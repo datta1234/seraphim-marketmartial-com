@@ -27,7 +27,7 @@
             @include('layouts.elements.navigation')
             {{-- Layout --}}
             <main class="user-content">
-                <div class="container page-body-container">
+                <div class="container page-body-container mt-3">
                     {{--Alerts--}}
                     <div>
                         <div class="toast-holder"></div>
@@ -46,7 +46,7 @@
         </div>
         <div class="push-down"></div>
     </div>
-    <div class="site-footer">
+    <div class="site-footer mt-3">
         @include('layouts.elements.footer')
         @yield('script_footer')
     </div>

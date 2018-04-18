@@ -1,3 +1,5 @@
+@import './_mm_custom_variables';
+
 html, body{
     height: 100%;
 }
@@ -5,4 +7,84 @@ html, body{
 body
 {
 
+}
+
+.card {
+	border: none;
+	box-shadow: 4px 4px 9px 0px $mm-shadow;
+
+	.card-header {
+		background-color: $mm-panel;
+		border: none;
+		
+		span.icon {
+			color: $mm-white;
+		}
+	}
+
+	.card-body {
+		background-color: $mm-background-light;
+		border: none;
+
+		.card-title {
+			color: $mm-heading-dark;
+		}
+		
+		.card-text {
+			color: $mm-text-dark;
+		}
+
+		h1.info-card > .icon {
+			color: $mm-info-blue;
+		}
+	}
+}
+
+.pull-up-card {
+	.card {
+		.card-body {
+			color: $mm-white;
+
+			.card-title {
+				color: $mm-white;
+			}
+		}
+
+
+		.card-screen {
+			background-color: $mm-panel-light;
+		}
+		.card-award {
+			background-color: $mm-panel;
+		}
+		.card-graph {
+			background-color: $mm-panel-green;
+		}
+		.card-robot {
+			background-color: $mm-panel-dark-green;
+		}
+	}
+}
+
+.info-block {
+	box-shadow: 4px 4px 9px 0px $mm-shadow;
+	
+	.card{
+		box-shadow: none;
+	}
+}
+
+.mm-button {
+	  color: $mm-white;
+	  background-color: $mm-panel;
+
+	  &:focus,
+	  &.focus {
+	    color: $mm-white;
+	    background-color: darken($mm-panel, 10%);
+	  }
+	  &:hover {
+	    color: $mm-white;
+	    background-color: darken($mm-panel, 10%);
+	  }
 }
