@@ -2,13 +2,21 @@
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 
+//Custom Assemble variables
+@import "_mm_custom_variables";
+
 // Variables
 @import "variables";
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+// General Custom
+@import '_general_custom.scss';
+
+// Icons
+@import"_icomoon.scss";
+
+//Components
+@import"components/_navbar.scss";
+@import"components/_footer.scss";
