@@ -53,7 +53,7 @@
                 </p>
             </div>
             <div class="col circle-icon-tile text-center">
-            <div class="circle-icon-block m-3"><span class="icon icon-wifi p-4"></span></div>
+            <div class="circle-icon-block m-3"><span class="icon icon-wifi2 p-4"></span></div>
                 <p class="mt-3 pt-3">
                     Online and advanced functionality
                 </p>
