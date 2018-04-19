@@ -1,0 +1,113 @@
+@import '../_mm_custom_variables';
+
+/*
+ *	Slide Cards
+ */
+.pull-up-card {
+	height: 150px;
+
+	.card {
+		.card-body {
+			height: 150px;
+			color: $mm-white;
+			background-color: inherit;
+
+			.card-title {
+				color: $mm-white;
+			}
+		}
+
+		/* [data-slide-content] {
+			display: none;
+			position: absolute;
+			bottom: 0px;
+		} */
+
+		.card-screen {
+			background-color: $mm-panel-light;
+		}
+		.card-award {
+			background-color: $mm-panel;
+		}
+		.card-graph {
+			background-color: $mm-panel-green;
+		}
+		.card-robot {
+			background-color: $mm-panel-dark-green;
+		}
+	}
+}
+
+[data-slide-block] {
+    position:relative;
+    height:150px;
+    overflow:hidden;
+  }
+  [data-slide-block] > [data-slide-title] {
+    width:100%;
+    background:#fff;
+    position:absolute;
+    height:150px;
+    top:0px;
+    margin-top:0px;
+  }
+  [data-slide-block] > [data-slide-content] {
+    width:100%;
+    background:#fff;
+    position:absolute;
+    height:150px;
+    bottom:0px;
+    margin-bottom:-150px;
+  }
+
+
+/*
+ *	CSS 3 flip prototype 
+ */
+/* .three-d {
+    perspective: 200px;
+    transition: all .07s linear;
+    position: relative;
+    cursor: pointer;
+}
+complete the animation!
+.three-d:hover .three-d-box, 
+.three-d:focus .three-d-box {
+    transform: translateZ(-25px) rotateX(90deg);
+}
+
+.three-d-box {
+    transition: all .3s ease-out;
+    transform: translatez(-25px);
+    transform-style: preserve-3d;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.front {
+    transform: rotatex(0deg) translatez(25px);
+}
+
+.back {
+    transform: rotatex(-90deg) translatez(25px);
+    color: #ffe7c4;
+}
+
+.front, .back {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    padding: 15px 10px;
+    color: #000;
+    border: none;
+    pointer-events: none;
+    box-sizing: border-box;
+} */

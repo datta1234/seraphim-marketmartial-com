@@ -25,18 +25,13 @@
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')
+            
             {{-- Layout --}}
             <main class="user-content">
                 <div class="container page-body-container mt-3">
                     {{--Alerts--}}
                     <div>
                         <div class="toast-holder"></div>
-                        <div class="alert alert-danger" id="alert-custom-danger" style="display: none;">
-                            <a class="close" aria-label="close" data-dismiss="alert" id="alert-custom-danger-close">&times;</a>
-                            <p id="alert-custom-danger-content">
-
-                            </p>
-                        </div>
                         @include('layouts.elements.alerts')
                     </div>
                     @yield('content')
@@ -48,7 +43,9 @@
     </div>
     <div class="site-footer mt-3">
         @include('layouts.elements.footer')
-        @yield('script_footer')
     </div>
+    
+     <!-- JavaScripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

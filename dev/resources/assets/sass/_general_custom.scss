@@ -6,7 +6,13 @@ html, body{
 
 body
 {
-
+	background-color: $mm-background-dark;
+	
+	.page-title {
+		h1 {
+			color: $mm-white;
+		}
+	}
 }
 
 .card {
@@ -40,32 +46,6 @@ body
 	}
 }
 
-.pull-up-card {
-	.card {
-		.card-body {
-			color: $mm-white;
-
-			.card-title {
-				color: $mm-white;
-			}
-		}
-
-
-		.card-screen {
-			background-color: $mm-panel-light;
-		}
-		.card-award {
-			background-color: $mm-panel;
-		}
-		.card-graph {
-			background-color: $mm-panel-green;
-		}
-		.card-robot {
-			background-color: $mm-panel-dark-green;
-		}
-	}
-}
-
 .info-block {
 	box-shadow: 4px 4px 9px 0px $mm-shadow;
 	
@@ -88,3 +68,20 @@ body
 	    background-color: darken($mm-panel, 10%);
 	  }
 }
+
+.circle-icon-tile {
+	.circle-icon-block {
+		.icon {
+			background-color: $mm-panel;
+			color: $mm-white;
+			border-radius: 100%;
+			font-size: 5em;
+		}
+	}
+
+	p {
+		color: $mm-panel;
+	}
+}
+
+

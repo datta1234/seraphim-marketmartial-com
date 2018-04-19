@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('/fonts/vendor/icomoon/icomoon.eot?khtwvv');
-  src:  url('/fonts/vendor/icomoon/icomoon.eot?khtwvv#iefix') format('embedded-opentype'),
-    url('/fonts/vendor/icomoon/icomoon.ttf?khtwvv') format('truetype'),
-    url('/fonts/vendor/icomoon/icomoon.woff?khtwvv') format('woff'),
-    url('/fonts/vendor/icomoon/icomoon.svg?khtwvv#icomoon') format('svg');
+  src:  url('/fonts/vendor/icomoon/icomoon.eot?yllo22');
+  src:  url('/fonts/vendor/icomoon/icomoon.eot?yllo22#iefix') format('embedded-opentype'),
+    url('/fonts/vendor/icomoon/icomoon.ttf?yllo22') format('truetype'),
+    url('/fonts/vendor/icomoon/icomoon.woff?yllo22') format('woff'),
+    url('/fonts/vendor/icomoon/icomoon.svg?yllo22#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,63 +24,70 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-info:before {
+.icon-man-circle:before {
   content: "\e900";
 }
-.icon-money:before {
+.icon-star-circle:before {
   content: "\e901";
 }
-.icon-drop:before {
+.icon-info:before {
   content: "\e902";
 }
-.icon-award:before {
+.icon-money:before {
   content: "\e903";
 }
-.icon-fluid:before {
+.icon-drop:before {
   content: "\e904";
 }
-.icon-question:before {
+.icon-award:before {
   content: "\e905";
 }
-.icon-addprofile:before {
+.icon-fluid:before {
   content: "\e906";
 }
-.icon-profile:before {
+.icon-question:before {
   content: "\e907";
 }
-.icon-lock:before {
+.icon-addprofile:before {
   content: "\e908";
 }
-.icon-screen:before {
+.icon-profile:before {
   content: "\e909";
 }
-.icon-award2:before {
+.icon-lock:before {
   content: "\e90a";
 }
-.icon-graph:before {
+.icon-screen:before {
   content: "\e90b";
 }
-.icon-robot:before {
+.icon-award2:before {
   content: "\e90c";
 }
-.icon-business:before {
+.icon-graph:before {
   content: "\e90d";
 }
-.icon-wifi:before {
+.icon-robot:before {
   content: "\e90e";
 }
-.icon-cashdown:before {
+.icon-business:before {
   content: "\e90f";
 }
-.icon-star:before {
+.icon-wifi:before {
   content: "\e910";
 }
-.icon-money2:before {
+.icon-cashdown:before {
   content: "\e911";
 }
-.icon-globe:before {
+.icon-star:before {
   content: "\e912";
 }
-.icon-man:before {
+.icon-money2:before {
   content: "\e913";
 }
+.icon-globe:before {
+  content: "\e914";
+}
+.icon-man:before {
+  content: "\e915";
+}
+
