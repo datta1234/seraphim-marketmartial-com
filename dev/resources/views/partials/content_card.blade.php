@@ -1,4 +1,4 @@
-<div class="card mt-3">
+<div class="card mt-5">
   <div class="card-header text-center">
 	{{ $header }}
   </div>
@@ -6,6 +6,7 @@
     <h2 class="card-title text-center">
 		{{ $title }}
     </h2>
+    <hr class="title-decorator">
     <div class="card-text">
 		{{ $body }}
     </div>

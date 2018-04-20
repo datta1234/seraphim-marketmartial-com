@@ -1,6 +1,61 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="row justify-content-md-end">
+    <div class="col col-md-12">
+        <p class="float-right active-markets">
+            Active Market Makers Online: <strong>7</strong>
+        </p>
+    </div>
+</div>
+
+<div class="home-login-block">
+    <div class="home-page-title">
+        <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
+    </div>
+    <div class="home-login float-right">
+        <form method="POST" action="{{ route('login') }}">
+            @csrf
+
+                <div class="w-100 mb-2">
+                    <div class="in-line-input email-input">
+                        
+                        <input id="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="Email address" required autofocus>
+                    </div>
+
+                    @if ($errors->has('email'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('email') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="w-100 mb-2">
+                    <div class="in-line-input pass-input">
+                        
+                        <input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required>
+                    </div>
+
+                    @if ($errors->has('password'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('password') }}</strong>
+                        </span>
+                    @endif
+                </div>
+
+                <div class="w-100 mb-2">
+                    <button type="submit" class="btn mm-login-button w-100">
+                        {{ __('Login') }}
+                    </button>
+                </div>
+                <div class="m-0">
+                    <a class="btn btn-link m-0 p-0" href="{{ route('password.request') }}">
+                        {{ __('Forgot Password') }}
+                    </a>
+                </div>
+        </form>
+    </div>
+</div>
 
 <!-- <div class="three-d">
     <div class="card-body">
@@ -109,6 +164,7 @@
         <h2 class="card-title text-center">
             What does Market Martial do?
         </h2>
+        <hr class="title-decorator mm-info">
         <p class="card-text text-center">
             Market Martial has been custom built exclusively for inter-bank derivatives traders with the intention of providing a seamless transition to an efficient electronic platform.
         </p>
@@ -122,7 +178,7 @@
 {{-- Liquidity Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-drop"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-drop"></span></h2>
     @endslot
     @slot('title')
         We improve liquidity
@@ -135,7 +191,7 @@
 {{-- Electronic efficiency Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-award"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-award"></span></h2>
     @endslot
     @slot('title')
         Electronic efficiency
@@ -158,7 +214,7 @@
 {{-- Feel and flow Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-fluid"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-fluid"></span></h2>
     @endslot
     @slot('title')
         We maintain the feel and flow
@@ -171,7 +227,7 @@
 {{-- Bridge the Gap Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-star-circle"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-star-circle"></span></h2>
     @endslot
     @slot('title')
         We bridge the gap: implied volatility vs premium
@@ -186,7 +242,7 @@
 {{-- Priority Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-man-circle"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-man-circle"></span></h2>
     @endslot
     @slot('title')
         You are our priority
@@ -201,7 +257,7 @@
 {{-- Sign Up Card --}}
 @card()
     @slot('header')
-        <h2><span class="icon icon-addprofile"></span></h2>
+        <h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
     @endslot
     @slot('title')
     @endslot
@@ -214,5 +270,76 @@
         </div>
     @endslot
 @endcard
+
+@endsection
+
+
+@section('sub-footer')
+
+<div class="home-sub-footer">
+    <div class="container">
+        <div class="row pt-3 pb-3">
+            <div class="col footer-sections">
+                <h3>Send us a message</h3>
+                <form action="{{ route('contact') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" id="name" name="name" placeholder="Enter your name here...">
+
+                        @if ($errors->has('name'))
+                            <div class="alert alert-danger">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" id="email" name="email" placeholder="Enter your email here...">
+                        @if ($errors->has('email'))
+                            <div class="alert alert-danger">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
+                        @if ($errors->has('message'))
+                            <div class="alert alert-danger">
+                                <strong>{{ $errors->first('message') }}</strong>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn mm-footer-button float-right w-75">Submit message</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col footer-sections">
+                <h3>About Market Martial</h3>
+                <p>
+                    Facilisi morbi tempus iaculis urna id. Tempor orci eu lobortis elementum nibh tellus molestie nunc non. Arcu cursus vitae congue mauris. Ultricies mi quis hendrerit dolor magna eget est lorem ipsum. Id eu nisl nunc mi. Imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper. Luctus venenatis lectus magna fringilla urna porttitor rhoncus. 
+                </p>
+            </div>
+            <div class="col benefits-block">
+                <h3>Benefits of using Market Martial</h3>
+                <div >
+                    <span class="icon icon-money2"></span>
+                    <p class="mb-1">get paid to make markets and trade!</p>
+                </div>
+                <div >
+                    <span class="icon icon-globe"></span>
+                    <p class="mb-1">easy to view markets, from anywhere in the world.</p>
+                </div>
+                <div >
+                    <span class="icon icon-graph"></span>
+                    <p class="mb-1">trade stats and market info at your fingertips.</p>
+                </div>
+                <div >
+                    <span class="icon icon-man"></span>
+                    <p class="mb-1">become a game-changer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection

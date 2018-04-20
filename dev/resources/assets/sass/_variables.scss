@@ -14,3 +14,20 @@ $line-height-base: 1.6;
 */
 $radius: 				0px;
 $border-radius:			0px;
+
+
+$container-max-widths: (
+	sm: 526px, 
+	md: 904px, 
+	lg: 1290px 
+);
+
+/* Old size
+$container-max-widths: (
+	sm: 420px, 
+	md: 720px, 
+	lg: 960px 
+); */
+
+
+

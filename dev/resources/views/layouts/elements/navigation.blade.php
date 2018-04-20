@@ -2,7 +2,7 @@
     <div class="container">
       	<div class="navbar-header">
         	<a class="navbar-brand" href="{{ url('/') }}">
-          		<img class="main-title-image" src="">
+          		<img class="main-title-image" src="{{asset('img/logo.svg')}}">
         	</a>
       	</div>
   		<ul class="nav justify-content-end">

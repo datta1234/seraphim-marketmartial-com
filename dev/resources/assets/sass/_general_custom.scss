@@ -1,4 +1,5 @@
 @import './_mm_custom_variables';
+@import './_icomoon';
 
 html, body{
     height: 100%;
@@ -6,6 +7,8 @@ html, body{
 
 body
 {
+	background-image: url(/img/background.png);
+	background-size: cover;
 	background-color: $mm-background-dark;
 	
 	.page-title {
@@ -13,6 +16,10 @@ body
 			color: $mm-white;
 		}
 	}
+}
+
+.main-title-image {
+	width: 70%;
 }
 
 .card {
@@ -25,6 +32,7 @@ body
 		
 		span.icon {
 			color: $mm-white;
+			font-size:4rem;
 		}
 	}
 
@@ -34,6 +42,7 @@ body
 
 		.card-title {
 			color: $mm-heading-dark;
+			margin-bottom: 0.2em;
 		}
 		
 		.card-text {
@@ -69,6 +78,39 @@ body
 	  }
 }
 
+.mm-login-button {
+	  color: $mm-panel;
+	  background-color: $mm-white;
+
+	  &:focus,
+	  &.focus {
+	    color: $mm-panel;
+	    background-color: darken($mm-white, 10%);
+	  }
+	  &:hover {
+	    color: $mm-panel;
+	    background-color: darken($mm-white, 10%);
+	  }
+}
+
+.mm-footer-button {
+	color: $mm-panel;
+	  background-color: transparent;
+	  border: .2em solid $mm-panel;
+
+	  &:focus,
+	  &.focus {
+	    color: $mm-panel;
+	    background-color: transparent;
+	    border-color: darken($mm-panel, 10%);
+	  }
+	  &:hover {
+	    color: $mm-panel;
+	    background-color: transparent;
+	    border-color: darken($mm-panel, 10%);
+	  }
+}
+
 .circle-icon-tile {
 	.circle-icon-block {
 		.icon {
@@ -84,4 +126,188 @@ body
 	}
 }
 
+.home-login {
+	.in-line-input {
+		border-color: $mm-white;
+		position:relative;
 
+		&.email-input:before {
+			 /* use !important to prevent issues with browser extensions that change fonts */
+			  font-family: 'icomoon' !important;
+			  speak: none;
+			  font-style: normal;
+			  font-weight: normal;
+			  font-variant: normal;
+			  text-transform: none;
+			  line-height: 1;
+
+			  /* Better Font Rendering =========== */
+			  -webkit-font-smoothing: antialiased;
+			  -moz-osx-font-smoothing: grayscale;
+			content: "\e90a";
+			font-size:2em;
+			position:absolute;
+			top:.27em;
+			left:.5em;
+			color: $mm-white;
+		}
+
+		&.pass-input:before {
+			 /* use !important to prevent issues with browser extensions that change fonts */
+			  font-family: 'icomoon' !important;
+			  speak: none;
+			  font-style: normal;
+			  font-weight: normal;
+			  font-variant: normal;
+			  text-transform: none;
+			  line-height: 1;
+
+			  /* Better Font Rendering =========== */
+			  -webkit-font-smoothing: antialiased;
+			  -moz-osx-font-smoothing: grayscale;
+			content: "\e90b";
+			font-size:2em;
+			position:absolute;
+			top:.27em;
+			left:.5em;
+			color: $mm-white;
+		}
+
+		input {
+			border-width: .12em;
+			line-height: 2em;
+			background-color: transparent;
+			padding-left:4em;
+			-webkit-appearance: none;
+			color: $mm-white;
+
+			&::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+			    color: $mm-white;
+			    opacity: 1; /* Firefox */
+			}
+
+			&:-ms-input-placeholder { /* Internet Explorer 10-11 */
+			    color: $mm-white;
+			}
+
+			&::-ms-input-placeholder { /* Microsoft Edge */
+			    color: $mm-white;
+			}
+			
+			/* &:-webkit-autofill {
+				color: $mm-white;
+			    border: .12em solid $mm-white;
+			    -webkit-box-shadow: inset 0 0 0px 9999px $mm-white;
+			}
+			
+			&:focus,
+			&:-webkit-autofill:focus {
+			    border-color: #66afe9;
+			    -webkit-box-shadow: inset 0 0 0px 9999px $mm-white,
+			                        0 0 8px rgba(102, 175, 233, 0.6);
+			} */
+
+			&:-webkit-autofill,
+			&:-webkit-autofill:hover,
+			&:-webkit-autofill:focus,
+			&:-webkit-autofill:active {
+			    transition: background-color 5000s ease-in-out 0s;
+			    -webkit-text-fill-color: $mm-white !important;
+			}
+
+		}
+	}
+	a {
+		color: $mm-white;
+		text-decoration: none;
+
+		&:focus,
+		&.focus {
+			color: darken($mm-white, 10%);
+		}
+		&:hover {
+	    	color: darken($mm-white, 10%);
+	  	}
+	}
+}
+
+.active-markets {
+	color: $mm-white;
+}
+
+
+.home-login-block {
+	margin-bottom: 12rem;
+	margin-top: 7rem;
+
+	.home-page-title {
+		display: inline-block;
+
+		h1 {
+			color: $mm-white;
+			font-size: 4em;
+			margin-top: -0.1em
+		}
+	}
+
+	.home-login {
+		display: inline-block;
+		width: 23em;
+	}
+
+}
+
+.title-decorator {
+	background-color: $mm-panel;
+    width: 4.8em;
+    height: .1em;
+    margin-top: 0em;
+    margin-bottom: 3em;
+
+    &.mm-info {
+    	height: .05em;
+    }
+}
+
+.home-sub-footer {
+	background-color: $mm-footer-grey;
+	
+	h3 {
+		color: $mm-panel;
+	}
+
+	p, .icon {
+		color: $mm-white;
+	}
+
+	.benefits-block {
+		p, span {
+			display: inline-block;
+		}
+
+		.icon {
+			font-size: 1.7rem;
+		}
+	}
+
+	.footer-sections {
+		padding-left: 2em;
+		padding-right: 2em;
+	}
+}
+
+#main-footer {
+	.navbar-header {
+		display: inline-block;
+	}
+	.footer-nav {
+		display: inline-block;	
+	}
+}
+
+#main-footer, .home-sub-footer {
+	.container {
+		padding-left: 5em;
+		padding-right: 4em;
+	}
+}

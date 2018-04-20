@@ -2,6 +2,13 @@
 * bootstrap overrides
 */
 
+/* Old size
+$container-max-widths: (
+	sm: 420px, 
+	md: 720px, 
+	lg: 960px 
+); */
+
 /*!
  * Bootstrap v4.1.0 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
@@ -603,25 +610,19 @@ pre code {
 
 @media (min-width: 576px) {
   .container {
-    max-width: 540px;
+    max-width: 526px;
   }
 }
 
 @media (min-width: 768px) {
   .container {
-    max-width: 720px;
+    max-width: 904px;
   }
 }
 
 @media (min-width: 992px) {
   .container {
-    max-width: 960px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1140px;
+    max-width: 1290px;
   }
 }
 
@@ -10392,17 +10393,138 @@ a.text-dark:focus {
   }
 }
 
+@font-face {
+  font-family: 'icomoon';
+  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?nr8ma9") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?nr8ma9") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?nr8ma9#icomoon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-wifi2:before {
+  content: "\E900";
+}
+
+.icon-man-circle:before {
+  content: "\E901";
+}
+
+.icon-star-circle:before {
+  content: "\E902";
+}
+
+.icon-info:before {
+  content: "\E903";
+}
+
+.icon-money:before {
+  content: "\E904";
+}
+
+.icon-drop:before {
+  content: "\E905";
+}
+
+.icon-award:before {
+  content: "\E906";
+}
+
+.icon-fluid:before {
+  content: "\E907";
+}
+
+.icon-question:before {
+  content: "\E908";
+}
+
+.icon-addprofile:before {
+  content: "\E909";
+}
+
+.icon-profile:before {
+  content: "\E90A";
+}
+
+.icon-lock:before {
+  content: "\E90B";
+}
+
+.icon-screen:before {
+  content: "\E90C";
+}
+
+.icon-award2:before {
+  content: "\E90D";
+}
+
+.icon-graph:before {
+  content: "\E90E";
+}
+
+.icon-robot:before {
+  content: "\E90F";
+}
+
+.icon-business:before {
+  content: "\E910";
+}
+
+.icon-wifi:before {
+  content: "\E911";
+}
+
+.icon-cashdown:before {
+  content: "\E912";
+}
+
+.icon-star:before {
+  content: "\E913";
+}
+
+.icon-money2:before {
+  content: "\E914";
+}
+
+.icon-globe:before {
+  content: "\E915";
+}
+
+.icon-man:before {
+  content: "\E916";
+}
+
 html,
 body {
   height: 100%;
 }
 
 body {
+  background-image: url(/img/background.png);
+  background-size: cover;
   background-color: #125b5c;
 }
 
 body .page-title h1 {
   color: #ffffff;
+}
+
+.main-title-image {
+  width: 70%;
 }
 
 .card {
@@ -10418,6 +10540,7 @@ body .page-title h1 {
 
 .card .card-header span.icon {
   color: #ffffff;
+  font-size: 4rem;
 }
 
 .card .card-body {
@@ -10427,6 +10550,7 @@ body .page-title h1 {
 
 .card .card-body .card-title {
   color: #1a333f;
+  margin-bottom: 0.2em;
 }
 
 .card .card-body .card-text {
@@ -10463,6 +10587,41 @@ body .page-title h1 {
   background-color: #1c7172;
 }
 
+.mm-login-button {
+  color: #269a9b;
+  background-color: #ffffff;
+}
+
+.mm-login-button:focus,
+.mm-login-button.focus {
+  color: #269a9b;
+  background-color: #e6e5e5;
+}
+
+.mm-login-button:hover {
+  color: #269a9b;
+  background-color: #e6e5e5;
+}
+
+.mm-footer-button {
+  color: #269a9b;
+  background-color: transparent;
+  border: 0.2em solid #269a9b;
+}
+
+.mm-footer-button:focus,
+.mm-footer-button.focus {
+  color: #269a9b;
+  background-color: transparent;
+  border-color: #1c7172;
+}
+
+.mm-footer-button:hover {
+  color: #269a9b;
+  background-color: transparent;
+  border-color: #1c7172;
+}
+
 .circle-icon-tile .circle-icon-block .icon {
   background-color: #269a9b;
   color: #ffffff;
@@ -10472,6 +10631,210 @@ body .page-title h1 {
 
 .circle-icon-tile p {
   color: #269a9b;
+}
+
+.home-login .in-line-input {
+  border-color: #ffffff;
+  position: relative;
+}
+
+.home-login .in-line-input.email-input:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\E90A";
+  font-size: 2em;
+  position: absolute;
+  top: .27em;
+  left: .5em;
+  color: #ffffff;
+}
+
+.home-login .in-line-input.pass-input:before {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: "\E90B";
+  font-size: 2em;
+  position: absolute;
+  top: .27em;
+  left: .5em;
+  color: #ffffff;
+}
+
+.home-login .in-line-input input {
+  border-width: .12em;
+  line-height: 2em;
+  background-color: transparent;
+  padding-left: 4em;
+  -webkit-appearance: none;
+  color: #ffffff;
+  /* &:-webkit-autofill {
+				color: $mm-white;
+			    border: .12em solid $mm-white;
+			    -webkit-box-shadow: inset 0 0 0px 9999px $mm-white;
+			}
+			
+			&:focus,
+			&:-webkit-autofill:focus {
+			    border-color: #66afe9;
+			    -webkit-box-shadow: inset 0 0 0px 9999px $mm-white,
+			                        0 0 8px rgba(102, 175, 233, 0.6);
+			} */
+}
+
+.home-login .in-line-input input::-webkit-input-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ffffff;
+  opacity: 1;
+  /* Firefox */
+}
+
+.home-login .in-line-input input:-ms-input-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ffffff;
+  opacity: 1;
+  /* Firefox */
+}
+
+.home-login .in-line-input input::-ms-input-placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ffffff;
+  opacity: 1;
+  /* Firefox */
+}
+
+.home-login .in-line-input input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #ffffff;
+  opacity: 1;
+  /* Firefox */
+}
+
+.home-login .in-line-input input:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #ffffff;
+}
+
+.home-login .in-line-input input::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #ffffff;
+}
+
+.home-login .in-line-input input:-webkit-autofill,
+.home-login .in-line-input input:-webkit-autofill:hover,
+.home-login .in-line-input input:-webkit-autofill:focus,
+.home-login .in-line-input input:-webkit-autofill:active {
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.home-login a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.home-login a:focus,
+.home-login a.focus {
+  color: #e6e5e5;
+}
+
+.home-login a:hover {
+  color: #e6e5e5;
+}
+
+.active-markets {
+  color: #ffffff;
+}
+
+.home-login-block {
+  margin-bottom: 12rem;
+  margin-top: 7rem;
+}
+
+.home-login-block .home-page-title {
+  display: inline-block;
+}
+
+.home-login-block .home-page-title h1 {
+  color: #ffffff;
+  font-size: 4em;
+  margin-top: -0.1em;
+}
+
+.home-login-block .home-login {
+  display: inline-block;
+  width: 23em;
+}
+
+.title-decorator {
+  background-color: #269a9b;
+  width: 4.8em;
+  height: .1em;
+  margin-top: 0em;
+  margin-bottom: 3em;
+}
+
+.title-decorator.mm-info {
+  height: .05em;
+}
+
+.home-sub-footer {
+  background-color: #303030;
+}
+
+.home-sub-footer h3 {
+  color: #269a9b;
+}
+
+.home-sub-footer p,
+.home-sub-footer .icon {
+  color: #ffffff;
+}
+
+.home-sub-footer .benefits-block p,
+.home-sub-footer .benefits-block span {
+  display: inline-block;
+}
+
+.home-sub-footer .benefits-block .icon {
+  font-size: 1.7rem;
+}
+
+.home-sub-footer .footer-sections {
+  padding-left: 2em;
+  padding-right: 2em;
+}
+
+#main-footer .navbar-header {
+  display: inline-block;
+}
+
+#main-footer .footer-nav {
+  display: inline-block;
+}
+
+#main-footer .container,
+.home-sub-footer .container {
+  padding-left: 5em;
+  padding-right: 4em;
 }
 
 @font-face {

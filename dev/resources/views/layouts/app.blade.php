@@ -41,7 +41,11 @@
         </div>
         <div class="push-down"></div>
     </div>
-    <div class="site-footer mt-3">
+
+    <div class="site-sub-footer mt-5">
+        @yield('sub-footer')
+    </div>
+    <div class="site-footer mt-0">
         @include('layouts.elements.footer')
     </div>
     
