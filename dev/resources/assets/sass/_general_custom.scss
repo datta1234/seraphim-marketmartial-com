@@ -14,6 +14,8 @@ body
 	.page-title {
 		h1 {
 			color: $mm-white;
+			font-family: $mm-font-head;
+			font-size:3.5rem;
 		}
 	}
 }
@@ -43,14 +45,31 @@ body
 		.card-title {
 			color: $mm-heading-dark;
 			margin-bottom: 0.2em;
+			font-family: $mm-font-sub-head;
 		}
 		
 		.card-text {
 			color: $mm-text-dark;
+
+			.elec-eff-card-list {
+				color: $mm-panel;
+				font-size: 1.6em;
+     			font-weight: bold;
+			}
+
+			.why-us-card {
+				p {
+					font-size: 1.4em;
+					font-family: $mm-font-sub-head;
+				}
+			}
 		}
 
-		h1.info-card > .icon {
-			color: $mm-info-blue;
+		.info-card {
+			.icon {
+				color: $mm-info-blue;
+				font-size: 2.5em;
+			}
 		}
 	}
 }
@@ -60,6 +79,12 @@ body
 	
 	.card{
 		box-shadow: none;
+	}
+
+	.pull-up-card {
+		.icon {
+			font-size: 2.5em;
+		}
 	}
 }
 
@@ -233,6 +258,7 @@ body
 
 .active-markets {
 	color: $mm-white;
+	font-family: $mm-font-body-alt;
 }
 
 
@@ -245,14 +271,20 @@ body
 
 		h1 {
 			color: $mm-white;
-			font-size: 4em;
-			margin-top: -0.1em
+			font-size: 3.9rem;
+			margin-top: -0.1em;
+			font-family: $mm-font-head;
 		}
 	}
 
 	.home-login {
 		display: inline-block;
 		width: 23em;
+
+		input, a {
+			font-family: $mm-font-body;
+			font-size: 1.1rem;
+		}
 	}
 
 }
@@ -269,15 +301,41 @@ body
     }
 }
 
+.traders-quote-block {
+	color: $mm-white;
+
+	.quote-start {
+		font-family: $mm-font-sub-head;
+		font-size: 7rem;
+		margin-top: -0.23em;
+		margin-left: -0.5em;
+	}
+
+	.traders-quote {
+		font-family: $mm-font-head;
+		font-size: 2rem;
+		font-style: italic;
+	}
+
+	.quote-by {
+		font-size: 1rem;
+		margin-top: -1em;
+	}
+}
+
 .home-sub-footer {
 	background-color: $mm-footer-grey;
 	
 	h3 {
 		color: $mm-panel;
+		font-family: $mm-font-sub-head;
+		font-size: 1.4rem;
 	}
 
 	p, .icon {
 		color: $mm-white;
+		font-size: 0.86rem;
+		font-family: $mm-font-sub-head;
 	}
 
 	.benefits-block {
@@ -293,15 +351,31 @@ body
 	.footer-sections {
 		padding-left: 2em;
 		padding-right: 2em;
+
+		textarea {
+			height: 9em;
+		}
+
+		.mm-footer-button {
+			width: 60%;
+			font-family: $mm-font-sub-head;
+		}
 	}
 }
 
 #main-footer {
+	height: 4em;
+
 	.navbar-header {
 		display: inline-block;
 	}
 	.footer-nav {
-		display: inline-block;	
+		display: inline-block;
+
+		a {
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;;
+		}	
 	}
 }
 
@@ -310,4 +384,12 @@ body
 		padding-left: 5em;
 		padding-right: 4em;
 	}
+}
+
+.user-content {
+	margin-bottom: 10em;
+}
+
+.site-sub-footer {
+	margin-bottom: 4em;
 }

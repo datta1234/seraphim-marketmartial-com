@@ -26,11 +26,11 @@
 		.card-screen {
 			background-color: $mm-panel-light;
 		}
-		.card-award {
-			background-color: $mm-panel;
-		}
-		.card-graph {
+        .card-award {
 			background-color: $mm-panel-green;
+        }
+        .card-graph {
+            background-color: $mm-panel;
 		}
 		.card-robot {
 			background-color: $mm-panel-dark-green;
@@ -70,7 +70,7 @@
     position: relative;
     cursor: pointer;
 }
-complete the animation!
+//complete the animation!
 .three-d:hover .three-d-box, 
 .three-d:focus .three-d-box {
     transform: translateZ(-25px) rotateX(90deg);

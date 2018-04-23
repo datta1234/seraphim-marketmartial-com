@@ -10,6 +10,9 @@
     @slot('title')
         Contact Us
     @endslot
+    @slot('decorator')
+        <hr class="title-decorator">
+    @endslot
     @slot('body')
         <form action="{{ route('contact') }}" method="POST">
             @csrf
@@ -46,3 +49,4 @@
 @endcard
 
 @endsection
+

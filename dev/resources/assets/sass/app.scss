@@ -1,6 +1,9 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+/* @import url('https://fonts.googleapis.com/css?family=Raleway:600');
+@import url('https://fonts.googleapis.com/css?family=Muli:700');
+@import url('https://fonts.googleapis.com/css?family=Roboto'); */
+@import"_mm_fonts.scss";
 
 //Custom Assemble variables
 @import "_mm_custom_variables";
@@ -21,3 +24,18 @@
 @import"components/_navbar.scss";
 @import"components/_footer.scss";
 @import"components/_card_animation.scss";
+
+
+@font-face {
+  font-family: 'Muli-Bold';
+  src:  url('/fonts/Muli-Bold.ttf') format('truetype');
+
+}
+@font-face {
+  font-family: 'Raleway-SemiBold';
+  src:  url('/fonts/Raleway-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto-Regular';
+  src:  url('/fonts/Roboto-Regular.ttf') format('truetype');
+}

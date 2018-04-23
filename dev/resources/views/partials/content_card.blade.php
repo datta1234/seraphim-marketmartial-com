@@ -6,7 +6,7 @@
     <h2 class="card-title text-center">
 		{{ $title }}
     </h2>
-    <hr class="title-decorator">
+    {{ $decorator }}
     <div class="card-text">
 		{{ $body }}
     </div>

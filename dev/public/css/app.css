@@ -1,4 +1,31 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);/* 
+/* @import url('https://fonts.googleapis.com/css?family=Raleway:600');
+@import url('https://fonts.googleapis.com/css?family=Muli:700');
+@import url('https://fonts.googleapis.com/css?family=Roboto'); */
+
+h1 {
+  font-family: "Raleway-SemiBold";
+}
+
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Muli-Bold";
+}
+
+p {
+  font-family: "Roboto-Regular";
+}
+
+button.mm-login-button,
+a.mm-button,
+button.mm-button {
+  font-family: Arial;
+  font-size: 1.2rem;
+}
+
+/* 
 * bootstrap overrides
 */
 
@@ -10521,6 +10548,8 @@ body {
 
 body .page-title h1 {
   color: #ffffff;
+  font-family: "Raleway-SemiBold";
+  font-size: 3.5rem;
 }
 
 .main-title-image {
@@ -10551,14 +10580,27 @@ body .page-title h1 {
 .card .card-body .card-title {
   color: #1a333f;
   margin-bottom: 0.2em;
+  font-family: "Muli-Bold";
 }
 
 .card .card-body .card-text {
   color: #57585a;
 }
 
-.card .card-body h1.info-card > .icon {
+.card .card-body .card-text .elec-eff-card-list {
+  color: #269a9b;
+  font-size: 1.6em;
+  font-weight: bold;
+}
+
+.card .card-body .card-text .why-us-card p {
+  font-size: 1.4em;
+  font-family: "Muli-Bold";
+}
+
+.card .card-body .info-card .icon {
   color: #77c7c5;
+  font-size: 2.5em;
 }
 
 .info-block {
@@ -10569,6 +10611,10 @@ body .page-title h1 {
 .info-block .card {
   -webkit-box-shadow: none;
           box-shadow: none;
+}
+
+.info-block .pull-up-card .icon {
+  font-size: 2.5em;
 }
 
 .mm-button {
@@ -10762,6 +10808,7 @@ body .page-title h1 {
 
 .active-markets {
   color: #ffffff;
+  font-family: Arial;
 }
 
 .home-login-block {
@@ -10775,13 +10822,20 @@ body .page-title h1 {
 
 .home-login-block .home-page-title h1 {
   color: #ffffff;
-  font-size: 4em;
+  font-size: 3.9rem;
   margin-top: -0.1em;
+  font-family: "Raleway-SemiBold";
 }
 
 .home-login-block .home-login {
   display: inline-block;
   width: 23em;
+}
+
+.home-login-block .home-login input,
+.home-login-block .home-login a {
+  font-family: "Roboto-Regular";
+  font-size: 1.1rem;
 }
 
 .title-decorator {
@@ -10796,17 +10850,43 @@ body .page-title h1 {
   height: .05em;
 }
 
+.traders-quote-block {
+  color: #ffffff;
+}
+
+.traders-quote-block .quote-start {
+  font-family: "Muli-Bold";
+  font-size: 7rem;
+  margin-top: -0.23em;
+  margin-left: -0.5em;
+}
+
+.traders-quote-block .traders-quote {
+  font-family: "Raleway-SemiBold";
+  font-size: 2rem;
+  font-style: italic;
+}
+
+.traders-quote-block .quote-by {
+  font-size: 1rem;
+  margin-top: -1em;
+}
+
 .home-sub-footer {
   background-color: #303030;
 }
 
 .home-sub-footer h3 {
   color: #269a9b;
+  font-family: "Muli-Bold";
+  font-size: 1.4rem;
 }
 
 .home-sub-footer p,
 .home-sub-footer .icon {
   color: #ffffff;
+  font-size: 0.86rem;
+  font-family: "Muli-Bold";
 }
 
 .home-sub-footer .benefits-block p,
@@ -10823,6 +10903,19 @@ body .page-title h1 {
   padding-right: 2em;
 }
 
+.home-sub-footer .footer-sections textarea {
+  height: 9em;
+}
+
+.home-sub-footer .footer-sections .mm-footer-button {
+  width: 60%;
+  font-family: "Muli-Bold";
+}
+
+#main-footer {
+  height: 4em;
+}
+
 #main-footer .navbar-header {
   display: inline-block;
 }
@@ -10831,10 +10924,23 @@ body .page-title h1 {
   display: inline-block;
 }
 
+#main-footer .footer-nav a {
+  font-family: "Muli-Bold";
+  font-size: 0.74rem;
+}
+
 #main-footer .container,
 .home-sub-footer .container {
   padding-left: 5em;
   padding-right: 4em;
+}
+
+.user-content {
+  margin-bottom: 10em;
+}
+
+.site-sub-footer {
+  margin-bottom: 4em;
 }
 
 @font-face {
@@ -11002,11 +11108,11 @@ body .page-title h1 {
 }
 
 .pull-up-card .card .card-award {
-  background-color: #269a9b;
+  background-color: #3cbdb9;
 }
 
 .pull-up-card .card .card-graph {
-  background-color: #3cbdb9;
+  background-color: #269a9b;
 }
 
 .pull-up-card .card .card-robot {
@@ -11047,7 +11153,7 @@ body .page-title h1 {
     position: relative;
     cursor: pointer;
 }
-complete the animation!
+//complete the animation!
 .three-d:hover .three-d-box, 
 .three-d:focus .three-d-box {
     transform: translateZ(-25px) rotateX(90deg);
@@ -11088,4 +11194,19 @@ complete the animation!
     pointer-events: none;
     box-sizing: border-box;
 } */
+
+@font-face {
+  font-family: 'Muli-Bold';
+  src: url("/fonts/Muli-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Raleway-SemiBold';
+  src: url("/fonts/Raleway-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'Roboto-Regular';
+  src: url("/fonts/Roboto-Regular.ttf") format("truetype");
+}
 

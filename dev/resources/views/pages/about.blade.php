@@ -2,7 +2,7 @@
 
 @section('content')
 
-<div class="page-title text-center mt-3">
+<div class="page-title text-center m-5">
     <h1>About us</h1>
 </div>
 
@@ -13,6 +13,9 @@
     @endslot
     @slot('title')
         The Next Generation of Derivatives Trading
+    @endslot
+    @slot('decorator')
+        <hr class="title-decorator">
     @endslot
     @slot('body')
         <p class="card-text text-center">
@@ -44,30 +47,33 @@
     @slot('title')
         Why Us?
     @endslot
+    @slot('decorator')
+        <hr class="title-decorator">
+    @endslot
     @slot('body')
-        <div class="row">
-            <div class="col circle-icon-tile text-center">
+        <div class="row why-us-card justify-content-md-center">
+            <div class="col-md-auto circle-icon-tile text-center">
                 <div class="circle-icon-block m-3"><span class="icon icon-business p-4"></span></div>
                 <p class="mt-3 pt-3">
-                    Experienced Management
+                    Experienced<br>Management
                 </p>
             </div>
-            <div class="col circle-icon-tile text-center">
+            <div class="col-md-auto circle-icon-tile text-center">
             <div class="circle-icon-block m-3"><span class="icon icon-wifi2 p-4"></span></div>
                 <p class="mt-3 pt-3">
-                    Online and advanced functionality
+                    Online and advanced<br>functionality
                 </p>
             </div>
-            <div class="col circle-icon-tile text-center">
+            <div class="col-md-auto circle-icon-tile text-center">
                 <div class="circle-icon-block m-3"><span class="icon icon-money2 p-4"></span></div>
                 <p class="mt-3 pt-3">
                     Low fees
                 </p>
             </div>
-            <div class="col circle-icon-tile text-center">
+            <div class="col-md-auto circle-icon-tile text-center">
                 <div class="circle-icon-block m-3"><span class="icon icon-star p-4"></span></div>
                 <p class="mt-3 pt-3">
-                    Rewards for market making
+                    Rewards for market<br>making
                 </p>
             </div>
         </div>

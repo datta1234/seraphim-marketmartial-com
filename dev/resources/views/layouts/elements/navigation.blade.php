@@ -1,4 +1,4 @@
-<nav id="mainNav" class="navbar navbar-default">
+<nav id="mainNav" class="navbar navbar-default sticky-top">
     <div class="container">
       	<div class="navbar-header">
         	<a class="navbar-brand" href="{{ url('/') }}">
