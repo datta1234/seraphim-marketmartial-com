@@ -28,10 +28,10 @@ class ContactUsMail extends Mailable
      */
     public function build()
     {
-        $name = $this->contact_details->name;
-        $email = $this->contact_details->email;
-        $message = $this->contact_details->message;
+        $name = $this->contact_details['name'];
+        $email = $this->contact_details['email'];
+        $message = $this->contact_details['message'];
 
-        return $this->view('emails.contact')->with(['name' => $name, 'email' => $email, 'message' => $message]);
+        return $this->view('emails.contact')->with(['name' => $name, 'email' => $email, 'content' => $message]);
     }
 }

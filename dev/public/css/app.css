@@ -10541,9 +10541,9 @@ body {
 }
 
 body {
-  background-image: url(/img/background.png);
-  background-size: cover;
-  background-color: #125b5c;
+  /* background-image: url(/img/background.png);
+	background-size: cover; */
+  background-color: #000705;
 }
 
 body .page-title h1 {
@@ -10558,8 +10558,8 @@ body .page-title h1 {
 
 .card {
   border: none;
-  -webkit-box-shadow: 4px 4px 9px 0px #0c4545;
-          box-shadow: 4px 4px 9px 0px #0c4545;
+  -webkit-box-shadow: 4px 4px 9px -4px #000000;
+          box-shadow: 4px 4px 9px -4px #000000;
 }
 
 .card .card-header {
@@ -10604,8 +10604,8 @@ body .page-title h1 {
 }
 
 .info-block {
-  -webkit-box-shadow: 4px 4px 9px 0px #0c4545;
-          box-shadow: 4px 4px 9px 0px #0c4545;
+  -webkit-box-shadow: 4px 4px 9px -4px #000000;
+          box-shadow: 4px 4px 9px -4px #000000;
 }
 
 .info-block .card {
@@ -10941,6 +10941,14 @@ body .page-title h1 {
 
 .site-sub-footer {
   margin-bottom: 4em;
+}
+
+#geoBackdrop {
+  top: 0px;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 @font-face {

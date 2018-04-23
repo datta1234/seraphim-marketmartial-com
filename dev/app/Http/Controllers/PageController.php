@@ -33,7 +33,7 @@ class PageController extends Controller
 
         /*try
         {*/
-            Mail::to($request->user())->send(new ContactUsMail($request->all()));
+            Mail::to(config("mail.admin_email"))->send(new ContactUsMail($request->all()));
             return redirect()->back()->with('success', 'Contact message has been sent');
         //}
         /*catch(Exception $e)

@@ -19,9 +19,10 @@
             'csrfToken' => csrf_token(),
             ]) !!};
         </script>
+    <script src="{{ asset('js/fss.js') }}"></script>
     </head>
     <body>
-
+        <div id="geoBackdrop"></div>
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')

@@ -327,7 +327,7 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" id="email" name="email" placeholder="Enter your email here...">
+                        <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" id="contactEmail" name="email" placeholder="Enter your email here...">
                         @if ($errors->has('email'))
                             <div class="alert alert-danger">
                                 <strong>{{ $errors->first('email') }}</strong>

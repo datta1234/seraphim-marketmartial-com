@@ -4,5 +4,5 @@ From: {{ $name }}
 Email: {{ $email }}
 <br>
 Message:
-<p>{{ $message }}</p> 
+<p>{{ $content }}</p> 
 </div>
