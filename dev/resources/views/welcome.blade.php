@@ -13,9 +13,10 @@
     <div class="home-page-title">
         <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
     </div>
+    @if (Auth::guest())
     <div class="home-login float-right">
         <form method="POST" action="{{ route('login') }}">
-            @csrf
+             {{ csrf_field() }}
 
                 <div class="w-100 mb-3">
                     <div class="in-line-input email-input">
@@ -55,6 +56,7 @@
                 </div>
         </form>
     </div>
+    @endif
 </div>
 
 <!-- <div class="three-d">
@@ -178,7 +180,7 @@
 </div>
 
 {{-- Liquidity Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-drop"></span></h2>
     @endslot
@@ -191,10 +193,10 @@
     @slot('body')
         <img class="img-fluid pb-4 pr-4 pl-4" src="{{asset('img/liquidity.svg')}}">
     @endslot
-@endcard
+@endcomponent
 
 {{-- Electronic efficiency Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-award"></span></h2>
     @endslot
@@ -220,10 +222,10 @@
                 </div>
             </div>
     @endslot
-@endcard
+@endcomponent
 
 {{-- Feel and flow Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-fluid"></span></h2>
     @endslot
@@ -238,10 +240,10 @@
             <img class="img-fluid justify-content-center pb-4" src="{{asset('img/maintain_flow.svg')}}">
         </div>
     @endslot
-@endcard
+@endcomponent
 
 {{-- Bridge the Gap Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-star-circle"></span></h2>
     @endslot
@@ -256,10 +258,10 @@
             International volatility traders negotiate trades by quoting premium, while South African volatility traders quote implied volatility. Market Martial simultaneously displays both, catering to respective traders’ market conventions. 
         </p>
     @endslot
-@endcard
+@endcomponent
 
 {{-- Priority Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-man-circle"></span></h2>
     @endslot
@@ -274,26 +276,28 @@
             In order to maintain objective, client-centric and user-friendly functionality Market Martial not only accepts comments and critiques, we encourage them. Please let us know how we can further improve the platform and serve you better.
         </p>
     @endslot
-@endcard
+@endcomponent
 
 {{-- Sign Up Card --}}
-@card()
-    @slot('header')
-        <h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
-    @endslot
-    @slot('title')
-    @endslot
-    @slot('decorator')
-    @endslot
-    @slot('body')
-        <div class="text-center">
-            <p class="card-text text-center">
-            Derivatives trading is now seamless and fast. Request, make, trade and view markets with efficiency and ease. Click the sign up button to get more information.
-            </p>
-            <a class="btn mm-button w-25" href="{{ route('register') }}">Sign up now</a>
-        </div>
-    @endslot
-@endcard
+@if (Auth::guest())
+    @component('partials.content_card')
+        @slot('header')
+            <h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+        @endslot
+        @slot('title')
+        @endslot
+        @slot('decorator')
+        @endslot
+        @slot('body')
+            <div class="text-center">
+                <p class="card-text text-center">
+                Derivatives trading is now seamless and fast. Request, make, trade and view markets with efficiency and ease. Click the sign up button to get more information.
+                </p>
+                <a class="btn mm-button w-25" href="{{ route('register') }}">Sign up now</a>
+            </div>
+        @endslot
+    @endcomponent
+@endif
 
 <div class="traders-quote-block mt-5">
     <div class="text-center d-flex justify-content-center">
@@ -316,7 +320,7 @@
             <div class="col col-lg-4 footer-sections">
                 <h3>Send us a message</h3>
                 <form action="{{ route('contact') }}" method="POST">
-                    @csrf
+                     {{ csrf_field() }}
                     <div class="form-group mb-2">
                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" id="name" name="name" placeholder="Enter your name here...">
 

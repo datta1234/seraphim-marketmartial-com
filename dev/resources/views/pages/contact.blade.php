@@ -3,7 +3,7 @@
 @section('content')
 
 {{-- Contact Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2><span class="icon icon-man-circle"></span></h2>
     @endslot
@@ -15,7 +15,7 @@
     @endslot
     @slot('body')
         <form action="{{ route('contact') }}" method="POST">
-            @csrf
+             {{ csrf_field() }}
             <div class="form-group">
                 <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" id="name" name="name" placeholder="Enter your name here...">
 
@@ -46,7 +46,7 @@
             </div>
         </form>
     @endslot
-@endcard
+@endcomponent
 
 @endsection
 

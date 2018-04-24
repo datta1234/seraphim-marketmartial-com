@@ -25,6 +25,42 @@ button.mm-button {
   font-size: 1.2rem;
 }
 
+/* // Borders
+$laravel-border-color: darken($body-bg, 10%);
+$list-group-border: $laravel-border-color;
+$navbar-default-border: $laravel-border-color;
+$panel-default-border: $laravel-border-color;
+$panel-inner-border: $laravel-border-color;
+
+// Brands
+$brand-primary: #3097D1;
+$brand-info: #8eb4cb;
+$brand-success: #2ab27b;
+$brand-warning: #cbb956;
+$brand-danger: #bf5329;
+
+// Typography
+$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
+$font-family-sans-serif: "Raleway", sans-serif;
+$font-size-base: 14px;
+$line-height-base: 1.6;
+$text-color: #636b6f;
+
+// Navbar
+$navbar-default-bg: #fff;
+
+// Buttons
+$btn-default-color: $text-color;
+
+// Inputs
+$input-border: lighten($text-color, 40%);
+$input-border-focus: lighten($brand-primary, 25%);
+$input-color-placeholder: lighten($text-color, 30%);
+
+// Panels
+$panel-default-heading-bg: #fff;
+ */
+
 /* 
 * bootstrap overrides
 */
@@ -10949,6 +10985,20 @@ body .page-title h1 {
   width: 100%;
   height: 100%;
   z-index: -1;
+}
+
+.register-info-group {
+  color: #269a9b;
+  font-size: 1em;
+}
+
+.register-info-group p,
+.register-info-group span {
+  display: inline-block;
+}
+
+.register-info-group .icon {
+  font-size: 1.2rem;
 }
 
 @font-face {

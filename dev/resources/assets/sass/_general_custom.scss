@@ -402,3 +402,16 @@ body
 	height: 100%;
 	z-index: -1;
 }
+
+.register-info-group {
+	color: $mm-panel;
+	font-size: 1em;
+	
+	p, span {
+		display: inline-block;
+	}
+
+	.icon {
+		font-size: 1.2rem;
+	}
+}

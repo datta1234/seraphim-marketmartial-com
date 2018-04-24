@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
         */
         $user_id =  DB::table('users')->insertGetId([
                 'name' => "admin",
-                'email' => "francois@assemble.co.za",
+                'email' => "staging@assemble.co.za",
                 'password' => bcrypt('jM68b7LdRspcHhMv'),
                 'remember_token' => null,
                 'created_at' => Carbon::now(),

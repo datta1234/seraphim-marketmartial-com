@@ -18,3 +18,12 @@ $( "[data-slide-block]" ).hover(
   	$( this ).find("[data-slide-title]").stop().animate({ marginTop: '0px'}, 500);
   }
 );
+
+
+$( "[data-not-listed-check]" ).on("change", function( event ) {
+	if ($("#new_organistation").attr("type") == "hidden") {
+		$("#new_organistation").attr("type", "");
+	} else {
+		$("#new_organistation").attr("type", "hidden");
+	}
+});

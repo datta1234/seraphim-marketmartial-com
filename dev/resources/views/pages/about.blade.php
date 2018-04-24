@@ -7,7 +7,7 @@
 </div>
 
 {{-- About content Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2><span class="icon icon-globe"></span></h2>
     @endslot
@@ -37,10 +37,10 @@
             With you, the derivatives traders, being the core focus of the Market Martial platform, I encourage you to provide me with your comments and critiques that could further improve your trading experience.   
         </p>
     @endslot
-@endcard
+@endcomponent
 
 {{-- Priority Card --}}
-@card()
+@component('partials.content_card')
     @slot('header')
         <h2><span class="icon icon-question"></span></h2>
     @endslot
@@ -78,6 +78,6 @@
             </div>
         </div>
     @endslot
-@endcard
+@endcomponent
 
 @endsection

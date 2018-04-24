@@ -19,9 +19,6 @@ Auth::routes();
 *
 */
 Route::get('/', 'PageController@index')->name('home');
-//Route::get('/home', 'PageController@index')->name('');
 Route::get('/contact', 'PageController@contact')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
-
-
