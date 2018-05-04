@@ -27,3 +27,10 @@ $( "[data-not-listed-check]" ).on("change", function( event ) {
 		$("#new_organistation").attr("type", "hidden");
 	}
 });
+
+/*
+ * Enable Tooltips
+ */
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})

@@ -1,8 +1,8 @@
 <footer id="main-footer" class="fixed-bottom">
 	<div class="container">
 		<div class="navbar-header">
-        	<a class="navbar-brand" href="{{ url('/') }}">
-          		<img class="main-title-image" src="{{asset('img/logo.svg')}}">
+        	<a class="navbar-brand footer-title-image" href="{{ url('/') }}">
+          		<span class="icon icon-mm-logo"></span>
         	</a>
       	</div>
       	<div class="footer-nav float-right">

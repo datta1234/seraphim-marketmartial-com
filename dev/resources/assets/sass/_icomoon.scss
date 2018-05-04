@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('/fonts/vendor/icomoon/icomoon.eot?nr8ma9');
-  src:  url('/fonts/vendor/icomoon/icomoon.eot?nr8ma9#iefix') format('embedded-opentype'),
-    url('/fonts/vendor/icomoon/icomoon.ttf?nr8ma9') format('truetype'),
-    url('/fonts/vendor/icomoon/icomoon.woff?nr8ma9') format('woff'),
-    url('/fonts/vendor/icomoon/icomoon.svg?nr8ma9#icomoon') format('svg');
+  src:  url('/fonts/vendor/icomoon/icomoon.eot?lbdp4o');
+  src:  url('/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix') format('embedded-opentype'),
+    url('/fonts/vendor/icomoon/icomoon.ttf?lbdp4o') format('truetype'),
+    url('/fonts/vendor/icomoon/icomoon.woff?lbdp4o') format('woff'),
+    url('/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-mm-logo:before {
+  content: "\e900";
+}
 .icon-wifi2:before {
   content: "\e900";
 }

@@ -1,8 +1,8 @@
 <nav id="mainNav" class="navbar navbar-default sticky-top">
     <div class="container">
       	<div class="navbar-header">
-        	<a class="navbar-brand" href="{{ url('/') }}">
-          		<img class="main-title-image" src="{{asset('img/logo.svg')}}">
+        	<a class="navbar-brand nav-title-image" href="{{ url('/') }}">
+				<span class="icon icon-mm-logo"></span>
         	</a>
       	</div>
   		<ul class="nav justify-content-end">

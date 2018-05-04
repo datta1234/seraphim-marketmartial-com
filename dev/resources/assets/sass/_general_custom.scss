@@ -20,8 +20,22 @@ body
 	}
 }
 
-.main-title-image {
-	width: 70%;
+.nav-title-image {
+	span {
+		font-size: 3.5rem;
+		color: $mm-white;
+
+		&:hover {
+	    	color: $mm-panel-green;
+	  	}
+	}
+}
+
+.footer-title-image {
+	span {
+		font-size: 3rem;
+		color: $mm-white;
+	}	
 }
 
 .card {
@@ -413,5 +427,23 @@ body
 
 	.icon {
 		font-size: 1.2rem;
+	}
+}
+
+.largeCheckBox {
+	label {
+		display: block;
+		padding-left: 0.8em;
+		text-indent: -0.8em;
+	}
+	input {
+		width: 1.2em;
+		height: 1.2em;
+		padding: 0;
+		margin:0;
+		vertical-align: bottom;
+		position: relative;
+		top: -0.2em;
+		*overflow: hidden;
 	}
 }

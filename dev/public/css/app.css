@@ -10458,8 +10458,8 @@ a.text-dark:focus {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?nr8ma9") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?nr8ma9") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?nr8ma9#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -10477,6 +10477,10 @@ a.text-dark:focus {
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mm-logo:before {
+  content: "\E900";
 }
 
 .icon-wifi2:before {
@@ -10588,8 +10592,18 @@ body .page-title h1 {
   font-size: 3.5rem;
 }
 
-.main-title-image {
-  width: 70%;
+.nav-title-image span {
+  font-size: 3.5rem;
+  color: #ffffff;
+}
+
+.nav-title-image span:hover {
+  color: #3cbdb9;
+}
+
+.footer-title-image span {
+  font-size: 3rem;
+  color: #ffffff;
 }
 
 .card {
@@ -11001,10 +11015,27 @@ body .page-title h1 {
   font-size: 1.2rem;
 }
 
+.largeCheckBox label {
+  display: block;
+  padding-left: 0.8em;
+  text-indent: -0.8em;
+}
+
+.largeCheckBox input {
+  width: 1.2em;
+  height: 1.2em;
+  padding: 0;
+  margin: 0;
+  vertical-align: bottom;
+  position: relative;
+  top: -0.2em;
+  *overflow: hidden;
+}
+
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?nr8ma9#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?nr8ma9") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?nr8ma9") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?nr8ma9#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -11022,6 +11053,10 @@ body .page-title h1 {
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-mm-logo:before {
+  content: "\E900";
 }
 
 .icon-wifi2:before {

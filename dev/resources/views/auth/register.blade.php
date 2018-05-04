@@ -8,7 +8,7 @@
         <h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
     @endslot
     @slot('title')
-    Sign up to join the Inter-Bank Derivatives Trading Platform
+    New Member Enquiry
     @endslot
     @slot('decorator')
         <hr class="title-decorator">
@@ -16,17 +16,15 @@
     @slot('body')
         <div>
             <p class="card-text text-center">
-            <strong>New Member Enquiry</strong><br>
-            It's easy to become a member. Complete the details below, and the you will receive an emails to log in to complete your profile.<br> 
-            Once you submit your profile, we'll get back to you asap with your verification to start using Market Martial.
+            Fill in your details below and we will email you a login to complete your profile.<br>
+            Once your credentials have been verified you will be able to view and use the Market Martial trading platform.
             </p>
-            <p class="card-text text-center"><em>"Fieldsmarked with * are required fields</em></p>
 
             <form method="POST" action="{{ route('register') }}">
                          {{ csrf_field() }}
                         
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 offset-1 col-form-label text-md-right">E-Mail Address*</label>
+                            <label for="email" class="col-md-4 offset-1 col-form-label text-md-right">E-Mail Address</label>
 
                             <div class="col-md-4">
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your email here...">
@@ -40,7 +38,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Full Name*</label>
+                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Full Name</label>
 
                             <div class="col-md-4">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required placeholder="Enter your full name here...">
@@ -54,35 +52,21 @@
                         </div>
                         {{-- NEEDS CHANGE --}}
                         <div class="form-group row">
-                            <label for="work_phone" class="col-md-4 offset-1 col-form-label text-md-right">Work Phone*</label>
+                            <label for="phone" class="col-md-4 offset-1 col-form-label text-md-right">Phone</label>
 
                             <div class="col-md-4">
-                                <input id="work_phone" type="text" class="form-control{{ $errors->has('work_phone') ? ' is-invalid' : '' }}" name="work_phone" value="{{ old('work_phone') }}" required placeholder="Enter your work phone number here...">
+                                <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}" required placeholder="Enter your work phone number here...">
 
-                                @if ($errors->has('work_phone'))
+                                @if ($errors->has('phone'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('work_phone') }}</strong>
+                                        <strong>{{ $errors->first('phone') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="cell_phone" class="col-md-4 offset-1 col-form-label text-md-right">Cell Phone</label>
-
-                            <div class="col-md-4">
-                                <input id="cell_phone" type="text" class="form-control{{ $errors->has('cell_phone') ? ' is-invalid' : '' }}" name="cell_phone" value="{{ old('cell_phone') }}" placeholder="Enter your cell phone number here...">
-
-                                @if ($errors->has('cell_phone'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('cell_phone') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Select Role*</label>
+                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Select Role</label>
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -101,22 +85,22 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Markets that you will be trading*</label>
+                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Markets that you will be trading</label>
 
                             <div class="form-group col-md-4 mt-2">
-                                <div class="checkbox">
+                                <div class="checkbox largeCheckBox">
                                     <label>
-                                        <input name="index" type="checkbox" value="index"> Index Option
+                                        <input class="" name="index" type="checkbox" value="index"> Index Option
                                     </label>
                                 </div>
-                                <div class="checkbox">
+                                <div class="checkbox largeCheckBox">
                                     <label>
-                                        <input name="single_stock" type="checkbox" value="single_stock"> Single Stock Option
+                                        <input class="largeCheckBox" name="single_stock" type="checkbox" value="single_stock"> Single Stock Option
                                     </label>
                                 </div>
-                                <div class="checkbox">
+                                <div class="checkbox largeCheckBox">
                                     <label>
-                                        <input name="delta_one" type="checkbox" value="delta_one"> Delta One (EFPs, Rolls and EFP Switches)
+                                        <input class="largeCheckBox" name="delta_one" type="checkbox" value="delta_one"> Delta One (EFPs, Rolls and EFP Switches)
                                     </label>
                                 </div>
 
@@ -130,7 +114,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Your Organisation*</label>
+                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Your Organisation</label>
 
                             <div class="col-md-4">
                                 <div class="form-group">
@@ -150,9 +134,9 @@
                                     </span>
                                 @endif
                                 
-                                <div class="checkbox">
+                                <div class="checkbox largeCheckBox">
                                     <label>
-                                        <input name="not_listed" type="checkbox" value="not_listed" data-not-listed-check> My organisation is not listed
+                                        <input class="largeCheckBox" name="not_listed" type="checkbox" value="not_listed" data-not-listed-check> My organisation is not listed
                                     </label>
                                 </div>
 
@@ -171,7 +155,7 @@
                             <label for="password" class="col-md-4 offset-1 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-4">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Enter your password here...">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Must be at least 8 characters long">
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback">
@@ -191,7 +175,7 @@
                         
                         <div class="form-group row mt-5">
                             <div class="col-md-4 offset-md-4">
-                                <div class="row register-info-group">
+                                <div class="row register-info-group" data-toggle="tooltip" data-trigger="click" data-placement="top" title="Security is extremely important to us and our users. We have therefore added a verification process to ensure that each user is legitimate. We always strive to achieve a fast turn-around time, so you should expect to hear back from us shortly.">
                                     <div class="col col-md-1">
                                         <span class="icon icon-info"></span>
                                     </div>
