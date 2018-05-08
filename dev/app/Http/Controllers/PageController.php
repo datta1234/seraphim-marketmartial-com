@@ -31,14 +31,12 @@ class PageController extends Controller
 
     public function contactMessage(ContactUsRequest $request) {
 
-        /*try
-        {*/
-            Mail::to(config("mail.admin_email"))->send(new ContactUsMail($request->all()));
-            return redirect()->back()->with('success', 'Contact message has been sent');
-        //}
-        /*catch(Exception $e)
-        {
-            return redirect()->back()->with('error', 'Failed to send the message');
-        }*/
+        Mail::to(config("mail.admin_email"))->send(new ContactUsMail($request->all()));
+
+        if( count(Mail::failures()) > 0 ) {
+           return redirect()->back()->with('error', 'Failed to send the message');
+        } else {    
+            return redirect()->action('PageController@index')->with('success', 'Contact message has been sent');
+        }
     }
 }

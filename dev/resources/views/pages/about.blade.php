@@ -18,24 +18,40 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
-        <p class="card-text text-center">
-            With as many brokers as there are banks, the question has always stood: How does a broker create edge, or how does a broker provide a service that truly is superior to all the rest?
-        </p>
-        <p class="card-text text-center">
-            After 7 years of managing Investec Bank’s Index and Single Stock Options trading books, with the necessary experience and expertise gained in this very niche market, I believe Market Martial is the answer to that question, and more.
-        </p>
-        <p class="card-text text-center">
-            I can truthfully say that Market Martial has been custom built exclusively for derivatives traders, by a derivatives trader.
-        </p>
-        <p class="card-text text-center">
-            The simple intention behind Market Martial has been to address all the inefficiencies I have experienced over the years by fast forwarding an old-fashioned market practice into the technical age, by utilising the numerous benefits of a state of the art electronic platform.
-        </p>
-        <p class="card-text text-center">
-            Although the intention may have been simple, building a business around a platform that needs to cater to the many intricacies required to efficientize a relatively complex market has been anything but. I can only hope that our hard work and commitment has resulted in a product that you will find as useful as it is intended to be.
-        </p>
-        <p class="card-text text-center">
-            With you, the derivatives traders, being the core focus of the Market Martial platform, I encourage you to provide me with your comments and critiques that could further improve your trading experience.   
-        </p>
+        <div class="about-us-content pl-5 pr-5">
+            <p class="card-text text-justify">
+                With as many brokers as there are banks, the question remains: How does a broker create edge?
+            </p>
+            <p class="card-text text-justify">
+                Applying a combined 18 years of managing our respective bank's equity derivatives trading books, resulting in the necessary experience and expertise in this very niche market, we believe Market Martial is the answer to that question, and more.
+            </p>
+            <p class="card-text text-justify">
+                Market Martial has been custom built exclusively for derivatives traders, by derivatives traders.
+            </p>
+            <p class="card-text text-justify">
+                The simple intention behind Market Martial has been to address all the inefficiencies we have experienced over the years by fast forwarding an old-fashioned market practice into the technical age, utilising the numerous benefits of a state of the art electronic platform.
+            </p>
+            <p class="card-text text-justify">
+                Although the intention may have been simple, building a platform that caters to the many intricacies required to make a relatively complex market more efficient, has been anything but. We can only hope that our hard work and commitment has resulted in a product that you will find as useful as it is intended to be.
+            </p>
+            <p class="card-text text-justify">
+                With you, the derivatives traders, being the core focus of the Market Martial platform, we encourage you to provide us with your comments and critiques tat could further improve your trading experience.
+            </p>
+            <div class="float-left">
+                <img src="http://via.placeholder.com/200x75">
+                <p class="card-text">
+                    Brendan Harcourt-Wood, CFA<br>
+                    Standard Bank Group (2004 - 2018)
+                </p>
+            </div>
+            <div class="float-right">
+                <img src="http://via.placeholder.com/200x75">
+                <p class="card-text text-right ">
+                    Wade Bothwell, CFA<br>
+                    Investec Bank Ltd (2009 - 2018)
+                </p>
+            </div>
+        </div>
     @endslot
 @endcomponent
 
@@ -52,26 +68,20 @@
     @endslot
     @slot('body')
         <div class="row why-us-card justify-content-md-center">
-            <div class="col-md-auto circle-icon-tile text-center">
+            <div class="col-md-3 circle-icon-tile text-center">
                 <div class="circle-icon-block m-3"><span class="icon icon-business p-4"></span></div>
                 <p class="mt-3 pt-3">
-                    Experienced<br>Management
+                    Experienced<br>specialist support
                 </p>
             </div>
-            <div class="col-md-auto circle-icon-tile text-center">
+            <div class="col-md-2 circle-icon-tile text-center">
             <div class="circle-icon-block m-3"><span class="icon icon-wifi2 p-4"></span></div>
                 <p class="mt-3 pt-3">
-                    Online and advanced<br>functionality
+                    Advanced online<br>functionality
                 </p>
             </div>
-            <div class="col-md-auto circle-icon-tile text-center">
+            <div class="col-md-3 circle-icon-tile text-center">
                 <div class="circle-icon-block m-3"><span class="icon icon-money2 p-4"></span></div>
-                <p class="mt-3 pt-3">
-                    Low fees
-                </p>
-            </div>
-            <div class="col-md-auto circle-icon-tile text-center">
-                <div class="circle-icon-block m-3"><span class="icon icon-star p-4"></span></div>
                 <p class="mt-3 pt-3">
                     Rewards for market<br>making
                 </p>

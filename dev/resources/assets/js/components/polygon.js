@@ -1,8 +1,8 @@
 $( document ).ready(function() {
     
     var MESH = {
-        segments: 12,
-        slices: 5,
+        segments: 16,
+        slices: 8,
         xRange: 0.3,
         yRange: 0.3,
         zRange: 0.5,
@@ -35,7 +35,7 @@ $( document ).ready(function() {
     function createMesh() {
         scene.remove(mesh);
         renderer.clear();
-        geometry = new FSS.Plane(container.offsetWidth + (container.offsetWidth/MESH.segments)*4, container.offsetHeight, MESH.segments, MESH.slices);
+        geometry = new FSS.Plane(container.offsetWidth + (container.offsetWidth/MESH.segments)*4, container.offsetHeight + container.offsetHeight*0.05, MESH.segments, MESH.slices);
         renderer.element.style.marginLeft = (-1*(container.offsetWidth/MESH.segments))+'px';
         material = new FSS.Material(MESH.ambient, MESH.diffuse);
         mesh = new FSS.Mesh(geometry, material);
@@ -56,12 +56,12 @@ $( document ).ready(function() {
     }
 
     function resize() {
-        renderer.setSize(container.offsetWidth + (container.offsetWidth/MESH.segments)*4, container.offsetHeight);
+        renderer.setSize(container.offsetWidth + (container.offsetWidth/MESH.segments)*4, container.offsetHeight + container.offsetHeight*0.05);
     }
 
     function animate() {
         now = Date.now() - start;
-        light.setPosition(300 * Math.sin(now * 0.001), 200 * Math.cos(now * 0.0005), MESH.light_z);
+        light.setPosition(150 * Math.sin(now * 0.001), 100 * Math.cos(now * 0.0005), MESH.light_z);
         renderer.render(scene);
 
         for (v = geometry.vertices.length - 1; v >= 0; v--) {

@@ -1,4 +1,4 @@
-<footer id="main-footer" class="fixed-bottom">
+<footer id="main-footer">
 	<div class="container">
 		<div class="navbar-header">
         	<a class="navbar-brand footer-title-image" href="{{ url('/') }}">

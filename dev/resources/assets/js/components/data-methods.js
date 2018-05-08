@@ -9,7 +9,7 @@ $( "alert alert-success" ).on( "click", "[data-dismiss]", function( event ) {
 /*
  * Hover panel slide
  */
-$( "[data-slide-block]" ).hover(
+/*$( "[data-slide-block]" ).hover(
   function() {
   	$( this ).find("[data-slide-content]").stop().animate({ marginBottom: '0px'}, 500)
   	$( this ).find("[data-slide-title]").stop().animate({ marginTop: '-150px'}, 500);
@@ -17,7 +17,7 @@ $( "[data-slide-block]" ).hover(
   	$( this ).find("[data-slide-content]").stop().animate({ marginBottom: '-150px'}, 500);
   	$( this ).find("[data-slide-title]").stop().animate({ marginTop: '0px'}, 500);
   }
-);
+);*/
 
 
 $( "[data-not-listed-check]" ).on("change", function( event ) {

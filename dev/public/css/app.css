@@ -73,7 +73,7 @@ $container-max-widths: (
 ); */
 
 /*!
- * Bootstrap v4.1.0 (https://getbootstrap.com/)
+ * Bootstrap v4.1.1 (https://getbootstrap.com/)
  * Copyright 2011-2018 The Bootstrap Authors
  * Copyright 2011-2018 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
@@ -123,7 +123,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 @-ms-viewport {
@@ -132,7 +132,6 @@ html {
 
 article,
 aside,
-dialog,
 figcaption,
 figure,
 footer,
@@ -283,7 +282,7 @@ pre,
 code,
 kbd,
 samp {
-  font-family: monospace, monospace;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 1em;
 }
 
@@ -613,13 +612,6 @@ mark,
 .figure-caption {
   font-size: 90%;
   color: #6c757d;
-}
-
-code,
-kbd,
-pre,
-samp {
-  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 code {
@@ -2582,6 +2574,13 @@ select.form-control-lg:not([size]):not([multiple]),
   display: block;
 }
 
+.was-validated .form-control-file:valid ~ .valid-feedback,
+.was-validated .form-control-file:valid ~ .valid-tooltip,
+.form-control-file.is-valid ~ .valid-feedback,
+.form-control-file.is-valid ~ .valid-tooltip {
+  display: block;
+}
+
 .was-validated .form-check-input:valid ~ .form-check-label,
 .form-check-input.is-valid ~ .form-check-label {
   color: #28a745;
@@ -2696,6 +2695,13 @@ select.form-control-lg:not([size]):not([multiple]),
 .custom-select:invalid ~ .invalid-tooltip,
 .custom-select.is-invalid ~ .invalid-feedback,
 .custom-select.is-invalid ~ .invalid-tooltip {
+  display: block;
+}
+
+.was-validated .form-control-file:invalid ~ .invalid-feedback,
+.was-validated .form-control-file:invalid ~ .invalid-tooltip,
+.form-control-file.is-invalid ~ .invalid-feedback,
+.form-control-file.is-invalid ~ .invalid-tooltip {
   display: block;
 }
 
@@ -4083,8 +4089,7 @@ input[type="button"].btn-block {
   border-bottom-right-radius: 0;
 }
 
-.input-group > .custom-file:not(:first-child) .custom-file-label,
-.input-group > .custom-file:not(:first-child) .custom-file-label::after {
+.input-group > .custom-file:not(:first-child) .custom-file-label {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -4210,13 +4215,14 @@ input[type="button"].btn-block {
 }
 
 .custom-control-label {
+  position: relative;
   margin-bottom: 0;
 }
 
 .custom-control-label::before {
   position: absolute;
   top: 0.3rem;
-  left: 0;
+  left: -1.5rem;
   display: block;
   width: 1rem;
   height: 1rem;
@@ -4232,7 +4238,7 @@ input[type="button"].btn-block {
 .custom-control-label::after {
   position: absolute;
   top: 0.3rem;
-  left: 0;
+  left: -1.5rem;
   display: block;
   width: 1rem;
   height: 1rem;
@@ -4398,7 +4404,7 @@ input[type="button"].btn-block {
   bottom: 0;
   z-index: 3;
   display: block;
-  height: calc(calc(2.19rem + 2px) - 1px * 2);
+  height: 2.19rem;
   padding: 0.375rem 0.75rem;
   line-height: 1.6;
   color: #495057;
@@ -6856,6 +6862,7 @@ button.close {
   margin-right: 3px;
   margin-left: 3px;
   text-indent: -999px;
+  cursor: pointer;
   background-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -10454,6 +10461,22 @@ a.text-dark:focus {
   .table-bordered td {
     border: 1px solid #dee2e6 !important;
   }
+
+  .table-dark {
+    color: inherit;
+  }
+
+  .table-dark th,
+  .table-dark td,
+  .table-dark thead th,
+  .table-dark tbody + tbody {
+    border-color: #dee2e6;
+  }
+
+  .table .thead-dark th {
+    color: inherit;
+    border-color: #dee2e6;
+  }
 }
 
 @font-face {
@@ -10484,95 +10507,95 @@ a.text-dark:focus {
 }
 
 .icon-wifi2:before {
-  content: "\E900";
-}
-
-.icon-man-circle:before {
   content: "\E901";
 }
 
-.icon-star-circle:before {
+.icon-man-circle:before {
   content: "\E902";
 }
 
-.icon-info:before {
+.icon-star-circle:before {
   content: "\E903";
 }
 
-.icon-money:before {
+.icon-info:before {
   content: "\E904";
 }
 
-.icon-drop:before {
+.icon-money:before {
   content: "\E905";
 }
 
-.icon-award:before {
+.icon-drop:before {
   content: "\E906";
 }
 
-.icon-fluid:before {
+.icon-award:before {
   content: "\E907";
 }
 
-.icon-question:before {
+.icon-fluid:before {
   content: "\E908";
 }
 
-.icon-addprofile:before {
+.icon-question:before {
   content: "\E909";
 }
 
-.icon-profile:before {
+.icon-addprofile:before {
   content: "\E90A";
 }
 
-.icon-lock:before {
+.icon-profile:before {
   content: "\E90B";
 }
 
-.icon-screen:before {
+.icon-lock:before {
   content: "\E90C";
 }
 
-.icon-award2:before {
+.icon-screen:before {
   content: "\E90D";
 }
 
-.icon-graph:before {
+.icon-award2:before {
   content: "\E90E";
 }
 
-.icon-robot:before {
+.icon-graph:before {
   content: "\E90F";
 }
 
-.icon-business:before {
+.icon-robot:before {
   content: "\E910";
 }
 
-.icon-wifi:before {
+.icon-business:before {
   content: "\E911";
 }
 
-.icon-cashdown:before {
+.icon-wifi:before {
   content: "\E912";
 }
 
-.icon-star:before {
+.icon-cashdown:before {
   content: "\E913";
 }
 
-.icon-money2:before {
+.icon-star:before {
   content: "\E914";
 }
 
-.icon-globe:before {
+.icon-money2:before {
   content: "\E915";
 }
 
-.icon-man:before {
+.icon-globe:before {
   content: "\E916";
+}
+
+.icon-man:before {
+  content: "\E917";
 }
 
 html,
@@ -10590,20 +10613,6 @@ body .page-title h1 {
   color: #ffffff;
   font-family: "Raleway-SemiBold";
   font-size: 3.5rem;
-}
-
-.nav-title-image span {
-  font-size: 3.5rem;
-  color: #ffffff;
-}
-
-.nav-title-image span:hover {
-  color: #3cbdb9;
-}
-
-.footer-title-image span {
-  font-size: 3rem;
-  color: #ffffff;
 }
 
 .card {
@@ -10627,6 +10636,13 @@ body .page-title h1 {
   border: none;
 }
 
+.card .card-body .liquidity-img,
+.card .card-body .feelflow-img {
+  padding-left: 5rem;
+  padding-right: 5rem;
+  padding-bottom: 5rem;
+}
+
 .card .card-body .card-title {
   color: #1a333f;
   margin-bottom: 0.2em;
@@ -10648,6 +10664,10 @@ body .page-title h1 {
   font-family: "Muli-Bold";
 }
 
+.card .card-body .card-text .contact-page-form {
+  width: 40%;
+}
+
 .card .card-body .info-card .icon {
   color: #77c7c5;
   font-size: 2.5em;
@@ -10663,8 +10683,10 @@ body .page-title h1 {
           box-shadow: none;
 }
 
-.info-block .pull-up-card .icon {
-  font-size: 2.5em;
+.info-block .card p {
+  font-size: 1.05em;
+  padding-left: 6rem;
+  padding-right: 6rem;
 }
 
 .mm-button {
@@ -10872,7 +10894,7 @@ body .page-title h1 {
 
 .home-login-block .home-page-title h1 {
   color: #ffffff;
-  font-size: 3.9rem;
+  font-size: 3.4rem;
   margin-top: -0.1em;
   font-family: "Raleway-SemiBold";
 }
@@ -11032,6 +11054,10 @@ body .page-title h1 {
   *overflow: hidden;
 }
 
+.signup-block {
+  margin-top: 6em;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
@@ -11060,95 +11086,95 @@ body .page-title h1 {
 }
 
 .icon-wifi2:before {
-  content: "\E900";
-}
-
-.icon-man-circle:before {
   content: "\E901";
 }
 
-.icon-star-circle:before {
+.icon-man-circle:before {
   content: "\E902";
 }
 
-.icon-info:before {
+.icon-star-circle:before {
   content: "\E903";
 }
 
-.icon-money:before {
+.icon-info:before {
   content: "\E904";
 }
 
-.icon-drop:before {
+.icon-money:before {
   content: "\E905";
 }
 
-.icon-award:before {
+.icon-drop:before {
   content: "\E906";
 }
 
-.icon-fluid:before {
+.icon-award:before {
   content: "\E907";
 }
 
-.icon-question:before {
+.icon-fluid:before {
   content: "\E908";
 }
 
-.icon-addprofile:before {
+.icon-question:before {
   content: "\E909";
 }
 
-.icon-profile:before {
+.icon-addprofile:before {
   content: "\E90A";
 }
 
-.icon-lock:before {
+.icon-profile:before {
   content: "\E90B";
 }
 
-.icon-screen:before {
+.icon-lock:before {
   content: "\E90C";
 }
 
-.icon-award2:before {
+.icon-screen:before {
   content: "\E90D";
 }
 
-.icon-graph:before {
+.icon-award2:before {
   content: "\E90E";
 }
 
-.icon-robot:before {
+.icon-graph:before {
   content: "\E90F";
 }
 
-.icon-business:before {
+.icon-robot:before {
   content: "\E910";
 }
 
-.icon-wifi:before {
+.icon-business:before {
   content: "\E911";
 }
 
-.icon-cashdown:before {
+.icon-wifi:before {
   content: "\E912";
 }
 
-.icon-star:before {
+.icon-cashdown:before {
   content: "\E913";
 }
 
-.icon-money2:before {
+.icon-star:before {
   content: "\E914";
 }
 
-.icon-globe:before {
+.icon-money2:before {
   content: "\E915";
 }
 
-.icon-man:before {
+.icon-globe:before {
   content: "\E916";
+}
+
+.icon-man:before {
+  content: "\E917";
 }
 
 #mainNav {
@@ -11162,7 +11188,21 @@ body .page-title h1 {
   font-weight: bold;
 }
 
+#mainNav a:hover {
+  color: #3cbdb9;
+}
+
+.nav-title-image span {
+  font-size: 3.5rem;
+  color: #ffffff;
+}
+
+.nav-title-image span:hover {
+  color: #3cbdb9;
+}
+
 #main-footer {
+  height: 100%;
   background-color: #000000;
 }
 
@@ -11170,123 +11210,119 @@ body .page-title h1 {
   color: #ffffff;
 }
 
+.footer-title-image span {
+  font-size: 3rem;
+  color: #ffffff;
+}
+
 /*
  *	Slide Cards
  */
 
-.pull-up-card {
-  height: 150px;
-}
-
-.pull-up-card .card {
-  /* [data-slide-content] {
-			display: none;
-			position: absolute;
-			bottom: 0px;
-		} */
-}
-
-.pull-up-card .card .card-body {
-  height: 150px;
+.flip-card-group .card {
+  background-color: transparent !important;
   color: #ffffff;
-  background-color: inherit;
+  font-family: "Muli-Bold";
 }
 
-.pull-up-card .card .card-body .card-title {
-  color: #ffffff;
-}
-
-.pull-up-card .card .card-screen {
-  background-color: #97d5d7;
-}
-
-.pull-up-card .card .card-award {
-  background-color: #3cbdb9;
-}
-
-.pull-up-card .card .card-graph {
-  background-color: #269a9b;
-}
-
-.pull-up-card .card .card-robot {
+.flip-card-group .card .card-screen {
   background-color: #1c7c74;
 }
 
-[data-slide-block] {
-  position: relative;
-  height: 150px;
-  overflow: hidden;
+.flip-card-group .card .card-award {
+  background-color: #3cbdb9;
 }
 
-[data-slide-block] > [data-slide-title] {
-  width: 100%;
-  background: #fff;
-  position: absolute;
-  height: 150px;
-  top: 0px;
-  margin-top: 0px;
+.flip-card-group .card .card-award .back-title {
+  padding-top: 1.7em;
 }
 
-[data-slide-block] > [data-slide-content] {
-  width: 100%;
-  background: #fff;
-  position: absolute;
-  height: 150px;
-  bottom: 0px;
-  margin-bottom: -150px;
+.flip-card-group .card .card-graph {
+  background-color: #269a9b;
+}
+
+.flip-card-group .card .card-graph .back-title {
+  padding-top: 0.7em;
+}
+
+.flip-card-group .card .card-robot {
+  background-color: #1c7c74;
+}
+
+.flip-card-group .card .card-robot .back-title {
+  padding-top: 1em;
+}
+
+.flip-card-group .card .icon {
+  font-size: 2.5em;
 }
 
 /*
- *	CSS 3 flip prototype 
+ *  Card Flip transition 
  */
 
-/* .three-d {
-    perspective: 200px;
-    transition: all .07s linear;
-    position: relative;
-    cursor: pointer;
-}
-//complete the animation!
-.three-d:hover .three-d-box, 
-.three-d:focus .three-d-box {
-    transform: translateZ(-25px) rotateX(90deg);
+/* entire container, keeps perspective */
+
+.flip-container {
+  -webkit-perspective: 100em;
+          perspective: 100em;
 }
 
-.three-d-box {
-    transition: all .3s ease-out;
-    transform: translatez(-25px);
-    transform-style: preserve-3d;
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
+/* flip the pane when hovered */
+
+.flip-container:hover .flipper,
+.flip-container.hover .flipper {
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
 }
+
+.flip-container,
+.front,
+.back {
+  width: 100%;
+  height: 150px;
+}
+
+/* flip speed goes here */
+
+.flipper {
+  -webkit-transition: 0.6s;
+  transition: 0.6s;
+  -webkit-transform-style: preserve-3d;
+          transform-style: preserve-3d;
+  position: relative;
+}
+
+/* hide back of pane during swap */
+
+.front,
+.back {
+  -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* front pane, placed above back */
+
 .front {
-    transform: rotatex(0deg) translatez(25px);
+  z-index: 2;
+  /* for firefox 31 */
+  -webkit-transform: rotateY(0deg);
+          transform: rotateY(0deg);
 }
+
+/* back, initially hidden pane */
 
 .back {
-    transform: rotatex(-90deg) translatez(25px);
-    color: #ffe7c4;
+  -webkit-transform: rotateY(180deg);
+          transform: rotateY(180deg);
 }
 
-.front, .back {
-    display: block;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: #fff;
-    padding: 15px 10px;
-    color: #000;
-    border: none;
-    pointer-events: none;
-    box-sizing: border-box;
-} */
+.flip-card-content {
+  background-color: #269a9b;
+}
 
 @font-face {
   font-family: 'Muli-Bold';

@@ -43,7 +43,7 @@
         <div class="push-down"></div>
     </div>
 
-    <div class="site-sub-footer mt-5">
+    <div class="site-sub-footer mt-5 mb-0">
         @yield('sub-footer')
     </div>
     <div class="site-footer mt-0">

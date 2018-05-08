@@ -6,5 +6,20 @@
 	a {
 		color: $mm-white;
 		font-weight: bold;
+
+		&:hover {
+	    	color: $mm-panel-green;
+	  	}
+	}
+}
+
+.nav-title-image {
+	span {
+		font-size: 3.5rem;
+		color: $mm-white;
+
+		&:hover {
+	    	color: $mm-panel-green;
+	  	}
 	}
 }

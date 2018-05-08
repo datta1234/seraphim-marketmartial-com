@@ -1,8 +1,16 @@
 #main-footer {
 	
+	height: 100%;
 	background-color: $mm-footer-black;
 	
 	a {
 		color: $mm-white;
 	}
+}
+
+.footer-title-image {
+	span {
+		font-size: 3rem;
+		color: $mm-white;
+	}	
 }

@@ -59,103 +59,67 @@
     @endif
 </div>
 
-<!-- <div class="three-d">
-    <div class="card-body">
-            <h2>
-                <span class="icon icon-screen"></span>
-            </h2>
-            <h5 class="card-title text-center">
-                All markets on one screen
-            </h5>
-        </div>
-    <div aria-hidden="true" class="card text-center three-d-box">
-        <div class="card-body front">
-            <h2>
-                <span class="icon icon-screen"></span>
-            </h2>
-            <h5 class="card-title text-center">
-                All markets on one screen
-            </h5>
-        </div>
-        <div class="card-body back">
-            <h5 class="card-title text-center">
-                Personalise the trading screen to see all markets that are relevant to you
-            </h5>
-        </div>
-    </div>
-</div> -->
-
 <div class="info-block">
-    <div class="card-group pull-up-card">
-        <div class="card text-center" data-slide-block>
-            <div class="card-screen">
-          <div class="card-body" data-slide-title>
-            <h2><span class="icon icon-screen"></span></h2>
-          
-            <h5 class="card-title text-center">
-                All markets on one screen
-            </h5>
-          </div>
-          <div class="card-body" data-slide-content >
-            <h5 class="card-title text-center pt-3">
-                Personalise the trading screen to see all markets that are relevant to you
-            </h5>
-          </div>
-
-            
-
-          </div>
+    <div class="card-group flip-card-group">
+        <div class="flip-container card text-center" ontouchstart="this.classList.toggle('hover');">
+            <div class="flipper">
+                <div class="front card-screen pt-3">
+                    <h2><span class="icon icon-screen"></span></h2>
+                    <h5 class="front-title text-center">
+                        All markets on one screen
+                    </h5>
+                </div>
+                <div class="back card-screen">
+                    <h5 class="back-title text-center pt-5 pl-2 pr-2">
+                        Personalise the trading screen to see all markets that are relevant to you
+                    </h5>
+                </div>
+            </div>
         </div>
-
-        <div class="card text-center" data-slide-block>
-            <div class="card-award">
-          <div class="card-body" data-slide-title>
-            <h2><span class="icon icon-award2"></span></h2>
-
-            <h5 class="card-title text-center">
-                Get rewarded for market making
-            </h5>
-          </div>
-          <div class="card-body" data-slide-content>
-            <h5 class="card-title text-center">
-                To improve liquidity, initial market makers are incentivised by receiving rebates, irrespective of whether the market maker trades
-            </h5>
-          </div>
-          </div>
+        <div class="flip-container card text-center" ontouchstart="this.classList.toggle('hover');">
+            <div class="flipper">
+                <div class="front card-award pt-3">
+                    <h2><span class="icon icon-award2"></span></h2>
+                    <h5 class="front-title text-center">
+                        Get rewarded for market making
+                    </h5>
+                </div>
+                <div class="back card-award">
+                    <h5 class="back-title text-center pl-2 pr-2">
+                        To improve liquidity, initial market makers are incentivised by receiving rebates, irrespective of whether the market maker trades
+                    </h5>
+                </div>
+            </div>
         </div>
-
-        <div class="card text-center" data-slide-block>
-            <div class="card-graph">
-          <div class="card-body" data-slide-title>
-            <h2><span class="icon icon-graph"></span></h2>
-
-            <h5 class="card-title text-center">
-                Personalised trading stats
-            </h5>
-          </div>
-          <div class="card-body pt-2" data-slide-content>
-            <h5 class="card-title text-center">
-                Sort, filter and view both incomplete (doubles) and completed market trades as well as individual activity stats: trades, markets made, rebates, market share…
-            </h5>
-          </div>
-          </div>
+        <div class="flip-container card text-center" ontouchstart="this.classList.toggle('hover');">
+            <div class="flipper">
+                <div class="front card-graph pt-3">
+                    <h2><span class="icon icon-graph"></span></h2>
+                    <h5 class="front-title text-center">
+                        Personalised trading stats
+                    </h5>
+                </div>
+                <div class="back card-graph">
+                    <h5 class="back-title text-center pl-2 pr-2">
+                        Sort, filter and view both incomplete (doubles) and completed market trades as well as individual activity stats: trades, markets made, rebates, market share…
+                    </h5>
+                </div>
+            </div>
         </div>
-
-        <div class="card text-center" data-slide-block>
-            <div class="card-robot">
-          <div class="card-body" data-slide-title>
-            <h2><span class="icon icon-robot"></span></h2>
-
-            <h5 class="card-title text-center">
-                Automated bookings
-            </h5>
-          </div>
-          <div class="card-body pt-3" data-slide-content>
-            <h5 class="card-title text-center">
-                Upon acceptance of automated confirmations, trades are instantaneously booked to pre-selected trading accounts, removing delays and human error
-            </h5>
-          </div>
-        </div>
+        <div class="flip-container card text-center" ontouchstart="this.classList.toggle('hover');">
+            <div class="flipper">
+                <div class="front card-robot pt-3">
+                    <h2><span class="icon icon-robot"></span></h2>
+                    <h5 class="front-title text-center">
+                        Automated bookings
+                    </h5>
+                </div>
+                <div class="back card-robot">
+                    <h5 class="back-title text-center pl-2 pr-2">
+                        Upon acceptance of automated confirmations, trades are instantaneously booked to pre-selected trading accounts, removing delays and human error
+                    </h5>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -191,7 +155,7 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
-        <img class="img-fluid pb-4 pr-4 pl-4" src="{{asset('img/liquidity.svg')}}">
+        <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v2.svg')}}">
     @endslot
 @endcomponent
 
@@ -215,7 +179,7 @@
                         <li>No broker bias.</li>
                         <li>Instantaneous response times.</li>
                         <li>Automated execution, confirmation and booking.</li>
-                        <li>Personalised Activity Stats.</li>
+                        <li>Personalised activity stats.</li>
                         <li>Record of market trades, including market doubles (incomplete trades).</li>
                         <li>Secure and anonymous trading.</li>
                     </ul>
@@ -237,7 +201,7 @@
     @endslot
     @slot('body')   
         <div class="text-center">
-            <img class="img-fluid justify-content-center pb-4" src="{{asset('img/maintain_flow.svg')}}">
+            <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v2.svg')}}">
         </div>
     @endslot
 @endcomponent
@@ -278,8 +242,11 @@
     @endslot
 @endcomponent
 
+<div class="signup-block text-center">
+    <a class="btn mm-button w-25" href="{{ route('register') }}">Sign up now</a>
+</div>
 {{-- Sign Up Card --}}
-@if (Auth::guest())
+{{--@if (Auth::guest())
     @component('partials.content_card')
         @slot('header')
             <h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
@@ -297,9 +264,9 @@
             </div>
         @endslot
     @endcomponent
-@endif
+@endif --}}
 
-<div class="traders-quote-block mt-5">
+<!-- <div class="traders-quote-block mt-5">
     <div class="text-center d-flex justify-content-center">
         <h1 class="quote-start">“</h1>
         <h1 class="traders-quote">We're traders.<br>It needs to do what we want, without fail.</h1>
@@ -307,7 +274,7 @@
     <div>
         <p class="quote-by text-center">- Francis James CEO</p>
     </div>
-</div>
+</div> -->
 
 @endsection
 
@@ -317,7 +284,7 @@
 <div class="home-sub-footer">
     <div class="container">
         <div class="row pt-3 pb-3">
-            <div class="col col-lg-4 footer-sections">
+            <div class="col col-lg-4 offset-lg-1 footer-sections">
                 <h3>Send us a message</h3>
                 <form action="{{ route('contact') }}" method="POST">
                      {{ csrf_field() }}
@@ -351,7 +318,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col col-lg-4 footer-sections">
+            <!-- <div class="col col-lg-4 footer-sections">
                 <h3>About Market Martial</h3>
                 <p>
                     With as many brokers as there are banks, the question has always stood: How does a broker create edge, or how does a broker provide a service that truly is superior to all the rest?
@@ -359,36 +326,36 @@
                 <p>
                     After 7 years of managing Investec Bank’s Index and Single Stock Options trading books, with the necessary experience and expertise gained in this very niche market, I believe Market Martial is the answer to that question, and more.
                 </p>
-            </div>
-            <div class="col col-lg-4 benefits-block">
+            </div> -->
+            <div class="col col-lg-4 offset-lg-2 benefits-block">
                 <h3>Benefits of using Market Martial</h3>
                 <div class="row">
                     <div class="col col-md-1">
                         <span class="icon icon-money2"></span>
                     </div>
                     <div class="col col col-md-11">
-                        <p class="mb-1">get paid to make markets and trade!</p>
+                        <p class="mb-3">get paid to make markets and trade!</p>
                     </div>
 
                     <div class="col col-md-1">
                         <span class="icon icon-globe"></span>
                     </div>
                     <div class="col col col-md-11">
-                        <p class="mb-1">easy to view markets, from anywhere in the world.</p>
+                        <p class="mb-3">easy to view markets, from anywhere in the world.</p>
                     </div>
 
                     <div class="col col-md-1">
                         <span class="icon icon-graph"></span>
                     </div>
                     <div class="col col col-md-11">
-                        <p class="mb-1">trade stats and market info at your fingertips.</p>
+                        <p class="mb-3">trade stats and market info at your fingertips.</p>
                     </div>
 
                     <div class="col col-md-1">
                         <span class="icon icon-man"></span>
                     </div>
                     <div class="col col col-md-11">
-                        <p class="mb-1">become a game-changer.</p>
+                        <p class="mb-3">become a game-changer.</p>
                     </div>
                 </div>
             </div>
