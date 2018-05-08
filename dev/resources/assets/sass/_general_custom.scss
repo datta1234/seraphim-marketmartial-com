@@ -1,5 +1,6 @@
 @import './_mm_custom_variables';
 @import './_icomoon';
+@import '~bootstrap/scss/bootstrap';
 
 html, body{
     height: 100%;
@@ -269,8 +270,16 @@ body
 
 
 .home-login-block {
-	margin-bottom: 12rem;
-	margin-top: 7rem;
+
+	@media (min-width: 1200px) {
+		margin-bottom: 12em;
+		margin-top: 7em;
+	}
+
+	@media (max-width: 1199px) {
+		margin-bottom: 5em;
+		margin-top: 3em;
+	}
 
 	.home-page-title {
 		display: inline-block;

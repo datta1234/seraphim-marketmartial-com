@@ -10,11 +10,15 @@
 </div>
 
 <div class="home-login-block">
+<div class="row">
+    <div class="col col-lg-9">
     <div class="home-page-title">
         <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
     </div>
+    </div>
     @if (Auth::guest())
-    <div class="home-login float-right">
+    <div class="col col-lg-3">
+    <div class="home-login float-md-right">
         <form method="POST" action="{{ route('login') }}">
              {{ csrf_field() }}
 
@@ -56,7 +60,9 @@
                 </div>
         </form>
     </div>
+    </div>
     @endif
+</div>
 </div>
 
 <div class="info-block">
