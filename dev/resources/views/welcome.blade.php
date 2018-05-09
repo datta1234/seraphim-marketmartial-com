@@ -249,7 +249,7 @@
 @endcomponent
 
 <div class="signup-block text-center">
-    <a class="btn mm-button w-25" href="{{ route('register') }}">Sign up now</a>
+    <a class="btn mm-login-button w-25" href="{{ route('register') }}">Sign up now</a>
 </div>
 {{-- Sign Up Card --}}
 {{--@if (Auth::guest())

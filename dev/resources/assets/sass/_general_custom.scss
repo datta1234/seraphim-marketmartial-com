@@ -40,9 +40,9 @@ body
 		border: none;
 		
 		.liquidity-img, .feelflow-img{
-			padding-left: 5rem;
-			padding-right: 5rem;
-			padding-bottom: 5rem;
+			padding-left: 2.5em;
+			padding-right: 2.5em;
+			padding-bottom: 2.5em;
 		}
 
 		.card-title {
@@ -123,6 +123,12 @@ body
 	    color: $mm-panel;
 	    background-color: darken($mm-white, 10%);
 	  }
+}
+
+a.mm-login-button {
+	font-size: 1.8em;
+	font-weight: bold;
+	box-shadow: 4px 4px 9px -4px #000000;
 }
 
 .mm-footer-button {

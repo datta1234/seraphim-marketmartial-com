@@ -35,7 +35,8 @@ class PageController extends Controller
 
         if( count(Mail::failures()) > 0 ) {
            return redirect()->back()->with('error', 'Failed to send the message');
-        } else {    
+        } else {
+            //@TODO - Check of the errors get logged otherwise log errors
             return redirect()->action('PageController@index')->with('success', 'Contact message has been sent');
         }
     }

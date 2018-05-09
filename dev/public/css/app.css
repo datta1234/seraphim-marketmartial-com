@@ -21035,9 +21035,9 @@ body .page-title h1 {
 
 .card .card-body .liquidity-img,
 .card .card-body .feelflow-img {
-  padding-left: 5rem;
-  padding-right: 5rem;
-  padding-bottom: 5rem;
+  padding-left: 2.5em;
+  padding-right: 2.5em;
+  padding-bottom: 2.5em;
 }
 
 .card .card-body .card-title {
@@ -21116,6 +21116,13 @@ body .page-title h1 {
 .mm-login-button:hover {
   color: #269a9b;
   background-color: #e6e5e5;
+}
+
+a.mm-login-button {
+  font-size: 1.8em;
+  font-weight: bold;
+  -webkit-box-shadow: 4px 4px 9px -4px #000000;
+          box-shadow: 4px 4px 9px -4px #000000;
 }
 
 .mm-footer-button {
@@ -21744,26 +21751,4 @@ body .page-title h1 {
   font-family: 'Roboto-Regular';
   src: url("/fonts/Roboto-Regular.ttf") format("truetype");
 }
-
-/* html {
- font-size: 1rem;
-}
-
-@include media-breakpoint-up(sm) {
- html {
-   font-size: 1.2rem;
- }
-}
-
-@include media-breakpoint-up(md) {
- html {
-   font-size: 1.4rem;
- }
-}
-
-@include media-breakpoint-up(lg) {
- html {
-   font-size: 1.1rem;
- }
-} */
 
