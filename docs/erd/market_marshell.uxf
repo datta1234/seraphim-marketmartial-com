@@ -59,7 +59,7 @@ trade_structure_id:int(11)
 market_status_id: int(11)
 stock_id: int(11)
 derivative_id: int(11)
-user_market_id: int(11)
+chosen_user_market_id: int(11) nullable
 created_at:timestamp
 updated_at:timestamp
 
@@ -77,8 +77,8 @@ updated_at:timestamp
     <panel_attributes>items
 --
 id: int(10)
-item_type_id: int(10)
-name: string(255)
+item_type_id: int(11)
+name: varchar(255)
 created_at:timestamp
 updated_at:timestamp
 </panel_attributes>
@@ -95,8 +95,7 @@ updated_at:timestamp
     <panel_attributes>item_types
 --
 id: int(1)
-item_type_id: int(10)
-validation_rule:string(255)
+validation_rule:varchar(255)
 created_at:timestamp
 updated_at:timestamp
 
@@ -414,12 +413,13 @@ bg=yellow</panel_attributes>
       <x>2208</x>
       <y>1016</y>
       <w>272</w>
-      <h>160</h>
+      <h>176</h>
     </coordinates>
     <panel_attributes>user_markets
 --
 id: int(11)
 user_id:int(11)
+user_market_request_id: int(11)
 user_market_status_id: int(11)
 active_negotiation_id: int(11)
 is_trade_away: tinyint(1)
@@ -1409,15 +1409,15 @@ m2=0..1
     <id>Relation</id>
     <coordinates>
       <x>2304</x>
-      <y>1168</y>
+      <y>1184</y>
       <w>40</w>
-      <h>88</h>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1923,5 +1923,35 @@ layer=1</panel_attributes>
     <panel_attributes>m1=n
 m2=0..1</panel_attributes>
     <additional_attributes>30.0;10.0;120.0;10.0;120.0;460.0;10.0;460.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>416</x>
+      <y>1184</y>
+      <w>120</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Note..
+Stocks and jse suppose to both have foreign id?
+bg=red
+
+layer=2</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>672</x>
+      <y>1416</y>
+      <w>120</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Note..
+market_type_id == trade_structure_groups-&gt;id?
+bg=red
+
+layer=2</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
