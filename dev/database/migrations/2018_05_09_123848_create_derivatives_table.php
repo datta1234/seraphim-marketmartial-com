@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganisationsTable extends Migration
+class CreateDerivativesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,19 @@ class CreateOrganisationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('organisations', function (Blueprint $table) {
+        Schema::create('derivatives', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->boolean('verified');
+            $table->boolean('is_seldom');
+            $table->integer('derivative_type_id')->unsigned();
             $table->text('description');
+            $table->boolean('has_deadline');
+            $table->boolean('has_negotiation');
+            $table->boolean('has_rebate');
             $table->timestamps();
+
+            $table->foreign('derivative_type_id')
+                ->references('id')->on('derivative_types');
         });
     }
 
@@ -29,6 +36,6 @@ class CreateOrganisationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organisations');
+        Schema::dropIfExists('derivatives');
     }
 }

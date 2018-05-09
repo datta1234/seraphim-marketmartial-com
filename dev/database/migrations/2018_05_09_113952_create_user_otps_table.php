@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOrganisationsTable extends Migration
+class CreateUserOtpsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateOrganisationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('organisations', function (Blueprint $table) {
+        Schema::create('user_otps', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->boolean('verified');
-            $table->text('description');
+            $table->integer('user_id')->unsigned();
+            $table->integer('otp')->unsigned();
+            $table->date('exired_at')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')
+                ->references('id')->on('users');
         });
     }
 
@@ -29,6 +32,6 @@ class CreateOrganisationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('organisations');
+        Schema::dropIfExists('user_otps');
     }
 }
