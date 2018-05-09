@@ -48,10 +48,8 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table){
             $table->string('name');
 
-            $table->dropForeign([
-                'role_id', 
-                'organisation_id'
-            ]);
+            $table->dropForeign(['role_id']);
+            $table->dropForeign(['organisation_id']);
 
             $table->dropColumn([
                 'role_id', 
