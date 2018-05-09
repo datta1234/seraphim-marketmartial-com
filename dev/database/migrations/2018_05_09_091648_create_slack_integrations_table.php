@@ -18,7 +18,11 @@ class CreateSlackIntegrationsTable extends Migration
             $table->string('type');
             $table->string('field');
             $table->text('value');
+            $table->integer('organisation_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('organisation_id')
+                ->references('id')->on('organisations');
         });
     }
 

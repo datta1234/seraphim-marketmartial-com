@@ -6,13 +6,14 @@
       <x>720</x>
       <y>1000</y>
       <w>168</w>
-      <h>144</h>
+      <h>160</h>
     </coordinates>
     <panel_attributes>derivatives
 --
 id: int(10)
 title: varchar(255)
 is_seldom: tinyint(2)
+derivative_type_id: int(11)
 description: text
 has_deadline:tiny_int(2) 
 has_negotiation: tiny_int(2)
@@ -197,7 +198,7 @@ layer=1</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
+m2=n</panel_attributes>
     <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
   </element>
   <element>
@@ -696,10 +697,9 @@ layer=0</panel_attributes>
 id: int(11)
 email: varchar(255)
 full_name: varchar(255)
-phone_work: varchar(255)
-phone_cell: varchar(255) nullable
-role_id: int(10)
-organisation_id: int(10)
+phone: varchar(255)
+role_id: int(11)
+organisation_id: int(11)
 active: tinyint(1)
 tc_accepted: tinyint(1)
 password: varchar(255)
@@ -707,7 +707,7 @@ remember_token: varchar(255)
 birthdate: date nullable
 married: tinyint(1) nullable
 children: tinyint(1) nullable
-hobbies: text
+hobbies: text nullable
 created_at: timestamp
 updated_at: timestamp
 deleted_at: timestamp
@@ -761,7 +761,7 @@ layer=1</panel_attributes>
       <w>208</w>
       <h>168</h>
     </coordinates>
-    <panel_attributes>m1=0..1
+    <panel_attributes>m1=1
 m2=0..n</panel_attributes>
     <additional_attributes>240.0;180.0;100.0;180.0;100.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -773,7 +773,7 @@ m2=0..n</panel_attributes>
       <w>208</w>
       <h>264</h>
     </coordinates>
-    <panel_attributes>m1=0..1
+    <panel_attributes>m1=1
 m2=0..n</panel_attributes>
     <additional_attributes>240.0;300.0;110.0;300.0;110.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -838,7 +838,7 @@ m2=0..1</panel_attributes>
       <x>1096</x>
       <y>296</y>
       <w>168</w>
-      <h>104</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>slack_integrations
 --
@@ -862,7 +862,7 @@ bg=light_gray</panel_attributes>
       <w>216</w>
       <h>32</h>
     </coordinates>
-    <panel_attributes>m1=0..n
+    <panel_attributes>m1=n
 m2=0..1</panel_attributes>
     <additional_attributes>10.0;10.0;250.0;10.0</additional_attributes>
   </element>
@@ -988,7 +988,7 @@ layer=1</panel_attributes>
       <w>208</w>
       <h>344</h>
     </coordinates>
-    <panel_attributes>m1=0..1
+    <panel_attributes>m1=1
 m2=0..n</panel_attributes>
     <additional_attributes>240.0;400.0;130.0;400.0;130.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -1000,7 +1000,7 @@ m2=0..n</panel_attributes>
       <w>208</w>
       <h>464</h>
     </coordinates>
-    <panel_attributes>m1=0..1
+    <panel_attributes>m1=1
 m2=0..n</panel_attributes>
     <additional_attributes>240.0;550.0;150.0;550.0;150.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -1020,14 +1020,16 @@ m2=0..1</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>336</x>
-      <y>104</y>
+      <y>88</y>
       <w>168</w>
-      <h>96</h>
+      <h>112</h>
     </coordinates>
     <panel_attributes>user_interests
 --
 id: int(11)
 value: varchar(255)
+interest_id: int(11)
+user_id: int(11)
 created_at: timestamp
 updated_at: timestamp
 
@@ -1042,7 +1044,7 @@ layer=1</panel_attributes>
       <w>208</w>
       <h>576</h>
     </coordinates>
-    <panel_attributes>m1=0..1
+    <panel_attributes>m1=1
 m2=0..n</panel_attributes>
     <additional_attributes>240.0;690.0;170.0;690.0;170.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -1075,7 +1077,7 @@ layer=1</panel_attributes>
       <h>192</h>
     </coordinates>
     <panel_attributes>m1=0..n
-m2=0..1</panel_attributes>
+m2=1</panel_attributes>
     <additional_attributes>10.0;210.0;80.0;210.0;80.0;10.0;30.0;10.0</additional_attributes>
   </element>
   <element>
@@ -1140,7 +1142,7 @@ layer=1</panel_attributes>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
-m2=0..1
+m2=1
 </panel_attributes>
     <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
   </element>
@@ -1155,6 +1157,7 @@ m2=0..1
     <panel_attributes>users_notifications
 --
 id: int(11)
+user_id: int(11)
 data: text
 description: text
 type:  varchar(255)
@@ -1194,7 +1197,7 @@ layer=1</panel_attributes>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-
-m1=0..n
+m1=n
 m2=0..1
 </panel_attributes>
     <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
@@ -1208,8 +1211,8 @@ m2=0..1
       <h>96</h>
     </coordinates>
     <panel_attributes>lt=-
-m1=0..n
-m2=0..1
+m1=0..1
+m2=n
 </panel_attributes>
     <additional_attributes>220.0;90.0;70.0;90.0;70.0;10.0;10.0;10.0</additional_attributes>
   </element>
@@ -1910,8 +1913,8 @@ layer=1</panel_attributes>
       <w>112</w>
       <h>392</h>
     </coordinates>
-    <panel_attributes>m1=0..n
-m2=1</panel_attributes>
+    <panel_attributes>m1=n
+m2=0..1</panel_attributes>
     <additional_attributes>30.0;10.0;120.0;10.0;120.0;460.0;10.0;460.0</additional_attributes>
   </element>
 </diagram>
