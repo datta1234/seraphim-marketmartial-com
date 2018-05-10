@@ -28,8 +28,8 @@
             @include('layouts.elements.navigation')
             
             {{-- Layout --}}
-            <main class="user-content">
-                <div class="container page-body-container mt-3">
+            <main class="container">
+                <div class="page-body-container mt-3">
                     {{--Alerts--}}
                     <div>
                         <div class="toast-holder"></div>
@@ -46,9 +46,8 @@
     <div class="site-sub-footer mt-5 mb-0">
         @yield('sub-footer')
     </div>
-    <div class="site-footer mt-0">
-        @include('layouts.elements.footer')
-    </div>
+    
+    @include('layouts.elements.footer')
     
      <!-- JavaScripts -->
     <script src="{{ asset('js/app.js') }}"></script>

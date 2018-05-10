@@ -1,10 +1,27 @@
 #main-footer {
-	
-	height: 100%;
+
+	position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 	background-color: $mm-footer-black;
 	
+	.footer-links-block {
+		float: right;
+		
+		.footer-link {
+			color: $mm-white;
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;
+		}
+	}
+
 	a {
-		color: $mm-white;
+		text-decoration: none;
+		
+		&:hover, .icon:hover {
+	    	color: $mm-panel-green;
+	  	}
 	}
 }
 
@@ -13,4 +30,28 @@
 		font-size: 3rem;
 		color: $mm-white;
 	}	
+}
+
+.contact-us-clear {
+	@media (min-width: 768px) {
+		margin-bottom: 6.3em;
+	}
+	
+	@media (min-width: 992px) {
+		margin-bottom: 4.5em;
+	}
+}
+
+.email-reset-clear {
+	@media (min-width: 768px) {
+		margin-bottom: 28em;
+	}
+	
+	@media (min-width: 992px) {
+		margin-bottom: 4.6em;
+	}
+
+	@media (min-width: 1400px) {
+		margin-bottom: 26.2em;
+	}
 }

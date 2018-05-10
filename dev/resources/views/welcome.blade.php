@@ -11,13 +11,13 @@
 
 <div class="home-login-block">
 <div class="row">
-    <div class="col col-lg-9">
+    <div class="col col-lg-8">
     <div class="home-page-title">
         <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
     </div>
     </div>
     @if (Auth::guest())
-    <div class="col col-lg-3">
+    <div class="col col-lg-4">
     <div class="home-login float-md-right">
         <form method="POST" action="{{ route('login') }}">
              {{ csrf_field() }}
@@ -76,7 +76,7 @@
                     </h5>
                 </div>
                 <div class="back card-screen">
-                    <h5 class="back-title text-center pt-5 pl-2 pr-2">
+                    <h5 class="back-title text-center pl-2 pr-2">
                         Personalise the trading screen to see all markets that are relevant to you
                     </h5>
                 </div>
@@ -139,12 +139,16 @@
             What does Market Martial do?
         </h2>
         <hr class="title-decorator mm-info">
-        <p class="card-text text-center">
-            Market Martial has been custom built exclusively for inter-bank derivatives traders with the intention of providing a seamless transition to an efficient electronic platform.
-        </p>
-        <p class="card-text text-center">
-            Market Martial moves the focus away from the broker and places the market maker back at centre stage. Instead of removing the broker, Market Martial keeps the broker to maintain accountability, drive markets and provide specialist support where necessary, but lets the machine streamline a fair and objective market making process.
-        </p>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <p class="card-text text-center">
+                    Market Martial has been custom built exclusively for inter-bank derivatives traders with the intention of providing a seamless transition to an efficient electronic platform.
+                </p>
+                <p class="card-text text-center">
+                    Market Martial moves the focus away from the broker and places the market maker back at centre stage. Instead of removing the broker, Market Martial keeps the broker to maintain accountability, drive markets and provide specialist support where necessary, but lets the machine streamline a fair and objective market making process.
+                </p>    
+            </div>
+        </div>
       </div>
     </div>
 </div>
@@ -161,7 +165,11 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
-        <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v2.svg')}}">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-9 col-md-12">
+                <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v2.svg')}}">
+            </div>
+        </div>
     @endslot
 @endcomponent
 
@@ -183,7 +191,6 @@
                     <ul class="elec-eff-card-list">
                         <li>All markets in one place, on one screen.</li>
                         <li>No broker bias.</li>
-                        <li>Instantaneous response times.</li>
                         <li>Automated execution, confirmation and booking.</li>
                         <li>Personalised activity stats.</li>
                         <li>Record of market trades, including market doubles (incomplete trades).</li>
@@ -206,8 +213,10 @@
         <hr class="title-decorator mm-info">
     @endslot
     @slot('body')   
-        <div class="text-center">
-            <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v2.svg')}}">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-9 col-md-12">
+                <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v2.svg')}}">
+            </div>
         </div>
     @endslot
 @endcomponent
@@ -224,9 +233,13 @@
         <hr class="title-decorator mm-info">
     @endslot
     @slot('body')
-        <p class="card-text text-center">
-            International volatility traders negotiate trades by quoting premium, while South African volatility traders quote implied volatility. Market Martial simultaneously displays both, catering to respective traders’ market conventions. 
-        </p>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <p class="card-text text-center">
+                    International volatility traders negotiate trades by quoting premium, while South African volatility traders quote implied volatility. Market Martial simultaneously displays both, catering to respective traders’ market conventions. 
+                </p>
+            </div>
+        </div>
     @endslot
 @endcomponent
 
@@ -242,14 +255,20 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
-        <p class="card-text text-center">
-            In order to maintain objective, client-centric and user-friendly functionality Market Martial not only accepts comments and critiques, we encourage them. Please let us know how we can further improve the platform and serve you better.
-        </p>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-10">
+                <p class="card-text text-center">
+                    In order to maintain objective, client-centric and user-friendly functionality Market Martial not only accepts comments and critiques, we encourage them. Please let us know how we can further improve the platform and serve you better.
+                </p>
+            </div>
+        </div>
     @endslot
 @endcomponent
 
-<div class="signup-block text-center">
-    <a class="btn mm-login-button w-25" href="{{ route('register') }}">Sign up now</a>
+<div class="row justify-content-md-center">
+    <div class="signup-block col col-lg-4 col-md-6  col-sm-12">
+        <a class="btn mm-login-button w-100" href="{{ route('register') }}">Sign up now</a>
+    </div>
 </div>
 {{-- Sign Up Card --}}
 {{--@if (Auth::guest())
@@ -289,8 +308,8 @@
 
 <div class="home-sub-footer">
     <div class="container">
-        <div class="row pt-3 pb-3">
-            <div class="col col-lg-4 offset-lg-1 footer-sections">
+        <div class="row">
+            <div class="col col-12 col-md-6 col-lg-4 offset-lg-1 footer-sections pt-3 pb-3">
                 <h3>Send us a message</h3>
                 <form action="{{ route('contact') }}" method="POST">
                      {{ csrf_field() }}
@@ -333,34 +352,34 @@
                     After 7 years of managing Investec Bank’s Index and Single Stock Options trading books, with the necessary experience and expertise gained in this very niche market, I believe Market Martial is the answer to that question, and more.
                 </p>
             </div> -->
-            <div class="col col-lg-4 offset-lg-2 benefits-block">
+            <div class="col col-12 col-md-6 col-lg-5 offset-lg-2 benefits-block pt-3 pb-3">
                 <h3>Benefits of using Market Martial</h3>
                 <div class="row">
-                    <div class="col col-md-1">
+                    <div class="col col-2 col-lg-1 col-md-2">
                         <span class="icon icon-money2"></span>
                     </div>
-                    <div class="col col col-md-11">
+                    <div class="col col-10 col-lg-11 col-md-10">
                         <p class="mb-3">get paid to make markets and trade!</p>
                     </div>
 
-                    <div class="col col-md-1">
+                    <div class="col col-2 col-lg-1 col-md-2">
                         <span class="icon icon-globe"></span>
                     </div>
-                    <div class="col col col-md-11">
+                    <div class="col col-10 col-lg-11 col-md-10">
                         <p class="mb-3">easy to view markets, from anywhere in the world.</p>
                     </div>
 
-                    <div class="col col-md-1">
+                    <div class="col col-2 col-lg-1 col-md-2">
                         <span class="icon icon-graph"></span>
                     </div>
-                    <div class="col col col-md-11">
+                    <div class="col col-10 col-lg-11 col-md-10">
                         <p class="mb-3">trade stats and market info at your fingertips.</p>
                     </div>
 
-                    <div class="col col-md-1">
+                    <div class="col col-2 col-lg-1 col-md-2">
                         <span class="icon icon-man"></span>
                     </div>
-                    <div class="col col col-md-11">
+                    <div class="col col-10 col-lg-11 col-md-10">
                         <p class="mb-3">become a game-changer.</p>
                     </div>
                 </div>

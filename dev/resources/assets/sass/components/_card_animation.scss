@@ -8,29 +8,77 @@
         background-color: transparent !important;
         color: $mm-white;
         font-family: $mm-font-sub-head;
+        
+        .back-title {
+            font-size: 1.125rem;
+
+            @media (min-width: 768px) {
+                font-size: 0.85rem;
+            }
+
+            @media (min-width: 992px) {
+                font-size: 1.125rem;
+            }
+        }
 
 		.card-screen {
 			background-color: $mm-panel-dark-green;
+
+            .back-title {
+                padding-top: 2.2em;
+                
+                @media (min-width: 768px) {
+                    padding-top: 2.8em;
+                }
+
+                @media (min-width: 1400px) {
+                    padding-top: 2.2em;
+                }
+            }
 		}
         .card-award {
 			background-color: $mm-panel-green;
 
             .back-title {
                 padding-top: 1.7em;
+                
+                @media (min-width: 768px) {
+                    padding-top: 1.1em;
+                }
+
+                @media (min-width: 1400px) {
+                    padding-top: 0.7em;
+                }
             }
         }
         .card-graph {
             background-color: $mm-panel;
 
             .back-title {
-                padding-top: 0.7em;
+                padding-top: 1.2em;
+                
+                @media (min-width: 768px) {
+                    padding-top: 0.8em;
+                }
+
+                @media (min-width: 1400px) {
+                    padding-top: 0.7em;
+                }
             }
 		}
 		.card-robot {
 			background-color: $mm-panel-dark-green;
 
             .back-title {
-                padding-top: 1em;
+                padding-top: 1.1em;
+                
+                @media (min-width: 768px) {
+                    padding-top: 0.8em;
+                }
+
+                @media (min-width: 1400px) {
+                    padding-top: 0.5em;
+                }
             }
 		}
 

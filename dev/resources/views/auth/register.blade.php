@@ -24,9 +24,9 @@
                          {{ csrf_field() }}
                         
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 offset-1 col-form-label text-md-right">E-Mail Address</label>
+                            <label for="email" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">E-Mail Address</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your email here...">
 
                                 @if ($errors->has('email'))
@@ -38,9 +38,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Full Name</label>
+                            <label for="name" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Full Name</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required placeholder="Enter your full name here...">
 
                                 @if ($errors->has('name'))
@@ -52,9 +52,9 @@
                         </div>
                         {{-- NEEDS CHANGE --}}
                         <div class="form-group row">
-                            <label for="phone" class="col-md-4 offset-1 col-form-label text-md-right">Phone</label>
+                            <label for="phone" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Phone</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}" required placeholder="Enter your work phone number here...">
 
                                 @if ($errors->has('phone'))
@@ -66,9 +66,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Select Role</label>
+                            <label for="role" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Select Role</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <div class="form-group">
                                   <select value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="role" required>
                                     <option value="trader">I am a Trader</option>
@@ -85,9 +85,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-md-4 offset-1 col-form-label text-md-right">Markets that you will be trading</label>
+                            <label for="name" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
 
-                            <div class="form-group col-md-4 mt-2">
+                            <div class="form-group col-sm-12 col-md-4 mt-2">
                                 <div class="checkbox largeCheckBox">
                                     <label>
                                         <input class="" name="index" type="checkbox" value="index"> Index Option
@@ -114,9 +114,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="role" class="col-md-4 offset-1 col-form-label text-md-right">Your Organisation</label>
+                            <label for="role" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <div class="form-group">
                                   <select value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="organisation" required>
                                     <option value="trader">Bank 1</option>
@@ -140,7 +140,7 @@
                                     </label>
                                 </div>
 
-                                <input type="hidden" id="new_organistation" type="text" class="form-control{{ $errors->has('new_organistation') ? ' is-invalid' : '' }}" name="new_organistation" value="{{ old('new_organistation') }}" placeholder="Enter your organisation here...">
+                                <input type="hidden" id="new_organistation" type="text" class="form-control{{ $errors->has('new_organistation') ? ' is-invalid' : '' }}" name="new_organistation" value="{{ old('new_organistation') }}" placeholder="Enter your organisation here..." disabled>
                                 
                                 @if ($errors->has('new_organistation'))
                                     <span class="invalid-feedback">
@@ -152,9 +152,9 @@
                         
                         {{-- NEEDS CHANGE END --}}
                         <div class="form-group row">
-                            <label for="password" class="col-md-4 offset-1 col-form-label text-md-right">{{ __('Password') }}</label>
+                            <label for="password" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">{{ __('Password') }}</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Must be at least 8 characters long">
 
                                 @if ($errors->has('password'))
@@ -166,20 +166,20 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password-confirm" class="col-md-4 offset-1 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                            <label for="password-confirm" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
-                            <div class="col-md-4">
+                            <div class="col-sm-12 col-md-4">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required placeholder="Repeat your password here...">
                             </div>
                         </div>
                         
                         <div class="form-group row mt-5">
-                            <div class="col-md-4 offset-md-4">
+                            <div class="col col-sm-12 col-md-6 offset-md-3 col-lg-5 offset-lg-4 col-xl-4 offset-xl-4">
                                 <div class="row register-info-group" data-toggle="tooltip" data-trigger="click" data-placement="top" title="Security is extremely important to us and our users. We have therefore added a verification process to ensure that each user is legitimate. We always strive to achieve a fast turn-around time, so you should expect to hear back from us shortly.">
-                                    <div class="col col-md-1">
+                                    <div class="col-12 col-md-2 col-xl-1 text-center">
                                         <span class="icon icon-info"></span>
                                     </div>
-                                    <div class="col col-md-11">
+                                    <div class="col-12 col-md-10 col-xl-11 register-info-text">
                                         <p class="mb-1">Why do I need to wait for verification?</p>
                                     </div>
                                 </div>
@@ -187,9 +187,11 @@
                         </div>
 
                         <div class="form-group row mb-0">
-                            <div class="col-md-12 ">
-                                <a class="btn mm-button float-right ml-2" href="{{ url('/') }}">Cancel</a>
-                                <button type="submit" class="btn mm-button float-right">Sign Me Up</button>
+                            <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
+                                <button type="submit" class="btn mm-button float-right w-100">Sign Me Up</button>
+                            </div>
+                            <div class="col-sm-12 col-md-3 col-xl-2 mt-2">
+                                <a class="btn mm-button float-right ml-2 w-100" href="{{ url('/') }}">Cancel</a>
                             </div>
                         </div>
                     </form>

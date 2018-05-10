@@ -35,7 +35,7 @@
                 Although the intention may have been simple, building a platform that caters to the many intricacies required to make a relatively complex market more efficient, has been anything but. We can only hope that our hard work and commitment has resulted in a product that you will find as useful as it is intended to be.
             </p>
             <p class="card-text text-justify">
-                With you, the derivatives traders, being the core focus of the Market Martial platform, we encourage you to provide us with your comments and critiques tat could further improve your trading experience.
+                With you, the derivatives traders, being the core focus of the Market Martial platform, we encourage you to provide us with your comments and critiques that could further improve your trading experience.
             </p>
             <div class="float-left">
                 <img src="http://via.placeholder.com/200x75">

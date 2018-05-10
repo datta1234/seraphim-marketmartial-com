@@ -39,11 +39,11 @@ body
 		background-color: $mm-background-light;
 		border: none;
 		
-		.liquidity-img, .feelflow-img{
+		/* .liquidity-img, .feelflow-img{
 			padding-left: 2.5em;
 			padding-right: 2.5em;
 			padding-bottom: 2.5em;
-		}
+		} */
 
 		.card-title {
 			color: $mm-heading-dark;
@@ -56,8 +56,16 @@ body
 
 			.elec-eff-card-list {
 				color: $mm-panel;
-				font-size: 1.6em;
-     			font-weight: bold;
+				
+				font-size: 1.2em;
+				
+				@media (min-width: 992px) {
+					font-size: 1.6em;
+				}
+
+				@media (min-width: 768px) {
+					font-size: 1.4em;
+				}
 			}
 
 			.why-us-card {
@@ -67,8 +75,16 @@ body
 				}
 			}
 
-			.contact-page-form {
-				width: 40%;
+			.page-form {
+				width: 100%;
+
+				@media (min-width: 768px) {
+					width: 60%;
+				}
+
+				@media (min-width: 992px) {
+					width: 40%;
+				}
 			}
 		}
 
@@ -89,8 +105,8 @@ body
 
 		p {
 			font-size: 1.05em;
-			padding-left: 6rem;
-			padding-right: 6rem;
+		/* 	padding-left: 6rem;
+			padding-right: 6rem; */
 		}
 	}
 }
@@ -277,14 +293,12 @@ a.mm-login-button {
 
 .home-login-block {
 
-	@media (min-width: 1200px) {
-		margin-bottom: 12em;
-		margin-top: 7em;
-	}
+	margin-bottom: 5em;
+	margin-top: 3em;
 
-	@media (max-width: 1199px) {
-		margin-bottom: 5em;
-		margin-top: 3em;
+	@media (min-width: 1400px) {
+		margin-bottom: 15em;
+		margin-top: 15em;
 	}
 
 	.home-page-title {
@@ -292,18 +306,26 @@ a.mm-login-button {
 
 		h1 {
 			color: $mm-white;
-			font-size: 3.4rem;
-			margin-top: -0.1em;
+			font-size: 2.2rem;
 			font-family: $mm-font-head;
+			
+			@media (min-width: 576px) {
+				font-size: 2.4rem;
+			}
+
+			@media (min-width: 1200px) {
+				font-size: 3.4rem;
+				margin-top: -0.1em;
+			}
 		}
 	}
 
 	.home-login {
 		display: inline-block;
-		width: 23em;
 
 		input, a {
 			font-family: $mm-font-body;
+
 			font-size: 1.1rem;
 		}
 	}
@@ -370,33 +392,20 @@ a.mm-login-button {
 	}
 
 	.footer-sections {
-		padding-left: 2em;
-		padding-right: 2em;
 
 		textarea {
 			height: 9em;
 		}
 
 		.mm-footer-button {
-			width: 60%;
+			width: 100%;
+			
+			@media (min-width: 768px) {
+				width: 60%;
+			}
+
 			font-family: $mm-font-sub-head;
 		}
-	}
-}
-
-#main-footer {
-	height: 4em;
-
-	.navbar-header {
-		display: inline-block;
-	}
-	.footer-nav {
-		display: inline-block;
-
-		a {
-			font-family: $mm-font-sub-head;
-			font-size: 0.74rem;;
-		}	
 	}
 }
 
@@ -427,6 +436,7 @@ a.mm-login-button {
 .register-info-group {
 	color: $mm-panel;
 	font-size: 1em;
+	cursor: pointer;
 	
 	p, span {
 		display: inline-block;
@@ -438,10 +448,12 @@ a.mm-login-button {
 }
 
 .largeCheckBox {
+
 	label {
 		display: block;
 		padding-left: 0.8em;
 		text-indent: -0.8em;
+		cursor: pointer;
 	}
 	input {
 		width: 1.2em;
@@ -452,9 +464,18 @@ a.mm-login-button {
 		position: relative;
 		top: -0.2em;
 		*overflow: hidden;
+		cursor: pointer;
 	}
 }
 
 .signup-block {
 	margin-top: 6em;
+	margin-bottom: 3em;
+}
+
+.register-info-text {
+	
+	@media (max-width: 576px) {
+		text-align: center;
+	}
 }

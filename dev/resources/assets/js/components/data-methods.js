@@ -31,10 +31,16 @@ $( document ).ready(function() {
    * Register - Toggle organisation input state
    */
   $( "[data-not-listed-check]" ).on("change", function( event ) {
-    if ($("#new_organistation").attr("type") == "hidden") {
-      $("#new_organistation").attr("type", "");
+    var org_check = $("#new_organistation");
+    var org_drop = $("#organisation");
+    if (org_check.attr("type") == "hidden") {
+      org_drop.prop( "disabled", true );
+      org_check.prop( "disabled", false );
+      org_check.attr("type", "");
     } else {
-      $("#new_organistation").attr("type", "hidden");
+      org_check.attr("type", "hidden");
+      org_check.prop( "disabled", true );
+      org_drop.prop( "disabled", false );
     }
   });
 
