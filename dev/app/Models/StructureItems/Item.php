@@ -29,6 +29,7 @@ class Item extends Model
      */
     protected $fillable = [
         'title',
+        'trade_structure_group_id'
     ];
 
     /**

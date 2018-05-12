@@ -12,19 +12,30 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-    	// data required for the system to be able to run
+    	 /**
+         * Required seed to be ran so that the application can operate
+         *
+         */
         $this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(TradeStructureTableSeeder::class);
         $this->call(MarketConditionCategoryTableSeeder::class);
         $this->call(MarketConditionTableSeeder::class);
         $this->call(MarketTypeTableSeeder::class);
         $this->call(MarketTableSeeder::class);
         $this->call(StockTableSeeder::class);
         $this->call(SafexExpirationDateTableSeeder::class);
+        $this->call(UserNotificationTypeTableSeeder::class);
 
-        
-        //start dummy data import
+        //enable selection of trade structures
+        $this->call(ItemTypeSeeder::class);
+        $this->call(TradeStructureTableSeeder::class);
+
+
+    
+         /**
+         * Start dummy data remove once going live
+         *
+         */
         $this->call(OrganisationTableSeeder::class);
 
     }

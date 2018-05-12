@@ -48,4 +48,28 @@ class TradeStructure extends Model
             'App\Models\MarketRequest\UserMarketRequest','trade_structure_id');
     }
 
+    public static function saveFullStructure($structure)
+    {
+         $groups = $structure['trade_structure_group'];
+         unset($structure['trade_structure_group']);
+         $tradeStucture = self::create($structure);
+
+         foreach ($groups as $group) 
+         {  
+              $group['trade_structure_id'] = $tradeStucture->id;//place the id 
+              $items = $group['items'];
+              unset($group['items']);
+              $structureGroup = TradeStructureGroup::create($group);
+
+              foreach ($items as $item) 
+              {
+                  $item['trade_structure_group_id'] = $structureGroup->id;//place the id 
+                  $structureGroup->items[] = Item::create($item);
+              }
+             $tradeStucture->tradeStructureGroups[] = $structureGroup;
+
+         }
+         return $tradeStucture;
+    }   
+
 }
