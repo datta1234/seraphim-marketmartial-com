@@ -16,15 +16,15 @@ class CreateUserMarketRequestTradablesTable extends Migration
         Schema::create('user_market_request_tradables', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_market_request_id')->unsigned();
-            $table->integer('derivative_id')->unsigned()->nullable();
+            $table->integer('market_id')->unsigned()->nullable();
             $table->integer('stock_id')->unsigned()->nullable();
             $table->timestamps();
 
             $table->foreign('user_market_request_id')
                 ->references('id')->on('user_market_requests');
 
-            $table->foreign('derivative_id')
-                ->references('id')->on('derivatives');
+            $table->foreign('market_id')
+                ->references('id')->on('markets');
 
             $table->foreign('stock_id')
                 ->references('id')->on('stocks');

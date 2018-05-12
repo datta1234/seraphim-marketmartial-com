@@ -17,7 +17,7 @@ class UpdateUsersTable extends Migration
             $table->dropColumn(['name']);
 
             $table->integer('role_id')->unsigned();
-            $table->integer('organisation_id')->unsigned();
+            $table->integer('organisation_id')->nullable()->unsigned();
             
             $table->string('full_name');
             $table->string('cell_phone');

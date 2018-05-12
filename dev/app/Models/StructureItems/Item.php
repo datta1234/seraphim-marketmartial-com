@@ -32,7 +32,7 @@ class Item extends Model
     ];
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function ItemTypes()
@@ -41,7 +41,7 @@ class Item extends Model
     }
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function tradeStructureGroups()

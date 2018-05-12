@@ -20,7 +20,7 @@ class CreateBookedTradesTable extends Migration
             $table->integer('booked_trade_status_id')->unsigned();
             $table->integer('traiding_account_id')->unsigned();
             $table->integer('trade_confirmation_id')->unsigned()->nullable();
-            $table->integer('derivative_id')->unsigned()->nullable();
+            $table->integer('market_id')->unsigned()->nullable();
             $table->integer('stock_id')->unsigned()->nullable();
             
             $table->double('amount', 11, 2);
@@ -40,8 +40,8 @@ class CreateBookedTradesTable extends Migration
             $table->foreign('trade_confirmation_id')
                 ->references('id')->on('trade_confirmations');
 
-            $table->foreign('derivative_id')
-                ->references('id')->on('derivatives');
+            $table->foreign('market_id')
+                ->references('id')->on('markets');
 
             $table->foreign('stock_id')
                 ->references('id')->on('stocks');

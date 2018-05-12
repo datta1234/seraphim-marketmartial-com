@@ -4,12 +4,12 @@ namespace App\Models\StructureItems;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Derivative extends Model
+class Market extends Model
 {
 	/**
 	 * @property integer $id
 	 * @property string $title
-	 * @property integer $derivative_type_id
+	 * @property integer $market_type_id
 	 * @property text $description
 	 * @property boolean $is_seldom
 	 * @property boolean $has_deadline
@@ -24,7 +24,7 @@ class Derivative extends Model
      *
      * @var string
      */
-    protected $table = 'derivatives';
+    protected $table = 'markets';
 
     /**
      * The attributes that are mass assignable.
@@ -46,16 +46,16 @@ class Derivative extends Model
     */
     public function jseIntergrations()
     {
-        return $this->belongsToMany('App\Models\ApiIntegration\JseIntergration', 'derivative_jse_intergration', 'jse_intergration_id', 'derivative_id');
+        return $this->belongsToMany('App\Models\ApiIntegration\JseIntergration', 'market_jse_intergration', 'jse_intergration_id', 'market_id');
     }
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivativeTypes()
+    public function marketTypes()
     {
-        return $this->belongsTo('App\Models\StructureItems\DerivativeType', 'derivative_type_id');
+        return $this->belongsTo('App\Models\StructureItems\MarketType', 'market_type_id');
     }
 
     /**
@@ -64,7 +64,7 @@ class Derivative extends Model
     */
     public function tradingAccounts()
     {
-        return $this->hasMany('App\Models\UserManagement\TradingAccount', 'derivative_id');
+        return $this->hasMany('App\Models\UserManagement\TradingAccount', 'market_id');
     }
 
     /**
@@ -73,7 +73,7 @@ class Derivative extends Model
     */
     public function userInterests()
     {
-        return $this->belongsToMany('App\Models\UserManagement\User', 'user_derivative_interests', 'user_id', 'derivative_id');
+        return $this->belongsToMany('App\Models\UserManagement\User', 'user_market_interests', 'user_id', 'market_id');
     }
 
     /**
@@ -82,7 +82,7 @@ class Derivative extends Model
     */
     public function userWatched()
     {
-        return $this->belongsToMany('App\Models\UserManagement\User', 'user_derivative_watched', 'user_id', 'derivative_id');
+        return $this->belongsToMany('App\Models\UserManagement\User', 'user_market_watched', 'user_id', 'market_id');
     }
 
     /**
@@ -91,7 +91,7 @@ class Derivative extends Model
     */
     public function userMarketRequestTradables()
     {
-        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','derivative_id');
+        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','market_id');
     }
 
     /**
@@ -100,7 +100,7 @@ class Derivative extends Model
     */
     public function tradeConfirmations()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','derivative_id');
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','market_id');
     }
 
     /**
@@ -109,6 +109,6 @@ class Derivative extends Model
     */
     public function bookedTrades()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','derivative_id');
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','market_id');
     }
 }

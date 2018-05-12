@@ -26,12 +26,12 @@ class Stock extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'code',
+    public $fillable = [
+        'code',
     ];
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function jseIntergrations()

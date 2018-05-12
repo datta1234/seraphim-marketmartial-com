@@ -4,7 +4,7 @@ namespace App\Models\StructureItems;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DerivativeType extends Model
+class MarketType extends Model
 {
 	/**
 	 * @property integer $id
@@ -18,7 +18,7 @@ class DerivativeType extends Model
      *
      * @var string
      */
-    protected $table = 'derivative_types';
+    protected $table = 'market_types';
 
     /**
      * The attributes that are mass assignable.
@@ -30,11 +30,11 @@ class DerivativeType extends Model
     ];
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivatives()
+    public function markets()
     {
-        return $this->hasMany('App\Models\StructureItems\Derivative', 'derivative_type_id');
+        return $this->hasMany('App\Models\StructureItems\Market', 'market_type_id');
     }
 }

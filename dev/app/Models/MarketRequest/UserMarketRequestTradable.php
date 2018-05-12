@@ -9,7 +9,7 @@ class UserMarketRequestTradable extends Model
     /**
      * @property integer $id
      * @property integer $user_market_request_id
-     * @property integer $derivative_id
+     * @property integer $market_id
      * @property integer $stock_id
      * @property \Carbon\Carbon $created_at
      * @property \Carbon\Carbon $updated_at
@@ -57,9 +57,9 @@ class UserMarketRequestTradable extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivatives()
+    public function markets()
     {
-        return $this->belongsTo('App\Models\StructureItems\Derivative','derivative_id');
+        return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
     /**

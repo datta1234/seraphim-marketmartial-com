@@ -35,9 +35,9 @@ class JseIntergration extends Model
     * Return relation based of jse_intergration_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivatives()
+    public function markets()
     {
-        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'derivative_jse_intergration', 'derivative_id', 'jse_intergration_id');
+        return $this->belongsToMany('App\Models\StructureItems\Market', 'market_jse_intergration', 'market_id', 'jse_intergration_id');
     }
 
     /**

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStocksTable extends Migration
+class SafexExpirationDates extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateStocksTable extends Migration
      */
     public function up()
     {
-        Schema::create('stocks', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code', 3);
-            $table->string('name')->nullable();
-            $table->timestamps();
-        });
+            Schema::create('safex_expiration_dates', function (Blueprint $table) {
+                $table->increments('id');
+                $table->date('expiration_date');
+                $table->timestamps();
+            });
     }
 
     /**
@@ -28,6 +27,6 @@ class CreateStocksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('safex_expiration_dates');
     }
 }

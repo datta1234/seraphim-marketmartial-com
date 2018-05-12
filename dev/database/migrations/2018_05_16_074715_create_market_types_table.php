@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDerivativeWatchedTable extends Migration
+class CreateMarketTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class CreateUserDerivativeWatchedTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_derivative_watched', function (Blueprint $table) {
+        Schema::create('market_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->integer('derivative_id')->unsigned();
+            $table->string('title');
             $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')->on('users');
         });
     }
 
@@ -31,6 +27,6 @@ class CreateUserDerivativeWatchedTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_derivative_watched');
+        Schema::dropIfExists('market_types');
     }
 }
