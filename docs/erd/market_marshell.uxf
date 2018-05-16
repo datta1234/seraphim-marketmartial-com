@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
   <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -93,7 +92,7 @@ updated_at:timestamp
     <panel_attributes>item_types
 --
 id: int(11)
-title: int(11)
+title: varchar(255)
 validation_rule:varchar(255)
 created_at:timestamp
 updated_at:timestamp
@@ -1021,7 +1020,7 @@ m2=0..1</panel_attributes>
       <w>168</w>
       <h>112</h>
     </coordinates>
-    <panel_attributes>user_interest
+    <panel_attributes>interest_user
 --
 id: int(11)
 value: varchar(255)
@@ -1248,17 +1247,16 @@ layer=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4976</x>
-      <y>1032</y>
+      <x>5216</x>
+      <y>1048</y>
       <w>256</w>
       <h>192</h>
     </coordinates>
-    <panel_attributes>jse_trade_confirmation_intergration
+    <panel_attributes>jse_trade_intergrations
 --
 id: int(10)
 type: varchar(255)
 title: varchar(255)
-booked_trade_id: int(11)
 value: varchar(255)
 created_at: timestamp
 updated_at: timestamp
@@ -1271,12 +1269,12 @@ bg=gray</panel_attributes>
     <coordinates>
       <x>4784</x>
       <y>1080</y>
-      <w>208</w>
+      <w>152</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;240.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1957,11 +1955,11 @@ m2=0..1</panel_attributes>
       <w>168</w>
       <h>112</h>
     </coordinates>
-    <panel_attributes>jse_intergrations_stock
+    <panel_attributes>jse_intergration_stock
 --
 id: int(10)
 jse_intergration_id: int(11)
-derivative_id: int(11)
+stock_id: int(11)
 created_at: timestamp
 updated_at: timestamp
 
@@ -2021,7 +2019,7 @@ m2=0..1
       <w>168</w>
       <h>112</h>
     </coordinates>
-    <panel_attributes>jse_intergrations_derivative
+    <panel_attributes>derivative_jse_intergration
 --
 id: int(10)
 jse_intergration_id: int(11)
@@ -2210,5 +2208,37 @@ m2=0..n</panel_attributes>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
     <additional_attributes>10.0;10.0;930.0;10.0;930.0;260.0;1370.0;260.0;1370.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4920</x>
+      <y>1048</y>
+      <w>184</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>booked_trade_jse_intergration
+--
+id: int(10)
+jse_intergration_id: int(11)
+booked_trade_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>5096</x>
+      <y>1088</y>
+      <w>136</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0</additional_attributes>
   </element>
 </diagram>

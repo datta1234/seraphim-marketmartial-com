@@ -20,12 +20,14 @@ class UpdateUsersTable extends Migration
             $table->integer('organisation_id')->unsigned();
             
             $table->string('full_name');
-            $table->string('phone');
+            $table->string('cell_phone');
+            $table->string('work_phone');
             $table->boolean('active');
             $table->boolean('tc_accepted');
             $table->date('birthdate')->nullable();
-            $table->boolean('married')->nullable();
-            $table->boolean('children')->nullable();
+            $table->boolean('is_married')->nullable();
+            $table->boolean('has_children')->nullable();
+            $table->date('last_login')->nullable();
             $table->text('hobbies')->nullable();
             
             $table->softDeletes();
@@ -54,16 +56,17 @@ class UpdateUsersTable extends Migration
             $table->dropColumn([
                 'role_id', 
                 'full_name',
-                'phone',
+                'cell_phone',
+                'work_phone',
                 'active',
                 'tc_accepted',
                 'birthdate',
-                'married',
-                'children',
-                'hobbies'
+                'is_married',
+                'has_children',
+                'hobbies',
+                'last_login'
             ]);
             $table->dropSoftDeletes();
-
         });
     }
 }

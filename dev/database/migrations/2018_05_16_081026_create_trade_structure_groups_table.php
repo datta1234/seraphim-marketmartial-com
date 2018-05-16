@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemTypesTable extends Migration
+class CreateTradeStructureGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,14 @@ class CreateItemTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('item_types', function (Blueprint $table) {
+        Schema::create('trade_structure_groups', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('validation_rule');
+            $table->string('title');
+            $table->integer('trade_structure_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('trade_structure_id')
+                ->references('id')->on('trade_structures');
         });
     }
 
@@ -27,6 +31,6 @@ class CreateItemTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('item_types');
+        Schema::dropIfExists('trade_structure_groups');
     }
 }

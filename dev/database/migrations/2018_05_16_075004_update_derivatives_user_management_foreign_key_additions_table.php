@@ -46,6 +46,6 @@ class UpdateDerivativesUserManagementForeignKeyAdditionsTable extends Migration
 
         Schema::table('user_derivative_interests', function (Blueprint $table){
             $table->dropForeign(['derivative_id']);
-        });   
+        });  
     }
 }
