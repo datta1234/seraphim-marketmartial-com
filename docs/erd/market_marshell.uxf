@@ -121,7 +121,7 @@ m2=n
       <w>728</w>
       <h>960</h>
     </coordinates>
-    <panel_attributes>structure items
+    <panel_attributes>Structure Items
 --
 bg=gray</panel_attributes>
     <additional_attributes/>
@@ -659,7 +659,7 @@ m2=0..n</panel_attributes>
       <w>752</w>
       <h>968</h>
     </coordinates>
-    <panel_attributes>trade confirmations
+    <panel_attributes>Trade Confirmations
 --
 bg=orange</panel_attributes>
     <additional_attributes/>
@@ -1867,18 +1867,6 @@ m2=0..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>3168</x>
-      <y>888</y>
-      <w>1504</w>
-      <h>568</h>
-    </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
-    <additional_attributes>60.0;680.0;10.0;680.0;20.0;30.0;1840.0;10.0;1840.0;200.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
       <x>872</x>
       <y>816</y>
       <w>3320</w>
@@ -2312,5 +2300,29 @@ m2=0..1</panel_attributes>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
     <additional_attributes>5230.0;1260.0;5230.0;930.0;1100.0;930.0;1100.0;10.0;100.0;10.0;100.0;240.0;10.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>872</x>
+      <y>1208</y>
+      <w>4112</w>
+      <h>824</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;90.0;280.0;90.0;280.0;1010.0;5120.0;1010.0;5120.0;10.0;4900.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>880</x>
+      <y>1112</y>
+      <w>4072</w>
+      <h>904</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;230.0;10.0;230.0;1110.0;5070.0;1110.0;5070.0;90.0;4890.0;90.0</additional_attributes>
   </element>
 </diagram>
