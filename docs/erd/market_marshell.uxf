@@ -496,7 +496,7 @@ bg=green</panel_attributes>
       <w>272</w>
       <h>104</h>
     </coordinates>
-    <panel_attributes>user_market_negotiation_conditions
+    <panel_attributes>market_negotiation_condition
 --
 id: int(11)
 is_private:tinyint(1)
@@ -1572,8 +1572,8 @@ layer=1</panel_attributes>
       <h>112</h>
     </coordinates>
     <panel_attributes>lt=-
-m1=0..n
-m2=0..1
+m1=0..1
+m2=0..n
 </panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
   </element>
@@ -1627,15 +1627,16 @@ m2=0..1
     <id>UMLClass</id>
     <coordinates>
       <x>3240</x>
-      <y>1584</y>
+      <y>1576</y>
       <w>256</w>
-      <h>176</h>
+      <h>184</h>
     </coordinates>
     <panel_attributes>rebates
 --
 id: int(11)
 user_id: int(11)
 user_market_request_id: int(11)
+user_market_id: int(11)
 trade_id: int(11)
 organisation_id: int(11)
 booked_trade_id: int(11)
@@ -1656,8 +1657,8 @@ layer=1</panel_attributes>
       <h>560</h>
     </coordinates>
     <panel_attributes>lt=-
-m1=0..n
-m2=0..1
+m1=0..1
+m2=0..n
 </panel_attributes>
     <additional_attributes>10.0;10.0;100.0;10.0;100.0;170.0;820.0;170.0;820.0;670.0;960.0;670.0</additional_attributes>
   </element>
@@ -1681,7 +1682,6 @@ bid_premium: double(11,2) nullable
 offer_premium: double(11,2) nullable
 has_premium_calc: tinyint(1) 
 future_reference: double(11,2) nullable
-market_negotiation_conditon_id: int(11) nullable
 spot_price: double(11,2) nullable
 is_repeat: tinyint(1)
 is_accepted: tinyint(1) nullable
@@ -2211,5 +2211,19 @@ bg=light_gray</panel_attributes>
     <panel_attributes>m1=0..n
 m2=1</panel_attributes>
     <additional_attributes>10.0;10.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>3336</x>
+      <y>1496</y>
+      <w>112</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Note..
+DO THIS ONE LAST
+bg=red
+layer=7</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
