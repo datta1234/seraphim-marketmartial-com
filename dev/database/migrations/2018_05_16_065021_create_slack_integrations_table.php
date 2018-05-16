@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateItemsTable extends Migration
+class CreateSlackIntegrationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateItemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('items', function (Blueprint $table) {
+        Schema::create('slack_integrations', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('item_type_id')->unsigned();
-            $table->string('name');
+            $table->string('type');
+            $table->string('field');
+            $table->text('value');
             $table->timestamps();
-
-            $table->foreign('item_type_id')
-                ->references('id')->on('item_types');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateItemsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('items');
+        Schema::dropIfExists('slack_integrations');
     }
 }
