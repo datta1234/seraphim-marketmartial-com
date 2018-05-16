@@ -402,9 +402,9 @@ bg=yellow</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>2208</x>
-      <y>1016</y>
+      <y>1024</y>
       <w>272</w>
-      <h>176</h>
+      <h>168</h>
     </coordinates>
     <panel_attributes>user_markets
 --
@@ -542,7 +542,7 @@ layer=1</panel_attributes>
 --
 id: int(11)
 user_market_id: int(11)
-is_offer: tinyint(11)
+is_offer: tinyint(1)
 contracts: double(11,2)
 trade_negotiation_id: int(11) nullable
 nominals: double(11,2) nullable
@@ -1524,10 +1524,11 @@ layer=1</panel_attributes>
     <coordinates>
       <x>3728</x>
       <y>1168</y>
-      <w>24</w>
+      <w>40</w>
       <h>72</h>
     </coordinates>
-    <panel_attributes/>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
@@ -1639,7 +1640,6 @@ user_market_request_id: int(11)
 user_market_id: int(11)
 trade_id: int(11)
 organisation_id: int(11)
-booked_trade_id: int(11)
 is_paid:tinyint(1)
 booked_trade_id:int(11) nullable
 trade_date: datetime
@@ -1706,8 +1706,8 @@ layer=1</panel_attributes>
       <w>184</w>
       <h>504</h>
     </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
     <additional_attributes>10.0;600.0;190.0;600.0;190.0;10.0</additional_attributes>
   </element>
   <element>
@@ -1817,8 +1817,8 @@ m2=0..n</panel_attributes>
       <w>1120</w>
       <h>864</h>
     </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
     <additional_attributes>10.0;1050.0;210.0;1050.0;210.0;620.0;700.0;620.0;690.0;10.0;1360.0;10.0;1360.0;260.0</additional_attributes>
   </element>
   <element>
@@ -2222,6 +2222,44 @@ m2=1</panel_attributes>
     </coordinates>
     <panel_attributes>Note..
 DO THIS ONE LAST
+bg=red
+layer=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1496</x>
+      <y>944</y>
+      <w>1760</w>
+      <h>824</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>2180.0;1000.0;2120.0;1000.0;2120.0;10.0;120.0;10.0;120.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>896</x>
+      <y>576</y>
+      <w>2776</w>
+      <h>456</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>3430.0;550.0;3430.0;300.0;370.0;310.0;370.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>3504</x>
+      <y>1440</y>
+      <w>112</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>Note..
+ISSUE HERE
 bg=red
 layer=7</panel_attributes>
     <additional_attributes/>
