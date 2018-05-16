@@ -1252,7 +1252,7 @@ layer=1</panel_attributes>
       <w>256</w>
       <h>192</h>
     </coordinates>
-    <panel_attributes>jse_trade_intergration
+    <panel_attributes>jse_trade_intergrations
 --
 id: int(10)
 type: varchar(255)
@@ -2214,7 +2214,7 @@ m2=0..n</panel_attributes>
     <coordinates>
       <x>4920</x>
       <y>1048</y>
-      <w>168</w>
+      <w>184</w>
       <h>112</h>
     </coordinates>
     <panel_attributes>booked_trade_jse_intergration
@@ -2232,13 +2232,13 @@ bg=light_gray</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>5080</x>
+      <x>5096</x>
       <y>1088</y>
-      <w>152</w>
+      <w>136</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=1</panel_attributes>
-    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0</additional_attributes>
   </element>
 </diagram>
