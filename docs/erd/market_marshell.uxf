@@ -54,7 +54,7 @@ updated_at:timestamp
 id: int(11)
 user_id: int(11)
 trade_structure_id:int(11)
-user_market_status_id: int(11)
+user_market_request_statuses_id: int(11)
 chosen_user_market_id: int(11) nullable
 created_at:timestamp
 updated_at:timestamp
@@ -243,7 +243,7 @@ updated_at:timestamp
 --
 id: int(11)
 item_id:int(11)
-user_market_request_group: int(11)
+user_market_request_group_id: int(11)
 value: varchar(255)
 created_at: timestamp
 updated_at: timestamp
@@ -337,8 +337,9 @@ layer=1</panel_attributes>
       <w>424</w>
       <h>72</h>
     </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
+    <panel_attributes>m1=0..n
+m2=0..1
+</panel_attributes>
     <additional_attributes>490.0;10.0;490.0;60.0;10.0;60.0</additional_attributes>
   </element>
   <element>
@@ -2128,36 +2129,6 @@ updated_at:timestamp
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
     <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1552</x>
-      <y>1208</y>
-      <w>184</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>user_market_statuses
---
-id: int(11)
-title: varchar(255)
-created_at:timestamp
-updated_at:timestamp
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1368</x>
-      <y>1104</y>
-      <w>288</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
-    <additional_attributes>320.0;130.0;320.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
