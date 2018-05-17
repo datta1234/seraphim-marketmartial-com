@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserMarketRequestStatus extends Model
 {
-    //
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'user_market_request_statuses';
 }

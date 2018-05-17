@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class JseTradeIntergration extends Model
 {
-    //
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'jse_trade_intergrations';
 }
