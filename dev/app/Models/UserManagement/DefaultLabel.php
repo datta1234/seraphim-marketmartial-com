@@ -28,4 +28,13 @@ class DefaultLabel extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function emails()
+    {
+        return $this->hasMany('App\Models\UserManagement\Email', 'default_id');
+    }
 }

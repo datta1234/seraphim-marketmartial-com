@@ -19,7 +19,7 @@ class CreateTradeConfirmationsTable extends Migration
             $table->integer('send_user_id')->unsigned();
             $table->integer('receiving_user_id')->unsigned();
             $table->integer('trade_id')->unsigned();
-            $table->integer('trade_confirmation_statuse_id')->unsigned();
+            $table->integer('trade_confirmation_status_id')->unsigned();
             $table->integer('trade_confirmation_id')->unsigned()->nullable();
             $table->integer('derivative_id')->unsigned()->nullable();
             $table->integer('stock_id')->unsigned()->nullable();
@@ -49,7 +49,7 @@ class CreateTradeConfirmationsTable extends Migration
             $table->foreign('trade_id')
                 ->references('id')->on('trades');
 
-            $table->foreign('trade_confirmation_statuse_id')
+            $table->foreign('trade_confirmation_status_id')
                 ->references('id')->on('trade_confirmation_statuses');
 
             $table->foreign('trade_confirmation_id')

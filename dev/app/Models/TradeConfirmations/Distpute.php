@@ -32,4 +32,40 @@ class Distpute extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function distputeStatuses()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\DistputeStatus','distpute_status_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sendUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','send_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function receivingUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','receiving_user_id');
+    }
 }

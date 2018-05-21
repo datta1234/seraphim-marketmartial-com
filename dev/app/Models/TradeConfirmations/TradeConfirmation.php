@@ -11,7 +11,7 @@ class TradeConfirmation extends Model
 	 * @property integer $send_user_id
 	 * @property integer $receiving_user_id
 	 * @property integer $trade_id
-	 * @property integer $trade_confirmation_statuse_id
+	 * @property integer $trade_confirmation_status_id
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $derivative_id
@@ -54,4 +54,107 @@ class TradeConfirmation extends Model
 		'net_premiums',
 		'is_confirmed',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationStatuses()
+    {
+        return $this->belongsTo(
+        	'App\Models\TradeConfirmations\TradeConfirmationStatus',
+        	'trade_confirmation_status_id'
+        );
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function distputes()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\Distpute','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationParents()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationChildren()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function bookedTrades()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function stocks()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivatives()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Derivative','derivative_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function trades()
+    {
+        return $this->belongsTo('App\Models\Trade\Trade','trade_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sendUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','send_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function recievingUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','receiving_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradingAccounts()
+    {
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+    }
 }

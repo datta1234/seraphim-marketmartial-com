@@ -30,4 +30,22 @@ class MarketNegotiationCondition extends Model
     protected $fillable = [
         'is_private',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketConditions()
+    {
+        return $this->belongsTo('App\Models\Market\MarketCondition','market_condition_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiations()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
 }

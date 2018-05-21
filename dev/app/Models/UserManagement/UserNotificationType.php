@@ -4,7 +4,7 @@ namespace App\Models\UserManagement;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserNotificationTypes extends Model
+class UserNotificationType extends Model
 {
 	/**
 	 * @property integer $id
@@ -28,4 +28,13 @@ class UserNotificationTypes extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userNotifications()
+    {
+        return $this->hasMany('App\Models\UserManagement\UserNotification', 'user_notification_type_id');
+    }
 }

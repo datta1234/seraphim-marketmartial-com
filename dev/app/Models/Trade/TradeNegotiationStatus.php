@@ -28,4 +28,13 @@ class TradeNegotiationStatus extends Model
     protected $fillable = [
         'name',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_status_id');
+    }
 }

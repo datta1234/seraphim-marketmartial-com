@@ -30,4 +30,23 @@ class SlackIntegration extends Model
     protected $fillable = [
         'type', 'field', 'value',
     ];
+
+    /**
+     * Return relation based of _id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function organisations()
+    {
+        return $this->belongsToMany('App\Models\UserManagement\Organisation', 'organisation_slack_intergration', 'organisation_id', 'slack_integration_id');
+    }
+
+    /**
+     * Return relation based of _id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function rebates()
+    {
+        return $this->belongsToMany('App\Models\Trade\Rebate', 'rebate_slack_integration', 'rebate_id', 'slack_integration_id');
+    }
+
 }

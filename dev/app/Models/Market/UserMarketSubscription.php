@@ -28,4 +28,22 @@ class UserMarketSubscription extends Model
      * @var array
      */
     protected $fillable = [];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarkets()
+    {
+        return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','user_id');
+    }
 }

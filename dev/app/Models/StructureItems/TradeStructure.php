@@ -28,4 +28,24 @@ class TradeStructure extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of derivative_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeStructureGroups()
+    {
+        return $this->hasMany('App\Models\StructureItems\TradeStructureGroup', 'trade_structure_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequests()
+    {
+        return $this->hasMany(
+            'App\Models\MarketRequest\UserMarketRequest','trade_structure_id');
+    }
+
 }

@@ -258,8 +258,8 @@ updated_at: timestamp
       <w>712</w>
       <h>264</h>
     </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
     <additional_attributes>850.0;10.0;850.0;300.0;10.0;300.0</additional_attributes>
   </element>
   <element>
@@ -1231,7 +1231,7 @@ spot_price: double(11,2) nullable
 future_reference: double(11,2) nullable
 near_expiery_reference: double(11,2) nullable
 trade_confirmation_id: int(11) nullable
-trade_confirmation_statuse_id: int(11)
+trade_confirmation_status_id: int(11)
 derivative_id: int(11) nullable
 stock_id: int(11) nullable
 contracts: double(11,2)
@@ -1295,18 +1295,6 @@ created_at: timestamp
 updated_at: timestamp
 layer=1</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>4128</x>
-      <y>1136</y>
-      <w>56</w>
-      <h>248</h>
-    </coordinates>
-    <panel_attributes>m1=0..n
-m2=0..1</panel_attributes>
-    <additional_attributes>50.0;10.0;20.0;10.0;20.0;280.0;50.0;280.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1902,8 +1890,8 @@ layer=1</panel_attributes>
       <w>96</w>
       <h>392</h>
     </coordinates>
-    <panel_attributes>m1=n
-m2=0..1</panel_attributes>
+    <panel_attributes>m1=0..1
+m2=n</panel_attributes>
     <additional_attributes>10.0;10.0;100.0;10.0;100.0;460.0;10.0;460.0</additional_attributes>
   </element>
   <element>
@@ -2324,5 +2312,17 @@ m2=0..n</panel_attributes>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
     <additional_attributes>10.0;10.0;230.0;10.0;230.0;1110.0;5070.0;1110.0;5070.0;90.0;4890.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4128</x>
+      <y>1136</y>
+      <w>56</w>
+      <h>248</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>50.0;10.0;20.0;10.0;20.0;280.0;50.0;280.0</additional_attributes>
   </element>
 </diagram>

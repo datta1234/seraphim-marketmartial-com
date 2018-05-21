@@ -28,4 +28,13 @@ class UserMarketStatus extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarkets()
+    {
+        return $this->hasMany('App\Models\Market\UserMarket','user_market_status_id');
+    }
 }

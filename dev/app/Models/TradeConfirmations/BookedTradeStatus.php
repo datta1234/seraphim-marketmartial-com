@@ -28,4 +28,13 @@ class BookedTradeStatus extends Model
     protected $fillable = [
        'title', 
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function bookedTrades()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','booked_trade_status_id');
+    }
 }

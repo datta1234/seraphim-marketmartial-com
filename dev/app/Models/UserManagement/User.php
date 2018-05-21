@@ -65,4 +65,203 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function roles()
+    {
+        return $this->belongsTo('App\Models\UserManagement\Role', 'role_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function organisations()
+    {
+        return $this->belongsTo('App\Models\UserManagement\Organisation', 'organisation_id');
+    }
+
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userOtps()
+    {
+        return $this->hasMany('App\Models\UserManagement\UserOtp', 'user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function interestUsers()
+    {
+        return $this->hasMany('App\Models\UserManagement\InterestUser', 'user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function emails()
+    {
+        return $this->hasMany('App\Models\UserManagement\Email', 'user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradingAccounts()
+    {
+        return $this->hasMany('App\Models\UserManagement\TradingAccount', 'user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivativeInterests()
+    {
+        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'user_derivative_interests', 'user_id', 'derivative_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivativeWatched()
+    {
+        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'user_derivative_watched', 'user_id', 'derivative_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequests()
+    {
+        return $this->hasMany('App\Models\MarketRequest\UserMarketRequest','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sendDistputes()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\Distpute','send_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function receivingDistputes()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\Distpute','receiving_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarkets()
+    {
+        return $this->hasMany('App\Models\Market\UserMarket','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketSubscriptions()
+    {
+        return $this->hasMany('App\Models\Market\UserMarketSubscription','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiations()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function bookedTrades()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function initiateTradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','initiate_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function recievingTradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','recieving_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function initiateTrades()
+    {
+        return $this->hasMany('App\Models\Trade\Trade','initiate_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function recievingTrades()
+    {
+        return $this->hasMany('App\Models\Trade\Trade','recieving_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function rebates()
+    {
+        return $this->hasMany('App\Models\Trade\Rebate','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sendTradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','send_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function recievingTradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','receiving_user_id');
+    }
 }

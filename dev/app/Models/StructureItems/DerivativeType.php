@@ -28,4 +28,13 @@ class DerivativeType extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of derivative_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivatives()
+    {
+        return $this->hasMany('App\Models\StructureItems\Derivative', 'derivative_type_id');
+    }
 }

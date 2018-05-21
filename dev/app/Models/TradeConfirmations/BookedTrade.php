@@ -36,4 +36,76 @@ class BookedTrade extends Model
     protected $fillable = [
         'is_sale', 'is_confirmed', 'amount',
     ];
+
+    /**
+     * Return relation based of _id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function jseTradeIntergrations()
+    {
+        return $this->belongsToMany('App\Models\ApiIntegration\JseTradeIntergration', 'booked_trade_jse_intergration', 'jse_intergration_id', 'booked_trade_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function bookedTradeStatuses()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\BookedTradeStatus','booked_trade_status_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function stocks()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivatives()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Derivative','derivative_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function rebates()
+    {
+        return $this->hasMany('App\Models\Trade\Rebate','booked_trade_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradingAccounts()
+    {
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+    }
 }

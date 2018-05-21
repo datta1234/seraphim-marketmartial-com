@@ -35,4 +35,94 @@ class UserMarket extends Model
         'is_trade_away',
         'is_market_maker_notified',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketStatuses()
+    {
+        return $this->belongsTo('App\Models\Market\UserMarketStatus','user_market_status_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiations()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function currentMarketNegotiations()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiation','current_market_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketSubscriptions()
+    {
+        return $this->hasMany('App\Models\Market\UserMarketSubscription','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function chosenUserMarketRequests()
+    {
+        return $this->hasMany('App\Models\MarketRequest\UserMarketRequest','chosen_user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequests()
+    {
+        return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function rebates()
+    {
+        return $this->hasMany('App\Models\Trade\Rebate','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function trades()
+    {
+        return $this->hasMany('App\Models\Trade\Trade','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','user_id');
+    }
 }

@@ -49,4 +49,67 @@ class MarketNegotiation extends Model
 		'is_repeat',
 		'is_accepted',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationStatuses()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiationStatus','market_negotiation_status_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationConditions()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiationCondition','market_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationParents()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationChildren()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarkets()
+    {
+        return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function currentUserMarkets()
+    {
+        return $this->hasMany('App\Models\Market\UserMarket','current_market_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','user_id');
+    }
 }

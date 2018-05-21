@@ -33,4 +33,67 @@ class Trade extends Model
     protected $fillable = [
         'contracts'
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeStatuses()
+    {
+        return $this->belongsTo('App\Models\Trade\TradeStatus','trade_status_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function rebates()
+    {
+        return $this->hasMany('App\Models\Trade\Rebate','trade_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarkets()
+    {
+        return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function initiateUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','initiate_user_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function recievingUsers()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','recieving_user_id');
+    }
 }

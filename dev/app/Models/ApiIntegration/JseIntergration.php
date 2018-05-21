@@ -30,4 +30,22 @@ class JseIntergration extends Model
     protected $fillable = [
         'type', 'field', 'value',
     ];
+
+    /**
+    * Return relation based of jse_intergration_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivatives()
+    {
+        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'derivative_jse_intergration', 'derivative_id', 'jse_intergration_id');
+    }
+
+    /**
+     * Return relation based of jse_intergration_id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function stocks()
+    {
+        return $this->belongsToMany('App\Models\StructureItems\Stock', 'jse_intergration_stock', 'stock_id', 'jse_intergration_id');
+    }
 }

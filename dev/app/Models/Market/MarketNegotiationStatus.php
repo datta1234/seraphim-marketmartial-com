@@ -28,4 +28,13 @@ class MarketNegotiationStatus extends Model
     protected $fillable = [
         'title',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiations()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','market_negotiation_status_id');
+    }
 }

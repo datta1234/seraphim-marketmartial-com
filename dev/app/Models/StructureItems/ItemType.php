@@ -29,4 +29,14 @@ class ItemType extends Model
     protected $fillable = [
         'title', 'validation_rule',
     ];
+
+    /**
+    * Return relation based of derivative_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function items()
+    {
+        return $this->hasMany('App\Models\StructureItems\Item', 'item_type_id');
+    }
+}
 }

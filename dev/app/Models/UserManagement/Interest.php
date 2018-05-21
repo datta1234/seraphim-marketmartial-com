@@ -28,4 +28,13 @@ class Interest extends Model
     protected $fillable = [
        'title', 
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function interestUsers()
+    {
+        return $this->hasMany('App\Models\UserManagement\InterestUser', 'interest_id');
+    }
 }

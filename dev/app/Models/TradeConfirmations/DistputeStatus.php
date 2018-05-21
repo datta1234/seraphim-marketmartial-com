@@ -28,4 +28,13 @@ class DistputeStatus extends Model
     protected $fillable = [
       'title',  
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function distputes()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\Distpute','distpute_status_id');
+    }
 }

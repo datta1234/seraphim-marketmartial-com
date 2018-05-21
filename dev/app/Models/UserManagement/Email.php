@@ -32,4 +32,22 @@ class Email extends Model
     protected $fillable = [
         'title', 'email', 'notifiable',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function defaultLabels()
+    {
+        return $this->belongsTo('App\Models\UserManagement\DefaultLabel', 'default_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User', 'user_id');
+    }
 }

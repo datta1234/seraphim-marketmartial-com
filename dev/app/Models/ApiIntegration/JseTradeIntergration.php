@@ -31,4 +31,13 @@ class JseTradeIntergration extends Model
     protected $fillable = [
         'type', 'title', 'field','value',
     ];
+
+    /**
+     * Return relation based of _id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function bookedTrades()
+    {
+        return $this->belongsToMany('App\Models\TradeConfirmations\BookedTrade', 'booked_trade_jse_intergration', 'booked_trade_id', 'jse_intergration_id');
+    }
 }

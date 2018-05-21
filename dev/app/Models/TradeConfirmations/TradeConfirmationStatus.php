@@ -28,4 +28,16 @@ class TradeConfirmationStatus extends Model
     protected $fillable = [
        'title', 
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->hasMany(
+            'App\Models\TradeConfirmations\TradeConfirmation',
+            'trade_confirmation_status_id'
+        );
+    }
 }

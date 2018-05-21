@@ -30,4 +30,25 @@ class UserMarketRequestItem extends Model
     protected $fillable = [
         'value',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequestGroups()
+    {
+        return $this->belongsTo(
+            'App\Models\MarketRequest\UserMarketRequestGroup',
+            'user_market_request_group_id'
+        );
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function items()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Item','item_id');
+    }
 }

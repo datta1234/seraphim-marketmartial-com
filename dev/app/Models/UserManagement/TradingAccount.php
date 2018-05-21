@@ -31,4 +31,40 @@ class TradingAccount extends Model
     protected $fillable = [
         'safex_number', 'sub_account',
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User', 'user_id');
+    }
+
+    /**
+    * Return relation based of derivative_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function derivatives()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Derivative', 'derivative_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function bookedTrades()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','traiding_account_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','traiding_account_id');
+    }
 }

@@ -28,4 +28,13 @@ class Role extends Model
     protected $fillable = [
        'title', 
     ];
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function users()
+    {
+        return $this->hasMany('App\Models\UserManagement\User', 'role_id');
+    }
 }
