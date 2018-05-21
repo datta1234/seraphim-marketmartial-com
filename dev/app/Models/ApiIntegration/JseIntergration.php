@@ -13,7 +13,6 @@ class JseIntergration extends Model
 	 * @property text $value
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
-	 *
 	 */
 
     /**

@@ -17,7 +17,7 @@ class CreateUserOtpsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('otp')->unsigned();
-            $table->date('exired_at')->nullable();
+            $table->date('expires_at')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

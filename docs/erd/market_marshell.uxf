@@ -1058,7 +1058,7 @@ m2=0..n</panel_attributes>
 id: int(11)
 otp: int(6)
 user_id: int(1)
-exires_at: timestamp
+expires_at: timestamp
 created_at: timestamp
 updated_at: timestamp
 
