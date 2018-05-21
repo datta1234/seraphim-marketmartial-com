@@ -26,4 +26,13 @@ class UserNotification extends Model
      * @var string
      */
     protected $table = 'user_notifications';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        
+    ];
 }

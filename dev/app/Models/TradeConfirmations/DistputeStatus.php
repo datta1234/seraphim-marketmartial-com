@@ -19,4 +19,13 @@ class DistputeStatus extends Model
      * @var string
      */
     protected $table = 'distpute_status';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+      'title',  
+    ];
 }

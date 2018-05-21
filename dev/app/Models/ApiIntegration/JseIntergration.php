@@ -21,4 +21,13 @@ class JseIntergration extends Model
      * @var string
      */
     protected $table = 'jse_intergrations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'type', 'field', 'value',
+    ];
 }

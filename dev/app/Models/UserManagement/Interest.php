@@ -19,4 +19,13 @@ class Interest extends Model
      * @var string
      */
     protected $table = 'interests';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+       'title', 
+    ];
 }

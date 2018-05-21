@@ -11,6 +11,7 @@ class MarketNegotiation extends Model
 	 * @property integer $user_id
 	 * @property integer $market_negotiation_id
 	 * @property integer $user_market_id
+	 * @property integer $market_negotiation_status_id
 	 * @property double $bid
 	 * @property double $offer
 	 * @property double $bid_premium
@@ -20,7 +21,6 @@ class MarketNegotiation extends Model
 	 * @property boolean $has_premium_calc
 	 * @property boolean $is_repeat
 	 * @property boolean $is_accepted
-	 * @property integer $market_negotiation_status_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -31,4 +31,22 @@ class MarketNegotiation extends Model
      * @var string
      */
     protected $table = 'market_negotiations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+       	'user_id',
+		'bid',
+		'offer',
+		'bid_premium',
+		'offer_premium',
+		'future_reference',
+		'spot_price',
+		'has_premium_calc',
+		'is_repeat',
+		'is_accepted',
+    ];
 }

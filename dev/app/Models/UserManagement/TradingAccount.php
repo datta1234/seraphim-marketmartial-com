@@ -22,4 +22,13 @@ class TradingAccount extends Model
      * @var string
      */
     protected $table = 'trading_accounts';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'safex_number', 'sub_account',
+    ];
 }

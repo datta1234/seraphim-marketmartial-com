@@ -19,4 +19,13 @@ class DerivativeType extends Model
      * @var string
      */
     protected $table = 'derivative_types';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

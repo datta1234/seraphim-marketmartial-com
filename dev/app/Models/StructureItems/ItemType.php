@@ -20,4 +20,13 @@ class ItemType extends Model
      * @var string
      */
     protected $table = 'item_types';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title', 'validation_rule',
+    ];
 }

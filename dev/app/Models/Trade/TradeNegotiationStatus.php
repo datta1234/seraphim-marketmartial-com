@@ -19,4 +19,13 @@ class TradeNegotiationStatus extends Model
      * @var string
      */
     protected $table = 'trade_negotiation_statuses';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+    ];
 }

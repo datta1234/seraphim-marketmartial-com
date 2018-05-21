@@ -24,4 +24,13 @@ class Trade extends Model
      * @var string
      */
     protected $table = 'trades';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'contracts'
+    ];
 }

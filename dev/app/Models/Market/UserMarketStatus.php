@@ -19,4 +19,13 @@ class UserMarketStatus extends Model
      * @var string
      */
     protected $table = 'user_market_statuses';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

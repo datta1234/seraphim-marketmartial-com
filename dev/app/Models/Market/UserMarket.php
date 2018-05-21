@@ -8,10 +8,10 @@ class UserMarket extends Model
 {
 	/**
 	 * @property integer $id
-	 * @property user_id $id
-	 * @property user_market_request_id $id
-	 * @property user_market_status_id $id
-	 * @property current_market_negotiation_id $id
+	 * @property integer $user_id
+	 * @property integer $user_market_request_id
+	 * @property integer $user_market_status_id
+	 * @property integer $current_market_negotiation_id
 	 * @property boolean $is_trade_away
 	 * @property boolean $is_market_maker_notified
 	 * @property \Carbon\Carbon $created_at
@@ -25,4 +25,14 @@ class UserMarket extends Model
      * @var string
      */
     protected $table = 'user_markets';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'is_trade_away',
+        'is_market_maker_notified',
+    ];
 }

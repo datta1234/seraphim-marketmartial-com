@@ -19,4 +19,13 @@ class MarketConditionCategory extends Model
      * @var string
      */
     protected $table = 'market_condition_categories';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

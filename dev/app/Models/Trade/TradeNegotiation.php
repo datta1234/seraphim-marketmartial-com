@@ -27,4 +27,13 @@ class TradeNegotiation extends Model
      * @var string
      */
     protected $table = 'trade_negotiations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'contracts', 'nominals', 'is_offer', 'is_distpute',
+    ];
 }

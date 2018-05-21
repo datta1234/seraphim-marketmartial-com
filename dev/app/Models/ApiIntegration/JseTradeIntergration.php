@@ -22,4 +22,13 @@ class JseTradeIntergration extends Model
      * @var string
      */
     protected $table = 'jse_trade_intergrations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'type', 'title', 'field','value',
+    ];
 }

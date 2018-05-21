@@ -21,4 +21,13 @@ class SlackIntegration extends Model
      * @var string
      */
     protected $table = 'slack_integrations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'type', 'field', 'value',
+    ];
 }

@@ -26,4 +26,13 @@ class Rebate extends Model
      * @var string
      */
     protected $table = 'rebates';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'is_paid',
+    ];
 }

@@ -23,4 +23,13 @@ class Distpute extends Model
      * @var string
      */
     protected $table = 'distputes';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

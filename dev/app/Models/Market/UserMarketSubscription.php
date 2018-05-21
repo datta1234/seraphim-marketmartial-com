@@ -21,4 +21,11 @@ class UserMarketSubscription extends Model
      * @var string
      */
     protected $table = 'user_market_subscription';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
 }

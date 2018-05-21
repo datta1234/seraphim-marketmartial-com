@@ -25,4 +25,18 @@ class Derivative extends Model
      * @var string
      */
     protected $table = 'derivatives';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+		'description',
+		'is_seldom',
+		'has_deadline',
+		'has_negotiation',
+		'has_rebate',
+    ];
 }

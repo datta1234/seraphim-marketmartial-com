@@ -23,4 +23,13 @@ class Email extends Model
      * @var string
      */
     protected $table = 'emails';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title', 'email', 'notifiable',
+    ];
 }

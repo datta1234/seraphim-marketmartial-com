@@ -27,4 +27,13 @@ class BookedTrade extends Model
      * @var string
      */
     protected $table = 'booked_trades';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'is_sale', 'is_confirmed', 'amount',
+    ];
 }

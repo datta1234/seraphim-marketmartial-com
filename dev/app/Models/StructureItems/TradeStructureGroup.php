@@ -20,4 +20,13 @@ class TradeStructureGroup extends Model
      * @var string
      */
     protected $table = 'trade_structure_groups';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

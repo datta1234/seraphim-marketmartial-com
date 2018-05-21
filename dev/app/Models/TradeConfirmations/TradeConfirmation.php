@@ -36,4 +36,22 @@ class TradeConfirmation extends Model
      * @var string
      */
     protected $table = 'trade_confirmations';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'spot_price',
+		'future_reference',
+		'near_expiery_reference',
+		'contracts',
+		'puts',
+		'calls',
+		'delta',
+		'gross_premiums',
+		'net_premiums',
+		'is_confirmed',
+    ];
 }

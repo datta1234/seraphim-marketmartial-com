@@ -19,4 +19,13 @@ class DefaultLabel extends Model
      * @var string
      */
     protected $table = 'default_label';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

@@ -21,4 +21,13 @@ class MarketNegotiationCondition extends Model
      * @var string
      */
     protected $table = 'market_negotiation_condition';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'is_private',
+    ];
 }

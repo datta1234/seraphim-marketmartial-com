@@ -19,4 +19,13 @@ class BookedTradeStatus extends Model
      * @var string
      */
     protected $table = 'booked_trade_status';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+       'title', 
+    ];
 }

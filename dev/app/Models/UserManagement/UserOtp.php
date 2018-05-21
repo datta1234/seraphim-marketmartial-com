@@ -21,4 +21,11 @@ class UserOtp extends Model
      * @var string
      */
     protected $table = 'user_otps';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [];
 }

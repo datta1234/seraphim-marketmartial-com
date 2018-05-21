@@ -19,4 +19,13 @@ class TradeConfirmationStatus extends Model
      * @var string
      */
     protected $table = 'trade_confirmation_statuses';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+       'title', 
+    ];
 }

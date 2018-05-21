@@ -19,4 +19,13 @@ class TradeStatus extends Model
      * @var string
      */
     protected $table = 'trade_status';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+    ];
 }

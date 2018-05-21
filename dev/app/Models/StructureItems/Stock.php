@@ -20,4 +20,13 @@ class Stock extends Model
      * @var string
      */
     protected $table = 'stocks';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'code',
+    ];
 }
