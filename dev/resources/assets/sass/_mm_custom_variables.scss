@@ -19,7 +19,9 @@ $mm-footer-black: 		#000000;
 
 $mm-shadow:				#0c4545;
 
-
+/* 
+* Fonts
+*/
 $mm-font-head: 		"Raleway-SemiBold";
 $mm-font-sub-head: 	"Muli-Bold";
 $mm-font-body: 		"Roboto-Regular";
@@ -29,7 +31,6 @@ $mm-font-body-alt: 	Arial;
 /* 
 * Trade View Variables
 */
-
 $mm-market-important:	#1D3641;
 $mm-modal-header:		#007D74;
 $mm-text-white:			#FFFFFF;
@@ -37,11 +38,15 @@ $mm-main-header:		#EDEDEE;
 $mm-background:			#D3D8DC;
 $mm-main-header-alt:	#282828;
 $mm-background-alt:		#191919;
+$mm-market-tab:			#071a22;
+$mm-market-tab-alt:		#073238;
 
-$mm-side-bar-bg:		#090909;
-$mm-footer-bg:			#6D6E70;
+$mm-interaction-bar-bg:	#090909;
+$mm-light-grey:			#6D6E70;
 $mm-market-intrest:		#2358BD;
 $mm-market-maker:		#37A53A;
 $mm-market-confirm:		#E17428;
 $mm-market-alert:		#BB1D1D;
 $mm-user-action:		#EBC300;
+$mm-footer-bg:			#303030;
+$mm-toggle-bg:			#1c7d74;

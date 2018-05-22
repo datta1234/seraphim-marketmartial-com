@@ -6,6 +6,9 @@
         	</a>
       	</div>
   		<ul class="nav justify-content-end">
+  			<li class="nav-item">
+				<a class="nav-link active" href="{{ route('trade') }}">Trade</a>
+			</li>
 			<li class="nav-item">
 				<a class="nav-link active" href="{{ route('about') }}">About Us</a>
 			</li>

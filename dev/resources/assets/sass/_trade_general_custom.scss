@@ -1,0 +1,166 @@
+#trade_app {
+	
+	.trade-section.light-theme {
+		background-color: $mm-background;
+		
+		h1, h2, h3, h4, h5, h6 {
+			color: $mm-market-important;
+		}
+		.sub-nav {
+			background-color: $mm-main-header;
+			color: $mm-market-important;
+		}
+	}
+
+	.trade-section.dark-theme {
+		background-color: $mm-background-alt;
+		
+		h1, h2, h3, h4, h5, h6, p, .toggle-text {
+			color: $mm-text-white;
+		}
+
+		.sub-nav {
+			background-color: $mm-main-header-alt;
+			color: $mm-text-white;
+		}
+	}
+
+	.sub-nav {
+		box-shadow: 0px 1px 6px 0px black;
+
+		p {
+			font-family: $mm-font-body-alt;
+		}
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: $mm-font-head;
+	}
+
+	p, span, .market-tab {
+		font-family: $mm-font-head;
+	} 
+
+	.user-market-group {
+		border-right: 0.15em solid $mm-light-grey;
+		
+		&:last-child {
+			border-right: none;
+		}
+	}
+}
+
+.menu-actions {
+	.icon {
+		font-size:1.7em;
+		vertical-align: middle;
+	}
+}
+
+.mm-request-button {
+	color: $mm-text-white;
+	background-color: $mm-market-intrest;
+	border-radius: 0.6em;
+	box-shadow: 4px 4px 8px -1px #000000;
+	width: 18%;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-market-intrest, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-market-intrest, 10%);
+	}
+}
+
+.mm-important-button {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	border-radius: 0.6em;
+	box-shadow: 4px 4px 8px -1px #000000;
+	width: 18%;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-market-important, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-market-important, 10%);
+	}
+}
+
+.mm-alert-button {
+	color: $mm-text-white;
+	background-color: $mm-market-alert;
+	border-radius: 0.6em;
+	box-shadow: 4px 4px 8px -1px #000000;
+	width: 18%;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-market-alert, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-market-alert, 10%);
+	}
+}
+
+.mm-confirmation-button {
+	color: $mm-text-white;
+	background-color: $mm-market-confirm;
+	border-radius: 0.6em;
+	box-shadow: 4px 4px 8px -1px #000000;
+	width: 18%;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-market-confirm, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-market-confirm, 10%);
+	}
+}
+
+.mm-transparent-button {
+	
+}
+
+.trade-section.dark-theme {
+	.mm-transparent-button {
+		color: $mm-text-white;
+		background-color: transparent;
+	
+		&:focus,
+		&.focus {
+			box-shadow: none;
+			color: darken($mm-text-white, 20%);
+		}
+		&:hover {
+			color: darken($mm-text-white, 20%);
+		}
+	}
+}
+
+.trade-section.light-theme {
+	.mm-transparent-button {
+		color: $mm-background-alt;
+		background-color: transparent;
+	
+		&:focus,
+		&.focus {
+			box-shadow: none;
+			color: lighten($mm-background-alt, 20%);
+		}
+		&:hover {
+			color: lighten($mm-background-alt, 20%);
+		}
+	}
+}
