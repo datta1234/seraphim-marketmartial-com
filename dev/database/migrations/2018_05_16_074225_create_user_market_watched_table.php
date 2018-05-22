@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUserDerivativeInterestsTable extends Migration
+class CreateUserMarketWatchedTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateUserDerivativeInterestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_derivative_interests', function (Blueprint $table) {
+        Schema::create('user_market_watched', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('derivative_id')->unsigned();
+            $table->integer('market_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -31,6 +31,6 @@ class CreateUserDerivativeInterestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_derivative_interests');
+        Schema::dropIfExists('user_market_watched');
     }
 }

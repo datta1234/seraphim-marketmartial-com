@@ -30,7 +30,7 @@ class TradeStructure extends Model
     ];
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function tradeStructureGroups()
@@ -47,5 +47,29 @@ class TradeStructure extends Model
         return $this->hasMany(
             'App\Models\MarketRequest\UserMarketRequest','trade_structure_id');
     }
+
+    public static function saveFullStructure($structure)
+    {
+         $groups = $structure['trade_structure_group'];
+         unset($structure['trade_structure_group']);
+         $tradeStucture = self::create($structure);
+
+         foreach ($groups as $group) 
+         {  
+              $group['trade_structure_id'] = $tradeStucture->id;//place the id 
+              $items = $group['items'];
+              unset($group['items']);
+              $structureGroup = TradeStructureGroup::create($group);
+
+              foreach ($items as $item) 
+              {
+                  $item['trade_structure_group_id'] = $structureGroup->id;//place the id 
+                  $structureGroup->items[] = Item::create($item);
+              }
+             $tradeStucture->tradeStructureGroups[] = $structureGroup;
+
+         }
+         return $tradeStucture;
+    }   
 
 }

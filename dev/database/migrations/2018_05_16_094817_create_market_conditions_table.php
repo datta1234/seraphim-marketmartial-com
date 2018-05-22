@@ -16,7 +16,8 @@ class CreateMarketConditionsTable extends Migration
         Schema::create('market_conditions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->integer('market_condition_category_id')->unsigned();
+            $table->string('alias');
+            $table->integer('market_condition_category_id')->nullable()->unsigned();
             $table->timestamps();
 
             $table->foreign('market_condition_category_id')

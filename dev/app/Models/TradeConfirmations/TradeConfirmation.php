@@ -14,7 +14,7 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_status_id
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
-	 * @property integer $derivative_id
+	 * @property integer $market_id
 	 * @property integer $traiding_account_id
 	 * @property double $spot_price
 	 * @property double $future_reference
@@ -117,9 +117,9 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivatives()
+    public function markets()
     {
-        return $this->belongsTo('App\Models\StructureItems\Derivative','derivative_id');
+        return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
     /**

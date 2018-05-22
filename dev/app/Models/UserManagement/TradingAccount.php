@@ -9,7 +9,7 @@ class TradingAccount extends Model
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
-	 * @property integer $derivative_id
+	 * @property integer $market_id
 	 * @property string $safex_number
 	 * @property string $sub_account
 	 * @property \Carbon\Carbon $created_at
@@ -42,12 +42,12 @@ class TradingAccount extends Model
     }
 
     /**
-    * Return relation based of derivative_id_foreign index
+    * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivatives()
+    public function markets()
     {
-        return $this->belongsTo('App\Models\StructureItems\Derivative', 'derivative_id');
+        return $this->belongsTo('App\Models\StructureItems\Market', 'market_id');
     }
 
     /**

@@ -125,18 +125,18 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivativeInterests()
+    public function marketInterests()
     {
-        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'user_derivative_interests', 'user_id', 'derivative_id');
+        return $this->belongsToMany('App\Models\StructureItems\Market', 'user_market_interests', 'user_id', 'market_id');
     }
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function derivativeWatched()
+    public function marketWatched()
     {
-        return $this->belongsToMany('App\Models\StructureItems\Derivative', 'user_derivative_watched', 'user_id', 'derivative_id');
+        return $this->belongsToMany('App\Models\StructureItems\Market', 'user_market_watched', 'user_id', 'market_id');
     }
 
     /**

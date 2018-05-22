@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDerivativesTable extends Migration
+class CreateMarketsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,20 @@ class CreateDerivativesTable extends Migration
      */
     public function up()
     {
-        Schema::create('derivatives', function (Blueprint $table) {
+        Schema::create('markets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
             $table->boolean('is_seldom');
-            $table->integer('derivative_type_id')->unsigned();
-            $table->text('description');
+            $table->integer('market_type_id')->unsigned();
+            $table->text('description')->nullable();
             $table->boolean('has_deadline');
             $table->boolean('has_negotiation');
+            $table->boolean('needs_spot');
             $table->boolean('has_rebate');
             $table->timestamps();
 
-            $table->foreign('derivative_type_id')
-                ->references('id')->on('derivative_types');
+            $table->foreign('market_type_id')
+                ->references('id')->on('market_types');
         });
     }
 
@@ -36,6 +37,6 @@ class CreateDerivativesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('derivatives');
+        Schema::dropIfExists('markets');
     }
 }

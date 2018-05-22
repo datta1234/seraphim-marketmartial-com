@@ -17,7 +17,7 @@ class CreateOrganisationsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->boolean('verified');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
