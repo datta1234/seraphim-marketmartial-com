@@ -34,10 +34,10 @@
 			<div class="col col-lg-3">
 				<div class="float-right">
 					<button type="button" class="btn mm-transparent-button mr-2">
-						<span class="icon icon-addprofile"></span> Markets
+						<span class="icon icon-add"></span> Markets
 					</button>
 					<button type="button" class="btn mm-transparent-button mr-2">
-						<span class="icon icon-profile"></span>
+						<span class="icon icon-chat"></span>
 					</button>
 				</div>
 			</div>
