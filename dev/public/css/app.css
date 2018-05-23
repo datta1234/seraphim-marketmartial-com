@@ -22255,6 +22255,16 @@ input:checked + .slider:before {
   text-decoration: none;
 }
 
+#trade-footer .footer-title-image .icon {
+  vertical-align: middle;
+}
+
+#trade-footer .footer-title-image .footer-logo-text {
+  color: #ffffff;
+  font-family: "Muli-Bold";
+  font-size: 0.74rem;
+}
+
 .interaction-bar,
 .interaction-bar-content-pane {
   -webkit-transition: all .25s ease-in;

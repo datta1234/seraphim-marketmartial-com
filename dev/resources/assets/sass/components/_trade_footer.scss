@@ -14,4 +14,15 @@
 	a {
 		text-decoration: none;
 	}
+
+	.footer-title-image {
+		.icon {
+			vertical-align: middle;
+		}
+		.footer-logo-text {
+			color: $mm-white;
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;
+		}
+	}
 }
