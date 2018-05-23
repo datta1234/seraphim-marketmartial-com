@@ -21514,6 +21514,11 @@ a.mm-login-button {
   }
 }
 
+#markets.form-control {
+  border: none;
+  background-color: transparent;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");

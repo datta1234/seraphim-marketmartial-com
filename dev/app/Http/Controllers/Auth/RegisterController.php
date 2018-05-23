@@ -6,6 +6,8 @@ use App\Models\UserManagement\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\UserManagement\Organisation;
+use App\Models\StructureItems\Market;
 
 class RegisterController extends Controller
 {
@@ -47,11 +49,19 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $messages = [
+           'markets.required' => 'Please select at least one of the listed markets',
+        ];
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
-        ]);
+            'cell_phone' => 'required|numeric',
+            'role' => 'required',
+            'markets' => 'required',
+            'organisation' => 'required_without:new_organistation',
+            'new_organistation' => 'required_without:organisation|string|max:255'
+        ], $messages);
     }
 
     /**
@@ -61,11 +71,50 @@ class RegisterController extends Controller
      * @return \App\Models\UserManagement\User
      */
     protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
+    {   
+        $roles = config('marketmartial.registration_role');
+        if( !in_array($data['role'], $roles) ) {
+            return back()->with('error', 'Incorrect role selected');
+        }
+        $role = array_flip($roles)[$data['role']];
+
+        $organisation = '';
+        if( array_key_exists('organisation', $data) ) {
+            $organisation = $data['organisation'];
+        } elseif( array_key_exists('new_organistation', $data) ) {
+            $organisation = Organisation::create([
+                'title' => $data['new_organistation'],
+                'verified' => false,
+            ])->id;
+        } else {
+            return back()->with('error', 'a Problem occured with your organisation selection, please try again');
+        }
+
+        $user = User::create([
+            'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'role_id' => $role,
+            'organisation_id' => $organisation,
+            'cell_phone' => $data['cell_phone'],
+            'active' => false,
+            'tc_accepted' => false,
         ]);
+
+        $user->marketInterests()->sync($data['markets']);
+        
+        return $user;
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $markets = Market::all()->pluck('title', 'id');
+        $organisations = Organisation::all()->pluck('title','id');
+        return view('auth.register')->with(compact('organisations', 'markets'));
     }
 }

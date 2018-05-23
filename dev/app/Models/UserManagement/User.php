@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models\UserManagement;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,6 +55,8 @@ class User extends Authenticatable
         'has_children',
         'hobbies',
         'birthdate',
+        'role_id',
+        'organisation_id',
     ];
 
     /**
