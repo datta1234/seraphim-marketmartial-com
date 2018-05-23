@@ -7,7 +7,7 @@
 <!-- Toggle dark-theme / light-theme classes -->
 <div class="trade-section light-theme pb-5">
 	<div class="sub-nav pt-3 pb-3">
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row align-items-center">
 				<div class="col col-lg-6">
 					<h1>Welcome John Doe(Banks ABC)</h1>
