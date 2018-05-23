@@ -10480,8 +10480,8 @@ a.text-dark:focus {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?r86mj6") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?r86mj6") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?r86mj6#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -10501,8 +10501,29 @@ a.text-dark:focus {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-add:before {
+  content: "\E918";
+}
+
+.icon-chat:before {
+  content: "\E919";
+}
+
+.icon-mm-logo-v2:before {
+  content: "\E91A";
+}
+
+.icon-arrows-right:before {
+  content: "\E91B";
+}
+
+.icon-arrows-left:before {
+  content: "\E91C";
+}
+
 .icon-mm-logo:before {
   content: "\E900";
+  color: #fff;
 }
 
 .icon-wifi2:before {
@@ -21695,8 +21716,8 @@ a.mm-login-button {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?r86mj6") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?r86mj6") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?r86mj6#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -21716,8 +21737,29 @@ a.mm-login-button {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-add:before {
+  content: "\E918";
+}
+
+.icon-chat:before {
+  content: "\E919";
+}
+
+.icon-mm-logo-v2:before {
+  content: "\E91A";
+}
+
+.icon-arrows-right:before {
+  content: "\E91B";
+}
+
+.icon-arrows-left:before {
+  content: "\E91C";
+}
+
 .icon-mm-logo:before {
   content: "\E900";
+  color: #fff;
 }
 
 .icon-wifi2:before {

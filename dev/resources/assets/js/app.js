@@ -83,26 +83,30 @@ const app = new Vue({
 
 // Testing Code ( Simulate Stream Updates )
 
-// setTimeout(function(){
-//     console.log("adding");
-//     app.display_markets[1].markets.push(
-//         new UserMarket({
-//             date: "Mar 17",
-//             strike: "22 000",
-//             bid: "21.33",
-//             offer: "44.22",
-//             state: "request"
-//         })
-//     );
-// }, 5000);
+setTimeout(function(){
+    console.log("adding");
+    app.display_markets[1].markets.push(
+        new UserMarket({
+            date: "Mar 17",
+            strike: "22 000",
+            bid: "21.33",
+            offer: "44.22",
+            state: "request"
+        })
+    );
+}, 5000);
 
-// setTimeout(function(){
-//     console.log("updating");
-//     app.display_markets[1].markets[0].bid = "99.99";
-// }, 10000);
+setTimeout(function(){
+    console.log("updating");
+    app.display_markets[1].markets[0].bid = "99.99";
+}, 10000);
 
-// setTimeout(function(){
-//     console.log("updating");
-//     app.display_markets[1].markets[0].offer = "100.99";
-// }, 15000);
+setTimeout(function(){
+    console.log("updating");
+    app.display_markets[1].markets[0].offer = "100.99";
+}, 15000);
 
+setTimeout(function(){
+    console.log("updating");
+    app.display_markets[2].markets[0].state = "confirm";
+}, 15000);

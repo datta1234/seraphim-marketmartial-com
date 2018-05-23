@@ -1,5 +1,4 @@
 <template>
-    <!-- TOP 40 user markets-->
     <div class="col col-lg-4 pl-0 pr-0 user-market">
         <div class="col col-12">
             <h2 class="text-center">{{ derivativeMarket.title }}</h2> 
@@ -16,7 +15,6 @@
             
         </div>
     </div>
-    <!-- END TOP 40 user markets-->
 </template>
 
 <script>
