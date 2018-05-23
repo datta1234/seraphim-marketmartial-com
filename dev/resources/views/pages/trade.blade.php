@@ -1,7 +1,6 @@
 @extends('layouts.trade_app')
 
 @section('content')
-<<<<<<< HEAD
 <div class="container-fluid">
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
