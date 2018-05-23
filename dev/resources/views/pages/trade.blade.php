@@ -5,7 +5,7 @@
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
-		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane">
+		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
 			
 
 			<div class="row sub-nav pt-3 pb-3">
@@ -48,17 +48,17 @@
 
 			<div class="row mt-5">
 				<div class="col col-lg-3 offset-lg-9">
-					<p class="float-right">
-	            		Active Market Makers Online: <strong>7</strong>
-	        		</p>
+					<div class="float-right">
+						<p>Active Market Makers Online: <strong>7</strong></p>
 
-	        		<!-- Rounded toggle switch -->
-	        		<div class="float-right">
-	        			<span class="toggle">Light theme toggle</span>
-						<label class="switch mb-0 ml-1">
-						  	<input type="checkbox">
-						  	<span class="slider round"></span>
-						</label>
+		        		<!-- Rounded toggle switch -->
+		        		<div class="float-right">
+		        			<span class="toggle">Light theme toggle</span>
+							<label class="switch mb-0 ml-1">
+							  	<input type="checkbox" data-toggle-theme>
+							  	<span class="slider round"></span>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>

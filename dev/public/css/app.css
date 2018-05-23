@@ -21576,6 +21576,10 @@ a.mm-login-button {
   color: #FFFFFF;
 }
 
+#trade_app .trade-section.dark-theme .toggle {
+  color: #FFFFFF;
+}
+
 #trade_app .sub-nav {
   -webkit-box-shadow: 0px 1px 6px 0px black;
           box-shadow: 0px 1px 6px 0px black;
@@ -22267,12 +22271,15 @@ input:checked + .slider:before {
 
 .interaction-bar,
 .interaction-bar-content-pane {
-  -webkit-transition: all .25s ease-in;
-  transition: all .25s ease-in;
+  -webkit-transition: all .25s;
+  transition: all .25s;
 }
 
 .interaction-bar-wrapper .interaction-bar {
-  width: 0%;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 0%;
+  flex: 0 0 0%;
+  max-width: 0%;
 }
 
 @font-face {
