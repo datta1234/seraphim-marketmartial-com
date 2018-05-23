@@ -7,18 +7,7 @@
 		<!-- Toggle dark-theme / light-theme classes -->
 		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
 			
-
-			<div class="row sub-nav pt-3 pb-3">
-				<div class="col-6">
-					<h1>Welcome John Doe(Banks ABC)</h1>
-				</div>
-				<div class="col-2">
-					<p class="mb-1">10:34</p>
-				</div>
-				<div class="col-4">
-					<p class="float-right mb-1">Rebates: <strong>R65, 000</strong></p>
-				</div>
-			</div>
+			<user-header></user-header>
 
 			<!-- Actions and Alerts -->
 			<div class="row mt-2 menu-actions">

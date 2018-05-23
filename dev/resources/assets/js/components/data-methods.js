@@ -12,14 +12,13 @@ $( document ).ready(function() {
     */
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
-    })
+    });
 
     /*
     * Toggle theme classes
     */
     $( "[data-toggle-theme]" ).on("change", function( event ) {
         $( '#trade_app' ).find( "[data-theme-wrapper]" ).toggleClass( "light-theme" ).toggleClass( "dark-theme" );
-
     });
 
 
