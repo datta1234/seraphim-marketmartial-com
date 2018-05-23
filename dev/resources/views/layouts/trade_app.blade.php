@@ -31,6 +31,7 @@
     @include('layouts.elements.trade_footer')
     
      <!-- JavaScripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
     
 </body>
 </html>

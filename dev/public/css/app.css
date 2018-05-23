@@ -21562,11 +21562,12 @@ a.mm-login-button {
   font-family: "Raleway-SemiBold";
 }
 
-#trade_app .user-market-group {
+#trade_app .user-market .user-market-group {
   border-right: 0.15em solid #6D6E70;
+  height: 100%;
 }
 
-#trade_app .user-market-group:last-child {
+#trade_app .user-market:last-child .user-market-group {
   border-right: none;
 }
 
@@ -22141,6 +22142,7 @@ input:checked + .slider:before {
   border-radius: 0.6em;
   -webkit-box-shadow: 4px 4px 8px -1px #000000;
           box-shadow: 4px 4px 8px -1px #000000;
+  cursor: pointer;
 }
 
 .trade-section.light-theme .market-tab.market-alert,

@@ -41,11 +41,15 @@
 		font-family: $mm-font-head;
 	} 
 
-	.user-market-group {
-		border-right: 0.15em solid $mm-light-grey;
-		
+	.user-market {	
+		.user-market-group {
+			border-right: 0.15em solid $mm-light-grey;
+			height:100%;
+		}
 		&:last-child {
-			border-right: none;
+			.user-market-group {
+				border-right: none;
+			}
 		}
 	}
 }
