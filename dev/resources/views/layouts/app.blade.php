@@ -20,6 +20,7 @@
             ]) !!};
         </script>
     <script src="{{ asset('js/fss.js') }}"></script>
+    @yield('header-scripts')
     </head>
     <body>
         <div id="geoBackdrop"></div>
@@ -50,6 +51,7 @@
     @include('layouts.elements.footer')
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/public.js') }}"></script>
+    @yield('footer-scripts')
 </body>
 </html>

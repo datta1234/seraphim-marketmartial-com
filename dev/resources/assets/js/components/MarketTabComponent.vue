@@ -64,7 +64,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
-                EventBus.$emit('interactionToggle', true);
+                EventBus.$emit('interactionToggle', true, this.market);
             }
         },
         mounted() {

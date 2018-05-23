@@ -5,20 +5,9 @@
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
-		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane">
+		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
 			
-
-			<div class="row sub-nav pt-3 pb-3">
-				<div class="col-6">
-					<h1>Welcome John Doe(Banks ABC)</h1>
-				</div>
-				<div class="col-2">
-					<p class="mb-1">10:34</p>
-				</div>
-				<div class="col-4">
-					<p class="float-right mb-1">Rebates: <strong>R65, 000</strong></p>
-				</div>
-			</div>
+			<user-header></user-header>
 
 			<!-- Actions and Alerts -->
 			<div class="row mt-2 menu-actions">
@@ -31,10 +20,10 @@
 				<div class="col-3">
 					<div class="float-right">
 						<button type="button" class="btn mm-transparent-button mr-2">
-							<span class="icon icon-addprofile"></span> Markets
+							<span class="icon icon-add"></span> Markets
 						</button>
 						<button type="button" class="btn mm-transparent-button mr-2">
-							<span class="icon icon-profile"></span>
+							<span class="icon icon-chat"></span>
 						</button>
 					</div>
 				</div>
@@ -48,17 +37,17 @@
 
 			<div class="row mt-5">
 				<div class="col col-lg-3 offset-lg-9">
-					<p class="float-right">
-	            		Active Market Makers Online: <strong>7</strong>
-	        		</p>
+					<div class="float-right">
+						<p>Active Market Makers Online: <strong>7</strong></p>
 
-	        		<!-- Rounded toggle switch -->
-	        		<div class="float-right">
-	        			<span class="toggle">Light theme toggle</span>
-						<label class="switch mb-0 ml-1">
-						  	<input type="checkbox">
-						  	<span class="slider round"></span>
-						</label>
+		        		<!-- Rounded toggle switch -->
+		        		<div class="float-right">
+		        			<span class="toggle">Light theme toggle</span>
+							<label class="switch mb-0 ml-1">
+							  	<input type="checkbox" data-toggle-theme>
+							  	<span class="slider round"></span>
+							</label>
+						</div>
 					</div>
 				</div>
 			</div>

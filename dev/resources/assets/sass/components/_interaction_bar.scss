@@ -1,8 +1,8 @@
 .interaction-bar-wrapper {
     .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content {
-        -webkit-transition: width .25s ease-in-out;
-        -o-transition: width .25s ease-in-out;
-        transition: width .25s ease-in-out;
+        -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
     }
     .interaction-bar {
         @extend .col-auto;
@@ -12,18 +12,21 @@
 
         .interaction-content {
             width:0px;
+            opacity: 0;
             height:100%;
             padding:0px;
             display:inline-block;
             margin:0px;
             padding:0px;
             float:left;
+            color:#fff;
 
             overflow: hidden;
         }
         &.active {
             .interaction-content {
                 width:450px;
+                opacity: 1;
             }
         }
     }
@@ -39,8 +42,10 @@
         padding:0px;
         float:left;
         position: relative;
-        
+
         color: #fff;
+
+        cursor:pointer;
         
         > .icon {
             display: block;

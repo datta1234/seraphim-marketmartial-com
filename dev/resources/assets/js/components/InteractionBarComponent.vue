@@ -1,9 +1,16 @@
 <template>
     <div class="interaction-bar" v-bind:class="{ 'active': opened }">
         <div class="interaction-content">
-            BLAHHHHHH
+
+            <!-- sub component -->
+            <div class="container-fluid">
+                <div class="row">
+                    {{ subject }}
+                </div>
+            </div>
+
         </div>
-        <div class="interaction-bar-toggle" @click="">
+        <div class="interaction-bar-toggle" @click="toggleBar()">
             <span class="icon icon-arrows-right" v-if="!opened"></span>
             <span class="icon icon-arrows-left" v-if="opened"></span>
         </div>
@@ -15,13 +22,18 @@
     export default {
         data() {
             return {
-                opened: false
+                opened: false,
+                subject: null
             };
         },
         methods: {
-            toggleBar(p1, p2) {
-                console.log('toggled', p1, p2);
-                this.opened = !this.opened;
+            toggleBar(set, subject) {
+                this.subject = subject;
+                if(typeof set != 'undefined') {
+                    this.opened = set == true;
+                } else {
+                    this.opened = !this.opened;
+                }
             }
         },
         mounted() {
