@@ -1,5 +1,5 @@
 <footer id="trade-footer">
-	<div class="{{ ( $layout['fluid'] ? 'container-fluid' : 'container' ) }}">
+	<div class="{{ ( isset($layout) && isset($layout['fluid']) && $layout['fluid'] ? 'container-fluid' : 'container' ) }}">
 		<div class="row">
 			<div class="col col-lg-4 mt-2 mb-2">
 				<a class="footer-title-image" href="{{ url('/') }}">

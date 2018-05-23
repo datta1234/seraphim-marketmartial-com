@@ -1,5 +1,5 @@
 <nav id="mainNav" class="navbar navbar-default sticky-top">
-    <div class="{{ ( $layout['fluid'] ? 'container-fluid' : 'container' ) }}">
+    <div class="{{ ( isset($layout) && isset($layout['fluid']) && $layout['fluid'] ? 'container-fluid' : 'container' ) }}">
       	<div class="navbar-header">
         	<a class="navbar-brand nav-title-image" href="{{ url('/') }}">
 				<span class="icon icon-mm-logo"></span>
