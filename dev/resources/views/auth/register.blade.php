@@ -14,6 +14,7 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
+    
         <div>
             <p class="card-text text-center">
             Fill in your details below and we will email you a login to complete your profile.<br>
@@ -27,7 +28,7 @@
                             <label for="email" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">E-Mail Address</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus placeholder="Enter your email here...">
+                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" autofocus placeholder="Enter your email here...">
 
                                 @if ($errors->has('email'))
                                     <span class="invalid-feedback">
@@ -38,28 +39,28 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Full Name</label>
+                            <label for="full_name" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Full Name</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <input id="name" type="text" class="form-control{{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required placeholder="Enter your full name here...">
+                                <input id="full_name" type="text" class="form-control{{ $errors->has('full_name') ? ' is-invalid' : '' }}" name="full_name" value="{{ old('full_name') }}" placeholder="Enter your full name here...">
 
-                                @if ($errors->has('name'))
+                                @if ($errors->has('full_name'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('full_name') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
-                        {{-- NEEDS CHANGE --}}
+
                         <div class="form-group row">
-                            <label for="phone" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Phone</label>
+                            <label for="cell_phone" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Phone</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <input id="phone" type="text" class="form-control{{ $errors->has('phone') ? ' is-invalid' : '' }}" name="phone" value="{{ old('phone') }}" required placeholder="Enter your work phone number here...">
+                                <input id="cell_phone" type="tel" class="form-control{{ $errors->has('cell_phone') ? ' is-invalid' : '' }}" name="cell_phone" value="{{ old('cell_phone') }}" placeholder="Enter your work cell_phone number here...">
 
-                                @if ($errors->has('phone'))
+                                @if ($errors->has('cell_phone'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('phone') }}</strong>
+                                        <strong>{{ $errors->first('cell_phone') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -70,7 +71,7 @@
 
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group">
-                                  <select value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="role" required>
+                                  <select name="role" value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="role">
                                     <option value="trader">I am a Trader</option>
                                     <option value="viewer">I am a Viewer</option>
                                   </select>
@@ -85,52 +86,44 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="name" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
+                            <label for="markets" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
 
                             <div class="form-group col-sm-12 col-md-4 mt-2">
-                                <div class="checkbox largeCheckBox">
-                                    <label>
-                                        <input class="" name="index" type="checkbox" value="index"> Index Option
-                                    </label>
-                                </div>
-                                <div class="checkbox largeCheckBox">
-                                    <label>
-                                        <input class="largeCheckBox" name="single_stock" type="checkbox" value="single_stock"> Single Stock Option
-                                    </label>
-                                </div>
-                                <div class="checkbox largeCheckBox">
-                                    <label>
-                                        <input class="largeCheckBox" name="delta_one" type="checkbox" value="delta_one"> Delta One (EFPs, Rolls and EFP Switches)
-                                    </label>
+                                <div class="form-control {{ $errors->has('markets') ? ' is-invalid' : '' }}" id="markets">
+                                @foreach ($markets as $key=>$market)
+                                    <div class="form-check checkbox largeCheckBox">
+                                        <label lass="form-check-label">
+                                            <input class="form-check-input" name="markets[]" type="checkbox" value="{{$key}}"> {{ $market }}
+                                        </label>
+                                    </div>
+                                @endforeach
                                 </div>
 
-
-                                @if ($errors->has('name'))
+                                @if ($errors->has('markets'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('name') }}</strong>
+                                        <strong>{{ $errors->first('markets') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="role" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
+                            <label for="organisation" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
 
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group">
-                                  <select value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="organisation" required>
-                                    <option value="trader">Bank 1</option>
-                                    <option value="viewer">Bank 2</option>
-                                    <option value="viewer">Bank 3</option>
-                                    <option value="viewer">Bank 4</option>
+                                  <select name="organisation" value="{{ old('organisation') }}" class="form-control {{ $errors->has('organisation') ? ' is-invalid' : '' }}" id="organisation">
+                                    @foreach ($organisations as $key=>$organisation)
+                                        <option value="{{$key}}">{{ $organisation }}</option>
+                                    @endforeach
                                   </select>
                                 </div>
 
                                 
 
-                                @if ($errors->has('role'))
+                                @if ($errors->has('organisation'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('role') }}</strong>
+                                        <strong>{{ $errors->first('organisation') }}</strong>
                                     </span>
                                 @endif
                                 
@@ -155,7 +148,7 @@
                             <label for="password" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required placeholder="Must be at least 8 characters long">
+                                <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Must be at least 8 characters long">
 
                                 @if ($errors->has('password'))
                                     <span class="invalid-feedback">
@@ -169,7 +162,7 @@
                             <label for="password-confirm" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required placeholder="Repeat your password here...">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Repeat your password here...">
                             </div>
                         </div>
                         

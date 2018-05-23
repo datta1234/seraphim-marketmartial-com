@@ -21500,6 +21500,11 @@ a.mm-login-button {
   }
 }
 
+#markets.form-control {
+  border: none;
+  background-color: transparent;
+}
+
 #trade_app .trade-section.light-theme {
   background-color: #D3D8DC;
 }

@@ -12,7 +12,7 @@ class OrganisationTableSeeder extends Seeder
     public function run()
     {
         factory(App\Models\UserManagement\Organisation::class,8)->create()->each(function($organisation){
-    	        factory(App\User::class, 10)->create([
+    	        factory(App\Models\UserManagement\User::class, 10)->create([
 					'organisation_id' =>  $organisation->id,
     	        ]);
         });

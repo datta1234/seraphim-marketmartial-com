@@ -21,7 +21,7 @@ class UpdateUsersTable extends Migration
             
             $table->string('full_name');
             $table->string('cell_phone');
-            $table->string('work_phone');
+            $table->string('work_phone')->nullable();
             $table->boolean('active');
             $table->boolean('tc_accepted');
             $table->date('birthdate')->nullable();
