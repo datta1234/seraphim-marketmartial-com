@@ -23,12 +23,12 @@
     </head>
     <body>
         <div id="trade_app">
-            @include('layouts.elements.navigation')
+            @include('layouts.elements.navigation', [ 'layout' => [ 'fluid' => true ] ])
             
             @yield('content')
         </div>
     
-    @include('layouts.elements.trade_footer')
+    @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
     
      <!-- JavaScripts -->
     <script src="{{ asset('js/app.js') }}"></script>

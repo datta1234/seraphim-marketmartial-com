@@ -21,7 +21,7 @@
 			</div>
   		</div>
 	</div>
-	<div class="container">
+	<div class="container-fluid">
 
 		<!-- Actions and Alerts -->
 		<div class="row mt-2 menu-actions">
