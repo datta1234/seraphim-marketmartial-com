@@ -22243,6 +22243,16 @@ input:checked + .slider:before {
   text-decoration: none;
 }
 
+#trade-footer .footer-title-image .icon {
+  vertical-align: middle;
+}
+
+#trade-footer .footer-title-image .footer-logo-text {
+  color: #ffffff;
+  font-family: "Muli-Bold";
+  font-size: 0.74rem;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");
