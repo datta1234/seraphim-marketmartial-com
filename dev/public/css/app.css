@@ -692,6 +692,7 @@ pre code {
 }
 
 .no-gutters > .col,
+.interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -699,7 +700,6 @@ pre code {
 
 .col-1,
 .col-2,
-.interaction-bar-wrapper.active .interaction-bar,
 .col-3,
 .col-4,
 .col-5,
@@ -708,12 +708,12 @@ pre code {
 .col-8,
 .col-9,
 .col-10,
-.interaction-bar-wrapper.active .interaction-bar-content-pane,
 .col-11,
 .col-12,
-.interaction-bar-wrapper .interaction-bar-content-pane,
 .col,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col-auto,
+.interaction-bar-wrapper .interaction-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -777,7 +777,8 @@ pre code {
   padding-left: 15px;
 }
 
-.col {
+.col,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -786,7 +787,8 @@ pre code {
   max-width: 100%;
 }
 
-.col-auto {
+.col-auto,
+.interaction-bar-wrapper .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -801,8 +803,7 @@ pre code {
   max-width: 8.33333333%;
 }
 
-.col-2,
-.interaction-bar-wrapper.active .interaction-bar {
+.col-2 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 16.66666667%;
           flex: 0 0 16.66666667%;
@@ -858,8 +859,7 @@ pre code {
   max-width: 75%;
 }
 
-.col-10,
-.interaction-bar-wrapper.active .interaction-bar-content-pane {
+.col-10 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 83.33333333%;
           flex: 0 0 83.33333333%;
@@ -873,8 +873,7 @@ pre code {
   max-width: 91.66666667%;
 }
 
-.col-12,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.col-12 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -2470,6 +2469,7 @@ select.form-control-lg:not([size]):not([multiple]),
 }
 
 .form-row > .col,
+.interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -11263,6 +11263,7 @@ pre code {
 }
 
 .no-gutters > .col,
+.interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -11270,7 +11271,6 @@ pre code {
 
 .col-1,
 .col-2,
-.interaction-bar-wrapper.active .interaction-bar,
 .col-3,
 .col-4,
 .col-5,
@@ -11279,12 +11279,12 @@ pre code {
 .col-8,
 .col-9,
 .col-10,
-.interaction-bar-wrapper.active .interaction-bar-content-pane,
 .col-11,
 .col-12,
-.interaction-bar-wrapper .interaction-bar-content-pane,
 .col,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col-auto,
+.interaction-bar-wrapper .interaction-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -11348,7 +11348,8 @@ pre code {
   padding-left: 15px;
 }
 
-.col {
+.col,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -11357,7 +11358,8 @@ pre code {
   max-width: 100%;
 }
 
-.col-auto {
+.col-auto,
+.interaction-bar-wrapper .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -11372,8 +11374,7 @@ pre code {
   max-width: 8.33333333%;
 }
 
-.col-2,
-.interaction-bar-wrapper.active .interaction-bar {
+.col-2 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 16.66666667%;
           flex: 0 0 16.66666667%;
@@ -11429,8 +11430,7 @@ pre code {
   max-width: 75%;
 }
 
-.col-10,
-.interaction-bar-wrapper.active .interaction-bar-content-pane {
+.col-10 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 83.33333333%;
           flex: 0 0 83.33333333%;
@@ -11444,8 +11444,7 @@ pre code {
   max-width: 91.66666667%;
 }
 
-.col-12,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.col-12 {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -13041,6 +13040,7 @@ select.form-control-lg:not([size]):not([multiple]),
 }
 
 .form-row > .col,
+.interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -22265,14 +22265,52 @@ input:checked + .slider:before {
   font-size: 0.74rem;
 }
 
-.interaction-bar,
-.interaction-bar-content-pane {
-  -webkit-transition: all .25s ease-in;
-  transition: all .25s ease-in;
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .interaction-bar > .interaction-content {
+  -webkit-transition: width .25s ease-in-out;
+  transition: width .25s ease-in-out;
 }
 
 .interaction-bar-wrapper .interaction-bar {
-  width: 0%;
+  padding: 0px;
+  width: auto;
+  position: relative;
+}
+
+.interaction-bar-wrapper .interaction-bar .interaction-content {
+  width: 0px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  overflow: hidden;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-content {
+  width: 450px;
+}
+
+.interaction-bar-wrapper .interaction-bar-toggle {
+  width: 25px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  position: relative;
+  color: #fff;
+}
+
+.interaction-bar-wrapper .interaction-bar-toggle > .icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -50%;
+  font-size: 32px;
 }
 
 @font-face {

@@ -47686,6 +47686,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(62);
 //
 //
 //
@@ -47705,6 +47706,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 var UserMarket = __webpack_require__(36);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -47752,7 +47754,7 @@ var UserMarket = __webpack_require__(36);
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
-            $(".interaction-bar-wrapper").toggleClass('active');
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true);
         }
     },
     mounted: function mounted() {}
@@ -47869,6 +47871,13 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(62);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -47876,11 +47885,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
-        return {};
+        return {
+            opened: false
+        };
     },
-    mounted: function mounted() {}
+
+    methods: {
+        toggleBar: function toggleBar(p1, p2) {
+            console.log('toggled', p1, p2);
+            this.opened = !this.opened;
+        }
+    },
+    mounted: function mounted() {
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionToggle', this.toggleBar);
+    }
 });
 
 /***/ }),
@@ -47891,7 +47912,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "interaction-bar" })
+  return _c(
+    "div",
+    { staticClass: "interaction-bar", class: { active: _vm.opened } },
+    [
+      _c("div", { staticClass: "interaction-content" }, [
+        _vm._v("\n        BLAHHHHHH\n    ")
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "interaction-bar-toggle",
+          on: { click: function($event) {} }
+        },
+        [
+          !_vm.opened
+            ? _c("span", { staticClass: "icon icon-arrows-right" })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.opened
+            ? _c("span", { staticClass: "icon icon-arrows-left" })
+            : _vm._e()
+        ]
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -47908,6 +47954,26 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+
+var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 
 /***/ })
 /******/ ]);

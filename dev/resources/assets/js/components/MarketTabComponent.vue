@@ -18,6 +18,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../lib/EventBus.js';
     const UserMarket = require('../lib/UserMarket');
     export default {
         props: {
@@ -63,7 +64,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
-                $(".interaction-bar-wrapper").toggleClass('active');
+                EventBus.$emit('interactionToggle', true);
             }
         },
         mounted() {
