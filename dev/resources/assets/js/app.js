@@ -7,7 +7,6 @@
 
 require('./bootstrap');
 require('./components/data-methods');
-require('./components/polygon');
 
 window.Vue = require('vue');
 
@@ -22,6 +21,7 @@ const DerivativeMarket = require('./lib/DerivativeMarket');
 
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
+Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
 
 const app = new Vue({
     el: '#trade_app',

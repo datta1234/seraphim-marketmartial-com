@@ -1,18 +1,22 @@
 <template>
-    <div class="col col-lg-4 pl-0 pr-0 user-market">
-        <div class="col col-12">
-            <h2 class="text-center">{{ derivativeMarket.title }}</h2> 
-        </div>
-        <div class="user-market-group pl-5 pr-5">
-
-            <!-- Date collection section -->
-            <div class="row mt-3 pr-3 pl-3" v-for="(markets, date) in market_date_groups">
+    <div class="user-market">
+        <div class="container-fluid">
+            <div class="row">
                 <div class="col-12">
-                    <p class="mb-1">{{ date }}</p>
+                    <h2 class="text-center">{{ derivativeMarket.title }}</h2> 
                 </div>
-                <market-tab :market="market" v-for="market in markets"></market-tab>
-            </div><!-- END Date collection section -->
-            
+                <div class="user-market-group col-12">
+
+                    <!-- Date collection section -->
+                    <div class="row mt-3 pr-3 pl-3" v-for="(markets, date) in market_date_groups">
+                        <div class="col-12">
+                            <p class="mb-1">{{ date }}</p>
+                        </div>
+                        <market-tab :market="market" v-for="market in markets"></market-tab>
+                    </div><!-- END Date collection section -->
+                    
+                </div>
+            </div>
         </div>
     </div>
 </template>

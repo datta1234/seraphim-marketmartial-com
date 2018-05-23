@@ -62,7 +62,8 @@
         },
         methods: {
             loadInteractionBar() {
-                // console.log("load Bar");
+                console.log("load Bar");
+                $(".interaction-bar-wrapper").toggleClass('active');
             }
         },
         mounted() {

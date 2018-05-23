@@ -1,0 +1,22 @@
+.interaction-bar, .interaction-bar-content-pane {
+    -webkit-transition: all .25s ease-in;
+         -o-transition: all .25s ease-in;
+            transition: all .25s ease-in;
+}
+.interaction-bar-wrapper {
+    .interaction-bar {
+        width:0%;
+    }
+    .interaction-bar-content-pane {
+        @extend .col-12
+    }
+
+    &.active {
+        .interaction-bar {
+            @extend .col-2
+        }
+        .interaction-bar-content-pane {
+            @extend .col-10
+        }
+    }
+}

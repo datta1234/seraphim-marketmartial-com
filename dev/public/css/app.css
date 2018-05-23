@@ -699,6 +699,7 @@ pre code {
 
 .col-1,
 .col-2,
+.interaction-bar-wrapper.active .interaction-bar,
 .col-3,
 .col-4,
 .col-5,
@@ -707,8 +708,10 @@ pre code {
 .col-8,
 .col-9,
 .col-10,
+.interaction-bar-wrapper.active .interaction-bar-content-pane,
 .col-11,
 .col-12,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col,
 .col-auto,
 .col-sm-1,
@@ -798,7 +801,8 @@ pre code {
   max-width: 8.33333333%;
 }
 
-.col-2 {
+.col-2,
+.interaction-bar-wrapper.active .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 16.66666667%;
           flex: 0 0 16.66666667%;
@@ -854,7 +858,8 @@ pre code {
   max-width: 75%;
 }
 
-.col-10 {
+.col-10,
+.interaction-bar-wrapper.active .interaction-bar-content-pane {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 83.33333333%;
           flex: 0 0 83.33333333%;
@@ -868,7 +873,8 @@ pre code {
   max-width: 91.66666667%;
 }
 
-.col-12 {
+.col-12,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -11264,6 +11270,7 @@ pre code {
 
 .col-1,
 .col-2,
+.interaction-bar-wrapper.active .interaction-bar,
 .col-3,
 .col-4,
 .col-5,
@@ -11272,8 +11279,10 @@ pre code {
 .col-8,
 .col-9,
 .col-10,
+.interaction-bar-wrapper.active .interaction-bar-content-pane,
 .col-11,
 .col-12,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col,
 .col-auto,
 .col-sm-1,
@@ -11363,7 +11372,8 @@ pre code {
   max-width: 8.33333333%;
 }
 
-.col-2 {
+.col-2,
+.interaction-bar-wrapper.active .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 16.66666667%;
           flex: 0 0 16.66666667%;
@@ -11419,7 +11429,8 @@ pre code {
   max-width: 75%;
 }
 
-.col-10 {
+.col-10,
+.interaction-bar-wrapper.active .interaction-bar-content-pane {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 83.33333333%;
           flex: 0 0 83.33333333%;
@@ -11433,7 +11444,8 @@ pre code {
   max-width: 91.66666667%;
 }
 
-.col-12 {
+.col-12,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 100%;
           flex: 0 0 100%;
@@ -22241,6 +22253,16 @@ input:checked + .slider:before {
 
 #trade-footer a {
   text-decoration: none;
+}
+
+.interaction-bar,
+.interaction-bar-content-pane {
+  -webkit-transition: all .25s ease-in;
+  transition: all .25s ease-in;
+}
+
+.interaction-bar-wrapper .interaction-bar {
+  width: 0%;
 }
 
 @font-face {
