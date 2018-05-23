@@ -10486,8 +10486,8 @@ a.text-dark:focus {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?r86mj6") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?r86mj6") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?r86mj6#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -10505,6 +10505,22 @@ a.text-dark:focus {
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-solid-arrow-down:before {
+  content: "\E91D";
+}
+
+.icon-solid-arrow-right:before {
+  content: "\E91E";
+}
+
+.icon-solid-arrow-up:before {
+  content: "\E91F";
+}
+
+.icon-solid-arrow-left:before {
+  content: "\E920";
 }
 
 .icon-add:before {
@@ -21732,8 +21748,8 @@ a.mm-login-button {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?r86mj6#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?r86mj6") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?r86mj6") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?r86mj6#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -21751,6 +21767,22 @@ a.mm-login-button {
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-solid-arrow-down:before {
+  content: "\E91D";
+}
+
+.icon-solid-arrow-right:before {
+  content: "\E91E";
+}
+
+.icon-solid-arrow-up:before {
+  content: "\E91F";
+}
+
+.icon-solid-arrow-left:before {
+  content: "\E920";
 }
 
 .icon-add:before {
