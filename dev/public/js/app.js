@@ -47993,12 +47993,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user_name', 'organisation'],
     data: function data() {
         return {
-            name: 'John Doe',
-            organisation: 'Banks ABC',
             time: {
                 hours: '',
                 minutes: '',
@@ -48048,11 +48048,19 @@ var render = function() {
   return _c("div", { staticClass: "user-header" }, [
     _c("div", { staticClass: "row sub-nav pt-3 pb-3" }, [
       _c("div", { staticClass: "col-6" }, [
-        _c("h1", { staticClass: "pt-1" }, [
-          _vm._v(
-            "Welcome " + _vm._s(_vm.name) + "(" + _vm._s(_vm.organisation) + ")"
-          )
-        ])
+        _vm.organisation
+          ? _c("h1", { staticClass: "pt-1" }, [
+              _vm._v(
+                "Welcome " +
+                  _vm._s(_vm.user_name) +
+                  " (" +
+                  _vm._s(_vm.organisation) +
+                  ")"
+              )
+            ])
+          : _c("h1", { staticClass: "pt-1" }, [
+              _vm._v("Welcome " + _vm._s(_vm.user_name))
+            ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-2" }, [

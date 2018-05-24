@@ -72,7 +72,7 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function roles()
+    public function role()
     {
         return $this->belongsTo('App\Models\UserManagement\Role', 'role_id');
     }
@@ -81,7 +81,7 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function organisations()
+    public function organisation()
     {
         return $this->belongsTo('App\Models\UserManagement\Organisation', 'organisation_id');
     }
