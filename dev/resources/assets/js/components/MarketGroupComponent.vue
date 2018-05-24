@@ -22,11 +22,11 @@
 </template>
 
 <script>
-    const DerivativeMarket = require('../lib/DerivativeMarket')
+    const Market = require('../lib/Market')
     export default {
         props: {
             'derivativeMarket': {
-                type: DerivativeMarket
+                type: Market
             }
         },
         watch: {

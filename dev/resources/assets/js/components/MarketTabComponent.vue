@@ -64,7 +64,12 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
-                EventBus.$emit('interactionToggle', true, this.market);
+                EventBus.$emit('interactionToggle', true, {
+                    component: 'ibar-market-request-single-stock',
+                    props: {
+                        market: this.market
+                    }
+                });
             }
         },
         mounted() {

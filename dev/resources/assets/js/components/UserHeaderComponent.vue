@@ -9,7 +9,7 @@
                 <p class="mb-1 pt-3">{{ time.computed_time }}</p>
             </div>
             <div class="col-4">
-                <p class="float-right mb-1 pt-3">Rebates: <strong>{{ total_rebate }}</strong></p>
+                <p class="float-right mb-1 pt-3">Rebates: <strong>{{ formatRandQty(total_rebate) }}</strong></p>
             </div>
         </div>
     </div>
