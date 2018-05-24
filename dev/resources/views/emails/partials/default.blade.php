@@ -4,12 +4,12 @@
 <div class="col-sm-12 col-md-4">
 
 
-  {{ Form::email("email[{$index}][email]",null,['class' => ($errors->has("email.{index}.email") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
+  {{ Form::email("email[{$index}][email]",null,['class' => ($errors->has("email.{$index}.email") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
   {{ Form::hidden("email[{$index}][default_id]",$label->id,['class' => ($errors->has('email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
   {{ Form::hidden("email[{$index}][notifiable]",1,['class' => ($errors->has('email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
   
-    @if ($errors->has("email.{index}.email"))
-            <strong class="text-danger">{{ $errors->first("email.{index}.email") }}</strong>
-    @endif
+   @if ($errors->has("email.{$index}.email"))
+	    <strong class="text-danger">{{ $errors->first("email.{$index}.email") }}</strong>
+	@endif
 </div>
 </div>

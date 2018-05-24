@@ -23,7 +23,7 @@
 								
 				<!-- this is for if fields are alredy set -->
 				@foreach ($emails as $index => $email)
-					@include('emails.partials.user_email', ['email' => $email,'index'=>$index])
+					@include('emails.partials.user_email', ['email' => $email,'index'=> $defaultLabels->count() + $index])
 				@endforeach
 
 
