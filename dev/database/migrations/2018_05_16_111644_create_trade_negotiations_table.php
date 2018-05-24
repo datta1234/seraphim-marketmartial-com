@@ -17,13 +17,14 @@ class CreateTradeNegotiationsTable extends Migration
             $table->increments('id');
 
             $table->integer('user_market_id')->unsigned();
-            $table->integer('trade_negotiation_id')->unsigned();
+            $table->integer('trade_negotiation_id')->unsigned()->nullable();
+            $table->integer('market_negotiation_id')->unsigned();
             $table->integer('initiate_user_id')->unsigned();
             $table->integer('recieving_user_id')->unsigned();
             $table->integer('trade_negotiation_status_id')->unsigned();
+            $table->boolean('traded');
 
-            $table->double('contracts', 11, 2);
-            $table->double('nominals', 11, 2)->nullable();
+            $table->double('quantity', 11, 2);
             
             $table->boolean('is_offer');
             $table->boolean('is_distpute');
@@ -35,6 +36,9 @@ class CreateTradeNegotiationsTable extends Migration
 
             $table->foreign('trade_negotiation_id')
                 ->references('id')->on('trade_negotiations');
+
+            $table->foreign('market_negotiation_id')
+                ->references('id')->on('market_negotiations');
 
             $table->foreign('initiate_user_id')
                 ->references('id')->on('users');

@@ -14,6 +14,10 @@
 * Trade View Variables
 */
 
+/*
+*   Interaction Bar
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -47,6 +51,10 @@ button.mm-button {
 
 /* 
 * Trade View Variables
+*/
+
+/*
+*   Interaction Bar
 */
 
 /* 
@@ -10482,6 +10490,10 @@ a.text-dark:focus {
 
 /* 
 * Trade View Variables
+*/
+
+/*
+*   Interaction Bar
 */
 
 @font-face {
@@ -22328,7 +22340,7 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
-  width: 450px;
+  width: 350px;
   opacity: 1;
 }
 
@@ -22351,6 +22363,29 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
+}
+
+.interaction-bar-wrapper .btn {
+  border: none;
+  border-radius: 0px;
+}
+
+.interaction-bar-wrapper .btn-primary {
+  background-color: #1D3641;
+}
+
+.interaction-bar-wrapper .btn-secondary {
+  background-color: #282828;
+}
+
+.interaction-bar-wrapper .btn[disabled] {
+  background-color: #6D6E70;
+}
+
+.interaction-bar-wrapper .btn-active {
+  background-color: #007D74;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 
 @font-face {

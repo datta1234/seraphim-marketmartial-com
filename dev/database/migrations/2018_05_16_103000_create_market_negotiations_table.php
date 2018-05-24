@@ -23,6 +23,10 @@ class CreateMarketNegotiationsTable extends Migration
             
             $table->double('bid', 11, 2)->nullable();
             $table->double('offer', 11, 2)->nullable();
+
+            $table->double('bid_qty', 11, 2);
+            $table->double('offer_qty', 11, 2);
+
             $table->double('bid_premium', 11, 2)->nullable();
             $table->double('offer_premium', 11, 2)->nullable();
             $table->double('future_reference', 11, 2)->nullable();

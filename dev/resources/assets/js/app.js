@@ -21,19 +21,46 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
  */
 
 const UserMarket = require('./lib/UserMarket');
-const DerivativeMarket = require('./lib/DerivativeMarket');
+const Market = require('./lib/Market');
+const Negotiation = require('./lib/Negotiation');
 
+Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+
+// Market Tab Components
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
+
+// Interaction Bar Component + children
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
-Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+    Vue.component('ibar-market-request-single-stock', require('./components/InteractionBar/MarketRequestSingleStock.vue'));
+
+Vue.mixin({
+    methods: {
+        formatRandQty(val) {
+            let sbl = "R";
+            let calcVal = ( typeof val === 'number' ? val : parseInt(val) );
+            switch(Math.ceil((""+calcVal).length / 3)) {
+                case 3: // 1 000 000 < x
+                    return sbl+(calcVal/1000000)+"m";
+                break;
+                case 2: // 1000 < x < 1 000 000
+                    return sbl+(calcVal/1000)+"k";
+                break;
+                case 1: // 100 < x < 1000
+                case 0: // x < 100
+                default:
+                    return sbl+calcVal;
+            }
+        }
+    }
+});
 
 const app = new Vue({
     el: '#trade_app',
     data: {
         // default data
         display_markets: [
-            new DerivativeMarket({
+            new Market({
                 title: "TOP 40",
                 markets: [
                     new UserMarket({
@@ -47,7 +74,10 @@ const app = new Vue({
                         strike: "11 000",
                         bid: "13.23",
                         offer: "24.53",
-                        state: "request"
+                        state: "request",
+                        negotiations: [
+                            new Negotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        ]
                     }),
                     new UserMarket({
                         date: "Mar 20",
@@ -58,7 +88,7 @@ const app = new Vue({
                     })
                 ]
             }),
-            new DerivativeMarket({
+            new Market({
                 title: "DTOP",
                 markets: [
                     new UserMarket({
@@ -70,7 +100,7 @@ const app = new Vue({
                     })
                 ]
             }),
-            new DerivativeMarket({
+            new Market({
                 title: "SINGLES",
                 markets: [
                     new UserMarket({
@@ -84,7 +114,6 @@ const app = new Vue({
         ]
     }
 });
-
 
 // Testing Code ( Simulate Stream Updates )
 

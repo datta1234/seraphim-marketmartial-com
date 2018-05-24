@@ -53223,54 +53223,109 @@ var OBSERVER_CONFIG = {
 /* 99 */
 /***/ (function(module, exports) {
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function UserMarket(options) {
-    var _this = this;
-
-    _classCallCheck(this, UserMarket);
-
-    var defaults = {
-        date: "",
-        strike: "",
-        bid: "",
-        offer: "",
-        state: ''
-        // assign options with defaults
-    };Object.keys(defaults).forEach(function (key) {
-        if (options && options[key]) {
-            _this[key] = options[key];
-        } else {
-            _this[key] = defaults[key];
-        }
-    });
-};
-
-/***/ }),
-/* 100 */
-/***/ (function(module, exports) {
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-module.exports = function DerivativeMarket(options) {
-    var _this = this;
+module.exports = function () {
+    function UserMarket(options) {
+        var _this = this;
 
-    _classCallCheck(this, DerivativeMarket);
+        _classCallCheck(this, UserMarket);
 
-    var defaults = {
-        title: "",
-        markets: []
-        // assign options with defaults
-    };Object.keys(defaults).forEach(function (key) {
-        if (options && options[key]) {
-            _this[key] = options[key];
-        } else {
-            _this[key] = defaults[key];
+        var defaults = {
+            date: "",
+            strike: "",
+            bid: "",
+            offer: "",
+            state: '',
+            negotiations: [],
+            // internal
+            _market: null
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && options[key]) {
+                _this[key] = options[key];
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+    }
+
+    /**
+    *   setParent - Set the parent Market
+    *   @param {Market} market - Market object
+    */
+
+
+    _createClass(UserMarket, [{
+        key: "setParent",
+        value: function setParent(market) {
+            this._market = market;
         }
-    });
-};
+
+        /**
+        *   getParent - Get the parent Market
+        *   @return {Market}
+        */
+
+    }, {
+        key: "getParent",
+        value: function getParent() {
+            return this._market;
+        }
+
+        /**
+        *   addNegotiation - add user negotiation
+        *   @param {Negotiation} negotiation - Negotiation objects
+        */
+
+    }, {
+        key: "addNegotiation",
+        value: function addNegotiation(negotiation) {
+            negotiation.setUserMarket(this);
+            this.negotiations.push(negotiation);
+        }
+
+        /**
+        *   addNegotiations - add array of user negotiations
+        *   @param {Array} negotiations - array of Negotiation objects
+        */
+
+    }, {
+        key: "addNegotiations",
+        value: function addNegotiations(negotiations) {
+            var _this2 = this;
+
+            negotiations.forEach(function (negotiation) {
+                _this2.addNegotiation(negotiation);
+            });
+        }
+
+        /**
+        * toJSON override
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this3 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this3[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return UserMarket;
+}();
 
 /***/ }),
+/* 100 */,
 /* 101 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -53321,18 +53376,47 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_bootstrap_vue__["a" /* default */]);
  */
 
 var UserMarket = __webpack_require__(99);
-var DerivativeMarket = __webpack_require__(100);
+var Market = __webpack_require__(241);
+var Negotiation = __webpack_require__(245);
 
+Vue.component('user-header', __webpack_require__(231));
+
+// Market Tab Components
 Vue.component('market-group', __webpack_require__(222));
 Vue.component('market-tab', __webpack_require__(225));
+
+// Interaction Bar Component + children
 Vue.component('interaction-bar', __webpack_require__(228));
-Vue.component('user-header', __webpack_require__(231));
+Vue.component('ibar-market-request-single-stock', __webpack_require__(242));
+
+Vue.mixin({
+    methods: {
+        formatRandQty: function formatRandQty(val) {
+            var sbl = "R";
+            var calcVal = typeof val === 'number' ? val : parseInt(val);
+            switch (Math.ceil(("" + calcVal).length / 3)) {
+                case 3:
+                    // 1 000 000 < x
+                    return sbl + calcVal / 1000000 + "m";
+                    break;
+                case 2:
+                    // 1000 < x < 1 000 000
+                    return sbl + calcVal / 1000 + "k";
+                    break;
+                case 1: // 100 < x < 1000
+                case 0: // x < 100
+                default:
+                    return sbl + calcVal;
+            }
+        }
+    }
+});
 
 var app = new Vue({
     el: '#trade_app',
     data: {
         // default data
-        display_markets: [new DerivativeMarket({
+        display_markets: [new Market({
             title: "TOP 40",
             markets: [new UserMarket({
                 date: "Mar 18",
@@ -53344,7 +53428,8 @@ var app = new Vue({
                 strike: "11 000",
                 bid: "13.23",
                 offer: "24.53",
-                state: "request"
+                state: "request",
+                negotiations: [new Negotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })]
             }), new UserMarket({
                 date: "Mar 20",
                 strike: "22 000",
@@ -53352,7 +53437,7 @@ var app = new Vue({
                 offer: "44.22",
                 state: "alert"
             })]
-        }), new DerivativeMarket({
+        }), new Market({
             title: "DTOP",
             markets: [new UserMarket({
                 date: "Mar 20",
@@ -53361,7 +53446,7 @@ var app = new Vue({
                 offer: "44.22",
                 state: "confirm"
             })]
-        }), new DerivativeMarket({
+        }), new Market({
             title: "SINGLES",
             markets: [new UserMarket({
                 date: "Mar 20",
@@ -64626,11 +64711,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var DerivativeMarket = __webpack_require__(100);
+var Market = __webpack_require__(241);
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         'derivativeMarket': {
-            type: DerivativeMarket
+            type: Market
         }
     },
     watch: {
@@ -64834,7 +64919,12 @@ var UserMarket = __webpack_require__(99);
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true, this.market);
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true, {
+                component: 'ibar-market-request-single-stock',
+                props: {
+                    market: this.market
+                }
+            });
         }
     },
     mounted: function mounted() {}
@@ -64964,30 +65054,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             opened: false,
-            subject: null
+            component: null,
+            component_props: {}
         };
     },
 
+    computed: {
+        currentBarContent: function currentBarContent() {
+            return this.component;
+        }
+    },
     methods: {
-        toggleBar: function toggleBar(set, subject) {
-            this.subject = subject;
+        toggleBar: function toggleBar(set, options) {
             if (typeof set != 'undefined') {
                 this.opened = set == true;
             } else {
                 this.opened = !this.opened;
+            }
+
+            // only handle if opened
+            if (this.opened) {
+                console.log(options);
+                this.component = options.component;
+                this.component_props = options.props;
             }
         }
     },
@@ -65008,15 +65103,22 @@ var render = function() {
     "div",
     { staticClass: "interaction-bar", class: { active: _vm.opened } },
     [
-      _c("div", { staticClass: "interaction-content" }, [
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "row" }, [
-            _vm._v(
-              "\n                " + _vm._s(_vm.subject) + "\n            "
+      _c(
+        "div",
+        { ref: "barContent", staticClass: "interaction-content" },
+        [
+          _c(
+            _vm.currentBarContent,
+            _vm._b(
+              { tag: "component" },
+              "component",
+              _vm.component_props,
+              false
             )
-          ])
-        ])
-      ]),
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _c(
         "div",
@@ -65212,6 +65314,581 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 235 */,
+/* 236 */,
+/* 237 */,
+/* 238 */,
+/* 239 */,
+/* 240 */,
+/* 241 */
+/***/ (function(module, exports) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+    function Market(options) {
+        var _this = this;
+
+        _classCallCheck(this, Market);
+
+        this.markets = [];
+        var defaults = {
+            title: ""
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && options[key]) {
+                _this[key] = options[key];
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+
+        // register markets
+        if (options.markets) {
+            this.addUserMarkets(options.markets);
+        }
+    }
+
+    /**
+    *   addUserMarket - add user market
+    *   @param {UserMarket} market - UserMarket objects
+    */
+
+
+    _createClass(Market, [{
+        key: "addUserMarket",
+        value: function addUserMarket(market) {
+            market.setParent(this);
+            this.markets.push(market);
+        }
+
+        /**
+        *   addUserMarkets - add array of user markets
+        *   @param {Array} markets - array of UserMarket objects
+        */
+
+    }, {
+        key: "addUserMarkets",
+        value: function addUserMarkets(markets) {
+            var _this2 = this;
+
+            markets.forEach(function (market) {
+                _this2.addUserMarket(market);
+            });
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this3 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this3[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return Market;
+}();
+
+/***/ }),
+/* 242 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(32)
+/* script */
+var __vue_script__ = __webpack_require__(243)
+/* template */
+var __vue_template__ = __webpack_require__(244)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketRequestSingleStock.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e1c2973c", Component.options)
+  } else {
+    hotAPI.reload("data-v-e1c2973c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 243 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var UserMarket = __webpack_require__(99);
+var Negotiation = __webpack_require__(245);
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        market: {
+            type: UserMarket
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false
+        };
+    },
+
+    computed: {},
+    methods: {},
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 244 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "" } },
+    [
+      _c(
+        "b-row",
+        { staticClass: "mb-3" },
+        [
+          _c("b-col", { attrs: { cols: "10" } }, [
+            _c("h3", [
+              _vm._v(
+                _vm._s(_vm.market.getParent().title) +
+                  " " +
+                  _vm._s(_vm.market.date) +
+                  " " +
+                  _vm._s(_vm.market.strike)
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("b-col", { attrs: { cols: "2" } }, [
+            _c("p", { staticClass: "pull-right" }, [_vm._v("10:00")])
+          ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.market.negotiations, function(item) {
+        return _c(
+          "b-row",
+          { staticClass: "mb-2" },
+          [
+            _c(
+              "b-col",
+              { attrs: { cols: "10" } },
+              [
+                _c(
+                  "b-row",
+                  [
+                    _c("b-col", { attrs: { cols: "3" } }, [
+                      _vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))
+                    ]),
+                    _vm._v(" "),
+                    _c("b-col", { attrs: { cols: "3" } }, [
+                      _vm._v(_vm._s(item.bid))
+                    ]),
+                    _vm._v(" "),
+                    _c("b-col", { attrs: { cols: "3" } }, [
+                      _vm._v(_vm._s(item.offer))
+                    ]),
+                    _vm._v(" "),
+                    _c("b-col", { attrs: { cols: "3" } }, [
+                      _vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))
+                    ])
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("b-col", { attrs: { cols: "2" } }, [
+              _c("p", [_vm._v(_vm._s(item.time))])
+            ])
+          ],
+          1
+        )
+      }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-3" },
+        [
+          _c(
+            "b-col",
+            { attrs: { cols: "10" } },
+            [
+              _c(
+                "b-form",
+                { attrs: { inline: "" } },
+                [
+                  _c("b-form-input", {
+                    staticClass: "w-25",
+                    attrs: { type: "number", placeholder: "Qty" },
+                    model: {
+                      value: _vm.bid_qty,
+                      callback: function($$v) {
+                        _vm.bid_qty = $$v
+                      },
+                      expression: "bid_qty"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("b-form-input", {
+                    staticClass: "w-25",
+                    attrs: { type: "text", placeholder: "Bid" },
+                    model: {
+                      value: _vm.bid,
+                      callback: function($$v) {
+                        _vm.bid = $$v
+                      },
+                      expression: "bid"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("b-form-input", {
+                    staticClass: "w-25",
+                    attrs: { type: "number", placeholder: "Offer" },
+                    model: {
+                      value: _vm.offer,
+                      callback: function($$v) {
+                        _vm.offer = $$v
+                      },
+                      expression: "offer"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("b-form-input", {
+                    staticClass: "w-25",
+                    attrs: { type: "text", placeholder: "Qty" },
+                    model: {
+                      value: _vm.offer_qty,
+                      callback: function($$v) {
+                        _vm.offer_qty = $$v
+                      },
+                      expression: "offer_qty"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("b-col", { attrs: { cols: "2" } })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "justify-content-md-center mb-1" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-button",
+                {
+                  staticClass: "w-100",
+                  attrs: { size: "sm", variant: "primary" }
+                },
+                [_vm._v("Send")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "justify-content-md-center mb-5" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-button",
+                {
+                  staticClass: "w-100",
+                  attrs: { size: "sm", variant: "secondary" }
+                },
+                [_vm._v("No Cares")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-5" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_conditions,
+                    callback: function($$v) {
+                      _vm.state_conditions = $$v
+                    },
+                    expression: "state_conditions"
+                  }
+                },
+                [_vm._v(" Apply a condition")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e1c2973c", module.exports)
+  }
+}
+
+/***/ }),
+/* 245 */
+/***/ (function(module, exports) {
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+module.exports = function () {
+    function Market(options) {
+        var _this = this;
+
+        _classCallCheck(this, Market);
+
+        // default internal
+        this._market = null;
+        // default public
+        var defaults = {
+            bid_qty: 0,
+            bid: null,
+            offer: null,
+            offer_qty: 0
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && options[key]) {
+                _this[key] = options[key];
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+
+        // register markets
+        if (options.market) {
+            this.setUserMarket(options.market);
+        }
+    }
+
+    /**
+    *   setUserMarket - Sets the negotiations UserMarket
+    *   @param {UserMarket} market - UserMarket for the negotiation
+    */
+
+
+    _createClass(Market, [{
+        key: 'setUserMarket',
+        value: function setUserMarket(market) {
+            this._market = market;
+        }
+
+        /**
+        *   getUserMarket - Gets the negotiations UserMarket
+        *   @return {UserMarket}
+        */
+
+    }, {
+        key: 'getUserMarket',
+        value: function getUserMarket() {
+            return this._market;
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: 'toJSON',
+        value: function toJSON() {
+            var _this2 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this2[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return Market;
+}();
 
 /***/ })
 /******/ ]);
