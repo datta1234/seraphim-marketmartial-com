@@ -1,0 +1,121 @@
+@extends('layouts.trade_app')
+
+@section('content')
+<div class="container">
+
+		@component('partials.content_card')
+			@slot('header')
+			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+			@endslot
+				@slot('title')
+					Your Profile
+				@endslot
+			@slot('decorator')
+				<hr class="title-decorator">
+			@endslot
+				@slot('body')
+
+            {!! Form::model($user,['route' => 'user.update']) !!}
+
+			         <div class="form-group row">
+			                    {{ Form::label('full_name','Full Name', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
+			                <div class="col-sm-12 col-md-4">
+			                  {{ Form::text('full_name',null,['class' => ($errors->has('full_name') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your full name here...']) }}
+
+
+			                    @if ($errors->has('full_name'))
+			                        <span class="invalid-feedback">
+			                            <strong>{{ $errors->first('full_name') }}</strong>
+			                        </span>
+			                    @endif
+			                </div>
+			            </div>
+
+			              <div class="form-group row">
+			                    {{ Form::label('cell_phone','Cell Phone', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
+			                <div class="col-sm-12 col-md-4">
+			                  {{ Form::text('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Cell Phone here here...']) }}
+
+
+			                    @if ($errors->has('cell_phone'))
+			                        <span class="invalid-feedback">
+			                            <strong>{{ $errors->first('cell_phone') }}</strong>
+			                        </span>
+			                    @endif
+			                </div>
+			            </div>
+
+			             <div class="form-group row">
+			                    {{ Form::label('work_phone','Work Phone', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
+			                <div class="col-sm-12 col-md-4">
+			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Work Phone here here...']) }}
+
+
+			                    @if ($errors->has('work_phone'))
+			                        <span class="invalid-feedback">
+			                            <strong>{{ $errors->first('work_phone') }}</strong>
+			                        </span>
+			                    @endif
+			                </div>
+			            </div>
+
+			              <div class="form-group row">
+			                    {{ Form::label('email','E - Mail', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
+			                <div class="col-sm-12 col-md-4">
+			                  {{ Form::text('email',null,['class' => ($errors->has('email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your E - Mail here here...']) }}
+
+
+			                    @if ($errors->has('email'))
+			                        <span class="invalid-feedback">
+			                            <strong>{{ $errors->first('email') }}</strong>
+			                        </span>
+			                    @endif
+			                </div>
+			            </div>
+
+			              <div class="form-group row">
+                <label for="organisation_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
+
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+
+                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
+
+                        @if ($errors->has('organisation_id'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('organisation_id') }}</strong>
+                            </span>
+                        @endif
+
+                    </div>
+                    
+                    <div class="checkbox largeCheckBox">
+                        <label>
+                            {{ Form::checkbox('not_listed', 'not_listed',null,['data-not-listed-check'=>true]) }}
+                            My organisation is not listed
+                        </label>
+                    </div>
+
+                 {{ Form::hidden('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...','disabled'=>true]) }}
+                    
+                    @if ($errors->has('new_organisation'))
+                        <span class="invalid-feedback">
+                            <strong>{{ $errors->first('new_organisation') }}</strong>
+                        </span>
+                    @endif
+                </div>
+            </div>
+
+               <div class="form-group row mb-0">
+                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
+                        <button type="submit" class="btn mm-button float-right w-100">Update</button>
+                    </div>
+                </div>
+
+		            {!! Form::close() !!}
+
+
+				@endslot
+		@endcomponent
+</div>
+@endsection

@@ -1,0 +1,47 @@
+@extends('layouts.trade_app')
+
+@section('content')
+<div class="container">
+
+		@component('partials.content_card')
+			@slot('header')
+			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+			@endslot
+				@slot('title')
+					E-Mail Settings
+				@endslot
+			@slot('decorator')
+				<hr class="title-decorator">
+			@endslot
+				@slot('body')
+
+            {!! Form::model($user,['route' => 'email.update']) !!}
+				
+				@foreach ($defaultLabels as $index => $defaultLabel)
+					@include('emails.partials.default', ['label' => $defaultLabel,'index'=>$index])
+				@endforeach
+								
+				<!-- this is for if fields are alredy set -->
+				@foreach ($emails as $index => $email)
+					@include('emails.partials.user_email', ['email' => $email,'index'=>$index])
+				@endforeach
+
+
+                    <div class="form-group row mb-0">
+
+                	 <div class="col-sm-12 col-md-3 col-xl-2 mt-2">
+                        <a class="btn mm-button float-right ml-2 w-100" href="#">Add E-mail</a>
+                    </div>
+                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
+                        <button type="submit" class="btn mm-button float-right w-100">Update</button>
+                    </div>
+                   
+                </div>
+
+		            {!! Form::close() !!}
+
+
+				@endslot
+		@endcomponent
+</div>
+@endsection

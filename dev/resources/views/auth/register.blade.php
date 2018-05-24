@@ -205,7 +205,6 @@
          * Register - Toggle organisation input state
          */
         $( "[data-not-listed-check]" ).on("change", function( event ) {
-            console.log("lolo");
             var org_check = $("#new_organisation");
             var org_drop = $("#organisation_id");
             console.log(org_check,org_drop);

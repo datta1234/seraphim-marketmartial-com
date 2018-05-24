@@ -30,16 +30,21 @@ class Email extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'email', 'notifiable',
+        'title', 'email', 'notifiable','default_id'
     ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function defaultLabels()
+    public function defaultLabel()
     {
         return $this->belongsTo('App\Models\UserManagement\DefaultLabel', 'default_id');
+    }
+
+    public function getLabelAttribute()
+    {
+        return $this->defaultLabel()->exists() ? $this->defaultLabel->title : $this->title ; 
     }
 
     /**

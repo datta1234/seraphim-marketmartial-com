@@ -16,8 +16,8 @@ class CreateEmailsTable extends Migration
         Schema::create('emails', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned();
-            $table->integer('default_id')->unsigned();
-            $table->string('title');
+            $table->integer('default_id')->nullable()->unsigned();
+            $table->string('title')->nullable();
             $table->string('email');
             $table->boolean('notifiable');
             $table->timestamps();
