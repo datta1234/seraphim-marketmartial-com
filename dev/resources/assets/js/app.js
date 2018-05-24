@@ -24,7 +24,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 const Market = require('./lib/Market');
 const UserMarketRequest = require('./lib/UserMarketRequest');
 const UserMarket = require('./lib/UserMarket');
-
 const MarketNegotiation = require('./lib/MarketNegotiation');
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
@@ -189,7 +188,7 @@ const app = new Vue({
 // REQUEST - blue
 setTimeout(function(){
     console.log("REQUEST - blue");
-    app.display_markets[1].market_requests.push(
+    app.display_markets[1].addMarketRequest(
         new UserMarketRequest({
             attributes: {
                 expiration_date: moment("2018-03-18 00:00:00"),

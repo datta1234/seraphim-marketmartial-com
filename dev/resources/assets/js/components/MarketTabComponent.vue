@@ -74,12 +74,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
-                EventBus.$emit('interactionToggle', true, {
-                    component: 'ibar-negotiation-bar',
-                    props: {
-                        marketRequest: this.marketRequest
-                    }
-                });
+                EventBus.$emit('interactionToggle', true, this.marketRequest);
             },
             calcMarketState() {
                 // set new refs
