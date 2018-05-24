@@ -20,7 +20,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> true,
-				'market_type_id' => 1
+				'market_type_id' => 1,
+				'is_selectable' => true
             ],
           	[
 				'title'=> 'DTOP',
@@ -30,7 +31,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> true,
-				'market_type_id' => 1
+				'market_type_id' => 1,
+				'is_selectable' => true
             ],
          	[
 				'title'=> 'DCAP',
@@ -40,7 +42,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> true,
-				'market_type_id' => 1
+				'market_type_id' => 1,
+				'is_selectable' => true
             ],
             [
 				'title'=> 'SINGLES',
@@ -50,7 +53,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> true,
-				'market_type_id' => 1
+				'market_type_id' => 3,
+				'is_selectable' => true
             ],
             [
 				'title'=> 'Options Switches',
@@ -60,7 +64,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> true,
-				'market_type_id' => 1
+				'market_type_id' => 1,
+				'is_selectable' => false
             ],
             [
 				'title'=> 'EFP',
@@ -70,7 +75,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>true,
 				'has_negotiation'=> true,
 				'has_rebate'=> false,
-				'market_type_id' => 2
+				'market_type_id' => 2,
+				'is_selectable' => false
             ],
             [
 				'title'=> 'Roll',
@@ -80,7 +86,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>false,
 				'has_negotiation'=> true,
 				'has_rebate'=> false,
-				'market_type_id' => 2
+				'market_type_id' => 2,
+				'is_selectable' => true
             ],
              [
 				'title'=> 'EFP Switches',
@@ -90,7 +97,8 @@ class MarketTableSeeder extends Seeder
 				'needs_spot'=>true,
 				'has_negotiation'=> true,
 				'has_rebate'=> false,
-				'market_type_id' => 2
+				'market_type_id' => 2,
+				'is_selectable' => true
             ],
 
 

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\UserManagement\User;
+use App\Models\UserManagement\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Models\UserManagement\Organisation;
 use App\Models\StructureItems\Market;
 use App\Models\StructureItems\MarketType;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -51,17 +53,28 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         $messages = [
-           'markets.required' => 'Please select at least one of the listed markets',
+            'markets.required' => 'Please select at least one of the listed markets',
+            'role_id.required' => 'Please select a role',
+            'role_id.exists' => 'Please select a role that is valid',
+            'organisation_id.required_without' => 'Please select your organisation.',
+            'cell_phone.required' => 'The phone field is required',
         ];
+
+
         return Validator::make($data, [
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'cell_phone' => 'required|numeric',
-            'role' => 'required',
-            'markets' => 'required',
-            'organisation' => 'required_without:new_organistation',
-            'new_organistation' => 'required_without:organisation|string|max:255'
+            'role_id' => [
+                'required',
+                Rule::exists('roles','id')->where(function ($query) {
+                     $query->where('is_selectable', 1);
+                }),
+            ],
+            'market_types' => 'required',
+            'organisation_id' => 'required_without:new_organistation',
+            'new_organistation' => 'required_if:organisation_id,null|string|max:255'
         ], $messages);
     }
 
@@ -73,15 +86,10 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {   
-        $roles = config('marketmartial.registration_role');
-        if( !in_array($data['role'], $roles) ) {
-            return back()->with('error', 'Incorrect role selected');
-        }
-        $role = array_flip($roles)[$data['role']];
-
         $organisation = '';
-        if( array_key_exists('organisation', $data) ) {
-            $organisation = $data['organisation'];
+
+        if( array_key_exists('organisation_id', $data) ) {
+            $organisation = $data['organisation_id'];
         } elseif( array_key_exists('new_organistation', $data) ) {
             $organisation = Organisation::create([
                 'title' => $data['new_organistation'],
@@ -95,14 +103,17 @@ class RegisterController extends Controller
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'role_id' => $role,
+            'role_id' => $data['role_id'],
             'organisation_id' => $organisation,
             'cell_phone' => $data['cell_phone'],
             'active' => false,
             'tc_accepted' => false,
         ]);
+
+        $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
         
-        $user->marketInterests()->sync($data['markets']);
+        $markets = Market::where('market_type_id',$data['market_types'])->pluck('id');
+        $user->marketInterests()->sync($markets);
         
         return $user;
     }
@@ -114,8 +125,9 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $markets = MarketType::all()->pluck('title', 'id');
+        $market_types = MarketType::all()->pluck('title', 'id');
         $organisations = Organisation::all()->pluck('title','id');
-        return view('auth.register')->with(compact('organisations', 'markets'));
+        $roles = Role::where('is_selectable',true)->pluck('title','id');
+        return view('auth.register')->with(compact('organisations', 'market_types','roles'));
     }
 }

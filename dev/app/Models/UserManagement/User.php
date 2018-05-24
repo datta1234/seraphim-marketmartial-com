@@ -55,7 +55,6 @@ class User extends Authenticatable
         'has_children',
         'hobbies',
         'birthdate',
-        'role_id',
         'organisation_id',
     ];
 

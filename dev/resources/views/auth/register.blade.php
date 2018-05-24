@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 {{-- Register Card --}}
 @component('partials.content_card')
     @slot('header')
@@ -67,65 +66,73 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="role" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Select Role</label>
+                            <label for="role_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Select Role</label>
 
                             <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                  <select name="role" value="{{ old('role') }}" class="form-control {{ $errors->has('role') ? ' is-invalid' : '' }}" id="role">
-                                    <option value="trader">I am a Trader</option>
-                                    <option value="viewer">I am a Viewer</option>
-                                  </select>
+                                <div class="form-group" >
+                                      <select name="role_id" value="{{ old('role_id') }}" class="form-control {{ $errors->has('role_id') ? ' is-invalid' : '' }}" id="role_id">
+                                        <option> Select Role</option>
+
+                                        @foreach ($roles as $key=> $role)
+                                            <option value="{{$key}}">I am a {{ $role }}</option>
+                                        @endforeach
+                                      </select>
+
+                                        @if ($errors->has('role_id'))
+                                            <span class="invalid-feedback">
+                                                 <strong>{{ $errors->first('role_id') }}</strong>
+                                            </span>
+                                        @endif
                                 </div>
 
-                                @if ($errors->has('role'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('role') }}</strong>
-                                    </span>
-                                @endif
+                              
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="markets" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
+                            <label for="market_types" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
 
                             <div class="form-group col-sm-12 col-md-4 mt-2">
-                                <div class="form-control {{ $errors->has('markets') ? ' is-invalid' : '' }}" id="markets">
-                                @foreach ($markets as $key=>$market)
+                                <div class="no-backdrop form-control {{ $errors->has('market_types') ? ' is-invalid' : '' }}" id="market_types">
+                                @foreach ($market_types as $key=>$market)
                                     <div class="form-check checkbox largeCheckBox">
                                         <label lass="form-check-label">
-                                            <input class="form-check-input" name="markets[]" type="checkbox" value="{{$key}}"> {{ $market }}
+                                            <input class="form-check-input" name="market_types[]" type="checkbox" value="{{$key}}"> {{ $market }}
                                         </label>
                                     </div>
                                 @endforeach
                                 </div>
 
-                                @if ($errors->has('markets'))
+                                @if ($errors->has('market_types'))
                                     <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('markets') }}</strong>
+                                        <strong>{{ $errors->first('market_types') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
 
                         <div class="form-group row">
-                            <label for="organisation" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
+                            <label for="organisation_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
 
                             <div class="col-sm-12 col-md-4">
                                 <div class="form-group">
-                                  <select name="organisation" value="{{ old('organisation') }}" class="form-control {{ $errors->has('organisation') ? ' is-invalid' : '' }}" id="organisation">
-                                    @foreach ($organisations as $key=>$organisation)
+                                  <select name="organisation_id" value="{{ old('organisation_id') }}" class="form-control {{ $errors->has('organisation_id') ? ' is-invalid' : '' }}" id="organisation_id">
+                                    <option value=""> Select Organisation</option>
+                                    @foreach ($organisations as $key=> $organisation)
                                         <option value="{{$key}}">{{ $organisation }}</option>
                                     @endforeach
                                   </select>
+                                    @if ($errors->has('organisation_id'))
+                                        <span class="invalid-feedback">
+                                            <strong>{{ $errors->first('organisation_id') }}</strong>
+                                        </span>
+                                    @endif
+
                                 </div>
 
                                 
 
-                                @if ($errors->has('organisation'))
-                                    <span class="invalid-feedback">
-                                        <strong>{{ $errors->first('organisation') }}</strong>
-                                    </span>
-                                @endif
+                             
                                 
                                 <div class="checkbox largeCheckBox">
                                     <label>
@@ -202,7 +209,7 @@
          */
         $( "[data-not-listed-check]" ).on("change", function( event ) {
             var org_check = $("#new_organistation");
-            var org_drop = $("#organisation");
+            var org_drop = $("#organisation_id");
             if (org_check.attr("type") == "hidden") {
                 org_drop.prop( "disabled", true );
                 org_check.prop( "disabled", false );

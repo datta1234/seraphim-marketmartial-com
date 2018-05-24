@@ -14,11 +14,15 @@ class MarketTypeTableSeeder extends Seeder
            DB::table('market_types')->insert([
             [
             	'id'=> 1,
-				'title'=> 'Options'
+				'title'=> 'Index Option'
             ],
             [
             	'id'=> 2,
-				'title'=> 'DELTA ONE'
+				'title'=> 'Delta One(EFPs, Rolls and EFP Switches)'
+            ],
+             [
+                'id'=> 3,
+                'title'=> 'Single Stock Options'
             ]
         ]);
     }
