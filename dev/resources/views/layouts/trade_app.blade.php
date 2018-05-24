@@ -15,11 +15,10 @@
 
     <!-- Scripts -->
     <script>
-        window.Laravel = {!! json_encode([
-            'csrfToken' => csrf_token(),
-            ]) !!};
-        </script>
-    <script src="{{ asset('js/fss.js') }}"></script>
+    window.Laravel = {!! json_encode([
+        'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
     </head>
     <body>
         <div id="trade_app">

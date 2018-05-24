@@ -89,7 +89,7 @@
                         </label>
                     </div>
 
-                 {{ Form::hidden('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...','disabled'=>true]) }}
+                 {{ Form::hidden('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...']) }}
                     
                     @if ($errors->has('new_organisation'))
                         <span class="invalid-feedback">
@@ -201,15 +201,11 @@
 @section('footer-scripts')
     @parent
     <script type="text/javascript">
-        /*
-         * Register - Toggle organisation input state
-         */
-        $( "[data-not-listed-check]" ).on("change", function( event ) {
+        function resetOrgSelect() {
             var org_check = $("#new_organisation");
             var org_drop = $("#organisation_id");
-            console.log(org_check,org_drop);
 
-            if (org_check.attr("type") == "hidden") {
+            if ($( "[data-not-listed-check]" ).prop('checked')) {
                 org_drop.prop( "disabled", true );
                 org_check.prop( "disabled", false );
                 org_check.attr("type", "");
@@ -218,7 +214,12 @@
                 org_check.prop( "disabled", true );
                 org_drop.prop( "disabled", false );
             }
-        });
+        }
+        $(document).ready(resetOrgSelect);
+        /*
+         * Register - Toggle organisation input state
+         */
+        $( "[data-not-listed-check]" ).on("change", resetOrgSelect);
 
         /*
         * Register - password and confirm match
