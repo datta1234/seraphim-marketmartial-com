@@ -74,7 +74,7 @@ class RegisterController extends Controller
             ],
             'market_types' => 'required',
             'organisation_id' => 'required_without:new_organistation',
-            'new_organistation' => 'required_if:organisation_id,null|string|max:255'
+            'new_organistation' => 'required_without:organisation_id|string|max:255'
         ], $messages);
     }
 
@@ -99,7 +99,7 @@ class RegisterController extends Controller
             return back()->with('error', 'a Problem occured with your organisation selection, please try again');
         }
 
-        $user = User::create([
+        $user = new User([
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
@@ -109,12 +109,11 @@ class RegisterController extends Controller
             'active' => false,
             'tc_accepted' => false,
         ]);
-
         $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
-        
+        $user->save();
+
         $markets = Market::where('market_type_id',$data['market_types'])->pluck('id');
         $user->marketInterests()->sync($markets);
-        
         return $user;
     }
 
@@ -125,9 +124,9 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $market_types = MarketType::all()->pluck('title', 'id');
-        $organisations = Organisation::all()->pluck('title','id');
-        $roles = Role::where('is_selectable',true)->pluck('title','id');
+        $market_types = MarketType::all()->pluck('title', 'id')->toArray();
+        $organisations = Organisation::all()->pluck('title','id')->toArray();
+        $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
         return view('auth.register')->with(compact('organisations', 'market_types','roles'));
     }
 }

@@ -38,4 +38,9 @@ class Role extends Model
     {
         return $this->hasMany('App\Models\UserManagement\User', 'role_id');
     }
+
+    public function getLabelAttribute()
+    {
+        return "I am a ".$this->title;
+    }
 }
