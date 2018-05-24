@@ -17,6 +17,9 @@
 // General Custom
 @import '_general_custom.scss';
 
+// Trade General Custom
+@import '_trade_general_custom.scss';
+
 // Icons
 @import"_icomoon.scss";
 
@@ -24,6 +27,10 @@
 @import"components/_navbar.scss";
 @import"components/_footer.scss";
 @import"components/_card_animation.scss";
+@import"components/_toggle_switch";
+@import"components/_market_tab";
+@import"components/_trade_footer";
+@import"components/_interaction_bar";
 
 
 @font-face {

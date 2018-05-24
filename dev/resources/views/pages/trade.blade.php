@@ -1,0 +1,58 @@
+@extends('layouts.trade_app')
+
+@section('content')
+<div class="container-fluid">
+	<div class="row interaction-bar-wrapper">
+		<interaction-bar></interaction-bar>
+		<!-- Toggle dark-theme / light-theme classes -->
+		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
+			
+			<user-header></user-header>
+
+			<!-- Actions and Alerts -->
+			<div class="row mt-2 menu-actions">
+				<div class="col-9">
+					<button type="button" class="btn mm-request-button mr-2 p-1">Request a Market</button>
+					<button type="button" class="btn mm-important-button mr-2 p-1">Important</button>
+					<button type="button" class="btn mm-alert-button mr-2 p-1">Alerts</button>
+					<button type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations</button>
+				</div>
+				<div class="col-3">
+					<div class="float-right">
+						<button type="button" class="btn mm-transparent-button mr-2">
+							<span class="icon icon-add"></span> Markets
+						</button>
+						<button type="button" class="btn mm-transparent-button mr-2">
+							<span class="icon icon-chat"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<!-- END Actions and Alerts -->
+
+			<!-- Markets sections -->
+			<div class="row user-markets mt-5">
+				<market-group v-for="derivative in display_markets" :derivative-market="derivative" class="col"></market-group>
+			</div>
+
+			<div class="row mt-5">
+				<div class="col col-lg-3 offset-lg-9">
+					<div class="float-right">
+						<p>Active Market Makers Online: <strong>7</strong></p>
+
+		        		<!-- Rounded toggle switch -->
+		        		<div class="float-right">
+		        			<span class="toggle">Theme toggle</span>
+							<label class="switch mb-0 ml-1">
+							  	<input type="checkbox" data-toggle-theme>
+							  	<span class="slider round"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+@endsection

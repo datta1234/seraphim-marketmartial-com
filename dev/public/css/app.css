@@ -2,6 +2,18 @@
 @import url('https://fonts.googleapis.com/css?family=Muli:700');
 @import url('https://fonts.googleapis.com/css?family=Roboto'); */
 
+/* 
+* Public View Variables
+*/
+
+/* 
+* Fonts
+*/
+
+/* 
+* Trade View Variables
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -25,59 +37,21 @@ button.mm-button {
   font-size: 1.2rem;
 }
 
-/* // Borders
-$laravel-border-color: darken($body-bg, 10%);
-$list-group-border: $laravel-border-color;
-$navbar-default-border: $laravel-border-color;
-$panel-default-border: $laravel-border-color;
-$panel-inner-border: $laravel-border-color;
+/* 
+* Public View Variables
+*/
 
-// Brands
-$brand-primary: #3097D1;
-$brand-info: #8eb4cb;
-$brand-success: #2ab27b;
-$brand-warning: #cbb956;
-$brand-danger: #bf5329;
+/* 
+* Fonts
+*/
 
-// Typography
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-$font-family-sans-serif: "Raleway", sans-serif;
-$font-size-base: 14px;
-$line-height-base: 1.6;
-$text-color: #636b6f;
-
-// Navbar
-$navbar-default-bg: #fff;
-
-// Buttons
-$btn-default-color: $text-color;
-
-// Inputs
-$input-border: lighten($text-color, 40%);
-$input-border-focus: lighten($brand-primary, 25%);
-$input-color-placeholder: lighten($text-color, 30%);
-
-// Panels
-$panel-default-heading-bg: #fff;
- */
+/* 
+* Trade View Variables
+*/
 
 /* 
 * bootstrap overrides
 */
-
-/* 
-$container-max-widths: (
-	sm: 526px,
-	md: 904px,
-	lg: 1290px 
-); */
-
-/* Old size
-$container-max-widths: (
-	sm: 420px, 
-	md: 720px, 
-	lg: 960px 
-); */
 
 /*!
  * Bootstrap v4.1.1 (https://getbootstrap.com/)
@@ -718,6 +692,7 @@ pre code {
 }
 
 .no-gutters > .col,
+.interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -736,7 +711,9 @@ pre code {
 .col-11,
 .col-12,
 .col,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col-auto,
+.interaction-bar-wrapper .interaction-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -800,7 +777,8 @@ pre code {
   padding-left: 15px;
 }
 
-.col {
+.col,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -809,7 +787,8 @@ pre code {
   max-width: 100%;
 }
 
-.col-auto {
+.col-auto,
+.interaction-bar-wrapper .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -2490,6 +2469,7 @@ select.form-control-lg:not([size]):not([multiple]),
 }
 
 .form-row > .col,
+.interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -10492,10 +10472,22 @@ a.text-dark:focus {
   }
 }
 
+/* 
+* Public View Variables
+*/
+
+/* 
+* Fonts
+*/
+
+/* 
+* Trade View Variables
+*/
+
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -10515,8 +10507,45 @@ a.text-dark:focus {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-solid-arrow-down:before {
+  content: "\E91D";
+}
+
+.icon-solid-arrow-right:before {
+  content: "\E91E";
+}
+
+.icon-solid-arrow-up:before {
+  content: "\E91F";
+}
+
+.icon-solid-arrow-left:before {
+  content: "\E920";
+}
+
+.icon-add:before {
+  content: "\E918";
+}
+
+.icon-chat:before {
+  content: "\E919";
+}
+
+.icon-mm-logo-v2:before {
+  content: "\E91A";
+}
+
+.icon-arrows-right:before {
+  content: "\E91B";
+}
+
+.icon-arrows-left:before {
+  content: "\E91C";
+}
+
 .icon-mm-logo:before {
   content: "\E900";
+  color: #fff;
 }
 
 .icon-wifi2:before {
@@ -11250,6 +11279,7 @@ pre code {
 }
 
 .no-gutters > .col,
+.interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -11268,7 +11298,9 @@ pre code {
 .col-11,
 .col-12,
 .col,
+.interaction-bar-wrapper .interaction-bar-content-pane,
 .col-auto,
+.interaction-bar-wrapper .interaction-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -11332,7 +11364,8 @@ pre code {
   padding-left: 15px;
 }
 
-.col {
+.col,
+.interaction-bar-wrapper .interaction-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -11341,7 +11374,8 @@ pre code {
   max-width: 100%;
 }
 
-.col-auto {
+.col-auto,
+.interaction-bar-wrapper .interaction-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -13022,6 +13056,7 @@ select.form-control-lg:not([size]):not([multiple]),
 }
 
 .form-row > .col,
+.interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -21519,10 +21554,202 @@ a.mm-login-button {
   background-color: transparent;
 }
 
+#trade_app .trade-section.light-theme {
+  background-color: #D3D8DC;
+}
+
+#trade_app .trade-section.light-theme h1,
+#trade_app .trade-section.light-theme h2,
+#trade_app .trade-section.light-theme h3,
+#trade_app .trade-section.light-theme h4,
+#trade_app .trade-section.light-theme h5,
+#trade_app .trade-section.light-theme h6 {
+  color: #1D3641;
+}
+
+#trade_app .trade-section.light-theme .sub-nav {
+  background-color: #EDEDEE;
+  color: #1D3641;
+}
+
+#trade_app .trade-section.dark-theme {
+  background-color: #191919;
+}
+
+#trade_app .trade-section.dark-theme h1,
+#trade_app .trade-section.dark-theme h2,
+#trade_app .trade-section.dark-theme h3,
+#trade_app .trade-section.dark-theme h4,
+#trade_app .trade-section.dark-theme h5,
+#trade_app .trade-section.dark-theme h6,
+#trade_app .trade-section.dark-theme p,
+#trade_app .trade-section.dark-theme .toggle-text {
+  color: #FFFFFF;
+}
+
+#trade_app .trade-section.dark-theme .sub-nav {
+  background-color: #282828;
+  color: #FFFFFF;
+}
+
+#trade_app .trade-section.dark-theme .toggle {
+  color: #FFFFFF;
+}
+
+#trade_app .sub-nav {
+  -webkit-box-shadow: 0px 1px 6px 0px black;
+          box-shadow: 0px 1px 6px 0px black;
+}
+
+#trade_app .sub-nav p {
+  font-family: Arial;
+}
+
+#trade_app h1,
+#trade_app h2,
+#trade_app h3,
+#trade_app h4,
+#trade_app h5,
+#trade_app h6 {
+  font-family: "Raleway-SemiBold";
+}
+
+#trade_app p,
+#trade_app span,
+#trade_app .market-tab {
+  font-family: "Raleway-SemiBold";
+}
+
+#trade_app .user-market .user-market-group {
+  border-right: 0.15em solid #6D6E70;
+  height: 100%;
+}
+
+#trade_app .user-market:last-child .user-market-group {
+  border-right: none;
+}
+
+.menu-actions .icon {
+  font-size: 1.7em;
+  vertical-align: middle;
+}
+
+.mm-request-button {
+  color: #FFFFFF;
+  background-color: #2358BD;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+  width: 18%;
+}
+
+.mm-request-button:focus,
+.mm-request-button.focus {
+  color: #FFFFFF;
+  background-color: #1b4492;
+}
+
+.mm-request-button:hover {
+  color: #FFFFFF;
+  background-color: #1b4492;
+}
+
+.mm-important-button {
+  color: #FFFFFF;
+  background-color: #1D3641;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+  width: 18%;
+}
+
+.mm-important-button:focus,
+.mm-important-button.focus {
+  color: #FFFFFF;
+  background-color: #0d191e;
+}
+
+.mm-important-button:hover {
+  color: #FFFFFF;
+  background-color: #0d191e;
+}
+
+.mm-alert-button {
+  color: #FFFFFF;
+  background-color: #BB1D1D;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+  width: 18%;
+}
+
+.mm-alert-button:focus,
+.mm-alert-button.focus {
+  color: #FFFFFF;
+  background-color: #8f1616;
+}
+
+.mm-alert-button:hover {
+  color: #FFFFFF;
+  background-color: #8f1616;
+}
+
+.mm-confirmation-button {
+  color: #FFFFFF;
+  background-color: #E17428;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+  width: 18%;
+}
+
+.mm-confirmation-button:focus,
+.mm-confirmation-button.focus {
+  color: #FFFFFF;
+  background-color: #bc5d1a;
+}
+
+.mm-confirmation-button:hover {
+  color: #FFFFFF;
+  background-color: #bc5d1a;
+}
+
+.trade-section.dark-theme .mm-transparent-button {
+  color: #FFFFFF;
+  background-color: transparent;
+}
+
+.trade-section.dark-theme .mm-transparent-button:focus,
+.trade-section.dark-theme .mm-transparent-button.focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: #cccccc;
+}
+
+.trade-section.dark-theme .mm-transparent-button:hover {
+  color: #cccccc;
+}
+
+.trade-section.light-theme .mm-transparent-button {
+  color: #191919;
+  background-color: transparent;
+}
+
+.trade-section.light-theme .mm-transparent-button:focus,
+.trade-section.light-theme .mm-transparent-button.focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: #4c4c4c;
+}
+
+.trade-section.light-theme .mm-transparent-button:hover {
+  color: #4c4c4c;
+}
+
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?lbdp4o#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?lbdp4o") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?lbdp4o") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?lbdp4o#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -21542,8 +21769,45 @@ a.mm-login-button {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-solid-arrow-down:before {
+  content: "\E91D";
+}
+
+.icon-solid-arrow-right:before {
+  content: "\E91E";
+}
+
+.icon-solid-arrow-up:before {
+  content: "\E91F";
+}
+
+.icon-solid-arrow-left:before {
+  content: "\E920";
+}
+
+.icon-add:before {
+  content: "\E918";
+}
+
+.icon-chat:before {
+  content: "\E919";
+}
+
+.icon-mm-logo-v2:before {
+  content: "\E91A";
+}
+
+.icon-arrows-right:before {
+  content: "\E91B";
+}
+
+.icon-arrows-left:before {
+  content: "\E91C";
+}
+
 .icon-mm-logo:before {
   content: "\E900";
+  color: #fff;
 }
 
 .icon-wifi2:before {
@@ -21899,6 +22163,194 @@ a.mm-login-button {
 
 .flip-card-content {
   background-color: #269a9b;
+}
+
+/* The switch - the box around the slider */
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 7px;
+}
+
+/* Hide default HTML checkbox */
+
+.switch input {
+  display: none;
+}
+
+/* The slider */
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 0px;
+  bottom: -2.5px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #1c7d74;
+}
+
+input:focus + .slider {
+  -webkit-box-shadow: 0 0 1px #1c7d74;
+          box-shadow: 0 0 1px #1c7d74;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* Rounded sliders */
+
+.slider.round {
+  border-radius: 7px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.trade-section.light-theme .market-tab,
+.trade-section.dark-theme .market-tab {
+  background-color: #071a22;
+  color: #FFFFFF;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+  cursor: pointer;
+}
+
+.trade-section.light-theme .market-tab.market-alert,
+.trade-section.dark-theme .market-tab.market-alert {
+  background-color: #BB1D1D;
+}
+
+.trade-section.light-theme .market-tab.market-confirm,
+.trade-section.dark-theme .market-tab.market-confirm {
+  background-color: #E17428;
+}
+
+.trade-section.light-theme .market-tab.market-request,
+.trade-section.dark-theme .market-tab.market-request {
+  border: 0.15em solid #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request .market-tab-state {
+  color: #2358BD;
+}
+
+.trade-section.light-theme .user-action,
+.trade-section.dark-theme .user-action {
+  color: #EBC300;
+}
+
+.trade-section.dark-theme .market-tab {
+  background-color: #073238;
+}
+
+.trade-section.light-theme .market-tab {
+  background-color: #071a22;
+}
+
+#trade-footer {
+  background-color: #303030;
+}
+
+#trade-footer .footer-links-block {
+  float: right;
+}
+
+#trade-footer .footer-links-block .footer-link {
+  color: #ffffff;
+  font-family: "Muli-Bold";
+  font-size: 0.74rem;
+}
+
+#trade-footer a {
+  text-decoration: none;
+}
+
+#trade-footer .footer-title-image .icon {
+  vertical-align: middle;
+}
+
+#trade-footer .footer-title-image .footer-logo-text {
+  color: #ffffff;
+  font-family: "Muli-Bold";
+  font-size: 0.74rem;
+}
+
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .interaction-bar > .interaction-content {
+  -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+  transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+}
+
+.interaction-bar-wrapper .interaction-bar {
+  padding: 0px;
+  width: auto;
+  position: relative;
+}
+
+.interaction-bar-wrapper .interaction-bar .interaction-content {
+  width: 0px;
+  opacity: 0;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  color: #fff;
+  overflow: hidden;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-content {
+  width: 450px;
+  opacity: 1;
+}
+
+.interaction-bar-wrapper .interaction-bar-toggle {
+  width: 25px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  position: relative;
+  color: #fff;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .interaction-bar-toggle > .icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -50%;
+  font-size: 32px;
 }
 
 @font-face {

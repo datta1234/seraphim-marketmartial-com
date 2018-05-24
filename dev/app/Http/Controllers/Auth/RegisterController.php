@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Models\UserManagement\Organisation;
 use App\Models\StructureItems\Market;
+use App\Models\StructureItems\MarketType;
 
 class RegisterController extends Controller
 {
@@ -100,7 +101,7 @@ class RegisterController extends Controller
             'active' => false,
             'tc_accepted' => false,
         ]);
-
+        
         $user->marketInterests()->sync($data['markets']);
         
         return $user;
@@ -113,7 +114,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $markets = Market::all()->pluck('title', 'id');
+        $markets = MarketType::all()->pluck('title', 'id');
         $organisations = Organisation::all()->pluck('title','id');
         return view('auth.register')->with(compact('organisations', 'markets'));
     }
