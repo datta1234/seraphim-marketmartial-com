@@ -22465,6 +22465,15 @@ input:checked + .slider:before {
   bottom: 0;
 }
 
+.popover .popover-body {
+  background-color: #FFFFFF;
+  color: #1D3641;
+}
+
+.popover .arrow {
+  visibility: hidden;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

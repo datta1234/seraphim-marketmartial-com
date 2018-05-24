@@ -66078,7 +66078,6 @@ var UserMarket = __webpack_require__(33);
     },
     mounted: function mounted() {
         this.checkSelected();
-        console.log("I run", this.markets);
     }
 });
 
@@ -66128,13 +66127,15 @@ var render = function() {
                     { staticClass: "col-12" },
                     _vm._l(_vm.availableSelectedMarkets, function(market, key) {
                       return _c("div", { staticClass: "row mt-1" }, [
-                        _c("div", { staticClass: "col-6 text-center" }, [
-                          _vm._v(
-                            "\n                                    " +
-                              _vm._s(key) +
-                              "\n                                "
-                          )
-                        ]),
+                        _c(
+                          "div",
+                          { staticClass: "col-6 text-center pt-2 pb-2" },
+                          [
+                            _c("h5", { staticClass: "w-100 m-0" }, [
+                              _vm._v(_vm._s(key))
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-6" }, [
                           market

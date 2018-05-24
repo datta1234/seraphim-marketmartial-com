@@ -17,8 +17,8 @@
                         <div class="row text-center">
                             <div class="col-12">
                                 <div v-for="(market,key) in availableSelectedMarkets" class="row mt-1">
-                                    <div class="col-6 text-center">
-                                        {{ key }}
+                                    <div class="col-6 text-center pt-2 pb-2">
+                                        <h5 class="w-100 m-0">{{ key }}</h5>
                                     </div>
                                     <div class="col-6">
                                         <button v-if="market" 
