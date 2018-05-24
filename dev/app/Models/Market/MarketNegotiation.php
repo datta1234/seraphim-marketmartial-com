@@ -41,6 +41,8 @@ class MarketNegotiation extends Model
        	'user_id',
 		'bid',
 		'offer',
+        'bid_nominals',
+        'offer_nominals',
 		'bid_premium',
 		'offer_premium',
 		'future_reference',
