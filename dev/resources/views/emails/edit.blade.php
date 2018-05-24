@@ -33,10 +33,10 @@
 
                     <div class="form-group row mb-0">
 
-                	 <div class="col-sm-12 col-md-3 col-xl-2 mt-2">
+                	 <div class="col-3">
                         <a class="btn mm-button float-right ml-2 w-100" href="#">Add E-mail</a>
                     </div>
-                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
+                    <div class="offset-6 col-3">
                         <button type="submit" class="btn mm-button float-right w-100">Update</button>
                     </div>
                    

@@ -94,7 +94,18 @@ body
 				font-size: 2.5em;
 			}
 		}
+
+		
 	}
+
+		a.user-nav-link {
+			color: $mm-text-dark;
+			font-weight: bold;
+
+			&:hover {
+		    	color: $mm-panel-green;
+		  	}
+		}
 }
 
 .info-block {
