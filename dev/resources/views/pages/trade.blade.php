@@ -6,33 +6,21 @@
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
 		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
-			
-			<user-header></user-header>
+			<user-header 
+				user_name="{{ $user->full_name }}" 
+				@if( isset($organisation) ) 
+					organisation="{{ $organisation->title }}"
+				@endif
+				total_rebate="{{ $total_rebate }}">
+			</user-header>
 
 			<!-- Actions and Alerts -->
-			<div class="row mt-2 menu-actions">
-				<div class="col-9">
-					<button type="button" class="btn mm-request-button mr-2 p-1">Request a Market</button>
-					<button type="button" class="btn mm-important-button mr-2 p-1">Important</button>
-					<button type="button" class="btn mm-alert-button mr-2 p-1">Alerts</button>
-					<button type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations</button>
-				</div>
-				<div class="col-3">
-					<div class="float-right">
-						<button type="button" class="btn mm-transparent-button mr-2">
-							<span class="icon icon-add"></span> Markets
-						</button>
-						<button type="button" class="btn mm-transparent-button mr-2">
-							<span class="icon icon-chat"></span>
-						</button>
-					</div>
-				</div>
-			</div>
+			<action-bar :markets="display_markets"></action-bar>
 			<!-- END Actions and Alerts -->
 
 			<!-- Markets sections -->
 			<div class="row user-markets mt-5">
-				<market-group v-for="derivative in display_markets" :derivative-market="derivative" class="col"></market-group>
+				<market-group v-for="market in display_markets" :market="market" class="col"></market-group>
 			</div>
 
 			<div class="row mt-5">
@@ -53,6 +41,7 @@
 			</div>
 
 		</div>
+		<chat-bar></chat-bar>
 	</div>
 </div>
 @endsection

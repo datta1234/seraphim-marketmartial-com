@@ -14,6 +14,10 @@
 * Trade View Variables
 */
 
+/*
+*   Interaction Bar
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -47,6 +51,10 @@ button.mm-button {
 
 /* 
 * Trade View Variables
+*/
+
+/*
+*   Interaction Bar
 */
 
 /* 
@@ -693,6 +701,7 @@ pre code {
 
 .no-gutters > .col,
 .interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
+.interaction-bar-wrapper .no-gutters > .chat-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -712,8 +721,10 @@ pre code {
 .col-12,
 .col,
 .interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane,
 .col-auto,
 .interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -778,7 +789,8 @@ pre code {
 }
 
 .col,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -788,7 +800,8 @@ pre code {
 }
 
 .col-auto,
-.interaction-bar-wrapper .interaction-bar {
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -2470,6 +2483,7 @@ select.form-control-lg:not([size]):not([multiple]),
 
 .form-row > .col,
 .interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
+.interaction-bar-wrapper .form-row > .chat-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -10484,6 +10498,10 @@ a.text-dark:focus {
 * Trade View Variables
 */
 
+/*
+*   Interaction Bar
+*/
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
@@ -11280,6 +11298,7 @@ pre code {
 
 .no-gutters > .col,
 .interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
+.interaction-bar-wrapper .no-gutters > .chat-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -11299,8 +11318,10 @@ pre code {
 .col-12,
 .col,
 .interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane,
 .col-auto,
 .interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -11365,7 +11386,8 @@ pre code {
 }
 
 .col,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -11375,7 +11397,8 @@ pre code {
 }
 
 .col-auto,
-.interaction-bar-wrapper .interaction-bar {
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -13057,6 +13080,7 @@ select.form-control-lg:not([size]):not([multiple]),
 
 .form-row > .col,
 .interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
+.interaction-bar-wrapper .form-row > .chat-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -21629,6 +21653,10 @@ a.mm-login-button {
   font-family: "Raleway-SemiBold";
 }
 
+#trade_app .user-market {
+  padding: 0px;
+}
+
 #trade_app .user-market .user-market-group {
   border-right: 0.15em solid #6D6E70;
   height: 100%;
@@ -21721,6 +21749,22 @@ a.mm-login-button {
 .mm-confirmation-button:hover {
   color: #FFFFFF;
   background-color: #bc5d1a;
+}
+
+.mm-generic-trade-button {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-generic-trade-button:focus,
+.mm-generic-trade-button.focus {
+  color: #FFFFFF;
+  background-color: #0d191e;
+}
+
+.mm-generic-trade-button:hover {
+  color: #FFFFFF;
+  background-color: #0d191e;
 }
 
 .trade-section.dark-theme .mm-transparent-button {
@@ -22269,6 +22313,16 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
+.trade-section.light-theme .market-tab.market-request-grey,
+.trade-section.dark-theme .market-tab.market-request-grey {
+  border: 0.15em solid #6D6E70;
+}
+
+.trade-section.light-theme .market-tab.market-request-grey .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request-grey .market-tab-state {
+  color: #6D6E70;
+}
+
 .trade-section.light-theme .user-action,
 .trade-section.dark-theme .user-action {
   color: #EBC300;
@@ -22337,8 +22391,36 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
-  width: 450px;
+  width: 350px;
   opacity: 1;
+}
+
+.interaction-bar-wrapper .interaction-bar input[type="number"],
+.interaction-bar-wrapper .interaction-bar input[type="text"] {
+  padding: 2px;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn {
+  border: none;
+  border-radius: 0px;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-primary {
+  background-color: #1D3641;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-secondary {
+  background-color: #282828;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn[disabled] {
+  background-color: #6D6E70;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-active {
+  background-color: #007D74;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
@@ -22360,6 +22442,64 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
+}
+
+.interaction-bar-wrapper .chat-bar,
+.interaction-bar-wrapper .chat-bar-content-pane,
+.interaction-bar-wrapper .chat-bar > .chat-content {
+  -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+  transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+}
+
+.interaction-bar-wrapper .chat-bar {
+  padding: 0px;
+  width: auto;
+  position: relative;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-content {
+  background-color: #090909;
+  width: 0px;
+  opacity: 0;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  color: #fff;
+  overflow: hidden;
+}
+
+.interaction-bar-wrapper .chat-bar.active .chat-content {
+  width: 300px;
+  opacity: 1;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header h1 {
+  display: inline-block;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header .icon {
+  font-size: 2em;
+}
+
+.interaction-bar-wrapper .chat-bar .chats {
+  background-color: #FFFFFF;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-action-wrapper {
+  position: absolute;
+  bottom: 0;
+}
+
+.popover .popover-body {
+  background-color: #FFFFFF;
+  color: #1D3641;
+}
+
+.popover .arrow {
+  visibility: hidden;
 }
 
 @font-face {

@@ -76,7 +76,7 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function chosenUserMarkets()
+    public function chosenUserMarket()
     {
         return $this->belongsTo('App\Models\Market\UserMarket','chosen_user_market_id');
     }

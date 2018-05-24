@@ -16,15 +16,19 @@ class CreateTradesTable extends Migration
         Schema::create('trades', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('trade_negotiation_id')->unsigned();
+            $table->integer('market_negotiation_id')->unsigned();
             $table->integer('user_market_id')->unsigned();
             $table->integer('initiate_user_id')->unsigned();
             $table->integer('recieving_user_id')->unsigned();
             $table->integer('trade_status_id')->unsigned();
-            $table->double('contracts', 11, 2);
+            $table->double('quantity', 11, 2);
             $table->timestamps();
 
             $table->foreign('trade_negotiation_id')
                 ->references('id')->on('trade_negotiations');
+
+            $table->foreign('market_negotiation_id')
+                ->references('id')->on('market_negotiations');
 
             $table->foreign('user_market_id')
                 ->references('id')->on('user_markets');

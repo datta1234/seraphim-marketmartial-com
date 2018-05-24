@@ -20,6 +20,8 @@
     "vue": "^2.5.7"
   },
   "dependencies": {
-    "flat-surface-shader-unofficial": "^0.1.0"
+    "bootstrap-vue": "^2.0.0-rc.11",
+    "flat-surface-shader-unofficial": "^0.1.0",
+    "moment": "^2.22.1"
   }
 }
