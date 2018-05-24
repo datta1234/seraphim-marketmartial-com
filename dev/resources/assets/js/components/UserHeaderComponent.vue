@@ -2,7 +2,8 @@
     <div class="user-header">
         <div class="row sub-nav pt-3 pb-3">
             <div class="col-6">
-                <h1 class="pt-1">Welcome {{ name }}({{ organisation }})</h1>
+                <h1 v-if="organisation" class="pt-1">Welcome {{ user_name }} ({{ organisation }})</h1>
+                <h1 v-else class="pt-1">Welcome {{ user_name }}</h1>
             </div>
             <div class="col-2">
                 <p class="mb-1 pt-3">{{ time.computed_time }}</p>
@@ -16,10 +17,12 @@
 
 <script>
     export default {
+        props: [
+            'user_name',
+            'organisation'
+        ],
         data() {
             return {
-                name:'John Doe',
-                organisation:'Banks ABC',
                 time:{
                     hours:'',
                     minutes:'',
