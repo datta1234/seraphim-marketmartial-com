@@ -15,7 +15,7 @@
 			</user-header>
 
 			<!-- Actions and Alerts -->
-			<action-bar></action-bar>
+			<action-bar :markets="display_markets"></action-bar>
 			<!-- END Actions and Alerts -->
 
 			<!-- Markets sections -->
