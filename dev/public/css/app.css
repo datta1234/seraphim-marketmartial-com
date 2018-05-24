@@ -21741,9 +21741,6 @@ a.mm-login-button {
 .mm-generic-trade-button {
   color: #FFFFFF;
   background-color: #1D3641;
-  border-radius: 0.6em;
-  -webkit-box-shadow: 4px 4px 8px -1px #000000;
-          box-shadow: 4px 4px 8px -1px #000000;
 }
 
 .mm-generic-trade-button:focus,
