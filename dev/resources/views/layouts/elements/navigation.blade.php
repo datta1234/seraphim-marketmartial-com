@@ -19,6 +19,15 @@
 				<li class="nav-item">
 					<a class="nav-link active" href="">More</a>
 				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="{{ route('user.edit') }}">My Profile</a>
+						<a class="dropdown-item" href="{{ route('user.edit_password') }}">Change Password</a>
+						<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
+						<a class="dropdown-item" href="{{ route('account.edit') }}">Account Setting</a>
+					</div>
+				</li>
 				<li class="nav-item">
 					<a class="nav-link active" href="{{ route('logout') }}"
 					onclick="event.preventDefault();
