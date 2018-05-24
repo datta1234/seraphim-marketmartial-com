@@ -34,6 +34,10 @@ Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
     Vue.component('ibar-market-request-single-stock', require('./components/InteractionBar/MarketRequestSingleStock.vue'));
 
+Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
+Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
+
 Vue.mixin({
     methods: {
         formatRandQty(val) {

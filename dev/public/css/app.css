@@ -701,6 +701,7 @@ pre code {
 
 .no-gutters > .col,
 .interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
+.interaction-bar-wrapper .no-gutters > .chat-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -720,8 +721,10 @@ pre code {
 .col-12,
 .col,
 .interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane,
 .col-auto,
 .interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -786,7 +789,8 @@ pre code {
 }
 
 .col,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -796,7 +800,8 @@ pre code {
 }
 
 .col-auto,
-.interaction-bar-wrapper .interaction-bar {
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -2478,6 +2483,7 @@ select.form-control-lg:not([size]):not([multiple]),
 
 .form-row > .col,
 .interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
+.interaction-bar-wrapper .form-row > .chat-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -11292,6 +11298,7 @@ pre code {
 
 .no-gutters > .col,
 .interaction-bar-wrapper .no-gutters > .interaction-bar-content-pane,
+.interaction-bar-wrapper .no-gutters > .chat-bar-content-pane,
 .no-gutters > [class*="col-"] {
   padding-right: 0;
   padding-left: 0;
@@ -11311,8 +11318,10 @@ pre code {
 .col-12,
 .col,
 .interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane,
 .col-auto,
 .interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar,
 .col-sm-1,
 .col-sm-2,
 .col-sm-3,
@@ -11377,7 +11386,8 @@ pre code {
 }
 
 .col,
-.interaction-bar-wrapper .interaction-bar-content-pane {
+.interaction-bar-wrapper .interaction-bar-content-pane,
+.interaction-bar-wrapper .chat-bar-content-pane {
   -ms-flex-preferred-size: 0;
       flex-basis: 0;
   -webkit-box-flex: 1;
@@ -11387,7 +11397,8 @@ pre code {
 }
 
 .col-auto,
-.interaction-bar-wrapper .interaction-bar {
+.interaction-bar-wrapper .interaction-bar,
+.interaction-bar-wrapper .chat-bar {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
@@ -13069,6 +13080,7 @@ select.form-control-lg:not([size]):not([multiple]),
 
 .form-row > .col,
 .interaction-bar-wrapper .form-row > .interaction-bar-content-pane,
+.interaction-bar-wrapper .form-row > .chat-bar-content-pane,
 .form-row > [class*="col-"] {
   padding-right: 5px;
   padding-left: 5px;
@@ -21726,6 +21738,25 @@ a.mm-login-button {
   background-color: #bc5d1a;
 }
 
+.mm-generic-trade-button {
+  color: #FFFFFF;
+  background-color: #1D3641;
+  border-radius: 0.6em;
+  -webkit-box-shadow: 4px 4px 8px -1px #000000;
+          box-shadow: 4px 4px 8px -1px #000000;
+}
+
+.mm-generic-trade-button:focus,
+.mm-generic-trade-button.focus {
+  color: #FFFFFF;
+  background-color: #0d191e;
+}
+
+.mm-generic-trade-button:hover {
+  color: #FFFFFF;
+  background-color: #0d191e;
+}
+
 .trade-section.dark-theme .mm-transparent-button {
   color: #FFFFFF;
   background-color: transparent;
@@ -22386,6 +22417,55 @@ input:checked + .slider:before {
   background-color: #007D74;
   margin-left: -10px;
   margin-right: -10px;
+}
+
+.interaction-bar-wrapper .chat-bar,
+.interaction-bar-wrapper .chat-bar-content-pane,
+.interaction-bar-wrapper .chat-bar > .chat-content {
+  -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+  transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+}
+
+.interaction-bar-wrapper .chat-bar {
+  padding: 0px;
+  width: auto;
+  position: relative;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-content {
+  background-color: #090909;
+  width: 0px;
+  opacity: 0;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  color: #fff;
+  overflow: hidden;
+}
+
+.interaction-bar-wrapper .chat-bar.active .chat-content {
+  width: 300px;
+  opacity: 1;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header h1 {
+  display: inline-block;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header .icon {
+  font-size: 2em;
+}
+
+.interaction-bar-wrapper .chat-bar .chats {
+  background-color: #FFFFFF;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-action-wrapper {
+  position: absolute;
+  bottom: 0;
 }
 
 @font-face {

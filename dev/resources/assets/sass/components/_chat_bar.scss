@@ -1,0 +1,54 @@
+.interaction-bar-wrapper {
+    .chat-bar, .chat-bar-content-pane, .chat-bar > .chat-content {
+        -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+    }
+    .chat-bar {
+        @extend .col-auto;
+        padding:0px;
+        width: auto;
+        position:relative;
+
+        .chat-content {
+            background-color: $mm-interaction-bar-bg;
+            width:0px;
+            opacity: 0;
+            height:100%;
+            padding:0px;
+            display:inline-block;
+            margin:0px;
+            padding:0px;
+            float:left;
+            color:#fff;
+
+            overflow: hidden;
+        }
+        &.active {
+            .chat-content {
+                width:300px;
+                opacity: 1;
+            }
+        }
+        .chat-header {
+            h1 {
+                display: inline-block;
+            }
+            .icon {
+                font-size: 2em;
+            }
+        }
+
+        .chats {
+           background-color: $mm-text-white; 
+        }
+
+        .chat-action-wrapper {
+            position: absolute;
+            bottom: 0;
+        }
+    }
+    .chat-bar-content-pane {
+        @extend .col;
+    }
+}
