@@ -10,7 +10,8 @@
 				user_name="{{ $user->full_name }}" 
 				@if( isset($organisation) ) 
 					organisation="{{ $organisation->title }}"
-				@endif>
+				@endif
+				total_rebate="{{ $total_rebate }}">
 			</user-header>
 
 			<!-- Actions and Alerts -->

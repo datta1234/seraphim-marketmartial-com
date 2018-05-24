@@ -66,7 +66,7 @@
 
 <script>
     const UserMarket = require('../../lib/UserMarket');
-    const Negotiation = require('../../lib/Negotiation');
+    const MarketNegotiation = require('../../lib/MarketNegotiation');
     export default {
         props: {
             market: {

@@ -22,7 +22,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 const UserMarket = require('./lib/UserMarket');
 const Market = require('./lib/Market');
-const Negotiation = require('./lib/Negotiation');
+const MarketNegotiation = require('./lib/MarketNegotiation');
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -79,8 +79,8 @@ const app = new Vue({
                         bid: "13.23",
                         offer: "24.53",
                         state: "request",
-                        negotiations: [
-                            new Negotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        MarketNegotiations: [
+                            new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         ]
                     }),
                     new UserMarket({
