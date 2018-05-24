@@ -2,15 +2,15 @@
     <div class="col col-12 text-center market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
         <div class="row justify-content-md-center">
             <div class="col col-6 market-tab-name market-tab-name">
-                {{ market.strike }}    
+                {{ marketRequest.attributes.strike }}    
             </div>
             <div class="col col-6 market-tab-state">
                 
-                <span v-if="market.state == 'request'">
-                    <span class="">REQUEST</span>
+                <span v-if="market_request_state_label != ''">
+                    <span class="">{{ market_request_state_label }}</span>
                 </span>
                 <span v-else>
-                    <span class="" v-bind:class="bidState">{{ market.bid }}</span> / <span class="" v-bind:class="offerState">{{ market.offer }}</span>
+                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
                 </span>
             </div>
         </div>
@@ -19,45 +19,55 @@
 
 <script>
     import { EventBus } from '../lib/EventBus.js';
-    const UserMarket = require('../lib/UserMarket');
+    const UserMarketRequest = require('../lib/UserMarketRequest');
     export default {
         props: {
-            market: {
-                type: UserMarket
+            marketRequest: {
+                type: UserMarketRequest
             }
         },
         watch: {
-            'market.bid': function (nV, oV) {
-                // console.log("Market Bid Updated", oV, nV);
-                this.bid_state = 'action';
+            'marketRequest.attributes.state': function(nV, oV) {
+                console.log('updated: marketRequest.user_markets');
+                this.calcMarketState();
             },
-            'market.offer': function (nV, oV) {
-                // console.log("Market Offer Updated", oV, nV);
-                this.offer_state = 'action';
+            'marketRequest.user_markets': function(nV, oV) {
+                console.log('updated: marketRequest.user_markets');
+                this.calcMarketState();
+            },
+            'marketRequest._chosen_user_market': function(nV, oV) {
+                console.log('updated: marketRequest._chosen_user_market');
+                this.calcMarketState();
             }
         },
         data() {
             return {
-                bid_state: '',
-                offer_state: ''
+                user_market: null,
+                current_negotiation: null,
+                market_request_state: '',
+                market_request_state_label: '',
+
+                user_market_bid: null,
+                user_market_offer: null,
             };
         },
         computed: {
             marketState: function() {
                 return {
-                    'market-request': this.market.state == 'request',
-                    'market-alert': this.market.state == 'alert',
-                    'market-confirm': this.market.state == 'confirm',
+                    'market-request-grey': this.market_request_state == 'request-grey',
+                    'market-request': this.market_request_state == 'request',
+                    'market-alert': this.market_request_state == 'alert',
+                    'market-confirm': this.market_request_state == 'confirm',
                 }
             },
             bidState: function() {
                 return {
-                    'user-action': this.bid_state == 'action',
+                    'user-action': this.marketRequest.attributes.bid_state == 'action',
                 }
             },
             offerState: function() {
                 return {
-                    'user-action': this.offer_state == 'action',
+                    'user-action': this.marketRequest.attributes.offer_state == 'action',
                 }
             }
         },
@@ -65,15 +75,59 @@
             loadInteractionBar() {
                 console.log("load Bar");
                 EventBus.$emit('interactionToggle', true, {
-                    component: 'ibar-market-request-single-stock',
+                    component: 'ibar-negotiation-bar',
                     props: {
-                        market: this.market
+                        marketRequest: this.marketRequest
                     }
                 });
+            },
+            calcMarketState() {
+                // set new refs
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+                this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+                this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+                
+                // run tests
+                // TODO: add logic for if current user then "SENT"
+                switch(this.marketRequest.attributes.state) {
+                    case "vol-spread":
+                        this.market_request_state = '';
+                        this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
+                    break;
+                    case "vol-spread-alert":
+                        this.market_request_state = 'alert';
+                        this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
+                    break;
+                    case "request":
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "REQUEST";
+                    break;
+                    case "request-grey":
+                        this.market_request_state = 'request-grey';
+                        this.market_request_state_label = "REQUEST";
+                    break;
+                    case "alert":
+                        this.market_request_state = 'alert';
+                        this.market_request_state_label = "";
+                    break;
+                    case "confirm":
+                        this.market_request_state = 'confirm';
+                        this.market_request_state_label = "";
+                    break;
+                    case "sent":
+                        this.market_request_state = 'sent';
+                        this.market_request_state_label = "SENT";
+                    break;
+                    default:
+                        this.market_request_state = '';
+                        this.market_request_state_label = '';
+                }
             }
         },
         mounted() {
-
+            // initial setup of states
+            this.calcMarketState();
         }
     }
 </script>

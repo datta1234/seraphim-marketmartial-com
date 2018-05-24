@@ -58,7 +58,7 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function currentMarketNegotiations()
+    public function currentMarketNegotiation()
     {
         return $this->belongsTo('App\Models\Market\MarketNegotiation','current_market_negotiation_id');
     }

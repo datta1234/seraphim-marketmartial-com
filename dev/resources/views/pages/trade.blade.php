@@ -19,7 +19,7 @@
 
 			<!-- Markets sections -->
 			<div class="row user-markets mt-5">
-				<market-group v-for="derivative in display_markets" :derivative-market="derivative" class="col"></market-group>
+				<market-group v-for="market in display_markets" :market="market" class="col"></market-group>
 			</div>
 
 			<div class="row mt-5">

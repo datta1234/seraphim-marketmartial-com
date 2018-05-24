@@ -2,15 +2,13 @@ module.exports = class UserMarket {
 
     constructor(options) {
         const defaults = {
-            date: "",
-            strike: "",
-            bid: "",
-            offer: "",
-            state: '',
             market_negotiations: [],
-            // internal
-            _market: null,
         }
+
+        // internal
+        this._market_request = null;
+        this._current_market_negotiation = null;
+
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
             if(options && options[key]) {
@@ -19,6 +17,11 @@ module.exports = class UserMarket {
                 this[key] = defaults[key];
             }
         });
+
+        // register current
+        if(options && options.current_market_negotiation) {
+            this.setCurrentNegotiation(options.current_market_negotiation);
+        }
     }
 
     /**
@@ -26,7 +29,7 @@ module.exports = class UserMarket {
     *   @param {Market} market - Market object
     */
     setParent(market) {
-        this._market = market;
+        this._market_request = market;
     }
 
     /**
@@ -34,7 +37,7 @@ module.exports = class UserMarket {
     *   @return {Market}
     */
     getParent() {
-        return this._market;
+        return this._market_request;
     }
 
     /**
@@ -54,6 +57,25 @@ module.exports = class UserMarket {
         market_negotiations.forEach(market_negotiation => {
             this.addNegotiation(market_negotiation);
         });
+    }
+
+    /**
+    *   setCurrentNegotiation - set the chosen UserMarket
+    *   @param {UserMarket}
+    */
+    setCurrentNegotiation(negotiation) {
+        if(this.market_negotiations.indexOf(negotiation) == -1) {
+            this.addNegotiation(negotiation);
+        }
+        this._current_market_negotiation = negotiation;
+    }
+
+    /**
+    *   getCurrentNegotiation - get the chosen user market
+    *   @return {UserMarket}
+    */
+    getCurrentNegotiation() {
+        return this._current_market_negotiation;
     }
 
     /**

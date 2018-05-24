@@ -1,9 +1,10 @@
 module.exports = class Market {
 
     constructor(options) {
-        this.markets = [];
+        this.market_requests = [];
         const defaults = {
             title: "",
+            description: "",
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -15,27 +16,27 @@ module.exports = class Market {
         });
 
         // register markets
-        if(options.markets) {
-            this.addUserMarkets(options.markets);
+        if(options && options.market_requests) {
+            this.addMarketRequests(options.market_requests);
         }
     }
 
     /**
-    *   addUserMarket - add user market
-    *   @param {UserMarket} market - UserMarket objects
+    *   addMarketRequest - add user market
+    *   @param {UserMarketRequest} market - UserMarket objects
     */
-    addUserMarket(market) {
-        market.setParent(this);
-        this.markets.push(market);
+    addMarketRequest(market_req) {
+        market_req.setParent(this);
+        this.market_requests.push(market_req);
     }
 
     /**
-    *   addUserMarkets - add array of user markets
-    *   @param {Array} markets - array of UserMarket objects
+    *   addMarketRequests - add array of user market_requests
+    *   @param {Array} market_requests - array of UserMarketRequest objects
     */
-    addUserMarkets(markets) {
-        markets.forEach(market => {
-            this.addUserMarket(market);
+    addMarketRequests(market_requests) {
+        market_requests.forEach(market_req => {
+            this.addMarketRequest(market_req);
         });
     }
 

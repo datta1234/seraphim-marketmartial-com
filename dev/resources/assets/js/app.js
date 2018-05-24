@@ -9,6 +9,7 @@ require('./bootstrap');
 require('./components/data-methods');
 
 window.Vue = require('vue');
+window.moment = require('moment');
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
@@ -20,9 +21,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const UserMarket = require('./lib/UserMarket');
 const Market = require('./lib/Market');
-const Negotiation = require('./lib/Negotiation');
+const UserMarketRequest = require('./lib/UserMarketRequest');
+const UserMarket = require('./lib/UserMarket');
+
+const MarketNegotiation = require('./lib/MarketNegotiation');
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -32,7 +35,10 @@ Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 
 // Interaction Bar Component + children
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
-    Vue.component('ibar-market-request-single-stock', require('./components/InteractionBar/MarketRequestSingleStock.vue'));
+    Vue.component('ibar-negotiation-bar', require('./components/InteractionBar/NegotiationBar.vue'));
+    Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
+    Vue.component('ibar-negotiation-history', require('./components/InteractionBar/Components/NegotiationHistory.vue'));
+    Vue.component('ibar-market-negotiation', require('./components/InteractionBar/MarketComponents/MarketNegotiation.vue'));
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
@@ -59,6 +65,52 @@ Vue.mixin({
     }
 });
 
+let sampleUserNegotitaion = new MarketNegotiation({ 
+    bid: 30, 
+    bid_qty: 50000000, 
+    offer: 25, 
+    offer_qty: 50000000 
+});
+let sampleUserMarket = new UserMarket({
+    market_negotiations: [
+        sampleUserNegotitaion
+    ]
+});
+let marketRequestSample = new UserMarketRequest({
+    attributes: {
+        expiration_date: moment("2018-03-18 00:00:00"),
+        strike: "10 000",
+        state: 'sent',
+        bid_state: '',
+        offer_state: '',
+    },
+    user_markets: [sampleUserMarket],
+    chosen_user_market: sampleUserMarket
+});
+let marketRequestSample2 = new UserMarketRequest({
+    attributes: {
+        expiration_date: moment("2018-03-20 00:00:00"),
+        strike: "12 000",
+        state: '',
+        bid_state: '',
+        offer_state: '',
+    },
+    user_markets: [
+        new UserMarket({
+            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+        }),
+        new UserMarket({
+            current_market_negotiation: new MarketNegotiation({ bid: 25, bid_qty: 50000000, offer: 24, offer_qty: 50000000 })
+        }),
+        new UserMarket({
+            current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+        })
+    ],
+    chosen_user_market: new UserMarket({
+        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+    })
+});
+
 const app = new Vue({
     el: '#trade_app',
     data: {
@@ -66,52 +118,65 @@ const app = new Vue({
         display_markets: [
             new Market({
                 title: "TOP 40",
-                markets: [
-                    new UserMarket({
-                        date: "Mar 18",
-                        strike: "10 000",
-                        bid: "10.00",
-                        offer: "11.00",
-                    }),
-                    new UserMarket({
-                        date: "Mar 18",
-                        strike: "11 000",
-                        bid: "13.23",
-                        offer: "24.53",
-                        state: "request",
-                        negotiations: [
-                            new Negotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                        ]
-                    }),
-                    new UserMarket({
-                        date: "Mar 20",
-                        strike: "22 000",
-                        bid: "21.33",
-                        offer: "44.22",
-                        state: "alert"
+                market_requests: [
+                    marketRequestSample,
+                    marketRequestSample2,
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
                     })
                 ]
             }),
             new Market({
                 title: "DTOP",
-                markets: [
-                    new UserMarket({
-                        date: "Mar 20",
-                        strike: "22 000",
-                        bid: "21.33",
-                        offer: "44.22",
-                        state: "confirm"
+                market_requests: [
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-17 00:00:00"),
+                            strike: "14 000",
+                            state: 'vol-spread',
+                            vol_spread: 4,
+                            bid_state: '',
+                            offer_state: '',
+                        }
                     })
                 ]
             }),
             new Market({
                 title: "SINGLES",
-                markets: [
-                    new UserMarket({
-                        date: "Mar 20",
-                        strike: "22 000",
-                        bid: "21.33",
-                        offer: "44.22",
+                market_requests: [
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-17 00:00:00"),
+                            strike: "16 000",
+                            state: 'confirm',
+                            bid_state: '',
+                            offer_state: 'action',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            }),
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                        })
                     })
                 ]
             })
@@ -121,30 +186,46 @@ const app = new Vue({
 
 // Testing Code ( Simulate Stream Updates )
 
+// REQUEST - blue
 setTimeout(function(){
-    console.log("adding");
-    app.display_markets[1].markets.push(
-        new UserMarket({
-            date: "Mar 17",
-            strike: "22 000",
-            bid: "21.33",
-            offer: "44.22",
-            state: "request"
+    console.log("REQUEST - blue");
+    app.display_markets[1].market_requests.push(
+        new UserMarketRequest({
+            attributes: {
+                expiration_date: moment("2018-03-18 00:00:00"),
+                strike: "10 000",
+                state: 'request',
+                bid_state: '',
+                offer_state: '',
+            }
         })
     );
 }, 5000);
 
+// REQUEST - grey
 setTimeout(function(){
-    console.log("updating");
-    app.display_markets[1].markets[0].bid = "99.99";
+    console.log("REQUEST - grey");
+    marketRequestSample.attributes.state = "request-grey";
 }, 10000);
 
+// VOL SPREAD
 setTimeout(function(){
-    console.log("updating");
-    app.display_markets[1].markets[0].offer = "100.99";
+    console.log("VOL SPREAD");
+    marketRequestSample.attributes.vol_spread = 3;
+    marketRequestSample.attributes.state = 'vol-spread-alert';
+}, 10000);
+
+// VOL SPREAD
+setTimeout(function(){
+    console.log("VOL SPREAD");
+    marketRequestSample2._chosen_user_market.setCurrentNegotiation(new MarketNegotiation({ bid: 32, bid_qty: 50000000, offer: 25, offer_qty: 50000000 }))
+    marketRequestSample2.attributes.bid_state = 'action';
+    marketRequestSample2.attributes.state = '';
 }, 15000);
 
+// RESET
 setTimeout(function(){
-    console.log("updating");
-    app.display_markets[2].markets[0].state = "confirm";
-}, 15000);
+    console.log("RESET STATE");
+    sampleUserMarket.setCurrentNegotiation(sampleUserNegotitaion);
+    marketRequestSample.setChosenUserMarket(sampleUserMarket);
+}, 20000);

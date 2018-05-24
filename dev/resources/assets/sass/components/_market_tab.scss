@@ -24,6 +24,14 @@
 		}
 	}
 
+	.market-tab.market-request-grey {
+		border: 0.15em solid $mm-market-intrest-greyed;
+
+		.market-tab-state {
+			color: $mm-market-intrest-greyed;
+		}
+	}
+
 	.user-action {
 		color: $mm-user-action;
 	}

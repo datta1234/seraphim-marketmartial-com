@@ -9,7 +9,7 @@ module.exports = class MarketNegotiation {
             bid: null,
             offer: null,
             offer_qty: 0,
-            time: new Date
+            time: null
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -21,7 +21,7 @@ module.exports = class MarketNegotiation {
         });
 
         // register markets
-        if(options.market) {
+        if(options && options.market) {
             this.setUserMarket(options.market);
         }
     }

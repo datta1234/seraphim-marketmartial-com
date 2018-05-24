@@ -3,16 +3,16 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
-                    <h2 class="text-center">{{ derivativeMarket.title }}</h2> 
+                    <h2 class="text-center">{{ market.title }}</h2> 
                 </div>
                 <div class="user-market-group col-12">
 
                     <!-- Date collection section -->
-                    <div class="row mt-3 pr-3 pl-3" v-for="(markets, date) in market_date_groups">
+                    <div class="row mt-3 pr-3 pl-3" v-for="(m_reqs, exp_date) in market_date_groups">
                         <div class="col-12">
-                            <p class="mb-1">{{ date }}</p>
+                            <p class="mb-1">{{ exp_date }}</p>
                         </div>
-                        <market-tab :market="market" v-for="market in markets"></market-tab>
+                        <market-tab :market-request="m_req" v-for="m_req in m_reqs"></market-tab>
                     </div><!-- END Date collection section -->
                     
                 </div>
@@ -25,14 +25,14 @@
     const Market = require('../lib/Market')
     export default {
         props: {
-            'derivativeMarket': {
+            'market': {
                 type: Market
             }
         },
         watch: {
-            'derivativeMarket.markets': function (nV, oV) {
+            'market.market_requests': function (nV, oV) {
                 // console.log("Markets Updated", oV, nV);
-                this.market_date_groups = this.mapMarketGroups(nV);
+                this.market_date_groups = this.mapMarketRequestGroups(nV);
             }
         },
         data() {
@@ -41,19 +41,21 @@
             };
         },
         methods: {
-            mapMarketGroups: function(markets) {
+            mapMarketRequestGroups: function(markets) {
                 // map markets to dates
                 return markets.reduce((x,y) => {
-                    if(!x[y.date]) { 
-                        x[y.date] = [];
+                    let date = y.attributes.expiration_date.format("MMM D");  
+                    if(!x[date]) { 
+                        x[date] = [];
                     }
-                    x[y.date].push(y);
+                    x[date].push(y);
                     return x;
                 }, {});
             }
         },
         mounted() {
-            this.market_date_groups = this.mapMarketGroups(this.derivativeMarket.markets);
+            this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
+            console.log(this.market_date_groups);
         }
     }
 </script>

@@ -29,6 +29,27 @@
                 opacity: 1;
             }
         }
+        input[type="number"],input[type="text"] {
+            padding:2px;
+        }
+        .btn {
+            border:none;
+            border-radius:0px;
+        }
+        .btn-primary {
+            background-color: $ibar-btn-primary;
+        }
+        .btn-secondary {
+            background-color: $ibar-btn-secondary;
+        }
+        .btn[disabled] {
+            background-color: $ibar-btn-inactive;
+        }
+        .btn-active {
+            background-color: $ibar-btn-active;
+            margin-left:-10px;
+            margin-right:-10px
+        }
     }
     .interaction-bar-content-pane {
         @extend .col;
@@ -54,24 +75,5 @@
             margin-top: -50%;
             font-size: 32px;
         }
-    }
-
-    .btn {
-        border:none;
-        border-radius:0px;
-    }
-    .btn-primary {
-        background-color: $ibar-btn-primary;
-    }
-    .btn-secondary {
-        background-color: $ibar-btn-secondary;
-    }
-    .btn[disabled] {
-        background-color: $ibar-btn-inactive;
-    }
-    .btn-active {
-        background-color: $ibar-btn-active;
-        margin-left:-10px;
-        margin-right:-10px
     }
 }

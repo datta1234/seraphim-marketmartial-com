@@ -21644,6 +21644,10 @@ a.mm-login-button {
   font-family: "Raleway-SemiBold";
 }
 
+#trade_app .user-market {
+  padding: 0px;
+}
+
 #trade_app .user-market .user-market-group {
   border-right: 0.15em solid #6D6E70;
   height: 100%;
@@ -22303,6 +22307,16 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
+.trade-section.light-theme .market-tab.market-request-grey,
+.trade-section.dark-theme .market-tab.market-request-grey {
+  border: 0.15em solid #6D6E70;
+}
+
+.trade-section.light-theme .market-tab.market-request-grey .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request-grey .market-tab-state {
+  color: #6D6E70;
+}
+
 .trade-section.light-theme .user-action,
 .trade-section.dark-theme .user-action {
   color: #EBC300;
@@ -22375,6 +22389,34 @@ input:checked + .slider:before {
   opacity: 1;
 }
 
+.interaction-bar-wrapper .interaction-bar input[type="number"],
+.interaction-bar-wrapper .interaction-bar input[type="text"] {
+  padding: 2px;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn {
+  border: none;
+  border-radius: 0px;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-primary {
+  background-color: #1D3641;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-secondary {
+  background-color: #282828;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn[disabled] {
+  background-color: #6D6E70;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-active {
+  background-color: #007D74;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
 .interaction-bar-wrapper .interaction-bar-toggle {
   width: 25px;
   height: 100%;
@@ -22394,29 +22436,6 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
-}
-
-.interaction-bar-wrapper .btn {
-  border: none;
-  border-radius: 0px;
-}
-
-.interaction-bar-wrapper .btn-primary {
-  background-color: #1D3641;
-}
-
-.interaction-bar-wrapper .btn-secondary {
-  background-color: #282828;
-}
-
-.interaction-bar-wrapper .btn[disabled] {
-  background-color: #6D6E70;
-}
-
-.interaction-bar-wrapper .btn-active {
-  background-color: #007D74;
-  margin-left: -10px;
-  margin-right: -10px;
 }
 
 .interaction-bar-wrapper .chat-bar,
