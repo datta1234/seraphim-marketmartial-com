@@ -42,7 +42,7 @@
 
 		        		<!-- Rounded toggle switch -->
 		        		<div class="float-right">
-		        			<span class="toggle">Light theme toggle</span>
+		        			<span class="toggle">Theme toggle</span>
 							<label class="switch mb-0 ml-1">
 							  	<input type="checkbox" data-toggle-theme>
 							  	<span class="slider round"></span>

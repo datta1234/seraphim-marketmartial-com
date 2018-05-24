@@ -24,5 +24,5 @@ Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
 Route::group(['middleware' => ['auth']], function () {
-	Route::get('/trade', 'PageController@trade')->name('trade');
+	Route::get('/trade', 'TradeScreenController@index')->name('trade');
 });

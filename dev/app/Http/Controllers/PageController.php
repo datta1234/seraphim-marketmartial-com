@@ -40,9 +40,4 @@ class PageController extends Controller
             return redirect()->action('PageController@index')->with('success', 'Contact message has been sent');
         }
     }
-
-    public function trade()
-    {
-        return view('pages.trade');
-    }
 }
