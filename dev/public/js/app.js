@@ -65125,7 +65125,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['user_name', 'organisation'],
+    props: ['user_name', 'organisation', 'total_rebate'],
     data: function data() {
         return {
             time: {
@@ -65135,8 +65135,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 session: 'AM',
                 computed_time: '',
                 _interval: null
-            },
-            rebates: 'R65, 000'
+            }
         };
     },
 
@@ -65201,7 +65200,7 @@ var render = function() {
       _c("div", { staticClass: "col-4" }, [
         _c("p", { staticClass: "float-right mb-1 pt-3" }, [
           _vm._v("Rebates: "),
-          _c("strong", [_vm._v(_vm._s(_vm.rebates))])
+          _c("strong", [_vm._v(_vm._s(_vm.total_rebate))])
         ])
       ])
     ])

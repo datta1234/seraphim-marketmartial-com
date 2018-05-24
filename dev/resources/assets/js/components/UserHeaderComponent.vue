@@ -9,7 +9,7 @@
                 <p class="mb-1 pt-3">{{ time.computed_time }}</p>
             </div>
             <div class="col-4">
-                <p class="float-right mb-1 pt-3">Rebates: <strong>{{ rebates }}</strong></p>
+                <p class="float-right mb-1 pt-3">Rebates: <strong>{{ total_rebate }}</strong></p>
             </div>
         </div>
     </div>
@@ -19,7 +19,8 @@
     export default {
         props: [
             'user_name',
-            'organisation'
+            'organisation',
+            'total_rebate'
         ],
         data() {
             return {
@@ -30,8 +31,7 @@
                     session:'AM',
                     computed_time:'',
                     _interval: null
-                },
-                rebates:'R65, 000'
+                }
             };
         },
         methods: {

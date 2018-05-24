@@ -266,4 +266,13 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','receiving_user_id');
     }
+
+    /**
+    * Return total rebate amount of user on monthly basis
+    * @return int sum
+    */
+    public function userTotalRebate() 
+    {
+        return 65000;
+    }
 }
