@@ -132,7 +132,6 @@
         },
         mounted() {
            this.checkSelected();
-           console.log("I run", this.markets);
         }
     }
 
