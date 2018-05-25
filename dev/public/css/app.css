@@ -10495,6 +10495,7 @@ body {
   /* background-image: url(/img/background.png);
 	background-size: cover; */
   background-color: #000705;
+  overflow-x: hidden;
 }
 
 body .page-title h1 {

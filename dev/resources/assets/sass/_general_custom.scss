@@ -8,6 +8,7 @@ body
 	/* background-image: url(/img/background.png);
 	background-size: cover; */
 	background-color: $mm-background-dark;
+	overflow-x: hidden;
 	
 	.page-title {
 		h1 {
