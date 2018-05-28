@@ -45,7 +45,8 @@
 		font-family: $mm-font-head;
 	} 
 
-	.user-market {	
+	.user-market {
+		padding:0px;	
 		.user-market-group {
 			border-right: 0.15em solid $mm-light-grey;
 			height:100%;
@@ -137,8 +138,19 @@
 	}
 }
 
-.mm-transparent-button {
-	
+.mm-generic-trade-button {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-market-important, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-market-important, 10%);
+	}
 }
 
 .trade-section.dark-theme {

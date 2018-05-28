@@ -44,9 +44,20 @@ $mm-market-tab-alt:		#073238;
 $mm-interaction-bar-bg:	#090909;
 $mm-light-grey:			#6D6E70;
 $mm-market-intrest:		#2358BD;
+$mm-market-intrest-greyed:     #6D6E70;
 $mm-market-maker:		#37A53A;
 $mm-market-confirm:		#E17428;
 $mm-market-alert:		#BB1D1D;
 $mm-user-action:		#EBC300;
 $mm-footer-bg:			#303030;
 $mm-toggle-bg:			#1c7d74;
+
+
+/*
+*   Interaction Bar
+*/
+$interaction-bar-width: 350px;
+$ibar-btn-primary: #1D3641;
+$ibar-btn-secondary: #282828;
+$ibar-btn-active: #007D74;
+$ibar-btn-inactive: #6D6E70;

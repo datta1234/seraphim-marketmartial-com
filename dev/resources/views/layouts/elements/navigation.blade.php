@@ -11,13 +11,10 @@
 					<a class="nav-link active" href="{{ route('trade') }}">Trade</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active" href="">Stats</a>
+					<a class="nav-link active" href="#">Stats</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active" href="">Previous day</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="">More</a>
+					<a class="nav-link active" href="#">Previous day</a>
 				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>

@@ -1,8 +1,5 @@
-@import './_mm_custom_variables';
-@import './_icomoon';
-@import '~bootstrap/scss/bootstrap';
 
-html, body{
+html, body {
     height: 100%;
 }
 
@@ -11,6 +8,7 @@ body
 	/* background-image: url(/img/background.png);
 	background-size: cover; */
 	background-color: $mm-background-dark;
+	overflow-x: hidden;
 	
 	.page-title {
 		h1 {

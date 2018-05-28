@@ -73,8 +73,8 @@ class RegisterController extends Controller
                 }),
             ],
             'market_types' => 'required',
-            'organisation_id' => 'required_without:new_organistation',
-            'new_organistation' => 'required_without:organisation_id|string|max:255'
+            'organisation_id' => 'required_without:not_listed',
+            'new_organisation' => 'required_with:not_listed|string|max:255'
         ], $messages);
     }
 
@@ -90,9 +90,9 @@ class RegisterController extends Controller
 
         if( array_key_exists('organisation_id', $data) ) {
             $organisation = $data['organisation_id'];
-        } elseif( array_key_exists('new_organistation', $data) ) {
+        } elseif( array_key_exists('new_organisation', $data) ) {
             $organisation = Organisation::create([
-                'title' => $data['new_organistation'],
+                'title' => $data['new_organisation'],
                 'verified' => false,
             ])->id;
         } else {
