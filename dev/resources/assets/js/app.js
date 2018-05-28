@@ -24,6 +24,8 @@ Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
+Vue.component('email-settings', require('./components/EmailSettingsComponent.vue'));
+
 const app = new Vue({
     el: '#trade_app',
     data: {

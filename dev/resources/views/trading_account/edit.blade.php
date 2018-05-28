@@ -19,11 +19,15 @@
 			@endslot
 				@slot('body')
 
-            {!! Form::model($user,['route' => 'email.update']) !!}
+            {!! Form::model($user,['route' => 'account.edit']) !!}
 				
 				<div class="offset-1 col-md-10">
 					@foreach ($markets as $index => $market)
-						@include('trading_account.partials.default', ['label' => $market,'index'=>$index])
+						@include('trading_account.partials.default', ['market' => $market,'index'=>$index])
+					@endforeach
+					
+					@foreach ($trading_accounts as $index => $trading_account)
+						@include('trading_account.partials.trading_account', ['trading_account' => $trading_account,'index'=>$market->count() + $index])
 					@endforeach
 
 

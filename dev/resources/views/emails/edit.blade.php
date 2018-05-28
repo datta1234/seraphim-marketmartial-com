@@ -31,6 +31,9 @@
 				@endforeach
 
 
+				<email-settings :email-settings-data="'{{ json_encode($emails) }}'" ></email-settings>
+
+
                     <div class="form-group row mb-0">
 
                 	 <div class="col-3">
