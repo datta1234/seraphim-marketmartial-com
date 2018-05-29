@@ -11916,6 +11916,12 @@ input:checked + .slider:before {
   visibility: hidden;
 }
 
+.Important-markets-menu,
+.Alerts-markets-menu,
+.Confirmations-markets-menu {
+  display: inline;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

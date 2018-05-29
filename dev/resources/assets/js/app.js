@@ -39,8 +39,14 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-negotiation-history', require('./components/InteractionBar/Components/NegotiationHistory.vue'));
     Vue.component('ibar-market-negotiation', require('./components/InteractionBar/MarketComponents/MarketNegotiation.vue'));
 
-Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+// Action Bar Component + children
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
+Vue.component('filter-markets-menu', require('./components/ActionBar/Components/FilterMarketsMenuComponent.vue'));
+Vue.component('Important-markets-menu', require('./components/ActionBar/Components/ImportantMenuComponent.vue'));
+Vue.component('Alerts-markets-menu', require('./components/ActionBar/Components/AlertsMenuComponent.vue'));
+Vue.component('Confirmations-markets-menu', require('./components/ActionBar/Components/ConfirmationsMenuComponent.vue'));
+
+Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 
 Vue.mixin({
