@@ -60,8 +60,16 @@
             };
         },
         computed: {
+            /**
+             * Compiles a notification list for Important market reqeusts with Market as key
+             *      and a market requests array as value
+             *
+             * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+             */
             notificationList: function() {
-                let list = this.markets.reduce( function(acc, obj) {
+                //Iterates through an array of Markets and compiles an object with Market.title as key
+                return this.markets.reduce( function(acc, obj) {
+                    //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                     acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
                         switch(obj2.attributes.state) {    
                             case "vol-spread-alert":
@@ -75,20 +83,36 @@
                     }, []);
                     return acc;
                 }, {});
-                return list;
             },
         },
         methods: {
+            /**
+             * Closes popover
+             */
             onDismiss() {
                 this.status = false;
                 this.$refs[this.popover_ref].$emit('close');
             },
+            /**
+             * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
+             *
+             * @param {string} $market a string detailing the related Market.title
+             * @param {string} $id a string id detailing the UserMarketRequests to be removed
+             *
+             * @todo Change $market to be the Market.id not Market.title
+             */
             addToNoCares(market, id) {
                 if(!this.no_cares.includes(id)) {
                     this.no_cares.push(id);
                     this.removeMarketRequest(market, id);
                 }
             },
+            /**
+             * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
+             *      closes the popover
+             *
+             * @todo Change market to be the Market.id not Market.title
+             */
             applyBulkNoCares() {
                 if(this.status) {
                     for (var market in this.notificationList) {
@@ -104,6 +128,14 @@
                 }
                 this.onDismiss();
             },
+            /**
+             * Removes a single Important UserMarketRequest by id from the Markets array
+             *
+             * @param {string} $market a string detailing the related Market.title
+             * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
+             *
+             * @todo Change $market to be the Market.id not Market.title
+             */
             removeMarketRequest(market, market_request_id) {
                 let market_index = this.markets.findIndex( (element) => {
                     return element.title == market;

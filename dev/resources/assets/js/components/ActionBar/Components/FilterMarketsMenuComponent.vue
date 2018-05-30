@@ -76,9 +76,17 @@
             };
         },
         methods: {
+            /**
+             * Saves the user's Market preference to the server
+             *
+             * @todo implement post reqeust to update user preference
+             */
             onSaveMarketSetting(popover_ref) {
                 this.onDismiss();
             },
+            /**
+             * Creates a bolean list of availableSelectedMarkets from markets prop
+             */
             checkSelected() {
                 Object.keys(this.availableSelectedMarkets).forEach(key=>{
                     this.availableSelectedMarkets[key] = false;
@@ -87,10 +95,24 @@
                     this.availableSelectedMarkets[market.title] = true;
                 });
             },
+            /**
+             * Adds a selected Market to Display Markets
+             * 
+             * @param {string} $market a string detailing a Market.title to be added
+             *
+             * @todo make a reqeust to update view data from server 
+             */
             addMarket(market) {
                this.markets.push( this.loadMarketData(market) );
                this.checkSelected();
             },
+            /**
+             * Removes a selected Market from Display Markets
+             * 
+             * @param {string} $market a string detailing a Market.title to be removed
+             *
+             * @todo make a push the updated Display Markets list to the server 
+             */
             removeMarket(market) {
                 let index = this.markets.findIndex(function(element) {
                     console.log(element.title);
@@ -99,6 +121,11 @@
                 this.markets.splice(index , 1);
                 this.checkSelected();
             },
+            /**
+             * Creates dummy market reqeusts for Newly added Market
+             *
+             * @todo remove once data is being pulled from server 
+             */
             loadMarketData(market) {
                 this.randomID += this.randomID + "1"
                 return new Market({
@@ -128,6 +155,9 @@
                     ]
                 });
             },
+            /**
+             * Closes popover
+             */
             onDismiss() {
                 this.$refs[this.popover_ref].$emit('close');
             },

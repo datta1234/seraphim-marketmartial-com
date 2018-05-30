@@ -8631,6 +8631,20 @@ module.exports = defaults;
 
 var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 
+/**
+ * Listens to a global toggleSidebar event
+ *
+ * @event EventBus#toggleSidebar
+ * 
+ * @type {string} $sidebar An argument detailing which sidebar is being toggled.
+ * @type {boolean} $state An argument detailing what state the sidebar being
+ *		toggled is in.
+ * @type {*} $payload An argument detailing the payload being transmitted with the
+ *		event.
+ *  
+ * @fires EventBus#chatToggle
+ * @fires EventBus#interactionToggle
+ */
 EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
     switch (sidebar) {
         case "interaction":
@@ -81774,7 +81788,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             time: {
                 hours: '',
                 minutes: '',
-                seconds: '',
                 session: 'AM',
                 computed_time: '',
                 _interval: null
@@ -81783,27 +81796,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
+        /**
+         * Creates a running clock from the current date and time.
+         *
+         * @todo Change clock time to be sent an initialsed from the backend
+         */
         showTime: function showTime() {
+
+            //Getting current time and setting our time object.
             var date = new Date();
-            this.time.hours = date.getHours(); // 0 - 23
+            this.time.hours = date.getHours(); // Hours format 0 - 23
             this.time.minutes = date.getMinutes(); // 0 - 59
             this.time.session = "AM";
 
+            //resets the hour when reaching 0 to 12
             if (this.time.hours == 0) {
-                this.time.hours = 12;
+                this.time.hours = 12; //Changes computed hours to format 0 - 12
             }
 
+            //Changes hours from before 12 AM to past 12 PM - keeps to format 0 - 12 
             if (this.time.hours > 12) {
                 this.time.hours = this.time.hours - 12;
                 this.time.session = "PM";
             }
 
+            //Format time from h:m format to hh:mm format with leading 0
             this.time.hours = this.time.hours < 10 ? "0" + this.time.hours : this.time.hours;
             this.time.minutes = this.time.minutes < 10 ? "0" + this.time.minutes : this.time.minutes;
             this.time.computed_time = this.time.hours + ":" + this.time.minutes + " " + this.time.session;
         }
     },
     mounted: function mounted() {
+        //Sets interval for running clock
         this.time._interval = setInterval(this.showTime, 1000);
     }
 });
@@ -83325,6 +83349,10 @@ var MarketNegotiation = __webpack_require__(32);
     },
 
     methods: {
+        /**
+         * Resets the quantities counters and updates each of the market_quantities
+         *      counters according to the matching market requests
+         */
         reloadQuantities: function reloadQuantities() {
             var _this = this;
 
@@ -83351,6 +83379,12 @@ var MarketNegotiation = __webpack_require__(32);
                 });
             });
         },
+
+        /**
+         * Loads the Chat Sidebar
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
         loadChatBar: function loadChatBar() {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
         }
@@ -83703,9 +83737,18 @@ var MarketNegotiation = __webpack_require__(32);
     },
 
     methods: {
+        /**
+         * Saves the user's Market preference to the server
+         *
+         * @todo implement post reqeust to update user preference
+         */
         onSaveMarketSetting: function onSaveMarketSetting(popover_ref) {
             this.onDismiss();
         },
+
+        /**
+         * Creates a bolean list of availableSelectedMarkets from markets prop
+         */
         checkSelected: function checkSelected() {
             var _this = this;
 
@@ -83716,10 +83759,26 @@ var MarketNegotiation = __webpack_require__(32);
                 _this.availableSelectedMarkets[market.title] = true;
             });
         },
+
+        /**
+         * Adds a selected Market to Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be added
+         *
+         * @todo make a reqeust to update view data from server 
+         */
         addMarket: function addMarket(market) {
             this.markets.push(this.loadMarketData(market));
             this.checkSelected();
         },
+
+        /**
+         * Removes a selected Market from Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be removed
+         *
+         * @todo make a push the updated Display Markets list to the server 
+         */
         removeMarket: function removeMarket(market) {
             var index = this.markets.findIndex(function (element) {
                 console.log(element.title);
@@ -83728,6 +83787,12 @@ var MarketNegotiation = __webpack_require__(32);
             this.markets.splice(index, 1);
             this.checkSelected();
         },
+
+        /**
+         * Creates dummy market reqeusts for Newly added Market
+         *
+         * @todo remove once data is being pulled from server 
+         */
         loadMarketData: function loadMarketData(market) {
             this.randomID += this.randomID + "1";
             return new Market({
@@ -83752,6 +83817,10 @@ var MarketNegotiation = __webpack_require__(32);
                 })]
             });
         },
+
+        /**
+         * Closes popover
+         */
         onDismiss: function onDismiss() {
             this.$refs[this.popover_ref].$emit('close');
         }
@@ -84028,8 +84097,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        /**
+         * Compiles a notification list for Important market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
         notificationList: function notificationList() {
-            var list = this.markets.reduce(function (acc, obj) {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                 acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
                     switch (obj2.attributes.state) {
                         case "vol-spread-alert":
@@ -84043,20 +84120,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }, []);
                 return acc;
             }, {});
-            return list;
         }
     },
     methods: {
+        /**
+         * Closes popover
+         */
         onDismiss: function onDismiss() {
             this.status = false;
             this.$refs[this.popover_ref].$emit('close');
         },
+
+        /**
+         * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
+         *
+         * @param {string} $market a string detailing the related Market.title
+         * @param {string} $id a string id detailing the UserMarketRequests to be removed
+         *
+         * @todo Change $market to be the Market.id not Market.title
+         */
         addToNoCares: function addToNoCares(market, id) {
             if (!this.no_cares.includes(id)) {
                 this.no_cares.push(id);
                 this.removeMarketRequest(market, id);
             }
         },
+
+        /**
+         * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
+         *      closes the popover
+         *
+         * @todo Change market to be the Market.id not Market.title
+         */
         applyBulkNoCares: function applyBulkNoCares() {
             var _this = this;
 
@@ -84074,6 +84169,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             this.onDismiss();
         },
+
+        /**
+         * Removes a single Important UserMarketRequest by id from the Markets array
+         *
+         * @param {string} $market a string detailing the related Market.title
+         * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
+         *
+         * @todo Change $market to be the Market.id not Market.title
+         */
         removeMarketRequest: function removeMarketRequest(market, market_request_id) {
             var market_index = this.markets.findIndex(function (element) {
                 return element.title == market;
@@ -84347,8 +84451,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        /**
+         * Compiles a notification list for Alert market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
         notificationList: function notificationList() {
-            var list = this.markets.reduce(function (acc, obj) {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                 acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
                     switch (obj2.attributes.state) {
                         case "vol-spread-alert":
@@ -84361,13 +84473,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }, []);
                 return acc;
             }, {});
-            return list;
         }
     },
     methods: {
+        /**
+         * Closes popover
+         */
         onDismiss: function onDismiss() {
             this.$refs[this.popover_ref].$emit('close');
         },
+
+        /**
+        * Loads the Interaction Sidebar with the related UserMarketRequest
+        *
+        * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+        *      to the Interaction Sidebar.
+        *
+        * @fires /lib/EventBus#toggleSidebar
+        */
         loadInteractionBar: function loadInteractionBar(market_request) {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
         }
@@ -84587,8 +84710,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
+        /**
+         * Compiles a notification list for Confirmation market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
         notificationList: function notificationList() {
-            var list = this.markets.reduce(function (acc, obj) {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                 acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
                     switch (obj2.attributes.state) {
                         case "confirm":
@@ -84600,13 +84731,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }, []);
                 return acc;
             }, {});
-            return list;
         }
     },
     methods: {
+        /**
+         * Closes popover
+         */
         onDismiss: function onDismiss() {
             this.$refs[this.popover_ref].$emit('close');
         },
+
+        /**
+         * Loads the Interaction Sidebar with the related UserMarketRequest
+         *
+         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+         *      to the Interaction Sidebar.
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
         loadInteractionBar: function loadInteractionBar(market_request) {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
         }
@@ -84839,10 +84981,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.opened = !this.opened;
             }
+        },
+
+        /**
+         * Listens for a chatToggle event firing
+         *
+         * @event /lib/EventBus#chatToggle
+         */
+        chatBarListener: function chatBarListener() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
         }
     },
     mounted: function mounted() {
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
+        this.chatBarListener();
     }
 });
 

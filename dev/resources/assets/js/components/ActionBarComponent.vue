@@ -93,6 +93,10 @@
             };
         },
         methods: {
+            /**
+             * Resets the quantities counters and updates each of the market_quantities
+             *      counters according to the matching market requests
+             */
             reloadQuantities() {
                 this.market_quantities.important = 0;
                 this.market_quantities.alert = 0;
@@ -117,6 +121,11 @@
                     });
                 });
             },
+            /**
+             * Loads the Chat Sidebar
+             *
+             * @fires /lib/EventBus#toggleSidebar
+             */
             loadChatBar() {
                 EventBus.$emit('toggleSidebar', 'chat');
             },

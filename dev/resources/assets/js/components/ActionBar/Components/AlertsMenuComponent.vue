@@ -43,8 +43,16 @@
             };
         },
         computed: {
+            /**
+             * Compiles a notification list for Alert market reqeusts with Market as key
+             *      and a market requests array as value
+             *
+             * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+             */
             notificationList: function() {
-                let list = this.markets.reduce( function(acc, obj) {
+                //Iterates through an array of Markets and compiles an object with Market.title as key
+                return this.markets.reduce( function(acc, obj) {
+                    //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                     acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
                         switch(obj2.attributes.state) {    
                             case "vol-spread-alert":
@@ -57,13 +65,23 @@
                     }, []);
                     return acc;
                 }, {});
-                return list;
             },
         },
         methods: {
+            /**
+             * Closes popover
+             */
             onDismiss() {
                 this.$refs[this.popover_ref].$emit('close');
             },
+             /**
+             * Loads the Interaction Sidebar with the related UserMarketRequest
+             *
+             * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+             *      to the Interaction Sidebar.
+             *
+             * @fires /lib/EventBus#toggleSidebar
+             */
             loadInteractionBar(market_request) {
                 EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
             },
