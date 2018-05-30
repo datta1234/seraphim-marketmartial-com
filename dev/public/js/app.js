@@ -19938,6 +19938,7 @@ module.exports = function () {
         this.user_markets = [];
         this._chosen_user_market = null;
         var defaults = {
+            id: "",
             attributes: {
                 expiration_date: moment(),
                 strike: ""
@@ -70176,6 +70177,7 @@ var sampleUserMarket = new UserMarket({
     market_negotiations: [sampleUserNegotitaion]
 });
 var marketRequestSample = new UserMarketRequest({
+    id: "7",
     attributes: {
         expiration_date: moment("2018-03-18 00:00:00"),
         strike: "10 000",
@@ -70187,6 +70189,7 @@ var marketRequestSample = new UserMarketRequest({
     chosen_user_market: sampleUserMarket
 });
 var marketRequestSample2 = new UserMarketRequest({
+    id: "6",
     attributes: {
         expiration_date: moment("2018-03-20 00:00:00"),
         strike: "12 000",
@@ -70210,9 +70213,11 @@ var app = new Vue({
     el: '#trade_app',
     data: {
         // default data
+        no_cares: [],
         display_markets: [new Market({
             title: "TOP 40",
             market_requests: [marketRequestSample, marketRequestSample2, new UserMarketRequest({
+                id: "1",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70230,6 +70235,7 @@ var app = new Vue({
         }), new Market({
             title: "DTOP",
             market_requests: [new UserMarketRequest({
+                id: "2",
                 attributes: {
                     expiration_date: moment("2018-03-17 00:00:00"),
                     strike: "14 000",
@@ -70242,6 +70248,7 @@ var app = new Vue({
         }), new Market({
             title: "SINGLES",
             market_requests: [new UserMarketRequest({
+                id: "3",
                 attributes: {
                     expiration_date: moment("2018-03-17 00:00:00"),
                     strike: "16 000",
@@ -70268,6 +70275,7 @@ var app = new Vue({
 setTimeout(function () {
     console.log("REQUEST - blue");
     app.display_markets[1].addMarketRequest(new UserMarketRequest({
+        id: "4",
         attributes: {
             expiration_date: moment("2018-03-18 00:00:00"),
             strike: "10 000",
@@ -83267,6 +83275,9 @@ var MarketNegotiation = __webpack_require__(31);
     props: {
         'markets': {
             type: Array
+        },
+        'no_cares': {
+            type: Array
         }
     },
     watch: {
@@ -83274,6 +83285,12 @@ var MarketNegotiation = __webpack_require__(31);
             handler: function handler() {
                 console.log('change list');
                 this.reloadQuantities();
+            },
+            deep: true
+        },
+        'no_cares': {
+            handler: function handler() {
+                console.log('added no care', this.no_cares);
             },
             deep: true
         }
@@ -83364,7 +83381,8 @@ var render = function() {
             _c("Important-markets-menu", {
               attrs: {
                 count: _vm.market_quantities.important,
-                markets: _vm.markets
+                markets: _vm.markets,
+                no_cares: _vm.no_cares
               }
             }),
             _vm._v(" "),
@@ -83653,6 +83671,7 @@ var MarketNegotiation = __webpack_require__(31);
                 'SINGLES': false,
                 'Roll': false
             },
+            randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
             popover_ref: 'add-market-ref'
         };
     },
@@ -83684,9 +83703,11 @@ var MarketNegotiation = __webpack_require__(31);
             this.checkSelected();
         },
         loadMarketData: function loadMarketData(market) {
+            this.randomID += this.randomID + "1";
             return new Market({
                 title: market,
                 market_requests: [new UserMarketRequest({
+                    id: this.randomID,
                     attributes: {
                         expiration_date: moment("2018-03-17 00:00:00"),
                         strike: "17 000",
@@ -83969,6 +83990,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -83977,10 +84003,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         'count': {
             type: Number
+        },
+        'no_cares': {
+            type: Array
         }
     },
     data: function data() {
         return {
+            status: false,
             popover_ref: 'important-market-ref'
         };
     },
@@ -84006,10 +84036,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         onDismiss: function onDismiss() {
+            this.status = false;
             this.$refs[this.popover_ref].$emit('close');
         },
-        applyNoCares: function applyNoCares() {
-            console.log("Applying No Cares");
+        addToNoCares: function addToNoCares(id) {
+            if (!this.no_cares.includes(id)) {
+                this.no_cares.push(id);
+            }
+        },
+        applyBulkNoCares: function applyBulkNoCares() {
+            var _this = this;
+
+            if (this.status) {
+                for (var market in this.notificationList) {
+                    if (this.notificationList[market].length > 0) {
+                        this.notificationList[market].forEach(function (market_request) {
+                            if (!_this.no_cares.includes(market_request.id)) {
+                                _this.no_cares.push(market_request.id);
+                            }
+                        });
+                    }
+                }
+            }
             this.onDismiss();
         }
     },
@@ -84085,7 +84133,7 @@ var render = function() {
                                 attrs: { type: "button" },
                                 on: {
                                   click: function($event) {
-                                    _vm.removeMarket(key)
+                                    _vm.addToNoCares(market_requests.id)
                                   }
                                 }
                               },
@@ -84107,8 +84155,21 @@ var render = function() {
                     [
                       _c(
                         "b-form-checkbox",
-                        { attrs: { value: "saveMarketDefault" } },
-                        [_vm._v("Select All")]
+                        {
+                          attrs: { id: "selectBulkNoCares", value: "true" },
+                          model: {
+                            value: _vm.status,
+                            callback: function($$v) {
+                              _vm.status = $$v
+                            },
+                            expression: "status"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Select All\n                    "
+                          )
+                        ]
                       )
                     ],
                     1
@@ -84123,7 +84184,7 @@ var render = function() {
                   {
                     staticClass: "btn mm-generic-trade-button w-100",
                     attrs: { type: "button" },
-                    on: { click: _vm.applyNoCares }
+                    on: { click: _vm.applyBulkNoCares }
                   },
                   [_vm._v("OK")]
                 )

@@ -74,6 +74,7 @@
                     'SINGLES': false,
                     'Roll': false,
                 },
+                randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
                 popover_ref: 'add-market-ref',
             };
         },
@@ -102,10 +103,12 @@
                 this.checkSelected();
             },
             loadMarketData(market) {
+                this.randomID += this.randomID + "1"
                 return new Market({
                     title: market,
                     market_requests: [
                         new UserMarketRequest({
+                            id: this.randomID,
                             attributes: {
                                 expiration_date: moment("2018-03-17 00:00:00"),
                                 strike: "17 000",

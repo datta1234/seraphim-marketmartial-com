@@ -12,19 +12,24 @@
                         <div class="col-6">
                             <button 
                                 type="button" class="btn mm-generic-trade-button w-100"
-                                @click="removeMarket(key)">No Cares
+                                @click="addToNoCares(market_requests.id)">No Cares
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 mt-2">
                     <b-form-group>
-                        <b-form-checkbox value="saveMarketDefault">Select All</b-form-checkbox>
+                        <b-form-checkbox 
+                            id="selectBulkNoCares"
+                            v-model="status" 
+                            value="true">
+                            Select All
+                        </b-form-checkbox>
                     </b-form-group>
                 </div>
                 
                 <div class="col-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="applyNoCares">OK</button>
+                    <button type="button" class="btn mm-generic-trade-button w-100" @click="applyBulkNoCares">OK</button>
                 </div>
                 <div class="col-6 mt-1">
                     <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss()">Cancel</button>
@@ -44,10 +49,14 @@
           'count': {
             type: Number
           },
+          'no_cares': {
+            type: Array
+          },
         },
         data() {
             return {
-              popover_ref: 'important-market-ref',
+                status: false,
+                popover_ref: 'important-market-ref',
             };
         },
         computed: {
@@ -71,10 +80,26 @@
         },
         methods: {
             onDismiss() {
+                this.status = false;
                 this.$refs[this.popover_ref].$emit('close');
             },
-            applyNoCares() {
-                console.log("Applying No Cares");
+            addToNoCares(id) {
+                if(!this.no_cares.includes(id)) {
+                    this.no_cares.push(id);
+                }
+            },
+            applyBulkNoCares() {
+                if(this.status) {
+                    for (var market in this.notificationList) {
+                        if(this.notificationList[market].length > 0) {
+                            this.notificationList[market].forEach( (market_request) => {
+                                if(!this.no_cares.includes(market_request.id)) {
+                                    this.no_cares.push(market_request.id);
+                                }
+                            });
+                        }
+                    }
+                }
                 this.onDismiss();
             },
         },

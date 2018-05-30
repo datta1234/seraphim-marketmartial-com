@@ -3,7 +3,7 @@
         <div class="row mt-2 menu-actions">
             <div class="col-9">
                 <button type="button" class="btn mm-request-button mr-2 p-1" @click="modals.select_market=true">Request a Market</button>
-                <Important-markets-menu :count="market_quantities.important" :markets="markets"></Important-markets-menu>
+                <Important-markets-menu :count="market_quantities.important" :markets="markets" :no_cares="no_cares"></Important-markets-menu>
                 <Alerts-markets-menu :count="market_quantities.alert" :markets="markets" v-if="market_quantities.alert>0"></Alerts-markets-menu>
                 <Confirmations-markets-menu :count="market_quantities.confirm" :markets="markets" v-if="market_quantities.confirm>0"></Confirmations-markets-menu>
             </div>
@@ -57,6 +57,9 @@
         props:{
           'markets': {
             type: Array
+          },
+          'no_cares': {
+            type: Array
           }
         },
         watch: {
@@ -64,6 +67,12 @@
                 handler: function(){
                     console.log('change list');
                     this.reloadQuantities();
+                },
+                deep: true
+            },
+            'no_cares': {
+                handler: function(){
+                    console.log('added no care', this.no_cares);
                 },
                 deep: true
             }
