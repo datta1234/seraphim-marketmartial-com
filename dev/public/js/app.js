@@ -8631,6 +8631,19 @@ module.exports = defaults;
 
 var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 
+EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
+    switch (sidebar) {
+        case "interaction":
+            EventBus.$emit('chatToggle', false);
+            EventBus.$emit('interactionToggle', state, payload);
+            break;
+        case "chat":
+            EventBus.$emit('interactionToggle', false);
+            EventBus.$emit('chatToggle', state, payload);
+            break;
+    }
+});
+
 /***/ }),
 /* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -82145,7 +82158,7 @@ var UserMarketRequest = __webpack_require__(31);
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true, this.marketRequest);
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
         calcMarketState: function calcMarketState() {
             // set new refs
@@ -83265,6 +83278,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 var Market = __webpack_require__(38);
@@ -83297,7 +83313,6 @@ var MarketNegotiation = __webpack_require__(32);
     },
     data: function data() {
         return {
-            opened: false,
             market_quantities: {
                 important: 1,
                 alert: 1,
@@ -83337,8 +83352,7 @@ var MarketNegotiation = __webpack_require__(32);
             });
         },
         loadChatBar: function loadChatBar() {
-            this.opened = this.opened ? false : true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('chatToggle', this.opened);
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
         }
     },
     mounted: function mounted() {
@@ -83410,7 +83424,23 @@ var render = function() {
           _c(
             "div",
             { staticClass: "float-right" },
-            [_c("filter-markets-menu", { attrs: { markets: _vm.markets } })],
+            [
+              _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-transparent-button mr-2",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.loadChatBar()
+                    }
+                  }
+                },
+                [_c("span", { staticClass: "icon icon-chat" })]
+              )
+            ],
             1
           )
         ])
@@ -83594,9 +83624,6 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
 //
 //
 //
@@ -83856,20 +83883,6 @@ var render = function() {
             ])
           ])
         ]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-transparent-button mr-2",
-          attrs: { type: "button" },
-          on: {
-            click: function($event) {
-              _vm.loadChatBar()
-            }
-          }
-        },
-        [_c("span", { staticClass: "icon icon-chat" })]
       )
     ],
     1
@@ -84100,7 +84113,7 @@ var render = function() {
         {
           ref: _vm.popover_ref,
           attrs: {
-            triggers: "click blur",
+            triggers: "focus",
             placement: "bottom",
             target: "actionImportantButton"
           }
@@ -84356,8 +84369,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$refs[this.popover_ref].$emit('close');
         },
         loadInteractionBar: function loadInteractionBar(market_request) {
-            console.log("load Bar");
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true, market_request);
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
         }
     },
     mounted: function mounted() {}
@@ -84596,8 +84608,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$refs[this.popover_ref].$emit('close');
         },
         loadInteractionBar: function loadInteractionBar(market_request) {
-            console.log("load Bar");
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', true, market_request);
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
         }
     },
     mounted: function mounted() {}
@@ -84823,7 +84834,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         toggleBar: function toggleBar(set) {
-            this.opened = set;
+            if (typeof set != 'undefined') {
+                this.opened = set == true;
+            } else {
+                this.opened = !this.opened;
+            }
         }
     },
     mounted: function mounted() {

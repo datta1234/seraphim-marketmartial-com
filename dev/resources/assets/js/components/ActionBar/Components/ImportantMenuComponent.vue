@@ -2,7 +2,7 @@
     <div class="Important-markets-menu">
         <button id="actionImportantButton" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ count }}</strong></button>
         <!-- Important market popover -->
-        <b-popover triggers="click blur" placement="bottom" :ref="popover_ref" target="actionImportantButton">
+        <b-popover triggers="focus" placement="bottom" :ref="popover_ref" target="actionImportantButton">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_requests in maket" class="row mt-2">

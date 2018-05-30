@@ -10,6 +10,9 @@
             <div class="col-3">
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
+                    <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()">
+                        <span class="icon icon-chat"></span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -79,7 +82,6 @@
         },
         data() {
             return {
-                opened: false,
                 market_quantities: {
                     important: 1,
                     alert: 1,
@@ -116,8 +118,7 @@
                 });
             },
             loadChatBar() {
-                this.opened = (this.opened) ? false : true;
-                EventBus.$emit('chatToggle', this.opened);
+                EventBus.$emit('toggleSidebar', 'chat');
             },
         },
         mounted() {

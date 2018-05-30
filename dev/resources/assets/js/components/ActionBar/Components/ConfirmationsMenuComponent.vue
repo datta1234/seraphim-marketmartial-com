@@ -64,8 +64,7 @@
                 this.$refs[this.popover_ref].$emit('close');
             },
             loadInteractionBar(market_request) {
-                console.log("load Bar");
-                EventBus.$emit('interactionToggle', true, market_request);
+                EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
             },
         },
         mounted() {

@@ -42,9 +42,6 @@
             </div>
         </b-popover>
         <!-- END Filter market popover -->
-        <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()">
-            <span class="icon icon-chat"></span>
-        </button>
     </div>
 </template>
 

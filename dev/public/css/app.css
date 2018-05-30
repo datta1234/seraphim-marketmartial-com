@@ -11918,7 +11918,8 @@ input:checked + .slider:before {
 
 .Important-markets-menu,
 .Alerts-markets-menu,
-.Confirmations-markets-menu {
+.Confirmations-markets-menu,
+.filter-markets-menu {
   display: inline;
 }
 

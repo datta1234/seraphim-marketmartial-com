@@ -74,7 +74,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
-                EventBus.$emit('interactionToggle', true, this.marketRequest);
+                EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             },
             calcMarketState() {
                 // set new refs
