@@ -12,7 +12,7 @@
                         <div class="col-6">
                             <button 
                                 type="button" class="btn mm-generic-trade-button w-100"
-                                @click="addToNoCares(market_requests.id)">No Cares
+                                @click="addToNoCares(key, market_requests.id)">No Cares
                             </button>
                         </div>
                     </div>
@@ -83,9 +83,10 @@
                 this.status = false;
                 this.$refs[this.popover_ref].$emit('close');
             },
-            addToNoCares(id) {
+            addToNoCares(market, id) {
                 if(!this.no_cares.includes(id)) {
                     this.no_cares.push(id);
+                    this.removeMarketRequest(market, id);
                 }
             },
             applyBulkNoCares() {
@@ -95,6 +96,7 @@
                             this.notificationList[market].forEach( (market_request) => {
                                 if(!this.no_cares.includes(market_request.id)) {
                                     this.no_cares.push(market_request.id);
+                                    this.removeMarketRequest(market, market_request.id);
                                 }
                             });
                         }
@@ -102,9 +104,18 @@
                 }
                 this.onDismiss();
             },
+            removeMarketRequest(market, market_request_id) {
+                let market_index = this.markets.findIndex( (element) => {
+                    return element.title == market;
+                });
+                let market_request_index = this.markets[market_index].market_requests.findIndex( (element) => {
+                    return element.id == market_request_id;
+                });
+                this.markets[market_index].market_requests.splice(market_request_index, 1);
+            },
         },
         mounted() {
-            
+
         }
     }
 </script>

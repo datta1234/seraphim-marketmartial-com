@@ -122,7 +122,6 @@
         },
         mounted() {
            this.reloadQuantities();
-           console.log("What do we get: ", this.markets);
         }
     }
 
