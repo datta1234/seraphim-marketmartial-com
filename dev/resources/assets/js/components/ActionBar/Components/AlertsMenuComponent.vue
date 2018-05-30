@@ -5,14 +5,14 @@
         <b-popover triggers="click blur" placement="bottom" :ref="popover_ref" target="actionAlertButton">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
-                    <div v-if="maket.length > 0" v-for="market_requests in maket" class="row mt-1">
+                    <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.attributes.strike }} {{ market_requests.attributes.expiration_date.format("MMM DD") }}</h6>
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} {{ market_request.attributes.expiration_date.format("MMM DD") }}</h6>
                         </div>
                         <div class="col-6">
                             <button 
                                 type="button" class="btn mm-generic-trade-button w-100"
-                                @click="removeMarket(key)">View
+                                @click="loadInteractionBar(market_request)">View
                             </button>
                         </div>
                     </div>
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../../lib/EventBus.js';  
     export default {
       props:{
           'markets': {
@@ -62,6 +63,10 @@
         methods: {
             onDismiss() {
                 this.$refs[this.popover_ref].$emit('close');
+            },
+            loadInteractionBar(market_request) {
+                console.log("load Bar");
+                EventBus.$emit('interactionToggle', true, market_request);
             },
         },
         mounted() {
