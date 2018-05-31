@@ -19,17 +19,28 @@
 			@endslot
 				@slot('body')
 
-            {!! Form::model($user,['route' => 'account.edit']) !!}
+            {!! Form::model($user,['route' => 'account.edit','method'=>'PUT']) !!}
 				
 				<div class="offset-1 col-md-10">
+
+					@foreach ($trading_accounts as $index => $trading_account)
+						@include('trading_account.partials.trading_account', ['trading_account' => $trading_account,'index'=>$markets->count() + $index])
+					@endforeach
+
 					@foreach ($markets as $index => $market)
 						@include('trading_account.partials.default', ['market' => $market,'index'=>$index])
 					@endforeach
-					
-					@foreach ($trading_accounts as $index => $trading_account)
-						@include('trading_account.partials.trading_account', ['trading_account' => $trading_account,'index'=>$market->count() + $index])
-					@endforeach
+			
 
+					<h2>
+						Auto Emails
+					</h2>
+					
+					<p>
+						Trade confirmations will be sent to the following emails(to register a new email, go to the Email tab):
+					</p>
+						
+					@include('emails.partials.select', ['emails' => $emails])
 
 					<div class="col-md-3 offset-md-9">
 					    <button type="submit" class="btn mm-button float-right w-100">Update</button>

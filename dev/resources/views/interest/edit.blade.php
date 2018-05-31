@@ -12,7 +12,7 @@
 			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
 			@endslot
 				@slot('title')
-					E-Mail Settings
+					Change Password
 				@endslot
 			@slot('decorator')
 				<hr class="title-decorator">
@@ -20,7 +20,6 @@
 				@slot('body')
 
 
-				<email-settings :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
 
 				@endslot
 		@endcomponent

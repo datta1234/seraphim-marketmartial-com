@@ -19,7 +19,7 @@
 			@endslot
 				@slot('body')
 
-            {!! Form::open(['route' => 'user.change_password']) !!}
+            {!! Form::open(['route' => 'user.change_password','method'=>'PUT']) !!}
 
 				<div class="form-group row">
 

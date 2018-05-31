@@ -6,6 +6,8 @@
 	</div>
 	<div class="col-md-4">
 		 {{ Form::hidden("trading_accounts[{$index}][id]",$trading_account->id,['class' => ($errors->has('email.{$index}.email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
+ 		{{ Form::hidden("trading_accounts[{$index}][market_id]",$trading_account->market_id) }}
+
 
 
 		{{ Form::text("trading_accounts[{$index}][safex_number]",$trading_account->safex_number,['class' => ($errors->has("trading_accounts.{$index}.safex_number") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'safex member code']) }}

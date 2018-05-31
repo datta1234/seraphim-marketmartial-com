@@ -1,54 +1,109 @@
 <template>
-	<div>
-		<div class="form-group row" v-for="email in emailSettingsDataJson">
-			<div class="col-sm-12 col-md-4">
-			
-			<input placeholder="Enter your email here..." name="email[3][email]" type="email" v-model="email.email" class="form-control">
+<div>
 
-			</div>
-		</div>
+<form>
+        <b-form-group
+         v-for="(email, index) in emailSettingForm.data().email"
+          horizontal
+          :label-cols="4"
+          :label=" email.title ? email.title : email.default_label.title"
+          :label-for="'email-'+index+'-email'"
+          :invalid-feedback="emailSettingForm.errors.get('email.'+index+'.email')"
+      >
+        <b-form-input  :id="'email-'+index+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
+      </b-form-group>
+</form>
 
 
- <div>
     <b-button @click="showModal">
-      Open Modal
+     Add E-mail
     </b-button>
-    <b-modal ref="myModalRef" hide-footer title="Using Component Methods">
-      <div class="d-block text-center">
-        <h3>Hello From My Modal!</h3>
-      </div>
-      <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">Close Me</b-btn>
-    </b-modal>
-  </div>
 
-	</div>
+    <b-btn class="mt-3 mm-button" @click="update">
+       Update
+    </b-btn>
+
+
+    <b-modal ref="myModalRef" hide-footer title="Add Email">
+      <div class="d-block">
+         <b-form-group
+              :label-for="'email-title'"
+              placeholder="Place email"
+              :invalid-feedback="email.errors.get('title')">
+            <b-form-input  :id="'email-'+index+'-title'"  placeholder="Email label" :state="email.errors.state('title')" v-model="email.title"></b-form-input>
+          </b-form-group>
+
+        <b-form-group
+        :label-for="'email-email'"
+        placeholder="Place email"
+        :invalid-feedback="email.errors.get('email')">
+        <b-form-input  :id="'email-'+index+'-email'"  placeholder="Email Address" :state="email.errors.state('email')" v-model="email.email"></b-form-input>
+        </b-form-group>
+      </div>
+      <b-btn class="mt-3 mm-button" block @click="hideModal">Save</b-btn>
+    </b-modal>
+ 
+</div>
 
 
 </template>
 
 <script>
+    const Form = require('../lib/Form.js');
 
     export default {
-        props: ['emailSettingsData'],
-        data() {
-            return {
-            	emailSettingsDataJson: function(){
-            		return JSON.parse(this.emailSettingsData);
-            	}
-            };
+        props:{
+          'emailSettingsData': {
+            type: Array
+          },
+          'defaultLabelsData':{
+            type: Array
+          }
         },
-        computed: {
-
+        data() { 
+            return {          
+                email : new Form({
+                    email: '',
+                    title: ''
+                }),
+                emailSettingForm: new Form(),
+                mutableEmailSettingsData: this.emailSettingsData,
+            }
         },
         methods: {
-  
+            update() {
+                this.emailSettingForm.put('/email-settings')
+                .then((response) => {
+                    this.mutableEmailSettingsData = response.data;
+                    this.fields = [];
+                    // fields will be update from the server
+                    this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
+                });
+                
+            },
+            showModal () {
+                this.$refs.myModalRef.show()
+            },
+            hideModal () {
+                this.email.post('/email-settings')
+                .then((response) => {
+                    this.mutableEmailSettingsData.push(response.data);
+                    this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
+                    this.$refs.myModalRef.hide();
+                });
+            },
         },
         mounted() {
-
-        	for (var i = 0; i <= this.emailSettingsDataJson.length; i++) {
-        		console.log(this.emailSettingsDataJson[i])
-        	}
-        	console.log("this is the content");
+            //load the defaults as users ones
+            this.defaultLabelsData.forEach((label)=>{
+                this.mutableEmailSettingsData.push({
+                    'title': label.title,
+                    'default_id':label.id,
+                    'notifiable':false,
+                    'email':null
+                });
+            });
+            this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
         }
     }
 </script>

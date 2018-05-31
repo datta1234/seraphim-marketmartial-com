@@ -24,9 +24,9 @@ class TradingAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'trading_accounts.*.safex_number' => 'required',
+            'trading_accounts.*.safex_number' => 'max:255',
             'trading_accounts.*.market_id' => 'required',
-            'trading_accounts.*.sub_account' => 'required',
+            'trading_accounts.*.sub_account' => 'max:255',
 
         ];
     }
