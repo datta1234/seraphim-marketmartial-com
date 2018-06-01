@@ -80,6 +80,8 @@
              *      to the Interaction Sidebar.
              *
              * @fires /lib/EventBus#toggleSidebar
+             *
+             * @todo Change the method to load apropriate modal not interaction bar
              */
             loadInteractionBar(market_request) {
                 EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
