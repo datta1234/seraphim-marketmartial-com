@@ -11455,6 +11455,24 @@ a.mm-login-button {
   }
 }
 
+@media (min-width: 768px) {
+  .login-reset-clear {
+    margin-bottom: 25.3em;
+  }
+}
+
+@media (min-width: 992px) {
+  .login-reset-clear {
+    margin-bottom: 50.6em;
+  }
+}
+
+@media (min-width: 1400px) {
+  .login-reset-clear {
+    margin-bottom: 23.7em;
+  }
+}
+
 /*
  *	Slide Cards
  */

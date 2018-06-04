@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@if($errors->any())
+    {{ var_dump($errors->all()) }}
+@endif
 {{-- Register Card --}}
 @component('partials.content_card')
     @slot('header')
@@ -18,7 +21,7 @@
             Fill in your details below and we will email you a login to complete your profile.<br>
             Once your credentials have been verified you will be able to view and use the Market Martial trading platform.
             </p>
-            {!! Form::open(['route' => 'register']) !!}
+            {!! Form::open(['route' => 'register', 'id' => 'registerPageForm']) !!}
             
 
          <div class="form-group row">
