@@ -7,11 +7,13 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Browser\Pages\ContactUsPage;
 use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Components\NavBar;
+use Tests\Browser\Components\PublicFooter;
 
 class ContactUsTest extends DuskTestCase
 {
     /**
-     * A Dusk test example.
+     * Assert base html elements are present.
      *
      * @return void
      */
@@ -25,6 +27,11 @@ class ContactUsTest extends DuskTestCase
         });
     }
 
+    /**
+     * Assert content sections are present present.
+     *
+     * @return void
+     */
     public function testContent()
     {
         $this->browse(function (Browser $browser) {
@@ -39,6 +46,11 @@ class ContactUsTest extends DuskTestCase
         });
     }
 
+    /**
+     * Asserting contact form submission and system response.
+     *
+     * @return void
+     */
     public function testContact()
     {
         $this->browse(function ($browser) {
@@ -50,6 +62,24 @@ class ContactUsTest extends DuskTestCase
                     /*->screenshot('error')*/
                     ->waitForLocation((new HomePage)->url())
                     ->assertSee('Contact message has been sent');
+        });
+    }
+
+    /**
+     * Assert basic components are included.
+     *
+     * @return void
+     */
+    public function testComponents() 
+    {
+        $this->browse(function ($browser) {
+            $browser->visit(new ContactUsPage)
+                    ->within(new NavBar, function ($browser) {
+                        $browser->testPublicLinks($browser);
+                    })
+                    ->within(new PublicFooter, function ($browser) {
+                        $browser->testContent($browser);
+                    });
         });
     }
 }

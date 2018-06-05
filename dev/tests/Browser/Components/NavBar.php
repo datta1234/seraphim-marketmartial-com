@@ -36,7 +36,7 @@ class NavBar extends BaseComponent
     public function elements()
     {
         return [
-            '@nav-list' => $this->selector(). ' .nav',
+            '@nav-list' => '.nav',
         ];
     }
 

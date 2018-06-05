@@ -36,7 +36,7 @@ class TradeFooter extends BaseComponent
     public function elements()
     {
         return [
-            '@footer-links' => $this->selector() . ' .footer-links-block',
+            '@footer-links' => '.footer-links-block',
         ];
     }
 

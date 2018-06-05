@@ -10,12 +10,61 @@ use App\Models\UserManagement\Role;
 use App\Models\UserManagement\Organisation;
 use Tests\Browser\Pages\HomePage;
 use Tests\Browser\Pages\TradeScreen;
+use Tests\Browser\Components\NavBar;
+use Tests\Browser\Components\PublicFooter;
+use Tests\Browser\Components\TradeFooter;
+
+use Illuminate\Contracts\Console\Kernel;
 
 class HomePageTest extends DuskTestCase
 {
-    use DatabaseMigrations;
+    protected static $dbSetup = false;
+    protected static $role;
+    protected static $organisation;
+    protected static $user;
+
     /**
-     * A Dusk test example.
+     * Called before each test method to create objects to test against.
+     *
+     * @return void
+     */
+    public function setUp()
+    {
+        parent::setUp();
+        
+        //Workaround to instantiate the db setup only once per class test
+        if(!self::$dbSetup)
+        {
+            \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+            
+            //create a new user to login with, role and organisation needed for user creation
+            self::$role = factory(Role::class)->create();
+            self::$organisation = factory(Organisation::class)->create();
+            self::$user = factory(User::class)->create([
+                        'organisation_id' =>  self::$organisation->id,
+                        'password'  =>  \Hash::make('samplepass')
+                    ]);
+            
+            self::$dbSetup = true;
+        }
+    }
+
+    /**
+     * Called after each test method to destroy objects to test against.
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->logout();
+        });
+
+        parent::tearDown();
+    }
+    
+    /**
+     * Assert base html elements are present.
      *
      * @return void
      */
@@ -29,17 +78,17 @@ class HomePageTest extends DuskTestCase
         });
     }
 
+    /**
+     * Asserting basic system login.
+     *
+     * @return void
+     */
     public function testLogin()
     {
         $this->browse(function ($browser) {
-            $role = factory(Role::class)->create();
-            $organisation = factory(Organisation::class)->create();
-            $user = factory(User::class)->create([
-                        'organisation_id' =>  $organisation->id,
-                        'password'  =>  \Hash::make('samplepass')
-                    ]);
+            
             $browser->visit(new HomePage)
-                    ->type('#homePageLoginForm input[name="email"]', $user->email)
+                    ->type('#homePageLoginForm input[name="email"]', self::$user->email)
                     ->type('#homePageLoginForm input[name="password"]', 'samplepass')
                     ->press('#homePageLoginForm button[type="submit"]')
                     ->waitForLocation((new TradeScreen)->url())
@@ -47,6 +96,11 @@ class HomePageTest extends DuskTestCase
         });
     }
 
+    /**
+     * Assert content sections are present present.
+     *
+     * @return void
+     */
     public function testContent()
     {
         $this->browse(function (Browser $browser) {
@@ -72,6 +126,11 @@ class HomePageTest extends DuskTestCase
         });
     }
 
+    /**
+     * Asserting contact form submission and system response.
+     *
+     * @return void
+     */
     public function testContact()
     {
         $this->browse(function ($browser) {
@@ -85,13 +144,30 @@ class HomePageTest extends DuskTestCase
         });
     }
 
+    /**
+     * Assert basic components are included.
+     *
+     * @return void
+     */
     public function testComponents() 
     {
         $this->browse(function ($browser) {
+
+            //Test components for Public User
             $browser->visit(new HomePage)
-                    ->assertVisible('#main-footer')
-                    ->assertVisible('#mainNav');
+                    ->within(new NavBar, function ($browser) {
+                        $browser->testPublicLinks($browser);
+                    })
+                    ->within(new PublicFooter, function ($browser) {
+                        $browser->testContent($browser);
+                    });
+            
+            //Test components for Authed User
+            $browser->loginAs(User::find(1))
+                    ->visit(new TradeScreen)
+                    ->within(new TradeFooter, function ($browser) {
+                        $browser->testContent($browser);
+                    });
         });
     }
-
 }
