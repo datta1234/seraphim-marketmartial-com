@@ -33,11 +33,12 @@ Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 
 // Interaction Bar Component + children
-Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
     Vue.component('ibar-negotiation-bar', require('./components/InteractionBar/NegotiationBar.vue'));
     Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
     Vue.component('ibar-negotiation-history', require('./components/InteractionBar/Components/NegotiationHistory.vue'));
     Vue.component('ibar-market-negotiation', require('./components/InteractionBar/MarketComponents/MarketNegotiation.vue'));
+    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
+Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
@@ -136,7 +137,143 @@ const app = new Vue({
                         chosen_user_market: new UserMarket({
                             current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
-                    })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
+                    new UserMarketRequest({
+                        attributes: {
+                            expiration_date: moment("2018-03-18 00:00:00"),
+                            strike: "11 000",
+                            state: '',
+                            bid_state: '',
+                            offer_state: '',
+                        },
+                        user_markets: [
+                            new UserMarket({
+                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            })
+                        ],
+                        chosen_user_market: new UserMarket({
+                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                        })
+                    }),
                 ]
             }),
             new Market({

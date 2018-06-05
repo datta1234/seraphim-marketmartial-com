@@ -1,5 +1,12 @@
+#trade_body {
+	height:auto;
+}
 #trade_app {
-	
+	height: 100%;
+	position: relative;
+	.trade-screen-wrapper {
+		position: relative;
+	}
 	.trade-section.light-theme {
 		background-color: $mm-background;
 		
@@ -46,7 +53,8 @@
 	} 
 
 	.user-market {
-		padding:0px;	
+		padding:0px;
+
 		.user-market-group {
 			border-right: 0.15em solid $mm-light-grey;
 			height:100%;

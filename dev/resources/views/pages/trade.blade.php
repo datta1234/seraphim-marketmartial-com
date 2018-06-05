@@ -1,7 +1,7 @@
 @extends('layouts.trade_app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid trade-screen-wrapper">
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->

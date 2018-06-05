@@ -1,17 +1,21 @@
 <template>
-    <div class="col col-12 text-center market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
-        <div class="row justify-content-md-center">
-            <div class="col col-6 market-tab-name market-tab-name">
-                {{ marketRequest.attributes.strike }}    
-            </div>
-            <div class="col col-6 market-tab-state">
-                
-                <span v-if="market_request_state_label != ''">
-                    <span class="">{{ market_request_state_label }}</span>
-                </span>
-                <span v-else>
-                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
-                </span>
+    <div class="col col-12 text-center">
+        <div class="row">
+            <div class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
+                <div class="row justify-content-md-center">
+                    <div class="col col-6 market-tab-name market-tab-name">
+                        {{ marketRequest.attributes.strike }}    
+                    </div>
+                    <div class="col col-6 market-tab-state">
+                        
+                        <span v-if="market_request_state_label != ''">
+                            <span class="">{{ market_request_state_label }}</span>
+                        </span>
+                        <span v-else>
+                            <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

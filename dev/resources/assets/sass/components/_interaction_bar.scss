@@ -1,4 +1,5 @@
 .interaction-bar-wrapper {
+    height:100%;
     .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
