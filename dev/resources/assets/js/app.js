@@ -40,8 +40,14 @@ Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
     Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
 
-Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+// Action Bar Component + children
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
+Vue.component('filter-markets-menu', require('./components/ActionBar/Components/FilterMarketsMenuComponent.vue'));
+Vue.component('Important-markets-menu', require('./components/ActionBar/Components/ImportantMenuComponent.vue'));
+Vue.component('Alerts-markets-menu', require('./components/ActionBar/Components/AlertsMenuComponent.vue'));
+Vue.component('Confirmations-markets-menu', require('./components/ActionBar/Components/ConfirmationsMenuComponent.vue'));
+
+Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 
 Vue.mixin({
@@ -77,6 +83,7 @@ let sampleUserMarket = new UserMarket({
     ]
 });
 let marketRequestSample = new UserMarketRequest({
+    id: "7",
     attributes: {
         expiration_date: moment("2018-03-18 00:00:00"),
         strike: "10 000",
@@ -88,6 +95,7 @@ let marketRequestSample = new UserMarketRequest({
     chosen_user_market: sampleUserMarket
 });
 let marketRequestSample2 = new UserMarketRequest({
+    id: "6",
     attributes: {
         expiration_date: moment("2018-03-20 00:00:00"),
         strike: "12 000",
@@ -115,6 +123,7 @@ const app = new Vue({
     el: '#trade_app',
     data: {
         // default data
+        no_cares: [],
         display_markets: [
             new Market({
                 title: "TOP 40",
@@ -122,6 +131,7 @@ const app = new Vue({
                     marketRequestSample,
                     marketRequestSample2,
                     new UserMarketRequest({
+                        id: "1",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -280,6 +290,7 @@ const app = new Vue({
                 title: "DTOP",
                 market_requests: [
                     new UserMarketRequest({
+                        id: "2",
                         attributes: {
                             expiration_date: moment("2018-03-17 00:00:00"),
                             strike: "14 000",
@@ -295,6 +306,7 @@ const app = new Vue({
                 title: "SINGLES",
                 market_requests: [
                     new UserMarketRequest({
+                        id: "3",
                         attributes: {
                             expiration_date: moment("2018-03-17 00:00:00"),
                             strike: "16 000",
@@ -327,6 +339,7 @@ setTimeout(function(){
     console.log("REQUEST - blue");
     app.display_markets[1].addMarketRequest(
         new UserMarketRequest({
+            id: "4",
             attributes: {
                 expiration_date: moment("2018-03-18 00:00:00"),
                 strike: "10 000",

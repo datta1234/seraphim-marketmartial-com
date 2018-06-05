@@ -15,7 +15,7 @@
 			</user-header>
 
 			<!-- Actions and Alerts -->
-			<action-bar :markets="display_markets"></action-bar>
+			<action-bar :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
 
 			<!-- Markets sections -->
