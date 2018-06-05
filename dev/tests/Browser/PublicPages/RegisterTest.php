@@ -10,6 +10,7 @@ use App\Models\UserManagement\Role;
 use App\Models\StructureItems\MarketType;
 use Tests\Browser\Pages\RegisterPage;
 use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Pages\UserDetailsPage;
 
 class RegisterTest extends DuskTestCase
 {
@@ -55,7 +56,13 @@ class RegisterTest extends DuskTestCase
                     ->assertSeeLink('Sign up now');
         });
     }
-
+    /**
+     * A User registration test that test if the user logs in after registration.
+     *
+     * @todo Change the redirection url to the registration
+     *
+     * @return void
+     */
     public function testRegistration()
     {
         $this->browse(function ($browser) {
@@ -76,7 +83,7 @@ class RegisterTest extends DuskTestCase
                     ->type('#registerPageForm input[name="password_confirmation"]', 'password')
                     ->pause(100)
                     ->press('#registerPageForm button[type="submit"]')
-                    ->waitForLocation((new HomePage)->url())
+                    ->waitForLocation((new UserDetailsPage)->url())
                     ->assertSeeLink('Logout');
         });
     }
