@@ -134,13 +134,6 @@ class LoginTest extends DuskTestCase
                     ->within(new PublicFooter, function ($browser) {
                         $browser->testContent($browser);
                     });
-
-            //Test components for Authed User
-            $browser->loginAs(User::find(1))
-                    ->visit(new TradeScreen)
-                    ->within(new TradeFooter, function ($browser) {
-                        $browser->testContent($browser);
-                    });
         });
     }
 }

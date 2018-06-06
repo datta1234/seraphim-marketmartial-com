@@ -160,18 +160,11 @@ class RegisterTest extends DuskTestCase
         $this->browse(function ($browser) {
             
             //Test components for Public User
-            $browser->visit(new HomePage)
+            $browser->visit(new RegisterPage)
                     ->within(new NavBar, function ($browser) {
                         $browser->testPublicLinks($browser);
                     })
                     ->within(new PublicFooter, function ($browser) {
-                        $browser->testContent($browser);
-                    });
-
-            //Test components for Authed User
-            $browser->loginAs(User::find(1))
-                    ->visit(new TradeScreen)
-                    ->within(new TradeFooter, function ($browser) {
                         $browser->testContent($browser);
                     });
         });

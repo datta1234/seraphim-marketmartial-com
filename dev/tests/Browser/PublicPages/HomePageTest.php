@@ -164,8 +164,11 @@ class HomePageTest extends DuskTestCase
             
             //Test components for Authed User
             $browser->loginAs(User::find(1))
-                    ->visit(new TradeScreen)
-                    ->within(new TradeFooter, function ($browser) {
+                    ->visit(new HomePage)
+                    ->within(new NavBar, function ($browser) {
+                        $browser->testAuthLinks($browser);
+                    })
+                    ->within(new PublicFooter, function ($browser) {
                         $browser->testContent($browser);
                     });
         });
