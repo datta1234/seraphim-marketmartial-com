@@ -70275,8 +70275,15 @@ var marketRequestSample2 = new UserMarketRequest({
 
 var app = new Vue({
     el: '#trade_app',
+    watch: {
+        'display_markets': function display_markets(nv) {
+            //@TODO sort market order use this.market_order []
+            console.log("Diplay Market Changes: ", JSON.stringify(nv), "\n\n\n\n", JSON.stringify(ov));
+        }
+    },
     data: {
         // default data
+        market_order: ['TOP 40', 'DTOP', 'DCAP', 'SINGLES', 'DELTA ONE'],
         no_cares: [],
         display_markets: [new Market({
             title: "TOP 40",
@@ -83713,7 +83720,10 @@ var render = function() {
                     }
                   }
                 },
-                [_c("span", { staticClass: "icon icon-chat" })]
+                [
+                  _c("span", { staticClass: "icon icon-chat" }),
+                  _vm._v(" Chat\n                ")
+                ]
               )
             ],
             1
@@ -83965,12 +83975,19 @@ var MarketNegotiation = __webpack_require__(32);
     },
     data: function data() {
         return {
-            availableSelectedMarkets: {
-                'TOP 40': false,
-                'DTOP': false,
-                'DCAP': false,
-                'SINGLES': false,
-                'Roll': false
+            availableSelectedMarketTypes: {
+                'INDEX': {
+                    state: false,
+                    markets: ['TOP 40', 'DTOP', 'DCAP']
+                },
+                'SINGLES': {
+                    state: false,
+                    markets: ['SINGLES']
+                },
+                'DELTA ONE': {
+                    state: false,
+                    markets: ['DELTA ONE']
+                }
             },
             randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
             popover_ref: 'add-market-ref'
@@ -83978,6 +83995,11 @@ var MarketNegotiation = __webpack_require__(32);
     },
 
     methods: {
+        onShow: function onShow() {
+            /* This is called just before the popover is shown */
+            this.checkSelected();
+        },
+
         /**
          * Saves the user's Market preference to the server
          *
@@ -83993,11 +84015,28 @@ var MarketNegotiation = __webpack_require__(32);
         checkSelected: function checkSelected() {
             var _this = this;
 
-            Object.keys(this.availableSelectedMarkets).forEach(function (key) {
-                _this.availableSelectedMarkets[key] = false;
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                _this.availableSelectedMarketTypes[key].state = false;
             });
             this.markets.forEach(function (market) {
-                _this.availableSelectedMarkets[market.title] = true;
+                Object.keys(_this.availableSelectedMarketTypes).forEach(function (key) {
+                    if (_this.availableSelectedMarketTypes[key].markets.includes(market.title)) _this.availableSelectedMarketTypes[key].state = true;
+                });
+            });
+        },
+
+        /**
+         * Filters the user's Market Type preference 
+         */
+        filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
+            var _this2 = this;
+
+            this.availableSelectedMarketTypes[market_type].markets.forEach(function (market) {
+                if (actionCheck) {
+                    _this2.addMarket(market);
+                } else {
+                    _this2.removeMarket(market);
+                }
             });
         },
 
@@ -84022,10 +84061,11 @@ var MarketNegotiation = __webpack_require__(32);
          */
         removeMarket: function removeMarket(market) {
             var index = this.markets.findIndex(function (element) {
-                console.log(element.title);
                 return element.title == market;
             });
-            this.markets.splice(index, 1);
+            if (index !== -1) {
+                this.markets.splice(index, 1);
+            }
             this.checkSelected();
         },
 
@@ -84066,9 +84106,7 @@ var MarketNegotiation = __webpack_require__(32);
             this.$refs[this.popover_ref].$emit('close');
         }
     },
-    mounted: function mounted() {
-        this.checkSelected();
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -84090,17 +84128,18 @@ var render = function() {
         {
           ref: _vm.popover_ref,
           attrs: {
-            triggers: "click blur",
+            triggers: "focus",
             placement: "bottomleft",
             target: "actionfilterMarketButton"
-          }
+          },
+          on: { show: _vm.onShow }
         },
         [
           _c("div", { staticClass: "row text-center" }, [
             _c(
               "div",
               { staticClass: "col-12" },
-              _vm._l(_vm.availableSelectedMarkets, function(market, key) {
+              _vm._l(_vm.availableSelectedMarketTypes, function(obj, key) {
                 return _c("div", { staticClass: "row mt-1" }, [
                   _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
                     _c("h5", { staticClass: "w-100 m-0" }, [
@@ -84109,7 +84148,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-6" }, [
-                    market
+                    obj.state
                       ? _c(
                           "button",
                           {
@@ -84117,7 +84156,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.removeMarket(key)
+                                _vm.filterMarketTypes(key, false)
                               }
                             }
                           },
@@ -84130,7 +84169,7 @@ var render = function() {
                             attrs: { type: "button" },
                             on: {
                               click: function($event) {
-                                _vm.addMarket(key)
+                                _vm.filterMarketTypes(key, true)
                               }
                             }
                           },

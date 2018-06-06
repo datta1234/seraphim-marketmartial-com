@@ -159,8 +159,15 @@ let marketRequestSample2 = new UserMarketRequest({
 
 const app = new Vue({
     el: '#trade_app',
+    watch: {
+        'display_markets': function(nv) {
+            //@TODO sort market order use this.market_order []
+            console.log("Diplay Market Changes: ", JSON.stringify(nv), "\n\n\n\n", JSON.stringify(ov));
+        },
+    },
     data: {
         // default data
+        market_order:['TOP 40','DTOP','DCAP','SINGLES','DELTA ONE'],
         no_cares: [],
         display_markets: [
             new Market({
