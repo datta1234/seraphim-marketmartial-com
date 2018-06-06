@@ -11974,6 +11974,10 @@ input:checked + .slider:before {
   max-width: 400px;
 }
 
+.confirmations-modal .modal-dialog {
+  max-width: 1000px;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");
