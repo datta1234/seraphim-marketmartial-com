@@ -4,6 +4,7 @@ module.exports = class UserMarketRequest {
         this.user_markets = [];
         this._chosen_user_market = null;
         const defaults = {
+            id: "",
             attributes: {
                 expiration_date: moment(),
                 strike: "",

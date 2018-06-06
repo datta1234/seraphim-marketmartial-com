@@ -20,7 +20,7 @@
         ]) !!};
     </script>
     </head>
-    <body>
+    <body id="trade_body">
         <div id="trade_app">
             @include('layouts.elements.navigation', [ 'layout' => [ 'fluid' => true ] ])
             

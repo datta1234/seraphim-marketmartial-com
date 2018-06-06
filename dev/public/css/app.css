@@ -11001,6 +11001,19 @@ a.mm-login-button {
   background-color: transparent;
 }
 
+#trade_body {
+  height: auto;
+}
+
+#trade_app {
+  height: 100%;
+  position: relative;
+}
+
+#trade_app .trade-screen-wrapper {
+  position: relative;
+}
+
 #trade_app .trade-section.light-theme {
   background-color: #D3D8DC;
 }
@@ -11215,7 +11228,7 @@ a.mm-login-button {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/marketmartial/public/fonts/vendor/icomoon/icomoon.eot?igbf0t");
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
@@ -11723,6 +11736,8 @@ input:checked + .slider:before {
   -webkit-box-shadow: 4px 4px 8px -1px #000000;
           box-shadow: 4px 4px 8px -1px #000000;
   cursor: pointer;
+  max-width: 350px;
+  margin: auto;
 }
 
 .trade-section.light-theme .market-tab.market-alert,
@@ -11770,6 +11785,8 @@ input:checked + .slider:before {
 
 #trade-footer {
   background-color: #303030;
+  position: relative;
+  width: 100%;
 }
 
 #trade-footer .footer-links-block {
@@ -11794,6 +11811,10 @@ input:checked + .slider:before {
   color: #ffffff;
   font-family: "Muli-Bold";
   font-size: 0.74rem;
+}
+
+.interaction-bar-wrapper {
+  height: 100%;
 }
 
 .interaction-bar-wrapper .interaction-bar,
@@ -11932,6 +11953,13 @@ input:checked + .slider:before {
 
 .popover .arrow {
   visibility: hidden;
+}
+
+.Important-markets-menu,
+.Alerts-markets-menu,
+.Confirmations-markets-menu,
+.filter-markets-menu {
+  display: inline;
 }
 
 @font-face {

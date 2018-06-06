@@ -30,7 +30,7 @@
                     this.opened = !this.opened;
                 }
 
-                // only handle if opened
+                // only populate if opened
                 if(this.opened) {
                     this.market_request = {};
                     this.market_request = marketRequest;
