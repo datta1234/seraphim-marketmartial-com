@@ -11962,6 +11962,18 @@ input:checked + .slider:before {
   display: inline;
 }
 
+#importantPopover,
+#alertsPopover,
+#confirmationsPopover {
+  display: inline;
+}
+
+#importantPopover .popover,
+#alertsPopover .popover,
+#confirmationsPopover .popover {
+  max-width: 400px;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

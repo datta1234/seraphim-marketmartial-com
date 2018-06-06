@@ -1,8 +1,9 @@
 <template>
     <div class="Confirmations-markets-menu">
         <button id="actionConfirmationsButton" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ count }}</strong></button>
+        <div id="confirmationsPopover"></div>
         <!-- Confirmations market popover -->
-        <b-popover triggers="click blur" placement="bottom" :ref="popover_ref" target="actionConfirmationsButton">
+        <b-popover container="confirmationsPopover" triggers="focus" placement="bottom" :ref="popover_ref" target="actionConfirmationsButton">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">

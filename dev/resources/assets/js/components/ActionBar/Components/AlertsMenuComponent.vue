@@ -1,8 +1,9 @@
 <template>
     <div class="Alerts-markets-menu">
         <button id="actionAlertButton" type="button" class="btn mm-alert-button mr-2 p-1">Alerts <strong>{{ count }}</strong></button>
+        <div id="alertsPopover"></div>
         <!-- Alerts market popover -->
-        <b-popover triggers="click blur" placement="bottom" :ref="popover_ref" target="actionAlertButton">
+        <b-popover container="alertsPopover" triggers="focus" placement="bottom" :ref="popover_ref" target="actionAlertButton">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">

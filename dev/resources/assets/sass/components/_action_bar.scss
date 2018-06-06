@@ -11,3 +11,10 @@
 .Important-markets-menu, .Alerts-markets-menu, .Confirmations-markets-menu, .filter-markets-menu {
 	display: inline;
 }
+
+#importantPopover, #alertsPopover, #confirmationsPopover {
+	display: inline;
+	.popover {
+		max-width:400px;
+	}
+}

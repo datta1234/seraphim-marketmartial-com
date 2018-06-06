@@ -84281,6 +84281,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -84417,11 +84418,14 @@ var render = function() {
         [_vm._v("Important "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
       ),
       _vm._v(" "),
+      _c("div", { attrs: { id: "importantPopover" } }),
+      _vm._v(" "),
       _c(
         "b-popover",
         {
           ref: _vm.popover_ref,
           attrs: {
+            container: "importantPopover",
             triggers: "focus",
             placement: "bottom",
             target: "actionImportantButton"
@@ -84638,6 +84642,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -84724,12 +84729,15 @@ var render = function() {
         [_vm._v("Alerts "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
       ),
       _vm._v(" "),
+      _c("div", { attrs: { id: "alertsPopover" } }),
+      _vm._v(" "),
       _c(
         "b-popover",
         {
           ref: _vm.popover_ref,
           attrs: {
-            triggers: "click blur",
+            container: "alertsPopover",
+            triggers: "focus",
             placement: "bottom",
             target: "actionAlertButton"
           }
@@ -84897,6 +84905,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -84984,12 +84993,15 @@ var render = function() {
         [_vm._v("Confirmations "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
       ),
       _vm._v(" "),
+      _c("div", { attrs: { id: "confirmationsPopover" } }),
+      _vm._v(" "),
       _c(
         "b-popover",
         {
           ref: _vm.popover_ref,
           attrs: {
-            triggers: "click blur",
+            container: "confirmationsPopover",
+            triggers: "focus",
             placement: "bottom",
             target: "actionConfirmationsButton"
           }
