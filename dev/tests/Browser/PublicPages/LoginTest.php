@@ -8,15 +8,13 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Role;
 use App\Models\UserManagement\Organisation;
-use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Pages\LoginPage;
 use Tests\Browser\Pages\TradeScreen;
 use Tests\Browser\Components\NavBar;
 use Tests\Browser\Components\PublicFooter;
 use Tests\Browser\Components\TradeFooter;
 
-use Illuminate\Contracts\Console\Kernel;
-
-class HomePageTest extends DuskTestCase
+class LoginTest extends DuskTestCase
 {
     protected static $dbSetup = false;
     protected static $role;
@@ -62,7 +60,7 @@ class HomePageTest extends DuskTestCase
 
         parent::tearDown();
     }
-    
+
     /**
      * Assert base html elements are present.
      *
@@ -71,7 +69,7 @@ class HomePageTest extends DuskTestCase
     public function testHtml()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new HomePage)
+            $browser->visit(new LoginPage)
 
                 // html markup
                 ->assertTitle('Market Martial');
@@ -87,10 +85,10 @@ class HomePageTest extends DuskTestCase
     {
         $this->browse(function ($browser) {
             
-            $browser->visit(new HomePage)
-                    ->type('#homePageLoginForm input[name="email"]', self::$user->email)
-                    ->type('#homePageLoginForm input[name="password"]', 'samplepass')
-                    ->press('#homePageLoginForm button[type="submit"]')
+            $browser->visit(new LoginPage)
+                    ->type('#loginPageLoginForm input[name="email"]', self::$user->email)
+                    ->type('#loginPageLoginForm input[name="password"]', 'samplepass')
+                    ->press('#loginPageLoginForm button[type="submit"]')
                     ->waitForLocation((new TradeScreen)->url())
                     ->assertSeeLink('Logout');
         });
@@ -104,43 +102,18 @@ class HomePageTest extends DuskTestCase
     public function testContent()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit(new HomePage)
-                ->assertSee('Active Market Makers Online')
-                
+            $browser->visit(new LoginPage)              
                 // see the main phrase
-                ->assertSee('The Inter-Bank Derivatives')
-                ->assertSee('Trading Platform')
+                ->assertSee('Login')
 
-                // title sections
-                ->assertSee('What does Market Martial do?')
-                ->assertSee('We improve liquidity')
-                ->assertSee('Electronic efficiency')
-                ->assertSee('We maintain the feel and flow')
-                ->assertSee('We bridge the gap: implied volatility vs premium')
-                ->assertSee('You are our priority')
+                // important sections
+                ->assertSee('Forgot Your Password?')
+                ->assertSee('Remember Me')
 
                 // menu tests
                 ->assertSeeLink('About Us')
                 ->assertSeeLink('Contact Us')
                 ->assertSeeLink('Sign up now');
-        });
-    }
-
-    /**
-     * Asserting contact form submission and system response.
-     *
-     * @return void
-     */
-    public function testContact()
-    {
-        $this->browse(function ($browser) {
-            $browser->visit(new HomePage)
-                    ->type('#homeContactForm input[name="name"]', 'Test name')
-                    ->type('#homeContactForm input[name="email"]', 'test@sample.com')
-                    ->type('#homeContactForm textarea[name="message"]', 'This is a sample message')
-                    ->press('#homeContactForm button[type="submit"]')
-                    ->waitForLocation((new HomePage)->url())
-                    ->assertSee('Contact message has been sent');
         });
     }
 
@@ -152,21 +125,11 @@ class HomePageTest extends DuskTestCase
     public function testComponents() 
     {
         $this->browse(function ($browser) {
-
+            
             //Test components for Public User
-            $browser->visit(new HomePage)
+            $browser->visit(new LoginPage)
                     ->within(new NavBar, function ($browser) {
                         $browser->testPublicLinks($browser);
-                    })
-                    ->within(new PublicFooter, function ($browser) {
-                        $browser->testContent($browser);
-                    });
-            
-            //Test components for Authed User
-            $browser->loginAs(User::find(1))
-                    ->visit(new HomePage)
-                    ->within(new NavBar, function ($browser) {
-                        $browser->testAuthLinks($browser);
                     })
                     ->within(new PublicFooter, function ($browser) {
                         $browser->testContent($browser);
