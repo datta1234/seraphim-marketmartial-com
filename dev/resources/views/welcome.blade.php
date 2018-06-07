@@ -167,7 +167,7 @@
     @slot('body')
         <div class="row justify-content-md-center">
             <div class="col col-lg-9 col-md-12">
-                <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v2.svg')}}">
+                <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v3.svg')}}">
             </div>
         </div>
     @endslot
@@ -215,7 +215,7 @@
     @slot('body')   
         <div class="row justify-content-md-center">
             <div class="col col-lg-9 col-md-12">
-                <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v2.svg')}}">
+                <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v3.svg')}}">
             </div>
         </div>
     @endslot
