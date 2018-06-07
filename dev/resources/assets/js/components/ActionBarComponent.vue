@@ -11,7 +11,7 @@
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
                     <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()">
-                        <span class="icon icon-chat"></span>
+                        <span class="icon icon-chat"></span> Chat
                     </button>
                 </div>
             </div>

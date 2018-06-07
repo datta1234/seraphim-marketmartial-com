@@ -50,24 +50,62 @@ Vue.component('Confirmations-markets-menu', require('./components/ActionBar/Comp
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 
+/**
+ * Takes in a value and splits the value by a splitter in a desired frequency
+ *
+ * @param {string|number} val - the desired value to split
+ * @param {string} splitter - the splitter to split the value by
+ * @param {number} frequency - the frequency in which to apply the split to the value
+ *
+ * @return {string} the newly splitted value
+ */
+let splitValHelper= function (val, splitter, frequency) {
+    let tempVal = ('' + val);
+    let floatVal = '';
+    //Check if our passed value is a float
+    if( ("" + val).indexOf('.') !== -1 ) 
+    {
+        floatVal = tempVal.slice(tempVal.indexOf('.'));
+        tempVal = tempVal.slice(0,tempVal.indexOf('.'));
+    }
+    //Creates an array of chars reverses and itterates through it
+    return tempVal.split('').reverse().reduce(function(x,y) {
+        //adds a space on the spesified frequency position
+        if(x[x.length-1].length == frequency)
+        {
+           x.push("");
+        }
+        x[x.length-1] = y+x[x.length-1];
+        return x;
+    //Concats the array to a string back in the correct order
+    }, [""]).reverse().join(splitter) + floatVal;
+};
+
 Vue.mixin({
     methods: {
+        /**
+         * Takes in a value and formats it according to it's size to a currency format
+         *
+         * @param {string|number} val - the desired value to be formatted
+         *
+         * @return {string} the formated currency value
+         */
         formatRandQty(val) {
             let sbl = "R";
             let calcVal = ( typeof val === 'number' ? val : parseInt(val) );
-            switch(Math.ceil((""+calcVal).length / 3)) {
+            //currently they want the format the same for all values
+            switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
                 case 3: // 1 000 000 < x
-                    return sbl+(calcVal/1000000)+"m";
+                    //return sbl+(calcVal/1000000)+"m";
                 break;
                 case 2: // 1000 < x < 1 000 000
-                    return sbl+(calcVal/1000)+"k";
-                break;
+                    //return sbl + splitValHelper( calcVal, ' ', 3);
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                    return sbl+calcVal;
+                    return sbl + splitValHelper( calcVal, ' ', 3);
             }
-        }
+        },
     }
 });
 
@@ -121,8 +159,34 @@ let marketRequestSample2 = new UserMarketRequest({
 
 const app = new Vue({
     el: '#trade_app',
+    watch: {
+        'display_markets': function(nv, ov) {
+            this.reorderDisplayMarkets(nv);
+        },
+    },
+    methods: {
+        /**
+         * Basic bubble sort that sorts Display Markets according to a set Market Order
+         *
+         * @param {Array} display_markets_arr - The display market array that need to be sorted
+         *
+         * @return void
+         */
+        reorderDisplayMarkets(display_markets_arr) {
+            for(let i = 0; i < display_markets_arr.length - 1; i++) {
+                for(let j = 0; j < display_markets_arr.length - i - 1; j++) {
+                    if( this.market_order.indexOf(display_markets_arr[j].title) > this.market_order.indexOf(display_markets_arr[j+1].title) ) {
+                        let temp = display_markets_arr[j];
+                        display_markets_arr[j] = display_markets_arr[j+1];
+                        display_markets_arr[j+1] = temp;
+                    }
+                }
+            }
+        }
+    },
     data: {
         // default data
+        market_order:['TOP 40','DTOP','DCAP','SINGLES','DELTA ONE'],
         no_cares: [],
         display_markets: [
             new Market({

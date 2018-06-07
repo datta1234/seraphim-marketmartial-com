@@ -4,21 +4,21 @@
             <span class="icon icon-add"></span> Markets
         </button>
         <!-- Filter market popover -->
-        <b-popover triggers="click blur" placement="bottomleft" :ref="popover_ref" target="actionfilterMarketButton">
+        <b-popover @show="onShow" triggers="focus" placement="bottomleft" :ref="popover_ref" target="actionfilterMarketButton">
             <div class="row text-center">
                 <div class="col-12">
-                    <div v-for="(market,key) in availableSelectedMarkets" class="row mt-1">
+                    <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
                             <h5 class="w-100 m-0">{{ key }}</h5>
                         </div>
                         <div class="col-6">
-                            <button v-if="market" 
+                            <button v-if="obj.state" 
                                 type="button" class="btn mm-generic-trade-button w-100"
-                                @click="removeMarket(key)">Remove
+                                @click="filterMarketTypes(key, false)">Remove
                             </button>
                             <button v-else 
                                 type="button" class="btn mm-generic-trade-button w-100"
-                                @click="addMarket(key)">Add
+                                @click="filterMarketTypes(key, true)">Add
                             </button>
                         </div>
                     </div>
@@ -64,18 +64,29 @@
         },
         data() {
             return {
-               availableSelectedMarkets: {
-                    'TOP 40': false,
-                    'DTOP': false,
-                    'DCAP': false,
-                    'SINGLES': false,
-                    'Roll': false,
+                availableSelectedMarketTypes: {
+                    'INDEX': {
+                        state: false,
+                        markets: ['TOP 40','DTOP','DCAP'],
+                    },
+                    'SINGLES': {
+                        state: false,
+                        markets: ['SINGLES'],
+                    },
+                    'DELTA ONE': {
+                        state: false,
+                        markets: ['DELTA ONE'],
+                    }
                 },
                 randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
                 popover_ref: 'add-market-ref',
             };
         },
         methods: {
+            onShow () {
+                /* This is called just before the popover is shown */
+                this.checkSelected();
+            },
             /**
              * Saves the user's Market preference to the server
              *
@@ -88,11 +99,26 @@
              * Creates a bolean list of availableSelectedMarkets from markets prop
              */
             checkSelected() {
-                Object.keys(this.availableSelectedMarkets).forEach(key=>{
-                    this.availableSelectedMarkets[key] = false;
+                Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
+                    this.availableSelectedMarketTypes[key].state = false;
                 });
                 this.markets.forEach((market) => {
-                    this.availableSelectedMarkets[market.title] = true;
+                    Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
+                        if( this.availableSelectedMarketTypes[key].markets.includes(market.title) )
+                        this.availableSelectedMarketTypes[key].state = true;
+                    });
+                });
+            },
+            /**
+             * Filters the user's Market Type preference 
+             */
+            filterMarketTypes(market_type, actionCheck) {
+                this.availableSelectedMarketTypes[market_type].markets.forEach((market) => {
+                    if(actionCheck) {
+                        this.addMarket(market);
+                    } else {
+                        this.removeMarket(market);
+                    }
                 });
             },
             /**
@@ -115,10 +141,11 @@
              */
             removeMarket(market) {
                 let index = this.markets.findIndex(function(element) {
-                    console.log(element.title);
                     return element.title == market;
                 });
-                this.markets.splice(index , 1);
+                if(index !== -1) {
+                    this.markets.splice(index , 1);
+                }
                 this.checkSelected();
             },
             /**
@@ -163,7 +190,6 @@
             },
         },
         mounted() {
-            this.checkSelected();
         }
     }
 </script>

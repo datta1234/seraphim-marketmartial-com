@@ -11,6 +11,10 @@
 	    	color: $mm-panel-green;
 	  	}
 	}
+
+	.nav-item.active > a {
+		border-bottom: solid;
+	}
 }
 
 .nav-title-image {

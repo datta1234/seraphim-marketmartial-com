@@ -14,7 +14,7 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
-        <form action="{{ route('contact') }}" method="POST">
+        <form id="ContactUsForm" action="{{ route('contact') }}" method="POST">
              {{ csrf_field() }}
             <div class="page-form mx-auto">
                 <div class="form-group">

@@ -11,3 +11,16 @@
 .Important-markets-menu, .Alerts-markets-menu, .Confirmations-markets-menu, .filter-markets-menu {
 	display: inline;
 }
+
+#importantPopover, #alertsPopover, #confirmationsPopover {
+	display: inline;
+	.popover {
+		max-width:400px;
+	}
+}
+
+.confirmations-modal {
+	.modal-dialog {
+  		max-width: 1000px;
+	}
+}
