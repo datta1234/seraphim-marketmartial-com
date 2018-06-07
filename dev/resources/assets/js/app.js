@@ -69,7 +69,7 @@ let splitValHelper= function (val, splitter, frequency) {
         tempVal = tempVal.slice(0,tempVal.indexOf('.'));
     }
     //Creates an array of chars reverses and itterates through it
-    return tempVal.split('').reverse().reduce(function(x,y){
+    return tempVal.split('').reverse().reduce(function(x,y) {
         //adds a space on the spesified frequency position
         if(x[x.length-1].length == frequency)
         {
@@ -93,16 +93,16 @@ Vue.mixin({
         formatRandQty(val) {
             let sbl = "R";
             let calcVal = ( typeof val === 'number' ? val : parseInt(val) );
+            //currently they want the format the same for all values
             switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
                 case 3: // 1 000 000 < x
-                    return sbl+(calcVal/1000000)+"m";
+                    //return sbl+(calcVal/1000000)+"m";
                 break;
                 case 2: // 1000 < x < 1 000 000
-                    return sbl + splitValHelper( calcVal, ' ', 3);
+                    //return sbl + splitValHelper( calcVal, ' ', 3);
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                console.log("default");
                     return sbl + splitValHelper( calcVal, ' ', 3);
             }
         },
@@ -160,10 +160,29 @@ let marketRequestSample2 = new UserMarketRequest({
 const app = new Vue({
     el: '#trade_app',
     watch: {
-        'display_markets': function(nv) {
-            //@TODO sort market order use this.market_order []
-            console.log("Diplay Market Changes: ", JSON.stringify(nv), "\n\n\n\n", JSON.stringify(ov));
+        'display_markets': function(nv, ov) {
+            this.reorderDisplayMarkets(nv);
         },
+    },
+    methods: {
+        /**
+         * Basic bubble sort that sorts Display Markets according to a set Market Order
+         *
+         * @param {Array} display_markets_arr - The display market array that need to be sorted
+         *
+         * @return void
+         */
+        reorderDisplayMarkets(display_markets_arr) {
+            for(let i = 0; i < display_markets_arr.length - 1; i++) {
+                for(let j = 0; j < display_markets_arr.length - i - 1; j++) {
+                    if( this.market_order.indexOf(display_markets_arr[j].title) > this.market_order.indexOf(display_markets_arr[j+1].title) ) {
+                        let temp = display_markets_arr[j];
+                        display_markets_arr[j] = display_markets_arr[j+1];
+                        display_markets_arr[j+1] = temp;
+                    }
+                }
+            }
+        }
     },
     data: {
         // default data

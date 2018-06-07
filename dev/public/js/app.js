@@ -42572,25 +42572,35 @@ module.exports = function spread(callback) {
 
 $(document).ready(function () {
 
-    /*
-    * Dismiss alert messages
-    */
+    /*/**
+     * Dismiss alert messages
+     */
     $("alert alert-success").on("click", "[data-dismiss]", function (event) {
         $(this).remove();
     });
 
-    /*
-    * Enable Tooltips
-    */
+    /**
+     * Enable Tooltips
+     */
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    /*
-    * Toggle theme classes
-    */
+    /**
+     * Toggle theme classes
+     */
     $("[data-toggle-theme]").on("change", function (event) {
         $('#trade_app').find("[data-theme-wrapper]").toggleClass("light-theme").toggleClass("dark-theme");
+    });
+
+    /**
+     * Toggle active Nav class
+     */
+    $(function () {
+        var currentUrl = window.location.href;
+        console.log(currentUrl);
+        $(".nav > .nav-item ").removeClass('active');
+        $(".nav > .nav-item ").find('a[href="' + currentUrl + '"]').parent().addClass('active');
     });
 });
 
@@ -70213,18 +70223,17 @@ Vue.mixin({
         formatRandQty: function formatRandQty(val) {
             var sbl = "R";
             var calcVal = typeof val === 'number' ? val : parseInt(val);
+            //currently they want the format the same for all values
             switch (Math.ceil(('' + Math.trunc(val)).length / 3)) {
                 case 3:
                     // 1 000 000 < x
-                    return sbl + calcVal / 1000000 + "m";
+                    //return sbl+(calcVal/1000000)+"m";
                     break;
-                case 2:
-                    // 1000 < x < 1 000 000
-                    return sbl + splitValHelper(calcVal, ' ', 3);
+                case 2: // 1000 < x < 1 000 000
+                //return sbl + splitValHelper( calcVal, ' ', 3);
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                    console.log("default");
                     return sbl + splitValHelper(calcVal, ' ', 3);
             }
         }
@@ -70276,9 +70285,28 @@ var marketRequestSample2 = new UserMarketRequest({
 var app = new Vue({
     el: '#trade_app',
     watch: {
-        'display_markets': function display_markets(nv) {
-            //@TODO sort market order use this.market_order []
-            console.log("Diplay Market Changes: ", JSON.stringify(nv), "\n\n\n\n", JSON.stringify(ov));
+        'display_markets': function display_markets(nv, ov) {
+            this.reorderDisplayMarkets(nv);
+        }
+    },
+    methods: {
+        /**
+         * Basic bubble sort that sorts Display Markets according to a set Market Order
+         *
+         * @param {Array} display_markets_arr - The display market array that need to be sorted
+         *
+         * @return void
+         */
+        reorderDisplayMarkets: function reorderDisplayMarkets(display_markets_arr) {
+            for (var i = 0; i < display_markets_arr.length - 1; i++) {
+                for (var j = 0; j < display_markets_arr.length - i - 1; j++) {
+                    if (this.market_order.indexOf(display_markets_arr[j].title) > this.market_order.indexOf(display_markets_arr[j + 1].title)) {
+                        var temp = display_markets_arr[j];
+                        display_markets_arr[j] = display_markets_arr[j + 1];
+                        display_markets_arr[j + 1] = temp;
+                    }
+                }
+            }
         }
     },
     data: {

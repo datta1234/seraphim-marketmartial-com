@@ -11397,6 +11397,10 @@ a.mm-login-button {
   color: #3cbdb9;
 }
 
+#mainNav .nav-item.active > a {
+  border-bottom: solid;
+}
+
 .nav-title-image span {
   font-size: 3.5rem;
   color: #ffffff;
