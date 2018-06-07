@@ -25,10 +25,21 @@ class ContactUsRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|max:255',
-            'email' => 'required|email',
+            'contact_email' => 'required|email',
             'message' => 'required'
         ];
 
         return $rules;
+    }
+
+    /**
+     * Get the redirect url and adds an achor tag to the contact form.
+     *
+     * @return string
+     */
+    protected function getRedirectUrl()
+    {
+        $url = $this->redirector->getUrlGenerator();
+        return $url->previous() . '#ContactUsForm';
     }
 }
