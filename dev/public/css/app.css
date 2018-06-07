@@ -11398,12 +11398,19 @@ a.mm-login-button {
 }
 
 .nav-title-image span {
-  font-size: 3rem;
   color: #ffffff;
 }
 
 .nav-title-image span:hover {
   color: #3cbdb9;
+}
+
+#app #mainNav span {
+  font-size: 3rem;
+}
+
+#trade_app #mainNav span {
+  font-size: 2.5rem;
 }
 
 #main-footer {
