@@ -87,7 +87,7 @@
                 <div class="front card-award pt-3">
                     <h2><span class="icon icon-award2"></span></h2>
                     <h5 class="front-title text-center">
-                        Get rewarded for market making
+                        Get rewarded for market<br>making
                     </h5>
                 </div>
                 <div class="back card-award">
