@@ -29,10 +29,13 @@ class CreateMarketNegotiationsTable extends Migration
 
             $table->double('bid_premium', 11, 2)->nullable();
             $table->double('offer_premium', 11, 2)->nullable();
-            $table->double('future_reference', 11, 2)->nullable();
             
-            $table->double('spot_price', 11, 2)->nullable();
-            $table->boolean('has_premium_calc');
+            $table->double('future_reference', 11, 2)->nullable(); // what it will be
+            $table->boolean('is_put')->nullable(); // PUT / CALL
+
+            // $table->double('spot_price', 11, 2)->nullable(); // current value
+            
+            $table->boolean('has_premium_calc'); // ONLY shows to organisation of - user_id
             $table->boolean('is_repeat');
             $table->boolean('is_accepted');
             
