@@ -1,5 +1,5 @@
 <template>
-    <div class="Confirmations-markets-menu">
+    <div dusk="confirmations-markets-menu" class="confirmations-markets-menu">
         <button id="actionConfirmationsButton" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ count }}</strong></button>
         <div id="confirmationsPopover"></div>
         <!-- Confirmations market popover -->

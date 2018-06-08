@@ -1,5 +1,5 @@
 <template>
-    <div class="Important-markets-menu">
+    <div dusk="important-markets-menu" class="important-markets-menu">
         <button id="actionImportantButton" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ count }}</strong></button>
         <div id="importantPopover"></div>
         <!-- Important market popover -->

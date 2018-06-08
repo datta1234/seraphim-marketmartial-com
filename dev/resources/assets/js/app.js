@@ -43,9 +43,9 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
 // Action Bar Component + children
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 Vue.component('filter-markets-menu', require('./components/ActionBar/Components/FilterMarketsMenuComponent.vue'));
-Vue.component('Important-markets-menu', require('./components/ActionBar/Components/ImportantMenuComponent.vue'));
-Vue.component('Alerts-markets-menu', require('./components/ActionBar/Components/AlertsMenuComponent.vue'));
-Vue.component('Confirmations-markets-menu', require('./components/ActionBar/Components/ConfirmationsMenuComponent.vue'));
+Vue.component('important-markets-menu', require('./components/ActionBar/Components/ImportantMenuComponent.vue'));
+Vue.component('alerts-markets-menu', require('./components/ActionBar/Components/AlertsMenuComponent.vue'));
+Vue.component('confirmations-markets-menu', require('./components/ActionBar/Components/ConfirmationsMenuComponent.vue'));
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));

@@ -1,5 +1,5 @@
 <template>
-    <div class="filter-markets-menu">
+    <div dusk="filter-markets-menu" class="filter-markets-menu">
         <button id="actionfilterMarketButton" type="button" class="btn mm-transparent-button mr-2">
             <span class="icon icon-add"></span> Markets
         </button>

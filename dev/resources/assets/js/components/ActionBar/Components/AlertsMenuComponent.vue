@@ -1,5 +1,5 @@
 <template>
-    <div class="Alerts-markets-menu">
+    <div dusk="alerts-markets-menu" class="alerts-markets-menu">
         <button id="actionAlertButton" type="button" class="btn mm-alert-button mr-2 p-1">Alerts <strong>{{ count }}</strong></button>
         <div id="alertsPopover"></div>
         <!-- Alerts market popover -->

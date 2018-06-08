@@ -1,5 +1,5 @@
 <template>
-    <div class="user-market">
+    <div dusk="market-group" class="user-market">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">

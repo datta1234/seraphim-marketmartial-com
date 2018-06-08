@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-bar" v-bind:class="{ 'active': opened }">
+    <div dusk="chat-bar" class="chat-bar" v-bind:class="{ 'active': opened }">
         <div class="chat-bar-toggle" @click="loadChatBar()">
             <span class="icon icon-arrows-right"></span>
         </div>

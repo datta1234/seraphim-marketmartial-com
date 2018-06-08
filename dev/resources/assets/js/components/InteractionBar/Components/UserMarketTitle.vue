@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-user-market-title">
         <b-col cols="10">
             <h3>{{ title }}</h3>
         </b-col>

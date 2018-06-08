@@ -1,5 +1,5 @@
 <template>
-    <div class="interaction-bar" v-bind:class="{ 'active': opened }">
+    <div dusk="interaction-bar" class="interaction-bar" v-bind:class="{ 'active': opened }">
         <div class="interaction-content" ref="barContent">
             <ibar-negotiation-bar :market-request="market_request"></ibar-negotiation-bar>
         </div>

@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-market-negotiation">
         <b-col>
             <b-row class="mb-3">
                 <b-col cols="10">

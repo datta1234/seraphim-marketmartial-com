@@ -70175,9 +70175,9 @@ Vue.component('interaction-bar', __webpack_require__(373));
 // Action Bar Component + children
 Vue.component('action-bar', __webpack_require__(376));
 Vue.component('filter-markets-menu', __webpack_require__(379));
-Vue.component('Important-markets-menu', __webpack_require__(382));
-Vue.component('Alerts-markets-menu', __webpack_require__(385));
-Vue.component('Confirmations-markets-menu', __webpack_require__(388));
+Vue.component('important-markets-menu', __webpack_require__(382));
+Vue.component('alerts-markets-menu', __webpack_require__(385));
+Vue.component('confirmations-markets-menu', __webpack_require__(388));
 
 Vue.component('user-header', __webpack_require__(228));
 Vue.component('chat-bar', __webpack_require__(391));
@@ -82002,38 +82002,42 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "user-header" }, [
-    _c("div", { staticClass: "row sub-nav pt-3" }, [
-      _c("div", { staticClass: "col-6" }, [
-        _vm.organisation
-          ? _c("h1", { staticClass: "pt-1" }, [
-              _vm._v(
-                "Welcome " +
-                  _vm._s(_vm.user_name) +
-                  " (" +
-                  _vm._s(_vm.organisation) +
-                  ")"
-              )
-            ])
-          : _c("h1", { staticClass: "pt-1" }, [
-              _vm._v("Welcome " + _vm._s(_vm.user_name))
-            ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-2" }, [
-        _c("p", { staticClass: "pt-1" }, [
-          _vm._v(_vm._s(_vm.time.computed_time))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-4" }, [
-        _c("p", { staticClass: "float-right pt-1" }, [
-          _vm._v("Rebates: "),
-          _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
+  return _c(
+    "div",
+    { staticClass: "user-header", attrs: { dusk: "user-header" } },
+    [
+      _c("div", { staticClass: "row sub-nav pt-3" }, [
+        _c("div", { staticClass: "col-6" }, [
+          _vm.organisation
+            ? _c("h1", { staticClass: "pt-1" }, [
+                _vm._v(
+                  "Welcome " +
+                    _vm._s(_vm.user_name) +
+                    " (" +
+                    _vm._s(_vm.organisation) +
+                    ")"
+                )
+              ])
+            : _c("h1", { staticClass: "pt-1" }, [
+                _vm._v("Welcome " + _vm._s(_vm.user_name))
+              ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-2" }, [
+          _c("p", { staticClass: "pt-1" }, [
+            _vm._v(_vm._s(_vm.time.computed_time))
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4" }, [
+          _c("p", { staticClass: "float-right pt-1" }, [
+            _vm._v("Rebates: "),
+            _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
+          ])
         ])
       ])
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82168,40 +82172,44 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "user-market" }, [
-    _c("div", { staticClass: "container-fluid h-100" }, [
-      _c("div", { staticClass: "row h-100" }, [
-        _c("div", { staticClass: "col-12" }, [
-          _c("h2", { staticClass: "text-center" }, [
-            _vm._v(_vm._s(_vm.market.title))
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "user-market-group col-12" },
-          _vm._l(_vm.market_date_groups, function(m_reqs, exp_date) {
-            return _c(
-              "div",
-              { staticClass: "row mt-3 pr-3 pl-3" },
-              [
-                _c("div", { staticClass: "col-12" }, [
-                  _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(exp_date))])
-                ]),
-                _vm._v(" "),
-                _vm._l(m_reqs, function(m_req) {
-                  return _c("market-tab", {
-                    attrs: { "market-request": m_req }
+  return _c(
+    "div",
+    { staticClass: "user-market", attrs: { dusk: "market-group" } },
+    [
+      _c("div", { staticClass: "container-fluid h-100" }, [
+        _c("div", { staticClass: "row h-100" }, [
+          _c("div", { staticClass: "col-12" }, [
+            _c("h2", { staticClass: "text-center" }, [
+              _vm._v(_vm._s(_vm.market.title))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "user-market-group col-12" },
+            _vm._l(_vm.market_date_groups, function(m_reqs, exp_date) {
+              return _c(
+                "div",
+                { staticClass: "row mt-3 pr-3 pl-3" },
+                [
+                  _c("div", { staticClass: "col-12" }, [
+                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(exp_date))])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(m_reqs, function(m_req) {
+                    return _c("market-tab", {
+                      attrs: { "market-request": m_req }
+                    })
                   })
-                })
-              ],
-              2
-            )
-          })
-        )
+                ],
+                2
+              )
+            })
+          )
+        ])
       ])
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82408,55 +82416,59 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col col-12 text-center" }, [
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        {
-          staticClass: "col market-tab p-3 mb-2 mt-2",
-          class: _vm.marketState,
-          on: {
-            click: function($event) {
-              _vm.loadInteractionBar()
+  return _c(
+    "div",
+    { staticClass: "col col-12 text-center", attrs: { dusk: "market-tab" } },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
             }
-          }
-        },
-        [
-          _c("div", { staticClass: "row justify-content-md-center" }, [
-            _c(
-              "div",
-              { staticClass: "col col-6 market-tab-name market-tab-name" },
-              [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.marketRequest.attributes.strike) +
-                    "    \n                "
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col col-6 market-tab-state" }, [
-              _vm.market_request_state_label != ""
-                ? _c("span", [
-                    _c("span", {}, [
-                      _vm._v(_vm._s(_vm.market_request_state_label))
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
                     ])
-                  ])
-                : _c("span", [
-                    _c("span", { class: _vm.bidState }, [
-                      _vm._v(_vm._s(_vm.user_market_bid))
-                    ]),
-                    _vm._v(" / "),
-                    _c("span", { class: _vm.offerState }, [
-                      _vm._v(_vm._s(_vm.user_market_offer))
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
                     ])
-                  ])
+              ])
             ])
-          ])
-        ]
-      )
-    ])
-  ])
+          ]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -82627,7 +82639,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-container",
-    { attrs: { fluid: "" } },
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar" } },
     [
       _c("ibar-user-market-title", {
         staticClass: "mt-1 mb-3",
@@ -82769,6 +82781,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-user-market-title" } },
     [
       _c("b-col", { attrs: { cols: "10" } }, [
         _c("h3", [_vm._v(_vm._s(_vm.title))])
@@ -82884,6 +82897,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-negotiation-history" } },
     [
       _c(
         "b-col",
@@ -83047,6 +83061,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-market-negotiation" } },
     [
       _c(
         "b-col",
@@ -83262,6 +83277,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-apply-conditions" } },
     [
       _c(
         "b-col",
@@ -83406,7 +83422,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "interaction-bar", class: { active: _vm.opened } },
+    {
+      staticClass: "interaction-bar",
+      class: { active: _vm.opened },
+      attrs: { dusk: "interaction-bar" }
+    },
     [
       _c(
         "div",
@@ -83667,7 +83687,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "action-bar" },
+    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
     [
       _c("div", { staticClass: "row mt-2 menu-actions" }, [
         _c(
@@ -83688,7 +83708,7 @@ var render = function() {
               [_vm._v("Request a Market")]
             ),
             _vm._v(" "),
-            _c("Important-markets-menu", {
+            _c("important-markets-menu", {
               attrs: {
                 count: _vm.market_quantities.important,
                 markets: _vm.markets,
@@ -83697,7 +83717,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _vm.market_quantities.alert > 0
-              ? _c("Alerts-markets-menu", {
+              ? _c("alerts-markets-menu", {
                   attrs: {
                     count: _vm.market_quantities.alert,
                     markets: _vm.markets
@@ -83706,7 +83726,7 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _vm.market_quantities.confirm > 0
-              ? _c("Confirmations-markets-menu", {
+              ? _c("confirmations-markets-menu", {
                   attrs: {
                     count: _vm.market_quantities.confirm,
                     markets: _vm.markets
@@ -84127,7 +84147,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "filter-markets-menu" },
+    {
+      staticClass: "filter-markets-menu",
+      attrs: { dusk: "filter-markets-menu" }
+    },
     [
       _vm._m(0),
       _vm._v(" "),
@@ -84459,7 +84482,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "Important-markets-menu" },
+    {
+      staticClass: "important-markets-menu",
+      attrs: { dusk: "important-markets-menu" }
+    },
     [
       _c(
         "button",
@@ -84770,7 +84796,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "Alerts-markets-menu" },
+    {
+      staticClass: "alerts-markets-menu",
+      attrs: { dusk: "alerts-markets-menu" }
+    },
     [
       _c(
         "button",
@@ -85081,7 +85110,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "Confirmations-markets-menu" },
+    {
+      staticClass: "confirmations-markets-menu",
+      attrs: { dusk: "confirmations-markets-menu" }
+    },
     [
       _c(
         "button",
@@ -85460,49 +85492,57 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "chat-bar", class: { active: _vm.opened } }, [
-    _c(
-      "div",
-      {
-        staticClass: "chat-bar-toggle",
-        on: {
-          click: function($event) {
-            _vm.loadChatBar()
+  return _c(
+    "div",
+    {
+      staticClass: "chat-bar",
+      class: { active: _vm.opened },
+      attrs: { dusk: "chat-bar" }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "chat-bar-toggle",
+          on: {
+            click: function($event) {
+              _vm.loadChatBar()
+            }
           }
-        }
-      },
-      [_c("span", { staticClass: "icon icon-arrows-right" })]
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "chat-content" }, [
-      _c("div", { staticClass: "container-fluid" }, [
-        _c("div", { staticClass: "chat-header row pt-1" }, [
-          _c("div", { staticClass: "col-12 text-center" }, [
-            _c("span", { staticClass: "icon icon-chat float-left" }),
-            _vm._v(" "),
-            _c("h3", [_vm._v("Messages")]),
-            _vm._v(" "),
-            _c(
-              "h3",
-              {
-                staticClass: "float-right close",
-                on: {
-                  click: function($event) {
-                    _vm.loadChatBar()
+        },
+        [_c("span", { staticClass: "icon icon-arrows-right" })]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "chat-content" }, [
+        _c("div", { staticClass: "container-fluid" }, [
+          _c("div", { staticClass: "chat-header row pt-1" }, [
+            _c("div", { staticClass: "col-12 text-center" }, [
+              _c("span", { staticClass: "icon icon-chat float-left" }),
+              _vm._v(" "),
+              _c("h3", [_vm._v("Messages")]),
+              _vm._v(" "),
+              _c(
+                "h3",
+                {
+                  staticClass: "float-right close",
+                  on: {
+                    click: function($event) {
+                      _vm.loadChatBar()
+                    }
                   }
-                }
-              },
-              [_vm._v("x")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
-        _vm._m(1)
+                },
+                [_vm._v("x")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
       ])
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {

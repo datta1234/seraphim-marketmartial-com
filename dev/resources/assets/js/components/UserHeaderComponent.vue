@@ -1,5 +1,5 @@
 <template>
-    <div class="user-header">
+    <div dusk="user-header" class="user-header">
         <div class="row sub-nav pt-3">
             <div class="col-6">
                 <h1 v-if="organisation" class="pt-1">Welcome {{ user_name }} ({{ organisation }})</h1>
