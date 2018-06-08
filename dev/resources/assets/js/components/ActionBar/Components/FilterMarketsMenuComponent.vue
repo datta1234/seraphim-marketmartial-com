@@ -27,17 +27,8 @@
                     <p class="m-2">DCap and Dtop: Only displaed when markets are requested</p>
                 </div>
                 
-                <div class="col-12 mt-2">
-                    <b-form-group>
-                        <b-form-checkbox value="saveMarketDefault">Set current as my default</b-form-checkbox>
-                    </b-form-group>
-                </div>
-                
-                <div class="col-6 mt-1">
+                <div class="col-6 offset-6 mt-1">
                     <button type="button" class="btn mm-generic-trade-button w-100" @click="onSaveMarketSetting">OK</button>
-                </div>
-                <div class="col-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">Cancel</button>
                 </div>
             </div>
         </b-popover>

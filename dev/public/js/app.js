@@ -82025,7 +82025,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "user-header" }, [
-    _c("div", { staticClass: "row sub-nav pt-3 pb-3" }, [
+    _c("div", { staticClass: "row sub-nav pt-3" }, [
       _c("div", { staticClass: "col-6" }, [
         _vm.organisation
           ? _c("h1", { staticClass: "pt-1" }, [
@@ -82043,13 +82043,13 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-2" }, [
-        _c("p", { staticClass: "mb-1 pt-3" }, [
+        _c("p", { staticClass: "pt-1" }, [
           _vm._v(_vm._s(_vm.time.computed_time))
         ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-4" }, [
-        _c("p", { staticClass: "float-right mb-1 pt-3" }, [
+        _c("p", { staticClass: "float-right pt-1" }, [
           _vm._v("Rebates: "),
           _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
         ])
@@ -83986,15 +83986,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 var Market = __webpack_require__(38);
 var UserMarket = __webpack_require__(73);
@@ -84227,26 +84218,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-12 mt-2" },
-              [
-                _c(
-                  "b-form-group",
-                  [
-                    _c(
-                      "b-form-checkbox",
-                      { attrs: { value: "saveMarketDefault" } },
-                      [_vm._v("Set current as my default")]
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
+            _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
               _c(
                 "button",
                 {
@@ -84255,18 +84227,6 @@ var render = function() {
                   on: { click: _vm.onSaveMarketSetting }
                 },
                 [_vm._v("OK")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { type: "button" },
-                  on: { click: _vm.onDismiss }
-                },
-                [_vm._v("Cancel")]
               )
             ])
           ])

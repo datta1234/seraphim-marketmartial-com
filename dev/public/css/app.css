@@ -11421,6 +11421,11 @@ a.mm-login-button {
   font-size: 3rem;
 }
 
+#trade_app #mainNav {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 #trade_app #mainNav span {
   font-size: 2.5rem;
 }
@@ -12035,6 +12040,10 @@ input:checked + .slider:before {
 
 .confirmations-modal .modal-dialog {
   max-width: 1000px;
+}
+
+.user-header h1 {
+  font-size: 1rem;
 }
 
 @font-face {
