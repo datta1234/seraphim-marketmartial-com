@@ -25,9 +25,7 @@
         data() {
             return {
                 time:{
-                    hours:'',
-                    minutes:'',
-                    session:'AM',
+                    location:'SA',
                     computed_time:'',
                     _interval: null
                 }
@@ -40,30 +38,8 @@
              * @todo Change clock time to be sent an initialsed from the backend
              */
             showTime() {
-
                 //Getting current time and setting our time object.
-                var date = new Date();
-                this.time.hours = date.getHours(); // Hours format 0 - 23
-                this.time.minutes = date.getMinutes(); // 0 - 59
-                this.time.session = "AM";
-                
-                //resets the hour when reaching 0 to 12
-                if(this.time.hours == 0){
-                    this.time.hours = 12; //Changes computed hours to format 0 - 12
-                }
-                
-                //Changes hours from before 12 AM to past 12 PM - keeps to format 0 - 12 
-                if(this.time.hours > 12){
-                    this.time.hours = this.time.hours - 12;
-                    this.time.session = "PM";
-                }
-                
-                //Format time from h:m format to hh:mm format with leading 0
-                this.time.hours = (this.time.hours < 10) ? "0" + this.time.hours : this.time.hours;
-                this.time.minutes = (this.time.minutes < 10) ? "0" + this.time.minutes : this.time.minutes;         
-                this.time.computed_time = this.time.hours + ":" + this.time.minutes + " " + this.time.session;
-                
-                
+                this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
             }
         },
         mounted() {
