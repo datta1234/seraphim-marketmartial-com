@@ -27,10 +27,10 @@
                     @endif
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" id="email" name="email" placeholder="Enter your email here...">
-                    @if ($errors->has('email'))
+                    <input type="text" class="form-control {{ $errors->has('contact_email') ? ' is-invalid' : '' }}" value="{{ old('contact_email') }}" id="email" name="contact_email" placeholder="Enter your email here...">
+                    @if ($errors->has('contact_email'))
                         <div class="alert alert-danger">
-                            <strong>{{ $errors->first('email') }}</strong>
+                            <strong>{{ $errors->first('contact_email') }}</strong>
                         </div>
                     @endif
                 </div>
