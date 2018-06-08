@@ -1,5 +1,8 @@
 <template>
     <div class="chat-bar" v-bind:class="{ 'active': opened }">
+        <div class="chat-bar-toggle" @click="loadChatBar()">
+            <span class="icon icon-arrows-right"></span>
+        </div>
         <div class="chat-content">
         
             <div class="container-fluid">
@@ -7,6 +10,7 @@
                     <div class="col-12 text-center">
                         <span class="icon icon-chat float-left"></span>
                         <h3>Messages</h3>
+                        <h3 class="float-right close" @click="loadChatBar()">x</h3>
                     </div>
                 </div>
                 <div class="row">
@@ -56,6 +60,14 @@
                 } else {
                     this.opened = !this.opened;
                 }
+            },
+            /**
+             * Loads the Chat Sidebar
+             *
+             * @fires /lib/EventBus#toggleSidebar
+             */
+            loadChatBar() {
+                EventBus.$emit('toggleSidebar', 'chat');
             },
             /**
              * Listens for a chatToggle event firing

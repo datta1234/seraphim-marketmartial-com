@@ -18,6 +18,10 @@
 *   Interaction Bar
 */
 
+/*
+*   Chat Bar
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -55,6 +59,10 @@ button.mm-button {
 
 /*
 *   Interaction Bar
+*/
+
+/*
+*   Chat Bar
 */
 
 /* 
@@ -11830,7 +11838,8 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .interaction-bar,
 .interaction-bar-wrapper .interaction-bar-content-pane,
-.interaction-bar-wrapper .interaction-bar > .interaction-content {
+.interaction-bar-wrapper .interaction-bar > .interaction-content,
+.interaction-bar-wrapper .interaction-bar > .interaction-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11846,12 +11855,16 @@ input:checked + .slider:before {
   opacity: 0;
   height: 100%;
   padding: 0px;
-  display: inline-block;
   margin: 0px;
   padding: 0px;
   float: left;
   color: #fff;
   overflow: hidden;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-bar-toggle {
+  width: 25px;
+  opacity: 1;
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
@@ -11888,7 +11901,7 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
-  width: 25px;
+  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -11896,6 +11909,7 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   position: relative;
+  opacity: 0;
   color: #fff;
   cursor: pointer;
 }
@@ -11910,7 +11924,8 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .chat-bar,
 .interaction-bar-wrapper .chat-bar-content-pane,
-.interaction-bar-wrapper .chat-bar > .chat-content {
+.interaction-bar-wrapper .chat-bar > .chat-content,
+.interaction-bar-wrapper .chat-bar > .chat-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11935,13 +11950,23 @@ input:checked + .slider:before {
   overflow: hidden;
 }
 
+.interaction-bar-wrapper .chat-bar.active .chat-bar-toggle {
+  width: 25px;
+  opacity: 1;
+}
+
 .interaction-bar-wrapper .chat-bar.active .chat-content {
   width: 300px;
   opacity: 1;
 }
 
-.interaction-bar-wrapper .chat-bar .chat-header h1 {
+.interaction-bar-wrapper .chat-bar .chat-header h3 {
   display: inline-block;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header .close {
+  cursor: pointer;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header .icon {
@@ -11955,6 +11980,29 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .chat-bar .chat-action-wrapper {
   position: absolute;
   bottom: 0;
+}
+
+.interaction-bar-wrapper .chat-bar-toggle {
+  background-color: #090909;
+  width: 0px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  position: relative;
+  opacity: 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .chat-bar-toggle > .icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -50%;
+  font-size: 32px;
 }
 
 .popover .popover-body {

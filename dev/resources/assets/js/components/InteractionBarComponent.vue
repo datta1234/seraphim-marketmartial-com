@@ -4,8 +4,7 @@
             <ibar-negotiation-bar :market-request="market_request"></ibar-negotiation-bar>
         </div>
         <div class="interaction-bar-toggle" @click="toggleBar(false)">
-            <span class="icon icon-arrows-right" v-if="!opened"></span>
-            <span class="icon icon-arrows-left" v-if="opened"></span>
+            <span class="icon icon-arrows-left"></span>
         </div>
     </div>
 </template>

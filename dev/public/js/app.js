@@ -83384,7 +83384,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -83452,15 +83451,7 @@ var render = function() {
             }
           }
         },
-        [
-          !_vm.opened
-            ? _c("span", { staticClass: "icon icon-arrows-right" })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.opened
-            ? _c("span", { staticClass: "icon icon-arrows-left" })
-            : _vm._e()
-        ]
+        [_c("span", { staticClass: "icon icon-arrows-left" })]
       )
     ]
   )
@@ -83620,7 +83611,8 @@ var MarketNegotiation = __webpack_require__(32);
             },
             modals: {
                 select_market: false
-            }
+            },
+            chat_opened: false
         };
     },
 
@@ -83655,6 +83647,13 @@ var MarketNegotiation = __webpack_require__(32);
                 });
             });
         },
+        toggleBar: function toggleBar(set) {
+            if (typeof set != 'undefined') {
+                this.chat_opened = set == true;
+            } else {
+                this.chat_opened = !this.chat_opened;
+            }
+        },
 
         /**
          * Loads the Chat Sidebar
@@ -83663,10 +83662,20 @@ var MarketNegotiation = __webpack_require__(32);
          */
         loadChatBar: function loadChatBar() {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+        },
+
+        /**
+         * Listens for a chatToggle event firing
+         *
+         * @event /lib/EventBus#chatToggle
+         */
+        chatBarListener: function chatBarListener() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
         }
     },
     mounted: function mounted() {
         this.reloadQuantities();
+        this.chatBarListener();
     }
 });
 
@@ -83737,22 +83746,24 @@ var render = function() {
             [
               _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-transparent-button mr-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      _vm.loadChatBar()
-                    }
-                  }
-                },
-                [
-                  _c("span", { staticClass: "icon icon-chat" }),
-                  _vm._v(" Chat\n                ")
-                ]
-              )
+              !_vm.chat_opened
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn mm-transparent-button mr-2",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.loadChatBar()
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { staticClass: "icon icon-chat" }),
+                      _vm._v(" Chat\n                ")
+                    ]
+                  )
+                : _vm._e()
             ],
             1
           )
@@ -85458,6 +85469,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -85474,6 +85489,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.opened = !this.opened;
             }
+        },
+
+        /**
+         * Loads the Chat Sidebar
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        loadChatBar: function loadChatBar() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
         },
 
         /**
@@ -85499,7 +85523,47 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat-bar", class: { active: _vm.opened } }, [
-    _vm._m(0)
+    _c(
+      "div",
+      {
+        staticClass: "chat-bar-toggle",
+        on: {
+          click: function($event) {
+            _vm.loadChatBar()
+          }
+        }
+      },
+      [_c("span", { staticClass: "icon icon-arrows-right" })]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "chat-content" }, [
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "chat-header row pt-1" }, [
+          _c("div", { staticClass: "col-12 text-center" }, [
+            _c("span", { staticClass: "icon icon-chat float-left" }),
+            _vm._v(" "),
+            _c("h3", [_vm._v("Messages")]),
+            _vm._v(" "),
+            _c(
+              "h3",
+              {
+                staticClass: "float-right close",
+                on: {
+                  click: function($event) {
+                    _vm.loadChatBar()
+                  }
+                }
+              },
+              [_vm._v("x")]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _vm._m(0),
+        _vm._v(" "),
+        _vm._m(1)
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -85507,81 +85571,73 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-content" }, [
-      _c("div", { staticClass: "container-fluid" }, [
-        _c("div", { staticClass: "chat-header row pt-1" }, [
-          _c("div", { staticClass: "col-12 text-center" }, [
-            _c("span", { staticClass: "icon icon-chat float-left" }),
-            _vm._v(" "),
-            _c("h3", [_vm._v("Messages")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "chats col-12 h-100" })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
-          _c("div", { staticClass: "col-12" }, [
-            _c("form", { attrs: { action: "", method: "POST" } }, [
-              _c("div", { staticClass: "form-group mb-2" }, [
-                _c("textarea", {
-                  staticClass: "form-control",
-                  attrs: {
-                    name: "message",
-                    value: "",
-                    rows: "6",
-                    placeholder: "Enter your message here..."
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group mb-2" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Send message")]
-                )
-              ])
-            ])
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "chats col-12 h-100" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
+      _c("div", { staticClass: "col-12" }, [
+        _c("form", { attrs: { action: "", method: "POST" } }, [
+          _c("div", { staticClass: "form-group mb-2" }, [
+            _c("textarea", {
+              staticClass: "form-control",
+              attrs: {
+                name: "message",
+                value: "",
+                rows: "6",
+                placeholder: "Enter your message here..."
+              }
+            })
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
+          _c("div", { staticClass: "form-group mb-2" }, [
             _c(
               "button",
               {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
+                staticClass: "btn mm-generic-trade-button",
+                attrs: { type: "submit" }
               },
-              [_vm._v("No cares, thanks")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
-              },
-              [_vm._v("Looking")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
-              },
-              [_vm._v("Please call me")]
+              [_vm._v("Send message")]
             )
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("No cares, thanks")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("Looking")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("Please call me")]
+        )
       ])
     ])
   }

@@ -10,7 +10,7 @@
             <div class="col-3">
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
-                    <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()">
+                    <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened">
                         <span class="icon icon-chat"></span> Chat
                     </button>
                 </div>
@@ -89,7 +89,8 @@
                 },
                 modals: {
                     select_market: false
-                }
+                },
+                chat_opened: false,
             };
         },
         methods: {
@@ -121,6 +122,13 @@
                     });
                 });
             },
+            toggleBar(set) {
+                if(typeof set != 'undefined') {
+                    this.chat_opened = set == true;
+                } else {
+                    this.chat_opened = !this.chat_opened;
+                }
+            },
             /**
              * Loads the Chat Sidebar
              *
@@ -129,9 +137,18 @@
             loadChatBar() {
                 EventBus.$emit('toggleSidebar', 'chat');
             },
+            /**
+             * Listens for a chatToggle event firing
+             *
+             * @event /lib/EventBus#chatToggle
+             */
+            chatBarListener() {
+                EventBus.$on('chatToggle', this.toggleBar);
+            },
         },
         mounted() {
            this.reloadQuantities();
+           this.chatBarListener();
         }
     }
 
