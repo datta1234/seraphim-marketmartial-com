@@ -11079,13 +11079,13 @@ a.mm-login-button {
 #trade_app h4,
 #trade_app h5,
 #trade_app h6 {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app p,
 #trade_app span,
 #trade_app .market-tab {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app .user-market {
@@ -12042,7 +12042,8 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
-.user-header h1 {
+#trade_app .user-header h1 {
+  font-family: "Raleway-SemiBold";
   font-size: 1rem;
 }
 
