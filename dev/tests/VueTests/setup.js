@@ -6,3 +6,6 @@ global.chai = require('chai');
 
 // make sinon for spies and stubs available globally
 global.sinon = require('sinon');
+
+// make moment library available globally
+global.moment = require('moment');
