@@ -113,11 +113,14 @@
                 </div>
             </div>
 
-               <div class="form-group row mb-0">
-                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
-                        <button type="submit" class="btn mm-button float-right w-100">Update</button>
-                    </div>
-                </div>
+            
+				<div class="form-group row mb-0">
+					<div class="col-md-12">
+						{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+					</div>
+				</div>
+
+
 
 		            {!! Form::close() !!}
 

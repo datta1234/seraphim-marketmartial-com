@@ -13,7 +13,7 @@
 		<a class="user-nav-link nav-link active" href="{{ route('email.edit') }}">Email Settings</a>
     </li>
     <li class="list-group-item">
-		  <a class="user-nav-link nav-link active" href="{{ route('account.edit') }}">Account Setting</a>
+		  <a class="user-nav-link nav-link active" href="{{ route('trade_settings.edit') }}">Account Setting</a>
     </li>
     <li class="list-group-item">
       <a class="user-nav-link nav-link active" href="{{ route('interest.edit') }}">Interest Setting</a>

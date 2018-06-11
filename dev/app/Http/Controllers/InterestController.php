@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\UserManagement\DefaultLabel;
+use App\Models\UserManagement\Interest;
 use App\Models\UserManagement\Email;
+use App\Http\Requests\InterestRequest;
 
 class InterestController extends Controller
 {
@@ -16,9 +17,19 @@ class InterestController extends Controller
     public function edit(Request $request)
     {
         $user = $request->user();
-        $emails = $user->emails()->with('defaultLabel')->get(); 
-        // only get defaults if
-        $defaultLabels = DefaultLabel::whereNotIn('id', $emails->pluck('default_id'))->get(); 
-        return view('interest.edit')->with(compact('user','defaultLabels','emails'));
+        $userInterest = $request->user()->interests()->get();
+        $interests = Interest::whereNotIn('id',$userInterest->pluck('id'))->get()->merge($userInterest);
+        return view('interest.edit')->with(compact('user','interests'));
+    }
+
+    public function update(InterestRequest $request)
+    {
+        $user = $request->user();
+        $user->update($request->all());
+        // update the users interest
+        $request->user()->interests()->sync($request->input('interest'));
+        
+        return redirect()->back()->with('success', 'Interest have been updated!');
+
     }
 }

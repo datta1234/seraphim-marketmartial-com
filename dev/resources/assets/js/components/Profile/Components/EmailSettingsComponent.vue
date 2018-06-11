@@ -5,6 +5,7 @@
         <b-form-group
          v-for="(email, index) in emailSettingForm.data().email"
           horizontal
+          :key = "`index"
           :label-cols="4"
           :label=" email.title ? email.title : email.default_label.title"
           :label-for="'email-'+index+'-email'"
@@ -49,8 +50,7 @@
 </template>
 
 <script>
-    const Form = require('../lib/Form.js');
-
+    const Form = require('../../../lib/Form.js');
     export default {
         props:{
           'emailSettingsData': {

@@ -5,7 +5,12 @@
 
 	</div>
 	<div class="col-md-4">
-		 {{ Form::hidden("trading_accounts[{$index}][id]",$trading_account->id,['class' => ($errors->has('email.{$index}.email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your email here...']) }}
+		
+		@if($trading_account->id)
+		 {{ Form::hidden("trading_accounts[{$index}][id]",$trading_account->id) }}
+ 		@endif
+
+
  		{{ Form::hidden("trading_accounts[{$index}][market_id]",$trading_account->market_id) }}
 
 

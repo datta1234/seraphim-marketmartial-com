@@ -14,7 +14,7 @@ class InterestTableSeeder extends Seeder
           /*
         *Default admin user
         */
-       DB::table('interests')->insert(
+       DB::table('interests')->insert([
        	[
                 'title' => "Football"
         ],
@@ -39,6 +39,6 @@ class InterestTableSeeder extends Seeder
         [
                 'title' => "Other"
         ]
-    );
+        ]);
     }
 }

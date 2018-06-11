@@ -11,6 +11,7 @@ require('./components/data-methods');
 window.Vue = require('vue');
 window.moment = require('moment');
 
+import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -26,6 +27,7 @@ const UserMarketRequest = require('./lib/UserMarketRequest');
 const UserMarket = require('./lib/UserMarket');
 const MarketNegotiation = require('./lib/MarketNegotiation');
 
+Vue.component('Datepicker');
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
 // Market Tab Components
@@ -42,6 +44,11 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
+
+// Profile Components
+Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
+Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
+
 
 Vue.mixin({
     methods: {
@@ -110,7 +117,6 @@ let marketRequestSample2 = new UserMarketRequest({
     })
 });
 
-Vue.component('email-settings', require('./components/EmailSettingsComponent.vue'));
 
 const app = new Vue({
     el: '#trade_app',

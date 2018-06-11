@@ -54,7 +54,7 @@ class EmailController extends Controller
     		$emailModel->fill($email);
     		$emailModels[] = $emailModel;
     	}
-     $user->emails()->saveMany($emailModels);
+        $user->emails()->saveMany($emailModels);
 
        return ['success'=>'true','data'=>$user->emails()->with('defaultLabel')->get(),'message'=>'email added'];
 

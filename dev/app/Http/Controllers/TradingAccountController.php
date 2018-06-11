@@ -18,9 +18,26 @@ class TradingAccountController extends Controller
 	public function edit(Request $request)
 	{
 		$user = $request->user();
-		$trading_accounts = $user->tradingAccounts()->get(); 
-		$markets = Market::whereNotIn('id', $trading_accounts->pluck('market_id'))->get();
-        $emails = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
+		$user_accounts = $user->tradingAccounts()->get(); 
+		$markets = Market::all();
+        $trading_accounts =  [];
+
+        foreach ($markets as $market) 
+        {
+            $user_account =  $user_accounts->firstWhere('market_id',$market->id);
+            if(!$user_account)
+            {
+                $trading_accounts[] = new TradingAccount([
+                    'user_id' => $user->id,
+                    'market_id' => $market->id,
+                ]);  
+            }else
+            {
+                $trading_accounts[] = $user_account;
+            }     
+        }
+
+        $emails = $user->emails()->with('defaultLabel')->get();//get ones that have alread been stored
 		return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails'));
 	}
 
@@ -31,17 +48,20 @@ class TradingAccountController extends Controller
      */
     public function update(TradingAccountRequest $request)
     {
+
         $user = $request->user();
     	$tradingAccounts = $request->input('trading_accounts');
-        $emails = $request->input('email');
+        $emails = $request->has('email') ? $request->input('email') : [];
         $savedModels = $user->tradingAccounts()->with('market')->get();//get once that have alread been stored
         $savedEmailModels = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
 
         $tradingAccountModels = [];
-
+        $emailModels = [];
+        
         foreach ($tradingAccounts as $tradingAccount) 
         {
-            if(!array_key_exists('id', $tradingAccount) && ($tradingAccount['safex_number'] != null || $tradingAccount['sub_account'] !=null)) 
+    
+            if(array_key_exists('id', $tradingAccount) || (!array_key_exists('id', $tradingAccount) && ($tradingAccount['safex_number'] != null || $tradingAccount['sub_account'] !=null))) 
             {
                  $tradingAccountModel = array_key_exists('id', $tradingAccount) ? $savedModels->firstWhere('id',$tradingAccount['id']) : New TradingAccount(); 
                 $tradingAccountModel->fill($tradingAccount);
@@ -60,6 +80,8 @@ class TradingAccountController extends Controller
 
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
-        return redirect()->back()->with('success', 'Trading account settings updated!');
+        
+        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('tsandcs.edit')->with('success', 'Trading account settings updated!');
+        
     }
 }

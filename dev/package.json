@@ -22,6 +22,7 @@
   "dependencies": {
     "bootstrap-vue": "^2.0.0-rc.11",
     "flat-surface-shader-unofficial": "^0.1.0",
-    "moment": "^2.22.1"
+    "moment": "^2.22.1",
+    "vuejs-datepicker": "^1.3.2"
   }
 }

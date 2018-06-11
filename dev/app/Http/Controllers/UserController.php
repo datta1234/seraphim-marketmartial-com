@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UserManagement\Organisation;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\PasswordRequest;
+use App\Http\Requests\TermsofUseRequest;
 
 class UserController extends Controller
 {
@@ -33,8 +34,7 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->update($request->all());
-        return redirect()->back()->with('success', 'Profile updated!');
-
+        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Profile updated!') : redirect()->route('user.edit_password')->with('success', 'Profile updated!');
     }
 
     public function editPassword(Request $request)
@@ -46,9 +46,21 @@ class UserController extends Controller
     public function storePassword(PasswordRequest $request)
     {
         $user = $request->user();
-        $user->update(['password'=>bcrypt($request->password)]);
-        return redirect()->back()->with('success', 'Password updated!');
+        $user->update(['password'=>bcrypt($request->input('password'))]);
+        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Password updated!') : redirect()->route('email.edit')->with('success', 'Password updated!');
     }
 
+    public function termsOfConditions(Request $request)
+    {
+        $user = $request->user();
+        return view('users.terms_and_conditions')->with(compact('user'));
+    }
 
+    public function storeTermsAndConditions(TermsofUseRequest $request)
+    {
+        $user = $request->user();
+        $user->tc_accepted = $request->input('tc_accepted');
+        $user->update();
+        return redirect()->back()->with('success', 'Terms and Conditions updated!');
+    }
 }
