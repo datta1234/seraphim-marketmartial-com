@@ -10,7 +10,7 @@
                     <div class="col-12 text-center">
                         <span class="icon icon-chat float-left"></span>
                         <h3>Messages</h3>
-                        <h3 class="float-right close" @click="loadChatBar()">x</h3>
+                        <h3 id="chat-bar-dismiss" class="float-right close" @click="loadChatBar()">x</h3>
                     </div>
                 </div>
                 <div class="row">
