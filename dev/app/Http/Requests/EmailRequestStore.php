@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EmailRequest extends FormRequest
+class EmailRequestStore extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,8 @@ class EmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email.*.email' => 'required|email',
-            'email.*.notifiable' => 'required|boolean',
+            'title' => 'required',
+            'email' => 'required|email'
         ];
-    }
-
-    public function messages()
-    {
-        return [
-            'email.*.email.required' => 'Email field is required',
-            'email.*.email.email' => 'Email field should be a valid email address',
-        ];  
     }
 }

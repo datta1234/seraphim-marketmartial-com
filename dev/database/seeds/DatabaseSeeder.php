@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call(SafexExpirationDateTableSeeder::class);
         $this->call(UserNotificationTypeTableSeeder::class);
         $this->call(DefaultLabelTableSeeder::class);
+        $this->call(InterestTableSeeder::class);
 
         //enable selection of trade structures
         $this->call(ItemTypeSeeder::class);

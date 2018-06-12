@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TradingAccountRequest extends FormRequest
+class InterestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +24,18 @@ class TradingAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            'trading_accounts.*.safex_number' => 'max:255',
-            'trading_accounts.*.market_id' => 'required',
-            'trading_accounts.*.sub_account' => 'max:255',
-
+            'birthdate' => 'required|date',
+            'is_married' => 'required|boolean',
+            'has_children'=>'required|boolean',
+            'hobbies'=>'required|string',
+            'interest.*.value'=>'required|string'
         ];
     }
 
     public function messages()
     {
         return [
-            'trading_accounts.*.safex_number.required' => 'Safex number field is required',
-            'trading_accounts.*.sub_account.required' => 'Sub account field is required',
-        ];  
+            'interest.*.value.required'=>'once you have checked and interest please complete the team.'
+        ];
     }
 }

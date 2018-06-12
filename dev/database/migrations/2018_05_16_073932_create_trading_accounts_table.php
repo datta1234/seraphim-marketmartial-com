@@ -17,8 +17,8 @@ class CreateTradingAccountsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('market_id')->unsigned();
-            $table->string('safex_number');
-            $table->string('sub_account');
+            $table->string('safex_number')->nullable();
+            $table->string('sub_account')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')
