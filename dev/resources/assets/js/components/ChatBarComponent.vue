@@ -51,11 +51,23 @@
         },
         methods: {
             toggleBar(set) {
-                this.opened = set;
-            }
+                if(typeof set != 'undefined') {
+                    this.opened = set == true;
+                } else {
+                    this.opened = !this.opened;
+                }
+            },
+            /**
+             * Listens for a chatToggle event firing
+             *
+             * @event /lib/EventBus#chatToggle
+             */
+            chatBarListener() {
+                EventBus.$on('chatToggle', this.toggleBar);
+            },
         },
         mounted() {
-            EventBus.$on('chatToggle', this.toggleBar)
+            this.chatBarListener();
         }
     }
 </script>

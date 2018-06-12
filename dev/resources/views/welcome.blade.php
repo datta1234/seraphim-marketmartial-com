@@ -19,7 +19,7 @@
     @if (Auth::guest())
     <div class="col col-lg-4">
     <div class="home-login float-md-right">
-        <form method="POST" action="{{ route('login') }}">
+        <form id="homePageLoginForm" method="POST" action="{{ route('login') }}">
              {{ csrf_field() }}
 
                 <div class="w-100 mb-3">
@@ -87,7 +87,7 @@
                 <div class="front card-award pt-3">
                     <h2><span class="icon icon-award2"></span></h2>
                     <h5 class="front-title text-center">
-                        Get rewarded for market making
+                        Get rewarded for market<br>making
                     </h5>
                 </div>
                 <div class="back card-award">
@@ -167,7 +167,7 @@
     @slot('body')
         <div class="row justify-content-md-center">
             <div class="col col-lg-9 col-md-12">
-                <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v2.svg')}}">
+                <img class="liquidity-img img-fluid" src="{{asset('img/liquidity_v3.svg')}}">
             </div>
         </div>
     @endslot
@@ -215,7 +215,7 @@
     @slot('body')   
         <div class="row justify-content-md-center">
             <div class="col col-lg-9 col-md-12">
-                <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v2.svg')}}">
+                <img class="feelflow-img img-fluid" src="{{asset('img/maintain_flow_v3.svg')}}">
             </div>
         </div>
     @endslot
@@ -311,7 +311,7 @@
         <div class="row">
             <div class="col col-12 col-md-6 col-lg-4 offset-lg-1 footer-sections pt-3 pb-3">
                 <h3>Send us a message</h3>
-                <form action="{{ route('contact') }}" method="POST">
+                <form id="ContactUsForm" action="{{ route('contact') }}" method="POST">
                      {{ csrf_field() }}
                     <div class="form-group mb-2">
                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" id="name" name="name" placeholder="Enter your name here...">
@@ -323,10 +323,10 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <input type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{ old('email') }}" id="contactEmail" name="email" placeholder="Enter your email here...">
-                        @if ($errors->has('email'))
+                        <input type="text" class="form-control {{ $errors->has('contact_email') ? ' is-invalid' : '' }}" value="{{ old('contact_email') }}" id="contactEmail" name="contact_email" placeholder="Enter your email here...">
+                        @if ($errors->has('contact_email'))
                             <div class="alert alert-danger">
-                                <strong>{{ $errors->first('email') }}</strong>
+                                <strong>{{ $errors->first('contact_email') }}</strong>
                             </div>
                         @endif
                     </div>
