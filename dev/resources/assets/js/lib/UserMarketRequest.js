@@ -1,14 +1,22 @@
 module.exports = class UserMarketRequest {
 
     constructor(options) {
-        this.user_markets = [];
-        this._chosen_user_market = null;
+        // default internal
+        this._market = null;
+        // default public
+        this.trade_items: []
+        this.quotes = [];
+        this.quote = null;
+        this.user_market = null;
         const defaults = {
             id: "",
+            trade_structure: "",
             attributes: {
-                expiration_date: moment(),
-                strike: "",
-            }
+                state: "",
+                bid_state: "",
+                offer_state: "",
+            },
+            created_at: moment(),
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -24,13 +32,11 @@ module.exports = class UserMarketRequest {
             this.addUserMarkets(options.user_markets);
         }
 
-        // register chosen
-        if(options && options.chosen_user_market) {
-            if(this.user_markets.indexOf(options.chosen_user_market) == -1) {
-                this.addUserMarkets(options.user_markets);
-            }
-            this.setChosenUserMarket(options.chosen_user_market);
+        // register quotes
+        if(options && options.user_market_quotes) {
+            this.addUserMarketQuotes(options.user_market_quotes);
         }
+
     }
 
     /**
@@ -53,6 +59,51 @@ module.exports = class UserMarketRequest {
     }
 
     /**
+    *   addUserMarketQuote - add user market quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote objects
+    */
+    addUserMarketQuote(user_market_quote) {
+        user_market_quote.setParent(this);
+        this.quotes.push(user_market_quote);
+    }
+
+    /**
+    *   addUserMarketQuotes - add array of user user_market_quotes
+    *   @param {Array} user_market_quotes - array of UserMarketQuote objects
+    */
+    addUserMarketQuotes(user_market_quotes) {
+        user_market_quotes.forEach(user_market_quote => {
+            this.addUserMarketQuote(user_market_quote);
+        });
+    }
+
+    /**
+    *   setUserMarketQuote - Set the UserMarketRequest quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+    */
+    setUserMarketQuote(user_market_quote){
+        this.quote = user_market_quote;
+    }
+
+    /**
+    *   addTradeItem - add trade item
+    *   @param {} trade_item - trade item object
+    */
+    addTradeItem(trade_item) {
+        this.trade_items.push(trade_item);
+    }
+
+    /**
+    *   addTradeItems - add array of trade items
+    *   @param {Array} trade_items - array of trade item objects
+    */
+    addTradeItems(trade_items) {
+        trade_items.forEach(trade_item => {
+            this.addTradeItem(trade_item);
+        }); 
+    }
+
+    /**
     *   setParent - Set the parent Market
     *   @param {Market} market - Market object
     */
@@ -66,25 +117,6 @@ module.exports = class UserMarketRequest {
     */
     getParent() {
         return this._market;
-    }
-
-    /**
-    *   setChosenUserMarket - set the chosen UserMarket
-    *   @param {UserMarket}
-    */
-    setChosenUserMarket(user_market) {
-        if(this.user_markets.indexOf(user_market) == -1) {
-            this.addUserMarket(user_market);
-        }
-        this._chosen_user_market = user_market;
-    }
-
-    /**
-    *   getChosenUserMarket - get the chosen user market
-    *   @return {UserMarket}
-    */
-    getChosenUserMarket() {
-        return this._chosen_user_market;
     }
 
     /**

@@ -3,8 +3,12 @@ module.exports = class Market {
     constructor(options) {
         this.market_requests = [];
         const defaults = {
+            id: "",
             title: "",
             description: "",
+            order: "",
+            market_type_id: "",
+
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

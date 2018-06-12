@@ -1,13 +1,16 @@
 module.exports = class UserMarket {
 
     constructor(options) {
-        const defaults = {
-            market_negotiations: [],
-        }
-
-        // internal
-        this._market_request = null;
+        // default internal
         this._current_market_negotiation = null;
+        this._user_market_request = null;
+        // default public
+        this.market_negotiations: [];
+        const defaults = {
+            id: "",
+            status: "",
+            created_at: moment(),
+        }
 
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -18,44 +21,44 @@ module.exports = class UserMarket {
             }
         });
 
-        // register current
-        if(options && options.current_market_negotiation) {
-            this.setCurrentNegotiation(options.current_market_negotiation);
+        // register market_negotiations
+        if(options && options.market_negotiations) {
+            this.addNegotiations(options.market_negotiations);
         }
     }
 
     /**
-    *   setParent - Set the parent Market
-    *   @param {Market} market - Market object
+    *   setParent - Set the parent UserMarketRequest
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
-    setParent(market) {
-        this._market_request = market;
+    setParent(user_market_request) {
+        this._user_market_request = user_market_request;
     }
 
     /**
-    *   getParent - Get the parent Market
-    *   @return {Market}
+    *   getParent - Get the parent UserMarketRequest
+    *   @return {UserMarketRequest}
     */
     getParent() {
-        return this._market_request;
+        return this._user_market_request;
     }
 
     /**
-    *   addNegotiation - add user market_negotiation
-    *   @param {Negotiation} market_negotiation - Negotiation objects
+    *   addNegotiation - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    addNegotiation(market_negotiation) {
-        market_negotiation.setUserMarket(this);
-        this.market_negotiations.push(market_negotiation);
+    addNegotiation(user_market_negotiation) {
+        user_market_negotiation.setParent(this);
+        this.market_negotiations.push(user_market_negotiation);
     }
 
     /**
     *   addNegotiations - add array of user market_negotiations
-    *   @param {Array} market_negotiations - array of Negotiation objects
+    *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
     */
-    addNegotiations(market_negotiations) {
-        market_negotiations.forEach(market_negotiation => {
-            this.addNegotiation(market_negotiation);
+    addNegotiations(user_market_negotiations) {
+        user_market_negotiations.forEach(user_market_negotiation => {
+            this.addNegotiation(user_market_negotiation);
         });
     }
 
