@@ -87,25 +87,31 @@
 
                 <div class="col-sm-12 col-md-4">
 
-                    <div class="form-group">
-
-                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
-
-                        @if ($errors->has('organisation_id'))
-                            <span class="invalid-feedback">
-                                <strong>{{ $errors->first('organisation_id') }}</strong>
-                            </span>
-                        @endif
-                    </div>
+                 
 	                
 					<toggle-input :show-if="true" name="not_listed" label="My Organisation is not listed" :checked="{{ old('not_listed') ? 'true' : 'false'}}">
-						{{ Form::text('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...']) }}
-	                    
-	                    @if ($errors->has('new_organisation'))
-	                        <span class="invalid-feedback">
-	                            <strong>{{ $errors->first('new_organisation') }}</strong>
-	                        </span>
-	                    @endif
+						<div slot="standard">
+						   <div class="form-group">
+
+		                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
+
+		                        @if ($errors->has('organisation_id'))
+		                            <span class="invalid-feedback">
+		                                <strong>{{ $errors->first('organisation_id') }}</strong>
+		                            </span>
+		                        @endif
+		                    </div>
+						</div>
+						<div slot="alt">
+							{{ Form::text('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...']) }}
+		                    
+		                    @if ($errors->has('new_organisation'))
+		                        <span class="invalid-feedback">
+		                            <strong>{{ $errors->first('new_organisation') }}</strong>
+		                        </span>
+		                    @endif
+						</div>
+					
 					</toggle-input>
 
 
