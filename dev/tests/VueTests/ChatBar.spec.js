@@ -5,7 +5,7 @@ import { EventBus } from '../../resources/assets/js/lib/EventBus.js';
 describe('ChatBarComponent.vue', () => {
 
 	it('Chat bar gets loaded when event gets emitted', (done) => {		
-		const wrapper = mount(ChatBar, { 
+		const toggleTestWrapper = mount(ChatBar, { 
 			methods: {
 				toggleBar: () => {done()}
 			}
@@ -14,11 +14,11 @@ describe('ChatBarComponent.vue', () => {
 	});
 
 	it('Chat bar emits event when closed', (done) => {
-		const wrapper2 = mount(ChatBar, {
+		const loadChatBarWrapper = mount(ChatBar, {
 			methods: {
 				loadChatBar: () => {done()}
 			}
 		});
-		wrapper2.find('#chat-bar-dismiss').trigger('click');
+		loadChatBarWrapper.find('#action-bar-open-chat').trigger('click');
 	});
 });

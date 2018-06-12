@@ -10,7 +10,7 @@
             <div class="col-3">
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
-                    <button type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened">
+                    <button id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened">
                         <span class="icon icon-chat"></span> Chat
                     </button>
                 </div>
