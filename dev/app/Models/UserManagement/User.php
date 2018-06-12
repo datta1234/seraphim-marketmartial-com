@@ -68,6 +68,15 @@ class User extends Authenticatable
     ];
 
     /**
+    * The attributes that should be cast to native types.
+    *
+    * @var array
+    */
+    protected $casts = [
+        'tc_accepted' => 'boolean',
+    ];
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -281,6 +290,6 @@ class User extends Authenticatable
     */
     public function completeProfile()
     {
-        return $this->tc_accepted;
+        return (bool)$this->tc_accepted;
     }
 }

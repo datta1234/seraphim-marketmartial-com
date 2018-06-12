@@ -1,48 +1,52 @@
 <template>
 <div>
 
-<form>
-        <b-form-group
-         v-for="(email, index) in emailSettingForm.data().email"
-          horizontal
-          :key = "`index"
-          :label-cols="4"
-          :label=" email.title ? email.title : email.default_label.title"
-          :label-for="'email-'+index+'-email'"
-          :invalid-feedback="emailSettingForm.errors.get('email.'+index+'.email')"
-      >
-        <b-form-input  :id="'email-'+index+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
-      </b-form-group>
-</form>
-
-
-    <b-button @click="showModal">
-     Add E-mail
-    </b-button>
-
-    <b-btn class="mt-3 mm-button" @click="update">
-       Update
-    </b-btn>
-
-
-    <b-modal ref="myModalRef" hide-footer title="Add Email">
-      <div class="d-block">
-         <b-form-group
-              :label-for="'email-title'"
-              placeholder="Place email"
-              :invalid-feedback="email.errors.get('title')">
-            <b-form-input  :id="'email-'+index+'-title'"  placeholder="Email label" :state="email.errors.state('title')" v-model="email.title"></b-form-input>
-          </b-form-group>
-
-        <b-form-group
-        :label-for="'email-email'"
-        placeholder="Place email"
-        :invalid-feedback="email.errors.get('email')">
-        <b-form-input  :id="'email-'+index+'-email'"  placeholder="Email Address" :state="email.errors.state('email')" v-model="email.email"></b-form-input>
+  <form>
+          <b-form-group
+           v-for="(email, key, index) in emailSettingForm.data().email"
+            horizontal
+            :key = "key"
+            :label-cols="4"
+            :label=" email.title ? email.title : email.default_label.title"
+            :label-for="'email-'+index+'-email'"
+            :invalid-feedback="emailSettingForm.errors.get('email.'+index+'.email')"
+        >
+          <b-form-input  :id="'email-'+index+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
         </b-form-group>
-      </div>
-      <b-btn class="mt-3 mm-button" block @click="hideModal">Save</b-btn>
-    </b-modal>
+  </form>
+
+  <div class="row">
+    <div class="col-md-12">
+        <b-btn class="btn mm-button float-right" @click="update">
+         Update
+      </b-btn>
+
+      <b-btn  class="btn mm-button float-right" @click="showModal">
+       Add E-mail
+      </b-btn>
+    </div>
+  </div>
+    
+
+
+  <b-modal ref="myModalRef" hide-footer title="Add Email">
+    <div class="d-block">
+       <b-form-group
+            :label-for="'email-title'"
+            placeholder="Place email"
+            :invalid-feedback="email.errors.get('title')">
+          <b-form-input  :id="'email-title'"  placeholder="Email label" :state="email.errors.state('title')" v-model="email.title"></b-form-input>
+        </b-form-group>
+
+      <b-form-group
+      :label-for="'email-email'"
+      placeholder="Place email"
+      :invalid-feedback="email.errors.get('email')">
+      <b-form-input  :id="'email-email'"  placeholder="Email Address" :state="email.errors.state('email')" v-model="email.email"></b-form-input>
+      </b-form-group>
+    </div>
+    <b-btn class="mt-3 mm-button" block @click="hideModal">Save</b-btn>
+  </b-modal>
  
 </div>
 
@@ -58,6 +62,9 @@
           },
           'defaultLabelsData':{
             type: Array
+          },
+          'profileCompleteData':{
+            type: Number
           }
         },
         data() { 
@@ -74,10 +81,15 @@
             update() {
                 this.emailSettingForm.put('/email-settings')
                 .then((response) => {
-                    this.mutableEmailSettingsData = response.data;
+                    this.mutableEmailSettingsData = response.data.email;
                     this.fields = [];
                     // fields will be update from the server
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
+                   
+                    if(this.profileCompleteData == 0)
+                    {
+                        window.location.href = response.data.redirect;
+                    }
                 });
                 
             },

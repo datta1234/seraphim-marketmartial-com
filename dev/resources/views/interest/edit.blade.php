@@ -23,13 +23,13 @@
 
 				<div class="form-group row">
 
-				        {{ Form::label('birthdate','Birthdate', ['class' => 'col-sm-12 col-md-4 col-form-label']) }}
+			        {{ Form::label('birthdate','Birthdate', ['class' => 'col-sm-12 col-md-4 col-form-label']) }}
 				    <div class="col-sm-12 col-md-4">
-				      {{ Form::date('birthdate',null,['class' => ($errors->has('birthdate') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Birthdate']) }}
 
+					<datepicker input-class="{{ $errors->has('birthdate') ? 'form-control is-invalid' : 'form-control' }}" name="birthdate" placeholder="Birthdate" format="yyyy-MM-dd" value="{{ $user->birthdate }}"></datepicker>
 
 				        @if ($errors->has('birthdate'))
-				            <span class="invalid-feedback">
+				            <span class="text-danger">
 				                <strong>{{ $errors->first('birthdate') }}</strong>
 				            </span>
 				        @endif

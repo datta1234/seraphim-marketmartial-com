@@ -55,8 +55,14 @@ class EmailController extends Controller
     		$emailModels[] = $emailModel;
     	}
         $user->emails()->saveMany($emailModels);
-
-       return ['success'=>'true','data'=>$user->emails()->with('defaultLabel')->get(),'message'=>'email added'];
+        
+       return [
+       'success'=>'true',
+       'data'=>[
+            'email' => $user->emails()->with('defaultLabel')->get(),
+            'redirect' => route('user.edit_password')
+        ],
+       'message'=>'email added'];
 
     }
 }

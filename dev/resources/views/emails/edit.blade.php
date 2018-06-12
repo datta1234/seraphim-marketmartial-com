@@ -18,8 +18,7 @@
 				<hr class="title-decorator">
 			@endslot
 				@slot('body')
-
-				<email-settings :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
+				<email-settings :profile-complete-data="{{ $profileIsComplete }}" :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
 
 				@endslot
 		@endcomponent

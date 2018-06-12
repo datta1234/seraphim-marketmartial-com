@@ -34,6 +34,6 @@ class ProfileIsComplete
      */
     public function compose(View $view)
     {
-        $view->with('profileIsComplete', $this->request->user()->completeProfile());
+        $view->with('profileIsComplete', (bool)$this->request->user()->completeProfile());
     }
 }

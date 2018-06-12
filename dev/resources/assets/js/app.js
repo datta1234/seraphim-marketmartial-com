@@ -16,6 +16,7 @@ import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -27,7 +28,10 @@ const UserMarketRequest = require('./lib/UserMarketRequest');
 const UserMarket = require('./lib/UserMarket');
 const MarketNegotiation = require('./lib/MarketNegotiation');
 
-Vue.component('Datepicker');
+// datepicker
+Vue.component('Datepicker', Datepicker);
+
+
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
 // Market Tab Components
@@ -48,6 +52,7 @@ Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 // Profile Components
 Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
 Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
+Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
 
 
 Vue.mixin({
