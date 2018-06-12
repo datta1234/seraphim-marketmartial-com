@@ -1,7 +1,7 @@
 @extends('layouts.trade_app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid trade-screen-wrapper">
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
@@ -15,7 +15,7 @@
 			</user-header>
 
 			<!-- Actions and Alerts -->
-			<action-bar :markets="display_markets"></action-bar>
+			<action-bar :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
 
 			<!-- Markets sections -->

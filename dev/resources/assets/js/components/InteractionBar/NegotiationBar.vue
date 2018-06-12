@@ -7,11 +7,7 @@
 
         <ibar-market-negotiation class="mb-5"></ibar-market-negotiation>
 
-        <b-row class="mb-5">
-            <b-col>
-                <b-form-checkbox v-model="state_conditions" value="true" unchecked-value="false"> Apply a condition</b-form-checkbox>
-            </b-col>
-        </b-row>
+        <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
 
         <b-row class="mb-2">
             <b-col>
@@ -21,7 +17,6 @@
 
     </b-container>
 </template>
-
 <script>
     import { EventBus } from '../../lib/EventBus.js';
     const UserMarketRequest = require('../../lib/UserMarketRequest');
@@ -45,7 +40,7 @@
                 user_market: null,
                 market_history: [],
                 market_title: "",
-                market_time: "",
+                market_time: ""
             };
         },
         watch: {

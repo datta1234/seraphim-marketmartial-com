@@ -1,7 +1,7 @@
 <template>
     <div class="user-market">
-        <div class="container-fluid">
-            <div class="row">
+        <div class="container-fluid h-100">
+            <div class="row h-100">
                 <div class="col-12">
                     <h2 class="text-center">{{ market.title }}</h2> 
                 </div>
