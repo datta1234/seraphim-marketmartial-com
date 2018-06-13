@@ -7,12 +7,8 @@ class FactoryHelper
 	public static function setUpTradeStructures()
 	{
 
-		// factory(\App\Models\UserManagement\Organisation::class,8)->create();
-		// exit;
-
 		$tradeStructures = config('tradestructures');
 		// need the types
-
 		factory(\App\Models\StructureItems\ItemType::class)->create([
 			'title' => 'Expiration Date',
 			'validation_rule' => 'required|date|after:today',
@@ -51,6 +47,57 @@ class FactoryHelper
 					}
 				});
 
-			}
+		}
+	}
+
+	public static function setUpTradeConditions()
+	{
+		$conditionCategories = config('marketmartial.market_condition_category');
+		$conditions = config('marketmartial.market_conditions');
+
+		foreach ($conditionCategories as $conditionCategory) {
+			factory(\App\Models\Market\MarketConditionCategory::class)->create([
+					'title' =>  $conditionCategory['title']
+				]);	
+		}
+
+		foreach ($conditions as $condition) {
+
+			factory(\App\Models\Market\MarketCondition::class)->create([
+				'title' =>  $condition['title'],
+				'alias' =>  $condition['alias'],
+				'timeout' => $condition['timeout'],
+				'market_condition_category_id' => \App\Models\Market\MarketConditionCategory::firstOrCreate(['title'],$condition['market_condition_category'])
+			]);	
+		}
+	} 
+
+
+	public static function setUpMarkets()
+	{
+		$marketTypes = config('marketmartial.market_type');
+		$markets = config('marketmartial.markets');
+
+		foreach ($marketTypes as $marketType) {
+			factory(\App\Models\StructureItems\MarketType::class)->create([
+					'title' =>  $marketType['title']
+				]);	
+		}
+
+		foreach($markets as $market)
+		{
+			factory(\App\Models\StructureItems\Market::class)->create([
+				'title' => $market['title'] ,
+				'description' => $market['description'],
+				'is_seldom' => $market['is_seldom'],
+				'has_deadline' => $market['has_deadline'],
+				'needs_spot' => $market['needs_spot'],
+				'has_negotiation' => $market['needs_spot'],
+				'has_rebate' => $market['has_rebate'],
+				'market_type_id' => \App\Models\StructureItems\MarketType::firstOrCreate(['title' => $market['market_type']]),
+				'is_selectable' => $market['is_selectable'],
+			]);	
+		}
+
 	}    
 }

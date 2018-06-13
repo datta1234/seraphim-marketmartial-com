@@ -15,12 +15,3 @@ foreach ($tradeStructures as $tradeStructure)
 }
 
 
-
-/*
-
-$factory->defineAs(App\User::class, 'admin', function ($faker) use ($factory) {
-    $post = $factory->raw('App\User');
-
-    return array_merge($post, ['admin' => true]);
-});
-*/
