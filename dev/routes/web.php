@@ -13,6 +13,7 @@
 
 Auth::routes();
 
+
 /*
 *
 *   Public Page Routes

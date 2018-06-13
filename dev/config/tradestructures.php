@@ -1,17 +1,6 @@
-<?php
+<?php 
 
-use Illuminate\Database\Seeder;
-
-class TradeStructureTableSeeder extends Seeder
-{
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $tradeStructures = [
+return [
             [
                 'id' => 1,
                 'title' => 'Outright',
@@ -23,16 +12,16 @@ class TradeStructureTableSeeder extends Seeder
                                     [
                                         [
                                             'title' => 'Expiration Date',
-                                            'item_type_id' => 1   
+                                            'type' => 'expiration date'   
                                         ],
                                         [
                                             'title' => 'Strike',
-                                            'item_type_id' => 2 
+                                            'type' => 'Double' 
 
                                         ],
                                         [
                                             'title' => 'Quantity',
-                                            'item_type_id' => 2   
+                                            'type' => 'Double'   
                                         ],
                                     ]
                             ]
@@ -49,16 +38,16 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
+                                                'type' => 'expiration date'   
                                             ],
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -68,12 +57,12 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ]
@@ -90,16 +79,16 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
+                                                'type' => 'expiration date'   
                                             ],
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -109,16 +98,16 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
+                                                'type' => 'expiration date'   
                                             ],
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ]
@@ -136,16 +125,16 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
+                                                'type' => 'expiration date'   
                                             ],
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -155,12 +144,12 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -170,12 +159,12 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ]
@@ -193,16 +182,16 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
+                                                'type' => 'expiration date'   
                                             ],
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -212,12 +201,12 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ],
@@ -227,12 +216,12 @@ class TradeStructureTableSeeder extends Seeder
                                         [
                                             [
                                                 'title' => 'Strike',
-                                                'item_type_id' => 2 
+                                                'type' => 'Double' 
 
                                             ],
                                             [
                                                 'title' => 'Quantity',
-                                                'item_type_id' => 2   
+                                                'type' => 'Double'   
                                             ],
                                         ]
                                 ]
@@ -240,9 +229,4 @@ class TradeStructureTableSeeder extends Seeder
             
             ]
         ];
-        foreach ($tradeStructures as $tradeStructure) 
-        {
-             App\Models\StructureItems\TradeStructure::saveFullStructure($tradeStructure);
-        }
-    }
-}
+
