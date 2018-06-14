@@ -11,6 +11,7 @@ describe('class UserMarketNegotiation', () => {
     	new UserMarketNegotiationCondition({id: "3"})
     ];
 	let user_market_negotiation_data = {
+		id: 2,
 		bid: "Test bid",
         offer: "Test offer",
         bid_qty: 2,
@@ -32,6 +33,7 @@ describe('class UserMarketNegotiation', () => {
 
 		it('UserMarketNegotiation constructed with defaults', () => {
 			let default_user_market_negotiation = new UserMarketNegotiation();
+			chai.assert(default_user_market_negotiation.id == '','id property is default value');
 			chai.assert(default_user_market_negotiation.bid == '','bid property is default value');
 			chai.assert(default_user_market_negotiation.offer == '','offer property is default value');
 			chai.assert(default_user_market_negotiation.bid_qty == 0,'bid_qty property is default value');
@@ -45,6 +47,7 @@ describe('class UserMarketNegotiation', () => {
 		});
 
 		it('UserMarketNegotiation constructed with passed params', () => {
+			chai.assert(user_market_negotiation.id == user_market_negotiation_data.id,'id property is equal to passed id value');
 			chai.assert(user_market_negotiation.bid == user_market_negotiation_data.bid,'bid property is equal to passed bid value');
 			chai.assert(user_market_negotiation.offer == user_market_negotiation_data.offer,'offer property is equal to passed offer value');
 			chai.assert(user_market_negotiation.bid_qty == user_market_negotiation_data.bid_qty,'bid_qty property is equal to passed bid_qty value');

@@ -6,6 +6,7 @@ export default class UserMarketNegotiation {
         // default public
         this.conditions = [];
         const defaults = {
+            id: "",
             bid: "",
             offer: "",
             bid_qty: 0,

@@ -5,6 +5,7 @@ describe('class UserMarketNegotiationCondition', () => {
 
 	let user_market_negotiation_condition = null;
 	let user_market_negotiation_condition_data = {
+		id: 2,
         title: "test title",
         options: {
 	        timeout: true,
@@ -23,6 +24,7 @@ describe('class UserMarketNegotiationCondition', () => {
 
 		it('UserMarketNegotiationCondition constructed with defaults', () => {
 			let default_user_market_negotiation_condition = new UserMarketNegotiationCondition();
+			chai.assert(default_user_market_negotiation_condition.id == '','id property is default value');
 			chai.assert(default_user_market_negotiation_condition.title == '','title property is default value');
 			chai.assert(default_user_market_negotiation_condition.options.timeout == false,'options.timeout property is default value');
 			chai.assert(default_user_market_negotiation_condition.options.sell == false,'options.sell property is default value');
@@ -31,6 +33,7 @@ describe('class UserMarketNegotiationCondition', () => {
 		});
 
 		it('UserMarketNegotiationCondition constructed with passed params', () => {
+			chai.assert(user_market_negotiation_condition.id == user_market_negotiation_condition_data.id,'id property is equal to passed id value');
 			chai.assert(user_market_negotiation_condition.title == user_market_negotiation_condition_data.title,'title property is equal to passed title value');
 			chai.assert(user_market_negotiation_condition.options.timeout == user_market_negotiation_condition_data.options.timeout,'options.timeout property is equal to passed options.timeout value');
 			chai.assert(user_market_negotiation_condition.options.sell == user_market_negotiation_condition_data.options.sell,'options.sell property is equal to passed options.sell value');

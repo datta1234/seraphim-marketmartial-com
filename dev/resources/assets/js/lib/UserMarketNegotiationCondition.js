@@ -5,6 +5,7 @@ export default class UserMarketNegotiationCondition {
         this._user_market_negotiation = null;
         // default public
         const defaults = {
+            id: "",
             title: "",
 		    options: {
 		        timeout: false,
