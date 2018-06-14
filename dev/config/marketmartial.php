@@ -1,6 +1,21 @@
 <?php
 
 return [
+		"default_role" => "Trader",//pull and use this role for testing as the default role
+		"roles" => [
+			[
+				'title' => 'Admin',
+				'is_selectable' => false,
+			],
+			[
+				'title' => 'Trader',
+				'is_selectable' => true,
+			],
+			[
+				'title' => 'Viewer',
+				'is_selectable' => true,
+			]
+		],
 		'market_condition_category' => [
                 [
                 	'title' => 'Fill or kill'

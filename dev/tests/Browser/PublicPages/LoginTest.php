@@ -36,7 +36,7 @@ class LoginTest extends DuskTestCase
             \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
             
             //create a new user to login with, role and organisation needed for user creation
-            self::$role = factory(Role::class)->create();
+            //self::$role = factory(Role::class)->create(); //we shouldnt need this anymore
             self::$organisation = factory(Organisation::class)->create();
             self::$user = factory(User::class)->create([
                         'organisation_id' =>  self::$organisation->id,

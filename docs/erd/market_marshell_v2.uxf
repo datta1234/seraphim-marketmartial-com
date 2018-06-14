@@ -279,13 +279,13 @@ m2=0..n</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>1127</x>
-      <y>1155</y>
-      <w>35</w>
-      <h>63</h>
+      <y>966</y>
+      <w>231</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;340.0;10.0;300.0;310.0;300.0;310.0;70.0;120.0;70.0;120.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -740,7 +740,7 @@ layer=1</panel_attributes>
     <coordinates>
       <x>287</x>
       <y>497</y>
-      <w>147</w>
+      <w>168</w>
       <h>84</h>
     </coordinates>
     <panel_attributes>user_market_watched
@@ -757,14 +757,14 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
+      <x>448</x>
       <y>525</y>
-      <w>203</w>
+      <w>182</w>
       <h>161</h>
     </coordinates>
     <panel_attributes>m1=1
 m2=0..n</panel_attributes>
-    <additional_attributes>270.0;200.0;110.0;200.0;110.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>240.0;200.0;80.0;200.0;80.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1062,7 +1062,7 @@ m2=0..n</panel_attributes>
 --
 id: int(11)
 otp: int(6)
-user_id: int(1)
+user_id: int(11)
 expires_at: timestamp
 created_at: timestamp
 updated_at: timestamp
@@ -1224,7 +1224,7 @@ m2=n
       <x>3647</x>
       <y>903</y>
       <w>224</w>
-      <h>238</h>
+      <h>252</h>
     </coordinates>
     <panel_attributes>trade_confirmations
 --
@@ -1288,7 +1288,7 @@ m2=0..n</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>3647</x>
-      <y>1155</y>
+      <y>1162</y>
       <w>224</w>
       <h>77</h>
     </coordinates>
@@ -1328,8 +1328,9 @@ m2=0..1
 id: int(11)
 user_id: int(11)
 trade_confirmation_id: int(11) nullable
-traiding_account_id: int(11)
+trading_account_id: int(11)
 is_sale: tinyint(1)
+is_rebate: tinyint(1)
 market_id: int(11) nullable
 stock_id: int(11) nullable
 amount: double(11,2)
@@ -1632,7 +1633,6 @@ id: int(11)
 user_id: int(11)
 user_market_request_id: int(11)
 user_market_id: int(11)
-trade_id: int(11)
 organisation_id: int(11)
 is_paid:tinyint(1)
 booked_trade_id:int(11) nullable
@@ -1693,18 +1693,6 @@ updated_at: timestamp
 
 layer=1</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>3052</x>
-      <y>1036</y>
-      <w>161</w>
-      <h>427</h>
-    </coordinates>
-    <panel_attributes>m1=0..n
-m2=0..1</panel_attributes>
-    <additional_attributes>10.0;580.0;190.0;580.0;190.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -2008,7 +1996,7 @@ m2=0..1
 --
 id: int(10)
 jse_intergration_id: int(11)
-derivative_id: int(11)
+market_id: int(11)
 created_at: timestamp
 updated_at: timestamp
 
@@ -2326,11 +2314,11 @@ m2=0..n</panel_attributes>
       <x>3612</x>
       <y>994</y>
       <w>49</w>
-      <h>217</h>
+      <h>224</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>50.0;10.0;20.0;10.0;20.0;280.0;50.0;280.0</additional_attributes>
+    <additional_attributes>50.0;10.0;20.0;10.0;20.0;290.0;50.0;290.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
