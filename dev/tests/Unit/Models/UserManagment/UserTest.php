@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Faker\Factory as Faker;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 
 /**
  *
@@ -180,12 +181,9 @@ class UserTest extends TestCase
     	$user->interests()->sync( $interests );
     	$user->load('interests');
     	
-
     	foreach ($user->interests as $interest ) {
-    		//dd( $interest );
-    		$this->assertInternalType('string', $interest->pivot->value);
 
-    		//var_dump($interest);
+    		$this->assertInternalType('string', $interest->pivot->value);
 
     		$this->assertDatabaseHas('interest_user', [
             	'user_id'          	=> $user->id,
@@ -221,6 +219,8 @@ class UserTest extends TestCase
     	factory(\App\Models\UserManagement\Role::class)->create();
 
     	$faker 			= Faker::create();
+
+
     	$user 			= factory( \App\Models\UserManagement\User::class )->create();
 
     	$this->assertDatabaseMissing('emails', [
@@ -262,9 +262,48 @@ class UserTest extends TestCase
     	factory(\App\Models\UserManagement\Role::class)->create();
 
     	$faker 			= Faker::create();
+    	$now 			= Carbon::now()->toDateTimeString();
     	$user 			= factory( \App\Models\UserManagement\User::class )->create();
 
+    	$this->assertDatabaseMissing('user_otps', [ 'user_id' => $user->id ]);
+
+    	$user_otps		= factory( \App\Models\UserManagement\UserOtp::class, 5 )->create([ 'user_id' => $user->id, 'expires_at' => $now ]);
+
+    	$user->load('userOtps')->each(function ($item, $key) use ($user_otps, $user) {
+
+    		$this->assertDatabaseHas('user_otps', [
+
+    			'id'		=> $user_otps[$key]->id,
+    			'otp'		=> $user_otps[$key]->otp,
+    			'user_id'	=> $user->id,
+    			'expires_at'=> $user_otps[$key]->expires_at,
+            	
+        	]);
+
+		});
 
     }
 
+     /**
+     * User emails has many UserNotification relation Test
+     *
+     * @covers \App\Models\UserManagement\User::userNotifications
+     * @testdox User has many \App\Models\UserManagement\userNotifications test
+     * @group relations/usermanagment
+     *
+	 * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\userNotifications
+
+     * @return void
+     */
+    public function testUserHasManyUserNotification()
+    {	
+
+    	factory(\App\Models\UserManagement\Role::class)->create();
+
+    	$faker 			= Faker::create();
+    	$now 			= Carbon::now()->toDateString();
+    	$user 			= factory( \App\Models\UserManagement\User::class )->create();
+
+	}
 }

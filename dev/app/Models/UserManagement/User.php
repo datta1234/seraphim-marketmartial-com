@@ -72,15 +72,6 @@ class User extends Authenticatable
     ];
 
     /**
-    * The attributes that should be cast to native types.
-    *
-    * @var array
-    */
-    protected $casts = [
-        'tc_accepted' => 'boolean',
-    ];
-
-    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -115,6 +106,15 @@ class User extends Authenticatable
     public function interests()
     {
         return $this->belongsToMany('App\Models\UserManagement\Interest','interest_user', 'user_id', 'interest_id')->withPivot('value');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function interestUsers()
+    {
+        return $this->hasMany('App\Models\UserManagement\InterestUser', 'user_id');
     }
 
     /**
@@ -286,14 +286,5 @@ class User extends Authenticatable
     public function userTotalRebate() 
     {
         return 65000;
-    }
-
-    /*
-    *
-    *return wether a users profile has been completed
-    */
-    public function completeProfile()
-    {
-        return (bool)$this->tc_accepted;
     }
 }

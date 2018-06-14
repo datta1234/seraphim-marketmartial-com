@@ -2,8 +2,8 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\UserOtp::class, function (Faker $faker) {
+$factory->define(App\Models\UserManagement\UserOtp::class, function (Faker $faker) {
     return [
-        //
+        'otp' => $faker->numberBetween(100000, 999999),
     ];
 });

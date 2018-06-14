@@ -33,7 +33,7 @@ class UserOtp extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function users()
+    public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User', 'user_id');
     }
