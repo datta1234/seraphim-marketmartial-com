@@ -21,6 +21,21 @@
             Fill in your details below and we will email you a login to complete your profile.<br>
             Once your credentials have been verified you will be able to view and use the Market Martial trading platform.
             </p>
+
+            <div class="row justify-content-md-center mb-">
+                <div class="col col-sm-12 col-md-6 col-lg-5 col-xl-4">
+                    <div class="row register-info-group justify-content-center" data-toggle="tooltip" data-trigger="click" data-placement="top" title="Security is extremely important to us and our users. We have therefore added a verification process to ensure that each user is legitimate. We always strive to achieve a fast turn-around time, so you should expect to hear back from us shortly.">
+                        <div class="col-12 col-md-2 col-xl-1 text-center">
+                            <span class="icon icon-info"></span>
+                        </div>
+                        <div class="col-auto register-info-text">
+                            <p class="mb-1">Why do I need to wait for verification?</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
             {!! Form::open(['route' => 'register', 'id' => 'registerPageForm']) !!}
             
 
@@ -58,7 +73,7 @@
            
                     {{ Form::label('cell_phone','Phone', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
                 <div class="col-sm-12 col-md-4">
-                  {{ Form::tel('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your work cell_phone number here...']) }}
+                  {{ Form::tel('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your phone number here...']) }}
 
 
                     @if ($errors->has('cell_phone'))
@@ -171,28 +186,14 @@
                 </div>
             </div>
 
-                
-            <div class="form-group row mt-5">
-                    <div class="col col-sm-12 col-md-6 offset-md-3 col-lg-5 offset-lg-4 col-xl-4 offset-xl-4">
-                        <div class="row register-info-group" data-toggle="tooltip" data-trigger="click" data-placement="top" title="Security is extremely important to us and our users. We have therefore added a verification process to ensure that each user is legitimate. We always strive to achieve a fast turn-around time, so you should expect to hear back from us shortly.">
-                            <div class="col-12 col-md-2 col-xl-1 text-center">
-                                <span class="icon icon-info"></span>
-                            </div>
-                            <div class="col-12 col-md-10 col-xl-11 register-info-text">
-                                <p class="mb-1">Why do I need to wait for verification?</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="form-group row mb-0">
+                <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
+                    <button type="submit" class="btn mm-button float-right w-100">Sign Me Up</button>
                 </div>
-
-                <div class="form-group row mb-0">
-                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
-                        <button type="submit" class="btn mm-button float-right w-100">Sign Me Up</button>
-                    </div>
-                    <div class="col-sm-12 col-md-3 col-xl-2 mt-2">
-                        <a class="btn mm-button float-right ml-2 w-100" href="{{ url('/') }}">Cancel</a>
-                    </div>
+                <div class="col-sm-12 col-md-3 col-xl-2 mt-2">
+                    <a class="btn mm-button float-right ml-2 w-100" href="{{ url('/') }}">Cancel</a>
                 </div>
+            </div>
 
             {!! Form::close() !!}
         </div>

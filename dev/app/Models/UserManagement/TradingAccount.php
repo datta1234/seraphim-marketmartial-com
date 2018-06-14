@@ -29,7 +29,7 @@ class TradingAccount extends Model
      * @var array
      */
     protected $fillable = [
-        'safex_number', 'sub_account',
+        'safex_number', 'sub_account','market_id'
     ];
 
     /**
@@ -45,7 +45,7 @@ class TradingAccount extends Model
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function markets()
+    public function market()
     {
         return $this->belongsTo('App\Models\StructureItems\Market', 'market_id');
     }

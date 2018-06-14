@@ -11,9 +11,11 @@ require('./components/data-methods');
 window.Vue = require('vue');
 window.moment = require('moment');
 
+import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -25,6 +27,10 @@ const Market = require('./lib/Market');
 const UserMarketRequest = require('./lib/UserMarketRequest');
 const UserMarket = require('./lib/UserMarket');
 const MarketNegotiation = require('./lib/MarketNegotiation');
+
+// datepicker
+Vue.component('Datepicker', Datepicker);
+
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -49,6 +55,12 @@ Vue.component('Confirmations-markets-menu', require('./components/ActionBar/Comp
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
+
+// Profile Components
+Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
+Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
+Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
+
 
 Vue.mixin({
     methods: {
@@ -118,6 +130,7 @@ let marketRequestSample2 = new UserMarketRequest({
         current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
     })
 });
+
 
 const app = new Vue({
     el: '#trade_app',

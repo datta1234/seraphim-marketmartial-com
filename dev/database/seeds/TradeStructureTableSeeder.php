@@ -238,17 +238,7 @@ class TradeStructureTableSeeder extends Seeder
                                 ]
                             ],
             
-            ],
-    
-    
-            // [
-            //     'id' => 5,
-            //     'title' => 'EFP'
-            // ],
-            // [
-            //     'id' => 6,
-            //     'title' => 'Rolls'
-            // ]
+            ]
         ];
         foreach ($tradeStructures as $tradeStructure) 
         {

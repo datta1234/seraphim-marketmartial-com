@@ -25,7 +25,6 @@ class EmailRequest extends FormRequest
     {
         return [
             'email.*.email' => 'required|email',
-            'email.*.default_id' => 'required',
             'email.*.notifiable' => 'required|boolean',
         ];
     }

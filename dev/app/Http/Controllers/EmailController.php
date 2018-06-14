@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\UserManagement\DefaultLabel;
 use App\Models\UserManagement\Email;
 use App\Http\Requests\EmailRequest;
+use App\Http\Requests\EmailRequestStore;
 
 
 class EmailController extends Controller
@@ -20,8 +21,17 @@ class EmailController extends Controller
         $user = $request->user();
         $emails = $user->emails()->with('defaultLabel')->get(); 
         // only get defaults if
-        $defaultLabels = DefaultLabel::whereNotIn('id', $emails->pluck('default_id'))->get(); 
+        $defaultLabels = DefaultLabel::whereNotIn('id',$emails->pluck('default_id'))->get(); 
         return view('emails.edit')->with(compact('user','defaultLabels','emails'));
+    }
+
+    public function store(EmailRequestStore $request)
+    {
+        $email = new Email($request->all());
+        $email->user_id = $request->user()->id;
+        $email->notifiable = false;
+        $email->save();
+       return ['success'=>'true','data'=>$email,'message'=>'email added'];
     }
 
     /**
@@ -38,17 +48,21 @@ class EmailController extends Controller
     	//get the already saved emails prevously
 
         $savedModels = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
-
     	foreach ($emails as $key => $email) 
     	{
     		$emailModel = array_key_exists('id', $email) ? $savedModels->firstWhere('id',$email['id']) : New Email(); 
     		$emailModel->fill($email);
     		$emailModels[] = $emailModel;
     	}
-
-    	$user->emails()->saveMany($emailModels);
-
-        return redirect()->back()->with('success', 'E-Mail fields updated!');
+        $user->emails()->saveMany($emailModels);
+        
+       return [
+       'success'=>'true',
+       'data'=>[
+            'email' => $user->emails()->with('defaultLabel')->get(),
+            'redirect' => route('user.edit_password')
+        ],
+       'message'=>'email added'];
 
     }
 }

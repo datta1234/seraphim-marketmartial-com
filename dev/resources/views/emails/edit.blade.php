@@ -18,32 +18,7 @@
 				<hr class="title-decorator">
 			@endslot
 				@slot('body')
-
-            {!! Form::model($user,['route' => 'email.update']) !!}
-				
-				@foreach ($defaultLabels as $index => $defaultLabel)
-					@include('emails.partials.default', ['label' => $defaultLabel,'index'=>$index])
-				@endforeach
-								
-				<!-- this is for if fields are alredy set -->
-				@foreach ($emails as $index => $email)
-					@include('emails.partials.user_email', ['email' => $email,'index'=> $defaultLabels->count() + $index])
-				@endforeach
-
-
-                    <div class="form-group row mb-0">
-
-                	 <div class="col-3">
-                        <a class="btn mm-button float-right ml-2 w-100" href="#">Add E-mail</a>
-                    </div>
-                    <div class="offset-6 col-3">
-                        <button type="submit" class="btn mm-button float-right w-100">Update</button>
-                    </div>
-                   
-                </div>
-
-		            {!! Form::close() !!}
-
+				<email-settings :profile-complete-data="{{ $profileIsComplete }}" :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
 
 				@endslot
 		@endcomponent

@@ -79,29 +79,41 @@
 			                    @endif
 			                </div>
 			            </div>
+				@if(!$profileIsComplete)
 
-			              <div class="form-group row">
+              <div class="form-group row">
                 <label for="organisation_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
 
+
                 <div class="col-sm-12 col-md-4">
-                    <div class="form-group">
 
-                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
+                 
+	                
+					<toggle-input :show-if="true" name="not_listed" label="My Organisation is not listed" :checked="{{ old('not_listed') ? 'true' : 'false'}}">
+						<div slot="standard">
+						   <div class="form-group">
 
-                        @if ($errors->has('organisation_id'))
-                            <span class="invalid-feedback">
-                                <strong>{{ $errors->first('organisation_id') }}</strong>
-                            </span>
-                        @endif
+		                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
 
-                    </div>
-                    
-                    <div class="checkbox largeCheckBox">
-                        <label>
-                            {{ Form::checkbox('not_listed', 'not_listed',null,['data-not-listed-check'=>true]) }}
-                            My organisation is not listed
-                        </label>
-                    </div>
+		                        @if ($errors->has('organisation_id'))
+		                            <span class="invalid-feedback">
+		                                <strong>{{ $errors->first('organisation_id') }}</strong>
+		                            </span>
+		                        @endif
+		                    </div>
+						</div>
+						<div slot="alt">
+							{{ Form::text('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...']) }}
+		                    
+		                    @if ($errors->has('new_organisation'))
+		                        <span class="invalid-feedback">
+		                            <strong>{{ $errors->first('new_organisation') }}</strong>
+		                        </span>
+		                    @endif
+						</div>
+					
+					</toggle-input>
+
 
                  {{ Form::hidden('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...','disabled'=>true]) }}
                     
@@ -112,12 +124,16 @@
                     @endif
                 </div>
             </div>
+			@endif
 
-               <div class="form-group row mb-0">
-                    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
-                        <button type="submit" class="btn mm-button float-right w-100">Update</button>
-                    </div>
-                </div>
+            
+				<div class="form-group row mb-0">
+					<div class="col-md-12">
+						{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+					</div>
+				</div>
+
+
 
 		            {!! Form::close() !!}
 
