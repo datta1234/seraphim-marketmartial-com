@@ -30,6 +30,7 @@
 <script>
     import { EventBus } from '../../../lib/EventBus.js';
     export default {
+      name: 'AlertsMenu',
       props:{
           'markets': {
             type: Array

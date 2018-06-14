@@ -43,6 +43,7 @@
 
 <script>
     export default {
+      name: 'ImportantMenu',
     	props:{
           'markets': {
             type: Array

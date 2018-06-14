@@ -3,9 +3,9 @@
         <div class="row mt-2 menu-actions">
             <div class="col-9">
                 <button type="button" class="btn mm-request-button mr-2 p-1" @click="modals.select_market=true">Request a Market</button>
-                <important-markets-menu :count="market_quantities.important" :markets="markets" :no_cares="no_cares"></important-markets-menu>
-                <alerts-markets-menu :count="market_quantities.alert" :markets="markets" v-if="market_quantities.alert>0"></alerts-markets-menu>
-                <confirmations-markets-menu :count="market_quantities.confirm" :markets="markets" v-if="market_quantities.confirm>0"></confirmations-markets-menu>
+                <important-menu :count="market_quantities.important" :markets="markets" :no_cares="no_cares"></important-menu>
+                <alerts-menu :count="market_quantities.alert" :markets="markets" v-if="market_quantities.alert>0"></alerts-menu>
+                <confirmations-menu :count="market_quantities.confirm" :markets="markets" v-if="market_quantities.confirm>0"></confirmations-menu>
             </div>
             <div class="col-3">
                 <div class="float-right">
@@ -51,12 +51,25 @@
 </template>
 
 <script>
+    //component imports
+    import FilterMarketsMenu from './ActionBar/Components/FilterMarketsMenuComponent.vue';
+    import ImportantMenu from './ActionBar/Components/ImportantMenuComponent.vue';
+    import AlertsMenu from './ActionBar/Components/AlertsMenuComponent.vue';
+    import ConfirmationsMenu from './ActionBar/Components/ConfirmationsMenuComponent.vue';
+    //lib imports
     import { EventBus } from '../lib/EventBus.js';
     import Market from '../lib/Market';
     import UserMarket from '../lib/UserMarket';
     import UserMarketRequest from '../lib/UserMarketRequest';
     import UserMarketNegotiation from '../lib/UserMarketNegotiation';
+
     export default {
+        components: {
+            FilterMarketsMenu,
+            ImportantMenu,
+            AlertsMenu,
+            ConfirmationsMenu
+        },
         props:{
           'markets': {
             type: Array

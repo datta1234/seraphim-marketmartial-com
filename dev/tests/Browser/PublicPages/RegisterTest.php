@@ -82,7 +82,7 @@ class RegisterTest extends DuskTestCase
     }
 
     /**
-     * Assert content sections are present present.
+     * Assert content sections are present.
      *
      * @return void
      */

@@ -73,13 +73,14 @@
         { 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot': 'N/A', 'Future': 'N/A', 'Contracts': 'N/A', 'Expriry': 'N/A' },
     ];
     export default {
-      props:{
-          'markets': {
-            type: Array
-          },
-          'count': {
-            type: Number
-          },
+        name: 'ConfirmationsMenu',
+        props:{
+            'markets': {
+                type: Array
+            },
+            'count': {
+                type: Number
+            },
         },
         data() {
             return {

@@ -42,6 +42,7 @@
     import UserMarketRequest from '../../../lib/UserMarketRequest';
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     export default {
+        name: 'FilterMarketsMenu',
     	props:{
           'markets': {
             type: Array

@@ -8797,6 +8797,7 @@ var UserMarketRequest = function () {
     }, {
         key: "setChosenUserMarket",
         value: function setChosenUserMarket(user_market) {
+            user_market.setParent(this);
             this.chosen_user_market = user_market;
         }
 
@@ -8810,17 +8811,6 @@ var UserMarketRequest = function () {
         value: function getChosenUserMarket() {
             return this.chosen_user_market;
         }
-
-        /**  TODO LOOK INTO THIS
-        *   setChosenUserMarket - set the chosen UserMarket
-        *   @param {UserMarket}
-        */
-        /*setChosenUserMarket(user_market) {
-            if(this.user_markets.indexOf(user_market) == -1) {
-                this.addUserMarket(user_market);
-            }
-            this._chosen_user_market = user_market;
-        }*/
 
         /**
         *   getParent - Get the parent Market
@@ -8841,6 +8831,7 @@ var UserMarketRequest = function () {
     }, {
         key: "setUserMarketQuote",
         value: function setUserMarketQuote(user_market_quote) {
+            user_market_quote.setParent(this);
             this.quote = user_market_quote;
         }
 
@@ -70288,12 +70279,8 @@ Vue.component('ibar-market-negotiation', __webpack_require__(367));
 Vue.component('ibar-apply-conditions', __webpack_require__(370));
 Vue.component('interaction-bar', __webpack_require__(373));
 
-// Action Bar Component + children
+// Action Bar Component
 Vue.component('action-bar', __webpack_require__(376));
-Vue.component('filter-markets-menu', __webpack_require__(379));
-Vue.component('important-markets-menu', __webpack_require__(382));
-Vue.component('alerts-markets-menu', __webpack_require__(385));
-Vue.component('confirmations-markets-menu', __webpack_require__(388));
 
 Vue.component('user-header', __webpack_require__(228));
 Vue.component('chat-bar', __webpack_require__(391));
@@ -83594,7 +83581,7 @@ var normalizeComponent = __webpack_require__(8)
 /* script */
 var __vue_script__ = __webpack_require__(377)
 /* template */
-var __vue_template__ = __webpack_require__(378)
+var __vue_template__ = __webpack_require__(390)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83638,11 +83625,19 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_Market__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarket__ = __webpack_require__(73);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__ = __webpack_require__(20);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketNegotiation__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(378);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(381);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(384);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(387);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarket__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarketRequest__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketNegotiation__ = __webpack_require__(32);
 //
 //
 //
@@ -83695,6 +83690,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+//component imports
+
+
+
+
+//lib imports
 
 
 
@@ -83702,6 +83704,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        FilterMarketsMenu: __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default.a,
+        ImportantMenu: __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default.a,
+        AlertsMenu: __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default.a,
+        ConfirmationsMenu: __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default.a
+    },
     props: {
         'markets': {
             type: Array
@@ -83784,7 +83792,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @fires /lib/EventBus#toggleSidebar
          */
         loadChatBar: function loadChatBar() {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+            __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
         },
 
         /**
@@ -83793,7 +83801,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @event /lib/EventBus#chatToggle
          */
         chatBarListener: function chatBarListener() {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
+            __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
         }
     },
     mounted: function mounted() {
@@ -83806,228 +83814,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
-    [
-      _c("div", { staticClass: "row mt-2 menu-actions" }, [
-        _c(
-          "div",
-          { staticClass: "col-9" },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-request-button mr-2 p-1",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    _vm.modals.select_market = true
-                  }
-                }
-              },
-              [_vm._v("Request a Market")]
-            ),
-            _vm._v(" "),
-            _c("important-markets-menu", {
-              attrs: {
-                count: _vm.market_quantities.important,
-                markets: _vm.markets,
-                no_cares: _vm.no_cares
-              }
-            }),
-            _vm._v(" "),
-            _vm.market_quantities.alert > 0
-              ? _c("alerts-markets-menu", {
-                  attrs: {
-                    count: _vm.market_quantities.alert,
-                    markets: _vm.markets
-                  }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.market_quantities.confirm > 0
-              ? _c("confirmations-markets-menu", {
-                  attrs: {
-                    count: _vm.market_quantities.confirm,
-                    markets: _vm.markets
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [
-          _c(
-            "div",
-            { staticClass: "float-right" },
-            [
-              _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
-              _vm._v(" "),
-              !_vm.chat_opened
-                ? _c(
-                    "button",
-                    {
-                      staticClass: "btn mm-transparent-button mr-2",
-                      attrs: { id: "action-bar-open-chat", type: "button" },
-                      on: {
-                        click: function($event) {
-                          _vm.loadChatBar()
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "icon icon-chat" }),
-                      _vm._v(" Chat\n                ")
-                    ]
-                  )
-                : _vm._e()
-            ],
-            1
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "b-modal",
-        {
-          attrs: { title: "Select A Market" },
-          model: {
-            value: _vm.modals.select_market,
-            callback: function($$v) {
-              _vm.$set(_vm.modals, "select_market", $$v)
-            },
-            expression: "modals.select_market"
-          }
-        },
-        [
-          _c(
-            "b-row",
-            { staticClass: "mt-1" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c("b-button", { staticClass: "w-100" }, [
-                    _vm._v("Index Options")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [_c("b-button", { staticClass: "w-100" }, [_vm._v("EFP")])],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "mt-1" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c("b-button", { staticClass: "w-100" }, [
-                    _vm._v("Single Stock Options")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [_c("b-button", { staticClass: "w-100" }, [_vm._v("Rolls")])],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "mt-1" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c("b-button", { staticClass: "w-100" }, [
-                    _vm._v("Options Switch")
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [
-                  _c("b-button", { staticClass: "w-100" }, [
-                    _vm._v("EFP Switch")
-                  ])
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "w-100",
-              attrs: { slot: "modal-footer" },
-              slot: "modal-footer"
-            },
-            [
-              _c(
-                "b-button",
-                {
-                  on: {
-                    click: function($event) {
-                      _vm.modals.select_market = false
-                    }
-                  }
-                },
-                [_vm._v("Close")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-79b015f7", module.exports)
-  }
-}
-
-/***/ }),
-/* 379 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var disposed = false
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(380)
+var __vue_script__ = __webpack_require__(379)
 /* template */
-var __vue_template__ = __webpack_require__(381)
+var __vue_template__ = __webpack_require__(380)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84066,7 +83858,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 380 */
+/* 379 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84119,6 +83911,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'FilterMarketsMenu',
     props: {
         'markets': {
             type: Array
@@ -84267,7 +84060,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 381 */
+/* 380 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84343,7 +84136,7 @@ var render = function() {
             _c("div", { staticClass: "col-12" }, [
               _c("p", { staticClass: "m-2" }, [
                 _vm._v(
-                  "DCap and Dtop: Only displaed when markets are requested"
+                  "DCap and Dtop: Only displayed when markets are requested"
                 )
               ])
             ]),
@@ -84391,15 +84184,15 @@ if (false) {
 }
 
 /***/ }),
-/* 382 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(383)
+var __vue_script__ = __webpack_require__(382)
 /* template */
-var __vue_template__ = __webpack_require__(384)
+var __vue_template__ = __webpack_require__(383)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84438,7 +84231,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 383 */
+/* 382 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84488,6 +84281,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ImportantMenu',
     props: {
         'markets': {
             type: Array
@@ -84602,7 +84396,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 384 */
+/* 383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84768,15 +84562,15 @@ if (false) {
 }
 
 /***/ }),
-/* 385 */
+/* 384 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(386)
+var __vue_script__ = __webpack_require__(385)
 /* template */
-var __vue_template__ = __webpack_require__(387)
+var __vue_template__ = __webpack_require__(386)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84815,7 +84609,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 386 */
+/* 385 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84853,6 +84647,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'AlertsMenu',
     props: {
         'markets': {
             type: Array
@@ -84916,7 +84711,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 387 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -85034,15 +84829,15 @@ if (false) {
 }
 
 /***/ }),
-/* 388 */
+/* 387 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(8)
 /* script */
-var __vue_script__ = __webpack_require__(389)
+var __vue_script__ = __webpack_require__(388)
 /* template */
-var __vue_template__ = __webpack_require__(390)
+var __vue_template__ = __webpack_require__(389)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -85081,7 +84876,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 389 */
+/* 388 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85159,6 +84954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var place_holder_data_options = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' }];
 var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot': 'N/A', 'Future': 'N/A', 'Contracts': 'N/A', 'Expriry': 'N/A' }];
 /* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ConfirmationsMenu',
     props: {
         'markets': {
             type: Array
@@ -85231,7 +85027,7 @@ var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot
 });
 
 /***/ }),
-/* 390 */
+/* 389 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -85473,6 +85269,222 @@ if (false) {
 }
 
 /***/ }),
+/* 390 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
+    [
+      _c("div", { staticClass: "row mt-2 menu-actions" }, [
+        _c(
+          "div",
+          { staticClass: "col-9" },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn mm-request-button mr-2 p-1",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.modals.select_market = true
+                  }
+                }
+              },
+              [_vm._v("Request a Market")]
+            ),
+            _vm._v(" "),
+            _c("important-menu", {
+              attrs: {
+                count: _vm.market_quantities.important,
+                markets: _vm.markets,
+                no_cares: _vm.no_cares
+              }
+            }),
+            _vm._v(" "),
+            _vm.market_quantities.alert > 0
+              ? _c("alerts-menu", {
+                  attrs: {
+                    count: _vm.market_quantities.alert,
+                    markets: _vm.markets
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.market_quantities.confirm > 0
+              ? _c("confirmations-menu", {
+                  attrs: {
+                    count: _vm.market_quantities.confirm,
+                    markets: _vm.markets
+                  }
+                })
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-3" }, [
+          _c(
+            "div",
+            { staticClass: "float-right" },
+            [
+              _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
+              _vm._v(" "),
+              !_vm.chat_opened
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn mm-transparent-button mr-2",
+                      attrs: { id: "action-bar-open-chat", type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.loadChatBar()
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { staticClass: "icon icon-chat" }),
+                      _vm._v(" Chat\n                ")
+                    ]
+                  )
+                : _vm._e()
+            ],
+            1
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          attrs: { title: "Select A Market" },
+          model: {
+            value: _vm.modals.select_market,
+            callback: function($$v) {
+              _vm.$set(_vm.modals, "select_market", $$v)
+            },
+            expression: "modals.select_market"
+          }
+        },
+        [
+          _c(
+            "b-row",
+            { staticClass: "mt-1" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c("b-button", { staticClass: "w-100" }, [
+                    _vm._v("Index Options")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [_c("b-button", { staticClass: "w-100" }, [_vm._v("EFP")])],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { staticClass: "mt-1" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c("b-button", { staticClass: "w-100" }, [
+                    _vm._v("Single Stock Options")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [_c("b-button", { staticClass: "w-100" }, [_vm._v("Rolls")])],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { staticClass: "mt-1" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c("b-button", { staticClass: "w-100" }, [
+                    _vm._v("Options Switch")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [
+                  _c("b-button", { staticClass: "w-100" }, [
+                    _vm._v("EFP Switch")
+                  ])
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "w-100",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "b-button",
+                {
+                  on: {
+                    click: function($event) {
+                      _vm.modals.select_market = false
+                    }
+                  }
+                },
+                [_vm._v("Close")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-79b015f7", module.exports)
+  }
+}
+
+/***/ }),
 /* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -85592,11 +85604,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         /**
-         * Loads the Chat Sidebar
+         * Fires the Chat Bar toggle event
          *
          * @fires /lib/EventBus#toggleSidebar
          */
-        loadChatBar: function loadChatBar() {
+        fireChatBar: function fireChatBar() {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
         },
 
@@ -85636,7 +85648,7 @@ var render = function() {
           staticClass: "chat-bar-toggle",
           on: {
             click: function($event) {
-              _vm.loadChatBar()
+              _vm.fireChatBar()
             }
           }
         },
@@ -85658,7 +85670,7 @@ var render = function() {
                   attrs: { id: "chat-bar-dismiss" },
                   on: {
                     click: function($event) {
-                      _vm.loadChatBar()
+                      _vm.fireChatBar()
                     }
                   }
                 },

@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils';
 import AlertsMenu from '../../resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue';
 
+
+
 describe('AlertsMenuComponent.vue', () => {
 
 	describe('Viewing Alerts', () => {
