@@ -65,7 +65,7 @@
 
 <script>
     import { EventBus } from '../../../lib/EventBus.js';
-    const UserMarketRequest = require('../../../lib/UserMarketRequest');
+    import UserMarketRequest from '../../../lib/UserMarketRequest';
     const place_holder_data_options = [
         { 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' },
     ];

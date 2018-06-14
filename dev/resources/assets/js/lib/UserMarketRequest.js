@@ -15,7 +15,7 @@ export default class UserMarketRequest {
                 offer_state: "",
             },
             quote: null,
-            user_market: null,
+            chosen_user_market: null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -62,8 +62,35 @@ export default class UserMarketRequest {
     *   setUserMarket - Set the UserMarketRequest
     *   @param {UserMarket} user_market - UserMarket object
     */
-    setUserMarket(user_market){
-        this.user_market = user_market;
+    setChosenUserMarket(user_market){
+        this.chosen_user_market = user_market;
+    }
+
+    /**
+    *   getChosenUserMarket - get the chosen user market
+    *   @return {UserMarket}
+    */
+    getChosenUserMarket() {
+        return this.chosen_user_market;
+    }
+
+    /**  TODO LOOK INTO THIS
+    *   setChosenUserMarket - set the chosen UserMarket
+    *   @param {UserMarket}
+    */
+    /*setChosenUserMarket(user_market) {
+        if(this.user_markets.indexOf(user_market) == -1) {
+            this.addUserMarket(user_market);
+        }
+        this._chosen_user_market = user_market;
+    }*/
+
+    /**
+    *   getParent - Get the parent Market
+    *   @return {Market}
+    */
+    getParent() {
+        return this._market;
     }
 
     /**

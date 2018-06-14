@@ -52,10 +52,10 @@
 
 <script>
     import { EventBus } from '../lib/EventBus.js';
-    const Market = require('../lib/Market');
-    const UserMarket = require('../lib/UserMarket');
-    const UserMarketRequest = require('../lib/UserMarketRequest');
-    const MarketNegotiation = require('../lib/MarketNegotiation');
+    import Market from '../lib/Market';
+    import UserMarket from '../lib/UserMarket';
+    import UserMarketRequest from '../lib/UserMarketRequest';
+    import UserMarketNegotiation from '../lib/UserMarketNegotiation';
     export default {
         props:{
           'markets': {

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    const Market = require('../lib/Market')
+    import Market from '../lib/Market';
     export default {
         props: {
             'market': {

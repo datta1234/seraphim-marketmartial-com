@@ -37,10 +37,10 @@
 </template>
 
 <script>
-	const Market = require('../../../lib/Market');
-    const UserMarket = require('../../../lib/UserMarket');
-    const UserMarketRequest = require('../../../lib/UserMarketRequest');
-    const MarketNegotiation = require('../../../lib/MarketNegotiation');
+	import Market from '../../../lib/Market';
+    import UserMarket from '../../../lib/UserMarket';
+    import UserMarketRequest from '../../../lib/UserMarketRequest';
+    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     export default {
     	props:{
           'markets': {
@@ -160,14 +160,14 @@
                             },
                             user_markets: [
                                 new UserMarket({
-                                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                    current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                                 }),
                                 new UserMarket({
-                                    current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                                    current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
                                 })
                             ],
                             chosen_user_market: new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
                             })
                         })
                     ]

@@ -23,7 +23,7 @@
 
 <script>
     import { EventBus } from '../lib/EventBus.js';
-    const UserMarketRequest = require('../lib/UserMarketRequest');
+    import UserMarketRequest from '../lib/UserMarketRequest';
     export default {
         props: {
             marketRequest: {
@@ -39,7 +39,7 @@
                 console.log('updated: marketRequest.user_markets');
                 this.calcMarketState();
             },
-            'marketRequest._chosen_user_market': function(nV, oV) {
+            'marketRequest.chosen_user_market': function(nV, oV) {
                 console.log('updated: marketRequest._chosen_user_market');
                 this.calcMarketState();
             }

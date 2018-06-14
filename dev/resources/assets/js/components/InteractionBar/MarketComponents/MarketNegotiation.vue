@@ -30,11 +30,11 @@
 </template>
 
 <script>
-    const MarketNegotiation = require('../../../lib/MarketNegotiation');
+    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     export default {
         data() {
             return {
-                market_negotiation: new MarketNegotiation()
+                market_negotiation: new UserMarketNegotiation()
             };
         },
         mounted() {

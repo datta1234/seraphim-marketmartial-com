@@ -21,10 +21,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-const Market = require('./lib/Market');
-const UserMarketRequest = require('./lib/UserMarketRequest');
-const UserMarket = require('./lib/UserMarket');
-const MarketNegotiation = require('./lib/MarketNegotiation');
+import Market from './lib/Market';
+import UserMarketRequest from './lib/UserMarketRequest';
+import UserMarket from './lib/UserMarket';
+import UserMarketNegotiation from './lib/UserMarketNegotiation';
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -109,7 +109,7 @@ Vue.mixin({
     }
 });
 
-let sampleUserNegotitaion = new MarketNegotiation({ 
+let sampleUserNegotitaion = new UserMarketNegotiation({ 
     bid: 30, 
     bid_qty: 50000000, 
     offer: 25, 
@@ -143,17 +143,17 @@ let marketRequestSample2 = new UserMarketRequest({
     },
     user_markets: [
         new UserMarket({
-            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
         }),
         new UserMarket({
-            current_market_negotiation: new MarketNegotiation({ bid: 25, bid_qty: 50000000, offer: 24, offer_qty: 50000000 })
+            current_market_negotiation: new UserMarketNegotiation({ bid: 25, bid_qty: 50000000, offer: 24, offer_qty: 50000000 })
         }),
         new UserMarket({
-            current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+            current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
         })
     ],
     chosen_user_market: new UserMarket({
-        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+        current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
     })
 });
 
@@ -205,11 +205,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -222,11 +222,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -239,11 +239,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -256,11 +256,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -273,11 +273,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -290,11 +290,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -307,11 +307,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -324,11 +324,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                     new UserMarketRequest({
@@ -341,11 +341,11 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                         })
                     }),
                 ]
@@ -380,14 +380,14 @@ const app = new Vue({
                         },
                         user_markets: [
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                             }),
                             new UserMarket({
-                                current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                                current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
                             })
                         ],
                         chosen_user_market: new UserMarket({
-                            current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                            current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
                         })
                     })
                 ]
@@ -431,7 +431,7 @@ setTimeout(function(){
 // VOL SPREAD
 setTimeout(function(){
     console.log("VOL SPREAD");
-    marketRequestSample2._chosen_user_market.setCurrentNegotiation(new MarketNegotiation({ bid: 32, bid_qty: 50000000, offer: 25, offer_qty: 50000000 }))
+    marketRequestSample2.chosen_user_market.setCurrentNegotiation(new UserMarketNegotiation({ bid: 32, bid_qty: 50000000, offer: 25, offer_qty: 50000000 }))
     marketRequestSample2.attributes.bid_state = 'action';
     marketRequestSample2.attributes.state = '';
 }, 15000);
