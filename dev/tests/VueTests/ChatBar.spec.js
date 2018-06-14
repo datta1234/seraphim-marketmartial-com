@@ -19,6 +19,6 @@ describe('ChatBarComponent.vue', () => {
 				loadChatBar: () => {done()}
 			}
 		});
-		loadChatBarWrapper.find('#action-bar-open-chat').trigger('click');
+		loadChatBarWrapper.find('#chat-bar-dismiss').trigger('click');
 	});
 });
