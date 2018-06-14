@@ -1,4 +1,4 @@
-module.exports = class Market {
+export default class Market {
 
     constructor(options) {
         this.market_requests = [];

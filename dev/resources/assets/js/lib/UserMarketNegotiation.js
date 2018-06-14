@@ -1,10 +1,10 @@
-module.exports = class UserMarketNegotiation {
+export default class UserMarketNegotiation {
 
     constructor(options) {
         // default internal
         this._user_market = null;
         // default public
-        this.conditions: [];
+        this.conditions = [];
         const defaults = {
             bid: "",
             offer: "",
@@ -12,7 +12,7 @@ module.exports = class UserMarketNegotiation {
             offer_qty: 0,
             bid_premium: "",
             offer_premium: "",
-            is_put: "",
+            is_put: false,
             status: "",
             created_at: moment(),
         }

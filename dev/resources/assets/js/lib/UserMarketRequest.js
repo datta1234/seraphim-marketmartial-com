@@ -1,13 +1,11 @@
-module.exports = class UserMarketRequest {
+export default class UserMarketRequest {
 
     constructor(options) {
         // default internal
         this._market = null;
         // default public
-        this.trade_items: []
+        this.trade_items = [];
         this.quotes = [];
-        this.quote = null;
-        this.user_market = null;
         const defaults = {
             id: "",
             trade_structure: "",
@@ -16,6 +14,8 @@ module.exports = class UserMarketRequest {
                 bid_state: "",
                 offer_state: "",
             },
+            quote: null,
+            user_market: null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -27,9 +27,9 @@ module.exports = class UserMarketRequest {
             }
         });
 
-        // register user_markets
-        if(options && options.user_markets) {
-            this.addUserMarkets(options.user_markets);
+        // register trade_items
+        if(options && options.trade_items) {
+            this.addTradeItems(options.trade_items);
         }
 
         // register quotes
@@ -37,25 +37,6 @@ module.exports = class UserMarketRequest {
             this.addUserMarketQuotes(options.user_market_quotes);
         }
 
-    }
-
-    /**
-    *   addUserMarket - add user market
-    *   @param {UserMarket} user_market - UserMarket objects
-    */
-    addUserMarket(user_market) {
-        user_market.setParent(this);
-        this.user_markets.push(user_market);
-    }
-
-    /**
-    *   addUserMarkets - add array of user user_markets
-    *   @param {Array} user_markets - array of UserMarket objects
-    */
-    addUserMarkets(user_markets) {
-        user_markets.forEach(user_market => {
-            this.addUserMarket(user_market);
-        });
     }
 
     /**
@@ -75,6 +56,14 @@ module.exports = class UserMarketRequest {
         user_market_quotes.forEach(user_market_quote => {
             this.addUserMarketQuote(user_market_quote);
         });
+    }
+
+    /**
+    *   setUserMarket - Set the UserMarketRequest
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setUserMarket(user_market){
+        this.user_market = user_market;
     }
 
     /**

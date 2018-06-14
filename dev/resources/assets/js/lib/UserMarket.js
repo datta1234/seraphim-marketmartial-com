@@ -1,15 +1,15 @@
-module.exports = class UserMarket {
+export default class UserMarket {
 
     constructor(options) {
         // default internal
-        this._current_market_negotiation = null;
         this._user_market_request = null;
         // default public
-        this.market_negotiations: [];
+        this.market_negotiations = [];
         const defaults = {
             id: "",
             status: "",
             created_at: moment(),
+            current_market_negotiation: null
         }
 
         // assign options with defaults

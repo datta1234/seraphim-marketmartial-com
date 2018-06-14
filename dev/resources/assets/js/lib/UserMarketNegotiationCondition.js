@@ -1,4 +1,4 @@
-module.exports = class UserMarketNegotiationCondition {
+export default class UserMarketNegotiationCondition {
 
     constructor(options) {
         // default internal
@@ -7,8 +7,8 @@ module.exports = class UserMarketNegotiationCondition {
         const defaults = {
             title: "",
 		    options: {
-		        timeout: true,
-		        sell: true,
+		        timeout: false,
+		        sell: false,
 		        buy: false,
 		    },
             created_at: moment(),

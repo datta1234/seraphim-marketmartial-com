@@ -1,4 +1,4 @@
-module.exports = class UserMarketQuote {
+export default class UserMarketQuote {
 
     constructor(options) {
         // default internal
