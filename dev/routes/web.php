@@ -15,7 +15,7 @@ Auth::routes();
 
 
 Route::get('/test', function(){
-	Tests\Factory\FactoryHelper::setUpMarkets();
+	
 	exit;
 });
 
