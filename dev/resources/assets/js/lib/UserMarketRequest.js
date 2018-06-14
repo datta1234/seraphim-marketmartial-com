@@ -63,6 +63,7 @@ export default class UserMarketRequest {
     *   @param {UserMarket} user_market - UserMarket object
     */
     setChosenUserMarket(user_market){
+        user_market.setParent(this);
         this.chosen_user_market = user_market;
     }
 
@@ -73,17 +74,6 @@ export default class UserMarketRequest {
     getChosenUserMarket() {
         return this.chosen_user_market;
     }
-
-    /**  TODO LOOK INTO THIS
-    *   setChosenUserMarket - set the chosen UserMarket
-    *   @param {UserMarket}
-    */
-    /*setChosenUserMarket(user_market) {
-        if(this.user_markets.indexOf(user_market) == -1) {
-            this.addUserMarket(user_market);
-        }
-        this._chosen_user_market = user_market;
-    }*/
 
     /**
     *   getParent - Get the parent Market
@@ -98,6 +88,7 @@ export default class UserMarketRequest {
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
     */
     setUserMarketQuote(user_market_quote){
+        user_market_quote.setParent(this);
         this.quote = user_market_quote;
     }
 

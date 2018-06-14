@@ -31,7 +31,7 @@ describe('class UserMarketRequest', () => {
 	    }],
         user_market_quotes: user_market_quotes_array,
         quote: user_market_quotes_array[0],
-        user_market: new UserMarket({id: "1"}),
+        chosen_user_market: new UserMarket({id: "1"}),
 	};
 
 	beforeEach(function() {
@@ -49,7 +49,7 @@ describe('class UserMarketRequest', () => {
 			chai.assert(default_user_market_request.attributes.bid_state == '','attributes.bid_state property is default value');
 			chai.assert(default_user_market_request.attributes.offer_state == '','attributes.offer_state property is default value');
 			chai.assert(default_user_market_request.quote == null,'quote property is default value');
-			chai.assert(default_user_market_request.user_market == null,'user_market property is default value');
+			chai.assert(default_user_market_request.chosen_user_market == null,'chosen_user_market property is default value');
 			chai.assert(moment.isMoment(default_user_market_request.created_at),'created_at should be of type moment');
 			chai.assert.lengthOf(default_user_market_request.trade_items, 0, 'trade_items array is empty');
 			chai.assert.lengthOf(default_user_market_request.quotes, 0, 'quotes array is empty');
@@ -61,7 +61,7 @@ describe('class UserMarketRequest', () => {
 			chai.assert(user_market_request.attributes.state == market_request_data.attributes.state,'attributes.state property is equal to passed attributes.state value');
 			chai.assert(user_market_request.attributes.bid_state == market_request_data.attributes.bid_state,'attributes.bid_state property is equal to passed attributes.bid_state value');
 			chai.assert(user_market_request.attributes.offer_state == market_request_data.attributes.offer_state,'attributes.offer_state property is equal to passed attributes.offer_state value');
-			chai.assert(user_market_request.user_market == market_request_data.user_market,'user_market property is equal to passed user_market value');
+			chai.assert(user_market_request.chosen_user_market == market_request_data.chosen_user_market,'chosen_user_market property is equal to passed chosen_user_market value');
 			chai.assert(user_market_request.created_at.isSame(market_request_data.created_at),'created_at property is equal to passed created_at value');
 			chai.assert.deepEqual(user_market_request.quote, market_request_data.quote,'quote property is equal to passed quote value');
 			chai.assert.deepEqual(user_market_request.quotes, market_request_data.user_market_quotes, 'quotes property is equal to passed quotes array');
@@ -102,9 +102,9 @@ describe('class UserMarketRequest', () => {
 
 		it('Test UserMarket Setter', () => {
 			let user_market = new UserMarket({id:"2"});
-			chai.assert.notDeepEqual(user_market_request.user_market, user_market, 'getParent() NOT be equal to the Parent set');
-			user_market_request.setUserMarket(user_market);
-			chai.assert.deepEqual(user_market_request.user_market, user_market, 'getParent() be equal to the Parent set');
+			chai.assert.notDeepEqual(user_market_request.getChosenUserMarket(), user_market, 'getChosenUserMarket() NOT be equal to the user_market set');
+			user_market_request.setChosenUserMarket(user_market);
+			chai.assert.deepEqual(user_market_request.getChosenUserMarket(), user_market, 'getChosenUserMarket() be equal to the user_market set');
 		});
 	});
 

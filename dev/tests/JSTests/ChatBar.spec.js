@@ -16,7 +16,7 @@ describe('ChatBarComponent.vue', () => {
 	it('Chat bar emits event when closed', (done) => {
 		const loadChatBarWrapper = mount(ChatBar, {
 			methods: {
-				loadChatBar: () => {done()}
+				fireChatBar: () => {done()}
 			}
 		});
 		loadChatBarWrapper.find('#chat-bar-dismiss').trigger('click');
