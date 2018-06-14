@@ -3,10 +3,14 @@
 namespace Tests\Unit\Models\UserManagment;
 
 use Tests\TestCase;
+use Faker\Factory as Faker;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
+ *
+ * Testes are grouped buy relations and data
+ *
  * @coversDefaultClass \App\UserManagement\User
  * @runInSeparateProcess
  */
@@ -22,6 +26,10 @@ class UserTest extends TestCase
      * Not accounting for null values within the casting test.
      * @coversNothing
      * @testdox check App\Models\UserManagement\User::class casting
+     * @group data
+     *
+     * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\Organisation
      *
      * @return void
      */
@@ -59,7 +67,10 @@ class UserTest extends TestCase
      *
      * @coversNothing
      * @testdox Test that $hidden Model attributes are not presant
+     * @group data
      *
+	 * @uses   \App\Models\UserManagement\Role
+	 *
      * @return void
      */
     public function testHiddenAttributes()
@@ -79,6 +90,9 @@ class UserTest extends TestCase
      *
      * @covers \App\Models\UserManagement\User::role
      * @testdox User belongs to \App\Models\UserManagement\Role test
+     * @group relations/usermanagment
+     *
+     * @uses   \App\Models\UserManagement\Role
      *
      * @return void
      */
@@ -97,12 +111,16 @@ class UserTest extends TestCase
 
     }
 
-     /**
+    /**
      * User Orgnisation relation Test
      *
      * @covers \App\Models\UserManagement\User::organisation
      * @testdox User belongs to \App\Models\UserManagement\Orgonisation test
+     * @group relations/usermanagment
      *
+	 * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\Organisation
+	 *
      * @return void
      */
     public function testUserBelongsToOrganisation()
@@ -123,6 +141,129 @@ class UserTest extends TestCase
 			'id'          		=> $user->id,
             'organisation_id' 	=> $organisation->id,
         ]);
+
+    }
+
+     /**
+     * User belongs to many Interest relation Test
+     *
+     * @covers \App\Models\UserManagement\User::interests
+     * @testdox User belongs to many\App\Models\UserManagement\Interest test
+     * @group relations/usermanagment
+     *
+	 * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\Interest
+
+     * @return void
+     */
+    public function testUserBelongsToManyInterests()
+    {	
+
+    	factory(\App\Models\UserManagement\Role::class)->create();
+
+    	$faker 			= Faker::create();
+    	$filler 		= $faker->word;
+    	$user 			= factory( \App\Models\UserManagement\User::class )->create();
+    	$interests 		= factory( \App\Models\UserManagement\Interest::class, 5 )->create();
+
+    	foreach ($interests as $interest ) {
+    		
+    		$this->assertDatabaseMissing('interest_user', [
+            	'user_id'          	=> $user->id,
+            	'interest_id' 		=> $interest->id,
+            	'value'				=> $filler
+        	]);
+
+    	}
+    	
+    	$user->interests()->attach( $interests, ['value' => $filler] );
+    	$user->interests()->sync( $interests );
+    	$user->load('interests');
+    	
+
+    	foreach ($user->interests as $interest ) {
+    		//dd( $interest );
+    		$this->assertInternalType('string', $interest->pivot->value);
+
+    		//var_dump($interest);
+
+    		$this->assertDatabaseHas('interest_user', [
+            	'user_id'          	=> $user->id,
+            	'interest_id' 		=> $interest->id,
+            	'value'				=> $filler
+        	]);
+
+        	$this->assertDatabaseHas('interests', [
+            	'id'          		=> $interest->id,
+            	'title' 			=> $interest->title
+        	]);
+
+    	}
+
+    	
+    }
+    
+     /**
+     * User emails has many email relation Test
+     *
+     * @covers \App\Models\UserManagement\User::emails
+     * @testdox User belongs to many\App\Models\UserManagement\Email test
+     * @group relations/usermanagment
+     *
+	 * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\Email
+
+     * @return void
+     */
+    public function testUserHasManyEmails()
+    {	
+
+    	factory(\App\Models\UserManagement\Role::class)->create();
+
+    	$faker 			= Faker::create();
+    	$user 			= factory( \App\Models\UserManagement\User::class )->create();
+
+    	$this->assertDatabaseMissing('emails', [
+            	'user_id' => $user->id
+        	]);
+
+    	$emails = factory( \App\Models\UserManagement\Email::class, 5 )->create([ 'user_id' => $user->id ]);
+
+    	foreach ($emails as $email ) {
+    		
+    		$this->assertDatabaseHas('emails', [
+    			'id'		=> $email->id,
+            	'user_id'	=> $user->id,
+            	'title'		=> $email->title,
+            	'email'		=> $email->email,
+            	'default_id'=> $email->default_id,
+            	'notifiable'=> $email->notifiable
+        	]);
+
+    	}
+
+    }
+
+    /**
+     * User emails has many userOtp relation Test
+     *
+     * @covers \App\Models\UserManagement\User::userOtps
+     * @testdox User belongs to many\App\Models\UserManagement\UserOtps test
+     * @group relations/usermanagment
+     *
+	 * @uses   \App\Models\UserManagement\Role
+     * @uses   \App\Models\UserManagement\UserOtps
+
+     * @return void
+     */
+    public function testUserHasManyUserOtp()
+    {	
+
+    	factory(\App\Models\UserManagement\Role::class)->create();
+
+    	$faker 			= Faker::create();
+    	$user 			= factory( \App\Models\UserManagement\User::class )->create();
+
 
     }
 
