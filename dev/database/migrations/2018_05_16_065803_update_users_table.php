@@ -16,14 +16,19 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table){
             $table->dropColumn(['name']);
 
-            $table->integer('role_id')->unsigned();
+            // @defaults
+            $table->integer('role_id')->default(3)->unsigned();
             $table->integer('organisation_id')->nullable()->unsigned();
             
-            $table->string('full_name');
-            $table->string('cell_phone');
+            // @defaults
+            $table->string('full_name')->nullable();
+            // @defaults
+            $table->string('cell_phone')->nullable();
             $table->string('work_phone')->nullable();
-            $table->boolean('active');
-            $table->boolean('tc_accepted');
+            // @defaults
+            $table->boolean('active')->default(0);
+            // @defaults
+            $table->boolean('tc_accepted')->default(0);
             $table->date('birthdate')->nullable();
             $table->boolean('is_married')->nullable();
             $table->boolean('has_children')->nullable();

@@ -14,7 +14,8 @@ class UpdateMarketTable extends Migration
     public function up()
     {
         Schema::table('markets', function (Blueprint $table){
-            $table->boolean('is_selectable');
+            // @defaults
+            $table->boolean('is_selectable')->nullable();
         });
     }
 
