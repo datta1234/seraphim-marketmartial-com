@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
 
-class MyProfile extends BasePage
+class TradeSettingsPage extends BasePage
 {
     /**
      * Get the URL for the page.
@@ -14,7 +14,7 @@ class MyProfile extends BasePage
      */
     public function url()
     {
-        return '/my-profile';
+        return '/trade-settings';
     }
 
     /**

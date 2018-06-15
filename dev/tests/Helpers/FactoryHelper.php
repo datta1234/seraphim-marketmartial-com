@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Factory;
+namespace Tests\Helper;
 
 class FactoryHelper
 {
