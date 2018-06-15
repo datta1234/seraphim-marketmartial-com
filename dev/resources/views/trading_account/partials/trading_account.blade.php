@@ -9,12 +9,7 @@
 		@if($trading_account->id)
 		 {{ Form::hidden("trading_accounts[{$index}][id]",$trading_account->id) }}
  		@endif
-
-
  		{{ Form::hidden("trading_accounts[{$index}][market_id]",$trading_account->market_id) }}
-
-
-
 		{{ Form::text("trading_accounts[{$index}][safex_number]",$trading_account->safex_number,['class' => ($errors->has("trading_accounts.{$index}.safex_number") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'safex member code']) }}
 
 		@if ($errors->has("trading_accounts.{$index}.safex_number"))

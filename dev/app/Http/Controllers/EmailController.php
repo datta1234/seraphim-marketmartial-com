@@ -21,7 +21,15 @@ class EmailController extends Controller
         $user = $request->user();
         $emails = $user->emails()->with('defaultLabel')->get(); 
         // only get defaults if
-        $defaultLabels = DefaultLabel::whereNotIn('id',$emails->pluck('default_id'))->get(); 
+        $used = $emails->filter(function ($email, $key) {
+            return $email->default_id !=  null;
+        })->pluck('default_id');
+
+        if($used)
+        {
+            $defaultLabels = DefaultLabel::whereNotIn('id',$used)->get(); 
+        }
+        
         return view('emails.edit')->with(compact('user','defaultLabels','emails'));
     }
 
