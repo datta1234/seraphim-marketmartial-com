@@ -70434,6 +70434,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "5",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70448,6 +70449,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "6",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70462,6 +70464,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "7",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70476,6 +70479,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "8",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70490,6 +70494,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "9",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70504,6 +70509,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "10",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70518,6 +70524,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "11",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -70532,6 +70539,7 @@ var app = new Vue({
                     current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
                 })
             }), new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketRequest__["a" /* default */]({
+                id: "12",
                 attributes: {
                     expiration_date: moment("2018-03-18 00:00:00"),
                     strike: "11 000",
@@ -84644,6 +84652,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -84729,7 +84741,7 @@ var render = function() {
         "button",
         {
           staticClass: "btn mm-alert-button mr-2 p-1",
-          attrs: { id: "actionAlertButton", type: "button" }
+          attrs: { id: "action-alert-button", type: "button" }
         },
         [_vm._v("Alerts "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
       ),
@@ -84744,7 +84756,7 @@ var render = function() {
             container: "alertsPopover",
             triggers: "focus",
             placement: "bottom",
-            target: "actionAlertButton"
+            target: "action-alert-button"
           }
         },
         [
@@ -84766,12 +84778,7 @@ var render = function() {
                                   _vm._s(key) +
                                   " " +
                                   _vm._s(market_request.attributes.strike) +
-                                  " " +
-                                  _vm._s(
-                                    market_request.attributes.expiration_date.format(
-                                      "MMM DD"
-                                    )
-                                  )
+                                  " \n                        "
                               )
                             ])
                           ]),
@@ -84782,7 +84789,10 @@ var render = function() {
                               {
                                 staticClass:
                                   "btn mm-generic-trade-button w-100",
-                                attrs: { type: "button" },
+                                attrs: {
+                                  id: "alert-view-" + market_request.id,
+                                  type: "button"
+                                },
                                 on: {
                                   click: function($event) {
                                     _vm.loadInteractionBar(market_request)

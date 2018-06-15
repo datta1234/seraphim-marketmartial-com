@@ -209,6 +209,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "5",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -226,6 +227,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "6",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -243,6 +245,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "7",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -260,6 +263,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "8",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -277,6 +281,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "9",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -294,6 +299,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "10",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -311,6 +317,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "11",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",
@@ -328,6 +335,7 @@ const app = new Vue({
                         })
                     }),
                     new UserMarketRequest({
+                        id: "12",
                         attributes: {
                             expiration_date: moment("2018-03-18 00:00:00"),
                             strike: "11 000",

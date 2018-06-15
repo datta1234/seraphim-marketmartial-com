@@ -1,17 +1,21 @@
 <template>
     <div dusk="alerts-markets-menu" class="alerts-markets-menu">
-        <button id="actionAlertButton" type="button" class="btn mm-alert-button mr-2 p-1">Alerts <strong>{{ count }}</strong></button>
-        <div id="alertsPopover"></div>
+        <button id="action-alert-button" type="button" class="btn mm-alert-button mr-2 p-1">Alerts <strong>{{ count }}</strong></button>
+        <div id="alerts-popover"></div>
         <!-- Alerts market popover -->
-        <b-popover container="alertsPopover" triggers="focus" placement="bottom" :ref="popover_ref" target="actionAlertButton">
+        <b-popover container="alerts-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-alert-button">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} {{ market_request.attributes.expiration_date.format("MMM DD") }}</h6>
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} 
+                            <!-- @TODO Change this to include expiration -->
+                            <!-- {{ market_request.attributes.expiration_date.format("MMM DD") }} -->
+                          </h6>
                         </div>
                         <div class="col-6">
-                            <button 
+                            <button
+                                :id="'alert-view-' + market_request.id"
                                 type="button" class="btn mm-generic-trade-button w-100"
                                 @click="loadInteractionBar(market_request)">View
                             </button>
@@ -35,6 +39,7 @@
           'markets': {
             type: Array
           },
+          // @todo: Could be moved to internal property and add a count to notification list
           'count': {
             type: Number
           },
