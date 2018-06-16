@@ -16,6 +16,7 @@ class CreateTradeStructuresTable extends Migration
         Schema::create('trade_structures', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
+            $table->boolean('is_selectable')->default(true);
             $table->timestamps();
         });
     }

@@ -34,7 +34,7 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarketRequestStatuses()
+    public function userMarketRequestStatus()
     {
         return $this->belongsTo(
             'App\Models\MarketRequest\UserMarketRequestStatus',
@@ -58,7 +58,7 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeStructures()
+    public function tradeStructure()
     {
         return $this->belongsTo('App\Models\StructureItems\TradeStructure','trade_structure_id');
     }
@@ -67,7 +67,19 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function users()
+    public function userMarketRequestGroups()
+    {
+        return $this->hasMany(
+            'App\Models\MarketRequest\UserMarketRequestGroup',
+            'user_market_request_id'
+        );
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
@@ -98,4 +110,5 @@ class UserMarketRequest extends Model
     {
         return $this->hasMany('App\Models\Trade\Rebate','user_market_request_id');
     }
+
 }

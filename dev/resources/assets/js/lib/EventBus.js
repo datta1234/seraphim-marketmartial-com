@@ -16,7 +16,7 @@ export const EventBus = new Vue();
  * @fires EventBus#interactionToggle
  */
 EventBus.$on('toggleSidebar', (sidebar, state, payload) => {
-	switch(sidebar) {    
+	switch(sidebar) {
         case "interaction":
         	EventBus.$emit('chatToggle', false);
         	EventBus.$emit('interactionToggle', state, payload);

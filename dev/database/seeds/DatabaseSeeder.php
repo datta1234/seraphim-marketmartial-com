@@ -31,8 +31,8 @@ class DatabaseSeeder extends Seeder
         //enable selection of trade structures
         $this->call(ItemTypeSeeder::class);
         $this->call(TradeStructureTableSeeder::class);
-
-
+        $this->call(UserMarketRequestSeeder::class);
+        $this->call(UserMarketRequestTradeablesSeeder::class);
     
          /**
          * Start dummy data remove once going live

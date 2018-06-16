@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-market-negotiation">
         <b-col>
             <b-row class="mb-3">
                 <b-col cols="10">
@@ -30,11 +30,11 @@
 </template>
 
 <script>
-    const MarketNegotiation = require('../../../lib/MarketNegotiation');
+    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     export default {
         data() {
             return {
-                market_negotiation: new MarketNegotiation()
+                market_negotiation: new UserMarketNegotiation()
             };
         },
         mounted() {

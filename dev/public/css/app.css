@@ -18,6 +18,10 @@
 *   Interaction Bar
 */
 
+/*
+*   Chat Bar
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -55,6 +59,10 @@ button.mm-button {
 
 /*
 *   Interaction Bar
+*/
+
+/*
+*   Chat Bar
 */
 
 /* 
@@ -11071,13 +11079,13 @@ a.mm-login-button {
 #trade_app h4,
 #trade_app h5,
 #trade_app h6 {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app p,
 #trade_app span,
 #trade_app .market-tab {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app .user-market {
@@ -11397,6 +11405,10 @@ a.mm-login-button {
   color: #3cbdb9;
 }
 
+#mainNav .nav-item.active > a {
+  border-bottom: solid;
+}
+
 .nav-title-image span {
   color: #ffffff;
 }
@@ -11407,6 +11419,11 @@ a.mm-login-button {
 
 #app #mainNav span {
   font-size: 3rem;
+}
+
+#trade_app #mainNav {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 #trade_app #mainNav span {
@@ -11826,7 +11843,8 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .interaction-bar,
 .interaction-bar-wrapper .interaction-bar-content-pane,
-.interaction-bar-wrapper .interaction-bar > .interaction-content {
+.interaction-bar-wrapper .interaction-bar > .interaction-content,
+.interaction-bar-wrapper .interaction-bar > .interaction-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11842,12 +11860,16 @@ input:checked + .slider:before {
   opacity: 0;
   height: 100%;
   padding: 0px;
-  display: inline-block;
   margin: 0px;
   padding: 0px;
   float: left;
   color: #fff;
   overflow: hidden;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-bar-toggle {
+  width: 25px;
+  opacity: 1;
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
@@ -11884,7 +11906,7 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
-  width: 25px;
+  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -11892,6 +11914,7 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   position: relative;
+  opacity: 0;
   color: #fff;
   cursor: pointer;
 }
@@ -11906,7 +11929,8 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .chat-bar,
 .interaction-bar-wrapper .chat-bar-content-pane,
-.interaction-bar-wrapper .chat-bar > .chat-content {
+.interaction-bar-wrapper .chat-bar > .chat-content,
+.interaction-bar-wrapper .chat-bar > .chat-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11931,13 +11955,23 @@ input:checked + .slider:before {
   overflow: hidden;
 }
 
+.interaction-bar-wrapper .chat-bar.active .chat-bar-toggle {
+  width: 25px;
+  opacity: 1;
+}
+
 .interaction-bar-wrapper .chat-bar.active .chat-content {
   width: 300px;
   opacity: 1;
 }
 
-.interaction-bar-wrapper .chat-bar .chat-header h1 {
+.interaction-bar-wrapper .chat-bar .chat-header h3 {
   display: inline-block;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header .close {
+  cursor: pointer;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header .icon {
@@ -11953,6 +11987,29 @@ input:checked + .slider:before {
   bottom: 0;
 }
 
+.interaction-bar-wrapper .chat-bar-toggle {
+  background-color: #090909;
+  width: 0px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  position: relative;
+  opacity: 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .chat-bar-toggle > .icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -50%;
+  font-size: 32px;
+}
+
 .popover .popover-body {
   background-color: #FFFFFF;
   color: #1D3641;
@@ -11962,11 +12019,32 @@ input:checked + .slider:before {
   visibility: hidden;
 }
 
-.Important-markets-menu,
-.Alerts-markets-menu,
-.Confirmations-markets-menu,
+.important-markets-menu,
+.alerts-markets-menu,
+.confirmations-markets-menu,
 .filter-markets-menu {
   display: inline;
+}
+
+#important-popover,
+#alerts-popover,
+#confirmations-popover {
+  display: inline;
+}
+
+#important-popover .popover,
+#alerts-popover .popover,
+#confirmations-popover .popover {
+  max-width: 400px;
+}
+
+.confirmations-modal .modal-dialog {
+  max-width: 1000px;
+}
+
+#trade_app .user-header h1 {
+  font-family: "Raleway-SemiBold";
+  font-size: 1rem;
 }
 
 @font-face {
