@@ -15,7 +15,6 @@ class UserOtpTest extends TestCase
      *
      * Not accounting for null values within the casting test.
      * @coversNothing
-     * @testdox check App\Models\UserManagement\UserOtp::class casting
      * @group data
      *
      * @uses   \App\Models\UserManagement\User
@@ -49,7 +48,6 @@ class UserOtpTest extends TestCase
      * User Otp belongs To user
      *
      * @covers \App\Models\UserManagement\UserOtp::user
-     * @testdox User belongs to \App\Models\UserManagement\User test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\User

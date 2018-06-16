@@ -15,7 +15,6 @@ class TradingAccountTest extends TestCase
      *
      * Not accounting for null values within the casting test.
      * @coversNothing
-     * @testdox check App\Models\UserManagement\TradingAccount::class casting
      * @group data
      *
      *	 
@@ -45,7 +44,6 @@ class TradingAccountTest extends TestCase
      * Trade account belongs To user
      *
      * @covers \App\Models\UserManagement\TradingAccount::user
-     * @testdox User belongs to \App\Models\UserManagement\User test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\User
@@ -90,7 +88,6 @@ class TradingAccountTest extends TestCase
      * market belongs To user
      *
      * @covers \App\Models\UserManagement\TradingAccount::market
-     * @testdox User belongs to \App\Models\UserManagement\User test
      * @group relations/Market
      *
      * @uses   App\Models\StructureItems\Market
@@ -134,7 +131,6 @@ class TradingAccountTest extends TestCase
      * Trade account has many booked trades
      *
      * @covers \App\Models\UserManagement\TradingAccount::bookedTrades
-     * @testdox trade account has many App\Models\TradeConfirmations\BookedTrade test
      * @group relations/TradeConfirmations
      *
      * @uses   App\Models\TradeConfirmations\BookedTrade
@@ -201,7 +197,6 @@ class TradingAccountTest extends TestCase
      * Trade account has many trade confirmation
      *
      * @covers \App\Models\UserManagement\TradingAccount::tradeConfirmations
-     * @testdox trade account has many App\Models\TradeConfirmations\TradeConfirmation test
      * @group relations/TradeConfirmations
      *
      * @uses   App\Models\TradeConfirmations\TradeConfirmation

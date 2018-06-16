@@ -23,7 +23,6 @@ class RoleTest extends TestCase
      *
      * Not accounting for null values within the casting test.
      * @coversNothing
-     * @testdox check App\Models\UserManagement\Role::class casting
      * @group data
      *	 
      * @return void
@@ -58,7 +57,6 @@ class RoleTest extends TestCase
      * Role has many users relation Test
      *
      * @covers \App\Models\UserManagement\Role::users
-     * @testdox Role has many \App\Models\UserManagement\User test
      * @group relations/usermanagment
      *
      * @return void

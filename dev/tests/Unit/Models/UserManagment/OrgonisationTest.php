@@ -9,14 +9,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class OrgonisationTest extends TestCase
 {
     
-    //use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * Orgonisation Model Type Casting test
      *
      * Not accounting for null values within the casting test.
      * @coversNothing
-     * @testdox check App\Models\UserManagement\Organisation::class casting
+     *
      * @group data
      *
      *	 
@@ -25,7 +25,7 @@ class OrgonisationTest extends TestCase
     public function testOronisationCasting()
     {
 
-    	$organisation 		= factory( \App\Models\UserManagement\Organisation::class )->create();
+    	$organisation 		= factory( \App\Models\UserManagement\Interest::class )->create();
     	$fetch_organisation = \App\Models\UserManagement\Organisation::find( $organisation->id );
 
 		$this->assertInternalType('int', $fetch_organisation->id);
@@ -47,7 +47,7 @@ class OrgonisationTest extends TestCase
      * Organisation has many users relation Test
      *
      * @covers \App\Models\UserManagement\Organisation::users
-     * @testdox Organisation has many \App\Models\UserManagement\Organisation test
+     * 
      * @group relations/usermanagment
      *
      * @uses \App\Models\UserManagement\User
@@ -133,7 +133,6 @@ class OrgonisationTest extends TestCase
      * Organisation belongs to many slack intergrations
      *
      * @covers \App\Models\UserManagement\Organisation::slackIntegrations
-     * @testdox Organisation belongs To Many App\Models\ApiIntegration\SlackIntegration test
      * @group relations/ApiIntegration
      *
      * @uses \App\Models\ApiIntegration\SlackIntegration
@@ -212,7 +211,6 @@ class OrgonisationTest extends TestCase
     * Organisation has many Rebates
     *
     * @covers \App\Models\UserManagement\Organisation::rebates
-    * @testdox Organisation has Many App\Models\Trade\Rebate test
     * @group relations/Trade
     *
     * @uses \App\Models\Trade\Rebate

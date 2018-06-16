@@ -26,7 +26,6 @@ class UserTest extends TestCase
      *
      * Not accounting for null values within the casting test.
      * @coversNothing
-     * @testdox check App\Models\UserManagement\User::class casting
      * @group data
      *
  	 *
@@ -66,7 +65,6 @@ class UserTest extends TestCase
      * Test Hidden model fields are not presant
      *
      * @coversNothing
-     * @testdox Test that $hidden Model attributes are not presant
      * @group data
      *
 	 *
@@ -78,8 +76,9 @@ class UserTest extends TestCase
 		$user 		= factory( \App\Models\UserManagement\User::class )->create();
     	$fetch 		= \App\Models\UserManagement\User::find($user->id);
 
-    	$this->assertNotContains('string', $fetch->password );
-		$this->assertNotContains('string', $fetch->remember_token );
+        $this->assertNotContains('password', $fetch->password );
+        $this->assertNotContains('remember_token', $fetch->remember_token );
+        $this->assertNotContains('last_login', $fetch->remember_token );
 
     }
 
@@ -87,7 +86,6 @@ class UserTest extends TestCase
      * User Role relation Test
      *
      * @covers \App\Models\UserManagement\User::role
-     * @testdox User belongs to \App\Models\UserManagement\Role test
      * @group relations/usermanagment
      *
  *
@@ -111,7 +109,6 @@ class UserTest extends TestCase
      * User Orgnisation relation Test
      *
      * @covers \App\Models\UserManagement\User::organisation
-     * @testdox User belongs to \App\Models\UserManagement\Orgonisation test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\Organisation
@@ -142,7 +139,6 @@ class UserTest extends TestCase
      * User belongs to many Interest relation Test
      *
      * @covers \App\Models\UserManagement\User::interests
-     * @testdox User belongs to many\App\Models\UserManagement\Interest test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\Interest
@@ -196,7 +192,6 @@ class UserTest extends TestCase
      * User emails has many email relation Test
      *
      * @covers \App\Models\UserManagement\User::emails
-     * @testdox User belongs to many\App\Models\UserManagement\Email test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\Email
@@ -239,7 +234,6 @@ class UserTest extends TestCase
      * User emails has many userOtp relation Test
      *
      * @covers \App\Models\UserManagement\User::userOtps
-     * @testdox User belongs to many\App\Models\UserManagement\UserOtps test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\UserOtps
@@ -285,7 +279,6 @@ class UserTest extends TestCase
      * User emails has many UserNotification relation Test
      *
      * @covers \App\Models\UserManagement\User::userNotifications
-     * @testdox User has many \App\Models\UserManagement\userNotifications test
      * @group relations/usermanagment
      *
      * @uses   \App\Models\UserManagement\userNotifications
@@ -340,7 +333,6 @@ class UserTest extends TestCase
      * User market watch belongs to many relation Test
      *
      * @covers \App\Models\UserManagement\User::marketWatched
-     * @testdox User belongs to many \App\Models\StructureItems\Market test
      * @group relations/structureItems
      *
      * @uses   \App\Models\StructureItems\Market
@@ -402,7 +394,6 @@ class UserTest extends TestCase
      * User market interests belongs to many relation Test
      *
      * @covers \App\Models\UserManagement\User::marketInterests
-     * @testdox User belongs to many \App\Models\StructureItems\Market test
      * @group relations/structureItems
      *
      * @uses   \App\Models\StructureItems\Market
@@ -466,7 +457,6 @@ class UserTest extends TestCase
      * User has many TradingAccount relation Test
      *
      * @covers \App\Models\UserManagement\User::tradingAccounts
-     * @testdox User has many \App\Models\UserManagement\TradingAccount test
      * @group relations/UserManagement
      *
      * @uses   \App\Models\UserManagement\TradingAccount
@@ -522,7 +512,6 @@ class UserTest extends TestCase
      * User has many Market Requests relation Test
      *
      * @covers \App\Models\UserManagement\User::userMarketRequests
-     * @testdox User has many \App\Models\MarketRequest\UserMarketRequest test
      * @group relations/MarketRequest
      *
      * @uses   \App\Models\MarketRequest\UserMarketRequest
@@ -575,7 +564,6 @@ class UserTest extends TestCase
      * User has many Send Distputes relation Test
      *
      * @covers \App\Models\UserManagement\User::sendDistputes
-     * @testdox User has many \App\Models\TradeConfirmations\Distpute test
      * @group relations/TradeConfirmations
      *
      * @uses   \App\Models\TradeConfirmations\Distpute
@@ -635,7 +623,6 @@ class UserTest extends TestCase
      * User has many Receiving Distputes relation Test
      *
      * @covers \App\Models\UserManagement\User::receivingDistputes
-     * @testdox User has many \App\Models\TradeConfirmations\Distpute test
      * @group relations/TradeConfirmations
      *
      * @uses   \App\Models\TradeConfirmations\Distpute
@@ -695,7 +682,6 @@ class UserTest extends TestCase
      * User has many User Markets relation Test
      *
      * @covers \App\Models\UserManagement\User::userMarkets
-     * @testdox User has many \App\Models\Market\UserMarket test
      * @group relations/Market
      *
      * @uses   \App\Models\Market\UserMarket
@@ -752,7 +738,6 @@ class UserTest extends TestCase
      * User has many User Market Subscriptions relation Test
      *
      * @covers \App\Models\UserManagement\User::userMarketSubscriptions
-     * @testdox User has many App\Models\Market\UserMarketSubscription test
      * @group relations/Market
      *
      * @uses   \App\Models\Market\UserMarketSubscription
@@ -803,7 +788,6 @@ class UserTest extends TestCase
      * User has many User Market Negotiations relation Test
      *
      * @covers \App\Models\UserManagement\User::marketNegotiations
-     * @testdox User has many App\Models\Market\MarketNegotiation test
      * @group relations/Market
      *
      * @uses   \App\Models\Market\MarketNegotiation
@@ -873,7 +857,6 @@ class UserTest extends TestCase
      * User has many User Booked Trades relation Test
      *
      * @covers \App\Models\UserManagement\User::bookedTrades
-     * @testdox User has many App\Models\TradeConfirmations\BookedTradetest
      * @group relations/TradeConfirmations
      *
      * @uses   \App\Models\TradeConfirmations\BookedTrade
@@ -935,7 +918,6 @@ class UserTest extends TestCase
      * User initiates many trade negotiations
      *
      * @covers \App\Models\UserManagement\User::initiateTradeNegotiations
-     * @testdox User has many App\Models\Trade\TradeNegotiation
      * @group relations/Trade
      *
      * @uses   \App\Models\Trade\TradeNegotiation
@@ -1000,7 +982,6 @@ class UserTest extends TestCase
      * User recieving many trade negotiations
      *
      * @covers \App\Models\UserManagement\User::recievingTradeNegotiations
-     * @testdox User has many App\Models\Trade\TradeNegotiation
      * @group relations/Trade
      *
      * @uses   \App\Models\Trade\TradeNegotiation
@@ -1076,7 +1057,6 @@ quantity: double(11,2)
      * User initiates many trades
      *
      * @covers \App\Models\UserManagement\User::initiateTrades
-     * @testdox User has many App\Models\Trade\Trade
      * @group relations/Trade
      *
      * @uses   App\Models\Trade\Trade
@@ -1135,7 +1115,6 @@ quantity: double(11,2)
      * User recieves many trades
      *
      * @covers \App\Models\UserManagement\User::recievingTrades
-     * @testdox User has many App\Models\Trade\Trade
      * @group relations/Trade
      *
      * @uses   App\Models\Trade\Trade
@@ -1194,7 +1173,6 @@ quantity: double(11,2)
      * User has many Rebates
      *
      * @covers \App\Models\UserManagement\User::rebates
-     * @testdox User has many App\Models\Trade\Rebate
      * @group relations/Trade
      *
      * @uses   App\Models\Trade\Rebate
@@ -1257,7 +1235,6 @@ quantity: double(11,2)
      * User has many Sent trade notification
      *
      * @covers \App\Models\UserManagement\User::sendTradeConfirmations
-     * @testdox User has many App\Models\TradeConfirmations\TradeConfirmation
      * @group relations/TradeConfirmations
      *
      * @uses   App\Models\TradeConfirmations\TradeConfirmation
@@ -1338,7 +1315,6 @@ quantity: double(11,2)
      * User has many recieved trade notifications
      *
      * @covers \App\Models\UserManagement\User::recievingTradeConfirmations
-     * @testdox User has many App\Models\TradeConfirmations\TradeConfirmation
      * @group relations/TradeConfirmations
      *
      * @uses   App\Models\TradeConfirmations\TradeConfirmation
