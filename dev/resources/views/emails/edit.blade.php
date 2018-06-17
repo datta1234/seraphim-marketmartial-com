@@ -1,4 +1,4 @@
-@extends('layouts.trade_app')
+@extends('layouts.canvas_app')
 
 @section('content')
 <div class="container">
@@ -17,7 +17,7 @@
 				@slot('body')
 					<div class="row">
 						<div class="col-md-8 offset-md-2">
-								<email-settings :profile-complete="'{{ $profileIsComplete }}'" :default-labels="'{{ $defaultLabels }}'" :email-settings="'{{ $emails }}'" ></email-settings>
+								<email-settings :profile-complete="{{ $profileIsComplete ? "true" : "false" }}" :default-labels="'{{ $defaultLabels }}'" :email-settings="'{{ $emails }}'" ></email-settings>
 						</div>
 					</div>
 				@endslot

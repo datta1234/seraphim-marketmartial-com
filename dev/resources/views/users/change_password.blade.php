@@ -1,4 +1,4 @@
-@extends('layouts.trade_app')
+@extends('layouts.canvas_app')
 
 @section('content')
 <div class="container">

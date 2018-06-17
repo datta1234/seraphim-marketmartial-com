@@ -17,8 +17,17 @@ class InterestController extends Controller
     public function edit(Request $request)
     {
         $user = $request->user();
-        $userInterest = $request->user()->interests()->get();
-        $interests = Interest::whereNotIn('id',$userInterest->pluck('id'))->get()->merge($userInterest);
+        $userInterests = $request->user()->interests()->get();
+        $interests = Interest::all();
+        //we dont want to loose the order the interest are displayed in
+        for ($i=0; $i < $interests->count() ; $i++) 
+        { 
+            $userInterest = $userInterests->firstWhere('id',$interests[$i]->id);
+            if($userInterest)
+            {
+                $interests[$i] = $userInterest;
+            }
+        }
         return view('interest.edit')->with(compact('user','interests'));
     }
 

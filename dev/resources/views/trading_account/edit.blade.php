@@ -1,4 +1,4 @@
-@extends('layouts.trade_app')
+@extends('layouts.canvas_app')
 
 @section('content')
 <div class="container">
@@ -16,37 +16,37 @@
 		
 				@slot('body')
 
-            {!! Form::model($user,['route' => 'trade_settings.edit','method'=>'PUT']) !!}
-				
-				<div class="offset-1 col-md-10">
-
-					@foreach ($trading_accounts as $index => $trading_account)
-						@include('trading_account.partials.trading_account', ['trading_account' => $trading_account])
-					@endforeach
-
-					<h2>
-						Auto Emails
-					</h2>
-					
-					<p>
-						Trade confirmations will be sent to the following emails(to register a new email, go to the Email tab):
-					</p>
-						
-					@include('emails.partials.select', ['emails' => $emails])
-
-					
-				<div class="form-group row mb-0">
-					<div class="col-md-12">
-						{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
-					</div>
-				</div>
+			<div class="row">
+				<div class="col-md-8 offset-md-2">
+					{!! Form::model($user,['route' => 'trade_settings.edit','method'=>'PUT']) !!}
 
 
+							@foreach ($trading_accounts as $index => $trading_account)
+								@include('trading_account.partials.trading_account', ['trading_account' => $trading_account])
+							@endforeach
 
-				</div>
-		
-		            {!! Form::close() !!}
+							<h2>
+								Auto Emails
+							</h2>
+							
+							<p>
+								Trade confirmations will be sent to the following emails(to register a new email, go to the Email tab):
+							</p>
+								
+							@include('emails.partials.select', ['emails' => $emails])
 
+							
+						<div class="form-group row mb-0">
+							<div class="col-md-12">
+								{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+							</div>
+						</div>
+
+
+				    {!! Form::close() !!}
+			</div>
+		</div>
+			
 
 				@endslot
 		@endcomponent

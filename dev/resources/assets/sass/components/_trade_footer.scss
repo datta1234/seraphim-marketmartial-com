@@ -1,8 +1,12 @@
 #trade-footer {
 	background-color: $mm-footer-bg;
 
-	position: relative;
+	
 	width:100%;
+	
+	position: absolute;
+    bottom: 0;
+    height: 65px;
 
 	.footer-links-block {
 		float: right;

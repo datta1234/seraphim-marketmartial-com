@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-12">
         <b-button class="mm-button mm-base float-right ml-2" @click="update">
-         Update
+         {{ (profileCompleteData == false) ? "Next" : "Update"  }}
       </b-button>
 
       <b-button  class="mm-button mm-base float-right" @click="showModal">
@@ -46,7 +46,7 @@
       <b-form-input  :id="'email-email'"  placeholder="Email Address" :state="email.errors.state('email')" v-model="email.email"></b-form-input>
       </b-form-group>
     </div>
-    <b-btn class="mt-3 mm-button" block @click="hideModal">Save</b-btn>
+    <b-btn class="mt-3 mm-button" block @click="hideModal"> Save</b-btn>
   </b-modal>
  
 </div>
@@ -65,7 +65,7 @@
             type: String
           },
           'profileCompleteData':{
-            type: Number
+            type: Boolean
           }
         },
         data() { 
@@ -88,7 +88,7 @@
                     // fields will be update from the server
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
                    
-                    if(this.profileCompleteData == 0)
+                    if(this.profileCompleteData == false)
                     {
                         window.location.href = response.data.redirect;
                     }
@@ -111,6 +111,8 @@
             //load the defaults as users ones
             this.defaultLabelsData = JSON.parse(this.defaultLabels);
             this.emailSettingsData = JSON.parse(this.emailSettings);
+            
+            console.log(this.profileCompleteData);
 
             this.defaultLabelsData.forEach((label)=>{
                 this.mutableEmailSettingsData.push({
