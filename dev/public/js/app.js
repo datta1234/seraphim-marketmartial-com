@@ -86727,15 +86727,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 var Form = __webpack_require__(397);
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
-        'emailSettingsData': {
-            type: Array
+        'emailSettings': {
+            type: String
         },
-        'defaultLabelsData': {
-            type: Array
+        'defaultLabels': {
+            type: String
         },
         'profileCompleteData': {
             type: Number
@@ -86748,7 +86750,8 @@ var Form = __webpack_require__(397);
                 title: ''
             }),
             emailSettingForm: new Form(),
-            mutableEmailSettingsData: this.emailSettingsData
+            mutableEmailSettingsData: []
+
         };
     },
 
@@ -86784,6 +86787,9 @@ var Form = __webpack_require__(397);
         var _this3 = this;
 
         //load the defaults as users ones
+        this.defaultLabelsData = JSON.parse(this.defaultLabels);
+        this.emailSettingsData = JSON.parse(this.emailSettings);
+
         this.defaultLabelsData.forEach(function (label) {
             _this3.mutableEmailSettingsData.push({
                 'title': label.title,
@@ -86792,6 +86798,9 @@ var Form = __webpack_require__(397);
                 'email': null
             });
         });
+
+        this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(this.emailSettingsData);
+
         this.emailSettingForm.updateData({ email: this.mutableEmailSettingsData });
     }
 });
@@ -87142,6 +87151,7 @@ var render = function() {
           return _c(
             "b-form-group",
             {
+              key: index,
               attrs: {
                 horizontal: "",
                 "label-cols": 4,
@@ -87155,7 +87165,7 @@ var render = function() {
             [
               _c("b-form-input", {
                 attrs: {
-                  id: "email-" + 1 + "-email",
+                  id: "email-" + index + "-email",
                   state: _vm.emailSettingForm.errors.state(
                     "email." + index + ".email"
                   )

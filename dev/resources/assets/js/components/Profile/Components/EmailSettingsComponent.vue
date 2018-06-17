@@ -3,14 +3,16 @@
 
   <form>
           <b-form-group
-           v-for="(email, index) in emailSettingForm.data().email"
+
+           v-for="(email,index) in emailSettingForm.data().email"
             horizontal
+            :key = "index"
             :label-cols="4"
             :label=" email.title ? email.title : email.default_label.title"
             :label-for="'email-'+index+'-email'"
             :invalid-feedback="emailSettingForm.errors.get('email.'+index+'.email')"
         >
-          <b-form-input  :id="'email-'+1+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
+          <b-form-input  :id="'email-'+index+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
         </b-form-group>
   </form>
 
@@ -56,11 +58,11 @@
     const Form = require('../../../lib/Form.js');
     export default {
         props:{
-          'emailSettingsData': {
-            type: Array
+          'emailSettings': {
+            type: String
           },
-          'defaultLabelsData':{
-            type: Array
+          'defaultLabels':{
+            type: String
           },
           'profileCompleteData':{
             type: Number
@@ -73,7 +75,8 @@
                     title: ''
                 }),
                 emailSettingForm: new Form(),
-                mutableEmailSettingsData: this.emailSettingsData,
+                mutableEmailSettingsData: []
+
             }
         },
         methods: {
@@ -102,10 +105,13 @@
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
                     this.$refs.myModalRef.hide();
                 });
-            },
+            }
         },
         mounted() {
             //load the defaults as users ones
+            this.defaultLabelsData = JSON.parse(this.defaultLabels);
+            this.emailSettingsData = JSON.parse(this.emailSettings);
+
             this.defaultLabelsData.forEach((label)=>{
                 this.mutableEmailSettingsData.push({
                     'title': label.title,
@@ -114,6 +120,9 @@
                     'email':null
                 });
             });
+
+            this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(this.emailSettingsData);
+            
             this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
         }
     }

@@ -13,6 +13,12 @@
 
 Auth::routes();
 
+
+Route::get('/test', function(){
+	
+	exit;
+});
+
 /*
 *
 *   Public Page Routes

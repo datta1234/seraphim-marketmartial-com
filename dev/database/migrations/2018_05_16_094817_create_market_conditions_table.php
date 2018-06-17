@@ -18,6 +18,7 @@ class CreateMarketConditionsTable extends Migration
             $table->string('title');
             $table->string('alias');
             $table->integer('market_condition_category_id')->nullable()->unsigned();
+            $table->boolean('timeout');
             $table->timestamps();
 
             $table->foreign('market_condition_category_id')

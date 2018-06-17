@@ -16,14 +16,14 @@ class CreateUserMarketRequestGroupsTable extends Migration
         Schema::create('user_market_request_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_market_request_id')->unsigned();
-            $table->integer('trade_structure_id')->unsigned();
+            $table->integer('trade_structure_group_id')->unsigned();
             $table->boolean('is_selected');
             $table->timestamps();
 
             $table->foreign('user_market_request_id')
-                ->references('id')->on('user_market_request_tradables');
+                ->references('id')->on('user_market_requests');
 
-            $table->foreign('trade_structure_id')
+            $table->foreign('trade_structure_group_id')
                 ->references('id')->on('trade_structure_groups');
         });
     }
