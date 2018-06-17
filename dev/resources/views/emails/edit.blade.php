@@ -9,16 +9,18 @@
 		<div class="col-9">
 			@component('partials.content_card')
 			@slot('header')
-			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+			<h2 class="mt-1 mb-1">
+				E-Mail Settings
+			</h2>
 			@endslot
-				@slot('title')
-					E-Mail Settings
-				@endslot
-			@slot('decorator')
-				<hr class="title-decorator">
-			@endslot
+	
 				@slot('body')
-				<email-settings :profile-complete-data="{{ $profileIsComplete }}" :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
+
+			<div class="row">
+				<div class="col-md-8 offset-md-2">
+					<email-settings :profile-complete-data="{{ $profileIsComplete }}" :default-labels-data="{{ $defaultLabels->toJson() }}" :email-settings-data="{{ $emails->toJson() }}" ></email-settings>
+				</div>
+			</div>
 
 				@endslot
 		@endcomponent

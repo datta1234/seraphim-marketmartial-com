@@ -18,6 +18,10 @@
 *   Interaction Bar
 */
 
+/* 
+* bootstrap overrides
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -39,6 +43,11 @@ a.mm-button,
 button.mm-button {
   font-family: Arial;
   font-size: 1.2rem;
+}
+
+button.mm-base,
+a.mm-base {
+  font-size: 0.9rem;
 }
 
 /* 
@@ -10611,17 +10620,20 @@ body .page-title h1 {
 .mm-button {
   color: #ffffff;
   background-color: #269a9b;
+  border-color: #269a9b;
 }
 
 .mm-button:focus,
 .mm-button.focus {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-button:hover {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-login-button {

@@ -9,14 +9,11 @@
 		<div class="col-9">
 			@component('partials.content_card')
 			@slot('header')
-			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+				<h2 class="mt-1 mb-1">
+						You're done. Thank you!
+				</h2>
 			@endslot
-				@slot('title')
-					You're done. Thank you!
-				@endslot
-			@slot('decorator')
-				<hr class="title-decorator">
-			@endslot
+	
 				@slot('body')
 
             		{!! Form::model($user,['route' => 'tsandcs.update','method'=>'PUT']) !!}

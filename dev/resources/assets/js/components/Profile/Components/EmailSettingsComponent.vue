@@ -3,27 +3,26 @@
 
   <form>
           <b-form-group
-           v-for="(email, key, index) in emailSettingForm.data().email"
+           v-for="(email, index) in emailSettingForm.data().email"
             horizontal
-            :key = "key"
             :label-cols="4"
             :label=" email.title ? email.title : email.default_label.title"
             :label-for="'email-'+index+'-email'"
             :invalid-feedback="emailSettingForm.errors.get('email.'+index+'.email')"
         >
-          <b-form-input  :id="'email-'+index+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
+          <b-form-input  :id="'email-'+1+'-email'"  :state="emailSettingForm.errors.state('email.'+index+'.email')" v-model="email.email"></b-form-input>
         </b-form-group>
   </form>
 
   <div class="row">
     <div class="col-md-12">
-        <b-btn class="btn mm-button float-right" @click="update">
+        <b-button class="mm-button mm-base float-right ml-2" @click="update">
          Update
-      </b-btn>
+      </b-button>
 
-      <b-btn  class="btn mm-button float-right" @click="showModal">
+      <b-button  class="mm-button mm-base float-right" @click="showModal">
        Add E-mail
-      </b-btn>
+      </b-button>
     </div>
   </div>
     

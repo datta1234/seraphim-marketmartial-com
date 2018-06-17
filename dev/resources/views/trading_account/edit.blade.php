@@ -9,14 +9,11 @@
 		<div class="col-9">
 			@component('partials.content_card')
 			@slot('header')
-			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
-			@endslot
-				@slot('title')
+				<h2 class="mt-1 mb-1">
 					Trading Account Settings
-				@endslot
-			@slot('decorator')
-				<hr class="title-decorator">
+				</h2>
 			@endslot
+		
 				@slot('body')
 
             {!! Form::model($user,['route' => 'trade_settings.edit','method'=>'PUT']) !!}

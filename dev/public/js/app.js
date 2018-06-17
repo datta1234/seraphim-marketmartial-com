@@ -86727,7 +86727,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 var Form = __webpack_require__(397);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -87139,11 +87138,10 @@ var render = function() {
     [
       _c(
         "form",
-        _vm._l(_vm.emailSettingForm.data().email, function(email, key, index) {
+        _vm._l(_vm.emailSettingForm.data().email, function(email, index) {
           return _c(
             "b-form-group",
             {
-              key: key,
               attrs: {
                 horizontal: "",
                 "label-cols": 4,
@@ -87157,7 +87155,7 @@ var render = function() {
             [
               _c("b-form-input", {
                 attrs: {
-                  id: "email-" + index + "-email",
+                  id: "email-" + 1 + "-email",
                   state: _vm.emailSettingForm.errors.state(
                     "email." + index + ".email"
                   )
@@ -87182,18 +87180,18 @@ var render = function() {
           { staticClass: "col-md-12" },
           [
             _c(
-              "b-btn",
+              "b-button",
               {
-                staticClass: "btn mm-button float-right",
+                staticClass: "mm-button mm-base float-right ml-2",
                 on: { click: _vm.update }
               },
               [_vm._v("\n         Update\n      ")]
             ),
             _vm._v(" "),
             _c(
-              "b-btn",
+              "b-button",
               {
-                staticClass: "btn mm-button float-right",
+                staticClass: "mm-button mm-base float-right",
                 on: { click: _vm.showModal }
               },
               [_vm._v("\n       Add E-mail\n      ")]

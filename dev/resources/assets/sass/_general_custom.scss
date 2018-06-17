@@ -123,15 +123,19 @@ body
 .mm-button {
 	  color: $mm-white;
 	  background-color: $mm-panel;
+	  border-color: $mm-panel;
 
 	  &:focus,
 	  &.focus {
-	    color: $mm-white;
-	    background-color: darken($mm-panel, 10%);
+		color: $mm-white;
+		background-color: darken($mm-panel, 10%);
+		border-color: darken($mm-panel, 10%);
 	  }
 	  &:hover {
 	    color: $mm-white;
 	    background-color: darken($mm-panel, 10%);
+		border-color: darken($mm-panel, 10%);
+
 	  }
 }
 

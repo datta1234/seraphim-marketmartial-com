@@ -12,21 +12,19 @@
 		<div class="col-9">
 			@component('partials.content_card')
 			@slot('header')
-			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
-			@endslot
-				@slot('title')
-					Your Profile
-				@endslot
-			@slot('decorator')
-				<hr class="title-decorator">
+			<h2 class="mt-1 mb-1">
+				My profile
+			</h2>
 			@endslot
 				@slot('body')
 
+	<div class="row">
+		<div class="col-md-8 offset-md-2">
             {!! Form::model($user,['route' => 'user.update']) !!}
 
 			         <div class="form-group row">
-			                    {{ Form::label('full_name','Full Name', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
-			                <div class="col-sm-12 col-md-4">
+			                    {{ Form::label('full_name','Full Name', ['class' => 'col-sm-4 col-form-label']) }}
+			                <div class="col-sm-8">
 			                  {{ Form::text('full_name',null,['class' => ($errors->has('full_name') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your full name here...']) }}
 
 
@@ -39,8 +37,8 @@
 			            </div>
 
 			              <div class="form-group row">
-			                    {{ Form::label('cell_phone','Cell Phone', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
-			                <div class="col-sm-12 col-md-4">
+			                    {{ Form::label('cell_phone','Cell Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                <div class="col-sm-8">
 			                  {{ Form::text('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Cell Phone here here...']) }}
 
 
@@ -53,8 +51,8 @@
 			            </div>
 
 			             <div class="form-group row">
-			                    {{ Form::label('work_phone','Work Phone', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
-			                <div class="col-sm-12 col-md-4">
+			                    {{ Form::label('work_phone','Work Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                <div class="col-sm-8">
 			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Work Phone here here...']) }}
 
 
@@ -67,8 +65,8 @@
 			            </div>
 
 			              <div class="form-group row">
-			                    {{ Form::label('email','E - Mail', ['class' => 'col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right']) }}
-			                <div class="col-sm-12 col-md-4">
+			                    {{ Form::label('email','E - Mail', ['class' => 'col-sm-4 col-form-label']) }}
+			                <div class="col-sm-8">
 			                  {{ Form::text('email',null,['class' => ($errors->has('email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your E - Mail here here...']) }}
 
 
@@ -82,10 +80,10 @@
 				@if(!$profileIsComplete)
 
               <div class="form-group row">
-                <label for="organisation_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Organisation</label>
+                <label for="organisation_id" class="col-sm-4 col-form-label">Your Organisation</label>
 
 
-                <div class="col-sm-12 col-md-4">
+                <div class="col-sm-8">
 
                  
 	                
@@ -136,7 +134,8 @@
 
 
 		            {!! Form::close() !!}
-
+			</div>
+		</div>
 
 				@endslot
 		@endcomponent

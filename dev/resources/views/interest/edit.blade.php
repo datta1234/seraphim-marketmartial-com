@@ -9,14 +9,9 @@
 		<div class="col-9">
 			@component('partials.content_card')
 			@slot('header')
-			<h2 class="mt-1 mb-1"><span class="icon icon-addprofile"></span></h2>
+			<h2 class="mt-1 mb-1">Tell Us More About Yourself</h2>
 			@endslot
-				@slot('title')
-					Tell Us More About Yourself
-				@endslot
-			@slot('decorator')
-				<hr class="title-decorator">
-			@endslot
+			
 				@slot('body')
 					
             {!! Form::model($user,['route' => 'interest.update','method'=>'PUT']) !!}
