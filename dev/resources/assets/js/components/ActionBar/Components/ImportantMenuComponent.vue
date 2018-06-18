@@ -1,17 +1,21 @@
 <template>
     <div dusk="important-markets-menu" class="important-markets-menu">
-        <button id="actionImportantButton" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ count }}</strong></button>
-        <div id="importantPopover"></div>
+        <button id="action-important-button" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ count }}</strong></button>
+        <div id="important-popover"></div>
         <!-- Important market popover -->
-        <b-popover container="importantPopover" triggers="focus" placement="bottom" :ref="popover_ref" target="actionImportantButton">
+        <b-popover container="important-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-important-button">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_requests in maket" class="row mt-2">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.attributes.strike }} {{ market_requests.attributes.expiration_date.format("MMM DD") }}</h6>
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.attributes.strike }} 
+                            <!-- @TODO Change this to include expiration -->
+                            <!-- {{ market_requests.attributes.expiration_date.format("MMM DD") }} -->
+                        </h6>
                         </div>
                         <div class="col-6">
-                            <button 
+                            <button
+                                :id="'important-nocare-' + market_requests.id"
                                 type="button" class="btn mm-generic-trade-button w-100"
                                 @click="addToNoCares(key, market_requests.id)">No Cares
                             </button>
@@ -21,7 +25,7 @@
                 <div class="col-12 mt-2">
                     <b-form-group>
                         <b-form-checkbox 
-                            id="selectBulkNoCares"
+                            id="select-bulk-nocares"
                             v-model="status" 
                             value="true">
                             Select All
@@ -30,10 +34,10 @@
                 </div>
                 
                 <div class="col-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="applyBulkNoCares">OK</button>
+                    <button id="apply-bulk-nocares-button" type="button" class="btn mm-generic-trade-button w-100" @click="applyBulkNoCares">OK</button>
                 </div>
                 <div class="col-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss()">Cancel</button>
+                    <button id="dismiss-important-popover" type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss()">Cancel</button>
                 </div>
             </div>
         </b-popover>
@@ -104,6 +108,7 @@
              * @todo Change $market to be the Market.id not Market.title
              */
             addToNoCares(market, id) {
+                console.log("HIT HERE: ", id)
                 if(!this.no_cares.includes(id)) {
                     this.no_cares.push(id);
                     this.removeMarketRequest(market, id);

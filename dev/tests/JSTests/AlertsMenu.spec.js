@@ -51,7 +51,8 @@ describe('AlertsMenuComponent.vue', () => {
 					new UserMarketRequest({id: "9"})
 				],
 			}),
-        ]
+        ],
+        alerts_count_per_market: 1
 	};
 
 	describe('Viewing Alerts', () => {
@@ -100,8 +101,13 @@ describe('AlertsMenuComponent.vue', () => {
 			});
 
 			chai.assert.deepPropertyVal(notificationListWrapper.vm.notificationList, test_data.display_markets[0].title, [test_data.display_markets[0].market_requests[2]], 'test_data.display_markets[0].market_requests[2] market request is present in the computed Alert Notification list');
+			chai.assert.lengthOf(notificationListWrapper.vm.notificationList[test_data.display_markets[0].title], test_data.alerts_count_per_market, 'array has length of 1');
+
 			chai.assert.deepPropertyVal(notificationListWrapper.vm.notificationList, test_data.display_markets[1].title, [test_data.display_markets[1].market_requests[1]], 'test_data.display_markets[1].market_requests[1] market request is present in the computed Alert Notification list');
+			chai.assert.lengthOf(notificationListWrapper.vm.notificationList[test_data.display_markets[1].title], test_data.alerts_count_per_market, 'array has length of 1');
+
 			chai.assert.deepPropertyVal(notificationListWrapper.vm.notificationList, test_data.display_markets[2].title, [test_data.display_markets[2].market_requests[0]], 'test_data.display_markets[2].market_requests[0] market request is present in the computed Alert Notification list');
+			chai.assert.lengthOf(notificationListWrapper.vm.notificationList[test_data.display_markets[2].title], test_data.alerts_count_per_market, 'array has length of 1');
 		});
 	});
 });
