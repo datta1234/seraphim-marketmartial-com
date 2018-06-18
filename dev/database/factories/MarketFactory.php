@@ -12,6 +12,8 @@ $factory->define(App\Models\StructureItems\Market::class, function (Faker $faker
 		"has_negotiation" => rand(0,1) == 1,
 		"has_rebate" => rand(0,1) == 1,
 		"market_type_id" => factory(App\Models\StructureItems\MarketType::class)->create()->id,
+		"parent_id"	=> null,
+		"is_displayed"	=> true,
 		"is_selectable" => rand(0,1) == 1
     ];
 });

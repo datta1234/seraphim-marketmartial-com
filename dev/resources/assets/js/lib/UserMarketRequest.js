@@ -76,14 +76,6 @@ export default class UserMarketRequest {
     }
 
     /**
-    *   getParent - Get the parent Market
-    *   @return {Market}
-    */
-    getParent() {
-        return this._market;
-    }
-
-    /**
     *   setUserMarketQuote - Set the UserMarketRequest quote
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
     */
@@ -111,18 +103,18 @@ export default class UserMarketRequest {
     }
 
     /**
-    *   setParent - Set the parent Market
+    *   setMarket - Set the parent Market
     *   @param {Market} market - Market object
     */
-    setParent(market) {
+    setMarket(market) {
         this._market = market;
     }
 
     /**
-    *   getParent - Get the parent Market
+    *   getMarket - Get the parent Market
     *   @return {Market}
     */
-    getParent() {
+    getMarket() {
         return this._market;
     }
 

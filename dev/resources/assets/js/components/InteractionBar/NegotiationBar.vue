@@ -57,7 +57,7 @@
             setMarketTime() {
                 this.market_time = "10:10";
             },
-            reset(){
+            reset() {
                 const defaults = {
                     bid: null,
                     offer: null,

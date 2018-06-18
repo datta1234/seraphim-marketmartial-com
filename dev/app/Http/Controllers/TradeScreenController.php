@@ -14,6 +14,7 @@ class TradeScreenController extends Controller
     	$user = Auth::user();
     	$organisation = $user->organisation;
     	$total_rebate = $user->userTotalRebate();
+        
         return view('pages.trade')->with([
         	'user' => $user, 
         	'organisation' => $organisation, 
