@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="col-6 offset-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">OK</button>
+                    <button id="dismiss-alert-popover" type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">OK</button>
                 </div>
             </div>
         </b-popover>
