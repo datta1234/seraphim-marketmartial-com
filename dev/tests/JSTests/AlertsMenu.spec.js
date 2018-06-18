@@ -10,6 +10,7 @@ import { EventBus } from '../../resources/assets/js/lib/EventBus.js';
 const localVue = createLocalVue();
 // install boostrap to this vue instance only
 localVue.use(BootstrapVue);
+
 describe('AlertsMenuComponent.vue', () => {
 
 	let test_data = {
@@ -83,11 +84,9 @@ describe('AlertsMenuComponent.vue', () => {
 			    },
 				localVue
 			});
-			
 			closePopoverWrapper.vm.$refs[closePopoverWrapper.vm.$data.popover_ref].$on("close", () => {
 				done();
 			});
-
 			closePopoverWrapper.find('#action-alert-button').trigger('click');
 			closePopoverWrapper.find('#dismiss-alert-popover').trigger('click');
 		});

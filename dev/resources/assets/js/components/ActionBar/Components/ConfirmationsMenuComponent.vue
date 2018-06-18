@@ -1,17 +1,21 @@
 <template>
     <div dusk="confirmations-markets-menu" class="confirmations-markets-menu">
-        <button id="actionConfirmationsButton" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ count }}</strong></button>
-        <div id="confirmationsPopover"></div>
+        <button id="action-confirmations-button" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ count }}</strong></button>
+        <div id="confirmations-popover"></div>
         <!-- Confirmations market popover -->
-        <b-popover container="confirmationsPopover" triggers="focus" placement="bottom" :ref="popover_ref" target="actionConfirmationsButton">
+        <b-popover container="confirmations-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-confirmations-button">
             <div class="row text-center">
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} {{ market_request.attributes.expiration_date.format("MMM DD") }}</h6>
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} 
+                            <!-- @TODO Change this to include expiration -->
+                            <!-- {{ market_request.attributes.expiration_date.format("MMM DD") }} -->
+                        </h6>
                         </div>
                         <div class="col-6">
-                            <button 
+                            <button
+                                :id="'confirmations-view-' + market_request.id"
                                 type="button" class="btn mm-generic-trade-button w-100"
                                 @click="loadModal(market_request)">View
                             </button>
@@ -19,7 +23,7 @@
                     </div>
                 </div>
                 <div class="col-6 offset-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">OK</button>
+                    <button id="dismiss-confirmations-popover" type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">OK</button>
                 </div>
             </div>
         </b-popover>
@@ -35,7 +39,8 @@
             <!-- Modal body content -->
             <b-container fluid>
                 <p>Thank you for your trade! Please check before accepting.</p>
-                <p>Date: {{ modals.market_request.attributes.expiration_date.format('DD-MMM-YYYY') }}</p>
+                <!-- @TODO Change this to include expiration -->
+                <p>Date: <!-- {{ modals.market_request.attributes.expiration_date.format('DD-MMM-YYYY') }} --></p>
                 <p>Structure: </p>
                 <div style="Display:inline;">
                     <h3>Option</h3>
@@ -64,7 +69,6 @@
 </template>
 
 <script>
-    import { EventBus } from '../../../lib/EventBus.js';
     import UserMarketRequest from '../../../lib/UserMarketRequest';
     const place_holder_data_options = [
         { 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' },
@@ -135,7 +139,6 @@
              *      to the Interaction Sidebar.
              */
             loadModal(market_request) {
-                console.log("Passed",market_request);
                 this.modals.market_request = market_request;
                 this.modals.show_modal = true;
             },
