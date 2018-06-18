@@ -4,7 +4,7 @@ export default class UserMarketRequest {
         // default internal
         this._market = null;
         // default public
-        this.trade_items = [];
+        this.trade_items = {};
         this.quotes = [];
         const defaults = {
             id: "",
@@ -22,6 +22,9 @@ export default class UserMarketRequest {
         Object.keys(defaults).forEach(key => {
             if(options && options[key]) {
                 this[key] = options[key];
+                if(defaults[key] instanceof moment) {
+                    this[key] = moment(this[key]);
+                }
             } else {
                 this[key] = defaults[key];
             }
@@ -36,7 +39,6 @@ export default class UserMarketRequest {
         if(options && options.user_market_quotes) {
             this.addUserMarketQuotes(options.user_market_quotes);
         }
-
     }
 
     /**
@@ -76,14 +78,6 @@ export default class UserMarketRequest {
     }
 
     /**
-    *   getParent - Get the parent Market
-    *   @return {Market}
-    */
-    getParent() {
-        return this._market;
-    }
-
-    /**
     *   setUserMarketQuote - Set the UserMarketRequest quote
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
     */
@@ -96,8 +90,11 @@ export default class UserMarketRequest {
     *   addTradeItem - add trade item
     *   @param {} trade_item - trade item object
     */
-    addTradeItem(trade_item) {
-        this.trade_items.push(trade_item);
+    addTradeItem(group, title, value) {
+        if(!this.trade_items[group]) {
+            this.trade_items[group] = {};
+        }
+        this.trade_items[group][title] = value;
     }
 
     /**
@@ -105,24 +102,28 @@ export default class UserMarketRequest {
     *   @param {Array} trade_items - array of trade item objects
     */
     addTradeItems(trade_items) {
-        trade_items.forEach(trade_item => {
-            this.addTradeItem(trade_item);
-        }); 
+        Object.keys(trade_items).forEach(trade_group => {
+
+            Object.keys(trade_items[trade_group]).forEach(title => {
+                this.addTradeItem(trade_group, title, trade_items[trade_group][title]);
+            });
+
+        });
     }
 
     /**
-    *   setParent - Set the parent Market
+    *   setMarket - Set the parent Market
     *   @param {Market} market - Market object
     */
-    setParent(market) {
+    setMarket(market) {
         this._market = market;
     }
 
     /**
-    *   getParent - Get the parent Market
+    *   getMarket - Get the parent Market
     *   @return {Market}
     */
-    getParent() {
+    getMarket() {
         return this._market;
     }
 

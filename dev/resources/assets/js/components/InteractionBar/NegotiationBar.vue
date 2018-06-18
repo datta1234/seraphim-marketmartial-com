@@ -1,19 +1,7 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar">
         
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
-        
-        <ibar-negotiation-history :history="market_history" class="mb-2"></ibar-negotiation-history>
-
-        <ibar-market-negotiation class="mb-5"></ibar-market-negotiation>
-
-        <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
-
-        <b-row class="mb-2">
-            <b-col>
-                <b-form-checkbox v-model="state_premium_calc" value="true" unchecked-value="false"> Apply premium calculator</b-form-checkbox>
-            </b-col>
-        </b-row>
+        <component v-if="marketRequest != null" :is="layouts[marketRequest.trade_structure]" :market-request="marketRequest"></component>
 
     </b-container>
 </template>
@@ -21,7 +9,19 @@
     import { EventBus } from '../../lib/EventBus.js';
     import UserMarketRequest from'../../lib/UserMarketRequest';
     import UserMarketNegotiation from'../../lib/UserMarketNegotiation';
+
+    import BarLayoutOutright from './BarLayouts/Outright';
+    import BarLayoutRisky from './BarLayouts/Risky';
+    import BarLayoutCalendar from './BarLayouts/Calendar';
+    import BarLayoutFly from './BarLayouts/Fly';
+
     export default {
+        components: {
+            BarLayoutOutright,
+            BarLayoutRisky,
+            BarLayoutCalendar,
+            BarLayoutFly,
+        },
         props: {
             marketRequest: {
                 type: UserMarketRequest
@@ -29,66 +29,16 @@
         },
         data() {
             return {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_title: "",
-                market_time: ""
+                layouts: {
+                    Outright: BarLayoutOutright,
+                    Risky: BarLayoutRisky,
+                    Calendar: BarLayoutCalendar,
+                    Fly: BarLayoutFly,
+                }
             };
         },
-        watch: {
-            'marketRequest': function() {
-                this.init();
-            }
-        },
-        methods: {
-            setMarketTitle() {
-                this.market_title = this.marketRequest.getParent().title+" "
-                +this.marketRequest.attributes.expiration_date.format("MMM D")+" "
-                +this.marketRequest.attributes.strike;
-            },
-            setMarketTime() {
-                this.market_time = "10:10";
-            },
-            reset(){
-                const defaults = {
-                    bid: null,
-                    offer: null,
-                    bid_qty: 0,
-                    offer_qty: 0,
-
-                    state_conditions: false,
-                    state_premium_calc: false,
-
-                    user_market: null,
-                    market_history: [],
-                    market_title: "",
-                    market_time: ""
-                };
-                Object.keys(defaults).forEach(k => {
-                    this[k] = defaults[k];
-                });
-            },
-            init() {
-                console.log("Mounted BAR", this.marketRequest);
-                this.reset();
-                if(this.marketRequest) {
-                    this.user_market = this.marketRequest.getChosenUserMarket();
-                    this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                    this.setMarketTitle();
-                    this.setMarketTime();
-                }
-            }
-        },
         mounted() {
-            this.init();
+
         }
     }
 </script>

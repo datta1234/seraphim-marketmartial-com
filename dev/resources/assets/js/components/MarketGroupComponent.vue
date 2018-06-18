@@ -12,7 +12,7 @@
                         <div class="col-12">
                             <p class="mb-1">{{ exp_date }}</p>
                         </div>
-                        <market-tab :market-request="m_req" v-for="m_req in m_reqs"></market-tab>
+                        <component :is="tabs[m_req.trade_structure]" :market-request="m_req" v-for="m_req in m_reqs"></component>
                     </div><!-- END Date collection section -->
                     
                 </div>
@@ -23,7 +23,19 @@
 
 <script>
     import Market from '../lib/Market';
+
+    import MarketTabOutright from './MarketTabs/Outright';
+    import MarketTabRisky from './MarketTabs/Risky';
+    import MarketTabCalendar from './MarketTabs/Calendar';
+    import MarketTabFly from './MarketTabs/Fly';
+
     export default {
+        components: {
+            MarketTabOutright,
+            MarketTabRisky,
+            MarketTabCalendar,
+            MarketTabFly,
+        },
         props: {
             'market': {
                 type: Market
@@ -37,14 +49,20 @@
         },
         data() {
             return {
-                market_date_groups: {}
+                market_date_groups: {},
+                tabs: {
+                    Outright: MarketTabOutright,
+                    Risky: MarketTabRisky,
+                    Calendar: MarketTabCalendar,
+                    Fly: MarketTabFly
+                }
             };
         },
         methods: {
             mapMarketRequestGroups: function(markets) {
                 // map markets to dates
                 return markets.reduce((x,y) => {
-                    let date = y.attributes.expiration_date.format("MMM D");  
+                    let date = y.trade_items.default["Expiration Date"];  
                     if(!x[date]) { 
                         x[date] = [];
                     }
