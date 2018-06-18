@@ -1,0 +1,24 @@
+trading_accounts
+
+	1. sub_account: varchar(255) > sub_account: varchar(255) nullable
+
+trades
+
+	1. Remove Contracts
+
+market_negotiations
+
+	1. have duplicated columns ? 
+		is_accepted: tinyint(1) nullable
+		is_accepted: int(11)
+
+	2. Remove spot_price: double(11,2) nullable
+
+trade_negotiations
+	
+	1. Remove Contracts
+
+trades 
+
+	1. Remove Contracts
+
