@@ -14,10 +14,11 @@ class MarketNegotiation extends Model
 	 * @property integer $market_negotiation_status_id
 	 * @property double $bid
 	 * @property double $offer
-	 * @property double $bid_premium
-	 * @property double $offer_premium
-	 * @property double $future_reference
-	 * @property double $spot_price
+	 * @property double $bid_qty
+     * @property double $offer_qty
+     * @property double $bid_premium
+     * @property double $offer_premium
+     * @property double $future_reference
 	 * @property boolean $has_premium_calc
 	 * @property boolean $is_repeat
 	 * @property boolean $is_accepted
@@ -38,18 +39,20 @@ class MarketNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-       	'user_id',
-		'bid',
-		'offer',
-        'bid_nominals',
-        'offer_nominals',
-		'bid_premium',
-		'offer_premium',
-		'future_reference',
-		'spot_price',
-		'has_premium_calc',
-		'is_repeat',
-		'is_accepted',
+            "user_id",
+            "market_negotiation_id",
+            "user_market_id",
+            "market_negotiation_status_id",
+            "bid",
+            "offer",
+            "offer_qty",
+            "bid_qty",
+            "bid_premium",
+            "offer_premium",
+            "future_reference",
+            "has_premium_calc",
+            "is_repeat",
+            "is_accepted"
     ];
 
     /**

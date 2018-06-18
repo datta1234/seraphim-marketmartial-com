@@ -10,7 +10,7 @@ class BookedTrade extends Model
 	 * @property integer $id
 	 * @property integer $user_id
 	 * @property integer $trade_confirmation_id
-	 * @property integer $traiding_account_id
+	 * @property integer $trading_account_id
 	 * @property integer $market_id
 	 * @property integer $stock_id
 	 * @property integer $booked_trade_status_id

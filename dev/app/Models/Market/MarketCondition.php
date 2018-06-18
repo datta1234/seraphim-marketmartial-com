@@ -34,7 +34,7 @@ class MarketCondition extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketConditionCategories()
+    public function marketConditionCategory()
     {
         return $this->belongsTo('App\Models\Market\MarketConditionCategory','market_condition_category_id');
     }

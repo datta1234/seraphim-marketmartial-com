@@ -38,5 +38,5 @@ class ItemType extends Model
     {
         return $this->hasMany('App\Models\StructureItems\Item', 'item_type_id');
     }
-}
+
 }

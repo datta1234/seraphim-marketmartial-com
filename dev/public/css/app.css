@@ -11236,7 +11236,7 @@ a.mm-login-button {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/marketmartial/public/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
@@ -12027,13 +12027,13 @@ input:checked + .slider:before {
 }
 
 #importantPopover,
-#alertsPopover,
+#alerts-popover,
 #confirmationsPopover {
   display: inline;
 }
 
 #importantPopover .popover,
-#alertsPopover .popover,
+#alerts-popover .popover,
 #confirmationsPopover .popover {
   max-width: 400px;
 }

@@ -13,7 +13,7 @@ class TradingAccountRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,18 @@ class TradingAccountRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'trading_accounts.*.safex_number' => 'max:255',
+            'trading_accounts.*.market_id' => 'required',
+            'trading_accounts.*.sub_account' => 'max:255',
+
         ];
+    }
+
+    public function messages()
+    {
+        return [
+            'trading_accounts.*.safex_number.required' => 'Safex number field is required',
+            'trading_accounts.*.sub_account.required' => 'Sub account field is required',
+        ];  
     }
 }

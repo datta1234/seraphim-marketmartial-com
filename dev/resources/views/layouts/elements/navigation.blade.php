@@ -22,7 +22,7 @@
 						<a class="dropdown-item" href="{{ route('user.edit') }}">My Profile</a>
 						<a class="dropdown-item" href="{{ route('user.edit_password') }}">Change Password</a>
 						<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
-						<a class="dropdown-item" href="{{ route('account.edit') }}">Account Setting</a>
+						<a class="dropdown-item" href="{{ route('trade_settings.edit') }}">Account Setting</a>
 					</div>
 				</li>
 				<li class="nav-item">
