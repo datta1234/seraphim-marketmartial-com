@@ -28,9 +28,6 @@ import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
 import UserMarketNegotiation from './lib/UserMarketNegotiation';
 
-import { TradeStructure } from './config/index';
-console.log(TradeStructure);
-
 // datepicker
 Vue.component('Datepicker', Datepicker);
 
@@ -145,34 +142,52 @@ const app = new Vue({
                 }
             }
         },
-        loadMarkets() {
+        loadMarketTypes() {
             let self = this;
-            axios.get('/trade/market-type')
+            return axios.get('/trade/market-type')
             .then(marketTypeResponse => {
-                console.log("Market Types", marketTypeResponse);
                 if(marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
-                    self.market_types.forEach(marketType => {
-                        axios.get('/trade/market-type/'+marketType.id+'/market')
-                        .then(marketResponse => {
-                            if(marketResponse.status == 200) {
-                                marketResponse.data.forEach((el) => {
-                                    self.display_markets.push(new Market(el));
-                                });
-                                self.reorderDisplayMarkets(self.display_markets);
-                                console.log("Markets", self.display_markets);
-                            } else {
-                                console.error(err);
-                            }
-                        });
-                    });
-                    
                 } else {
                     console.error(err);    
                 }
+                return self.market_types;
             }, err => {
                 console.error(err);
+            });
+        },
+        loadMarkets(marketType) {
+            let self = this;
+            return axios.get('/trade/market-type/'+marketType.id+'/market')
+            .then(marketResponse => {
+                if(marketResponse.status == 200) {
+                    marketResponse.data = marketResponse.data.map(x => {
+                        x = new Market(x);
+                        self.display_markets.push(x);
+                        return x;
+                    });
+                    self.reorderDisplayMarkets(self.display_markets);
+                    return marketResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        },
+        loadMarketRequests(market) {
+            let self = this;
+            console.log("Load Market Request", market);
+            return axios.get('/trade/market/'+market.id+'/market-request')
+            .then(marketResponse => {
+                if(marketResponse.status == 200) {
+                    console.log(JSON.stringify(marketResponse.data, null, 4));
+                    marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
+                    market.addMarketRequests(marketResponse.data);
+                    console.log("Market Requests", marketResponse.data);
+                    return marketResponse.data;
+                } else {
+                    console.error(err);
+                }
             });
         }
     },
@@ -184,7 +199,26 @@ const app = new Vue({
         market_types: [],
     },
     mounted: function() {
-        this.loadMarkets();
+        this.loadMarketTypes()
+        .then(market_types => {
+            let promises = [];
+            market_types.forEach(market_type => {
+                promises.push(
+                    this.loadMarkets(market_type)
+                    .then(markets => {
+                        markets.forEach(market => {
+                            promises.push(
+                                this.loadMarketRequests(market)
+                            );
+                        });
+                    })
+                );
+            });
+            return Promise.all(promises);
+        })
+        .then(all_market_requests => {
+            console.log(all_market_requests);
+        });
     }
 });
 

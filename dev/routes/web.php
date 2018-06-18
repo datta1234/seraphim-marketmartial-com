@@ -56,5 +56,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth']], function() {
 
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
+    Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
+    
 
 });

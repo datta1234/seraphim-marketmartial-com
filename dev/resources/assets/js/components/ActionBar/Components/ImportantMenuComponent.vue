@@ -8,7 +8,7 @@
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_requests in maket" class="row mt-2">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.attributes.strike }} {{ market_requests.attributes.expiration_date.format("MMM DD") }}</h6>
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.trade_items.default["Strike"] }} {{ market_requests.trade_items.default["Expiration Date"] }}</h6>
                         </div>
                         <div class="col-6">
                             <button 
