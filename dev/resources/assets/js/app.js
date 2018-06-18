@@ -186,6 +186,8 @@ const app = new Vue({
         no_cares: [],
         display_markets: [
             new Market({
+                id: "1",
+                order: 1,
                 title: "TOP 40",
                 market_requests: [
                     marketRequestSample,
@@ -355,6 +357,8 @@ const app = new Vue({
                 ]
             }),
             new Market({
+                id: "2",
+                order: 2,
                 title: "DTOP",
                 market_requests: [
                     new UserMarketRequest({
@@ -371,6 +375,8 @@ const app = new Vue({
                 ]
             }),
             new Market({
+                id: "4",
+                order: 4,
                 title: "SINGLES",
                 market_requests: [
                     new UserMarketRequest({
