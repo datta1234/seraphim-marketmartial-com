@@ -68,9 +68,12 @@ class RoleTest extends TestCase
 
     	$this->populateRolesTable();
     	$role = \App\Models\UserManagement\Role::find( rand(1,3) );
+
 		$users = factory( \App\Models\UserManagement\User::class, 5 )->create([
 			'role_id' => $role->id
 		])->keyBy('id');
+
+
 
 		$role->users->keyBy('id')->each( function($item,$key) use ($role, $users) {
 
@@ -84,29 +87,47 @@ class RoleTest extends TestCase
 			$this->assertArrayHasKey('organisation_id', $item->toArray());
 			$this->assertArrayHasKey('active', $item->toArray());
 			$this->assertArrayHasKey('tc_accepted', $item->toArray());
-			$this->assertArrayHasKey('remember_token', $item->toArray());
 			$this->assertArrayHasKey('birthdate', $item->toArray());
 			$this->assertArrayHasKey('is_married', $item->toArray());
 			$this->assertArrayHasKey('has_children', $item->toArray());
-			$this->assertArrayHasKey('last_login', $item->toArray());
 			$this->assertArrayHasKey('hobbies', $item->toArray());
+
+			$this->assertArrayNotHasKey('remember_token', $item->toArray());
+			$this->assertArrayNotHasKey('password', $item->toArray());
+			$this->assertArrayNotHasKey('last_login', $item->toArray());
 
 			$this->assertDatabaseHas('roles', [
 	    		'id'		=> $role->id,
-	            'role_id'	=> $tole->title
+	            'title'	=> $role->title
 	        ]);
+
+	        $this->assertDatabaseMissing('user_market_watched', [
+				'user_id' 	=> $user->id,
+				'market_id'	=> $item->id
+        	]);
 
 	        $this->assertDatabaseHas('users', [
 	    		'id'		=> $item->id,
 	    		'email'		=> $item->email,
 	            'full_name'	=> $item->full_name,
+	            'cell_phone'	=> $item->cell_phone,
+	            'work_phone'	=> $item->work_phone,
+	            'role_id'	=> $role->id,
+	            'organisation_id'	=> $item->organisation_id,
+	            'active'	=> $item->active,
+	            'tc_accepted'	=> $item->tc_accepted,
+	            'password'	=> $item->password,
+	            'remember_token'	=> $item->remember_token,
+	            'birthdate'	=> $item->birthdate,
+	            'is_married'	=> $item->is_married,
+	            'has_children'	=> $item->has_children,
+	            'last_login'	=> $item->last_login,
+	            'hobbies'	=> $item->hobbies,
 	        ]);
 
 
 
 		});
-
-    	
 
 
     }
