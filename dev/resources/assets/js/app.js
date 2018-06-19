@@ -180,7 +180,6 @@ const app = new Vue({
             return axios.get('/trade/market/'+market.id+'/market-request')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
-                    console.log(JSON.stringify(marketResponse.data, null, 4));
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
                     market.addMarketRequests(marketResponse.data);
                     console.log("Market Requests", marketResponse.data);
@@ -217,7 +216,7 @@ const app = new Vue({
             return Promise.all(promises);
         })
         .then(all_market_requests => {
-            console.log(all_market_requests);
+            // nada
         });
     }
 });

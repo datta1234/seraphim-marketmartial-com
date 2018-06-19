@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid dusk="ibar-negotiation-bar-calendar">
+    <b-container fluid dusk="ibar-negotiation-bar-rolls">
         
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         

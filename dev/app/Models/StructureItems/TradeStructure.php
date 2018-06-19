@@ -70,6 +70,15 @@ class TradeStructure extends Model
 
          }
          return $tradeStucture;
-    }   
+    }  
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketTypes()
+    {
+        return $this->belongsToMany('App\Models\StructureItems\MarketType', 'market_types_trade_structures', 'trade_structure_id', 'market_type_id');
+    } 
 
 }
