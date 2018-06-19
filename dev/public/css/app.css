@@ -12026,13 +12026,13 @@ input:checked + .slider:before {
   display: inline;
 }
 
-#importantPopover,
+#important-popover,
 #alerts-popover,
 #confirmations-popover {
   display: inline;
 }
 
-#importantPopover .popover,
+#important-popover .popover,
 #alerts-popover .popover,
 #confirmations-popover .popover {
   max-width: 400px;

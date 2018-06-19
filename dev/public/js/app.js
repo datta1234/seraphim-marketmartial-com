@@ -87139,7 +87139,7 @@ var render = function() {
           attrs: {
             triggers: "focus",
             placement: "bottomleft",
-            target: "actionfilterMarketButton"
+            target: "action-filter-market-button"
           },
           on: { show: _vm.onShow }
         },
@@ -87224,7 +87224,7 @@ var staticRenderFns = [
       "button",
       {
         staticClass: "btn mm-transparent-button mr-2",
-        attrs: { id: "actionfilterMarketButton", type: "button" }
+        attrs: { id: "action-filter-market-button", type: "button" }
       },
       [_c("span", { staticClass: "icon icon-add" }), _vm._v(" Markets\n    ")]
     )
@@ -87335,6 +87335,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ImportantMenu',
@@ -87400,6 +87401,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @todo Change $market to be the Market.id not Market.title
          */
         addToNoCares: function addToNoCares(market, id) {
+            console.log("HIT HERE: ", id);
             if (!this.no_cares.includes(id)) {
                 this.no_cares.push(id);
                 this.removeMarketRequest(market, id);
@@ -87470,22 +87472,22 @@ var render = function() {
         "button",
         {
           staticClass: "btn mm-important-button mr-2 p-1",
-          attrs: { id: "actionImportantButton", type: "button" }
+          attrs: { id: "action-important-button", type: "button" }
         },
         [_vm._v("Important "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
       ),
       _vm._v(" "),
-      _c("div", { attrs: { id: "importantPopover" } }),
+      _c("div", { attrs: { id: "important-popover" } }),
       _vm._v(" "),
       _c(
         "b-popover",
         {
           ref: _vm.popover_ref,
           attrs: {
-            container: "importantPopover",
+            container: "important-popover",
             triggers: "focus",
             placement: "bottom",
-            target: "actionImportantButton"
+            target: "action-important-button"
           }
         },
         [
@@ -87527,7 +87529,10 @@ var render = function() {
                               {
                                 staticClass:
                                   "btn mm-generic-trade-button w-100",
-                                attrs: { type: "button" },
+                                attrs: {
+                                  id: "important-nocare-" + market_requests.id,
+                                  type: "button"
+                                },
                                 on: {
                                   click: function($event) {
                                     _vm.addToNoCares(key, market_requests.id)
@@ -87553,7 +87558,7 @@ var render = function() {
                       _c(
                         "b-form-checkbox",
                         {
-                          attrs: { id: "selectBulkNoCares", value: "true" },
+                          attrs: { id: "select-bulk-nocares", value: "true" },
                           model: {
                             value: _vm.status,
                             callback: function($$v) {
@@ -87580,7 +87585,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
+                    attrs: { id: "apply-bulk-nocares-button", type: "button" },
                     on: { click: _vm.applyBulkNoCares }
                   },
                   [_vm._v("OK")]
@@ -87592,7 +87597,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
+                    attrs: { id: "dismiss-important-popover", type: "button" },
                     on: {
                       click: function($event) {
                         _vm.onDismiss()
