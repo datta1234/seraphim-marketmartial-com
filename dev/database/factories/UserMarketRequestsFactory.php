@@ -7,6 +7,7 @@ $factory->define(App\Models\MarketRequest\UserMarketRequest::class, function (Fa
 		"user_id" =>  factory(App\Models\UserManagement\User::class)->create()->id,
 		"trade_structure_id" => factory(App\Models\StructureItems\TradeStructure::class,'Outright')->create()->id,
 		"user_market_request_statuses_id" => factory(App\Models\MarketRequest\UserMarketRequestStatus::class)->create()->id,
+        "market_id" =>  factory(App\Models\StructureItems\Market::class)->create()->id,
 		"chosen_user_market_id" => null
 	];
 });

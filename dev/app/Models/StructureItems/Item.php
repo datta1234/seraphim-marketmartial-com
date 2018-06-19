@@ -36,7 +36,7 @@ class Item extends Model
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function ItemTypes()
+    public function itemType()
     {
         return $this->belongsTo('App\Models\StructureItems\ItemType', 'item_type_id');
     }

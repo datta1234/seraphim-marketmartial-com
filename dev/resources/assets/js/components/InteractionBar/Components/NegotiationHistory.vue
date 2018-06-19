@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-negotiation-history">
         <b-col>
             <b-row v-for="item in history">            
                 <b-col cols="10">

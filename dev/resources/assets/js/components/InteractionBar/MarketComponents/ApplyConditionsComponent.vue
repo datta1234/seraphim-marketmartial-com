@@ -1,5 +1,5 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-apply-conditions">
         <b-col>
             <b-form-checkbox v-model="show_options" value="true" unchecked-value="false"> Apply a condition</b-form-checkbox>
         </b-col>

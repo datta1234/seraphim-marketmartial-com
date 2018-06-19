@@ -17,7 +17,9 @@ class CreateUserMarketRequestItemsTable extends Migration
             $table->increments('id');
             $table->integer('item_id')->unsigned();
             $table->integer('user_market_request_group_id')->unsigned();
+            $table->string('title');
             $table->string('value');
+            $table->string('type');
             $table->timestamps();
 
             $table->foreign('item_id')

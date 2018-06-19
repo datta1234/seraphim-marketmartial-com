@@ -111,4 +111,22 @@ class Market extends Model
     {
         return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','market_id');
     }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function parent()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Market','parent_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function children()
+    {
+        return $this->hasMany('App\Models\StructureItems\Market','parent_id');
+    }
 }

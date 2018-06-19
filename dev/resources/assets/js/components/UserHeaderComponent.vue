@@ -1,15 +1,15 @@
 <template>
-    <div class="user-header">
-        <div class="row sub-nav pt-3 pb-3">
-            <div class="col-6">
+    <div dusk="user-header" class="user-header">
+        <div class="row sub-nav pt-3">
+            <div class="col-6 user-details">
                 <h1 v-if="organisation" class="pt-1">Welcome {{ user_name }} ({{ organisation }})</h1>
                 <h1 v-else class="pt-1">Welcome {{ user_name }}</h1>
             </div>
-            <div class="col-2">
-                <p class="mb-1 pt-3">{{ time.computed_time }}</p>
+            <div class="col-2 current-time">
+                <p class="pt-1">{{ time.computed_time }}</p>
             </div>
-            <div class="col-4">
-                <p class="float-right mb-1 pt-3">Rebates: <strong>{{ formatRandQty(total_rebate) }}</strong></p>
+            <div class="col-4 total-rebate">
+                <p class="float-right pt-1">Rebates: <strong>{{ formatRandQty(total_rebate) }}</strong></p>
             </div>
         </div>
     </div>
@@ -25,9 +25,7 @@
         data() {
             return {
                 time:{
-                    hours:'',
-                    minutes:'',
-                    session:'AM',
+                    location:'SA',
                     computed_time:'',
                     _interval: null
                 }
@@ -40,30 +38,8 @@
              * @todo Change clock time to be sent an initialsed from the backend
              */
             showTime() {
-
                 //Getting current time and setting our time object.
-                var date = new Date();
-                this.time.hours = date.getHours(); // Hours format 0 - 23
-                this.time.minutes = date.getMinutes(); // 0 - 59
-                this.time.session = "AM";
-                
-                //resets the hour when reaching 0 to 12
-                if(this.time.hours == 0){
-                    this.time.hours = 12; //Changes computed hours to format 0 - 12
-                }
-                
-                //Changes hours from before 12 AM to past 12 PM - keeps to format 0 - 12 
-                if(this.time.hours > 12){
-                    this.time.hours = this.time.hours - 12;
-                    this.time.session = "PM";
-                }
-                
-                //Format time from h:m format to hh:mm format with leading 0
-                this.time.hours = (this.time.hours < 10) ? "0" + this.time.hours : this.time.hours;
-                this.time.minutes = (this.time.minutes < 10) ? "0" + this.time.minutes : this.time.minutes;         
-                this.time.computed_time = this.time.hours + ":" + this.time.minutes + " " + this.time.session;
-                
-                
+                this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
             }
         },
         mounted() {

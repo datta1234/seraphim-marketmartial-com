@@ -1,15 +1,15 @@
-module.exports = class MarketNegotiation {
+export default class UserMarketQuote {
 
     constructor(options) {
         // default internal
-        this._market = null;
+        this._user_market_request = null;
         // default public
         const defaults = {
-            bid_qty: 0,
-            bid: null,
-            offer: null,
-            offer_qty: 0,
-            time: null
+            id: "",
+		    bid_only: false,
+		    offer_only: false,
+		    vol_spread: "",
+		    created_at: moment()
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -19,27 +19,22 @@ module.exports = class MarketNegotiation {
                 this[key] = defaults[key];
             }
         });
-
-        // register markets
-        if(options && options.market) {
-            this.setUserMarket(options.market);
-        }
     }
 
     /**
-    *   setUserMarket - Sets the negotiations UserMarket
-    *   @param {UserMarket} market - UserMarket for the negotiation
+    *   setParent - Set the parent UserMarketRequest
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
-    setUserMarket(market) {
-        this._market = market;
+    setParent(user_market_request) {
+        this._user_market_request = user_market_request;
     }
 
     /**
-    *   getUserMarket - Gets the negotiations UserMarket
-    *   @return {UserMarket}
+    *   getParent - Get the parent UserMarketRequest
+    *   @return {UserMarketRequest}
     */
-    getUserMarket() {
-        return this._market;
+    getParent() {
+        return this._user_market_request;
     }
 
     /**

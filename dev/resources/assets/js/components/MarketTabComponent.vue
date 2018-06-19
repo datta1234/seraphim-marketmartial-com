@@ -1,5 +1,5 @@
 <template>
-    <div class="col col-12 text-center">
+    <div dusk="market-tab" class="col col-12 text-center">
         <div class="row">
             <div class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
                 <div class="row justify-content-md-center">
@@ -23,7 +23,7 @@
 
 <script>
     import { EventBus } from '../lib/EventBus.js';
-    const UserMarketRequest = require('../lib/UserMarketRequest');
+    import UserMarketRequest from '../lib/UserMarketRequest';
     export default {
         props: {
             marketRequest: {
@@ -39,7 +39,7 @@
                 console.log('updated: marketRequest.user_markets');
                 this.calcMarketState();
             },
-            'marketRequest._chosen_user_market': function(nV, oV) {
+            'marketRequest.chosen_user_market': function(nV, oV) {
                 console.log('updated: marketRequest._chosen_user_market');
                 this.calcMarketState();
             }

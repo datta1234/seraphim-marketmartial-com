@@ -4750,12 +4750,121 @@ function readonlyDescriptor() {
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var bind = __webpack_require__(21);
+var bind = __webpack_require__(23);
 var isBuffer = __webpack_require__(44);
 
 /*global toString:true*/
@@ -5059,7 +5168,7 @@ module.exports = {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5221,115 +5330,6 @@ function concat() {
 }
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -5356,7 +5356,7 @@ module.exports = function normalizeComponent (
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return position; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return eventOn; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return eventOff; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(6);
 
 
 // Determine if an element is an HTML Element
@@ -5620,6 +5620,239 @@ var eventOff = function eventOff(el, evtName, handler) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserMarketRequest = function () {
+    function UserMarketRequest(options) {
+        var _this = this;
+
+        _classCallCheck(this, UserMarketRequest);
+
+        // default internal
+        this._market = null;
+        // default public
+        this.trade_items = {};
+        this.quotes = [];
+        var defaults = {
+            id: "",
+            trade_structure: "",
+            attributes: {
+                state: "",
+                bid_state: "",
+                offer_state: ""
+            },
+            quote: null,
+            chosen_user_market: null,
+            created_at: moment()
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && options[key]) {
+                _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+
+        // register trade_items
+        if (options && options.trade_items) {
+            this.addTradeItems(options.trade_items);
+        }
+
+        // register quotes
+        if (options && options.user_market_quotes) {
+            this.addUserMarketQuotes(options.user_market_quotes);
+        }
+    }
+
+    /**
+    *   addUserMarketQuote - add user market quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote objects
+    */
+
+
+    _createClass(UserMarketRequest, [{
+        key: "addUserMarketQuote",
+        value: function addUserMarketQuote(user_market_quote) {
+            user_market_quote.setParent(this);
+            this.quotes.push(user_market_quote);
+        }
+
+        /**
+        *   addUserMarketQuotes - add array of user user_market_quotes
+        *   @param {Array} user_market_quotes - array of UserMarketQuote objects
+        */
+
+    }, {
+        key: "addUserMarketQuotes",
+        value: function addUserMarketQuotes(user_market_quotes) {
+            var _this2 = this;
+
+            user_market_quotes.forEach(function (user_market_quote) {
+                _this2.addUserMarketQuote(user_market_quote);
+            });
+        }
+
+        /**
+        *   setUserMarket - Set the UserMarketRequest
+        *   @param {UserMarket} user_market - UserMarket object
+        */
+
+    }, {
+        key: "setChosenUserMarket",
+        value: function setChosenUserMarket(user_market) {
+            user_market.setParent(this);
+            this.chosen_user_market = user_market;
+        }
+
+        /**
+        *   getChosenUserMarket - get the chosen user market
+        *   @return {UserMarket}
+        */
+
+    }, {
+        key: "getChosenUserMarket",
+        value: function getChosenUserMarket() {
+            return this.chosen_user_market;
+        }
+
+        /**
+        *   setUserMarketQuote - Set the UserMarketRequest quote
+        *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+        */
+
+    }, {
+        key: "setUserMarketQuote",
+        value: function setUserMarketQuote(user_market_quote) {
+            user_market_quote.setParent(this);
+            this.quote = user_market_quote;
+        }
+
+        /**
+        *   addTradeItem - add trade item
+        *   @param {} trade_item - trade item object
+        */
+
+    }, {
+        key: "addTradeItem",
+        value: function addTradeItem(group, title, value) {
+            if (!this.trade_items[group]) {
+                this.trade_items[group] = {};
+            }
+            this.trade_items[group][title] = value;
+        }
+
+        /**
+        *   addTradeItems - add array of trade items
+        *   @param {Array} trade_items - array of trade item objects
+        */
+
+    }, {
+        key: "addTradeItems",
+        value: function addTradeItems(trade_items) {
+            var _this3 = this;
+
+            Object.keys(trade_items).forEach(function (trade_group) {
+
+                Object.keys(trade_items[trade_group]).forEach(function (title) {
+                    _this3.addTradeItem(trade_group, title, trade_items[trade_group][title]);
+                });
+            });
+        }
+
+        /**
+        *   setMarket - Set the parent Market
+        *   @param {Market} market - Market object
+        */
+
+    }, {
+        key: "setMarket",
+        value: function setMarket(market) {
+            this._market = market;
+        }
+
+        /**
+        *   getMarket - Get the parent Market
+        *   @return {Market}
+        */
+
+    }, {
+        key: "getMarket",
+        value: function getMarket() {
+            return this._market;
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this4 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this4[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return UserMarketRequest;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarketRequest);
+
+/***/ }),
+/* 10 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+
+var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+
+/**
+ * Listens to a global toggleSidebar event
+ *
+ * @event EventBus#toggleSidebar
+ * 
+ * @type {string} $sidebar An argument detailing which sidebar is being toggled.
+ * @type {boolean} $state An argument detailing what state the sidebar being
+ *		toggled is in.
+ * @type {*} $payload An argument detailing the payload being transmitted with the
+ *		event.
+ *  
+ * @fires EventBus#chatToggle
+ * @fires EventBus#interactionToggle
+ */
+EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
+    switch (sidebar) {
+        case "interaction":
+            EventBus.$emit('chatToggle', false);
+            EventBus.$emit('interactionToggle', state, payload);
+            break;
+        case "chat":
+            EventBus.$emit('interactionToggle', false);
+            EventBus.$emit('chatToggle', state, payload);
+            break;
+    }
+});
+
+/***/ }),
+/* 11 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /**
  * Log a warning message to the console with bootstrap-vue formatting sugar.
  * @param {string} message
@@ -5632,7 +5865,7 @@ function warn(message) {
 /* harmony default export */ __webpack_exports__["a"] = (warn);
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ (function(module, exports) {
 
 var g;
@@ -5659,7 +5892,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5669,7 +5902,7 @@ module.exports = g;
 /* unused harmony export omitLinkProps */
 /* unused harmony export computed */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_functional_data_merge__ = __webpack_require__(1);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -5902,7 +6135,7 @@ function clickHandlerFactory(_ref3) {
 });
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8428,10 +8661,10 @@ Popper.Defaults = Defaults;
 /* harmony default export */ __webpack_exports__["default"] = (Popper);
 //# sourceMappingURL=popper.js.map
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8475,7 +8708,126 @@ Popper.Defaults = Defaults;
 });
 
 /***/ }),
-/* 14 */
+/* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserMarketNegotiation = function () {
+    function UserMarketNegotiation(options) {
+        var _this = this;
+
+        _classCallCheck(this, UserMarketNegotiation);
+
+        // default internal
+        this._user_market = null;
+        // default public
+        this.conditions = [];
+        var defaults = {
+            id: "",
+            bid: "",
+            offer: "",
+            bid_qty: 0,
+            offer_qty: 0,
+            bid_premium: "",
+            offer_premium: "",
+            is_put: false,
+            status: "",
+            created_at: moment()
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && options[key]) {
+                _this[key] = options[key];
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+
+        // register conditions
+        if (options && options.user_market_negotiation_condition) {
+            this.addUserMarketNegotiationConditions(options.user_market_negotiation_condition);
+        }
+    }
+
+    /**
+    *   setParent - Sets the negotiations UserMarket
+    *   @param {UserMarket} market - UserMarket for the negotiation
+    */
+
+
+    _createClass(UserMarketNegotiation, [{
+        key: "setParent",
+        value: function setParent(user_market) {
+            this._user_market = user_market;
+        }
+
+        /**
+        *   getParent - Gets the negotiations UserMarket
+        *   @return {UserMarket}
+        */
+
+    }, {
+        key: "getParent",
+        value: function getParent() {
+            return this._user_market;
+        }
+
+        /**
+        *   addNegotiation - add user user_market_negotiation
+        *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+        */
+
+    }, {
+        key: "addUserMarketNegotiationCondition",
+        value: function addUserMarketNegotiationCondition(user_market_negotiation_condition) {
+            user_market_negotiation_condition.setParent(this);
+            this.conditions.push(user_market_negotiation_condition);
+        }
+
+        /**
+        *   addNegotiations - add array of user market_negotiations
+        *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
+        */
+
+    }, {
+        key: "addUserMarketNegotiationConditions",
+        value: function addUserMarketNegotiationConditions(user_market_negotiation_conditions) {
+            var _this2 = this;
+
+            user_market_negotiation_conditions.forEach(function (user_market_negotiation_condition) {
+                _this2.addUserMarketNegotiationCondition(user_market_negotiation_condition);
+            });
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this3 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this3[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return UserMarketNegotiation;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarketNegotiation);
+
+/***/ }),
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8498,13 +8850,13 @@ Popper.Defaults = Defaults;
 });
 
 /***/ }),
-/* 15 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 var normalizeHeaderName = __webpack_require__(46);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -8521,10 +8873,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(22);
+    adapter = __webpack_require__(24);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(22);
+    adapter = __webpack_require__(24);
   }
   return adapter;
 }
@@ -8598,7 +8950,7 @@ module.exports = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(34)))
 
 /***/ }),
-/* 16 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8621,51 +8973,13 @@ module.exports = defaults;
 });
 
 /***/ }),
-/* 17 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(74);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-
-var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
-
-/**
- * Listens to a global toggleSidebar event
- *
- * @event EventBus#toggleSidebar
- * 
- * @type {string} $sidebar An argument detailing which sidebar is being toggled.
- * @type {boolean} $state An argument detailing what state the sidebar being
- *		toggled is in.
- * @type {*} $payload An argument detailing the payload being transmitted with the
- *		event.
- *  
- * @fires EventBus#chatToggle
- * @fires EventBus#interactionToggle
- */
-EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
-    switch (sidebar) {
-        case "interaction":
-            EventBus.$emit('chatToggle', false);
-            EventBus.$emit('interactionToggle', state, payload);
-            break;
-        case "chat":
-            EventBus.$emit('interactionToggle', false);
-            EventBus.$emit('chatToggle', state, payload);
-            break;
-    }
-});
-
-/***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = pluckProps;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__identity__ = __webpack_require__(198);
 
 
@@ -8689,7 +9003,7 @@ function pluckProps(keysToPluck, objToPluck) {
 }
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8711,7 +9025,7 @@ function pluckProps(keysToPluck, objToPluck) {
 });
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -19082,7 +19396,7 @@ return jQuery;
 
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19100,18 +19414,18 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 var settle = __webpack_require__(47);
 var buildURL = __webpack_require__(49);
 var parseHeaders = __webpack_require__(50);
 var isURLSameOrigin = __webpack_require__(51);
-var createError = __webpack_require__(23);
+var createError = __webpack_require__(25);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(52);
 
 module.exports = function xhrAdapter(config) {
@@ -19287,7 +19601,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19312,7 +19626,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19324,7 +19638,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -19350,7 +19664,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ (function(module, exports) {
 
 /*
@@ -19432,7 +19746,7 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -19791,7 +20105,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19866,11 +20180,11 @@ function observeDOM(el, callback, opts) {
 }
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(6);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 
@@ -19941,7 +20255,7 @@ var BVRL = '__BV_root_listeners__';
 });
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -19958,231 +20272,6 @@ var BVRL = '__BV_root_listeners__';
     }
   }
 });
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function UserMarketRequest(options) {
-        var _this = this;
-
-        _classCallCheck(this, UserMarketRequest);
-
-        this.user_markets = [];
-        this._chosen_user_market = null;
-        var defaults = {
-            id: "",
-            attributes: {
-                expiration_date: moment(),
-                strike: ""
-            }
-            // assign options with defaults
-        };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
-                _this[key] = options[key];
-            } else {
-                _this[key] = defaults[key];
-            }
-        });
-
-        // register user_markets
-        if (options && options.user_markets) {
-            this.addUserMarkets(options.user_markets);
-        }
-
-        // register chosen
-        if (options && options.chosen_user_market) {
-            if (this.user_markets.indexOf(options.chosen_user_market) == -1) {
-                this.addUserMarkets(options.user_markets);
-            }
-            this.setChosenUserMarket(options.chosen_user_market);
-        }
-    }
-
-    /**
-    *   addUserMarket - add user market
-    *   @param {UserMarket} user_market - UserMarket objects
-    */
-
-
-    _createClass(UserMarketRequest, [{
-        key: "addUserMarket",
-        value: function addUserMarket(user_market) {
-            user_market.setParent(this);
-            this.user_markets.push(user_market);
-        }
-
-        /**
-        *   addUserMarkets - add array of user user_markets
-        *   @param {Array} user_markets - array of UserMarket objects
-        */
-
-    }, {
-        key: "addUserMarkets",
-        value: function addUserMarkets(user_markets) {
-            var _this2 = this;
-
-            user_markets.forEach(function (user_market) {
-                _this2.addUserMarket(user_market);
-            });
-        }
-
-        /**
-        *   setParent - Set the parent Market
-        *   @param {Market} market - Market object
-        */
-
-    }, {
-        key: "setParent",
-        value: function setParent(market) {
-            this._market = market;
-        }
-
-        /**
-        *   getParent - Get the parent Market
-        *   @return {Market}
-        */
-
-    }, {
-        key: "getParent",
-        value: function getParent() {
-            return this._market;
-        }
-
-        /**
-        *   setChosenUserMarket - set the chosen UserMarket
-        *   @param {UserMarket}
-        */
-
-    }, {
-        key: "setChosenUserMarket",
-        value: function setChosenUserMarket(user_market) {
-            if (this.user_markets.indexOf(user_market) == -1) {
-                this.addUserMarket(user_market);
-            }
-            this._chosen_user_market = user_market;
-        }
-
-        /**
-        *   getChosenUserMarket - get the chosen user market
-        *   @return {UserMarket}
-        */
-
-    }, {
-        key: "getChosenUserMarket",
-        value: function getChosenUserMarket() {
-            return this._chosen_user_market;
-        }
-
-        /**
-        * toJSON - override removing internal references
-        */
-
-    }, {
-        key: "toJSON",
-        value: function toJSON() {
-            var _this3 = this;
-
-            var json = {};
-            Object.keys(this).forEach(function (key) {
-                if (key[0] != '_') {
-                    json[key] = _this3[key];
-                }
-            });
-            return json;
-        }
-    }]);
-
-    return UserMarketRequest;
-}();
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports) {
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function MarketNegotiation(options) {
-        var _this = this;
-
-        _classCallCheck(this, MarketNegotiation);
-
-        // default internal
-        this._market = null;
-        // default public
-        var defaults = {
-            bid_qty: 0,
-            bid: null,
-            offer: null,
-            offer_qty: 0,
-            time: null
-            // assign options with defaults
-        };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
-                _this[key] = options[key];
-            } else {
-                _this[key] = defaults[key];
-            }
-        });
-
-        // register markets
-        if (options && options.market) {
-            this.setUserMarket(options.market);
-        }
-    }
-
-    /**
-    *   setUserMarket - Sets the negotiations UserMarket
-    *   @param {UserMarket} market - UserMarket for the negotiation
-    */
-
-
-    _createClass(MarketNegotiation, [{
-        key: 'setUserMarket',
-        value: function setUserMarket(market) {
-            this._market = market;
-        }
-
-        /**
-        *   getUserMarket - Gets the negotiations UserMarket
-        *   @return {UserMarket}
-        */
-
-    }, {
-        key: 'getUserMarket',
-        value: function getUserMarket() {
-            return this._market;
-        }
-
-        /**
-        * toJSON - override removing internal references
-        */
-
-    }, {
-        key: 'toJSON',
-        value: function toJSON() {
-            var _this2 = this;
-
-            var json = {};
-            Object.keys(this).forEach(function (key) {
-                if (key[0] != '_') {
-                    json[key] = _this2[key];
-                }
-            });
-            return json;
-        }
-    }]);
-
-    return MarketNegotiation;
-}();
 
 /***/ }),
 /* 33 */
@@ -20425,7 +20514,7 @@ function prefixPropName(prefix, value) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = copyProps;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__identity__ = __webpack_require__(198);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -20488,22 +20577,30 @@ function copyProps(props) {
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-module.exports = function () {
+var Market = function () {
     function Market(options) {
         var _this = this;
 
         _classCallCheck(this, Market);
 
         this.market_requests = [];
+        this.children = [];
+        this._parent = null;
         var defaults = {
+            id: "",
             title: "",
-            description: ""
+            description: "",
+            order: "",
+            market_type_id: "",
+            parent_id: "",
+            is_displayed: true
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
             if (options && options[key]) {
@@ -20517,6 +20614,11 @@ module.exports = function () {
         if (options && options.market_requests) {
             this.addMarketRequests(options.market_requests);
         }
+
+        // register market children
+        if (options && options.children) {
+            this.addChildren(options.children);
+        }
     }
 
     /**
@@ -20528,7 +20630,7 @@ module.exports = function () {
     _createClass(Market, [{
         key: "addMarketRequest",
         value: function addMarketRequest(market_req) {
-            market_req.setParent(this);
+            market_req.setMarket(this);
             this.market_requests.push(market_req);
         }
 
@@ -20548,18 +20650,70 @@ module.exports = function () {
         }
 
         /**
+        *   addChild - add user market
+        *   @param {UserMarketRequest} market - UserMarket objects
+        */
+
+    }, {
+        key: "addChild",
+        value: function addChild(market) {
+            market.setParent(this);
+            this.children.push(market);
+        }
+
+        /**
+        *   addChildren - add array of user market_requests
+        *   @param {Array} market_requests - array of UserChild objects
+        */
+
+    }, {
+        key: "addChildren",
+        value: function addChildren(markets) {
+            var _this3 = this;
+
+            markets.forEach(function (market) {
+                if (!(market instanceof Market)) {
+                    market = new Market(market);
+                }
+                _this3.addChild(market);
+            });
+        }
+
+        /**
+        *   setParent - Set the parent Market
+        *   @param {Market} market - Market object
+        */
+
+    }, {
+        key: "setParent",
+        value: function setParent(market) {
+            this._parent = market;
+        }
+
+        /**
+        *   getParent - Get the parent Market
+        *   @return {Market}
+        */
+
+    }, {
+        key: "getParent",
+        value: function getParent() {
+            return this._parent;
+        }
+
+        /**
         * toJSON - override removing internal references
         */
 
     }, {
         key: "toJSON",
         value: function toJSON() {
-            var _this3 = this;
+            var _this4 = this;
 
             var json = {};
             Object.keys(this).forEach(function (key) {
                 if (key[0] != '_') {
-                    json[key] = _this3[key];
+                    json[key] = _this4[key];
                 }
             });
             return json;
@@ -20569,13 +20723,15 @@ module.exports = function () {
     return Market;
 }();
 
+/* harmony default export */ __webpack_exports__["a"] = (Market);
+
 /***/ }),
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 window._ = __webpack_require__(40);
-window.Popper = __webpack_require__(12).default;
+window.Popper = __webpack_require__(14).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -20584,7 +20740,7 @@ window.Popper = __webpack_require__(12).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(20);
+  window.$ = window.jQuery = __webpack_require__(22);
 
   __webpack_require__(41);
 } catch (e) {}
@@ -37741,7 +37897,7 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(33)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(33)(module)))
 
 /***/ }),
 /* 41 */
@@ -37753,7 +37909,7 @@ if (token) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(20), __webpack_require__(12)) :
+   true ? factory(exports, __webpack_require__(22), __webpack_require__(14)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -41689,10 +41845,10 @@ module.exports = __webpack_require__(43);
 "use strict";
 
 
-var utils = __webpack_require__(4);
-var bind = __webpack_require__(21);
+var utils = __webpack_require__(5);
+var bind = __webpack_require__(23);
 var Axios = __webpack_require__(45);
-var defaults = __webpack_require__(15);
+var defaults = __webpack_require__(18);
 
 /**
  * Create an instance of Axios
@@ -41725,9 +41881,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(25);
+axios.Cancel = __webpack_require__(27);
 axios.CancelToken = __webpack_require__(59);
-axios.isCancel = __webpack_require__(24);
+axios.isCancel = __webpack_require__(26);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -41775,8 +41931,8 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(15);
-var utils = __webpack_require__(4);
+var defaults = __webpack_require__(18);
+var utils = __webpack_require__(5);
 var InterceptorManager = __webpack_require__(54);
 var dispatchRequest = __webpack_require__(55);
 
@@ -41861,7 +42017,7 @@ module.exports = Axios;
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -41880,7 +42036,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(23);
+var createError = __webpack_require__(25);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -41941,7 +42097,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -42016,7 +42172,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -42076,7 +42232,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -42194,7 +42350,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -42254,7 +42410,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -42313,10 +42469,10 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 var transformData = __webpack_require__(56);
-var isCancel = __webpack_require__(24);
-var defaults = __webpack_require__(15);
+var isCancel = __webpack_require__(26);
+var defaults = __webpack_require__(18);
 var isAbsoluteURL = __webpack_require__(57);
 var combineURLs = __webpack_require__(58);
 
@@ -42406,7 +42562,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(4);
+var utils = __webpack_require__(5);
 
 /**
  * Transform the data for a request or a response
@@ -42475,7 +42631,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(25);
+var Cancel = __webpack_require__(27);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -42572,25 +42728,35 @@ module.exports = function spread(callback) {
 
 $(document).ready(function () {
 
-    /*
-    * Dismiss alert messages
-    */
+    /*/**
+     * Dismiss alert messages
+     */
     $("alert alert-success").on("click", "[data-dismiss]", function (event) {
         $(this).remove();
     });
 
-    /*
-    * Enable Tooltips
-    */
+    /**
+     * Enable Tooltips
+     */
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    /*
-    * Toggle theme classes
-    */
+    /**
+     * Toggle theme classes
+     */
     $("[data-toggle-theme]").on("change", function (event) {
         $('#trade_app').find("[data-theme-wrapper]").toggleClass("light-theme").toggleClass("dark-theme");
+    });
+
+    /**
+     * Toggle active Nav class
+     */
+    $(function () {
+        var currentUrl = window.location.href;
+        console.log(currentUrl);
+        $(".nav > .nav-item ").removeClass('active');
+        $(".nav > .nav-item ").find('a[href="' + currentUrl + '"]').parent().addClass('active');
     });
 });
 
@@ -42660,11 +42826,11 @@ var props = {
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_dom__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__link_link__ = __webpack_require__(13);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -43144,7 +43310,7 @@ var BvEvent = function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__object__ = __webpack_require__(3);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -43203,7 +43369,7 @@ function looseEqual(a, b) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_object__ = __webpack_require__(3);
 
 
@@ -43288,10 +43454,10 @@ function isObject(obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bv_event_class__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__dom__ = __webpack_require__(7);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -44405,27 +44571,31 @@ var ToolTip = function () {
 
 /***/ }),
 /* 73 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-module.exports = function () {
+var UserMarket = function () {
     function UserMarket(options) {
         var _this = this;
 
         _classCallCheck(this, UserMarket);
 
+        // default internal
+        this._user_market_request = null;
+        // default public
+        this.market_negotiations = [];
         var defaults = {
-            market_negotiations: []
+            id: "",
+            status: "",
+            created_at: moment(),
+            current_market_negotiation: null
 
-            // internal
-        };this._market_request = null;
-        this._current_market_negotiation = null;
-
-        // assign options with defaults
-        Object.keys(defaults).forEach(function (key) {
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
             if (options && options[key]) {
                 _this[key] = options[key];
             } else {
@@ -44433,59 +44603,59 @@ module.exports = function () {
             }
         });
 
-        // register current
-        if (options && options.current_market_negotiation) {
-            this.setCurrentNegotiation(options.current_market_negotiation);
+        // register market_negotiations
+        if (options && options.market_negotiations) {
+            this.addNegotiations(options.market_negotiations);
         }
     }
 
     /**
-    *   setParent - Set the parent Market
-    *   @param {Market} market - Market object
+    *   setParent - Set the parent UserMarketRequest
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
 
 
     _createClass(UserMarket, [{
-        key: 'setParent',
-        value: function setParent(market) {
-            this._market_request = market;
+        key: "setParent",
+        value: function setParent(user_market_request) {
+            this._user_market_request = user_market_request;
         }
 
         /**
-        *   getParent - Get the parent Market
-        *   @return {Market}
+        *   getParent - Get the parent UserMarketRequest
+        *   @return {UserMarketRequest}
         */
 
     }, {
-        key: 'getParent',
+        key: "getParent",
         value: function getParent() {
-            return this._market_request;
+            return this._user_market_request;
         }
 
         /**
-        *   addNegotiation - add user market_negotiation
-        *   @param {Negotiation} market_negotiation - Negotiation objects
+        *   addNegotiation - add user user_market_negotiation
+        *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
         */
 
     }, {
-        key: 'addNegotiation',
-        value: function addNegotiation(market_negotiation) {
-            market_negotiation.setUserMarket(this);
-            this.market_negotiations.push(market_negotiation);
+        key: "addNegotiation",
+        value: function addNegotiation(user_market_negotiation) {
+            user_market_negotiation.setParent(this);
+            this.market_negotiations.push(user_market_negotiation);
         }
 
         /**
         *   addNegotiations - add array of user market_negotiations
-        *   @param {Array} market_negotiations - array of Negotiation objects
+        *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
         */
 
     }, {
-        key: 'addNegotiations',
-        value: function addNegotiations(market_negotiations) {
+        key: "addNegotiations",
+        value: function addNegotiations(user_market_negotiations) {
             var _this2 = this;
 
-            market_negotiations.forEach(function (market_negotiation) {
-                _this2.addNegotiation(market_negotiation);
+            user_market_negotiations.forEach(function (user_market_negotiation) {
+                _this2.addNegotiation(user_market_negotiation);
             });
         }
 
@@ -44495,7 +44665,7 @@ module.exports = function () {
         */
 
     }, {
-        key: 'setCurrentNegotiation',
+        key: "setCurrentNegotiation",
         value: function setCurrentNegotiation(negotiation) {
             if (this.market_negotiations.indexOf(negotiation) == -1) {
                 this.addNegotiation(negotiation);
@@ -44509,7 +44679,7 @@ module.exports = function () {
         */
 
     }, {
-        key: 'getCurrentNegotiation',
+        key: "getCurrentNegotiation",
         value: function getCurrentNegotiation() {
             return this._current_market_negotiation;
         }
@@ -44519,7 +44689,7 @@ module.exports = function () {
         */
 
     }, {
-        key: 'toJSON',
+        key: "toJSON",
         value: function toJSON() {
             var _this3 = this;
 
@@ -44535,6 +44705,8 @@ module.exports = function () {
 
     return UserMarket;
 }();
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarket);
 
 /***/ }),
 /* 74 */
@@ -55500,7 +55672,7 @@ Vue.compile = compileToFunctions;
 
 module.exports = Vue;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(231).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(231).setImmediate))
 
 /***/ }),
 /* 75 */
@@ -67404,9 +67576,9 @@ var props = Object(__WEBPACK_IMPORTED_MODULE_1__utils_object__["a" /* assign */]
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return props; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(13);
 
 
 
@@ -67882,14 +68054,14 @@ var unbindTargets = function unbindTargets(vnode, binding, listenTypes) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__clickout__ = __webpack_require__(269);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listen_on_root__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listen_on_root__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_key_codes__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_key_codes__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_bv_event_class__ = __webpack_require__(69);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__utils_dom__ = __webpack_require__(7);
 
 
@@ -68498,11 +68670,11 @@ var props = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_radio_check__ = __webpack_require__(218);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_loose_equal__ = __webpack_require__(70);
 
 
@@ -68790,8 +68962,8 @@ var props = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_state__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_state__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_radio_check__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_loose_equal__ = __webpack_require__(70);
 
@@ -69021,9 +69193,9 @@ Object(__WEBPACK_IMPORTED_MODULE_6__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_range__ = __webpack_require__(321);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_dom__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_link_link__ = __webpack_require__(13);
 /*
  * Comon props, computed, data, render function, and methods for b-pagination and b-pagination-nav
  */
@@ -69612,11 +69784,11 @@ var PopOver = function (_ToolTip) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_dom__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_ssr__ = __webpack_require__(326);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_observe_dom__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_observe_dom__ = __webpack_require__(30);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
@@ -70061,7 +70233,7 @@ var OBSERVER_CONFIG = {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
 var __vue_script__ = __webpack_require__(351)
 /* template */
@@ -70108,7 +70280,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(230);
-module.exports = __webpack_require__(406);
+module.exports = __webpack_require__(430);
 
 
 /***/ }),
@@ -70121,6 +70293,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_bootstrap_vue__ = __webpack_require__(235);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_bootstrap_vue_dist_bootstrap_vue_css__ = __webpack_require__(349);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_bootstrap_vue_dist_bootstrap_vue_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_bootstrap_vue_dist_bootstrap_vue_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_Market__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_UserMarket__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarketNegotiation__ = __webpack_require__(16);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -70145,10 +70321,10 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_1_bootstrap_vue__["a" /* default */]);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-var Market = __webpack_require__(38);
-var UserMarketRequest = __webpack_require__(31);
-var UserMarket = __webpack_require__(73);
-var MarketNegotiation = __webpack_require__(32);
+
+
+
+
 
 // datepicker
 Vue.component('Datepicker', __WEBPACK_IMPORTED_MODULE_0_vuejs_datepicker__["a" /* default */]);
@@ -70157,312 +70333,189 @@ Vue.component('user-header', __webpack_require__(228));
 
 // Market Tab Components
 Vue.component('market-group', __webpack_require__(353));
-Vue.component('market-tab', __webpack_require__(356));
+Vue.component('market-tab', __webpack_require__(368));
 
 // Interaction Bar Component + children
-Vue.component('ibar-negotiation-bar', __webpack_require__(359));
-Vue.component('ibar-user-market-title', __webpack_require__(362));
-Vue.component('ibar-negotiation-history', __webpack_require__(365));
-Vue.component('ibar-market-negotiation', __webpack_require__(368));
-Vue.component('ibar-apply-conditions', __webpack_require__(371));
-Vue.component('interaction-bar', __webpack_require__(374));
+Vue.component('ibar-negotiation-bar', __webpack_require__(371));
+Vue.component('ibar-user-market-title', __webpack_require__(386));
+Vue.component('ibar-negotiation-history', __webpack_require__(389));
+Vue.component('ibar-market-negotiation', __webpack_require__(392));
+Vue.component('ibar-apply-conditions', __webpack_require__(395));
+Vue.component('interaction-bar', __webpack_require__(398));
 
-// Action Bar Component + children
-Vue.component('action-bar', __webpack_require__(377));
-Vue.component('filter-markets-menu', __webpack_require__(380));
-Vue.component('Important-markets-menu', __webpack_require__(383));
-Vue.component('Alerts-markets-menu', __webpack_require__(386));
-Vue.component('Confirmations-markets-menu', __webpack_require__(389));
+// Action Bar Component
+Vue.component('action-bar', __webpack_require__(401));
 
 Vue.component('user-header', __webpack_require__(228));
-Vue.component('chat-bar', __webpack_require__(392));
+Vue.component('chat-bar', __webpack_require__(416));
 
 // Profile Components
-Vue.component('email-settings', __webpack_require__(395));
-Vue.component('activate-input', __webpack_require__(400));
-Vue.component('toggle-input', __webpack_require__(403));
+Vue.component('email-settings', __webpack_require__(419));
+Vue.component('activate-input', __webpack_require__(424));
+Vue.component('toggle-input', __webpack_require__(427));
+
+/**
+ * Takes in a value and splits the value by a splitter in a desired frequency
+ *
+ * @param {string|number} val - the desired value to split
+ * @param {string} splitter - the splitter to split the value by
+ * @param {number} frequency - the frequency in which to apply the split to the value
+ *
+ * @return {string} the newly splitted value
+ */
+var splitValHelper = function splitValHelper(val, splitter, frequency) {
+    var tempVal = '' + val;
+    var floatVal = '';
+    //Check if our passed value is a float
+    if (("" + val).indexOf('.') !== -1) {
+        floatVal = tempVal.slice(tempVal.indexOf('.'));
+        tempVal = tempVal.slice(0, tempVal.indexOf('.'));
+    }
+    //Creates an array of chars reverses and itterates through it
+    return tempVal.split('').reverse().reduce(function (x, y) {
+        //adds a space on the spesified frequency position
+        if (x[x.length - 1].length == frequency) {
+            x.push("");
+        }
+        x[x.length - 1] = y + x[x.length - 1];
+        return x;
+        //Concats the array to a string back in the correct order
+    }, [""]).reverse().join(splitter) + floatVal;
+};
 
 Vue.mixin({
     methods: {
+        /**
+         * Takes in a value and formats it according to it's size to a currency format
+         *
+         * @param {string|number} val - the desired value to be formatted
+         *
+         * @return {string} the formated currency value
+         */
         formatRandQty: function formatRandQty(val) {
             var sbl = "R";
             var calcVal = typeof val === 'number' ? val : parseInt(val);
-            switch (Math.ceil(("" + calcVal).length / 3)) {
+            //currently they want the format the same for all values
+            switch (Math.ceil(('' + Math.trunc(val)).length / 3)) {
                 case 3:
                     // 1 000 000 < x
-                    return sbl + calcVal / 1000000 + "m";
+                    //return sbl+(calcVal/1000000)+"m";
                     break;
-                case 2:
-                    // 1000 < x < 1 000 000
-                    return sbl + calcVal / 1000 + "k";
-                    break;
+                case 2: // 1000 < x < 1 000 000
+                //return sbl + splitValHelper( calcVal, ' ', 3);
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                    return sbl + calcVal;
+                    return sbl + splitValHelper(calcVal, ' ', 3);
             }
         }
     }
 });
 
-var sampleUserNegotitaion = new MarketNegotiation({
-    bid: 30,
-    bid_qty: 50000000,
-    offer: 25,
-    offer_qty: 50000000
-});
-var sampleUserMarket = new UserMarket({
-    market_negotiations: [sampleUserNegotitaion]
-});
-var marketRequestSample = new UserMarketRequest({
-    id: "7",
-    attributes: {
-        expiration_date: moment("2018-03-18 00:00:00"),
-        strike: "10 000",
-        state: 'sent',
-        bid_state: '',
-        offer_state: ''
-    },
-    user_markets: [sampleUserMarket],
-    chosen_user_market: sampleUserMarket
-});
-var marketRequestSample2 = new UserMarketRequest({
-    id: "6",
-    attributes: {
-        expiration_date: moment("2018-03-20 00:00:00"),
-        strike: "12 000",
-        state: '',
-        bid_state: '',
-        offer_state: ''
-    },
-    user_markets: [new UserMarket({
-        current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-    }), new UserMarket({
-        current_market_negotiation: new MarketNegotiation({ bid: 25, bid_qty: 50000000, offer: 24, offer_qty: 50000000 })
-    }), new UserMarket({
-        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-    })],
-    chosen_user_market: new UserMarket({
-        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-    })
-});
-
 var app = new Vue({
     el: '#trade_app',
+    watch: {
+        'display_markets': function display_markets(nv, ov) {
+            this.reorderDisplayMarkets(nv);
+        }
+    },
+    methods: {
+        /**
+         * Basic bubble sort that sorts Display Markets according to a set Market Order
+         *
+         * @param {Array} display_markets_arr - The display market array that need to be sorted
+         *
+         * @return void
+         */
+        reorderDisplayMarkets: function reorderDisplayMarkets(display_markets_arr) {
+            for (var i = 0; i < display_markets_arr.length - 1; i++) {
+                for (var j = 0; j < display_markets_arr.length - i - 1; j++) {
+                    if (this.market_order.indexOf(display_markets_arr[j].title) > this.market_order.indexOf(display_markets_arr[j + 1].title)) {
+                        var temp = display_markets_arr[j];
+                        display_markets_arr[j] = display_markets_arr[j + 1];
+                        display_markets_arr[j + 1] = temp;
+                    }
+                }
+            }
+        },
+        loadMarketTypes: function loadMarketTypes() {
+            var self = this;
+            return axios.get('/trade/market-type').then(function (marketTypeResponse) {
+                if (marketTypeResponse.status == 200) {
+                    // set the available market types
+                    self.market_types = marketTypeResponse.data;
+                } else {
+                    console.error(err);
+                }
+                return self.market_types;
+            }, function (err) {
+                console.error(err);
+            });
+        },
+        loadMarkets: function loadMarkets(marketType) {
+            var self = this;
+            return axios.get('/trade/market-type/' + marketType.id + '/market').then(function (marketResponse) {
+                if (marketResponse.status == 200) {
+                    marketResponse.data = marketResponse.data.map(function (x) {
+                        x = new __WEBPACK_IMPORTED_MODULE_3__lib_Market__["a" /* default */](x);
+                        self.display_markets.push(x);
+                        return x;
+                    });
+                    self.reorderDisplayMarkets(self.display_markets);
+                    return marketResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        },
+        loadMarketRequests: function loadMarketRequests(market) {
+            var self = this;
+            console.log("Load Market Request", market);
+            return axios.get('/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
+                if (marketResponse.status == 200) {
+                    console.log(JSON.stringify(marketResponse.data, null, 4));
+                    marketResponse.data = marketResponse.data.map(function (x) {
+                        return new __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketRequest__["a" /* default */](x);
+                    });
+                    market.addMarketRequests(marketResponse.data);
+                    console.log("Market Requests", marketResponse.data);
+                    return marketResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        }
+    },
     data: {
         // default data
+        market_order: ['TOP 40', 'DTOP', 'DCAP', 'SINGLES', 'DELTA ONE'],
         no_cares: [],
-        display_markets: [new Market({
-            title: "TOP 40",
-            market_requests: [marketRequestSample, marketRequestSample2, new UserMarketRequest({
-                id: "1",
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            }), new UserMarketRequest({
-                attributes: {
-                    expiration_date: moment("2018-03-18 00:00:00"),
-                    strike: "11 000",
-                    state: '',
-                    bid_state: '',
-                    offer_state: ''
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                })
-            })]
-        }), new Market({
-            title: "DTOP",
-            market_requests: [new UserMarketRequest({
-                id: "2",
-                attributes: {
-                    expiration_date: moment("2018-03-17 00:00:00"),
-                    strike: "14 000",
-                    state: 'vol-spread',
-                    vol_spread: 4,
-                    bid_state: '',
-                    offer_state: ''
-                }
-            })]
-        }), new Market({
-            title: "SINGLES",
-            market_requests: [new UserMarketRequest({
-                id: "3",
-                attributes: {
-                    expiration_date: moment("2018-03-17 00:00:00"),
-                    strike: "16 000",
-                    state: 'confirm',
-                    bid_state: '',
-                    offer_state: 'action'
-                },
-                user_markets: [new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                }), new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                })],
-                chosen_user_market: new UserMarket({
-                    current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                })
-            })]
-        })]
+        display_markets: [],
+        market_types: []
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.loadMarketTypes().then(function (market_types) {
+            var promises = [];
+            market_types.forEach(function (market_type) {
+                promises.push(_this.loadMarkets(market_type).then(function (markets) {
+                    markets.forEach(function (market) {
+                        promises.push(_this.loadMarketRequests(market));
+                    });
+                }));
+            });
+            return Promise.all(promises);
+        }).then(function (all_market_requests) {
+            console.log(all_market_requests);
+        });
     }
 });
 
-// Testing Code ( Simulate Stream Updates )
-
-// REQUEST - blue
-setTimeout(function () {
-    console.log("REQUEST - blue");
-    app.display_markets[1].addMarketRequest(new UserMarketRequest({
-        id: "4",
-        attributes: {
-            expiration_date: moment("2018-03-18 00:00:00"),
-            strike: "10 000",
-            state: 'request',
-            bid_state: '',
-            offer_state: ''
-        }
-    }));
-}, 5000);
-
-// REQUEST - grey
-setTimeout(function () {
-    console.log("REQUEST - grey");
-    marketRequestSample.attributes.state = "request-grey";
-}, 10000);
-
-// VOL SPREAD
-setTimeout(function () {
-    console.log("VOL SPREAD");
-    marketRequestSample.attributes.vol_spread = 3;
-    marketRequestSample.attributes.state = 'vol-spread-alert';
-}, 10000);
-
-// VOL SPREAD
-setTimeout(function () {
-    console.log("VOL SPREAD");
-    marketRequestSample2._chosen_user_market.setCurrentNegotiation(new MarketNegotiation({ bid: 32, bid_qty: 50000000, offer: 25, offer_qty: 50000000 }));
-    marketRequestSample2.attributes.bid_state = 'action';
-    marketRequestSample2.attributes.state = '';
-}, 15000);
-
-// RESET
-setTimeout(function () {
-    console.log("RESET STATE");
-    sampleUserMarket.setCurrentNegotiation(sampleUserNegotitaion);
-    marketRequestSample.setChosenUserMarket(sampleUserMarket);
-}, 20000);
+// test code
+// import emulation from './emulate';
+// emulation.setApp(app);
+// emulation.init();
 
 /***/ }),
 /* 231 */
@@ -70532,7 +70585,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
                          (typeof global !== "undefined" && global.clearImmediate) ||
                          (this && this.clearImmediate);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 232 */
@@ -70725,7 +70778,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10), __webpack_require__(34)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(34)))
 
 /***/ }),
 /* 233 */
@@ -72618,7 +72671,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(29)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -72638,7 +72691,7 @@ if(false) {
 /* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(false);
+exports = module.exports = __webpack_require__(28)(false);
 // imports
 
 
@@ -72774,9 +72827,9 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(13);
 
 
 
@@ -72863,7 +72916,7 @@ Object(__WEBPACK_IMPORTED_MODULE_3__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__breadcrumb_item__ = __webpack_require__(199);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -72975,7 +73028,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(6);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -73052,7 +73105,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_dom__ = __webpack_require__(7);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(19);
 
 
 
@@ -73344,7 +73397,7 @@ Object(__WEBPACK_IMPORTED_MODULE_6__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_prefix_prop_name__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_unprefix_prop_name__ = __webpack_require__(255);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_copyProps__ = __webpack_require__(36);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_pluck_props__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__mixins_card_mixin__ = __webpack_require__(37);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__card_body__ = __webpack_require__(204);
@@ -73537,8 +73590,8 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_observe_dom__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_observe_dom__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_key_codes__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_dom__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_id__ = __webpack_require__(8);
 
@@ -73999,7 +74052,7 @@ var TransitionEndEvents = {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__image_img__ = __webpack_require__(66);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_id__ = __webpack_require__(8);
 
 
@@ -74149,7 +74202,7 @@ Object(__WEBPACK_IMPORTED_MODULE_4__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(6);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -74219,7 +74272,7 @@ var props = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_memoize__ = __webpack_require__(264);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_suffix_prop_name__ = __webpack_require__(265);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(6);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -74404,7 +74457,7 @@ function suffixPropName(suffix, str) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_listen_on_root__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_listen_on_root__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_dom__ = __webpack_require__(7);
 
 
@@ -74847,7 +74900,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(29)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -74867,7 +74920,7 @@ if(false) {
 /* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(false);
+exports = module.exports = __webpack_require__(28)(false);
 // imports
 
 
@@ -74884,7 +74937,7 @@ exports.push([module.i, "/* workaround for https://github.com/bootstrap-vue/boot
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__link_link__ = __webpack_require__(13);
 
 
 
@@ -75040,7 +75093,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_array__ = __webpack_require__(6);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -75157,10 +75210,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_dom__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__layout_form_row__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__form_form_text__ = __webpack_require__(214);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__form_form_invalid_feedback__ = __webpack_require__(215);
@@ -75493,11 +75546,11 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_options__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__form_checkbox__ = __webpack_require__(217);
 
 
@@ -75643,10 +75696,10 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_options__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(32);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__form_radio__ = __webpack_require__(219);
 
 
@@ -75787,10 +75840,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__form_input_css__ = __webpack_require__(288);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__form_input_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__form_input_css__);
 
@@ -75958,7 +76011,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(29)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -75978,7 +76031,7 @@ if(false) {
 /* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(false);
+exports = module.exports = __webpack_require__(28)(false);
 // imports
 
 
@@ -76019,9 +76072,9 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(15);
 
 
 
@@ -76200,10 +76253,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_custom__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_custom__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(6);
 
 
 
@@ -76484,11 +76537,11 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_options__ = __webpack_require__(71);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(6);
 
 
 
@@ -76949,7 +77002,7 @@ var props = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__link__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_plugins__ = __webpack_require__(2);
 
 
@@ -77039,10 +77092,10 @@ var props = {
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__link_link__ = __webpack_require__(13);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
@@ -77223,10 +77276,10 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__button_button__ = __webpack_require__(63);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__button_button_close__ = __webpack_require__(62);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_listen_on_root__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_observe_dom__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warn__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_key_codes__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_listen_on_root__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_observe_dom__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warn__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_key_codes__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_bv_event_class__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__utils_dom__ = __webpack_require__(7);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -78018,7 +78071,7 @@ var listenTypes = { click: true };
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(11);
 
 
 
@@ -78085,7 +78138,7 @@ var props = {
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__link_link__ = __webpack_require__(13);
 
 
 
@@ -78387,9 +78440,9 @@ var props = {
 
 "use strict";
 /* unused harmony export props */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__link_link__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_pluck_props__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_object__ = __webpack_require__(3);
 
 
@@ -78430,7 +78483,7 @@ var props = Object(__WEBPACK_IMPORTED_MODULE_3__utils_object__["a" /* assign */]
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_listen_on_root__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_listen_on_root__ = __webpack_require__(31);
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -78612,7 +78665,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_pagination__ = __webpack_require__(224);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link_link__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__link_link__ = __webpack_require__(13);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 
@@ -78729,7 +78782,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_popover_class__ = __webpack_require__(225);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_toolpop__ = __webpack_require__(226);
 
 
@@ -78931,12 +78984,12 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_lodash_get___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_lodash_get__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_loose_equal__ = __webpack_require__(70);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_stable_sort__ = __webpack_require__(333);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_key_codes__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_key_codes__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_array__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__utils_array__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__mixins_id__ = __webpack_require__(8);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__mixins_listen_on_root__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__mixins_listen_on_root__ = __webpack_require__(31);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__table_css__ = __webpack_require__(334);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__table_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__table_css__);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -80453,7 +80506,7 @@ function words(string, pattern, guard) {
 
 module.exports = startCase;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 332 */
@@ -81391,7 +81444,7 @@ function get(object, path, defaultValue) {
 
 module.exports = get;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
 
 /***/ }),
 /* 333 */
@@ -81446,7 +81499,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(29)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -81466,7 +81519,7 @@ if(false) {
 /* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(false);
+exports = module.exports = __webpack_require__(28)(false);
 // imports
 
 
@@ -81508,8 +81561,8 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_key_codes__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_observe_dom__ = __webpack_require__(28);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_key_codes__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_observe_dom__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_id__ = __webpack_require__(8);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -82044,7 +82097,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_tooltip_class__ = __webpack_require__(72);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_toolpop__ = __webpack_require__(226);
 
 
@@ -82255,8 +82308,8 @@ function removeBVSS(el) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_observe_dom__ = __webpack_require__(28);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_observe_dom__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_warn__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_dom__ = __webpack_require__(7);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -82767,10 +82820,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_tooltip_class__ = __webpack_require__(72);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(11);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 
@@ -82966,10 +83019,10 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_popover_class__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(11);
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 
@@ -83151,7 +83204,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(27)(content, options);
+var update = __webpack_require__(29)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -83171,7 +83224,7 @@ if(false) {
 /* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(26)(false);
+exports = module.exports = __webpack_require__(28)(false);
 // imports
 
 
@@ -83210,9 +83263,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             time: {
-                hours: '',
-                minutes: '',
-                session: 'AM',
+                location: 'SA',
                 computed_time: '',
                 _interval: null
             }
@@ -83226,28 +83277,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @todo Change clock time to be sent an initialsed from the backend
          */
         showTime: function showTime() {
-
             //Getting current time and setting our time object.
-            var date = new Date();
-            this.time.hours = date.getHours(); // Hours format 0 - 23
-            this.time.minutes = date.getMinutes(); // 0 - 59
-            this.time.session = "AM";
-
-            //resets the hour when reaching 0 to 12
-            if (this.time.hours == 0) {
-                this.time.hours = 12; //Changes computed hours to format 0 - 12
-            }
-
-            //Changes hours from before 12 AM to past 12 PM - keeps to format 0 - 12 
-            if (this.time.hours > 12) {
-                this.time.hours = this.time.hours - 12;
-                this.time.session = "PM";
-            }
-
-            //Format time from h:m format to hh:mm format with leading 0
-            this.time.hours = this.time.hours < 10 ? "0" + this.time.hours : this.time.hours;
-            this.time.minutes = this.time.minutes < 10 ? "0" + this.time.minutes : this.time.minutes;
-            this.time.computed_time = this.time.hours + ":" + this.time.minutes + " " + this.time.session;
+            this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
         }
     },
     mounted: function mounted() {
@@ -83264,38 +83295,42 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "user-header" }, [
-    _c("div", { staticClass: "row sub-nav pt-3 pb-3" }, [
-      _c("div", { staticClass: "col-6" }, [
-        _vm.organisation
-          ? _c("h1", { staticClass: "pt-1" }, [
-              _vm._v(
-                "Welcome " +
-                  _vm._s(_vm.user_name) +
-                  " (" +
-                  _vm._s(_vm.organisation) +
-                  ")"
-              )
-            ])
-          : _c("h1", { staticClass: "pt-1" }, [
-              _vm._v("Welcome " + _vm._s(_vm.user_name))
-            ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-2" }, [
-        _c("p", { staticClass: "mb-1 pt-3" }, [
-          _vm._v(_vm._s(_vm.time.computed_time))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-4" }, [
-        _c("p", { staticClass: "float-right mb-1 pt-3" }, [
-          _vm._v("Rebates: "),
-          _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
+  return _c(
+    "div",
+    { staticClass: "user-header", attrs: { dusk: "user-header" } },
+    [
+      _c("div", { staticClass: "row sub-nav pt-3" }, [
+        _c("div", { staticClass: "col-6 user-details" }, [
+          _vm.organisation
+            ? _c("h1", { staticClass: "pt-1" }, [
+                _vm._v(
+                  "Welcome " +
+                    _vm._s(_vm.user_name) +
+                    " (" +
+                    _vm._s(_vm.organisation) +
+                    ")"
+                )
+              ])
+            : _c("h1", { staticClass: "pt-1" }, [
+                _vm._v("Welcome " + _vm._s(_vm.user_name))
+              ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-2 current-time" }, [
+          _c("p", { staticClass: "pt-1" }, [
+            _vm._v(_vm._s(_vm.time.computed_time))
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4 total-rebate" }, [
+          _c("p", { staticClass: "float-right pt-1" }, [
+            _vm._v("Rebates: "),
+            _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
+          ])
         ])
       ])
-    ])
-  ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -83312,11 +83347,11 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
 var __vue_script__ = __webpack_require__(354)
 /* template */
-var __vue_template__ = __webpack_require__(355)
+var __vue_template__ = __webpack_require__(367)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83360,6 +83395,15 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar__ = __webpack_require__(361);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__);
 //
 //
 //
@@ -83384,11 +83428,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var Market = __webpack_require__(38);
+
+
+
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        MarketTabOutright: __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
+        MarketTabRisky: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
+        MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
+        MarketTabFly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a
+    },
     props: {
         'market': {
-            type: Market
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]
         }
     },
     watch: {
@@ -83399,7 +83455,13 @@ var Market = __webpack_require__(38);
     },
     data: function data() {
         return {
-            market_date_groups: {}
+            market_date_groups: {},
+            tabs: {
+                Outright: __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
+                Risky: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
+                Calendar: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
+                Fly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a
+            }
         };
     },
 
@@ -83407,7 +83469,7 @@ var Market = __webpack_require__(38);
         mapMarketRequestGroups: function mapMarketRequestGroups(markets) {
             // map markets to dates
             return markets.reduce(function (x, y) {
-                var date = y.attributes.expiration_date.format("MMM D");
+                var date = y.trade_items.default["Expiration Date"];
                 if (!x[date]) {
                     x[date] = [];
                 }
@@ -83426,65 +83488,12 @@ var Market = __webpack_require__(38);
 /* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "user-market" }, [
-    _c("div", { staticClass: "container-fluid h-100" }, [
-      _c("div", { staticClass: "row h-100" }, [
-        _c("div", { staticClass: "col-12" }, [
-          _c("h2", { staticClass: "text-center" }, [
-            _vm._v(_vm._s(_vm.market.title))
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "user-market-group col-12" },
-          _vm._l(_vm.market_date_groups, function(m_reqs, exp_date) {
-            return _c(
-              "div",
-              { staticClass: "row mt-3 pr-3 pl-3" },
-              [
-                _c("div", { staticClass: "col-12" }, [
-                  _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(exp_date))])
-                ]),
-                _vm._v(" "),
-                _vm._l(m_reqs, function(m_req) {
-                  return _c("market-tab", {
-                    attrs: { "market-request": m_req }
-                  })
-                })
-              ],
-              2
-            )
-          })
-        )
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-e92bdb5e", module.exports)
-  }
-}
-
-/***/ }),
-/* 356 */
-/***/ (function(module, exports, __webpack_require__) {
-
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(357)
+var __vue_script__ = __webpack_require__(356)
 /* template */
-var __vue_template__ = __webpack_require__(358)
+var __vue_template__ = __webpack_require__(357)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83501,7 +83510,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/components/MarketTabComponent.vue"
+Component.options.__file = "resources/assets/js/components/MarketTabs/Outright.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -83510,9 +83519,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6f815fbb", Component.options)
+    hotAPI.createRecord("data-v-6e1e795c", Component.options)
   } else {
-    hotAPI.reload("data-v-6f815fbb", Component.options)
+    hotAPI.reload("data-v-6e1e795c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -83523,12 +83532,13 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 357 */
+/* 356 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
 //
 //
 //
@@ -83554,11 +83564,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 
-var UserMarketRequest = __webpack_require__(31);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         marketRequest: {
-            type: UserMarketRequest
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
         }
     },
     watch: {
@@ -83570,7 +83580,7 @@ var UserMarketRequest = __webpack_require__(31);
             console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
-        'marketRequest._chosen_user_market': function marketRequest_chosen_user_market(nV, oV) {
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
             console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
@@ -83663,62 +83673,1176 @@ var UserMarketRequest = __webpack_require__(31);
 });
 
 /***/ }),
-/* 358 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col col-12 text-center" }, [
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        {
-          staticClass: "col market-tab p-3 mb-2 mt-2",
-          class: _vm.marketState,
-          on: {
-            click: function($event) {
-              _vm.loadInteractionBar()
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-outright" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
             }
-          }
-        },
-        [
-          _c("div", { staticClass: "row justify-content-md-center" }, [
-            _c(
-              "div",
-              { staticClass: "col col-6 market-tab-name market-tab-name" },
-              [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(_vm.marketRequest.attributes.strike) +
-                    "    \n                "
-                )
-              ]
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col col-6 market-tab-state" }, [
-              _vm.market_request_state_label != ""
-                ? _c("span", [
-                    _c("span", {}, [
-                      _vm._v(_vm._s(_vm.market_request_state_label))
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
                     ])
-                  ])
-                : _c("span", [
-                    _c("span", { class: _vm.bidState }, [
-                      _vm._v(_vm._s(_vm.user_market_bid))
-                    ]),
-                    _vm._v(" / "),
-                    _c("span", { class: _vm.offerState }, [
-                      _vm._v(_vm._s(_vm.user_market_offer))
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
                     ])
-                  ])
+              ])
             ])
-          ])
-        ]
-      )
-    ])
-  ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6e1e795c", module.exports)
+  }
+}
+
+/***/ }),
+/* 358 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(359)
+/* template */
+var __vue_template__ = __webpack_require__(360)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Risky.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5df3c2a8", Component.options)
+  } else {
+    hotAPI.reload("data-v-5df3c2a8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 359 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 360 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-risky" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5df3c2a8", module.exports)
+  }
+}
+
+/***/ }),
+/* 361 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(362)
+/* template */
+var __vue_template__ = __webpack_require__(363)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Calendar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ba66ade8", Component.options)
+  } else {
+    hotAPI.reload("data-v-ba66ade8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 362 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 363 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-calendar" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ba66ade8", module.exports)
+  }
+}
+
+/***/ }),
+/* 364 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(365)
+/* template */
+var __vue_template__ = __webpack_require__(366)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Fly.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5ecff995", Component.options)
+  } else {
+    hotAPI.reload("data-v-5ecff995", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 365 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 366 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-fly" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5ecff995", module.exports)
+  }
+}
+
+/***/ }),
+/* 367 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "user-market", attrs: { dusk: "market-group" } },
+    [
+      _c("div", { staticClass: "container-fluid h-100" }, [
+        _c("div", { staticClass: "row h-100" }, [
+          _c("div", { staticClass: "col-12" }, [
+            _c("h2", { staticClass: "text-center" }, [
+              _vm._v(_vm._s(_vm.market.title))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "user-market-group col-12" },
+            _vm._l(_vm.market_date_groups, function(m_reqs, exp_date) {
+              return _c(
+                "div",
+                { staticClass: "row mt-3 pr-3 pl-3" },
+                [
+                  _c("div", { staticClass: "col-12" }, [
+                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(exp_date))])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(m_reqs, function(m_req) {
+                    return _c(_vm.tabs[m_req.trade_structure], {
+                      tag: "component",
+                      attrs: { "market-request": m_req }
+                    })
+                  })
+                ],
+                2
+              )
+            })
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e92bdb5e", module.exports)
+  }
+}
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(369)
+/* template */
+var __vue_template__ = __webpack_require__(370)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6f815fbb", Component.options)
+  } else {
+    hotAPI.reload("data-v-6f815fbb", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 369 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 370 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "col col-12 text-center", attrs: { dusk: "market-tab" } },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -83731,15 +84855,15 @@ if (false) {
 }
 
 /***/ }),
-/* 359 */
+/* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(360)
+var __vue_script__ = __webpack_require__(372)
 /* template */
-var __vue_template__ = __webpack_require__(361)
+var __vue_template__ = __webpack_require__(385)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83778,12 +84902,120 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 360 */
+/* 372 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__ = __webpack_require__(373);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__ = __webpack_require__(376);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__ = __webpack_require__(379);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__ = __webpack_require__(382);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__);
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        BarLayoutOutright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
+        BarLayoutRisky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
+        BarLayoutCalendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
+        BarLayoutFly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a
+    },
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            layouts: {
+                Outright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
+                Risky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
+                Calendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
+                Fly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a
+            }
+        };
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 373 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(374)
+/* template */
+var __vue_template__ = __webpack_require__(375)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Outright.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-848aa7e0", Component.options)
+  } else {
+    hotAPI.reload("data-v-848aa7e0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 374 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
 //
 //
 //
@@ -83805,12 +85037,229 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 
-var UserMarketRequest = __webpack_require__(31);
-var MarketNegotiation = __webpack_require__(32);
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         marketRequest: {
-            type: UserMarketRequest
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 375 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-outright" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-848aa7e0", module.exports)
+  }
+}
+
+/***/ }),
+/* 376 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(377)
+/* template */
+var __vue_template__ = __webpack_require__(378)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Risky.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-185bef10", Component.options)
+  } else {
+    hotAPI.reload("data-v-185bef10", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 377 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
         }
     },
     data: function data() {
@@ -83880,7 +85329,7 @@ var MarketNegotiation = __webpack_require__(32);
 });
 
 /***/ }),
-/* 361 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -83889,7 +85338,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-container",
-    { attrs: { fluid: "" } },
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-risky" } },
     [
       _c("ibar-user-market-title", {
         staticClass: "mt-1 mb-3",
@@ -83940,20 +85389,484 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-185bef10", module.exports)
+  }
+}
+
+/***/ }),
+/* 379 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(380)
+/* template */
+var __vue_template__ = __webpack_require__(381)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Calendar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1b2e4880", Component.options)
+  } else {
+    hotAPI.reload("data-v-1b2e4880", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 380 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_title: "",
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {
+            this.market_title = this.marketRequest.getParent().title + " " + this.marketRequest.attributes.expiration_date.format("MMM D") + " " + this.marketRequest.attributes.strike;
+        },
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_title: "",
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 381 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-calendar" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1b2e4880", module.exports)
+  }
+}
+
+/***/ }),
+/* 382 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(383)
+/* template */
+var __vue_template__ = __webpack_require__(384)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Fly.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-36e3e661", Component.options)
+  } else {
+    hotAPI.reload("data-v-36e3e661", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 383 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_title: "",
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {
+            this.market_title = this.marketRequest.getParent().title + " " + this.marketRequest.attributes.expiration_date.format("MMM D") + " " + this.marketRequest.attributes.strike;
+        },
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_title: "",
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 384 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-fly" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-36e3e661", module.exports)
+  }
+}
+
+/***/ }),
+/* 385 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar" } },
+    [
+      _vm.marketRequest != null
+        ? _c(_vm.layouts[_vm.marketRequest.trade_structure], {
+            tag: "component",
+            attrs: { "market-request": _vm.marketRequest }
+          })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-07934dce", module.exports)
   }
 }
 
 /***/ }),
-/* 362 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(363)
+var __vue_script__ = __webpack_require__(387)
 /* template */
-var __vue_template__ = __webpack_require__(364)
+var __vue_template__ = __webpack_require__(388)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -83992,7 +85905,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 363 */
+/* 387 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84022,7 +85935,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 364 */
+/* 388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84031,6 +85944,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-user-market-title" } },
     [
       _c("b-col", { attrs: { cols: "10" } }, [
         _c("h3", [_vm._v(_vm._s(_vm.title))])
@@ -84054,15 +85968,15 @@ if (false) {
 }
 
 /***/ }),
-/* 365 */
+/* 389 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(366)
+var __vue_script__ = __webpack_require__(390)
 /* template */
-var __vue_template__ = __webpack_require__(367)
+var __vue_template__ = __webpack_require__(391)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84101,7 +86015,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 366 */
+/* 390 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84137,7 +86051,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 367 */
+/* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84146,6 +86060,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-negotiation-history" } },
     [
       _c(
         "b-col",
@@ -84205,15 +86120,15 @@ if (false) {
 }
 
 /***/ }),
-/* 368 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(369)
+var __vue_script__ = __webpack_require__(393)
 /* template */
-var __vue_template__ = __webpack_require__(370)
+var __vue_template__ = __webpack_require__(394)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84252,11 +86167,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 369 */
+/* 393 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(16);
 //
 //
 //
@@ -84289,18 +86205,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var MarketNegotiation = __webpack_require__(32);
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            market_negotiation: new MarketNegotiation()
+            market_negotiation: new __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]()
         };
     },
     mounted: function mounted() {}
 });
 
 /***/ }),
-/* 370 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84309,6 +86225,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-market-negotiation" } },
     [
       _c(
         "b-col",
@@ -84445,15 +86362,15 @@ if (false) {
 }
 
 /***/ }),
-/* 371 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(372)
+var __vue_script__ = __webpack_require__(396)
 /* template */
-var __vue_template__ = __webpack_require__(373)
+var __vue_template__ = __webpack_require__(397)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84492,7 +86409,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 372 */
+/* 396 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -84515,7 +86432,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 373 */
+/* 397 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84524,6 +86441,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
+    { attrs: { dusk: "ibar-apply-conditions" } },
     [
       _c(
         "b-col",
@@ -84560,15 +86478,15 @@ if (false) {
 }
 
 /***/ }),
-/* 374 */
+/* 398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(375)
+var __vue_script__ = __webpack_require__(399)
 /* template */
-var __vue_template__ = __webpack_require__(376)
+var __vue_template__ = __webpack_require__(400)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84607,13 +86525,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 375 */
+/* 399 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
-//
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 //
 //
 //
@@ -84660,7 +86577,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 376 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84669,7 +86586,11 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "interaction-bar", class: { active: _vm.opened } },
+    {
+      staticClass: "interaction-bar",
+      class: { active: _vm.opened },
+      attrs: { dusk: "interaction-bar" }
+    },
     [
       _c(
         "div",
@@ -84692,15 +86613,7 @@ var render = function() {
             }
           }
         },
-        [
-          !_vm.opened
-            ? _c("span", { staticClass: "icon icon-arrows-right" })
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.opened
-            ? _c("span", { staticClass: "icon icon-arrows-left" })
-            : _vm._e()
-        ]
+        [_c("span", { staticClass: "icon icon-arrows-left" })]
       )
     ]
   )
@@ -84716,15 +86629,15 @@ if (false) {
 }
 
 /***/ }),
-/* 377 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(378)
+var __vue_script__ = __webpack_require__(402)
 /* template */
-var __vue_template__ = __webpack_require__(379)
+var __vue_template__ = __webpack_require__(415)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -84763,12 +86676,24 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 378 */
+/* 402 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(403);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(406);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(409);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(412);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarket__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketNegotiation__ = __webpack_require__(16);
 //
 //
 //
@@ -84822,12 +86747,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+//component imports
 
-var Market = __webpack_require__(38);
-var UserMarket = __webpack_require__(73);
-var UserMarketRequest = __webpack_require__(31);
-var MarketNegotiation = __webpack_require__(32);
+
+
+
+//lib imports
+
+
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        FilterMarketsMenu: __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default.a,
+        ImportantMenu: __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default.a,
+        AlertsMenu: __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default.a,
+        ConfirmationsMenu: __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default.a
+    },
     props: {
         'markets': {
             type: Array
@@ -84860,7 +86798,8 @@ var MarketNegotiation = __webpack_require__(32);
             },
             modals: {
                 select_market: false
-            }
+            },
+            chat_opened: false
         };
     },
 
@@ -84895,6 +86834,13 @@ var MarketNegotiation = __webpack_require__(32);
                 });
             });
         },
+        toggleBar: function toggleBar(set) {
+            if (typeof set != 'undefined') {
+                this.chat_opened = set == true;
+            } else {
+                this.chat_opened = !this.chat_opened;
+            }
+        },
 
         /**
          * Loads the Chat Sidebar
@@ -84902,16 +86848,275 @@ var MarketNegotiation = __webpack_require__(32);
          * @fires /lib/EventBus#toggleSidebar
          */
         loadChatBar: function loadChatBar() {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+            __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+        },
+
+        /**
+         * Listens for a chatToggle event firing
+         *
+         * @event /lib/EventBus#chatToggle
+         */
+        chatBarListener: function chatBarListener() {
+            __WEBPACK_IMPORTED_MODULE_4__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
         }
     },
     mounted: function mounted() {
         this.reloadQuantities();
+        this.chatBarListener();
     }
 });
 
 /***/ }),
-/* 379 */
+/* 403 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(404)
+/* template */
+var __vue_template__ = __webpack_require__(405)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b6758c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b6758c2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 404 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(38);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'FilterMarketsMenu',
+    props: {
+        'markets': {
+            type: Array
+        },
+        'popoverRef': {
+            type: String
+        },
+        'closeCallback': {
+            type: Function
+        }
+    },
+    data: function data() {
+        return {
+            availableSelectedMarketTypes: {
+                'INDEX': {
+                    state: false,
+                    markets: ['TOP 40', 'DTOP', 'DCAP']
+                },
+                'SINGLES': {
+                    state: false,
+                    markets: ['SINGLES']
+                },
+                'DELTA ONE': {
+                    state: false,
+                    markets: ['DELTA ONE']
+                }
+            },
+            randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
+            popover_ref: 'add-market-ref'
+        };
+    },
+
+    methods: {
+        onShow: function onShow() {
+            /* This is called just before the popover is shown */
+            this.checkSelected();
+        },
+
+        /**
+         * Saves the user's Market preference to the server
+         *
+         * @todo implement post reqeust to update user preference
+         */
+        onSaveMarketSetting: function onSaveMarketSetting(popover_ref) {
+            this.onDismiss();
+        },
+
+        /**
+         * Creates a bolean list of availableSelectedMarkets from markets prop
+         */
+        checkSelected: function checkSelected() {
+            var _this = this;
+
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                _this.availableSelectedMarketTypes[key].state = false;
+            });
+            this.markets.forEach(function (market) {
+                Object.keys(_this.availableSelectedMarketTypes).forEach(function (key) {
+                    if (_this.availableSelectedMarketTypes[key].markets.includes(market.title)) _this.availableSelectedMarketTypes[key].state = true;
+                });
+            });
+        },
+
+        /**
+         * Filters the user's Market Type preference 
+         */
+        filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
+            var _this2 = this;
+
+            this.availableSelectedMarketTypes[market_type].markets.forEach(function (market) {
+                if (actionCheck) {
+                    _this2.addMarket(market);
+                } else {
+                    _this2.removeMarket(market);
+                }
+            });
+        },
+
+        /**
+         * Adds a selected Market to Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be added
+         *
+         * @todo make a reqeust to update view data from server 
+         */
+        addMarket: function addMarket(market) {
+            this.markets.push(this.loadMarketData(market));
+            this.checkSelected();
+        },
+
+        /**
+         * Removes a selected Market from Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be removed
+         *
+         * @todo make a push the updated Display Markets list to the server 
+         */
+        removeMarket: function removeMarket(market) {
+            var index = this.markets.findIndex(function (element) {
+                return element.title == market;
+            });
+            if (index !== -1) {
+                this.markets.splice(index, 1);
+            }
+            this.checkSelected();
+        },
+
+        /**
+         * Creates dummy market reqeusts for Newly added Market
+         *
+         * @todo remove once data is being pulled from server 
+         */
+        loadMarketData: function loadMarketData(market) {
+            this.randomID += this.randomID + "1";
+            return new __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]({
+                title: market,
+                market_requests: [new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__["a" /* default */]({
+                    id: this.randomID,
+                    attributes: {
+                        expiration_date: moment("2018-03-17 00:00:00"),
+                        strike: "17 000",
+                        state: 'confirm',
+                        bid_state: 'action',
+                        offer_state: ''
+                    },
+                    user_markets: [new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
+                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
+                    }), new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
+                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                    })],
+                    chosen_user_market: new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
+                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
+                    })
+                })]
+            });
+        },
+
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -84920,7 +87125,1222 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "action-bar" },
+    {
+      staticClass: "filter-markets-menu",
+      attrs: { dusk: "filter-markets-menu" }
+    },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            triggers: "focus",
+            placement: "bottomleft",
+            target: "action-filter-market-button"
+          },
+          on: { show: _vm.onShow }
+        },
+        [
+          _c("div", { staticClass: "row text-center" }, [
+            _c(
+              "div",
+              { staticClass: "col-12" },
+              _vm._l(_vm.availableSelectedMarketTypes, function(obj, key) {
+                return _c("div", { staticClass: "row mt-1" }, [
+                  _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
+                    _c("h5", { staticClass: "w-100 m-0" }, [
+                      _vm._v(_vm._s(key))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    obj.state
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.filterMarketTypes(key, false)
+                              }
+                            }
+                          },
+                          [_vm._v("Remove\n                        ")]
+                        )
+                      : _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.filterMarketTypes(key, true)
+                              }
+                            }
+                          },
+                          [_vm._v("Add\n                        ")]
+                        )
+                  ])
+                ])
+              })
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12" }, [
+              _c("p", { staticClass: "m-2" }, [
+                _vm._v(
+                  "DCap and Dtop: Only displayed when markets are requested"
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { type: "button" },
+                  on: { click: _vm.onSaveMarketSetting }
+                },
+                [_vm._v("OK")]
+              )
+            ])
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn mm-transparent-button mr-2",
+        attrs: { id: "action-filter-market-button", type: "button" }
+      },
+      [_c("span", { staticClass: "icon icon-add" }), _vm._v(" Markets\n    ")]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b6758c2", module.exports)
+  }
+}
+
+/***/ }),
+/* 406 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(407)
+/* template */
+var __vue_template__ = __webpack_require__(408)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-97ac4208", Component.options)
+  } else {
+    hotAPI.reload("data-v-97ac4208", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 407 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ImportantMenu',
+    props: {
+        'markets': {
+            type: Array
+        },
+        'count': {
+            type: Number
+        },
+        'no_cares': {
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            status: false,
+            popover_ref: 'important-market-ref'
+        };
+    },
+
+    computed: {
+        /**
+         * Compiles a notification list for Important market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
+        notificationList: function notificationList() {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
+                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
+                    switch (obj2.attributes.state) {
+                        case "vol-spread-alert":
+                        case "alert":
+                        case "confirm":
+                            return acc2;
+                            break;
+                        default:
+                            return acc2.concat(obj2);
+                    }
+                }, []);
+                return acc;
+            }, {});
+        }
+    },
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.status = false;
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+         * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
+         *
+         * @param {string} $market a string detailing the related Market.title
+         * @param {string} $id a string id detailing the UserMarketRequests to be removed
+         *
+         * @todo Change $market to be the Market.id not Market.title
+         */
+        addToNoCares: function addToNoCares(market, id) {
+            console.log("HIT HERE: ", id);
+            if (!this.no_cares.includes(id)) {
+                this.no_cares.push(id);
+                this.removeMarketRequest(market, id);
+            }
+        },
+
+        /**
+         * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
+         *      closes the popover
+         *
+         * @todo Change market to be the Market.id not Market.title
+         */
+        applyBulkNoCares: function applyBulkNoCares() {
+            var _this = this;
+
+            if (this.status) {
+                for (var market in this.notificationList) {
+                    if (this.notificationList[market].length > 0) {
+                        this.notificationList[market].forEach(function (market_request) {
+                            if (!_this.no_cares.includes(market_request.id)) {
+                                _this.no_cares.push(market_request.id);
+                                _this.removeMarketRequest(market, market_request.id);
+                            }
+                        });
+                    }
+                }
+            }
+            this.onDismiss();
+        },
+
+        /**
+         * Removes a single Important UserMarketRequest by id from the Markets array
+         *
+         * @param {string} $market a string detailing the related Market.title
+         * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
+         *
+         * @todo Change $market to be the Market.id not Market.title
+         */
+        removeMarketRequest: function removeMarketRequest(market, market_request_id) {
+            var market_index = this.markets.findIndex(function (element) {
+                return element.title == market;
+            });
+            var market_request_index = this.markets[market_index].market_requests.findIndex(function (element) {
+                return element.id == market_request_id;
+            });
+            this.markets[market_index].market_requests.splice(market_request_index, 1);
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 408 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "important-markets-menu",
+      attrs: { dusk: "important-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-important-button mr-2 p-1",
+          attrs: { id: "action-important-button", type: "button" }
+        },
+        [_vm._v("Important "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "important-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "important-popover",
+            triggers: "focus",
+            placement: "bottom",
+            target: "action-important-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            [
+              _vm._l(_vm.notificationList, function(maket, key) {
+                return _c(
+                  "div",
+                  { staticClass: "col-12" },
+                  _vm._l(maket, function(market_requests) {
+                    return maket.length > 0
+                      ? _c("div", { staticClass: "row mt-2" }, [
+                          _c("div", { staticClass: "col-6 text-center" }, [
+                            _c("h6", { staticClass: "w-100 m-0" }, [
+                              _vm._v(
+                                " " +
+                                  _vm._s(key) +
+                                  " " +
+                                  _vm._s(
+                                    market_requests.trade_items.default[
+                                      "Strike"
+                                    ]
+                                  ) +
+                                  " " +
+                                  _vm._s(
+                                    market_requests.trade_items.default[
+                                      "Expiration Date"
+                                    ]
+                                  )
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-6" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn mm-generic-trade-button w-100",
+                                attrs: {
+                                  id: "important-nocare-" + market_requests.id,
+                                  type: "button"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    _vm.addToNoCares(key, market_requests.id)
+                                  }
+                                }
+                              },
+                              [_vm._v("No Cares\n                        ")]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
+                  })
+                )
+              }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-12 mt-2" },
+                [
+                  _c(
+                    "b-form-group",
+                    [
+                      _c(
+                        "b-form-checkbox",
+                        {
+                          attrs: { id: "select-bulk-nocares", value: "true" },
+                          model: {
+                            value: _vm.status,
+                            callback: function($$v) {
+                              _vm.status = $$v
+                            },
+                            expression: "status"
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Select All\n                    "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 mt-1" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: { id: "apply-bulk-nocares-button", type: "button" },
+                    on: { click: _vm.applyBulkNoCares }
+                  },
+                  [_vm._v("OK")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 mt-1" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: { id: "dismiss-important-popover", type: "button" },
+                    on: {
+                      click: function($event) {
+                        _vm.onDismiss()
+                      }
+                    }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-97ac4208", module.exports)
+  }
+}
+
+/***/ }),
+/* 409 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(410)
+/* template */
+var __vue_template__ = __webpack_require__(411)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0edeefd2", Component.options)
+  } else {
+    hotAPI.reload("data-v-0edeefd2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 410 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'AlertsMenu',
+    props: {
+        'markets': {
+            type: Array
+        },
+        // @todo: Could be moved to internal property and add a count to notification list
+        'count': {
+            type: Number
+        }
+    },
+    data: function data() {
+        return {
+            popover_ref: 'alert-market-ref'
+        };
+    },
+
+    computed: {
+        /**
+         * Compiles a notification list for Alert market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
+        notificationList: function notificationList() {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
+                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
+                    switch (obj2.attributes.state) {
+                        case "vol-spread-alert":
+                        case "alert":
+                            return acc2.concat(obj2);
+                            break;
+                        default:
+                            return acc2;
+                    }
+                }, []);
+                return acc;
+            }, {});
+        }
+    },
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+        * Loads the Interaction Sidebar with the related UserMarketRequest
+        *
+        * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+        *      to the Interaction Sidebar.
+        *
+        * @fires /lib/EventBus#toggleSidebar
+        */
+        loadInteractionBar: function loadInteractionBar(market_request) {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 411 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "alerts-markets-menu",
+      attrs: { dusk: "alerts-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-alert-button mr-2 p-1",
+          attrs: { id: "action-alert-button", type: "button" }
+        },
+        [_vm._v("Alerts "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "alerts-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "alerts-popover",
+            triggers: "focus",
+            placement: "bottom",
+            target: "action-alert-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            [
+              _vm._l(_vm.notificationList, function(maket, key) {
+                return _c(
+                  "div",
+                  { staticClass: "col-12" },
+                  _vm._l(maket, function(market_request) {
+                    return maket.length > 0
+                      ? _c("div", { staticClass: "row mt-1" }, [
+                          _c("div", { staticClass: "col-6 text-center" }, [
+                            _c("h6", { staticClass: "w-100 m-0" }, [
+                              _vm._v(
+                                " " +
+                                  _vm._s(key) +
+                                  " " +
+                                  _vm._s(market_request.attributes.strike) +
+                                  " \n                        "
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-6" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn mm-generic-trade-button w-100",
+                                attrs: {
+                                  id: "alert-view-" + market_request.id,
+                                  type: "button"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    _vm.loadInteractionBar(market_request)
+                                  }
+                                }
+                              },
+                              [_vm._v("View\n                        ")]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
+                  })
+                )
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: { id: "dismiss-alert-popover", type: "button" },
+                    on: { click: _vm.onDismiss }
+                  },
+                  [_vm._v("OK")]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0edeefd2", module.exports)
+  }
+}
+
+/***/ }),
+/* 412 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(413)
+/* template */
+var __vue_template__ = __webpack_require__(414)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-351d97c0", Component.options)
+  } else {
+    hotAPI.reload("data-v-351d97c0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 413 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var place_holder_data_options = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' }];
+var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot': 'N/A', 'Future': 'N/A', 'Contracts': 'N/A', 'Expriry': 'N/A' }];
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ConfirmationsMenu',
+    props: {
+        'markets': {
+            type: Array
+        },
+        'count': {
+            type: Number
+        }
+    },
+    data: function data() {
+        return {
+            modals: {
+                show_modal: false,
+                market_request: {
+                    type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__["a" /* default */]
+                },
+                table_data: {
+                    options: place_holder_data_options,
+                    futures: place_holder_data_futures
+                }
+            },
+            popover_ref: 'confirmation-market-ref'
+        };
+    },
+
+    computed: {
+        /**
+         * Compiles a notification list for Confirmation market reqeusts with Market as key
+         *      and a market requests array as value
+         *
+         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
+         */
+        notificationList: function notificationList() {
+            //Iterates through an array of Markets and compiles an object with Market.title as key
+            return this.markets.reduce(function (acc, obj) {
+                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
+                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
+                    switch (obj2.attributes.state) {
+                        case "confirm":
+                            return acc2.concat(obj2);
+                            break;
+                        default:
+                            return acc2;
+                    }
+                }, []);
+                return acc;
+            }, {});
+        }
+    },
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+         * Loads the Confirmation Modal with the related UserMarketRequest 
+         *
+         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+         *      to the Interaction Sidebar.
+         */
+        loadModal: function loadModal(market_request) {
+            this.modals.market_request = market_request;
+            this.modals.show_modal = true;
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 414 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "confirmations-markets-menu",
+      attrs: { dusk: "confirmations-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-confirmation-button mr-2 p-1",
+          attrs: { id: "action-confirmations-button", type: "button" }
+        },
+        [_vm._v("Confirmations "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "confirmations-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "confirmations-popover",
+            triggers: "focus",
+            placement: "bottom",
+            target: "action-confirmations-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            [
+              _vm._l(_vm.notificationList, function(maket, key) {
+                return _c(
+                  "div",
+                  { staticClass: "col-12" },
+                  _vm._l(maket, function(market_request) {
+                    return maket.length > 0
+                      ? _c("div", { staticClass: "row mt-1" }, [
+                          _c("div", { staticClass: "col-6 text-center" }, [
+                            _c("h6", { staticClass: "w-100 m-0" }, [
+                              _vm._v(
+                                " " +
+                                  _vm._s(key) +
+                                  " " +
+                                  _vm._s(market_request.attributes.strike) +
+                                  " \n                        "
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col-6" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn mm-generic-trade-button w-100",
+                                attrs: {
+                                  id: "confirmations-view-" + market_request.id,
+                                  type: "button"
+                                },
+                                on: {
+                                  click: function($event) {
+                                    _vm.loadModal(market_request)
+                                  }
+                                }
+                              },
+                              [_vm._v("View\n                        ")]
+                            )
+                          ])
+                        ])
+                      : _vm._e()
+                  })
+                )
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: {
+                      id: "dismiss-confirmations-popover",
+                      type: "button"
+                    },
+                    on: { click: _vm.onDismiss }
+                  },
+                  [_vm._v("OK")]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _vm.modals.show_modal
+        ? _c(
+            "b-modal",
+            {
+              staticClass: "confirmations-modal",
+              attrs: { size: "lg" },
+              model: {
+                value: _vm.modals.show_modal,
+                callback: function($$v) {
+                  _vm.$set(_vm.modals, "show_modal", $$v)
+                },
+                expression: "modals.show_modal"
+              }
+            },
+            [
+              _c(
+                "div",
+                { attrs: { slot: "modal-title" }, slot: "modal-title" },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.modals.market_request.attributes.strike) +
+                      "\n        "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-container",
+                { attrs: { fluid: "" } },
+                [
+                  _c("p", [
+                    _vm._v(
+                      "Thank you for your trade! Please check before accepting."
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v("Date: ")]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v("Structure: ")]),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { Display: "inline" } }, [
+                    _c("h3", [_vm._v("Option")])
+                  ]),
+                  _vm._v(" "),
+                  _c("b-table", {
+                    attrs: {
+                      responsive: "",
+                      hover: "",
+                      items: _vm.modals.table_data.options
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { Display: "inline" } }, [
+                    _c("h3", [_vm._v("Futures")])
+                  ]),
+                  _vm._v(" "),
+                  _c("b-table", {
+                    attrs: {
+                      responsive: "",
+                      hover: "",
+                      items: _vm.modals.table_data.futures
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "b-row",
+                    [
+                      _c("b-col", { attrs: { md: "5", "offset-md": "7" } }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn mm-generic-trade-button w-100 mb-1",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("I'm Happy, Trade Confirmed")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn mm-generic-trade-button w-100 mb-1",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Delta / Refs - Recalculate & Dispute")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Send")]
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", {
+                staticClass: "w-100",
+                attrs: { slot: "modal-footer" },
+                slot: "modal-footer"
+              })
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-351d97c0", module.exports)
+  }
+}
+
+/***/ }),
+/* 415 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
     [
       _c("div", { staticClass: "row mt-2 menu-actions" }, [
         _c(
@@ -84941,7 +88361,7 @@ var render = function() {
               [_vm._v("Request a Market")]
             ),
             _vm._v(" "),
-            _c("Important-markets-menu", {
+            _c("important-menu", {
               attrs: {
                 count: _vm.market_quantities.important,
                 markets: _vm.markets,
@@ -84950,7 +88370,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _vm.market_quantities.alert > 0
-              ? _c("Alerts-markets-menu", {
+              ? _c("alerts-menu", {
                   attrs: {
                     count: _vm.market_quantities.alert,
                     markets: _vm.markets
@@ -84959,7 +88379,7 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _vm.market_quantities.confirm > 0
-              ? _c("Confirmations-markets-menu", {
+              ? _c("confirmations-menu", {
                   attrs: {
                     count: _vm.market_quantities.confirm,
                     markets: _vm.markets
@@ -84977,19 +88397,24 @@ var render = function() {
             [
               _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-transparent-button mr-2",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      _vm.loadChatBar()
-                    }
-                  }
-                },
-                [_c("span", { staticClass: "icon icon-chat" })]
-              )
+              !_vm.chat_opened
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn mm-transparent-button mr-2",
+                      attrs: { id: "action-bar-open-chat", type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.loadChatBar()
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { staticClass: "icon icon-chat" }),
+                      _vm._v(" Chat\n                ")
+                    ]
+                  )
+                : _vm._e()
             ],
             1
           )
@@ -85122,1280 +88547,15 @@ if (false) {
 }
 
 /***/ }),
-/* 380 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(381)
+var __vue_script__ = __webpack_require__(417)
 /* template */
-var __vue_template__ = __webpack_require__(382)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6b6758c2", Component.options)
-  } else {
-    hotAPI.reload("data-v-6b6758c2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 381 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var Market = __webpack_require__(38);
-var UserMarket = __webpack_require__(73);
-var UserMarketRequest = __webpack_require__(31);
-var MarketNegotiation = __webpack_require__(32);
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        'markets': {
-            type: Array
-        },
-        'popoverRef': {
-            type: String
-        },
-        'closeCallback': {
-            type: Function
-        }
-    },
-    data: function data() {
-        return {
-            availableSelectedMarkets: {
-                'TOP 40': false,
-                'DTOP': false,
-                'DCAP': false,
-                'SINGLES': false,
-                'Roll': false
-            },
-            randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
-            popover_ref: 'add-market-ref'
-        };
-    },
-
-    methods: {
-        /**
-         * Saves the user's Market preference to the server
-         *
-         * @todo implement post reqeust to update user preference
-         */
-        onSaveMarketSetting: function onSaveMarketSetting(popover_ref) {
-            this.onDismiss();
-        },
-
-        /**
-         * Creates a bolean list of availableSelectedMarkets from markets prop
-         */
-        checkSelected: function checkSelected() {
-            var _this = this;
-
-            Object.keys(this.availableSelectedMarkets).forEach(function (key) {
-                _this.availableSelectedMarkets[key] = false;
-            });
-            this.markets.forEach(function (market) {
-                _this.availableSelectedMarkets[market.title] = true;
-            });
-        },
-
-        /**
-         * Adds a selected Market to Display Markets
-         * 
-         * @param {string} $market a string detailing a Market.title to be added
-         *
-         * @todo make a reqeust to update view data from server 
-         */
-        addMarket: function addMarket(market) {
-            this.markets.push(this.loadMarketData(market));
-            this.checkSelected();
-        },
-
-        /**
-         * Removes a selected Market from Display Markets
-         * 
-         * @param {string} $market a string detailing a Market.title to be removed
-         *
-         * @todo make a push the updated Display Markets list to the server 
-         */
-        removeMarket: function removeMarket(market) {
-            var index = this.markets.findIndex(function (element) {
-                console.log(element.title);
-                return element.title == market;
-            });
-            this.markets.splice(index, 1);
-            this.checkSelected();
-        },
-
-        /**
-         * Creates dummy market reqeusts for Newly added Market
-         *
-         * @todo remove once data is being pulled from server 
-         */
-        loadMarketData: function loadMarketData(market) {
-            this.randomID += this.randomID + "1";
-            return new Market({
-                title: market,
-                market_requests: [new UserMarketRequest({
-                    id: this.randomID,
-                    attributes: {
-                        expiration_date: moment("2018-03-17 00:00:00"),
-                        strike: "17 000",
-                        state: 'confirm',
-                        bid_state: 'action',
-                        offer_state: ''
-                    },
-                    user_markets: [new UserMarket({
-                        current_market_negotiation: new MarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                    }), new UserMarket({
-                        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                    })],
-                    chosen_user_market: new UserMarket({
-                        current_market_negotiation: new MarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                    })
-                })]
-            });
-        },
-
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        }
-    },
-    mounted: function mounted() {
-        this.checkSelected();
-    }
-});
-
-/***/ }),
-/* 382 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "filter-markets-menu" },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            triggers: "click blur",
-            placement: "bottomleft",
-            target: "actionfilterMarketButton"
-          }
-        },
-        [
-          _c("div", { staticClass: "row text-center" }, [
-            _c(
-              "div",
-              { staticClass: "col-12" },
-              _vm._l(_vm.availableSelectedMarkets, function(market, key) {
-                return _c("div", { staticClass: "row mt-1" }, [
-                  _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
-                    _c("h5", { staticClass: "w-100 m-0" }, [
-                      _vm._v(_vm._s(key))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    market
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                _vm.removeMarket(key)
-                              }
-                            }
-                          },
-                          [_vm._v("Remove\n                        ")]
-                        )
-                      : _c(
-                          "button",
-                          {
-                            staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { type: "button" },
-                            on: {
-                              click: function($event) {
-                                _vm.addMarket(key)
-                              }
-                            }
-                          },
-                          [_vm._v("Add\n                        ")]
-                        )
-                  ])
-                ])
-              })
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-12" }, [
-              _c("p", { staticClass: "m-2" }, [
-                _vm._v(
-                  "DCap and Dtop: Only displaed when markets are requested"
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-12 mt-2" },
-              [
-                _c(
-                  "b-form-group",
-                  [
-                    _c(
-                      "b-form-checkbox",
-                      { attrs: { value: "saveMarketDefault" } },
-                      [_vm._v("Set current as my default")]
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { type: "button" },
-                  on: { click: _vm.onSaveMarketSetting }
-                },
-                [_vm._v("OK")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { type: "button" },
-                  on: { click: _vm.onDismiss }
-                },
-                [_vm._v("Cancel")]
-              )
-            ])
-          ])
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn mm-transparent-button mr-2",
-        attrs: { id: "actionfilterMarketButton", type: "button" }
-      },
-      [_c("span", { staticClass: "icon icon-add" }), _vm._v(" Markets\n    ")]
-    )
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6b6758c2", module.exports)
-  }
-}
-
-/***/ }),
-/* 383 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(6)
-/* script */
-var __vue_script__ = __webpack_require__(384)
-/* template */
-var __vue_template__ = __webpack_require__(385)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-97ac4208", Component.options)
-  } else {
-    hotAPI.reload("data-v-97ac4208", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 384 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        'markets': {
-            type: Array
-        },
-        'count': {
-            type: Number
-        },
-        'no_cares': {
-            type: Array
-        }
-    },
-    data: function data() {
-        return {
-            status: false,
-            popover_ref: 'important-market-ref'
-        };
-    },
-
-    computed: {
-        /**
-         * Compiles a notification list for Important market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "vol-spread-alert":
-                        case "alert":
-                        case "confirm":
-                            return acc2;
-                            break;
-                        default:
-                            return acc2.concat(obj2);
-                    }
-                }, []);
-                return acc;
-            }, {});
-        }
-    },
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.status = false;
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-         * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
-         *
-         * @param {string} $market a string detailing the related Market.title
-         * @param {string} $id a string id detailing the UserMarketRequests to be removed
-         *
-         * @todo Change $market to be the Market.id not Market.title
-         */
-        addToNoCares: function addToNoCares(market, id) {
-            if (!this.no_cares.includes(id)) {
-                this.no_cares.push(id);
-                this.removeMarketRequest(market, id);
-            }
-        },
-
-        /**
-         * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
-         *      closes the popover
-         *
-         * @todo Change market to be the Market.id not Market.title
-         */
-        applyBulkNoCares: function applyBulkNoCares() {
-            var _this = this;
-
-            if (this.status) {
-                for (var market in this.notificationList) {
-                    if (this.notificationList[market].length > 0) {
-                        this.notificationList[market].forEach(function (market_request) {
-                            if (!_this.no_cares.includes(market_request.id)) {
-                                _this.no_cares.push(market_request.id);
-                                _this.removeMarketRequest(market, market_request.id);
-                            }
-                        });
-                    }
-                }
-            }
-            this.onDismiss();
-        },
-
-        /**
-         * Removes a single Important UserMarketRequest by id from the Markets array
-         *
-         * @param {string} $market a string detailing the related Market.title
-         * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
-         *
-         * @todo Change $market to be the Market.id not Market.title
-         */
-        removeMarketRequest: function removeMarketRequest(market, market_request_id) {
-            var market_index = this.markets.findIndex(function (element) {
-                return element.title == market;
-            });
-            var market_request_index = this.markets[market_index].market_requests.findIndex(function (element) {
-                return element.id == market_request_id;
-            });
-            this.markets[market_index].market_requests.splice(market_request_index, 1);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 385 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "Important-markets-menu" },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-important-button mr-2 p-1",
-          attrs: { id: "actionImportantButton", type: "button" }
-        },
-        [_vm._v("Important "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            triggers: "focus",
-            placement: "bottom",
-            target: "actionImportantButton"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_requests) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-2" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(market_requests.attributes.strike) +
-                                  " " +
-                                  _vm._s(
-                                    market_requests.attributes.expiration_date.format(
-                                      "MMM DD"
-                                    )
-                                  )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.addToNoCares(key, market_requests.id)
-                                  }
-                                }
-                              },
-                              [_vm._v("No Cares\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
-              }),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-12 mt-2" },
-                [
-                  _c(
-                    "b-form-group",
-                    [
-                      _c(
-                        "b-form-checkbox",
-                        {
-                          attrs: { id: "selectBulkNoCares", value: "true" },
-                          model: {
-                            value: _vm.status,
-                            callback: function($$v) {
-                              _vm.status = $$v
-                            },
-                            expression: "status"
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        Select All\n                    "
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
-                    on: { click: _vm.applyBulkNoCares }
-                  },
-                  [_vm._v("OK")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function($event) {
-                        _vm.onDismiss()
-                      }
-                    }
-                  },
-                  [_vm._v("Cancel")]
-                )
-              ])
-            ],
-            2
-          )
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-97ac4208", module.exports)
-  }
-}
-
-/***/ }),
-/* 386 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(6)
-/* script */
-var __vue_script__ = __webpack_require__(387)
-/* template */
-var __vue_template__ = __webpack_require__(388)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0edeefd2", Component.options)
-  } else {
-    hotAPI.reload("data-v-0edeefd2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 387 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        'markets': {
-            type: Array
-        },
-        'count': {
-            type: Number
-        }
-    },
-    data: function data() {
-        return {
-            popover_ref: 'alert-market-ref'
-        };
-    },
-
-    computed: {
-        /**
-         * Compiles a notification list for Alert market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "vol-spread-alert":
-                        case "alert":
-                            return acc2.concat(obj2);
-                            break;
-                        default:
-                            return acc2;
-                    }
-                }, []);
-                return acc;
-            }, {});
-        }
-    },
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-        * Loads the Interaction Sidebar with the related UserMarketRequest
-        *
-        * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
-        *      to the Interaction Sidebar.
-        *
-        * @fires /lib/EventBus#toggleSidebar
-        */
-        loadInteractionBar: function loadInteractionBar(market_request) {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 388 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "Alerts-markets-menu" },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-alert-button mr-2 p-1",
-          attrs: { id: "actionAlertButton", type: "button" }
-        },
-        [_vm._v("Alerts "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            triggers: "click blur",
-            placement: "bottom",
-            target: "actionAlertButton"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_request) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-1" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(market_request.attributes.strike) +
-                                  " " +
-                                  _vm._s(
-                                    market_request.attributes.expiration_date.format(
-                                      "MMM DD"
-                                    )
-                                  )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.loadInteractionBar(market_request)
-                                  }
-                                }
-                              },
-                              [_vm._v("View\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
-                    on: { click: _vm.onDismiss }
-                  },
-                  [_vm._v("OK")]
-                )
-              ])
-            ],
-            2
-          )
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0edeefd2", module.exports)
-  }
-}
-
-/***/ }),
-/* 389 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(6)
-/* script */
-var __vue_script__ = __webpack_require__(390)
-/* template */
-var __vue_template__ = __webpack_require__(391)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-351d97c0", Component.options)
-  } else {
-    hotAPI.reload("data-v-351d97c0", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 390 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        'markets': {
-            type: Array
-        },
-        'count': {
-            type: Number
-        }
-    },
-    data: function data() {
-        return {
-            popover_ref: 'confirmation-market-ref'
-        };
-    },
-
-    computed: {
-        /**
-         * Compiles a notification list for Confirmation market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "confirm":
-                            return acc2.concat(obj2);
-                            break;
-                        default:
-                            return acc2;
-                    }
-                }, []);
-                return acc;
-            }, {});
-        }
-    },
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-         * Loads the Interaction Sidebar with the related UserMarketRequest
-         *
-         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
-         *      to the Interaction Sidebar.
-         *
-         * @fires /lib/EventBus#toggleSidebar
-         *
-         * @todo Change the method to load apropriate modal not interaction bar
-         */
-        loadInteractionBar: function loadInteractionBar(market_request) {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 391 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "Confirmations-markets-menu" },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-confirmation-button mr-2 p-1",
-          attrs: { id: "actionConfirmationsButton", type: "button" }
-        },
-        [_vm._v("Confirmations "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            triggers: "click blur",
-            placement: "bottom",
-            target: "actionConfirmationsButton"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_request) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-1" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(market_request.attributes.strike) +
-                                  " " +
-                                  _vm._s(
-                                    market_request.attributes.expiration_date.format(
-                                      "MMM DD"
-                                    )
-                                  )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: { type: "button" },
-                                on: {
-                                  click: function($event) {
-                                    _vm.loadInteractionBar(market_request)
-                                  }
-                                }
-                              },
-                              [_vm._v("View\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { type: "button" },
-                    on: { click: _vm.onDismiss }
-                  },
-                  [_vm._v("OK")]
-                )
-              ])
-            ],
-            2
-          )
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-351d97c0", module.exports)
-  }
-}
-
-/***/ }),
-/* 392 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(6)
-/* script */
-var __vue_script__ = __webpack_require__(393)
-/* template */
-var __vue_template__ = __webpack_require__(394)
+var __vue_template__ = __webpack_require__(418)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -86434,12 +88594,16 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 393 */
+/* 417 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+//
+//
+//
+//
 //
 //
 //
@@ -86502,6 +88666,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         /**
+         * Fires the Chat Bar toggle event
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        fireChatBar: function fireChatBar() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+        },
+
+        /**
          * Listens for a chatToggle event firing
          *
          * @event /lib/EventBus#chatToggle
@@ -86516,97 +88689,138 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 394 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "chat-bar", class: { active: _vm.opened } }, [
-    _vm._m(0)
-  ])
+  return _c(
+    "div",
+    {
+      staticClass: "chat-bar",
+      class: { active: _vm.opened },
+      attrs: { dusk: "chat-bar" }
+    },
+    [
+      _c(
+        "div",
+        {
+          staticClass: "chat-bar-toggle",
+          on: {
+            click: function($event) {
+              _vm.fireChatBar()
+            }
+          }
+        },
+        [_c("span", { staticClass: "icon icon-arrows-right" })]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "chat-content" }, [
+        _c("div", { staticClass: "container-fluid" }, [
+          _c("div", { staticClass: "chat-header row pt-1" }, [
+            _c("div", { staticClass: "col-12 text-center" }, [
+              _c("span", { staticClass: "icon icon-chat float-left" }),
+              _vm._v(" "),
+              _c("h3", [_vm._v("Messages")]),
+              _vm._v(" "),
+              _c(
+                "h3",
+                {
+                  staticClass: "float-right close",
+                  attrs: { id: "chat-bar-dismiss" },
+                  on: {
+                    click: function($event) {
+                      _vm.fireChatBar()
+                    }
+                  }
+                },
+                [_vm._v("x")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _vm._m(0),
+          _vm._v(" "),
+          _vm._m(1)
+        ])
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-content" }, [
-      _c("div", { staticClass: "container-fluid" }, [
-        _c("div", { staticClass: "chat-header row pt-1" }, [
-          _c("div", { staticClass: "col-12 text-center" }, [
-            _c("span", { staticClass: "icon icon-chat float-left" }),
-            _vm._v(" "),
-            _c("h3", [_vm._v("Messages")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "chats col-12 h-100" })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
-          _c("div", { staticClass: "col-12" }, [
-            _c("form", { attrs: { action: "", method: "POST" } }, [
-              _c("div", { staticClass: "form-group mb-2" }, [
-                _c("textarea", {
-                  staticClass: "form-control",
-                  attrs: {
-                    name: "message",
-                    value: "",
-                    rows: "6",
-                    placeholder: "Enter your message here..."
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "form-group mb-2" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button",
-                    attrs: { type: "submit" }
-                  },
-                  [_vm._v("Send message")]
-                )
-              ])
-            ])
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "chats col-12 h-100" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
+      _c("div", { staticClass: "col-12" }, [
+        _c("form", { attrs: { action: "", method: "POST" } }, [
+          _c("div", { staticClass: "form-group mb-2" }, [
+            _c("textarea", {
+              staticClass: "form-control",
+              attrs: {
+                name: "message",
+                value: "",
+                rows: "6",
+                placeholder: "Enter your message here..."
+              }
+            })
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
+          _c("div", { staticClass: "form-group mb-2" }, [
             _c(
               "button",
               {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
+                staticClass: "btn mm-generic-trade-button",
+                attrs: { type: "submit" }
               },
-              [_vm._v("No cares, thanks")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
-              },
-              [_vm._v("Looking")]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12 mt-1" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-generic-trade-button float-right w-50",
-                attrs: { type: "button" }
-              },
-              [_vm._v("Please call me")]
+              [_vm._v("Send message")]
             )
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("No cares, thanks")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("Looking")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-12 mt-1" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn mm-generic-trade-button float-right w-50",
+            attrs: { type: "button" }
+          },
+          [_vm._v("Please call me")]
+        )
       ])
     ])
   }
@@ -86621,15 +88835,15 @@ if (false) {
 }
 
 /***/ }),
-/* 395 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(396)
+var __vue_script__ = __webpack_require__(420)
 /* template */
-var __vue_template__ = __webpack_require__(399)
+var __vue_template__ = __webpack_require__(423)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -86668,7 +88882,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 396 */
+/* 420 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -86729,7 +88943,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var Form = __webpack_require__(397);
+var Form = __webpack_require__(421);
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         'emailSettings': {
@@ -86805,7 +89019,7 @@ var Form = __webpack_require__(397);
 });
 
 /***/ }),
-/* 397 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -86814,7 +89028,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Errors = __webpack_require__(398);
+var Errors = __webpack_require__(422);
 
 module.exports = function () {
     /**
@@ -87028,7 +89242,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 398 */
+/* 422 */
 /***/ (function(module, exports) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -87134,7 +89348,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 399 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -87304,15 +89518,15 @@ if (false) {
 }
 
 /***/ }),
-/* 400 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(401)
+var __vue_script__ = __webpack_require__(425)
 /* template */
-var __vue_template__ = __webpack_require__(402)
+var __vue_template__ = __webpack_require__(426)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -87351,7 +89565,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 401 */
+/* 425 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -87400,7 +89614,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 402 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -87485,15 +89699,15 @@ if (false) {
 }
 
 /***/ }),
-/* 403 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(6)
+var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(404)
+var __vue_script__ = __webpack_require__(428)
 /* template */
-var __vue_template__ = __webpack_require__(405)
+var __vue_template__ = __webpack_require__(429)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -87532,7 +89746,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 404 */
+/* 428 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -87569,7 +89783,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 405 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -87613,7 +89827,7 @@ if (false) {
 }
 
 /***/ }),
-/* 406 */
+/* 430 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

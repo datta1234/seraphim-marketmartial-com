@@ -1,5 +1,5 @@
 .interaction-bar-wrapper {
-    .chat-bar, .chat-bar-content-pane, .chat-bar > .chat-content {
+    .chat-bar, .chat-bar-content-pane, .chat-bar > .chat-content, .chat-bar > .chat-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
@@ -25,14 +25,22 @@
             overflow: hidden;
         }
         &.active {
+            .chat-bar-toggle {
+                width: $chat-toggle-width;
+                opacity: 1;
+            }
             .chat-content {
-                width:300px;
+                width:$chat-bar-width;
                 opacity: 1;
             }
         }
         .chat-header {
-            h1 {
+            h3 {
                 display: inline-block;
+            }
+            .close {
+                cursor: pointer;
+                color: $mm-text-white;
             }
             .icon {
                 font-size: 2em;
@@ -50,5 +58,28 @@
     }
     .chat-bar-content-pane {
         @extend .col;
+    }
+    .chat-bar-toggle {
+        background-color: $mm-interaction-bar-bg;
+        width:0px;
+        height:100%;
+        padding:0px;
+        display:inline-block;
+        margin:0px;
+        padding:0px;
+        float:left;
+        position: relative;
+        opacity: 0;
+        color: #fff;
+
+        cursor:pointer;
+        
+        > .icon {
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -50%;
+            font-size: 32px;
+        }
     }
 }
