@@ -12028,13 +12028,13 @@ input:checked + .slider:before {
 
 #importantPopover,
 #alerts-popover,
-#confirmationsPopover {
+#confirmations-popover {
   display: inline;
 }
 
 #importantPopover .popover,
 #alerts-popover .popover,
-#confirmationsPopover .popover {
+#confirmations-popover .popover {
   max-width: 400px;
 }
 

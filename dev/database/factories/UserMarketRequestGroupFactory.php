@@ -6,7 +6,7 @@ $factory->define(App\Models\MarketRequest\UserMarketRequestGroup::class, functio
     return [
 		"user_market_request_id" => factory(App\Models\MarketRequest\UserMarketRequest::class)->create()->id,
 		"trade_structure_group_id" => factory(App\Models\StructureItems\TradeStructure::class,'Outright')->create()->id,
-		"is_selected" => rand(0,1) ==1
+		"is_selected" => rand(0,1) == 1
     ];
 });
 

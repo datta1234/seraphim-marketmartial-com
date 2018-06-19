@@ -26,6 +26,13 @@ class CreateUserMarketRequestGroupsTable extends Migration
             $table->foreign('trade_structure_group_id')
                 ->references('id')->on('trade_structure_groups');
         });
+
+        Schema::table('user_market_request_tradables', function (Blueprint $table) {
+            $table->integer('user_market_request_group_id')->unsigned()->nullable();
+
+            $table->foreign('user_market_request_group_id', 'umrt_umrg_fk')
+                ->references('id')->on('user_market_request_groups');
+        });
     }
 
     /**
@@ -35,6 +42,12 @@ class CreateUserMarketRequestGroupsTable extends Migration
      */
     public function down()
     {
+        Schema::table('user_market_request_tradables', function (Blueprint $table) {
+            $table->dropForeign('umrt_umrg_fk');
+        });
+        Schema::table('user_market_request_tradables', function (Blueprint $table) {
+            $table->dropColumn('user_market_request_group_id');
+        });
         Schema::dropIfExists('user_market_request_groups');
     }
 }
