@@ -68,6 +68,13 @@ class UserOtpTest extends TestCase
     	$fetch_otp = \App\Models\UserManagement\UserOtp::find( $opt->id );
 
     	$this->assertEquals( $fetch_otp->user->toArray(), $opt->user->toArray());
+    	$this->assertNull( 
+    		\Validator::make($fetch_otp->toArray(), [
+				'expires_at' => 'date_format:Y-m-d H:i:s',
+				'created_at' => 'date_format:Y-m-d H:i:s',
+				'updated_at' => 'date_format:Y-m-d H:i:s'
+			])->validate()
+    	);
 
     }
 }
