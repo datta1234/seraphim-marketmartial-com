@@ -22,7 +22,7 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class, functio
 		'gross_premiums'				=> $faker->randomFloat(2, 1, 9999999 ),
 		'net_premiums'					=> $faker->randomFloat(2, 1, 9999999 ),
 		'is_confirmed'					=> $faker->boolean(50),
-		'traiding_account_id'			=> factory(App\Models\UserManagement\TradingAccount::class)->create()->id
+		'trading_account_id'			=> factory(App\Models\UserManagement\TradingAccount::class)->create()->id
     ];
 
 });

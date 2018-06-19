@@ -15,7 +15,7 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $traiding_account_id
+	 * @property integer $trading_account_id
 	 * @property double $spot_price
 	 * @property double $future_reference
 	 * @property double $near_expiery_reference
@@ -155,6 +155,6 @@ class TradeConfirmation extends Model
     */
     public function tradingAccounts()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
 }
