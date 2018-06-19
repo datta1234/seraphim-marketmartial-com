@@ -98,11 +98,10 @@ class UserTest extends TestCase
     {
 
 		$user 			= factory( \App\Models\UserManagement\User::class )->create();
-    	$user_role_id 	= $user->id;
 
     	$this->assertDatabaseHas('users', [
     		'id'		=> $user->id,
-            'role_id'	=> $user_role_id
+            'role_id'	=> $user->role_id
         ]);
 
 
@@ -1303,7 +1302,7 @@ quantity: double(11,2)
 			$this->assertArrayHasKey('gross_premiums', $trade_confirmation->toArray());
 			$this->assertArrayHasKey('net_premiums', $trade_confirmation->toArray());
 			$this->assertArrayHasKey('is_confirmed', $trade_confirmation->toArray());
-			$this->assertArrayHasKey('traiding_account_id', $trade_confirmation->toArray());
+			$this->assertArrayHasKey('trading_account_id', $trade_confirmation->toArray());
 
 			$this->assertDatabaseHas('trade_confirmations', [
 
@@ -1325,7 +1324,7 @@ quantity: double(11,2)
     			'gross_premiums' => $trade_confirmation->gross_premiums,
     			'net_premiums' => $trade_confirmation->net_premiums,
     			'is_confirmed' => $trade_confirmation->is_confirmed,
-    			'traiding_account_id' => $trade_confirmation->traiding_account_id,
+    			'trading_account_id' => $trade_confirmation->trading_account_id,
 
         	]);
 
@@ -1384,7 +1383,7 @@ quantity: double(11,2)
 			$this->assertArrayHasKey('gross_premiums', $trade_confirmation->toArray());
 			$this->assertArrayHasKey('net_premiums', $trade_confirmation->toArray());
 			$this->assertArrayHasKey('is_confirmed', $trade_confirmation->toArray());
-			$this->assertArrayHasKey('traiding_account_id', $trade_confirmation->toArray());
+			$this->assertArrayHasKey('trading_account_id', $trade_confirmation->toArray());
 
 			$this->assertDatabaseHas('trade_confirmations', [
 
@@ -1406,7 +1405,7 @@ quantity: double(11,2)
     			'gross_premiums' => $trade_confirmation->gross_premiums,
     			'net_premiums' => $trade_confirmation->net_premiums,
     			'is_confirmed' => $trade_confirmation->is_confirmed,
-    			'traiding_account_id' => $trade_confirmation->traiding_account_id,
+    			'trading_account_id' => $trade_confirmation->trading_account_id,
 
         	]);
 
