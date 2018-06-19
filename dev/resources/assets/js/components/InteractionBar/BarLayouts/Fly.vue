@@ -39,7 +39,6 @@
 
                 user_market: null,
                 market_history: [],
-                market_title: "",
                 market_time: ""
             };
         },
@@ -48,17 +47,22 @@
                 this.init();
             }
         },
+        computed: {
+            'market_title': function() {
+                return this.marketRequest.getMarket().title+" "
+                +this.marketRequest.trade_items.default["Expiration Date"]+" "
+                +this.marketRequest.trade_items.default["Strike"];
+            }
+        },
         methods: {
             setMarketTitle() {
-                this.market_title = this.marketRequest.getParent().title+" "
-                +this.marketRequest.attributes.expiration_date.format("MMM D")+" "
-                +this.marketRequest.attributes.strike;
+                
             },
             setMarketTime() {
                 this.market_time = "10:10";
             },
             reset() {
-                const defaults = {
+                let defaults = {
                     bid: null,
                     offer: null,
                     bid_qty: 0,
@@ -69,7 +73,6 @@
 
                     user_market: null,
                     market_history: [],
-                    market_title: "",
                     market_time: ""
                 };
                 Object.keys(defaults).forEach(k => {

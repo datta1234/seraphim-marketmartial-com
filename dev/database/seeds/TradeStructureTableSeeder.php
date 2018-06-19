@@ -11,238 +11,57 @@ class TradeStructureTableSeeder extends Seeder
      */
     public function run()
     {
-        $tradeStructures = [
-            [
-                'id' => 1,
-                'title' => 'Outright',
-                'trade_structure_group' =>
-                        [
-                            [
-                                'title'=> 'default',
-                                'items'=>
-                                    [
-                                        [
-                                            'title' => 'Expiration Date',
-                                            'item_type_id' => 1   
-                                        ],
-                                        [
-                                            'title' => 'Strike',
-                                            'item_type_id' => 2 
+        $tradeStructures = config('tradestructures');
 
-                                        ],
-                                        [
-                                            'title' => 'Quantity',
-                                            'item_type_id' => 2   
-                                        ],
-                                    ]
-                            ]
-                        ],
-            ],
-            [
-                'id' => 2,
-                'title' => 'Risky',
-                         'trade_structure_group' =>
-                            [
-                                [
-                                    'title'=> 'default',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
-                                            ],
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Risky options',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ]
-                            ],
-            ],
-            [
-                'id' => 3,
-                'title' => 'Calendar',
-                  'trade_structure_group' =>
-                            [
-                                [
-                                    'title'=> 'default',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
-                                            ],
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Calander option',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
-                                            ],
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ]
-                            ],
-            
-            ],
-            [
-                'id' => 4,
-                'title' => 'Fly',
-                  'trade_structure_group' =>
-                            [
-                                [
-                                    'title'=> 'default',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
-                                            ],
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Fly Second option',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Fly third option',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ]
-                            ],
-            
-            ],
-            [
-                'id' => 5,
-                'title' => 'Fly',
-                  'trade_structure_group' =>
-                            [
-                                [
-                                    'title'=> 'default',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Expiration Date',
-                                                'item_type_id' => 1   
-                                            ],
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Fly Second option',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ],
-                                [
-                                    'title'=> 'Fly third option',
-                                    'items'=>
-                                        [
-                                            [
-                                                'title' => 'Strike',
-                                                'item_type_id' => 2 
-
-                                            ],
-                                            [
-                                                'title' => 'Quantity',
-                                                'item_type_id' => 2   
-                                            ],
-                                        ]
-                                ]
-                            ],
-            
-            ]
-        ];
         foreach ($tradeStructures as $tradeStructure) 
         {
-             App\Models\StructureItems\TradeStructure::saveFullStructure($tradeStructure);
+            $tradeStructureModel = factory(\App\Models\StructureItems\TradeStructure::class,$tradeStructure['title'],1)->create()
+                ->each(function($tradeStructureModel) use ($tradeStructure){
+
+                    foreach ($tradeStructure['trade_structure_group'] as $group) 
+                    {   
+                        $tradeStructureGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
+                                   'title' => $group['title'],
+                                   'trade_structure_id' => $tradeStructureModel->id
+                        ]);
+
+                        foreach ($group['items'] as $item) 
+                        {
+                            $itemType = \App\Models\StructureItems\ItemType::where('title',$item['type'])->first();
+                        
+
+                            factory(\App\Models\StructureItems\Item::class)->create([
+                                'title' => $item['title'],
+                                'trade_structure_group_id' => $tradeStructureGroupModel->id,
+                                'item_type_id' => $itemType->id
+                            ]); 
+                        }
+                    }
+                });
+
         }
+
+        $tradeStructures = \App\Models\StructureItems\TradeStructure::all()->keyBy('title');
+        $marketTypes = \App\Models\StructureItems\MarketType::all()->keyBy('title');
+
+        $marketTypes['Index Option']->tradeStructures()->sync([
+            $tradeStructures['Outright']->id,
+            $tradeStructures['Risky']->id,
+            $tradeStructures['Calendar']->id,
+            $tradeStructures['Fly']->id,
+            $tradeStructures['Option Switch']->id,
+        ]);
+        $marketTypes['Delta One(EFPs, Rolls and EFP Switches)']->tradeStructures()->sync([
+            $tradeStructures['EFP']->id,
+            $tradeStructures['Rolls']->id,
+            $tradeStructures['EFP Switch']->id,
+        ]);
+        $marketTypes['Single Stock Options']->tradeStructures()->sync([
+            $tradeStructures['Outright']->id,
+            $tradeStructures['Risky']->id,
+            $tradeStructures['Calendar']->id,
+            $tradeStructures['Fly']->id,
+            $tradeStructures['Option Switch']->id,
+        ]);
     }
 }

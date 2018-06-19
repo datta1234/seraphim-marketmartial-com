@@ -28,6 +28,10 @@
     import MarketTabRisky from './MarketTabs/Risky';
     import MarketTabCalendar from './MarketTabs/Calendar';
     import MarketTabFly from './MarketTabs/Fly';
+    import OptionSwitch from './MarketTabs/OptionSwitch';
+    import EFP from './MarketTabs/EFP';
+    import Rolls from './MarketTabs/Rolls';
+    import EFPSwitch from './MarketTabs/EFPSwitch';
 
     export default {
         components: {
@@ -35,6 +39,10 @@
             MarketTabRisky,
             MarketTabCalendar,
             MarketTabFly,
+            OptionSwitch,
+            EFP,
+            Rolls,
+            EFPSwitch,
         },
         props: {
             'market': {
@@ -51,10 +59,14 @@
             return {
                 market_date_groups: {},
                 tabs: {
-                    Outright: MarketTabOutright,
-                    Risky: MarketTabRisky,
-                    Calendar: MarketTabCalendar,
-                    Fly: MarketTabFly
+                    'Outright': MarketTabOutright,
+                    'Risky': MarketTabRisky,
+                    'Calendar': MarketTabCalendar,
+                    'Fly': MarketTabFly,
+                    'Option Switch': OptionSwitch,
+                    'EFP': EFP,
+                    'Rolls': Rolls,
+                    'EFP Switch': EFPSwitch,
                 }
             };
         },
@@ -62,7 +74,7 @@
             mapMarketRequestGroups: function(markets) {
                 // map markets to dates
                 return markets.reduce((x,y) => {
-                    let date = y.trade_items.default["Expiration Date"];  
+                    let date = y.trade_items.default ? y.trade_items.default["Expiration Date"] : '';
                     if(!x[date]) { 
                         x[date] = [];
                     }

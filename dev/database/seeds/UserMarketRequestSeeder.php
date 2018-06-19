@@ -26,20 +26,19 @@ class UserMarketRequestSeeder extends Seeder
             $TradeStructures['Fly'] = factory(App\Models\StructureItems\TradeStructure::class,'Fly')->create();
         }
 
-        factory(App\Models\MarketRequest\UserMarketRequest::class, 2)->create([
-            "trade_structure_id" => $TradeStructures['Outright']
-        ]);
+        $markets = App\Models\StructureItems\Market::all();
+        foreach($markets as $market) {
 
-        factory(App\Models\MarketRequest\UserMarketRequest::class, 2)->create([
-            "trade_structure_id" => $TradeStructures['Risky']
-        ]);
+            if($market->marketType->tradeStructures)
+            foreach($market->marketType->tradeStructures as $tradeStruct) {
 
-        factory(App\Models\MarketRequest\UserMarketRequest::class, 2)->create([
-            "trade_structure_id" => $TradeStructures['Calendar']
-        ]);
+                factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
+                    "market_id" =>  $market->id,
+                    "trade_structure_id" => $tradeStruct->id
+                ]);
+                
+            }
 
-        factory(App\Models\MarketRequest\UserMarketRequest::class, 2)->create([
-            "trade_structure_id" => $TradeStructures['Fly']
-        ]);
+        }
     }
 }

@@ -13,7 +13,7 @@ class CreateMarketTypesTradeStructureTable extends Migration
      */
     public function up()
     {
-        Schema::create('market_types_trade_structure', function (Blueprint $table) {
+        Schema::create('market_types_trade_structures', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('market_type_id')->unsigned();
             $table->integer('trade_structure_id')->unsigned();
@@ -33,6 +33,6 @@ class CreateMarketTypesTradeStructureTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('market_types_trade_structure');
+        Schema::dropIfExists('market_types_trade_structures');
     }
 }

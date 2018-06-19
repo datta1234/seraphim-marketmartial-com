@@ -29,6 +29,8 @@ class UserMarketRequestItem extends Model
      */
     protected $fillable = [
         'value',
+        'title',
+        'type'
     ];
 
     /**
