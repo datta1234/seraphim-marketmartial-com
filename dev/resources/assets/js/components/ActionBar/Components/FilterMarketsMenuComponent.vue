@@ -1,10 +1,10 @@
 <template>
     <div dusk="filter-markets-menu" class="filter-markets-menu">
-        <button id="actionfilterMarketButton" type="button" class="btn mm-transparent-button mr-2">
+        <button id="action-filter-market-button" type="button" class="btn mm-transparent-button mr-2">
             <span class="icon icon-add"></span> Markets
         </button>
         <!-- Filter market popover -->
-        <b-popover @show="onShow" triggers="focus" placement="bottomleft" :ref="popover_ref" target="actionfilterMarketButton">
+        <b-popover @show="onShow" triggers="focus" placement="bottomleft" :ref="popover_ref" target="action-filter-market-button">
             <div class="row text-center">
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
