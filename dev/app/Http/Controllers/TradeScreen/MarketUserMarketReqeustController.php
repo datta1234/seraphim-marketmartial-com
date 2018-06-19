@@ -17,33 +17,30 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function index(Market $market)
     {
-        $userMarketRequests = $market->userMarketRequestTradables()->with([
-            'userMarketRequest' => function($q){ 
-                $q->select([
+        $userMarketRequests = $market->userMarketRequests()->select([
                     "id", 
                     "trade_structure_id", 
                     "created_at"
-                ]); 
-            }, 
-            'userMarketRequest.tradeStructure' => function($q){ 
+        ])->with([
+            'tradeStructure' => function($q){ 
                 $q->select([
                     "id", 
                     "title"]); 
             }, 
-            'userMarketRequest.userMarketRequestGroups' => function($q){ 
+            'userMarketRequestGroups' => function($q){ 
                 $q->select([
                     "id", 
                     "user_market_request_id", 
                     "trade_structure_group_id"
                 ]); 
             },
-            'userMarketRequest.userMarketRequestGroups.tradeStructureGroup' => function($q){ 
+            'userMarketRequestGroups.tradeStructureGroup' => function($q){ 
                 $q->select([
                     "id", 
                     "title"
                 ]); 
             },
-            'userMarketRequest.userMarketRequestGroups.userMarketRequestItems' => function($q){ 
+            'userMarketRequestGroups.userMarketRequestItems' => function($q){ 
                 $q->select([
                     "id", 
                     "value", 
@@ -51,7 +48,7 @@ class MarketUserMarketReqeustController extends Controller
                     "user_market_request_group_id"
                 ]); 
             },
-            'userMarketRequest.userMarketRequestGroups.userMarketRequestItems.item' => function($q){ 
+            'userMarketRequestGroups.userMarketRequestItems.item' => function($q){ 
                 $q->select([
                     "id", 
                     "title"
@@ -61,9 +58,9 @@ class MarketUserMarketReqeustController extends Controller
 
         $output = $userMarketRequests->map(function($tradeable) {
             return [
-                "id"                => $tradeable->userMarketRequest->id,
-                "trade_structure"   => $tradeable->userMarketRequest->tradeStructure->title,
-                "trade_items"       => $tradeable->userMarketRequest->userMarketRequestGroups
+                "id"                => $tradeable->id,
+                "trade_structure"   => $tradeable->tradeStructure->title,
+                "trade_items"       => $tradeable->userMarketRequestGroups
                  ->keyBy('tradeStructureGroup.title')
                  ->map(function($group) {
                     return $group->userMarketRequestItems->keyBy('item.title')->map(function($item) {
@@ -84,7 +81,7 @@ class MarketUserMarketReqeustController extends Controller
                 // OR - show quote to all, user_market to interest & market maker
                 "user_market"   => [], //UserMarket
 
-                "created_at"    => $tradeable->userMarketRequest->created_at
+                "created_at"    => $tradeable->created_at
             ];
         });
 

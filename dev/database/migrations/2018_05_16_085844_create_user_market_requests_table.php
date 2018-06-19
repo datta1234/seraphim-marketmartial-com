@@ -19,6 +19,7 @@ class CreateUserMarketRequestsTable extends Migration
             $table->integer('trade_structure_id')->unsigned();
             $table->integer('user_market_request_statuses_id')->unsigned();
             $table->integer('chosen_user_market_id')->unsigned()->nullable();
+            $table->integer('market_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -29,6 +30,9 @@ class CreateUserMarketRequestsTable extends Migration
 
             $table->foreign('user_market_request_statuses_id')
                 ->references('id')->on('user_market_request_statuses');
+
+            $table->foreign('market_id')
+                ->references('id')->on('markets');
         });
     }
 
