@@ -97,7 +97,31 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function create(Market $market)
     {
-        //
+
+    // "id": 1,
+    // "trade_structure": "TS_1",
+    // "trade_items": {
+    //     "default": {
+    //         "Expiration Date": "2018-01-01 00:00:00",
+    //         "Strike": "20 000"
+    //     }
+    // },
+
+        UserMarketRequest::create();
+        //user_market_request_tradables
+       
+        //user_market_request_groups
+
+        // generate groups based of the group 
+        foreach ($groups as $group) 
+        {
+            # code...
+        }
+
+        //user_market_request_items
+            //Quanitity
+            //Strke
+            //experation
     }
 
     /**
