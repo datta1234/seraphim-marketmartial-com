@@ -1,0 +1,83 @@
+.interaction-bar-wrapper {
+    height:100%;
+    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-bar-toggle {
+        -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+    }
+    .interaction-bar {
+        @extend .col-auto;
+        padding:0px;
+        width: auto;
+        position:relative;
+
+        .interaction-content {
+            width:0px;
+            opacity: 0;
+            height:100%;
+            padding:0px;
+            margin:0px;
+            padding:0px;
+            float:left;
+            color:#fff;
+
+            overflow: hidden;
+        }
+        &.active {
+            .interaction-bar-toggle {
+                width: $interaction-toggle-width;
+                opacity: 1;
+            }
+            .interaction-content {
+                width: $interaction-bar-width;
+                opacity: 1;
+            }
+        }
+        input[type="number"],input[type="text"] {
+            padding:2px;
+        }
+        .btn {
+            border:none;
+            border-radius:0px;
+        }
+        .btn-primary {
+            background-color: $ibar-btn-primary;
+        }
+        .btn-secondary {
+            background-color: $ibar-btn-secondary;
+        }
+        .btn[disabled] {
+            background-color: $ibar-btn-inactive;
+        }
+        .btn-active {
+            background-color: $ibar-btn-active;
+            margin-left:-10px;
+            margin-right:-10px
+        }
+    }
+    .interaction-bar-content-pane {
+        @extend .col;
+    }
+    .interaction-bar-toggle {
+        width:0px;
+        height:100%;
+        padding:0px;
+        display:inline-block;
+        margin:0px;
+        padding:0px;
+        float:left;
+        position: relative;
+        opacity: 0;
+        color: #fff;
+
+        cursor:pointer;
+        
+        > .icon {
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -50%;
+            font-size: 32px;
+        }
+    }
+}

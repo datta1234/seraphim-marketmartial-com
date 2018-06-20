@@ -1,14 +1,55 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+/* @import url('https://fonts.googleapis.com/css?family=Raleway:600');
+@import url('https://fonts.googleapis.com/css?family=Muli:700');
+@import url('https://fonts.googleapis.com/css?family=Roboto'); */
+@import"_mm_fonts.scss";
+
+//Custom Assemble variables
+@import "_mm_custom_variables";
 
 // Variables
-@import "variables";
+@import "_variables";
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+// General Custom
+@import '_general_custom.scss';
+
+// Trade General Custom
+@import '_trade_general_custom.scss';
+
+// Icons
+@import"_icomoon.scss";
+
+//Components
+@import"components/_navbar.scss";
+@import"components/_footer.scss";
+@import"components/_card_animation.scss";
+@import"components/_toggle_switch";
+@import"components/_market_tab";
+@import"components/_trade_footer";
+@import"components/_interaction_bar";
+@import"components/_chat_bar";
+@import"components/_action_bar";
+@import"components/_user_header";
+@import"components/_negotiation_bar";
+
+
+@font-face {
+  font-family: 'Muli-Bold';
+  src:  url('/fonts/Muli-Bold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Muli-Regular';
+  src:  url('/fonts/Muli-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Raleway-SemiBold';
+  src:  url('/fonts/Raleway-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Roboto-Regular';
+  src:  url('/fonts/Roboto-Regular.ttf') format('truetype');
 }

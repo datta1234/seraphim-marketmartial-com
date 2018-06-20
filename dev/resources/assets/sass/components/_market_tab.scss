@@ -1,0 +1,53 @@
+.trade-section.light-theme, .trade-section.dark-theme {
+	.market-tab {
+		background-color: $mm-market-tab;
+		color: $mm-text-white;
+		border-radius: 0.6em;
+		box-shadow: 4px 4px 8px -1px #000000;
+
+		cursor: pointer;
+
+		max-width: 350px;
+		margin: auto;
+	}
+
+	.market-tab.market-alert {
+		background-color: $mm-market-alert; 
+	}
+
+	.market-tab.market-confirm {
+		background-color: $mm-market-confirm;
+	}
+
+	.market-tab.market-request {
+		border: 0.15em solid $mm-market-intrest;
+
+		.market-tab-state {
+			color: $mm-market-intrest;
+		}
+	}
+
+	.market-tab.market-request-grey {
+		border: 0.15em solid $mm-market-intrest-greyed;
+
+		.market-tab-state {
+			color: $mm-market-intrest-greyed;
+		}
+	}
+
+	.user-action {
+		color: $mm-user-action;
+	}
+}
+
+.trade-section.dark-theme {
+	.market-tab {
+		background-color: $mm-market-tab-alt;
+	}
+}
+
+.trade-section.light-theme {
+	.market-tab {
+		background-color: $mm-market-tab;
+	}
+}

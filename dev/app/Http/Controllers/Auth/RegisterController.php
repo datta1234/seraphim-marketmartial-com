@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Models\UserManagement\User;
+use App\Models\UserManagement\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\UserManagement\Organisation;
+use App\Models\StructureItems\Market;
+use App\Models\StructureItems\MarketType;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -28,7 +32,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -48,25 +52,81 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        $messages = [
+            'markets.required' => 'Please select at least one of the listed markets',
+            'role_id.required' => 'Please select a role',
+            'role_id.exists' => 'Please select a role that is valid',
+            'organisation_id.required_without' => 'Please select your organisation.',
+            'cell_phone.required' => 'The phone field is required',
+        ];
+
+
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+            'password' => 'required|string|min:8|confirmed',
+            'cell_phone' => 'required|numeric',
+            'role_id' => [
+                'required',
+                Rule::exists('roles','id')->where(function ($query) {
+                     $query->where('is_selectable', 1);
+                }),
+            ],
+            'market_types' => 'required',
+            'organisation_id' => 'required_without:not_listed',
+            'new_organisation' => 'required_with:not_listed|string|max:255'
+        ], $messages);
     }
 
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\User
+     * @return \App\Models\UserManagement\User
      */
     protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
+    {   
+        $organisation = '';
+
+        if( array_key_exists('organisation_id', $data) ) {
+            $organisation = $data['organisation_id'];
+        } elseif( array_key_exists('new_organisation', $data) ) {
+            $organisation = Organisation::create([
+                'title' => $data['new_organisation'],
+                'verified' => false,
+            ])->id;
+        } else {
+            return back()->with('error', 'a Problem occured with your organisation selection, please try again');
+        }
+
+        $user = new User([
+            'full_name' => $data['full_name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => bcrypt($data['password']),
+            'role_id' => $data['role_id'],
+            'organisation_id' => $organisation,
+            'cell_phone' => $data['cell_phone'],
+            'active' => false,
+            'tc_accepted' => false,
         ]);
+        $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
+        $user->save();
+
+        $markets = Market::where('market_type_id',$data['market_types'])->pluck('id');
+        $user->marketInterests()->sync($markets);
+        return $user;
+    }
+
+    /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $market_types = MarketType::all()->pluck('title', 'id')->toArray();
+        $organisations = Organisation::all()->pluck('title','id')->toArray();
+        $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
+        return view('auth.register')->with(compact('organisations', 'market_types','roles'));
     }
 }
