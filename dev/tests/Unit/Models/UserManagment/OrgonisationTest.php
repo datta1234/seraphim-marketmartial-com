@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class OrgonisationTest extends TestCase
 {
     
-    use RefreshDatabase;
+    //use RefreshDatabase;
 
     /**
      * Orgonisation Model Type Casting test
@@ -66,7 +66,7 @@ class OrgonisationTest extends TestCase
 		$users = factory( \App\Models\UserManagement\User::class, 5 )->create([
 			'organisation_id' => $organisation->id
 		])->keyBy('id');
-
+		$organisation->load('users');
 
 
 		$organisation->users->keyBy('id')->each( function($item,$key) use ($organisation, $users) {
@@ -144,53 +144,124 @@ class OrgonisationTest extends TestCase
     {
 
     	$organisation 			= factory( \App\Models\UserManagement\Organisation::class )->create();
-    	$slack_Intergrations	= factory( \App\Models\ApiIntegration\SlackIntegration::class )->create();
+    	$slackIntegrations	= factory( \App\Models\ApiIntegration\SlackIntegration::class, 5 )->create();
 
-    	$this->assertDatabaseMissing('organisation_slack_intergration', [
-    		'organisation_id' => $organisation->id,
-    		'slack_integration_id' => $slack_Intergrations->id,
-    	]);
+    	foreach ($slackIntegrations as $slack_Intergration ) {
 
-    	$organisation->slackIntegrations()->attach( $slack_Intergrations );
-    	$organisation->slackIntegrations()->sync( $slack_Intergrations );
-    	$fetch_organisation = \App\Models\UserManagement\Organisation::find(  $organisation->id )->load('slackIntegrations');
+    		$this->assertDatabaseMissing('organisation_slack_intergration', [
+            	'organisation_id' => $organisation->id,
+    			'slack_integration_id' => $slack_Intergration->id,
+        	]);
 
-    	// Dont know what i have broken here .......
+    	}
 
-    	$this->assertDatabaseHas('organisation_slack_intergration', [
-    		'organisation_id' => $fetch_organisation->id,
-    		'slack_integration_id' => $fetch_organisation->slackIntegrations->id,
-    	]);
+		$organisation->slackIntegrations()->attach( $slackIntegrations );
+    	$organisation->slackIntegrations()->sync( $slackIntegrations );
 
-    	$this->assertDatabaseHas('organisations', [
+    	$fetch_organisation = \App\Models\UserManagement\Organisation::find($organisation->id);
+    	$slackIntegrations 	= $slackIntegrations->keyBy('id');
+
+    	$organisation->slackIntegrations->keyBy('id')->each( function($item,$key) use ($fetch_organisation,$slackIntegrations) {
+
+    		$slackIntegration = $slackIntegrations[$key];
+
+    		$this->assertDatabaseHas('organisation_slack_intergration', [
+    			'organisation_id' => $fetch_organisation->id,
+    			'slack_integration_id' => $slackIntegration->id,
+    		]);
+
+			$this->assertArrayHasKey('title', $fetch_organisation->toArray());
+			$this->assertArrayHasKey('verified', $fetch_organisation->toArray());
+			$this->assertArrayHasKey('description', $fetch_organisation->toArray());
+    		$this->assertDatabaseHas('organisations', [
 	    		'id'		=> $fetch_organisation->id,
 	            'title'		=> $fetch_organisation->title,
 	            'verified'	=> $fetch_organisation->verified,
 	            'description'=> $fetch_organisation->description
+			]);
+
+    		$this->assertNull( 
+				\Validator::make($fetch_organisation->toArray(), [
+					'created_at' => 'date_format:Y-m-d H:i:s',
+					'updated_at' => 'date_format:Y-m-d H:i:s'
+				])->validate()
+			);
+
+			$this->assertArrayHasKey('type', $slackIntegration->toArray());
+			$this->assertArrayHasKey('field', $slackIntegration->toArray());
+			$this->assertArrayHasKey('value', $slackIntegration->toArray());
+			$this->assertDatabaseHas('slack_integrations', [
+	    		'id'		=> $slackIntegration->id,
+	            'type'		=> $slackIntegration->type,
+	            'field'		=> $slackIntegration->field,
+	            'value'		=> $slackIntegration->value
+			]);
+
+			$this->assertNull( 
+				\Validator::make($slackIntegration->toArray(), [
+					'created_at' => 'date_format:Y-m-d H:i:s',
+					'updated_at' => 'date_format:Y-m-d H:i:s'
+				])->validate()
+			);
+
+    	});
+
+    }
+
+   /**
+    * Organisation has many Rebates
+    *
+    * @covers \App\Models\UserManagement\Organisation::rebates
+    * @testdox Organisation has Many App\Models\Trade\Rebate test
+    * @group relations/Trade
+    *
+    * @uses \App\Models\Trade\Rebate
+    *
+    * @return void
+    */
+    public function testOrganisationHasManyRebates()
+    {
+
+    	$organisation = factory(\App\Models\UserManagement\Organisation::class)->create();
+
+    	$this->assertDatabaseMissing('rebates', [
+			'organisation_id' => $organisation->id
 		]);
 
-		$this->assertDatabaseHas('slack_integrations', [
-	    		'id'		=> $fetch_organisation->slackIntegrations->id,
-	            'type'		=> $fetch_organisation->slackIntegrations->type,
-	            'field'		=> $fetch_organisation->slackIntegrations->field,
-	            'value'		=> $fetch_organisation->slackIntegrations->value
-		]);
+    	$rebates = factory( \App\Models\Trade\Rebate::class, 5 )->create([
+    		'organisation_id' => $organisation->id
+    	])->keyBy('id');
 
+    	$organisation->rebates->keyBy('id')->each( function($item,$key) use ($organisation,$rebates){
 
-		$this->assertNull( 
-			\Validator::make($fetch_organisation->toArray(), [
-				'created_at' => 'date_format:Y-m-d H:i:s',
-				'updated_at' => 'date_format:Y-m-d H:i:s'
-			])->validate()
-		);
+    		$rebate = $rebates[$key];
 
-		$this->assertNull( 
-			\Validator::make($fetch_organisation->slackIntegrations->toArray(), [
-				'created_at' => 'date_format:Y-m-d H:i:s',
-				'updated_at' => 'date_format:Y-m-d H:i:s'
-			])->validate()
-		);
+			$this->assertArrayHasKey('user_id', $rebate->toArray());
+			$this->assertArrayHasKey('user_market_request_id', $rebate->toArray());
+			$this->assertArrayHasKey('user_market_id', $rebate->toArray());
+			$this->assertArrayHasKey('organisation_id', $rebate->toArray());
+			$this->assertArrayHasKey('is_paid', $rebate->toArray());
+			$this->assertArrayHasKey('booked_trade_id', $rebate->toArray());
+			$this->assertArrayHasKey('trade_date', $rebate->toArray());
+			$this->assertDatabaseHas('rebates', [
+				'id' => $rebate->id,
+	    		'user_id' => $rebate->user_id,
+	    		'user_market_request_id' => $rebate->user_market_request_id,
+	    		'user_market_id' => $rebate->user_market_id,
+	    		'organisation_id' => $organisation->id,
+	    		'booked_trade_id' => $rebate->booked_trade_id,
+	    		'trade_date' => $rebate->trade_date,
+			]);
 
+			$this->assertNull( 
+				\Validator::make($rebate->toArray(), [
+					'trade_date' => 'date_format:Y-m-d',
+					'created_at' => 'date_format:Y-m-d H:i:s',
+					'updated_at' => 'date_format:Y-m-d H:i:s'
+				])->validate()
+			);
+
+    	});
 
     }
 
