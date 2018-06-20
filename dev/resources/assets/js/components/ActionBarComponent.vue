@@ -2,7 +2,7 @@
     <div dusk="action-bar" class="action-bar">
         <div class="row mt-2 menu-actions">
             <div class="col-9">
-                <button type="button" class="btn mm-request-button mr-2 p-1" @click="modals.select_market=true">Request a Market</button>
+                <request-market-menu></request-market-menu>
                 <important-menu :count="market_quantities.important" :markets="markets" :no_cares="no_cares"></important-menu>
                 <alerts-menu :count="market_quantities.alert" :markets="markets" v-if="market_quantities.alert>0"></alerts-menu>
                 <confirmations-menu :count="market_quantities.confirm" :markets="markets" v-if="market_quantities.confirm>0"></confirmations-menu>
@@ -16,37 +16,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- NB TODO REMOVE BS -->
-        <b-modal v-model="modals.select_market" title="Select A Market">
-            <b-row class="mt-1">
-                <b-col>
-                    <b-button class="w-100">Index Options</b-button>
-                </b-col>
-                <b-col>
-                    <b-button class="w-100">EFP</b-button>
-                </b-col>
-            </b-row>
-            <b-row class="mt-1">
-                <b-col>
-                    <b-button class="w-100">Single Stock Options</b-button>
-                </b-col>
-                <b-col>
-                    <b-button class="w-100">Rolls</b-button>
-                </b-col>
-            </b-row>
-            <b-row class="mt-1">
-                <b-col>
-                    <b-button class="w-100">Options Switch</b-button>
-                </b-col>
-                <b-col>
-                    <b-button class="w-100">EFP Switch</b-button>
-                </b-col>
-            </b-row>
-            <div slot="modal-footer" class="w-100">
-                <b-button @click="modals.select_market=false">Close</b-button>
-            </div>
-        </b-modal>
     </div>
 </template>
 
@@ -56,6 +25,7 @@
     import ImportantMenu from './ActionBar/Components/ImportantMenuComponent.vue';
     import AlertsMenu from './ActionBar/Components/AlertsMenuComponent.vue';
     import ConfirmationsMenu from './ActionBar/Components/ConfirmationsMenuComponent.vue';
+    import RequestMarketMenu from './ActionBar/Components/RequestMarket/RequestMarketMenuComponent.vue';
     //lib imports
     import { EventBus } from '../lib/EventBus.js';
     import Market from '../lib/Market';
@@ -68,7 +38,8 @@
             FilterMarketsMenu,
             ImportantMenu,
             AlertsMenu,
-            ConfirmationsMenu
+            ConfirmationsMenu,
+            RequestMarketMenu
         },
         props:{
           'markets': {

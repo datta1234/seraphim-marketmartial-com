@@ -8,7 +8,7 @@
 	}
 }
 
-.important-markets-menu, .alerts-markets-menu, .confirmations-markets-menu, .filter-markets-menu {
+.important-markets-menu, .alerts-markets-menu, .confirmations-markets-menu, .filter-markets-menu, .request-market-menu {
 	display: inline;
 }
 
@@ -16,11 +16,5 @@
 	display: inline;
 	.popover {
 		max-width:400px;
-	}
-}
-
-.confirmations-modal {
-	.modal-dialog {
-  		max-width: 1000px;
 	}
 }
