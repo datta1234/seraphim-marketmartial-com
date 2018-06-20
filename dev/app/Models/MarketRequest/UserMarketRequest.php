@@ -28,7 +28,7 @@ class UserMarketRequest extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = ["market_id","trade_structure_id","user_market_request_statuses_id","chosen_user_market_id"];
 
     /**
     * Return relation based of _id_foreign index

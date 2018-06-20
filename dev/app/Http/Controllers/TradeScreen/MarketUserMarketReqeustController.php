@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\TradeScreen;
 
+use Exception;
+use Illuminate\Support\Facades\Log;
 use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\StructureItems\Market;
 use App\Models\StructureItems\TradeStructure;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\StructureItems\TradeStructureGroup;
+use App\Models\MarketRequest\UserMarketRequestGroup;
+use App\Models\MarketRequest\UserMarketRequestItem;
+use Illuminate\Support\Facades\DB;
+
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -100,39 +106,8 @@ class MarketUserMarketReqeustController extends Controller
     public function create(Market $market)
     {
 
-        // "id": 1,
-        // "trade_structure": "TS_1",
-        // "trade_items": {
-        //     "default": {
-        //         "Expiration Date": "2018-01-01 00:00:00",
-        //         "Strike": "20 000"
-        //     }
-        // },
 
-
-        //UserMarketRequest::create();
-        //user_market_request_tradables
-       
-        //user_market_request_groups
-
-        // generate groups based of the group 
-
-        //use this to refer to the 
-        $tradeStructure = TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first();
-
-
-        $request->input('trade_structure_groups');
-
-        foreach ($tradeStructureGroups as $group) 
-        {
-            $tradeStructureGroups = new TradeStructureGroup();
-
-        }
-
-        //user_market_request_items
-            //Quanitity
-            //Strke
-            //experation
+        
     }
 
     /**
@@ -144,7 +119,87 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function store(Request $request, Market $market)
     {
-        //
+        $input = $request->all();
+
+        $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with('tradeStructureGroups.items')->firstOrFail();
+
+        $inputTradeStructureGroups = $request->input('trade_structure_groups');
+        
+        $responseData = [
+            "trade_structure"   => $tradeStructure->title,
+            "trade_items"       => []
+        ];
+
+        try {
+                DB::beginTransaction();
+
+                $userMarketRequest = new UserMarketRequest([
+                    "trade_structure_id"                => $tradeStructure->id,
+                    "user_market_request_statuses_id"   => 1,
+                    "market_id"                         => $market->id,
+                    "chosen_user_market_id"             => null
+                ]);
+
+                
+                $userMarketRequest->user_id = $request->user()->id;
+                $userMarketRequest->save();
+                $responseData = ['id'=> $userMarketRequest->id];
+
+
+                //add tradables logic get clarrification
+                // $userMarketRequestTradable = UserMarketRequestTradable::create([
+                //     "user_market_request_id"        => ,
+                //     "market_id"                     => ,
+                //     "stock_id"                      => , 
+                //     "user_market_request_group_id"  =>
+                // ]);
+
+                for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
+                {
+
+
+                    $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
+                    $userMarketRequestGroup = UserMarketRequestGroup::create([
+                        'is_selected'               =>  $inputTradeStructureGroups[$i]['is_selected'],
+                        'trade_structure_group_id'  =>  $tradeStructuregroup->id,
+                        'user_market_request_id'    => $userMarketRequest->id
+                    ]);
+
+                    $inputTradeStructureGroupsfields = $inputTradeStructureGroups[$i]['fields'];
+                    
+                    foreach ($tradeStructuregroup->items as $structureItem)
+                    {
+                        if(array_key_exists($structureItem->title, $inputTradeStructureGroupsfields))
+                        {       
+                         //most of the values are based of the relation of schema only the va,ue is grabed from the join
+                         $userMarketRequestItem =   UserMarketRequestItem::create([
+                                'user_market_request_group_id'  => $userMarketRequestGroup->id,
+                                'item_id'                       => $structureItem->id,
+                                'title'                         => $structureItem->title,
+                                'type'                          => $structureItem->itemType->title,
+                                'value'                         => $inputTradeStructureGroupsfields[$structureItem->title]//actual sent from the frontend
+                            ]); 
+
+                        $responseData['trade_items'][$tradeStructuregroup->title][$userMarketRequestItem->title] = $userMarketRequestItem->value;
+
+                        }else
+                        {
+                            // throw exception market request input incomplte
+                        }
+                        
+                    }
+                }
+                DB::commit();
+            } catch (Exception $e) 
+            {
+                DB::rollBack();
+                Log::error($e->getMessage());
+                return ['success'=>false,'data'=> null,'message'=>"Could not create market request."];
+            }
+
+        //broadCast new market request;
+
+        return ['success'=>true,'data'=> $responseData,,'message'=>"Market Request created successfully."];
     }
 
     /**

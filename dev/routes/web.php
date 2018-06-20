@@ -15,8 +15,10 @@ Auth::routes();
 
 
 Route::get('/test', function(){
+return App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first()->toArray();
 
-	dd(App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first());
+	dd(App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first()->toArray(),
+		App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first());
 	exit;
 });
 
@@ -53,12 +55,14 @@ Route::group(['middleware' => ['auth','redirectOnFirstLogin']], function () {
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 });
 
+Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
+
+
 Route::group(['prefix' => 'trade', 'middleware' => ['auth']], function() {
 
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
-    Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
-    
+
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
