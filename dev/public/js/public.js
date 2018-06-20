@@ -60,12 +60,12 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 440);
+/******/ 	return __webpack_require__(__webpack_require__.s = 467);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 12:
+/***/ 13:
 /***/ (function(module, exports) {
 
 var g;
@@ -93,7 +93,7 @@ module.exports = g;
 
 /***/ }),
 
-/***/ 14:
+/***/ 15:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2619,7 +2619,7 @@ Popper.Defaults = Defaults;
 /* harmony default export */ __webpack_exports__["default"] = (Popper);
 //# sourceMappingURL=popper.js.map
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(12)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(13)))
 
 /***/ }),
 
@@ -2720,7 +2720,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(34)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
 
 /***/ }),
 
@@ -13369,7 +13369,7 @@ module.exports = Cancel;
 
 /***/ }),
 
-/***/ 33:
+/***/ 34:
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -13398,7 +13398,7 @@ module.exports = function(module) {
 
 /***/ }),
 
-/***/ 34:
+/***/ 35:
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -13594,7 +13594,7 @@ process.umask = function() { return 0; };
 
 
 window._ = __webpack_require__(40);
-window.Popper = __webpack_require__(14).default;
+window.Popper = __webpack_require__(15).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -30761,7 +30761,7 @@ if (token) {
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12), __webpack_require__(33)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(34)(module)))
 
 /***/ }),
 
@@ -30774,7 +30774,7 @@ if (token) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(22), __webpack_require__(14)) :
+   true ? factory(exports, __webpack_require__(22), __webpack_require__(15)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -34794,110 +34794,6 @@ function isSlowBuffer (obj) {
 
 /***/ }),
 
-/***/ 440:
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(441);
-
-
-/***/ }),
-
-/***/ 441:
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(39);
-__webpack_require__(61);
-__webpack_require__(442);
-
-/***/ }),
-
-/***/ 442:
-/***/ (function(module, exports) {
-
-$(document).ready(function () {
-
-    var MESH = {
-        segments: 16,
-        slices: 8,
-        xRange: 0.3,
-        yRange: 0.3,
-        zRange: 0.5,
-        ambient: '#000021',
-        diffuse: '#FFFFFF',
-        speed: 0.0002,
-        light_z: 150,
-        light_source_dark: '#000705',
-        light_source_light: '#239192'
-    };
-    var container = document.getElementById('geoBackdrop');
-    var renderer = new FSS.WebGLRenderer();
-    var scene = new FSS.Scene();
-    var light = new FSS.Light(MESH.light_source_dark, MESH.light_source_light);
-    var geometry, material, mesh;
-    var now,
-        start = Date.now();
-
-    function initialise() {
-        if (container !== null) {
-            createMesh();
-            resize();
-            animate();
-
-            scene.add(light);
-            container.appendChild(renderer.element);
-            window.addEventListener('resize', resize);
-        }
-    }
-
-    function createMesh() {
-        scene.remove(mesh);
-        renderer.clear();
-        geometry = new FSS.Plane(container.offsetWidth + container.offsetWidth / MESH.segments * 4, container.offsetHeight + container.offsetHeight * 0.05, MESH.segments, MESH.slices);
-        renderer.element.style.marginLeft = -1 * (container.offsetWidth / MESH.segments) + 'px';
-        material = new FSS.Material(MESH.ambient, MESH.diffuse);
-        mesh = new FSS.Mesh(geometry, material);
-        scene.add(mesh);
-
-        // Augment vertices for animation
-        var v, vertex;
-        for (v = geometry.vertices.length - 1; v >= 0; v--) {
-            vertex = geometry.vertices[v];
-            vertex.anchor = FSS.Vector3.clone(vertex.position);
-            vertex.step = FSS.Vector3.create(Math.randomInRange(0.2, 1.0), Math.randomInRange(0.2, 1.0), Math.randomInRange(0.2, 1.0));
-            vertex.time = Math.randomInRange(0, Math.PIM2);
-        }
-    }
-
-    function resize() {
-        renderer.setSize(container.offsetWidth + container.offsetWidth / MESH.segments * 4, container.offsetHeight + container.offsetHeight * 0.05);
-    }
-
-    function animate() {
-        now = Date.now() - start;
-        light.setPosition(150 * Math.sin(now * 0.001), 100 * Math.cos(now * 0.0005), MESH.light_z);
-        renderer.render(scene);
-
-        for (v = geometry.vertices.length - 1; v >= 0; v--) {
-            vertex = geometry.vertices[v];
-            var offset = 0.5;
-            ox = Math.sin(vertex.time + vertex.step[0] * now * MESH.speed);
-            oy = Math.cos(vertex.time + vertex.step[1] * now * MESH.speed);
-            oz = Math.sin(vertex.time + vertex.step[2] * now * MESH.speed);
-            FSS.Vector3.set(vertex.position, MESH.xRange * geometry.segmentWidth * ox, MESH.yRange * geometry.sliceHeight * oy, MESH.zRange * offset * oz - offset);
-            FSS.Vector3.add(vertex.position, vertex.anchor);
-        }
-
-        // Set the Geometry to dirty
-        geometry.dirty = true;
-
-        requestAnimationFrame(animate);
-    }
-
-    initialise();
-});
-
-/***/ }),
-
 /***/ 45:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -35002,6 +34898,110 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
+
+/***/ }),
+
+/***/ 467:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(468);
+
+
+/***/ }),
+
+/***/ 468:
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(39);
+__webpack_require__(61);
+__webpack_require__(469);
+
+/***/ }),
+
+/***/ 469:
+/***/ (function(module, exports) {
+
+$(document).ready(function () {
+
+    var MESH = {
+        segments: 16,
+        slices: 8,
+        xRange: 0.3,
+        yRange: 0.3,
+        zRange: 0.5,
+        ambient: '#000021',
+        diffuse: '#FFFFFF',
+        speed: 0.0002,
+        light_z: 150,
+        light_source_dark: '#000705',
+        light_source_light: '#239192'
+    };
+    var container = document.getElementById('geoBackdrop');
+    var renderer = new FSS.WebGLRenderer();
+    var scene = new FSS.Scene();
+    var light = new FSS.Light(MESH.light_source_dark, MESH.light_source_light);
+    var geometry, material, mesh;
+    var now,
+        start = Date.now();
+
+    function initialise() {
+        if (container !== null) {
+            createMesh();
+            resize();
+            animate();
+
+            scene.add(light);
+            container.appendChild(renderer.element);
+            window.addEventListener('resize', resize);
+        }
+    }
+
+    function createMesh() {
+        scene.remove(mesh);
+        renderer.clear();
+        geometry = new FSS.Plane(container.offsetWidth + container.offsetWidth / MESH.segments * 4, container.offsetHeight + container.offsetHeight * 0.05, MESH.segments, MESH.slices);
+        renderer.element.style.marginLeft = -1 * (container.offsetWidth / MESH.segments) + 'px';
+        material = new FSS.Material(MESH.ambient, MESH.diffuse);
+        mesh = new FSS.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // Augment vertices for animation
+        var v, vertex;
+        for (v = geometry.vertices.length - 1; v >= 0; v--) {
+            vertex = geometry.vertices[v];
+            vertex.anchor = FSS.Vector3.clone(vertex.position);
+            vertex.step = FSS.Vector3.create(Math.randomInRange(0.2, 1.0), Math.randomInRange(0.2, 1.0), Math.randomInRange(0.2, 1.0));
+            vertex.time = Math.randomInRange(0, Math.PIM2);
+        }
+    }
+
+    function resize() {
+        renderer.setSize(container.offsetWidth + container.offsetWidth / MESH.segments * 4, container.offsetHeight + container.offsetHeight * 0.05);
+    }
+
+    function animate() {
+        now = Date.now() - start;
+        light.setPosition(150 * Math.sin(now * 0.001), 100 * Math.cos(now * 0.0005), MESH.light_z);
+        renderer.render(scene);
+
+        for (v = geometry.vertices.length - 1; v >= 0; v--) {
+            vertex = geometry.vertices[v];
+            var offset = 0.5;
+            ox = Math.sin(vertex.time + vertex.step[0] * now * MESH.speed);
+            oy = Math.cos(vertex.time + vertex.step[1] * now * MESH.speed);
+            oz = Math.sin(vertex.time + vertex.step[2] * now * MESH.speed);
+            FSS.Vector3.set(vertex.position, MESH.xRange * geometry.segmentWidth * ox, MESH.yRange * geometry.sliceHeight * oy, MESH.zRange * offset * oz - offset);
+            FSS.Vector3.add(vertex.position, vertex.anchor);
+        }
+
+        // Set the Geometry to dirty
+        geometry.dirty = true;
+
+        requestAnimationFrame(animate);
+    }
+
+    initialise();
+});
 
 /***/ }),
 
