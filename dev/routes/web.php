@@ -16,7 +16,6 @@ Auth::routes();
 
 Route::get('/test', function(){
 
-	dd(App\Models\StructureItems\TradeStructure::all());
 	dd(App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first());
 	exit;
 });

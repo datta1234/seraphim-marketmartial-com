@@ -4,8 +4,10 @@ namespace App\Http\Controllers\TradeScreen;
 
 use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\StructureItems\Market;
+use App\Models\StructureItems\TradeStructure;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\StructureItems\TradeStructureGroup;
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -98,24 +100,33 @@ class MarketUserMarketReqeustController extends Controller
     public function create(Market $market)
     {
 
-    // "id": 1,
-    // "trade_structure": "TS_1",
-    // "trade_items": {
-    //     "default": {
-    //         "Expiration Date": "2018-01-01 00:00:00",
-    //         "Strike": "20 000"
-    //     }
-    // },
+        // "id": 1,
+        // "trade_structure": "TS_1",
+        // "trade_items": {
+        //     "default": {
+        //         "Expiration Date": "2018-01-01 00:00:00",
+        //         "Strike": "20 000"
+        //     }
+        // },
 
-        UserMarketRequest::create();
+
+        //UserMarketRequest::create();
         //user_market_request_tradables
        
         //user_market_request_groups
 
         // generate groups based of the group 
-        foreach ($groups as $group) 
+
+        //use this to refer to the 
+        $tradeStructure = TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first();
+
+
+        $request->input('trade_structure_groups');
+
+        foreach ($tradeStructureGroups as $group) 
         {
-            # code...
+            $tradeStructureGroups = new TradeStructureGroup();
+
         }
 
         //user_market_request_items
