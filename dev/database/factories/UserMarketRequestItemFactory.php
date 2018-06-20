@@ -1,0 +1,21 @@
+<?php
+
+use Faker\Generator as Faker;
+
+$factory->define(App\Models\MarketRequest\UserMarketRequestItem::class, function (Faker $faker) {
+    return [
+        "item_id" => function() {
+            return factory(App\Models\StructureItems\Item::class)->create()->id;
+        },
+        "title" => function($umrItem) {
+            return App\Models\StructureItems\Item::find($umrItem['item_id'])->title;
+        },
+        "type" => function($umrItem) {
+            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title;
+        },
+        "value" => function($umrItem) use ($faker) {
+            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title == "expiration date" ? $faker->date('Y-m-d') : $faker->randomNumber(8) ;
+        }
+    ];
+});
+

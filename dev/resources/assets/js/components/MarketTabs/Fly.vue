@@ -4,7 +4,7 @@
             <div class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
                 <div class="row justify-content-md-center">
                     <div class="col col-6 market-tab-name market-tab-name">
-                        {{ marketRequest.attributes.strike }}    
+                        {{ marketRequest.trade_items.default["Strike"] }}    
                     </div>
                     <div class="col col-6 market-tab-state">
                         

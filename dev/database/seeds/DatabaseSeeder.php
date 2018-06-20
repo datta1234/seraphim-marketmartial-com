@@ -33,6 +33,10 @@ class DatabaseSeeder extends Seeder
         $this->call(TradeStructureTableSeeder::class);
 
 
+        
+        $this->call(UserMarketRequestSeeder::class);
+        $this->call(UserMarketRequestTradeablesSeeder::class);
+        $this->call(UserMarketRequestItemSeeder::class);
     
          /**
          * Start dummy data remove once going live

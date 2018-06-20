@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-tab-risky" class="col col-12 text-center">
+    <div dusk="market-tab-efp" class="col col-12 text-center">
         <div class="row">
             <div class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
                 <div class="row justify-content-md-center">

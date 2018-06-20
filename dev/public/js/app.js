@@ -70473,7 +70473,6 @@ var app = new Vue({
             console.log("Load Market Request", market);
             return axios.get('/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
                 if (marketResponse.status == 200) {
-                    console.log(JSON.stringify(marketResponse.data, null, 4));
                     marketResponse.data = marketResponse.data.map(function (x) {
                         return new __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketRequest__["a" /* default */](x);
                     });
@@ -70507,7 +70506,7 @@ var app = new Vue({
             });
             return Promise.all(promises);
         }).then(function (all_market_requests) {
-            console.log(all_market_requests);
+            // nada
         });
     }
 });
@@ -83404,6 +83403,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__ = __webpack_require__(364);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch__ = __webpack_require__(440);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP__ = __webpack_require__(443);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls__ = __webpack_require__(446);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch__ = __webpack_require__(449);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch__);
 //
 //
 //
@@ -83427,6 +83434,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+
 
 
 
@@ -83440,7 +83451,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         MarketTabOutright: __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
         MarketTabRisky: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
         MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
-        MarketTabFly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a
+        MarketTabFly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a,
+        OptionSwitch: __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default.a,
+        EFP: __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default.a,
+        Rolls: __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default.a,
+        EFPSwitch: __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default.a
     },
     props: {
         'market': {
@@ -83457,10 +83472,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             market_date_groups: {},
             tabs: {
-                Outright: __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
-                Risky: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
-                Calendar: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
-                Fly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a
+                'Outright': __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
+                'Risky': __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
+                'Calendar': __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
+                'Fly': __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a,
+                'Option Switch': __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default.a,
+                'EFP': __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default.a,
+                'Rolls': __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default.a,
+                'EFP Switch': __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default.a
             }
         };
     },
@@ -83469,7 +83488,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         mapMarketRequestGroups: function mapMarketRequestGroups(markets) {
             // map markets to dates
             return markets.reduce(function (x, y) {
-                var date = y.trade_items.default["Expiration Date"];
+                var date = y.trade_items.default ? y.trade_items.default["Expiration Date"] : '';
                 if (!x[date]) {
                     x[date] = [];
                 }
@@ -83970,7 +83989,7 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                    " +
-                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
                       "    \n                "
                   )
                 ]
@@ -84233,7 +84252,7 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                    " +
-                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
                       "    \n                "
                   )
                 ]
@@ -84496,7 +84515,7 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                    " +
-                      _vm._s(_vm.marketRequest.attributes.strike) +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
                       "    \n                "
                   )
                 ]
@@ -84918,6 +84937,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__ = __webpack_require__(382);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__ = __webpack_require__(452);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__ = __webpack_require__(455);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__ = __webpack_require__(458);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__ = __webpack_require__(461);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__);
 //
 //
 //
@@ -84925,6 +84952,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+
+
 
 
 
@@ -84940,7 +84972,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         BarLayoutOutright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
         BarLayoutRisky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
         BarLayoutCalendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
-        BarLayoutFly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a
+        BarLayoutFly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
+        BarLayoutOptionSwitch: __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
+        BarLayoutEFP: __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
+        BarLayoutEFPSwitch: __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
+        BarLayoutRolls: __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
     },
     props: {
         marketRequest: {
@@ -84950,10 +84986,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             layouts: {
-                Outright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
-                Risky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
-                Calendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
-                Fly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a
+                'Outright': __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
+                'Risky': __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
+                'Calendar': __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
+                'Fly': __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
+                'Option Switch': __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
+                'EFP': __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
+                'EFPSwitch': __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
+                'Rolls': __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
             }
         };
     },
@@ -85274,7 +85314,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             user_market: null,
             market_history: [],
-            market_title: "",
             market_time: ""
         };
     },
@@ -85284,10 +85323,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.init();
         }
     },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
     methods: {
-        setMarketTitle: function setMarketTitle() {
-            this.market_title = this.marketRequest.getParent().title + " " + this.marketRequest.attributes.expiration_date.format("MMM D") + " " + this.marketRequest.attributes.strike;
-        },
+        setMarketTitle: function setMarketTitle() {},
         setMarketTime: function setMarketTime() {
             this.market_time = "10:10";
         },
@@ -85305,7 +85347,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 user_market: null,
                 market_history: [],
-                market_title: "",
                 market_time: ""
             };
             Object.keys(defaults).forEach(function (k) {
@@ -85490,7 +85531,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             user_market: null,
             market_history: [],
-            market_title: "",
             market_time: ""
         };
     },
@@ -85500,10 +85540,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.init();
         }
     },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
     methods: {
-        setMarketTitle: function setMarketTitle() {
-            this.market_title = this.marketRequest.getParent().title + " " + this.marketRequest.attributes.expiration_date.format("MMM D") + " " + this.marketRequest.attributes.strike;
-        },
+        setMarketTitle: function setMarketTitle() {},
         setMarketTime: function setMarketTime() {
             this.market_time = "10:10";
         },
@@ -85521,7 +85564,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 user_market: null,
                 market_history: [],
-                market_title: "",
                 market_time: ""
             };
             Object.keys(defaults).forEach(function (k) {
@@ -85706,7 +85748,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             user_market: null,
             market_history: [],
-            market_title: "",
             market_time: ""
         };
     },
@@ -85716,10 +85757,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.init();
         }
     },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
     methods: {
-        setMarketTitle: function setMarketTitle() {
-            this.market_title = this.marketRequest.getParent().title + " " + this.marketRequest.attributes.expiration_date.format("MMM D") + " " + this.marketRequest.attributes.strike;
-        },
+        setMarketTitle: function setMarketTitle() {},
         setMarketTime: function setMarketTime() {
             this.market_time = "10:10";
         },
@@ -85737,7 +85781,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 user_market: null,
                 market_history: [],
-                market_title: "",
                 market_time: ""
             };
             Object.keys(defaults).forEach(function (k) {
@@ -87482,15 +87525,19 @@ var render = function() {
                                   _vm._s(key) +
                                   " " +
                                   _vm._s(
-                                    market_requests.trade_items.default[
-                                      "Strike"
-                                    ]
+                                    market_requests.trade_items.default
+                                      ? market_requests.trade_items.default[
+                                          "Strike"
+                                        ]
+                                      : ""
                                   ) +
                                   " " +
                                   _vm._s(
-                                    market_requests.trade_items.default[
-                                      "Expiration Date"
-                                    ]
+                                    market_requests.trade_items.default
+                                      ? market_requests.trade_items.default[
+                                          "Expiration Date"
+                                        ]
+                                      : ""
                                   )
                               )
                             ])
@@ -90322,6 +90369,1935 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 431 */,
+/* 432 */,
+/* 433 */,
+/* 434 */,
+/* 435 */,
+/* 436 */,
+/* 437 */,
+/* 438 */,
+/* 439 */,
+/* 440 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(441)
+/* template */
+var __vue_template__ = __webpack_require__(442)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/OptionSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-153a8557", Component.options)
+  } else {
+    hotAPI.reload("data-v-153a8557", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 441 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 442 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-option_switch" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-153a8557", module.exports)
+  }
+}
+
+/***/ }),
+/* 443 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(444)
+/* template */
+var __vue_template__ = __webpack_require__(445)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/EFP.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-326059de", Component.options)
+  } else {
+    hotAPI.reload("data-v-326059de", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 444 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 445 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-efp" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-326059de", module.exports)
+  }
+}
+
+/***/ }),
+/* 446 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(447)
+/* template */
+var __vue_template__ = __webpack_require__(448)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Rolls.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-613c4e90", Component.options)
+  } else {
+    hotAPI.reload("data-v-613c4e90", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 447 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 448 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-rolls" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-613c4e90", module.exports)
+  }
+}
+
+/***/ }),
+/* 449 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(450)
+/* template */
+var __vue_template__ = __webpack_require__(451)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/EFPSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6240ada5", Component.options)
+  } else {
+    hotAPI.reload("data-v-6240ada5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 450 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            console.log('updated: marketRequest.user_markets');
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            console.log('updated: marketRequest._chosen_user_market');
+            this.calcMarketState();
+        }
+    },
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            market_request_state: '',
+            market_request_state_label: '',
+
+            user_market_bid: null,
+            user_market_offer: null
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm'
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            this.user_market = this.marketRequest.getChosenUserMarket();
+            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "vol-spread":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "vol-spread-alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "request":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "request-grey":
+                    this.market_request_state = 'request-grey';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    },
+    mounted: function mounted() {
+        // initial setup of states
+        this.calcMarketState();
+    }
+});
+
+/***/ }),
+/* 451 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col col-12 text-center",
+      attrs: { dusk: "market-tab-efp_switch" }
+    },
+    [
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          {
+            staticClass: "col market-tab p-3 mb-2 mt-2",
+            class: _vm.marketState,
+            on: {
+              click: function($event) {
+                _vm.loadInteractionBar()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "row justify-content-md-center" }, [
+              _c(
+                "div",
+                { staticClass: "col col-6 market-tab-name market-tab-name" },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      "    \n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col col-6 market-tab-state" }, [
+                _vm.market_request_state_label != ""
+                  ? _c("span", [
+                      _c("span", {}, [
+                        _vm._v(_vm._s(_vm.market_request_state_label))
+                      ])
+                    ])
+                  : _c("span", [
+                      _c("span", { class: _vm.bidState }, [
+                        _vm._v(_vm._s(_vm.user_market_bid))
+                      ]),
+                      _vm._v(" / "),
+                      _c("span", { class: _vm.offerState }, [
+                        _vm._v(_vm._s(_vm.user_market_offer))
+                      ])
+                    ])
+              ])
+            ])
+          ]
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6240ada5", module.exports)
+  }
+}
+
+/***/ }),
+/* 452 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(453)
+/* template */
+var __vue_template__ = __webpack_require__(454)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/OptionSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-01563e0b", Component.options)
+  } else {
+    hotAPI.reload("data-v-01563e0b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 453 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 454 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-option_switch" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-01563e0b", module.exports)
+  }
+}
+
+/***/ }),
+/* 455 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(456)
+/* template */
+var __vue_template__ = __webpack_require__(457)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFP.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-82388046", Component.options)
+  } else {
+    hotAPI.reload("data-v-82388046", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 456 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 457 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-82388046", module.exports)
+  }
+}
+
+/***/ }),
+/* 458 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(459)
+/* template */
+var __vue_template__ = __webpack_require__(460)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFPSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-062ad171", Component.options)
+  } else {
+    hotAPI.reload("data-v-062ad171", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 459 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 460 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp_switch" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-062ad171", module.exports)
+  }
+}
+
+/***/ }),
+/* 461 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(462)
+/* template */
+var __vue_template__ = __webpack_require__(463)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Rolls.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1ba47af8", Component.options)
+  } else {
+    hotAPI.reload("data-v-1ba47af8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 462 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 463 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-rolls" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-2" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-form-checkbox",
+                {
+                  attrs: { value: "true", "unchecked-value": "false" },
+                  model: {
+                    value: _vm.state_premium_calc,
+                    callback: function($$v) {
+                      _vm.state_premium_calc = $$v
+                    },
+                    expression: "state_premium_calc"
+                  }
+                },
+                [_vm._v(" Apply premium calculator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1ba47af8", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
