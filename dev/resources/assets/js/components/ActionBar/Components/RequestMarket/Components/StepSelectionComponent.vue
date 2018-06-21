@@ -32,9 +32,6 @@
 <script>
     export default {
         name: 'StepSelection',
-        components: {
-            
-        },
         props:{
             'callback': {
                 type: Function

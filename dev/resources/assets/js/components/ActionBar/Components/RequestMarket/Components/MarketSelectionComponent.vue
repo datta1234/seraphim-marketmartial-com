@@ -15,9 +15,6 @@
 <script>
     export default {
         name: 'MarketSelection',
-        components: {
-            
-        },
         props:{
             'callback': {
                 type: Function

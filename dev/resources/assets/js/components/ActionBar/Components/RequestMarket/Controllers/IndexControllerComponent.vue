@@ -8,22 +8,9 @@
     import StepSelection from '../Components/StepSelectionComponent.vue';
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
     import StructureSelection from '../Components/StructureSelectionComponent.vue';
+    import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
 
     import Market from '../../../../../lib/Market';
-    /*market/{marketId}/market-request
-    'trade_structure':'Outright'
-    'trade_structure_groups':
-    [
-        {
-            is_selected: bool,
-            fields:{
-                'Expiration Date':
-                'Strike':
-                'Quantity':
-            }
-        },
-    ]
-    }*/
     export default {
         name: 'IndexController',
         props:{
@@ -39,17 +26,18 @@
                 index_data: {
                     market_type_title:"Index Option",
                     market_type: null,
-                    trade_structures: null,
+                    index_market_object: {
+                        trade_structure: "",
+                        trade_structure_groups: [],
+                    },
+                    number_of_dates: 1,
                 },
                 selected_step_component: null,
                 components: {
                     Selections: StepSelection,
                     Market: MarketSelection,
-                    Structure :StructureSelection,
-                },
-                index_market_object: {
-                    trade_structure: "Index Option",
-                    trade_structure_groups: '',
+                    Structure: StructureSelection,
+                    Expiry: ExpirySelection,
                 },
             };
         },
@@ -78,20 +66,24 @@
                         this.selected_step_component = 'Selections';    
                         break;
                     case 2:
-                        console.log("CASE 2: ", this.index_market_object)
                         this.selected_step_component = 'Market';
                         break;
                     case 3:
-                        console.log("CASE 3: ", this.index_market_object);
-                        this.loadStructures();
+                        this.modal_data.title += ' > ' + component_data;
+                        console.log("CASE 3: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Structure';
                         break;
                     case 4:
-                        this.index_market_object.trade_structure = component_data;
-                        console.log("CASE 4: ", this.index_market_object);
-                        this.selected_step_component = '';                      
+                        if (component_data == 'Calendar') {
+                            this.index_data.number_of_dates = 2;
+                        }
+                        this.modal_data.title += ' > ' + component_data;
+                        this.index_data.index_market_object.trade_structure = component_data;
+                        console.log("CASE 4: ", this.index_data.index_market_object);
+                        this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
+                        console.log("CASE 5: ", component_data);
                         this.selected_step_component = '';
                         break;
                     case 6:
@@ -112,24 +104,9 @@
                     });
                 }
             },
-            /**
-             * Loads Market Structure
-             */
-            loadStructures() {
-                axios.get('trade/market-type/'+this.index_data.market_type.id+'/trade-structure')
-                .then(tradeStructureResponse => {
-                    if(tradeStructureResponse.status == 200) {
-                        this.index_data.trade_structures = tradeStructureResponse.data;
-                        console.log("WHAT COMES FROM SERVER? ",this.index_data.trade_structures)
-                    } else {
-                        console.error(err);    
-                    }
-                }, err => {
-                    console.error(err);
-                });
-            },
         },
         mounted() {
+            this.modal_data.title = "Index";
             this.loadIndexMarkets();
             console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';

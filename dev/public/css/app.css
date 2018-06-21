@@ -12058,12 +12058,10 @@ input:checked + .slider:before {
 
 .mm-modal .modal-header .modal-title .mm-modal-title {
   color: #FFFFFF;
-}
-
-@media (min-width: 992px) {
-  .mm-modal .modal-header .modal-title .mm-modal-title {
-    margin-left: 19.6rem;
-  }
+  /* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
 }
 
 .mm-modal .modal-footer {

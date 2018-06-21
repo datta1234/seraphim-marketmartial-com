@@ -6,7 +6,7 @@
         <b-modal class="mm-modal mx-auto" size="lg" v-model="modal_data.show_modal" :ref="modal_data.modal_ref">
             <!-- Modal title content --> 
             <div class="mm-modal-title" slot="modal-title">
-                {{ modal_data.title }}
+                {{ modalTitle }}
             </div>
 
             <component v-bind:is="controllers[modal_data.selected_step_component]" :callback="loadController" :modal_data="modal_data"></component>
@@ -30,7 +30,23 @@
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
+    import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     
+    /*market/{marketId}/market-request
+    {
+        "trade_structure": "Outright",
+        "trade_structure_groups": [{
+            "is_selected": "1",
+            "stock_code"://either this one
+            "market_id": // or this one not both
+            "fields": {
+                "Expiration Date": "lol",
+                "Strike": "lol",
+                "Quantity": "lol"
+            }
+        }]
+    }*/
+
     export default {
         name: 'RequestMarketMenu',
         components: {
@@ -38,6 +54,7 @@
             IndexController,
             MarketSelection,
             StructureSelection,
+            ExpirySelection,
         },
         props:{
           
@@ -57,6 +74,11 @@
                 },
             };
         },
+        computed: {
+            modalTitle: function() {
+                return this.modal_data.title;
+            }
+        },
         methods: {
             /**
              * Loads the Reqeust a Market Modal 
@@ -74,6 +96,7 @@
             hideModal() {
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = false;
+                this.modal_data.title = 'Select A Market';
                 this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
             /**
