@@ -171,7 +171,7 @@ class MarketUserMarketReqeustController extends Controller
                 ]);
 
                 
-                $userMarketRequest->user_id = 1;//$request->user()->id;
+                $userMarketRequest->user_id = $request->user()->id;
                 $userMarketRequest->save();
                 $responseData = ['id'=> $userMarketRequest->id];
 
