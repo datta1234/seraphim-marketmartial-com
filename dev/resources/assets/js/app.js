@@ -161,8 +161,12 @@ const app = new Vue({
             return axios.get('/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
+                    if(!marketType.markets) {
+                        marketType.markets = [];
+                    }
                     marketResponse.data = marketResponse.data.map(x => {
                         x = new Market(x);
+                        marketType.markets.push(x);   
                         self.display_markets.push(x);
                         return x;
                     });

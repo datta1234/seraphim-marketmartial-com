@@ -10,6 +10,7 @@ class Stock extends Model
 	 * @property integer $id
 	 * @property string $name
 	 * @property string $code
+     * @property string $verified
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -27,7 +28,7 @@ class Stock extends Model
      * @var array
      */
     public $fillable = [
-        'code',
+        'code'
     ];
 
     /**

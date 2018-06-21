@@ -1,0 +1,76 @@
+.confirmations-modal {
+	.modal-dialog {
+  		max-width: 1000px;
+	}
+}
+
+.mm-modal {
+	.modal-content {
+		background-color: $mm-background;
+	}
+	.modal-header {
+		background-color: $mm-modal-header;
+		
+		.modal-title {
+			.mm-modal-title {
+				color: $mm-text-white;
+
+				/* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
+			}
+		}
+	}
+	.modal-footer {
+		border-top: none;
+		text-align: center;
+	}
+}
+
+.mm-modal-button {
+	color: $mm-text-white;
+	background-color: $mm-modal-header;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-modal-header, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-modal-header, 10%);
+	}
+}
+
+.mm-modal-market-button {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	border-radius: 2rem;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}
+
+
+.mm-modal-market-button-alt {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}

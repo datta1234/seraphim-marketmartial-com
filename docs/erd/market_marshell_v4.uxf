@@ -138,11 +138,11 @@ layer=-1</panel_attributes>
       <x>686</x>
       <y>1253</y>
       <w>35</w>
-      <h>91</h>
+      <h>70</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -323,18 +323,20 @@ m2=0..n</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>623</x>
-      <y>1330</y>
+      <y>1309</y>
       <w>147</w>
-      <h>98</h>
+      <h>119</h>
     </coordinates>
     <panel_attributes>trade_structure_groups
 --
 id: int(10)
 trade_structure_id: int(11)
 title: varchar(255)
+can_have_stock: boolean
+can_have_market: boolean
+for_select: boolean nullable 
 created_at:timestamp
 updated_at:timestamp
-
 layer=1</panel_attributes>
     <additional_attributes/>
   </element>
