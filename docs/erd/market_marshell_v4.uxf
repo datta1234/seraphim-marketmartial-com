@@ -470,7 +470,7 @@ m2=0..1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2296</x>
+      <x>2247</x>
       <y>1330</y>
       <w>224</w>
       <h>91</h>
@@ -501,15 +501,14 @@ bg=green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1911</x>
-      <y>1568</y>
+      <x>2247</x>
+      <y>1526</y>
       <w>238</w>
       <h>91</h>
     </coordinates>
     <panel_attributes>market_negotiation_condition
 --
 id: int(11)
-is_private:tinyint(1)
 market_negotiation_id:int(11)
 market_condition_id:int(11)
 created_at: timestamp
@@ -1434,14 +1433,14 @@ m2=0..n
     <coordinates>
       <x>2149</x>
       <y>1365</y>
-      <w>161</w>
+      <w>112</w>
       <h>35</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>10.0;20.0;210.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1552,8 +1551,8 @@ m2=0..1
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2240</x>
-      <y>1568</y>
+      <x>2499</x>
+      <y>1526</y>
       <w>196</w>
       <h>91</h>
     </coordinates>
@@ -1571,22 +1570,8 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2023</x>
-      <y>1498</y>
-      <w>35</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=0..1
-m2=0..n
-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>2142</x>
-      <y>1589</y>
+      <x>2149</x>
+      <y>1533</y>
       <w>112</w>
       <h>35</h>
     </coordinates>
@@ -1594,13 +1579,27 @@ m2=0..n
 m1=0..1
 m2=0..n
 </panel_attributes>
-    <additional_attributes>140.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2345</x>
+      <y>1610</y>
+      <w>273</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>350.0;10.0;350.0;50.0;10.0;50.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2513</x>
-      <y>1491</y>
+      <x>2492</x>
+      <y>1330</y>
       <w>203</w>
       <h>91</h>
     </coordinates>
@@ -1617,16 +1616,16 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2429</x>
-      <y>1519</y>
-      <w>98</w>
-      <h>119</h>
+      <x>2555</x>
+      <y>1414</y>
+      <w>35</w>
+      <h>126</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>10.0;140.0;60.0;140.0;60.0;10.0;120.0;10.0</additional_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1671,12 +1670,13 @@ m2=0..n
       <x>1918</x>
       <y>1281</y>
       <w>238</w>
-      <h>224</h>
+      <h>357</h>
     </coordinates>
     <panel_attributes>market_negotiations
 --
 id: int(11)
 user_id:int(11)
+counter_user_id: int(11)
 market_negotiation_id: int(11) nullable
 user_market_id: int(11)
 bid: double(11,2) nullable
@@ -1690,7 +1690,18 @@ future_reference: double(11,2) nullable
 spot_price: double(11,2) nullable
 is_repeat: tinyint(1)
 is_accepted: tinyint(1) nullable
+is_private: boolean
 market_negotiation_status_id: int(11)
+
+cond_is_repeat_atw: boolean nullable
+cond_fok_apply_bid: boolean nullable
+cond_fok_spin: boolean nullable
+cond_timeout: boolean nullable
+cond_is_ocd: boolean nullable
+cond_is_subject: boolean nullable
+cond_buy_mid: boolean nullable
+cond_buy_best: boolean nullable
+
 created_at: timestamp
 updated_at: timestamp
 
@@ -2337,12 +2348,12 @@ m2=0..1</panel_attributes>
       <x>2149</x>
       <y>959</y>
       <w>686</w>
-      <h>532</h>
+      <h>539</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;730.0;800.0;730.0;800.0;10.0;960.0;10.0</additional_attributes>
+    <additional_attributes>10.0;740.0;800.0;740.0;800.0;10.0;960.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>

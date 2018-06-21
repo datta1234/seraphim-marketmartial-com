@@ -10,6 +10,9 @@
                 <b-col cols="12">
                     Select a Condition
                 </b-col>
+                <b-col cols="12">
+                    <b-btn></b-btn>
+                </b-col>
             </b-row>
         </b-col>
     </b-row>

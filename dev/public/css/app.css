@@ -11840,6 +11840,9 @@ input:checked + .slider:before {
 .interaction-bar-wrapper {
   font-family: "Muli-Regular";
   height: 100%;
+  /*
+    *   Market Negotiation Blocks
+    */
 }
 
 .interaction-bar-wrapper .interaction-bar,
@@ -11926,6 +11929,10 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
+}
+
+.interaction-bar-wrapper .ibar.market-negotiation form input {
+  margin: 1px;
 }
 
 .interaction-bar-wrapper .chat-bar,
