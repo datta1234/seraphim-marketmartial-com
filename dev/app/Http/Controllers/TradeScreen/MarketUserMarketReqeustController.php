@@ -145,10 +145,6 @@ class MarketUserMarketReqeustController extends Controller
                 $userMarketRequest->save();
                 $responseData = ['id'=> $userMarketRequest->id];
 
-
-                //add tradables logic get clarrification
-            
-
                 for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
                 {
 
@@ -163,7 +159,7 @@ class MarketUserMarketReqeustController extends Controller
                     $stock_id = null; 
                     $market_id = null;     
 
-                    if($inputTradeStructureGroups[$i]['stock'])//if a stock id passed then
+                    if(array_key_exists('stock', $inputTradeStructureGroups[$i]))//if a stock id passed then
                     {
                         $stock = Stock::where('code',$inputTradeStructureGroups[$i]['stock'])->first();
                         if(!$stock)
