@@ -12,6 +12,8 @@
     import OutrightDetails from '../Components/OutrightDetailsComponent.vue';
     import RiskyDetails from '../Components/RiskyDetailsComponent.vue';
     import FlyDetails from '../Components/FlyDetailsComponent.vue';
+    import CalendarDetails from '../Components/CalendarDetailsComponent.vue';
+    import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
     import Market from '../../../../../lib/Market';
     export default {
@@ -27,10 +29,11 @@
         data() {
             return {
                 index_data: {
-                    market_type_title:"Index Option",
+                    market_type_title:'Index Option',
                     market_type: null,
                     index_market_object: {
-                        trade_structure: "",
+                        market:'',
+                        trade_structure: '',
                         trade_structure_groups: [],
                         expiry_dates:[],
                         details: null,
@@ -47,6 +50,8 @@
                     Outright: OutrightDetails,
                     Risky: RiskyDetails,
                     Fly: FlyDetails,
+                    Calendar: CalendarDetails,
+                    Confirm: ConfirmMarketRequest,
                 },
             };
         },
@@ -80,6 +85,7 @@
                     case 3:
                         this.modal_data.title += ' > ' + component_data;
                         console.log("CASE 3: ", this.index_data.index_market_object);
+                        this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
                         break;
                     case 4:
@@ -98,6 +104,7 @@
                         console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                         break;
                     case 6:
+                        this.modal_data.title = 'Confirm Market Request'
                         this.index_data.index_market_object.details = component_data;
                         console.log("CASE 6: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Confirm';

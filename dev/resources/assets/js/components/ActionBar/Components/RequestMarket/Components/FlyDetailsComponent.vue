@@ -68,7 +68,7 @@
 						</b-row>
 	   					
 	   					<b-row>
-		   					<b-col class="text-center">	
+		   					<b-col class="text-center mt-3">	
 		                		<p>
 		                			All bids/offers going forward will have to maintain the ratio you set here
 		                		</p>
@@ -103,14 +103,17 @@
                 form_data: {
                 	options: [
 	                	{
+	                		is_selected:true,
 	                		strike: '',
 	                    	quantity: '',
 	                	},
 	                	{
+	                		is_selected:false,
 	                		strike: '',
 	                    	quantity: '',	
 	                	},
 	                	{
+	                		is_selected:true,
 	                		strike: '',
 	                    	quantity: '',
 	                	}

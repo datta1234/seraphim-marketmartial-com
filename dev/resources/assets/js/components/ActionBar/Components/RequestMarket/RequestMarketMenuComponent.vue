@@ -34,6 +34,8 @@
     import OutrightDetails from './Components/OutrightDetailsComponent.vue';
     import RiskyDetails from './Components/RiskyDetailsComponent.vue';
     import FlyDetails from './Components/FlyDetailsComponent.vue';
+    import CalendarDetails from './Components/CalendarDetailsComponent.vue';
+    import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
     
     /*market/{marketId}/market-request
     {
@@ -61,6 +63,8 @@
             OutrightDetails,
             RiskyDetails,
             FlyDetails,
+            CalendarDetails,
+            ConfirmMarketRequest,
         },
         props:{
           

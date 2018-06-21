@@ -3,8 +3,8 @@
         <b-container fluid>
             <b-row class="justify-content-md-center">
                 <b-form @submit="submitDetails">
-                    <b-form-group horizontal label="Strike:" label-for="outright-strike-1">
-				      	<b-form-radio-group id="risky-choices" v-model="form_data.choice" name="choice">
+                    <b-form-group horizontal>
+				      	<b-form-radio-group id="risky-choices" v-model="chosen_option" name="choice">
 				        	<b-form-radio value="0">CHOICE</b-form-radio>
 				        	<b-form-radio value="1">CHOICE</b-form-radio>
 				      	</b-form-radio-group>
@@ -62,16 +62,26 @@
                 type: Object
             }
         },
+        watch: {
+            'chosen_option': function(chosen_index) {
+                this.form_data.options.forEach( (element, index) => {
+                    element.is_selected = (chosen_index == index) ? true : false;
+                });
+                console.log("YOU BE HER MATEE", this.form_data.options);
+            }
+        },
         data() {
             return {
+                chosen_option: 0,
                 form_data: {
-                	choice: 0,
                 	options: [
 	                	{
+                            is_selected:true,
 	                		strike: '',
 	                    	quantity: '',
 	                	},
 	                	{
+                            is_selected:false,
 	                		strike: '',
 	                    	quantity: '',	
 	                	},
