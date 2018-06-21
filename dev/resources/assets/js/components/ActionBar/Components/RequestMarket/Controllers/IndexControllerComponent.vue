@@ -11,6 +11,7 @@
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
     import OutrightDetails from '../Components/OutrightDetailsComponent.vue';
     import RiskyDetails from '../Components/RiskyDetailsComponent.vue';
+    import FlyDetails from '../Components/FlyDetailsComponent.vue';
 
     import Market from '../../../../../lib/Market';
     export default {
@@ -45,6 +46,7 @@
                     Expiry: ExpirySelection,
                     Outright: OutrightDetails,
                     Risky: RiskyDetails,
+                    Fly: FlyDetails,
                 },
             };
         },

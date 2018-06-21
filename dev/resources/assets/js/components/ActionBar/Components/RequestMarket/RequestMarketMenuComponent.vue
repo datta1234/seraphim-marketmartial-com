@@ -33,6 +33,7 @@
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     import OutrightDetails from './Components/OutrightDetailsComponent.vue';
     import RiskyDetails from './Components/RiskyDetailsComponent.vue';
+    import FlyDetails from './Components/FlyDetailsComponent.vue';
     
     /*market/{marketId}/market-request
     {
@@ -59,6 +60,7 @@
             ExpirySelection,
             OutrightDetails,
             RiskyDetails,
+            FlyDetails,
         },
         props:{
           

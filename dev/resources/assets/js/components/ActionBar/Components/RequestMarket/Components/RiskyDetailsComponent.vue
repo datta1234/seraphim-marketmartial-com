@@ -10,27 +10,27 @@
 				      	</b-form-radio-group>
                     </b-form-group>
 
-                    <b-form-group horizontal label="Strike:" label-for="outright-strike-a">
-                        <b-form-input id="outright-strike-a"
+                    <b-form-group horizontal label="Strike" label-for="outright-strike-0">
+                        <b-form-input id="outright-strike-0"
                                   type="number"
                                   v-model="form_data.options[0].strike"
                                   required>
                         </b-form-input>
-                        <b-form-input id="outright-strike-b"
+                        <b-form-input id="outright-strike-1"
                                   type="number"
                                   v-model="form_data.options[1].strike"
                                   required>
                         </b-form-input>
                     </b-form-group>
 
-                    <b-form-group horizontal label="Quantity" label-for="outright-quantity-a">
-                        <b-form-input id="outright-quantity-a"
+                    <b-form-group horizontal label="Quantity (Ratio)" label-for="outright-quantity-0">
+                        <b-form-input id="outright-quantity-0"
                                   type="number"
                                   v-model="form_data.options[0].quantity"
                                   placeholder="500"
                                   required>
                         </b-form-input>
-                        <b-form-input id="outright-quantity-b"
+                        <b-form-input id="outright-quantity-1"
                                   type="number"
                                   v-model="form_data.options[1].quantity"
                                   placeholder="500"
