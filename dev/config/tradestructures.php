@@ -39,7 +39,7 @@ return [
                         [
                             [
                                 'title'=> 'default',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -59,7 +59,7 @@ return [
                             ],
                             [
                                 'title'=> 'Risky options',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
