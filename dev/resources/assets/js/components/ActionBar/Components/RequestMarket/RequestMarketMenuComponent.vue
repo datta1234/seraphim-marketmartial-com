@@ -6,7 +6,7 @@
         <b-modal class="mm-modal mx-auto" size="lg" v-model="modal_data.show_modal" :ref="modal_data.modal_ref">
             <!-- Modal title content --> 
             <div class="mm-modal-title" slot="modal-title">
-                {{ modal_data.title }}
+                {{ modalTitle }}
             </div>
 
             <component v-bind:is="controllers[modal_data.selected_step_component]" :callback="loadController" :modal_data="modal_data"></component>
@@ -27,13 +27,40 @@
 
 <script>
     import IndexController from './Controllers/IndexControllerComponent.vue';
-    import MarketSelections from './Components/MarketSelectionsComponent.vue';
+    import StepSelection from './Components/StepSelectionComponent.vue';
+    import MarketSelection from './Components/MarketSelectionComponent.vue';
+    import StructureSelection from './Components/StructureSelectionComponent.vue';
+    import ExpirySelection from './Components/ExpirySelectionComponent.vue';
+    import OutrightDetails from './Components/OutrightDetailsComponent.vue';
+    import RiskyDetails from './Components/RiskyDetailsComponent.vue';
+    import FlyDetails from './Components/FlyDetailsComponent.vue';
     
+    /*market/{marketId}/market-request
+    {
+        "trade_structure": "Outright",
+        "trade_structure_groups": [{
+            "is_selected": "1",
+            "stock_code"://either this one
+            "market_id": // or this one not both
+            "fields": {
+                "Expiration Date": "lol",
+                "Strike": "lol",
+                "Quantity": "lol"
+            }
+        }]
+    }*/
+
     export default {
         name: 'RequestMarketMenu',
         components: {
-            MarketSelections,
+            StepSelection,
             IndexController,
+            MarketSelection,
+            StructureSelection,
+            ExpirySelection,
+            OutrightDetails,
+            RiskyDetails,
+            FlyDetails,
         },
         props:{
           
@@ -48,10 +75,15 @@
                     selected_step_component: null
                 },
                 controllers: {
-                    Selections: MarketSelections,
+                    Selections: StepSelection,
                     Index: IndexController,
                 },
             };
+        },
+        computed: {
+            modalTitle: function() {
+                return this.modal_data.title;
+            }
         },
         methods: {
             /**
@@ -61,7 +93,7 @@
                 this.modal_data.selected_step_component = 'Selections';
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = true;
-                console.log("RUNNING: ", this.selected_step_component, this.modal_data.show_modal, this.modal_data.step);
+                console.log("RUNNING: ", this.modal_data.selected_step_component, this.modal_data.show_modal, this.modal_data.step);
                 this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
             },
             /**
@@ -70,12 +102,14 @@
             hideModal() {
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = false;
+                this.modal_data.title = 'Select A Market';
                 this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
             /**
              * Loads component contoller 
              */
             loadController(name) {
+                this.nextStep();
                 this.modal_data.selected_step_component = name;
             },
             /**
@@ -84,7 +118,7 @@
             previousStep() {
                 this.modal_data.step--;
             },
-            nextStep(data) {
+            nextStep() {
                 //receives name of next componenet to load
                 this.modal_data.step++;
             },

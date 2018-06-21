@@ -1,9 +1,9 @@
 <template>
-    <div dusk="market-selections" class="market-selections">
+    <div dusk="step-selections" class="step-selections">
         <b-container fluid>
             <b-row class="mt-2">
                 <b-col>
-                    <b-button class="mm-modal-market-button w-100" @click="nextStep()">Index Options</b-button>
+                    <b-button class="mm-modal-market-button w-100" @click="nextStep('Index')">Index Options</b-button>
                 </b-col>
                 <b-col>
                     <b-button class="mm-modal-market-button w-100">EFP</b-button>
@@ -31,10 +31,7 @@
 
 <script>
     export default {
-        name: 'MarketSelections',
-        components: {
-            
-        },
+        name: 'StepSelection',
         props:{
             'callback': {
                 type: Function
@@ -48,9 +45,10 @@
             };
         },
         methods: {
-            nextStep(data) {
+            nextStep(step) {
                 this.modal_data.step++;
-                this.callback('Index')
+                console.log("Current Step===================: ", this.modal_data.step);
+                this.callback(step)
             },
         },
         mounted() {

@@ -15,10 +15,10 @@
 			.mm-modal-title {
 				color: $mm-text-white;
 
-				@media (min-width: 992px) {
-			    	margin-left: 19.6rem;
+				/* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
 				}
-
+				 */
 			}
 		}
 	}
@@ -47,6 +47,22 @@
 	color: $mm-text-white;
 	background-color: $mm-market-important;
 	border-radius: 2rem;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}
+
+
+.mm-modal-market-button-alt {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
 	
 	&:focus,
 	&.focus {

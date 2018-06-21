@@ -12088,12 +12088,10 @@ input:checked + .slider:before {
 
 .mm-modal .modal-header .modal-title .mm-modal-title {
   color: #FFFFFF;
-}
-
-@media (min-width: 992px) {
-  .mm-modal .modal-header .modal-title .mm-modal-title {
-    margin-left: 19.6rem;
-  }
+  /* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
 }
 
 .mm-modal .modal-footer {
@@ -12130,6 +12128,22 @@ input:checked + .slider:before {
 }
 
 .mm-modal-market-button:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-modal-market-button-alt:focus,
+.mm-modal-market-button-alt.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt:hover {
   color: #FFFFFF;
   background-color: #1c7c74;
 }

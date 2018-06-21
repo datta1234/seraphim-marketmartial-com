@@ -18,6 +18,6 @@ class TradeStructureController extends Controller
      */
    	public function index(MarketType $marketType)
    	{
-   		return $marketType->tradeStructures()->get();
+   		return $marketType->tradeStructures()->with('tradeStructureGroups.items')->get();
    	}
 }
