@@ -4,6 +4,7 @@ return [
         [
             'id' => 1,
             'title' => 'Outright',
+            'is_selectable' => true,
             'trade_structure_group' =>
                     [
                         [
@@ -30,6 +31,8 @@ return [
         [
             'id' => 2,
             'title' => 'Risky',
+            'is_selectable' => true,
+
                      'trade_structure_group' =>
                         [
                             [
@@ -75,6 +78,7 @@ return [
         [
             'id' => 3,
             'title' => 'Calendar',
+            'is_selectable' => true,
               'trade_structure_group' =>
                         [
                             [
@@ -121,6 +125,7 @@ return [
         [
             'id' => 4,
             'title' => 'Fly',
+            'is_selectable' => true,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -177,6 +182,8 @@ return [
         [
             'id' => 5,
             'title' => 'Option Switch',
+            'is_selectable' => false,
+
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -222,6 +229,7 @@ return [
         [
             'id' => 6,
             'title' => 'EFP',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -239,6 +247,7 @@ return [
         [
             'id' => 7,
             'title' => 'Rolls',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -260,6 +269,7 @@ return [
         [
             'id' => 8,
             'title' => 'EFP Switch',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',

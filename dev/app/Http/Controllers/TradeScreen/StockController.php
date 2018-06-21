@@ -16,6 +16,6 @@ class StockController extends Controller
     public function index(Request $request)
     {
     	$code = $request->input('code');
-        return Stock::where('code','like','%'.$code.'%')->get();
+        return Stock::where('code','like','%'.$code.'%')->where('verified',true)->get();
     }
 }

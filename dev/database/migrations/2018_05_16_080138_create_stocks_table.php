@@ -16,6 +16,7 @@ class CreateStocksTable extends Migration
         Schema::create('stocks', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code', 3);
+            $table->boolean('verified')->default(true);
             $table->string('name')->nullable();
             $table->timestamps();
         });

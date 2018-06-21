@@ -29,6 +29,8 @@ class UserMarketRequestGroup extends Model
      */
     protected $fillable = [
         'is_selected',
+        'trade_structure_group_id',
+        'user_market_request_id'
     ];
 
     /**

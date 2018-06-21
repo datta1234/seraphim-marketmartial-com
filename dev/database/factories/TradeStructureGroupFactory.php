@@ -6,7 +6,7 @@ $factory->define(App\Models\StructureItems\TradeStructureGroup::class, function 
        	return [
 		   'title' => $faker->word,
            'trade_structure_id' => function() {
-                return App\Models\StructureItems\TradeStructure::all()->random()->id;    
+                return App\Models\StructureItems\TradeStructureGroup::all()->random()->id;    
            }
 		];
 });
