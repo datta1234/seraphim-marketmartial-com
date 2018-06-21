@@ -70,7 +70,7 @@ export default class UserMarket {
         if(this.market_negotiations.indexOf(negotiation) == -1) {
             this.addNegotiation(negotiation);
         }
-        this._current_market_negotiation = negotiation;
+        this.current_market_negotiation = negotiation;
     }
 
     /**
@@ -78,7 +78,7 @@ export default class UserMarket {
     *   @return {UserMarket}
     */
     getCurrentNegotiation() {
-        return this._current_market_negotiation;
+        return this.current_market_negotiation;
     }
 
     /**

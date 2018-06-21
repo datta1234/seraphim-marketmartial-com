@@ -11838,6 +11838,7 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper {
+  font-family: "Muli-Regular";
   height: 100%;
 }
 

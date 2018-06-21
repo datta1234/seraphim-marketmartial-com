@@ -44670,7 +44670,7 @@ var UserMarket = function () {
             if (this.market_negotiations.indexOf(negotiation) == -1) {
                 this.addNegotiation(negotiation);
             }
-            this._current_market_negotiation = negotiation;
+            this.current_market_negotiation = negotiation;
         }
 
         /**
@@ -44681,7 +44681,7 @@ var UserMarket = function () {
     }, {
         key: "getCurrentNegotiation",
         value: function getCurrentNegotiation() {
-            return this._current_market_negotiation;
+            return this.current_market_negotiation;
         }
 
         /**
@@ -70483,6 +70483,26 @@ var app = new Vue({
                     console.error(err);
                 }
             });
+        },
+        loadConfig: function loadConfig(config_name, config_file) {
+            var self = this;
+            return axios.get('/config/' + config_file).then(function (configResponse) {
+                if (configResponse.status == 200) {
+                    // proxy through vue logic
+                    self.configs[config_name] = configResponse.data;
+                    return configResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        },
+        config: function config(path) {
+            return path.split('.').reduce(function (acc, cur) {
+                if (acc && typeof acc[cur] !== 'undefined') {
+                    return acc[cur];
+                }
+                return undefined;
+            }, this.configs);
         }
     },
     data: {
@@ -70490,23 +70510,33 @@ var app = new Vue({
         market_order: ['TOP 40', 'DTOP', 'DCAP', 'SINGLES', 'DELTA ONE'],
         no_cares: [],
         display_markets: [],
-        market_types: []
+        market_types: [],
+
+        // internal properties
+        configs: {}
     },
     mounted: function mounted() {
         var _this = this;
 
-        this.loadMarketTypes().then(function (market_types) {
-            var promises = [];
-            market_types.forEach(function (market_type) {
-                promises.push(_this.loadMarkets(market_type).then(function (markets) {
-                    markets.forEach(function (market) {
-                        promises.push(_this.loadMarketRequests(market));
-                    });
-                }));
+        // load config files
+        this.loadConfig("trade_structure", "trade_structure.json").catch(function (err) {
+            console.error(err);
+            // @TODO: handle this with critical failure... no config = no working trade screen
+        }).then(function (configs) {
+            // laod the trade data
+            _this.loadMarketTypes().then(function (market_types) {
+                var promises = [];
+                market_types.forEach(function (market_type) {
+                    promises.push(_this.loadMarkets(market_type).then(function (markets) {
+                        markets.forEach(function (market) {
+                            promises.push(_this.loadMarketRequests(market));
+                        });
+                    }));
+                });
+                return Promise.all(promises);
+            }).then(function (all_market_requests) {
+                // nada
             });
-            return Promise.all(promises);
-        }).then(function (all_market_requests) {
-            // nada
         });
     }
 });
@@ -83395,22 +83425,6 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(38);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky__ = __webpack_require__(358);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar__ = __webpack_require__(361);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__ = __webpack_require__(364);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch__ = __webpack_require__(440);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP__ = __webpack_require__(443);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls__ = __webpack_require__(446);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch__ = __webpack_require__(449);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch__);
 //
 //
 //
@@ -83434,29 +83448,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
-
-
-
-
-
-
-
-
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        MarketTabOutright: __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
-        MarketTabRisky: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
-        MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
-        MarketTabFly: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a,
-        OptionSwitch: __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default.a,
-        EFP: __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default.a,
-        Rolls: __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default.a,
-        EFPSwitch: __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default.a
-    },
     props: {
         'market': {
             type: __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]
@@ -83470,25 +83465,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            market_date_groups: {},
-            tabs: {
-                'Outright': __WEBPACK_IMPORTED_MODULE_1__MarketTabs_Outright___default.a,
-                'Risky': __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Risky___default.a,
-                'Calendar': __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Calendar___default.a,
-                'Fly': __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Fly___default.a,
-                'Option Switch': __WEBPACK_IMPORTED_MODULE_5__MarketTabs_OptionSwitch___default.a,
-                'EFP': __WEBPACK_IMPORTED_MODULE_6__MarketTabs_EFP___default.a,
-                'Rolls': __WEBPACK_IMPORTED_MODULE_7__MarketTabs_Rolls___default.a,
-                'EFP Switch': __WEBPACK_IMPORTED_MODULE_8__MarketTabs_EFPSwitch___default.a
-            }
+            market_date_groups: {}
         };
     },
 
     methods: {
         mapMarketRequestGroups: function mapMarketRequestGroups(markets) {
+            var _this = this;
+
             // map markets to dates
             return markets.reduce(function (x, y) {
-                var date = y.trade_items.default ? y.trade_items.default["Expiration Date"] : '';
+                var date = y.trade_items.default ? y.trade_items.default[_this.$root.config("trade_structure.outright.expiration_date")] : '';
                 if (!x[date]) {
                     x[date] = [];
                 }
@@ -83558,6 +83545,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -83581,6 +83569,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -83592,24 +83582,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -83640,49 +83626,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -83726,7 +83669,13 @@ var render = function() {
                 [
                   _vm._v(
                     "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                      _vm._s(
+                        _vm.marketRequest.trade_items.default[
+                          this.$root.config(
+                            "trade_structure.outright.expiration_date"
+                          )
+                        ]
+                      ) +
                       "    \n                "
                   )
                 ]
@@ -83821,6 +83770,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -83844,6 +83794,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -83855,24 +83807,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -83903,49 +83851,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -84084,6 +83989,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -84107,6 +84013,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -84118,24 +84026,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -84166,49 +84070,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -84347,6 +84208,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -84370,6 +84232,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -84381,24 +84245,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -84429,49 +84289,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -84588,8 +84405,7 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _vm._l(m_reqs, function(m_req) {
-                    return _c(_vm.tabs[m_req.trade_structure], {
-                      tag: "component",
+                    return _c("market-tab", {
                       attrs: { "market-request": m_req }
                     })
                   })
@@ -84668,137 +84484,75 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__ = __webpack_require__(358);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__ = __webpack_require__(361);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__ = __webpack_require__(364);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__ = __webpack_require__(440);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__ = __webpack_require__(443);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__ = __webpack_require__(446);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__ = __webpack_require__(449);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__);
 //
 //
 //
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
+
+
+
+
+
+
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        MarketTabOutright: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
+        MarketTabRisky: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
+        MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
+        MarketTabFly: __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
+        OptionSwitch: __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
+        EFP: __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
+        Rolls: __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
+        EFPSwitch: __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
+    },
     props: {
         marketRequest: {
             type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
         }
     },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
-            this.calcMarketState();
-        }
-    },
     data: function data() {
         return {
-            user_market: null,
-            current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
-
-            user_market_bid: null,
-            user_market_offer: null
+            tabs: {
+                'Outright': __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
+                'Risky': __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
+                'Calendar': __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
+                'Fly': __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
+                'Option Switch': __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
+                'EFP': __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
+                'Rolls': __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
+                'EFP Switch': __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
+            }
         };
     },
 
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm'
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
-        }
-    },
-    mounted: function mounted() {
-        // initial setup of states
-        this.calcMarketState();
-    }
+    computed: {},
+    methods: {},
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -84811,56 +84565,14 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "col col-12 text-center", attrs: { dusk: "market-tab" } },
+    { staticStyle: { width: "100%" }, attrs: { dusk: "market-tab" } },
     [
-      _c("div", { staticClass: "row" }, [
-        _c(
-          "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.attributes.strike) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
-          ]
-        )
-      ])
-    ]
+      _c(_vm.tabs[_vm.marketRequest.trade_structure], {
+        tag: "component",
+        attrs: { "market-request": _vm.marketRequest }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -85056,6 +84768,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(73);
 //
 //
 //
@@ -85075,6 +84788,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -85087,17 +84818,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
             state_premium_calc: false,
 
             user_market: null,
             market_history: [],
-            market_time: ""
+            market_time: "",
+
+            proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
+            proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */]()
         };
     },
 
@@ -85108,10 +84836,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
         }
     },
     methods: {
+        sendQuote: function sendQuote() {
+            console.log(this.proposed_user_market);
+        },
         setMarketTitle: function setMarketTitle() {},
         setMarketTime: function setMarketTime() {
             this.market_time = "10:10";
@@ -85120,12 +84851,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
                 state_premium_calc: false,
 
                 user_market: null,
@@ -85138,12 +84863,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         init: function init() {
             console.log("Mounted BAR", this.marketRequest);
-            this.reset();
+            this.reset(); // clear current state
+
+            // set up ui data
             if (this.marketRequest) {
                 this.user_market = this.marketRequest.getChosenUserMarket();
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
                 this.setMarketTitle();
                 this.setMarketTime();
+
+                // set up the new UserMarket as quote to be sent
+                this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
+                this.proposed_user_market_negotiation = new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */]();
+
+                // relate
+                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
             }
         }
     },
@@ -85174,7 +84908,72 @@ var render = function() {
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-5" },
+        [
+          _c(
+            "b-col",
+            [
+              _c(
+                "b-row",
+                { staticClass: "justify-content-md-center mb-1" },
+                [
+                  _c(
+                    "b-col",
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "w-100",
+                          attrs: { size: "sm", variant: "primary" },
+                          on: {
+                            click: function($event) {
+                              _vm.sendQuote()
+                            }
+                          }
+                        },
+                        [_vm._v("Send")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c(
+                    "b-col",
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "w-100",
+                          attrs: { size: "sm", variant: "secondary" }
+                        },
+                        [_vm._v("No Cares")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _c(
         "b-row",
@@ -85877,8 +85676,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar" } },
+    "div",
+    { attrs: { dusk: "ibar-negotiation-bar" } },
     [
       _vm.marketRequest != null
         ? _c(_vm.layouts[_vm.marketRequest.trade_structure], {
@@ -85990,7 +85789,7 @@ var render = function() {
     { attrs: { dusk: "ibar-user-market-title" } },
     [
       _c("b-col", { attrs: { cols: "10" } }, [
-        _c("h3", [_vm._v(_vm._s(_vm.title))])
+        _c("h5", [_vm._v(_vm._s(_vm.title))])
       ]),
       _vm._v(" "),
       _c("b-col", { attrs: { cols: "2" } }, [
@@ -86235,27 +86034,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            market_negotiation: new __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]()
-        };
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        }
     },
-    mounted: function mounted() {}
+    data: function data() {
+        return {};
+    },
+    mounted: function mounted() {
+        console.log(this.marketNegotiation);
+    }
 });
 
 /***/ }),
@@ -86289,11 +86082,11 @@ var render = function() {
                         staticClass: "w-25",
                         attrs: { type: "number", placeholder: "Qty" },
                         model: {
-                          value: _vm.market_negotiation.bid_qty,
+                          value: _vm.marketNegotiation.bid_qty,
                           callback: function($$v) {
-                            _vm.$set(_vm.market_negotiation, "bid_qty", $$v)
+                            _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
                           },
-                          expression: "market_negotiation.bid_qty"
+                          expression: "marketNegotiation.bid_qty"
                         }
                       }),
                       _vm._v(" "),
@@ -86301,11 +86094,11 @@ var render = function() {
                         staticClass: "w-25",
                         attrs: { type: "text", placeholder: "Bid" },
                         model: {
-                          value: _vm.market_negotiation.bid,
+                          value: _vm.marketNegotiation.bid,
                           callback: function($$v) {
-                            _vm.$set(_vm.market_negotiation, "bid", $$v)
+                            _vm.$set(_vm.marketNegotiation, "bid", $$v)
                           },
-                          expression: "market_negotiation.bid"
+                          expression: "marketNegotiation.bid"
                         }
                       }),
                       _vm._v(" "),
@@ -86313,11 +86106,11 @@ var render = function() {
                         staticClass: "w-25",
                         attrs: { type: "number", placeholder: "Offer" },
                         model: {
-                          value: _vm.market_negotiation.offer,
+                          value: _vm.marketNegotiation.offer,
                           callback: function($$v) {
-                            _vm.$set(_vm.market_negotiation, "offer", $$v)
+                            _vm.$set(_vm.marketNegotiation, "offer", $$v)
                           },
-                          expression: "market_negotiation.offer"
+                          expression: "marketNegotiation.offer"
                         }
                       }),
                       _vm._v(" "),
@@ -86325,11 +86118,11 @@ var render = function() {
                         staticClass: "w-25",
                         attrs: { type: "text", placeholder: "Qty" },
                         model: {
-                          value: _vm.market_negotiation.offer_qty,
+                          value: _vm.marketNegotiation.offer_qty,
                           callback: function($$v) {
-                            _vm.$set(_vm.market_negotiation, "offer_qty", $$v)
+                            _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
                           },
-                          expression: "market_negotiation.offer_qty"
+                          expression: "marketNegotiation.offer_qty"
                         }
                       })
                     ],
@@ -86340,50 +86133,6 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("b-col", { attrs: { cols: "2" } })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "justify-content-md-center mb-1" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "w-100",
-                      attrs: { size: "sm", variant: "primary" }
-                    },
-                    [_vm._v("Send")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "justify-content-md-center" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "w-100",
-                      attrs: { size: "sm", variant: "secondary" }
-                    },
-                    [_vm._v("No Cares")]
-                  )
-                ],
-                1
-              )
             ],
             1
           )
@@ -86464,6 +86213,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -86490,19 +86248,44 @@ var render = function() {
         "b-col",
         [
           _c(
-            "b-form-checkbox",
-            {
-              attrs: { value: "true", "unchecked-value": "false" },
-              model: {
-                value: _vm.show_options,
-                callback: function($$v) {
-                  _vm.show_options = $$v
-                },
-                expression: "show_options"
-              }
-            },
-            [_vm._v(" Apply a condition")]
-          )
+            "b-row",
+            [
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-form-checkbox",
+                    {
+                      attrs: { value: "true", "unchecked-value": "false" },
+                      model: {
+                        value: _vm.show_options,
+                        callback: function($$v) {
+                          _vm.show_options = $$v
+                        },
+                        expression: "show_options"
+                      }
+                    },
+                    [_vm._v(" Apply a condition")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.show_options
+            ? _c(
+                "b-row",
+                { staticClass: "text-center" },
+                [
+                  _c("b-col", { attrs: { cols: "12" } }, [
+                    _vm._v("\n                Select a Condition\n            ")
+                  ])
+                ],
+                1
+              )
+            : _vm._e()
         ],
         1
       )
@@ -89943,6 +89726,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -89966,6 +89750,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -89977,24 +89763,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -90025,49 +89807,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -90206,6 +89945,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -90229,6 +89969,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -90240,24 +89982,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -90288,49 +90026,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -90469,6 +90164,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -90492,6 +90188,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -90503,24 +90201,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -90551,49 +90245,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -90732,6 +90383,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(464);
 //
 //
 //
@@ -90755,6 +90407,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 
@@ -90766,24 +90420,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            console.log('updated: marketRequest.user_markets');
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            console.log('updated: marketRequest._chosen_user_market');
             this.calcMarketState();
         }
     },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
             current_negotiation: null,
-            market_request_state: '',
-            market_request_state_label: '',
 
             user_market_bid: null,
             user_market_offer: null
@@ -90814,49 +90464,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        },
-        calcMarketState: function calcMarketState() {
-            // set new refs
-            this.user_market = this.marketRequest.getChosenUserMarket();
-            this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-
-            // run tests
-            // TODO: add logic for if current user then "SENT"
-            switch (this.marketRequest.attributes.state) {
-                case "vol-spread":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "vol-spread-alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
-                    break;
-                case "request":
-                    this.market_request_state = 'request';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "request-grey":
-                    this.market_request_state = 'request-grey';
-                    this.market_request_state_label = "REQUEST";
-                    break;
-                case "alert":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = "";
-                    break;
-                case "confirm":
-                    this.market_request_state = 'confirm';
-                    this.market_request_state_label = "";
-                    break;
-                case "sent":
-                    this.market_request_state = 'sent';
-                    this.market_request_state_label = "SENT";
-                    break;
-                default:
-                    this.market_request_state = '';
-                    this.market_request_state_label = '';
-            }
         }
     },
     mounted: function mounted() {
@@ -91807,6 +91414,69 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-1ba47af8", module.exports)
   }
 }
+
+/***/ }),
+/* 464 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        return {
+            market_request_state: '',
+            market_request_state_label: ''
+        };
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        },
+        calcMarketState: function calcMarketState() {
+            // set new refs
+            // this.user_market = this.marketRequest.getChosenUserMarket();
+            // this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
+            // this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
+            // this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+
+            // run tests
+            // TODO: add logic for if current user then "SENT"
+            switch (this.marketRequest.attributes.state) {
+                case "REQUEST-VOL":
+                    this.market_request_state = '';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "REQUEST-SENT-VOL":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    break;
+                case "REQUEST":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "REQUEST";
+                    break;
+                case "REQUEST-SENT":
+                    this.market_request_state = 'request';
+                    this.market_request_state_label = "SENT";
+                    break;
+                case "alert":
+                    this.market_request_state = 'alert';
+                    this.market_request_state_label = "";
+                    break;
+                case "confirm":
+                    this.market_request_state = 'confirm';
+                    this.market_request_state_label = "";
+                    break;
+                case "sent":
+                    this.market_request_state = 'sent';
+                    this.market_request_state_label = "SENT";
+                    break;
+                default:
+                    this.market_request_state = '';
+                    this.market_request_state_label = '';
+            }
+        }
+    }
+});
 
 /***/ })
 /******/ ]);

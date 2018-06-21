@@ -12,7 +12,7 @@
                         <div class="col-12">
                             <p class="mb-1">{{ exp_date }}</p>
                         </div>
-                        <component :is="tabs[m_req.trade_structure]" :market-request="m_req" v-for="m_req in m_reqs"></component>
+                        <market-tab :market-request="m_req" v-for="m_req in m_reqs"></market-tab>
                     </div><!-- END Date collection section -->
                     
                 </div>
@@ -24,26 +24,9 @@
 <script>
     import Market from '../lib/Market';
 
-    import MarketTabOutright from './MarketTabs/Outright';
-    import MarketTabRisky from './MarketTabs/Risky';
-    import MarketTabCalendar from './MarketTabs/Calendar';
-    import MarketTabFly from './MarketTabs/Fly';
-    import OptionSwitch from './MarketTabs/OptionSwitch';
-    import EFP from './MarketTabs/EFP';
-    import Rolls from './MarketTabs/Rolls';
-    import EFPSwitch from './MarketTabs/EFPSwitch';
+    
 
     export default {
-        components: {
-            MarketTabOutright,
-            MarketTabRisky,
-            MarketTabCalendar,
-            MarketTabFly,
-            OptionSwitch,
-            EFP,
-            Rolls,
-            EFPSwitch,
-        },
         props: {
             'market': {
                 type: Market
@@ -57,24 +40,14 @@
         },
         data() {
             return {
-                market_date_groups: {},
-                tabs: {
-                    'Outright': MarketTabOutright,
-                    'Risky': MarketTabRisky,
-                    'Calendar': MarketTabCalendar,
-                    'Fly': MarketTabFly,
-                    'Option Switch': OptionSwitch,
-                    'EFP': EFP,
-                    'Rolls': Rolls,
-                    'EFP Switch': EFPSwitch,
-                }
+                market_date_groups: {}
             };
         },
         methods: {
             mapMarketRequestGroups: function(markets) {
                 // map markets to dates
                 return markets.reduce((x,y) => {
-                    let date = y.trade_items.default ? y.trade_items.default["Expiration Date"] : '';
+                    let date = y.trade_items.default ? y.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] : '';
                     if(!x[date]) { 
                         x[date] = [];
                     }

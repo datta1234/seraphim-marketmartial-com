@@ -61,21 +61,21 @@ return [
             ],
             [
                 'title' => 'Sell in the middle',
-                'alias' => 'Sell at best',
+                'alias' => 'Sell at mid(Private)',
                 'market_condition_category' => 'Meet in the Middle',
                 'timeout' => false
             ],
           	[
                 'title' => 'Buy at best',
-                'alias' => 'Sell at best',
+                'alias' => 'Buy at best',
             	'market_condition_category' => 'Buy/Sell at Best',
-                'timeout' => false
+                'timeout' => true
             ],
             [
                 'title' => 'Sell at best',
                 'alias' => 'Sell at best',
             	'market_condition_category' => 'Buy/Sell at Best',
-                'timeout' => false
+                'timeout' => true
             ],
             [
                 'title' => 'OCO',

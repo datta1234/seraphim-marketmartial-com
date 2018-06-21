@@ -1,4 +1,5 @@
 .interaction-bar-wrapper {
+    font-family: $mm-font-int-bar;
     height:100%;
     .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;

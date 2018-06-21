@@ -188,6 +188,27 @@ const app = new Vue({
                     console.error(err);
                 }
             });
+        },
+        loadConfig(config_name, config_file) {
+            let self = this;
+            return axios.get('/config/'+config_file)
+            .then(configResponse => {
+                if(configResponse.status == 200) {
+                    // proxy through vue logic
+                    self.configs[config_name] = configResponse.data;
+                    return configResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        },
+        config(path) {
+            return path.split('.').reduce((acc, cur) => {
+                if(acc && typeof acc[cur] !== 'undefined') {
+                    return acc[cur];
+                }
+                return undefined;
+            }, this.configs);
         }
     },
     data: {
@@ -196,28 +217,41 @@ const app = new Vue({
         no_cares: [],
         display_markets: [],
         market_types: [],
+
+        // internal properties
+        configs: {},
     },
     mounted: function() {
-        this.loadMarketTypes()
-        .then(market_types => {
-            let promises = [];
-            market_types.forEach(market_type => {
-                promises.push(
-                    this.loadMarkets(market_type)
-                    .then(markets => {
-                        markets.forEach(market => {
-                            promises.push(
-                                this.loadMarketRequests(market)
-                            );
-                        });
-                    })
-                );
-            });
-            return Promise.all(promises);
+        // load config files
+        this.loadConfig("trade_structure", "trade_structure.json")
+        .catch(err => {
+            console.error(err);
+            // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then(all_market_requests => {
-            // nada
+        .then(configs => {
+            // laod the trade data
+            this.loadMarketTypes()
+            .then(market_types => {
+                let promises = [];
+                market_types.forEach(market_type => {
+                    promises.push(
+                        this.loadMarkets(market_type)
+                        .then(markets => {
+                            markets.forEach(market => {
+                                promises.push(
+                                    this.loadMarketRequests(market)
+                                );
+                            });
+                        })
+                    );
+                });
+                return Promise.all(promises);
+            })
+            .then(all_market_requests => {
+                // nada
+            });
         });
+
     }
 });
 

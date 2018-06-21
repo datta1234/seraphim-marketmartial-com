@@ -4,7 +4,7 @@
             <div class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
                 <div class="row justify-content-md-center">
                     <div class="col col-6 market-tab-name market-tab-name">
-                        {{ marketRequest.trade_items.default["Strike"] }}    
+                        {{ marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")] }}    
                     </div>
                     <div class="col col-6 market-tab-state">
                         
@@ -24,6 +24,8 @@
 <script>
     import { EventBus } from '../../lib/EventBus.js';
     import UserMarketRequest from '../../lib/UserMarketRequest';
+    import MarketTabMixin from '../MarketTabMixin';
+    
     export default {
         props: {
             marketRequest: {
@@ -32,24 +34,20 @@
         },
         watch: {
             'marketRequest.attributes.state': function(nV, oV) {
-                console.log('updated: marketRequest.user_markets');
                 this.calcMarketState();
             },
             'marketRequest.user_markets': function(nV, oV) {
-                console.log('updated: marketRequest.user_markets');
                 this.calcMarketState();
             },
             'marketRequest.chosen_user_market': function(nV, oV) {
-                console.log('updated: marketRequest._chosen_user_market');
                 this.calcMarketState();
             }
         },
+        mixins: [MarketTabMixin],
         data() {
             return {
                 user_market: null,
                 current_negotiation: null,
-                market_request_state: '',
-                market_request_state_label: '',
 
                 user_market_bid: null,
                 user_market_offer: null,
@@ -79,49 +77,6 @@
             loadInteractionBar() {
                 console.log("load Bar");
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-            },
-            calcMarketState() {
-                // set new refs
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-                this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-                this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-                
-                // run tests
-                // TODO: add logic for if current user then "SENT"
-                switch(this.marketRequest.attributes.state) {
-                    case "vol-spread":
-                        this.market_request_state = '';
-                        this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
-                    break;
-                    case "vol-spread-alert":
-                        this.market_request_state = 'alert';
-                        this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
-                    break;
-                    case "request":
-                        this.market_request_state = 'request';
-                        this.market_request_state_label = "REQUEST";
-                    break;
-                    case "request-grey":
-                        this.market_request_state = 'request-grey';
-                        this.market_request_state_label = "REQUEST";
-                    break;
-                    case "alert":
-                        this.market_request_state = 'alert';
-                        this.market_request_state_label = "";
-                    break;
-                    case "confirm":
-                        this.market_request_state = 'confirm';
-                        this.market_request_state_label = "";
-                    break;
-                    case "sent":
-                        this.market_request_state = 'sent';
-                        this.market_request_state_label = "SENT";
-                    break;
-                    default:
-                        this.market_request_state = '';
-                        this.market_request_state_label = '';
-                }
             }
         },
         mounted() {
