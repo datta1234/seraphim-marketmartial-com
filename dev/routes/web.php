@@ -63,9 +63,11 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth']], function() {
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
 
-
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
     Route::get('stock', 'TradeScreen\StockController@index');
+
+    Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
+    Route::resource('market-condition', 'TradeScreen\MarketConditionsController');
 
 });

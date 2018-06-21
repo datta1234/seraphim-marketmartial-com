@@ -11,79 +11,15 @@ class MarketConditionTableSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('market_conditions')->insert([
-            [
-                'id' => 1,
-                'title' => 'Repeat all the way',
-                'alias' => 'Repeat ATW',
-                'market_condition_category_id' => null,
-                'timeout' => false
-            ],
-            [
-                'id' => 2,
-                'title' => 'Prefer to kill (20min Fok)',
-                'alias' => 'FoK: kill',
-                'market_condition_category_id' => 1,
-                'timeout' => true
-            ],
-            [
-                'id' => 3,
-                'title' => 'Happy to Spin',
-                'alias' => 'FoK: fill',
-                'market_condition_category_id' => 1,
-                'timeout' => false
-            ],
-            [
-                'id' => 4,
-                'title' => 'Propose (Private)',
-                'alias' => 'Propose (Private)',
-                'market_condition_category_id' => null,
-                'timeout' => false
-            ],
-            [
-                'id' => 5,
-                'title' => 'Buy in the middle',
-                'alias' => 'Buy at mid(Private)',
-                'market_condition_category_id' => 2,
-                'timeout' => false
+         $conditions = config('marketmartial.market_conditions');
+        foreach ($conditions as $condition) {
 
-            ],
-            [
-                'id' => 6,
-                'title' => 'Sell in the middle',
-                'alias' => 'Sell at best',
-                'market_condition_category_id' => 2,
-                'timeout' => false
-            ],
-          	[
-                'id' => 7,
-                'title' => 'Buy at best',
-                'alias' => 'Sell at best',
-            	'market_condition_category_id' => 3,
-                'timeout' => false
-            ],
-            [
-                'id' => 8,
-                'title' => 'Sell at best',
-                'alias' => 'Sell at best',
-            	'market_condition_category_id' => 3,
-                'timeout' => false
-            ],
-            [
-                'id' => 9,
-                'title' => 'OCO',
-                'alias' => 'OCO',
-            	'market_condition_category_id' => null,
-                'timeout' => false
-            ],
-            [
-                'id' => 10,
-                'title' => 'Subject',
-                'alias' => 'Subject',
-            	'market_condition_category_id' => null,
-                'timeout' => false
-
-            ],
-        ]);
+            factory(\App\Models\Market\MarketCondition::class)->create([
+                'title' =>  $condition['title'],
+                'alias' =>  $condition['alias'],
+                'timeout' => $condition['timeout'],
+                'market_condition_category_id' => $condition['market_condition_category'] == null ? null : \App\Models\Market\MarketConditionCategory::where('title',$condition['market_condition_category'])->first()->id
+            ]); 
+        }
     }
 }

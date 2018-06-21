@@ -16,6 +16,8 @@ class CreateTradeStructureGroupsTable extends Migration
         Schema::create('trade_structure_groups', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
+            $table->boolean('force_select')->nullable();
+
             $table->integer('trade_structure_id')->unsigned();
             $table->timestamps();
 

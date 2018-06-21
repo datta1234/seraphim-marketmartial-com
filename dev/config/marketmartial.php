@@ -18,74 +18,97 @@ return [
 		],
 		'market_condition_category' => [
                 [
-                	'title' => 'Fill or kill'
+                	'title' => 'FoK',
+                    'market_condition_category' => null,
+            	],
+                [
+                    'title' => 'Apply To',
+                    'market_condition_category' => 'FoK',
+                ],
+                [
+                    'title' => 'Fill or kill',
+                    'market_condition_category' => 'FoK',
+                ],
+            	[
+	                'title' => 'Meet in the Middle',
+                    'market_condition_category' => null,
             	],
             	[
-	                'title' => 'Meet in the Middle'
-            	],
-            	[
-	                'title' => 'Buy/Sell at Best'
+	                'title' => 'Buy/Sell at Best',
+                    'market_condition_category' => null,
             	]
 		],
 	   'market_conditions' => [
             [
                 'title' => 'Repeat all the way',
-                'alias' => 'Repeat ATW',
+                'alias' => 'repeat_atw',
                 'market_condition_category' => null,
                 'timeout' => false
             ],
             [
+                'title' => 'My Bid',
+                'alias' => 'bid',
+                'market_condition_category' => 'Apply To',
+                'timeout' => true
+            ],
+            [
+                'title' => 'My Offer',
+                'alias' => 'offer',
+                'market_condition_category' => 'Apply To',
+                'timeout' => false
+            ],
+            [
                 'title' => 'Prefer to kill (20min Fok)',
-                'alias' => 'FoK: kill',
+                'alias' => 'fok_kill',
                 'market_condition_category' => 'Fill or kill',
                 'timeout' => true
             ],
             [
                 'title' => 'Happy to Spin',
-                'alias' => 'FoK: fill',
+                'alias' => 'fok_fill',
                 'market_condition_category' => 'Fill or kill',
                 'timeout' => false
             ],
             [
                 'title' => 'Propose (Private)',
-                'alias' => 'Propose (Private)',
+                'alias' => 'propose',
                 'market_condition_category' => null,
                 'timeout' => false
             ],
             [
                 'title' => 'Buy in the middle',
-                'alias' => 'Buy at mid(Private)',
+                'alias' => 'buy_at_mid',
                 'market_condition_category' => 'Meet in the Middle',
                 'timeout' => false
 
             ],
             [
                 'title' => 'Sell in the middle',
-                'alias' => 'Sell at best',
+                'alias' => 'sell_at_mid',
                 'market_condition_category' => 'Meet in the Middle',
                 'timeout' => false
             ],
           	[
                 'title' => 'Buy at best',
-                'alias' => 'Sell at best',
+                'alias' => 'buy_at_best',
             	'market_condition_category' => 'Buy/Sell at Best',
-                'timeout' => false
+                'timeout' => true
             ],
             [
                 'title' => 'Sell at best',
-                'alias' => 'Sell at best',
+                'alias' => 'sell_at_best',
             	'market_condition_category' => 'Buy/Sell at Best',
-                'timeout' => false
+                'timeout' => true
             ],
             [
                 'title' => 'OCO',
-                'alias' => 'OCO',
+                'alias' => 'oco',
             	'market_condition_category' => null,
                 'timeout' => false
             ],
             [
                 'title' => 'Subject',
-                'alias' => 'Subject',
+                'alias' => 'subject',
             	'market_condition_category' => null,
                 'timeout' => false
 

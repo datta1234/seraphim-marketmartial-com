@@ -47,4 +47,8 @@ class MarketCondition extends Model
     {
         return $this->hasMany('App\Models\Market\MarketNegotiationCondition','market_condition_id');
     }
+
+    public static function topLevel() {
+        return (new self)->where('market_condition_category_id', null);
+    }
 }

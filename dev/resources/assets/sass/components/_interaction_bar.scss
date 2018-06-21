@@ -1,4 +1,5 @@
 .interaction-bar-wrapper {
+    font-family: $mm-font-int-bar;
     height:100%;
     .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
@@ -41,10 +42,16 @@
             border-radius:0px;
         }
         .btn-primary {
-            background-color: $ibar-btn-primary;
+            background-color: $ibar-btn-background-primary;
+            color: $ibar-btn-color-primary;
         }
         .btn-secondary {
-            background-color: $ibar-btn-secondary;
+            background-color: $ibar-btn-background-secondary;
+            color: $ibar-btn-color-secondary;
+        }
+        .btn-default {
+            background-color: $ibar-btn-background-default;
+            color: $ibar-btn-color-default;
         }
         .btn[disabled] {
             background-color: $ibar-btn-inactive;
@@ -79,5 +86,31 @@
             margin-top: -50%;
             font-size: 32px;
         }
+    }
+
+
+
+
+    /*
+    *   Market Negotiation Blocks
+    */
+    .ibar.market-negotiation {
+
+    }
+
+    /*
+    * conditions
+    */
+    .ibar-condition-panel {
+        background-color: $ibar-condition-panel-background;
+        margin:auto;
+        .ibar-condition-panel-content {
+            padding-top: 2px;
+            padding-bottom: 2px;    
+        }
+    }
+    .ibar-condition:active, .ibar-condition[aria-expanded="true"] {
+        background-color: $ibar-btn-condition-active;
+        width: 85% !important;
     }
 }

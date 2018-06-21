@@ -1,5 +1,6 @@
 <?php 
-
+        //fly selected, outright -> force yes
+        //efp switch, risky, caly,options swicth, -> no force select
 return [
         [
             'id' => 1,
@@ -9,6 +10,7 @@ return [
                     [
                         [
                             'title'=> 'default',
+                            'force_select' => true,
                             'items'=>
                                 [
                                     [
@@ -37,6 +39,7 @@ return [
                         [
                             [
                                 'title'=> 'default',
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -56,6 +59,7 @@ return [
                             ],
                             [
                                 'title'=> 'Risky options',
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -83,6 +87,7 @@ return [
                         [
                             [
                                 'title'=> 'default',
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -102,6 +107,7 @@ return [
                             ],
                             [
                                 'title'=> 'Calander option',
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -129,6 +135,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -148,6 +155,7 @@ return [
                     ],
                     [
                         'title'=> 'Fly Second option',
+                        'force_select' => false,
                         'items'=>
                             [
                                 [
@@ -163,6 +171,7 @@ return [
                     ],
                     [
                         'title'=> 'Fly third option',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -187,6 +196,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -206,6 +216,7 @@ return [
                     ],
                     [
                         'title'=> 'Switch Options',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -233,6 +244,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -250,6 +262,7 @@ return [
             'is_selectable' => false,
                 'trade_structure_group' => [
                     [
+                         'force_select' => true,
                         'title'=> 'default',
                         'items'=>
                             [
@@ -273,6 +286,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -283,6 +297,7 @@ return [
                     ],
                     [
                         'title'=> 'Switch Options',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [

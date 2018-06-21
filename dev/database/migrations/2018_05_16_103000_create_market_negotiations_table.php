@@ -17,6 +17,8 @@ class CreateMarketNegotiationsTable extends Migration
             $table->increments('id');
             
             $table->integer('user_id')->unsigned();
+            $table->integer('counter_user_id')->unsigned()->nullable();
+
             $table->integer('market_negotiation_id')->unsigned()->nullable();
             $table->integer('user_market_id')->unsigned();
             $table->integer('market_negotiation_status_id')->unsigned();
@@ -35,6 +37,17 @@ class CreateMarketNegotiationsTable extends Migration
             $table->boolean('has_premium_calc'); // ONLY shows to organisation of - user_id
             $table->boolean('is_repeat');
             $table->boolean('is_accepted');
+            $table->boolean('is_private');
+
+            // conditions
+            $table->boolean('cond_is_repeat_atw')->nullable();
+            $table->boolean('cond_fok_apply_bid')->nullable();
+            $table->boolean('cond_fok_spin')->nullable();
+            $table->boolean('cond_timeout')->nullable();
+            $table->boolean('cond_is_ocd')->nullable();
+            $table->boolean('cond_is_subject')->nullable();
+            $table->boolean('cond_buy_mid')->nullable();
+            $table->boolean('cond_buy_best')->nullable();
             
             $table->timestamps();
 

@@ -39,12 +39,11 @@ Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 
 // Interaction Bar Component + children
-    Vue.component('ibar-negotiation-bar', require('./components/InteractionBar/NegotiationBar.vue'));
-    Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
-    Vue.component('ibar-negotiation-history', require('./components/InteractionBar/Components/NegotiationHistory.vue'));
-    Vue.component('ibar-market-negotiation', require('./components/InteractionBar/MarketComponents/MarketNegotiation.vue'));
-    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
+    Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
+    Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/Components/NegotiationHistoryContracts.vue'));
+    Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationContracts.vue'));
+    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
 
 // Action Bar Component
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
@@ -192,6 +191,27 @@ const app = new Vue({
                     console.error(err);
                 }
             });
+        },
+        loadConfig(config_name, config_file) {
+            let self = this;
+            return axios.get('/config/'+config_file)
+            .then(configResponse => {
+                if(configResponse.status == 200) {
+                    // proxy through vue logic
+                    self.configs[config_name] = configResponse.data;
+                    return configResponse.data;
+                } else {
+                    console.error(err);
+                }
+            });
+        },
+        config(path) {
+            return path.split('.').reduce((acc, cur) => {
+                if(acc && typeof acc[cur] !== 'undefined') {
+                    return acc[cur];
+                }
+                return undefined;
+            }, this.configs);
         }
     },
     data: {
@@ -200,28 +220,41 @@ const app = new Vue({
         no_cares: [],
         display_markets: [],
         market_types: [],
+
+        // internal properties
+        configs: {},
     },
     mounted: function() {
-        this.loadMarketTypes()
-        .then(market_types => {
-            let promises = [];
-            market_types.forEach(market_type => {
-                promises.push(
-                    this.loadMarkets(market_type)
-                    .then(markets => {
-                        markets.forEach(market => {
-                            promises.push(
-                                this.loadMarketRequests(market)
-                            );
-                        });
-                    })
-                );
-            });
-            return Promise.all(promises);
+        // load config files
+        this.loadConfig("trade_structure", "trade_structure.json")
+        .catch(err => {
+            console.error(err);
+            // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then(all_market_requests => {
-            // nada
+        .then(configs => {
+            // laod the trade data
+            this.loadMarketTypes()
+            .then(market_types => {
+                let promises = [];
+                market_types.forEach(market_type => {
+                    promises.push(
+                        this.loadMarkets(market_type)
+                        .then(markets => {
+                            markets.forEach(market => {
+                                promises.push(
+                                    this.loadMarketRequests(market)
+                                );
+                            });
+                        })
+                    );
+                });
+                return Promise.all(promises);
+            })
+            .then(all_market_requests => {
+                // nada
+            });
         });
+
     }
 });
 

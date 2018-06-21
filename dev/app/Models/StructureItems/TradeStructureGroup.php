@@ -28,7 +28,8 @@ class TradeStructureGroup extends Model
      */
     protected $fillable = [
         'title',
-        'trade_structure_id'
+        'trade_structure_id',
+        'force_select',
     ];
 
     /**
