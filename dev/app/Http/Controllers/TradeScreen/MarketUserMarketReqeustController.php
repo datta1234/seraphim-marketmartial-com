@@ -12,8 +12,9 @@ use App\Http\Controllers\Controller;
 use App\Models\StructureItems\TradeStructureGroup;
 use App\Models\MarketRequest\UserMarketRequestGroup;
 use App\Models\MarketRequest\UserMarketRequestItem;
+use App\Models\MarketRequest\UserMarketRequestTradable;
+use App\Models\StructureItems\Stock;
 use Illuminate\Support\Facades\DB;
-
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -119,7 +120,6 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function store(Request $request, Market $market)
     {
-        $input = $request->all();
 
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with('tradeStructureGroups.items')->firstOrFail();
 
@@ -141,18 +141,13 @@ class MarketUserMarketReqeustController extends Controller
                 ]);
 
                 
-                $userMarketRequest->user_id = $request->user()->id;
+                $userMarketRequest->user_id = 1;//$request->user()->id;
                 $userMarketRequest->save();
                 $responseData = ['id'=> $userMarketRequest->id];
 
 
                 //add tradables logic get clarrification
-                // $userMarketRequestTradable = UserMarketRequestTradable::create([
-                //     "user_market_request_id"        => ,
-                //     "market_id"                     => ,
-                //     "stock_id"                      => , 
-                //     "user_market_request_group_id"  =>
-                // ]);
+            
 
                 for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
                 {
@@ -164,6 +159,36 @@ class MarketUserMarketReqeustController extends Controller
                         'trade_structure_group_id'  =>  $tradeStructuregroup->id,
                         'user_market_request_id'    => $userMarketRequest->id
                     ]);
+
+                    $stock_id = null; 
+                    $market_id = null;     
+
+                    if($inputTradeStructureGroups[$i]['stock'])//if a stock id passed then
+                    {
+                        $stock = Stock::where('code',$inputTradeStructureGroups[$i]['stock'])->first();
+                        if(!$stock)
+                        {
+                            $stock = Stock::create([
+                                'code'      => $inputTradeStructureGroups[$i]['stock'],
+                                'verified'  => true
+                            ]);
+                        }
+                        $stock_id = $stock->id;
+                        $responseData['trade_items'][$tradeStructuregroup->title]["stock_code"] = $stock->code;
+
+                    }else
+                    {
+                        $market_id = $inputTradeStructureGroups[$i]['market_id'];
+                        $responseData['trade_items'][$tradeStructuregroup->title]["market"] = $market->title;
+                    }
+
+                    $userMarketRequestTradable = UserMarketRequestTradable::create([
+                        "user_market_request_id"        => $userMarketRequest->id,
+                        "market_id"                     => $market_id,
+                        "stock_id"                      => $stock_id, 
+                        "user_market_request_group_id"  => $userMarketRequestGroup->id
+                    ]);
+
 
                     $inputTradeStructureGroupsfields = $inputTradeStructureGroups[$i]['fields'];
                     
@@ -199,7 +224,7 @@ class MarketUserMarketReqeustController extends Controller
 
         //broadCast new market request;
 
-        return ['success'=>true,'data'=> $responseData,,'message'=>"Market Request created successfully."];
+        return ['success'=>true,'data'=> $responseData,'message'=>"Market Request created successfully."];
     }
 
     /**
