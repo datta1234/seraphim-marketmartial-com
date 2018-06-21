@@ -51,7 +51,7 @@
             };
         },
         mounted() {
-
+            
         }
     }
 </script>

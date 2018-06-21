@@ -70399,12 +70399,11 @@ Vue.component('market-group', __webpack_require__(354));
 Vue.component('market-tab', __webpack_require__(357));
 
 // Interaction Bar Component + children
-Vue.component('ibar-negotiation-bar', __webpack_require__(384));
-Vue.component('ibar-user-market-title', __webpack_require__(411));
-Vue.component('ibar-negotiation-history', __webpack_require__(414));
-Vue.component('ibar-market-negotiation', __webpack_require__(417));
-Vue.component('ibar-apply-conditions', __webpack_require__(420));
 Vue.component('interaction-bar', __webpack_require__(423));
+Vue.component('ibar-user-market-title', __webpack_require__(411));
+Vue.component('ibar-negotiation-history-contracts', __webpack_require__(462));
+Vue.component('ibar-market-negotiation-contracts', __webpack_require__(465));
+Vue.component('ibar-apply-conditions', __webpack_require__(420));
 
 // Action Bar Component
 Vue.component('action-bar', __webpack_require__(426));
@@ -85840,12 +85839,12 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", {
+      _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
       }),
@@ -85911,6 +85910,11 @@ var render = function() {
         ],
         1
       ),
+      _vm._v(" "),
+      _c("ibar-apply-conditions", {
+        staticClass: "mb-5",
+        attrs: { conditions: _vm.proposed_user_market_negotiation.conditions }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -86122,12 +86126,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -86339,12 +86346,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -86556,12 +86566,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -86773,12 +86786,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -86990,12 +87006,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -87207,12 +87226,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -87424,12 +87446,15 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history", {
+      _c("ibar-negotiation-history-contracts", {
         staticClass: "mb-2",
         attrs: { history: _vm.market_history }
       }),
       _vm._v(" "),
-      _c("ibar-market-negotiation", { staticClass: "mb-5" }),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      }),
       _vm._v(" "),
       _c(
         "b-row",
@@ -87615,363 +87640,12 @@ if (false) {
 }
 
 /***/ }),
-/* 414 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(3)
-/* script */
-var __vue_script__ = __webpack_require__(415)
-/* template */
-var __vue_template__ = __webpack_require__(416)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/Components/NegotiationHistory.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0c32e6d5", Component.options)
-  } else {
-    hotAPI.reload("data-v-0c32e6d5", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 415 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        history: {
-            type: Array
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 416 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-negotiation-history" } },
-    [
-      _c(
-        "b-col",
-        _vm._l(_vm.history, function(item) {
-          return _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c(
-                    "b-row",
-                    [
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.bid))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.offer))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } }, [
-                _c("p", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(item.time))
-                ])
-              ])
-            ],
-            1
-          )
-        })
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0c32e6d5", module.exports)
-  }
-}
-
-/***/ }),
-/* 417 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(3)
-/* script */
-var __vue_script__ = __webpack_require__(418)
-/* template */
-var __vue_template__ = __webpack_require__(419)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiation.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0c83c5af", Component.options)
-  } else {
-    hotAPI.reload("data-v-0c83c5af", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 418 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(11);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketNegotiation: {
-            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {};
-    },
-    mounted: function mounted() {
-        console.log(this.marketNegotiation);
-    }
-});
-
-/***/ }),
-/* 419 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    {
-      staticClass: "ibar market-negotiation",
-      attrs: { dusk: "ibar-market-negotiation" }
-    },
-    [
-      _c(
-        "b-col",
-        [
-          _c(
-            "b-row",
-            { staticClass: "mb-3" },
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c(
-                    "b-form",
-                    { attrs: { inline: "" } },
-                    [
-                      _c("b-form-input", {
-                        staticClass: "w-25",
-                        attrs: { type: "number", placeholder: "Qty" },
-                        model: {
-                          value: _vm.marketNegotiation.bid_qty,
-                          callback: function($$v) {
-                            _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
-                          },
-                          expression: "marketNegotiation.bid_qty"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("b-form-input", {
-                        staticClass: "w-25",
-                        attrs: { type: "text", placeholder: "Bid" },
-                        model: {
-                          value: _vm.marketNegotiation.bid,
-                          callback: function($$v) {
-                            _vm.$set(_vm.marketNegotiation, "bid", $$v)
-                          },
-                          expression: "marketNegotiation.bid"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("b-form-input", {
-                        staticClass: "w-25",
-                        attrs: { type: "number", placeholder: "Offer" },
-                        model: {
-                          value: _vm.marketNegotiation.offer,
-                          callback: function($$v) {
-                            _vm.$set(_vm.marketNegotiation, "offer", $$v)
-                          },
-                          expression: "marketNegotiation.offer"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("b-form-input", {
-                        staticClass: "w-25",
-                        attrs: { type: "text", placeholder: "Qty" },
-                        model: {
-                          value: _vm.marketNegotiation.offer_qty,
-                          callback: function($$v) {
-                            _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
-                          },
-                          expression: "marketNegotiation.offer_qty"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } })
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0c83c5af", module.exports)
-  }
-}
-
-/***/ }),
+/* 414 */,
+/* 415 */,
+/* 416 */,
+/* 417 */,
+/* 418 */,
+/* 419 */,
 /* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -88024,6 +87698,43 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(44);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -88044,11 +87755,50 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            show_options: false
+            show_options: false,
+            conditions: [],
+            categories: []
         };
+    },
+
+    methods: {
+        loadConditions: function loadConditions() {
+            var self = this;
+            return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/trade/market-condition').then(function (conditionsResponse) {
+                if (conditionsResponse.status == 200) {
+                    // set the available market types
+                    self.conditions = conditionsResponse.data.conditions || [];
+                    self.categories = conditionsResponse.data.categories || [];
+                    self.categories.forEach(function (x) {
+                        return x['opened'] = false;
+                    });
+                } else {
+                    console.error(err);
+                }
+                return conditionsResponse.data;
+            }, function (err) {
+                console.error(err);
+            });
+        },
+        applyCondition: function applyCondition(condition) {
+            console.log(condition);
+        },
+        applyCategory: function applyCategory(category) {
+            this.categories.forEach(function (x) {
+                return x.opened = false;
+            }); // reset
+
+            category.opened = true;
+            console.log(category);
+        }
+    },
+    created: function created() {
+        this.loadConditions();
     },
     mounted: function mounted() {}
 });
@@ -88098,15 +87848,123 @@ var render = function() {
           _vm.show_options
             ? _c(
                 "b-row",
-                { staticClass: "text-center" },
+                { staticClass: "text-center", attrs: { role: "tablist" } },
                 [
                   _c("b-col", { attrs: { cols: "12" } }, [
                     _vm._v("\n                Select a Condition\n            ")
                   ]),
                   _vm._v(" "),
-                  _c("b-col", { attrs: { cols: "12" } }, [_c("b-btn")], 1)
+                  _vm._l(_vm.conditions, function(condition) {
+                    return _c(
+                      "b-col",
+                      { attrs: { cols: "12" } },
+                      [
+                        _c(
+                          "b-btn",
+                          {
+                            directives: [
+                              {
+                                name: "b-toggle",
+                                rawName: "v-b-toggle",
+                                value: "condition_" + condition.id,
+                                expression: "'condition_'+condition.id"
+                              }
+                            ],
+                            staticClass: "w-75 mt-2 ibar-condition",
+                            attrs: {
+                              variant: "default",
+                              size: "sm",
+                              role: "tab"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.applyCondition(condition)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    " +
+                                _vm._s(condition.title) +
+                                "\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("b-collapse", {
+                          staticClass: "w-75 ibar-condition-panel",
+                          attrs: {
+                            id: "condition_" + condition.id,
+                            accordion: "conditions",
+                            role: "tabpanel"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.categories, function(category) {
+                    return _c(
+                      "b-col",
+                      { attrs: { cols: "12" } },
+                      [
+                        _c(
+                          "b-btn",
+                          {
+                            directives: [
+                              {
+                                name: "b-toggle",
+                                rawName: "v-b-toggle",
+                                value: "category_" + category.id,
+                                expression: "'category_'+category.id"
+                              }
+                            ],
+                            staticClass: "w-75 mt-2 ibar-condition",
+                            attrs: {
+                              variant: "default",
+                              size: "sm",
+                              role: "tab"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.applyCategory(category)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    " +
+                                _vm._s(category.title) +
+                                "\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "b-collapse",
+                          {
+                            staticClass: "w-75 ibar-condition-panel",
+                            attrs: {
+                              id: "category_" + category.id,
+                              accordion: "conditions",
+                              role: "tabpanel"
+                            }
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "ibar-condition-panel-content" },
+                              [_c("div", [_c("label")])]
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  })
                 ],
-                1
+                2
               )
             : _vm._e()
         ],
@@ -88180,6 +88038,8 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__ = __webpack_require__(384);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__);
 //
 //
 //
@@ -88191,9 +88051,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'ibar-negotiation-bar': __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default.a
+    },
     data: function data() {
         return {
             opened: false,
@@ -91484,6 +91349,400 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 456 */,
+/* 457 */,
+/* 458 */,
+/* 459 */,
+/* 460 */,
+/* 461 */,
+/* 462 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(463)
+/* template */
+var __vue_template__ = __webpack_require__(464)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/Components/NegotiationHistoryContracts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-05ed7bfc", Component.options)
+  } else {
+    hotAPI.reload("data-v-05ed7bfc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 463 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        history: {
+            type: Array
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 464 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-negotiation-history" } },
+    [
+      _c(
+        "b-col",
+        _vm._l(_vm.history, function(item) {
+          return _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c(
+                    "b-row",
+                    [
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.bid))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.offer))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(item.time))
+                ])
+              ])
+            ],
+            1
+          )
+        })
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-05ed7bfc", module.exports)
+  }
+}
+
+/***/ }),
+/* 465 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(466)
+/* template */
+var __vue_template__ = __webpack_require__(467)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiationContracts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1640b262", Component.options)
+  } else {
+    hotAPI.reload("data-v-1640b262", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 466 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {};
+    },
+    mounted: function mounted() {
+        console.log(this.marketNegotiation);
+    }
+});
+
+/***/ }),
+/* 467 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    {
+      staticClass: "ibar market-negotiation",
+      attrs: { dusk: "ibar-market-negotiation" }
+    },
+    [
+      _c(
+        "b-col",
+        [
+          _c(
+            "b-row",
+            { staticClass: "mb-3" },
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c("b-form", { attrs: { inline: "" } }, [
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Qty" },
+                          model: {
+                            value: _vm.marketNegotiation.bid_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
+                            },
+                            expression: "marketNegotiation.bid_qty"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Bid" },
+                          model: {
+                            value: _vm.marketNegotiation.bid,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid", $$v)
+                            },
+                            expression: "marketNegotiation.bid"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Offer" },
+                          model: {
+                            value: _vm.marketNegotiation.offer,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer", $$v)
+                            },
+                            expression: "marketNegotiation.offer"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Qty" },
+                          model: {
+                            value: _vm.marketNegotiation.offer_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
+                            },
+                            expression: "marketNegotiation.offer_qty"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1640b262", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

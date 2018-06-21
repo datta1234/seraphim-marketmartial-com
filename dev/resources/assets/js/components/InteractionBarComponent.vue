@@ -11,7 +11,12 @@
 
 <script>
     import { EventBus } from '../lib/EventBus.js';
+    import NegotiationBar from './InteractionBar/NegotiationBar.vue';
+
     export default {
+        components: {
+            'ibar-negotiation-bar': NegotiationBar,
+        },
         data() {
             return {
                 opened: false,

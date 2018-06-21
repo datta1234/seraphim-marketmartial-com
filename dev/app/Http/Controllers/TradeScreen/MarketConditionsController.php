@@ -16,10 +16,10 @@ class MarketConditionsController extends Controller
      */
     public function index()
     {
-        $categories = MarketConditionCategory::with('marketConditions')->all();
-        $conditions = MarketCondition::where('')->all();
+        $categories = MarketConditionCategory::topLevel()->with('marketConditions')->get();
+        $conditions = MarketCondition::topLevel()->get();
 
-
+        return json_encode(compact('categories', 'conditions'));
     }
 
     /**

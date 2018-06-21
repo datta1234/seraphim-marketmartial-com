@@ -60,10 +60,18 @@ $mm-toggle-bg:			#1c7d74;
 */
 $interaction-bar-width: 350px;
 $interaction-toggle-width: 25px;
-$ibar-btn-primary: #1D3641;
-$ibar-btn-secondary: #282828;
+$ibar-btn-background-primary: #1D3641;
+$ibar-btn-background-secondary: #282828;
+$ibar-btn-background-default: #1D3641;
+$ibar-btn-color-primary: #FFFFFF;
+$ibar-btn-color-secondary: #FFFFFF;
+$ibar-btn-color-default: #FFFFFF;
 $ibar-btn-active: #007D74;
 $ibar-btn-inactive: #6D6E70;
+
+// conditions
+$ibar-condition-panel-background: #282828;
+$ibar-btn-condition-active: #007D74;
 
 /*
 *   Chat Bar

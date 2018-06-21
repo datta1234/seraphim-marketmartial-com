@@ -3,9 +3,9 @@
         
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         
-        <ibar-negotiation-history :history="market_history" class="mb-2"></ibar-negotiation-history>
+        <ibar-negotiation-history-contracts :history="market_history" class="mb-2"></ibar-negotiation-history-contracts>
 
-        <ibar-market-negotiation class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation>
+        <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
         
 
         <b-row class="mb-5">
@@ -23,7 +23,7 @@
             </b-col>
         </b-row>
 
-        <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
+        <ibar-apply-conditions class="mb-5" :conditions="proposed_user_market_negotiation.conditions"></ibar-apply-conditions>
 
         <b-row class="mb-2">
             <b-col>

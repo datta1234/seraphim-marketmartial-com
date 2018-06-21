@@ -42,10 +42,16 @@
             border-radius:0px;
         }
         .btn-primary {
-            background-color: $ibar-btn-primary;
+            background-color: $ibar-btn-background-primary;
+            color: $ibar-btn-color-primary;
         }
         .btn-secondary {
-            background-color: $ibar-btn-secondary;
+            background-color: $ibar-btn-background-secondary;
+            color: $ibar-btn-color-secondary;
+        }
+        .btn-default {
+            background-color: $ibar-btn-background-default;
+            color: $ibar-btn-color-default;
         }
         .btn[disabled] {
             background-color: $ibar-btn-inactive;
@@ -89,8 +95,22 @@
     *   Market Negotiation Blocks
     */
     .ibar.market-negotiation {
-        form input {
-            margin: 1px;
+
+    }
+
+    /*
+    * conditions
+    */
+    .ibar-condition-panel {
+        background-color: $ibar-condition-panel-background;
+        margin:auto;
+        .ibar-condition-panel-content {
+            padding-top: 2px;
+            padding-bottom: 2px;    
         }
+    }
+    .ibar-condition:active, .ibar-condition[aria-expanded="true"] {
+        background-color: $ibar-btn-condition-active;
+        width: 85% !important;
     }
 }
