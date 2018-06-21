@@ -4,7 +4,7 @@ export default class UserMarketRequest {
         // default internal
         this._market = null;
         // default public
-        this.trade_items = {};
+        this.trade_items = {};//with group title as key
         this.quotes = [];
         const defaults = {
             id: "",

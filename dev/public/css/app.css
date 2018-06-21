@@ -12102,6 +12102,22 @@ input:checked + .slider:before {
   background-color: #1c7c74;
 }
 
+.mm-modal-market-button-alt {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-modal-market-button-alt:focus,
+.mm-modal-market-button-alt.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

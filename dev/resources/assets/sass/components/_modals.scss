@@ -58,3 +58,19 @@
 		background-color: $mm-modal-header;
 	}
 }
+
+
+.mm-modal-market-button-alt {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}

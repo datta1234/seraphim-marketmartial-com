@@ -31,6 +31,8 @@
     import MarketSelection from './Components/MarketSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
+    import OutrightDetails from './Components/OutrightDetailsComponent.vue';
+    import RiskyDetails from './Components/RiskyDetailsComponent.vue';
     
     /*market/{marketId}/market-request
     {
@@ -55,6 +57,8 @@
             MarketSelection,
             StructureSelection,
             ExpirySelection,
+            OutrightDetails,
+            RiskyDetails,
         },
         props:{
           

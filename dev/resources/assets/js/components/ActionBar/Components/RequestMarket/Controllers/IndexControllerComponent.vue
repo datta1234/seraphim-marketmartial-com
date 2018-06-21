@@ -9,6 +9,8 @@
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
     import StructureSelection from '../Components/StructureSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
+    import OutrightDetails from '../Components/OutrightDetailsComponent.vue';
+    import RiskyDetails from '../Components/RiskyDetailsComponent.vue';
 
     import Market from '../../../../../lib/Market';
     export default {
@@ -29,6 +31,9 @@
                     index_market_object: {
                         trade_structure: "",
                         trade_structure_groups: [],
+                        expiry_dates:[],
+                        details: null,
+
                     },
                     number_of_dates: 1,
                 },
@@ -38,6 +43,8 @@
                     Market: MarketSelection,
                     Structure: StructureSelection,
                     Expiry: ExpirySelection,
+                    Outright: OutrightDetails,
+                    Risky: RiskyDetails,
                 },
             };
         },
@@ -83,11 +90,15 @@
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
-                        console.log("CASE 5: ", component_data);
-                        this.selected_step_component = '';
+                        this.index_data.index_market_object.expiry_dates = component_data;
+                        console.log("CASE 5: ", this.index_data.index_market_object);
+                        this.selected_step_component = this.index_data.index_market_object.trade_structure;
+                        console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                         break;
                     case 6:
-                        this.selected_step_component = '';
+                        this.index_data.index_market_object.details = component_data;
+                        console.log("CASE 6: ", this.index_data.index_market_object);
+                        this.selected_step_component = 'Confirm';
                         break;
                     default:
                 }
