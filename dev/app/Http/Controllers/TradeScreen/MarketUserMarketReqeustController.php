@@ -15,6 +15,7 @@ use App\Models\MarketRequest\UserMarketRequestItem;
 use App\Models\MarketRequest\UserMarketRequestTradable;
 use App\Models\StructureItems\Stock;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\TradeScreen\Market\UserMarketRequestRequest;
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -118,7 +119,7 @@ class MarketUserMarketReqeustController extends Controller
      * @param  \App\Models\StructureItems\Market  $market
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Market $market)
+    public function store(UserMarketRequestRequest $request, Market $market)
     {
 
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with('tradeStructureGroups.items')->firstOrFail();
@@ -214,7 +215,8 @@ class MarketUserMarketReqeustController extends Controller
             } catch (Exception $e) 
             {
                 DB::rollBack();
-                Log::error($e->getMessage());
+                dd($e);
+                //Log::error($e->getMessage());
                 return ['success'=>false,'data'=> null,'message'=>"Could not create market request."];
             }
 
