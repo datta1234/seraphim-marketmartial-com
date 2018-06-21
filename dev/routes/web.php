@@ -55,11 +55,11 @@ Route::group(['middleware' => ['auth','redirectOnFirstLogin']], function () {
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 });
 
-Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
 
 
 Route::group(['prefix' => 'trade', 'middleware' => ['auth']], function() {
 
+	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
 

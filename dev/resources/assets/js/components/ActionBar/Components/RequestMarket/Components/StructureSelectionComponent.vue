@@ -42,7 +42,7 @@
                 .then(tradeStructureResponse => {
                     if(tradeStructureResponse.status == 200) {
                         this.trade_structures = tradeStructureResponse.data;
-                        console.log("WHAT COMES FROM SERVER? ",this.trade_structures);
+                        console.log("WHAT COMES FROM SERVER STRUCTURE? ",this.trade_structures);
                     } else {
                         console.error(err);    
                     }

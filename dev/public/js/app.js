@@ -91188,7 +91188,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get('trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
                 if (tradeStructureResponse.status == 200) {
                     _this.trade_structures = tradeStructureResponse.data;
-                    console.log("WHAT COMES FROM SERVER? ", _this.trade_structures);
+                    console.log("WHAT COMES FROM SERVER STRUCTURE? ", _this.trade_structures);
                 } else {
                     console.error(err);
                 }
