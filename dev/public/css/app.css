@@ -11838,7 +11838,14 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper {
+  font-family: "Muli-Regular";
   height: 100%;
+  /*
+    *   Market Negotiation Blocks
+    */
+  /*
+    * conditions
+    */
 }
 
 .interaction-bar-wrapper .interaction-bar,
@@ -11889,10 +11896,17 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .interaction-bar .btn-primary {
   background-color: #1D3641;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .interaction-bar .btn-secondary {
   background-color: #282828;
+  color: #FFFFFF;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-default {
+  background-color: #1D3641;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .interaction-bar .btn[disabled] {
@@ -11925,6 +11939,22 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
+}
+
+.interaction-bar-wrapper .ibar-condition-panel {
+  background-color: #282828;
+  margin: auto;
+}
+
+.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.interaction-bar-wrapper .ibar-condition:active,
+.interaction-bar-wrapper .ibar-condition[aria-expanded="true"] {
+  background-color: #007D74;
+  width: 85% !important;
 }
 
 .interaction-bar-wrapper .chat-bar,

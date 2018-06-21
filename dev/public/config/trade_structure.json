@@ -1,0 +1,27 @@
+{
+    "outright": {
+        "title": "Outright",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike"
+    },
+    "risky": {
+        "title": "Risky",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike"
+    },
+    "fly": {
+        "title": "Fly",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike"
+    },
+    "calendar": {
+        "title": "Calendar",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike"
+    },
+    "option_switch": {
+        "title": "Option Switch",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike"
+    }
+}

@@ -1,9 +1,9 @@
 <template>
-    <b-container fluid dusk="ibar-negotiation-bar">
+    <div dusk="ibar-negotiation-bar">
         
         <component v-if="marketRequest != null" :is="layouts[marketRequest.trade_structure]" :market-request="marketRequest"></component>
 
-    </b-container>
+    </div>
 </template>
 <script>
     import { EventBus } from '../../lib/EventBus.js';
@@ -51,7 +51,7 @@
             };
         },
         mounted() {
-
+            
         }
     }
 </script>

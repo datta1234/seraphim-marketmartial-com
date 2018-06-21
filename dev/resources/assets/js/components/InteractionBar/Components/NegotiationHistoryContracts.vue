@@ -4,14 +4,14 @@
             <b-row v-for="item in history">            
                 <b-col cols="10">
                     <b-row>
-                        <b-col cols="3">{{ formatRandQty(item.bid_qty) }}</b-col>
-                        <b-col cols="3">{{ item.bid }}</b-col>
-                        <b-col cols="3">{{ item.offer }}</b-col>
-                        <b-col cols="3">{{ formatRandQty(item.offer_qty) }}</b-col>
+                        <b-col cols="3" class="text-center">{{ formatRandQty(item.bid_qty) }}</b-col>
+                        <b-col cols="3" class="text-center">{{ item.bid }}</b-col>
+                        <b-col cols="3" class="text-center">{{ item.offer }}</b-col>
+                        <b-col cols="3" class="text-center">{{ formatRandQty(item.offer_qty) }}</b-col>
                     </b-row>
                 </b-col>
                 <b-col cols="2">
-                    <p>{{ item.time }}</p>
+                    <p class="text-center">{{ item.time }}</p>
                 </b-col>
             </b-row>
         </b-col>

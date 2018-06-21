@@ -4,6 +4,7 @@ namespace App\Http\Requests\TradeScreen\Market;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\StructureItems\TradeStructure;
+use App\Rules\TradeStructureGroupChoice;
 
 class UserMarketRequestRequest extends FormRequest
 {
@@ -25,8 +26,10 @@ class UserMarketRequestRequest extends FormRequest
      */
     public function rules()
     {
-        $this->tradeStructure = TradeStructure::where('title',$this->input('trade_structure'))->with('tradeStructureGroups.items.itemType')->first();
-       
+        //fly selected, outright -> force yes
+        //efp switch, risky, caly,options swicth, ->no force select
+    
+       $this->tradeStructure = TradeStructure::where('title',$this->input('trade_structure'))->with('tradeStructureGroups.items.itemType')->first();
        $rules = [
             'trade_structure' => 'required|exists:trade_structures,title', 
         ];
@@ -43,6 +46,9 @@ class UserMarketRequestRequest extends FormRequest
     {  
         $rules = [];
 
+        
+        $rules['trade_structure_groups'] =  [new TradeStructureGroupChoice($tradeStructure)];
+
         for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
         { 
             $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
@@ -54,7 +60,13 @@ class UserMarketRequestRequest extends FormRequest
             $rules[$marketInput] = "required_without:{$stockInput}|exists:markets,id";
             $rules[$stockInput] = "required_without:{$marketInput}";
 
-            $rules["trade_structure_groups.{$i}.is_selected"] = 'boolean';
+            if(is_null($tradeStructuregroup->force_select))
+            {
+                $rules["trade_structure_groups.{$i}.is_selected"] = 'boolean|required';
+            }else
+            {
+               $rules["trade_structure_groups.{$i}.is_selected"] = 'boolean'; 
+            }
 
             foreach ($tradeStructuregroup->items as $structureItem)
             {

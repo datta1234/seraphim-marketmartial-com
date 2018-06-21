@@ -39,7 +39,9 @@ class MarketNegotiation extends Model
      * @var array
      */
     protected $fillable = [
+
             "user_id",
+            "counter_user_id",
             "market_negotiation_id",
             "user_market_id",
             "market_negotiation_status_id",
@@ -52,7 +54,17 @@ class MarketNegotiation extends Model
             "future_reference",
             "has_premium_calc",
             "is_repeat",
-            "is_accepted"
+            "is_accepted",
+
+            "is_private",
+            "cond_is_repeat_atw",
+            "cond_fok_apply_bid",
+            "cond_fok_spin",
+            "cond_timeout",
+            "cond_is_ocd",
+            "cond_is_subject",
+            "cond_buy_mid",
+            "cond_buy_best",
     ];
 
     /**
