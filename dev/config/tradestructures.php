@@ -8,6 +8,7 @@ return [
                     [
                         [
                             'title'=> 'default',
+                            'force_select' => true,
                             'items'=>
                                 [
                                     [
@@ -34,6 +35,7 @@ return [
                         [
                             [
                                 'title'=> 'default',
+                                'force_select' => false,
                                 'items'=>
                                     [
                                         [
@@ -53,6 +55,7 @@ return [
                             ],
                             [
                                 'title'=> 'Risky options',
+                                'force_select' => false,
                                 'items'=>
                                     [
                                         [
@@ -79,6 +82,7 @@ return [
                         [
                             [
                                 'title'=> 'default',
+                                'force_select' => false,
                                 'items'=>
                                     [
                                         [
@@ -98,6 +102,7 @@ return [
                             ],
                             [
                                 'title'=> 'Calander option',
+                                'force_select' => false,
                                 'items'=>
                                     [
                                         [
@@ -124,6 +129,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -143,6 +149,7 @@ return [
                     ],
                     [
                         'title'=> 'Fly Second option',
+                        'force_select' => false,
                         'items'=>
                             [
                                 [
@@ -158,6 +165,7 @@ return [
                     ],
                     [
                         'title'=> 'Fly third option',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -180,6 +188,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -199,6 +208,7 @@ return [
                     ],
                     [
                         'title'=> 'Switch Options',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -225,6 +235,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => true,
                         'items'=>
                             [
                                 [
@@ -241,6 +252,7 @@ return [
             'title' => 'Rolls',
                 'trade_structure_group' => [
                     [
+                         'force_select' => true,
                         'title'=> 'default',
                         'items'=>
                             [
@@ -263,6 +275,7 @@ return [
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -273,6 +286,7 @@ return [
                     ],
                     [
                         'title'=> 'Switch Options',
+                        'force_select' => null,
                         'items'=>
                             [
                                 [

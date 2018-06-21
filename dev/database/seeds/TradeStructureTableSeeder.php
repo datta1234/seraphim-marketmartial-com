@@ -20,9 +20,11 @@ class TradeStructureTableSeeder extends Seeder
 
                     foreach ($tradeStructure['trade_structure_group'] as $group) 
                     {   
+                   
                         $tradeStructureGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
                                    'title' => $group['title'],
-                                   'trade_structure_id' => $tradeStructureModel->id
+                                   'trade_structure_id' => $tradeStructureModel->id,
+                                   'force_select'=> $group['force_select']
                         ]);
 
                         foreach ($group['items'] as $item) 
