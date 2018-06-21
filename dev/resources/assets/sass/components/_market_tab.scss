@@ -9,6 +9,11 @@
 
 		max-width: 350px;
 		margin: auto;
+
+		&.active {
+			box-shadow: 0px 0px 10px 5px #EBC300;
+    		border: 0.15em solid #EBC300;
+		}
 	}
 
 	.market-tab.market-alert {

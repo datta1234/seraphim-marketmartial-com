@@ -38,6 +38,20 @@ class MarketConditionCategory extends Model
         return $this->hasMany('App\Models\Market\MarketCondition','market_condition_category_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function children()
+    {
+        return $this->hasMany('App\Models\Market\MarketConditionCategory','market_condition_category_id');
+    }
+
+    /**
+    * Return only the groups with no parent
+    * @static
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public static function topLevel() {
         return (new self)->where('market_condition_category_id', null);
     }

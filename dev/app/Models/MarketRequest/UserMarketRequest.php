@@ -30,6 +30,10 @@ class UserMarketRequest extends Model
      */
     protected $fillable = [];
 
+    protected $dates = [
+        'created_at'
+    ];
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

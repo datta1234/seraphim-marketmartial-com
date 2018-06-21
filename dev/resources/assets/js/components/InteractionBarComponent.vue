@@ -38,9 +38,14 @@
                 if(this.opened) {
                     this.market_request = {};
                     this.market_request = marketRequest;
+                    EventBus.$emit('interactionChange', this.market_request);
                 } else {
                     this.market_request = {};
                     this.market_request = null;
+                    // fire close event if its closing
+                    if(this.opened == false) {
+                        EventBus.$emit('interactionClose');
+                    }
                 }
             }
         },

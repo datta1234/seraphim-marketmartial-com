@@ -21,7 +21,8 @@ class MarketUserMarketReqeustController extends Controller
                     "id", 
                     "trade_structure_id", 
                     "user_id",
-                    "created_at"
+                    "created_at",
+                    "updated_at",
         ])->with([
             'tradeStructure' => function($q){ 
                 $q->select([
@@ -72,12 +73,13 @@ class MarketUserMarketReqeustController extends Controller
                 // OR - show quote to all, user_market to interest & market maker
                 "user_market"   => [], //UserMarket
 
-                "created_at"    => $marketRequest->created_at
+                "created_at"    => $marketRequest->created_at->format("Y-m-d H:i:s"),
+                "updated_at"    => $marketRequest->updated_at->format("Y-m-d H:i:s"),
             ];
         });
 
         // $output
-        return $output;
+        return response()->json($output);
     }   
 
     /**

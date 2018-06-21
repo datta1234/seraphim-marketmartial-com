@@ -1,6 +1,8 @@
 export default class UserMarketRequest {
 
     constructor(options) {
+        this._endpoint = ["/trade/market/", "/"];
+
         // default internal
         this._market = null;
         // default public
@@ -17,6 +19,7 @@ export default class UserMarketRequest {
             quote: null,
             chosen_user_market: null,
             created_at: moment(),
+            updated_at: moment(),
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -46,7 +49,7 @@ export default class UserMarketRequest {
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote objects
     */
     addUserMarketQuote(user_market_quote) {
-        user_market_quote.setParent(this);
+        user_market_quote.setMarketRequest(this);
         this.quotes.push(user_market_quote);
     }
 
@@ -65,7 +68,7 @@ export default class UserMarketRequest {
     *   @param {UserMarket} user_market - UserMarket object
     */
     setChosenUserMarket(user_market){
-        user_market.setParent(this);
+        user_market.setMarketRequest(this);
         this.chosen_user_market = user_market;
     }
 
@@ -82,7 +85,7 @@ export default class UserMarketRequest {
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
     */
     setUserMarketQuote(user_market_quote){
-        user_market_quote.setParent(this);
+        user_market_quote.setMarketRequest(this);
         this.quote = user_market_quote;
     }
 

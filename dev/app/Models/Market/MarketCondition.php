@@ -40,14 +40,10 @@ class MarketCondition extends Model
     }
 
     /**
-    * Return relation based of _id_foreign index
+    * Return only the conditions with no parent
+    * @static
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketNegotiationConditions()
-    {
-        return $this->hasMany('App\Models\Market\MarketNegotiationCondition','market_condition_id');
-    }
-
     public static function topLevel() {
         return (new self)->where('market_condition_category_id', null);
     }

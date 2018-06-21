@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\TradeScreen;
+namespace App\Http\Controllers\TradeScreen\MarketRequest;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Market\MarketConditionCategory;
-use App\Models\Market\MarketCondition;
+use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
 
-class MarketConditionsController extends Controller
+class UserMarketController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +15,7 @@ class MarketConditionsController extends Controller
      */
     public function index()
     {
-        $categories = MarketConditionCategory::topLevel()
-            ->with(['marketConditions', 'children', 'children.marketConditions'])
-            ->get();
-        $conditions = MarketCondition::topLevel()->get();
-
-        return response()->json(compact('categories', 'conditions'));
+        //
     }
 
     /**
@@ -40,9 +34,9 @@ class MarketConditionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserMarketStoreRequest $request)
     {
-        //
+        return response()->json($request->all());
     }
 
     /**

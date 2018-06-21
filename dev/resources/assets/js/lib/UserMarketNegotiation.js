@@ -33,18 +33,18 @@ export default class UserMarketNegotiation {
     }
 
     /**
-    *   setParent - Sets the negotiations UserMarket
+    *   setUserMarket - Sets the negotiations UserMarket
     *   @param {UserMarket} market - UserMarket for the negotiation
     */
-    setParent(user_market) {
+    setUserMarket(user_market) {
         this._user_market = user_market;
     }
 
     /**
-    *   getParent - Gets the negotiations UserMarket
+    *   getUserMarket - Gets the negotiations UserMarket
     *   @return {UserMarket}
     */
-    getParent() {
+    getUserMarket() {
         return this._user_market;
     }
 
@@ -53,7 +53,7 @@ export default class UserMarketNegotiation {
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
     addUserMarketNegotiationCondition(user_market_negotiation_condition) {
-        user_market_negotiation_condition.setParent(this);
+        user_market_negotiation_condition.setUserMarketNegotiation(this);
         this.conditions.push(user_market_negotiation_condition);
     }
 
@@ -80,4 +80,15 @@ export default class UserMarketNegotiation {
         return json;
     }
 
+    prepareStore() {
+        return {
+            bid: this.bid,
+            offer: this.offer,
+            bid_qty: this.bid_qty,
+            offer_qty: this.offer_qty,
+            bid_premium: this.bid_premium,
+            offer_premium: this.offer_premium,
+            conditions: this.conditions.map(x => x.prepareStore()),
+        };
+    }
 }

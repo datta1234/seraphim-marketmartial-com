@@ -25,7 +25,7 @@ export default class UserMarketQuote {
     *   setParent - Set the parent UserMarketRequest
     *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
-    setParent(user_market_request) {
+    setMarketRequest(user_market_request) {
         this._user_market_request = user_market_request;
     }
 
@@ -33,7 +33,7 @@ export default class UserMarketQuote {
     *   getParent - Get the parent UserMarketRequest
     *   @return {UserMarketRequest}
     */
-    getParent() {
+    getMarketRequest() {
         return this._user_market_request;
     }
 

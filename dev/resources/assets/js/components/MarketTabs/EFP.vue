@@ -51,6 +51,8 @@
 
                 user_market_bid: null,
                 user_market_offer: null,
+
+                isActive: false,
             };
         },
         computed: {
@@ -60,6 +62,7 @@
                     'market-request': this.market_request_state == 'request',
                     'market-alert': this.market_request_state == 'alert',
                     'market-confirm': this.market_request_state == 'confirm',
+                    'active': this.isActive,
                 }
             },
             bidState: function() {
@@ -76,12 +79,21 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
+                this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }
         },
         mounted() {
             // initial setup of states
             this.calcMarketState();
+            EventBus.$on('interactionClose', (marketRequest) => {
+                this.isActive = false;
+            });
+            EventBus.$on('interactionChange', (marketRequest) => {
+                if(this.marketRequest !== marketRequest) {
+                    this.isActive = false;
+                }
+            });
         }
     }
 </script>

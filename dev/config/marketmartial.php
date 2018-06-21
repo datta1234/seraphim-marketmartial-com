@@ -65,7 +65,7 @@ return [
             ],
             [
                 'title' => 'Happy to Spin',
-                'alias' => 'fok_fill',
+                'alias' => 'fok_spin',
                 'market_condition_category' => 'Fill or kill',
                 'timeout' => false
             ],
