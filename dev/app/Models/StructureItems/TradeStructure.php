@@ -29,6 +29,10 @@ class TradeStructure extends Model
         'title',
     ];
 
+    protected $casts = [
+        'is_selectable' => 'boolean',
+    ];
+
     /**
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

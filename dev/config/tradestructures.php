@@ -1,9 +1,11 @@
 <?php 
-
+        //fly selected, outright -> force yes
+        //efp switch, risky, caly,options swicth, -> no force select
 return [
         [
             'id' => 1,
             'title' => 'Outright',
+            'is_selectable' => true,
             'trade_structure_group' =>
                     [
                         [
@@ -31,11 +33,13 @@ return [
         [
             'id' => 2,
             'title' => 'Risky',
+            'is_selectable' => true,
+
                      'trade_structure_group' =>
                         [
                             [
                                 'title'=> 'default',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -55,7 +59,7 @@ return [
                             ],
                             [
                                 'title'=> 'Risky options',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -78,11 +82,12 @@ return [
         [
             'id' => 3,
             'title' => 'Calendar',
+            'is_selectable' => true,
               'trade_structure_group' =>
                         [
                             [
                                 'title'=> 'default',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -102,7 +107,7 @@ return [
                             ],
                             [
                                 'title'=> 'Calander option',
-                                'force_select' => false,
+                                'force_select' => null,
                                 'items'=>
                                     [
                                         [
@@ -126,6 +131,7 @@ return [
         [
             'id' => 4,
             'title' => 'Fly',
+            'is_selectable' => true,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -185,10 +191,12 @@ return [
         [
             'id' => 5,
             'title' => 'Option Switch',
+            'is_selectable' => false,
+
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
-                        'force_select' => true,
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -208,7 +216,7 @@ return [
                     ],
                     [
                         'title'=> 'Switch Options',
-                        'force_select' => true,
+                        'force_select' => null,
                         'items'=>
                             [
                                 [
@@ -232,6 +240,7 @@ return [
         [
             'id' => 6,
             'title' => 'EFP',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',
@@ -250,6 +259,7 @@ return [
         [
             'id' => 7,
             'title' => 'Rolls',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                          'force_select' => true,
@@ -272,6 +282,7 @@ return [
         [
             'id' => 8,
             'title' => 'EFP Switch',
+            'is_selectable' => false,
                 'trade_structure_group' => [
                     [
                         'title'=> 'default',

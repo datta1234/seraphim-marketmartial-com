@@ -9,7 +9,8 @@ foreach ($tradeStructures as $tradeStructure)
 	$factory->defineAs(App\Models\StructureItems\TradeStructure::class,$tradeStructure['title'],function (Faker $faker) use ($tradeStructure){
 		
 		return [
-		   'title' => $tradeStructure['title']
+		   'title' => $tradeStructure['title'],
+		   'is_selectable' => $tradeStructure['is_selectable']
 		];
 	});
 }

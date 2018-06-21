@@ -12052,7 +12052,8 @@ input:checked + .slider:before {
 .important-markets-menu,
 .alerts-markets-menu,
 .confirmations-markets-menu,
-.filter-markets-menu {
+.filter-markets-menu,
+.request-market-menu {
   display: inline;
 }
 
@@ -12068,13 +12069,83 @@ input:checked + .slider:before {
   max-width: 400px;
 }
 
+#trade_app .user-header h1 {
+  font-family: "Raleway-SemiBold";
+  font-size: 1rem;
+}
+
 .confirmations-modal .modal-dialog {
   max-width: 1000px;
 }
 
-#trade_app .user-header h1 {
-  font-family: "Raleway-SemiBold";
-  font-size: 1rem;
+.mm-modal .modal-content {
+  background-color: #D3D8DC;
+}
+
+.mm-modal .modal-header {
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-header .modal-title .mm-modal-title {
+  color: #FFFFFF;
+  /* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
+}
+
+.mm-modal .modal-footer {
+  border-top: none;
+  text-align: center;
+}
+
+.mm-modal-button {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-button:focus,
+.mm-modal-button.focus {
+  color: #FFFFFF;
+  background-color: #13524d;
+}
+
+.mm-modal-button:hover {
+  color: #FFFFFF;
+  background-color: #13524d;
+}
+
+.mm-modal-market-button {
+  color: #FFFFFF;
+  background-color: #1D3641;
+  border-radius: 2rem;
+}
+
+.mm-modal-market-button:focus,
+.mm-modal-market-button.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-modal-market-button-alt:focus,
+.mm-modal-market-button-alt.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
 }
 
 @font-face {
