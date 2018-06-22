@@ -42,7 +42,8 @@
             selectExpiryDates(date) {
                 this.selected_dates.push(date);
                 if(this.selected_dates.length == this.data.number_of_dates) {    
-                    this.callback(this.selected_dates);
+                    this.data.index_market_object.expiry_dates = this.selected_dates;
+                    this.callback();//add title dates
                 }
             },
             castToMoment(date_string) {

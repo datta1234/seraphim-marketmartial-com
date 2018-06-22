@@ -72,32 +72,30 @@
              * Loads step component 
              */
             loadStepComponent(component_data) {
-
-                this.nextStep();
+                if( component_data != 'back' ) {
+                    this.nextStep();
+                }
                 switch (this.modal_data.step) {
-                    case 1:
-                        this.selected_step_component = 'Selections';    
-                        break;
                     case 2:
                         this.selected_step_component = 'Market';
                         break;
                     case 3:
-                        this.modal_data.title += ' > ' + component_data.title;
+                        //this.modal_data.title += ' > ' + component_data.title;
                         console.log("CASE 3: ", this.index_data.index_market_object);
-                        this.index_data.index_market_object.market = component_data;
+                        //this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
                         break;
                     case 4:
                         if (component_data == 'Calendar') {
                             this.index_data.number_of_dates = 2;
                         }
-                        this.modal_data.title += ' > ' + component_data;
-                        this.index_data.index_market_object.trade_structure = component_data;
+                        //this.modal_data.title += ' > ' + component_data;
+                        //this.index_data.index_market_object.trade_structure = component_data;
                         console.log("CASE 4: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
-                        this.index_data.index_market_object.expiry_dates = component_data;
+                        //this.index_data.index_market_object.expiry_dates = component_data;
                         console.log("CASE 5: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Details';
                         console.log("CASE 5 COMPONENT: ", this.selected_step_component);
@@ -170,6 +168,7 @@
             this.loadIndexMarkets();
             console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';
+            this.$on('modal_step', this.loadStepComponent);
         }
     }
 </script>

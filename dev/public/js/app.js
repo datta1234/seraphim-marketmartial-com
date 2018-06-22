@@ -90611,7 +90611,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 step: 0,
                 show_modal: false,
                 modal_ref: 'request-market-ref',
-                selected_step_component: null
+                selected_controller: null
             },
             controllers: {
                 Selections: __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default.a,
@@ -90630,10 +90630,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * Loads the Reqeust a Market Modal 
          */
         showModal: function showModal() {
-            this.modal_data.selected_step_component = 'Selections';
+            this.modal_data.selected_controller = 'Selections';
             this.modal_data.step = 0;
             this.modal_data.show_modal = true;
-            console.log("RUNNING: ", this.modal_data.selected_step_component, this.modal_data.show_modal, this.modal_data.step);
+            console.log("RUNNING: ", this.modal_data.selected_controller, this.modal_data.show_modal, this.modal_data.step);
             this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
         },
 
@@ -90652,7 +90652,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         loadController: function loadController(name) {
             this.nextStep();
-            this.modal_data.selected_step_component = name;
+            this.modal_data.selected_controller = name;
         },
 
         /**
@@ -90660,6 +90660,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         previousStep: function previousStep() {
             this.modal_data.step--;
+            if (this.modal_data.step == 1) {
+                this.modal_data.selected_controller = 'Selections';
+                this.modal_data.step = 0;
+            } else {
+                this.$refs['currentController'].$emit('modal_step', 'back');
+            }
         },
         nextStep: function nextStep() {
             //receives name of next componenet to load
@@ -90812,32 +90818,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * Loads step component 
          */
         loadStepComponent: function loadStepComponent(component_data) {
-
-            this.nextStep();
+            if (component_data != 'back') {
+                this.nextStep();
+            }
             switch (this.modal_data.step) {
-                case 1:
-                    this.selected_step_component = 'Selections';
-                    break;
                 case 2:
                     this.selected_step_component = 'Market';
                     break;
                 case 3:
-                    this.modal_data.title += ' > ' + component_data.title;
+                    //this.modal_data.title += ' > ' + component_data.title;
                     console.log("CASE 3: ", this.index_data.index_market_object);
-                    this.index_data.index_market_object.market = component_data;
+                    //this.index_data.index_market_object.market = component_data;
                     this.selected_step_component = 'Structure';
                     break;
                 case 4:
                     if (component_data == 'Calendar') {
                         this.index_data.number_of_dates = 2;
                     }
-                    this.modal_data.title += ' > ' + component_data;
-                    this.index_data.index_market_object.trade_structure = component_data;
+                    //this.modal_data.title += ' > ' + component_data;
+                    //this.index_data.index_market_object.trade_structure = component_data;
                     console.log("CASE 4: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Expiry';
                     break;
                 case 5:
-                    this.index_data.index_market_object.expiry_dates = component_data;
+                    //this.index_data.index_market_object.expiry_dates = component_data;
                     console.log("CASE 5: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Details';
                     console.log("CASE 5 COMPONENT: ", this.selected_step_component);
@@ -90917,6 +90921,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.loadIndexMarkets();
         console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
         this.selected_step_component = 'Market';
+        this.$on('modal_step', this.loadStepComponent);
     }
 });
 
@@ -91151,6 +91156,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         selectMarket: function selectMarket(market) {
+            this.data.index_market_object.market = market;
             this.callback(market);
         }
     },
@@ -91262,6 +91268,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         selectStructure: function selectStructure(trade_structure) {
+            this.data.index_market_object.trade_structure = trade_structure;
             this.callback(trade_structure);
         },
 
@@ -91409,7 +91416,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectExpiryDates: function selectExpiryDates(date) {
             this.selected_dates.push(date);
             if (this.selected_dates.length == this.data.number_of_dates) {
-                this.callback(this.selected_dates);
+                this.data.index_market_object.expiry_dates = this.selected_dates;
+                this.callback(); //add title dates
             }
         },
         castToMoment: function castToMoment(date_string) {
@@ -91829,9 +91837,7 @@ var render = function() {
                                 _c("b-form-input", {
                                   attrs: {
                                     id: "outright-strike-0",
-                                    type: "number",
-                                    min: "0",
-                                    required: ""
+                                    type: "number"
                                   },
                                   model: {
                                     value: field.strike,
@@ -92297,7 +92303,8 @@ var render = function() {
             [_vm._v("\n            " + _vm._s(_vm.modalTitle) + "\n        ")]
           ),
           _vm._v(" "),
-          _c(_vm.controllers[_vm.modal_data.selected_step_component], {
+          _c(_vm.controllers[_vm.modal_data.selected_controller], {
+            ref: "currentController",
             tag: "component",
             attrs: {
               close_modal: _vm.hideModal,

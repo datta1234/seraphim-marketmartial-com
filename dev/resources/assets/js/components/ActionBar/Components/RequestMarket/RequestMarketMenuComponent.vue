@@ -9,7 +9,7 @@
                 {{ modalTitle }}
             </div>
 
-            <component v-bind:is="controllers[modal_data.selected_step_component]" :close_modal="hideModal" :callback="loadController" :modal_data="modal_data"></component>
+            <component ref="currentController" v-bind:is="controllers[modal_data.selected_controller]" :close_modal="hideModal" :callback="loadController" :modal_data="modal_data"></component>
 
            <!-- Modal footer content -->
            <div slot="modal-footer" class="w-100">
@@ -55,7 +55,7 @@
                     step: 0,
                     show_modal: false,
                     modal_ref: 'request-market-ref',
-                    selected_step_component: null,
+                    selected_controller: null,
                 },
                 controllers: {
                     Selections: StepSelection,
@@ -73,10 +73,10 @@
              * Loads the Reqeust a Market Modal 
              */
             showModal() {
-                this.modal_data.selected_step_component = 'Selections';
+                this.modal_data.selected_controller = 'Selections';
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = true;
-                console.log("RUNNING: ", this.modal_data.selected_step_component, this.modal_data.show_modal, this.modal_data.step);
+                console.log("RUNNING: ", this.modal_data.selected_controller, this.modal_data.show_modal, this.modal_data.step);
                 this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
             },
             /**
@@ -93,13 +93,19 @@
              */
             loadController(name) {
                 this.nextStep();
-                this.modal_data.selected_step_component = name;
+                this.modal_data.selected_controller = name;
             },
             /**
              * Returns to previous modal step 
              */
             previousStep() {
                 this.modal_data.step--;
+                if(this.modal_data.step == 1) {
+                    this.modal_data.selected_controller = 'Selections';
+                    this.modal_data.step = 0;
+                } else {
+                    this.$refs['currentController'].$emit('modal_step', 'back');
+                }
             },
             nextStep() {
                 //receives name of next componenet to load

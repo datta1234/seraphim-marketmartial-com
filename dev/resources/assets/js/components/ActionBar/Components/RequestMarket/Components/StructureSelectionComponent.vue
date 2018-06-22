@@ -30,6 +30,7 @@
         },
         methods: {
             selectStructure(trade_structure) {
+                this.data.index_market_object.trade_structure = trade_structure;
                 this.callback(trade_structure);
             },
             /**
