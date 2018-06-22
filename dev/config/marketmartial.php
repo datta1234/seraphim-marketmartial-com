@@ -2,6 +2,9 @@
 
 return [
 		"default_role" => "Trader",//pull and use this role for testing as the default role
+        "AutoSetTradeAccounts" => [
+            "Direct"
+        ],
 		"roles" => [
 			[
 				'title' => 'Admin',
