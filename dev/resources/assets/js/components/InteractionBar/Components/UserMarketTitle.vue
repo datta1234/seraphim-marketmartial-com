@@ -1,7 +1,7 @@
 <template>
-    <b-row>
+    <b-row dusk="ibar-user-market-title">
         <b-col cols="10">
-            <h3>{{ title }}</h3>
+            <h5>{{ title }}</h5>
         </b-col>
         <b-col cols="2">
             <p class="pull-right">{{ time }}</p>
@@ -13,10 +13,12 @@
     export default {
         props: {
             title: {
-                type: String
+                type: String,
+                default: ""
             },
             time: {
-                type: String
+                type: String,
+                default: ""
             }
         },
         mounted() {

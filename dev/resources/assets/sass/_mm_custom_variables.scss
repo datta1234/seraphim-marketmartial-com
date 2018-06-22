@@ -25,6 +25,7 @@ $mm-shadow:				#0c4545;
 $mm-font-head: 		"Raleway-SemiBold";
 $mm-font-sub-head: 	"Muli-Bold";
 $mm-font-sub-head-alt: 	"Muli-Regular";
+$mm-font-int-bar:   "Muli-Regular";
 $mm-font-body: 		"Roboto-Regular";
 $mm-font-body-alt: 	Arial;
 
@@ -33,7 +34,7 @@ $mm-font-body-alt: 	Arial;
 * Trade View Variables
 */
 $mm-market-important:	#1D3641;
-$mm-modal-header:		#007D74;
+$mm-modal-header:		#1c7c74;
 $mm-text-white:			#FFFFFF;
 $mm-main-header:		#EDEDEE;
 $mm-background:			#D3D8DC;
@@ -58,7 +59,23 @@ $mm-toggle-bg:			#1c7d74;
 *   Interaction Bar
 */
 $interaction-bar-width: 350px;
-$ibar-btn-primary: #1D3641;
-$ibar-btn-secondary: #282828;
+$interaction-toggle-width: 25px;
+$ibar-btn-background-primary: #1D3641;
+$ibar-btn-background-secondary: #282828;
+$ibar-btn-background-default: #1D3641;
+$ibar-btn-color-primary: #FFFFFF;
+$ibar-btn-color-secondary: #FFFFFF;
+$ibar-btn-color-default: #FFFFFF;
 $ibar-btn-active: #007D74;
 $ibar-btn-inactive: #6D6E70;
+
+// conditions
+$ibar-condition-panel-background: #282828;
+$ibar-condition-panel-title-background: #6D6E70;
+$ibar-btn-condition-active: #007D74;
+
+/*
+*   Chat Bar
+*/
+$chat-bar-width: 300px;
+$chat-toggle-width: 25px;

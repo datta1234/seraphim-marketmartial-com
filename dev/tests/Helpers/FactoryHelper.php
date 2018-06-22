@@ -57,8 +57,8 @@ class FactoryHelper
 
 		foreach ($conditionCategories as $conditionCategory) {
 			factory(\App\Models\Market\MarketConditionCategory::class)->create([
-					'title' =>  $conditionCategory['title']
-				]);	
+				'title' =>  $conditionCategory['title']
+			]);	
 		}
 
 		foreach ($conditions as $condition) {
@@ -67,7 +67,7 @@ class FactoryHelper
 				'title' =>  $condition['title'],
 				'alias' =>  $condition['alias'],
 				'timeout' => $condition['timeout'],
-				'market_condition_category_id' => \App\Models\Market\MarketConditionCategory::firstOrCreate(['title'],$condition['market_condition_category'])
+				'market_condition_category_id' => $condition['market_condition_category'] == null ? null : \App\Models\Market\MarketConditionCategory::where('title',$condition['market_condition_category'])->first()->id
 			]);	
 		}
 	} 
@@ -99,5 +99,5 @@ class FactoryHelper
 			]);	
 		}
 
-	}    
+	}
 }

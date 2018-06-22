@@ -1,5 +1,5 @@
 <template>
-    <div class="user-market">
+    <div dusk="market-group" class="user-market">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">
@@ -22,7 +22,10 @@
 </template>
 
 <script>
-    const Market = require('../lib/Market')
+    import Market from '../lib/Market';
+
+    
+
     export default {
         props: {
             'market': {
@@ -44,7 +47,7 @@
             mapMarketRequestGroups: function(markets) {
                 // map markets to dates
                 return markets.reduce((x,y) => {
-                    let date = y.attributes.expiration_date.format("MMM D");  
+                    let date = y.trade_items.default ? y.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] : '';
                     if(!x[date]) { 
                         x[date] = [];
                     }

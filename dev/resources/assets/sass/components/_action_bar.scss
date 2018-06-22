@@ -8,6 +8,13 @@
 	}
 }
 
-.Important-markets-menu, .Alerts-markets-menu, .Confirmations-markets-menu, .filter-markets-menu {
+.important-markets-menu, .alerts-markets-menu, .confirmations-markets-menu, .filter-markets-menu, .request-market-menu {
 	display: inline;
+}
+
+#important-popover, #alerts-popover, #confirmations-popover {
+	display: inline;
+	.popover {
+		max-width:400px;
+	}
 }

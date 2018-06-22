@@ -29,16 +29,18 @@ class UserMarketRequestGroup extends Model
      */
     protected $fillable = [
         'is_selected',
+        'trade_structure_group_id',
+        'user_market_request_id'
     ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarketRequestTradables()
+    public function userMarketRequest()
     {
         return $this->belongsTo(
-            'App\Models\MarketRequest\UserMarketRequestTradable',
+            'App\Models\MarketRequest\UserMarketRequest',
             'user_market_request_id'
         );
     }
@@ -59,8 +61,8 @@ class UserMarketRequestGroup extends Model
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeStructureGroups()
+    public function tradeStructureGroup()
     {
-        return $this->belongsTo('App\Models\StructureItems\TradeStructureGroup', 'trade_structure_id');
+        return $this->belongsTo('App\Models\StructureItems\TradeStructureGroup', 'trade_structure_group_id');
     }
 }

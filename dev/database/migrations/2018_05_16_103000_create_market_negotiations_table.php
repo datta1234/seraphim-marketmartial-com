@@ -17,9 +17,10 @@ class CreateMarketNegotiationsTable extends Migration
             $table->increments('id');
             
             $table->integer('user_id')->unsigned();
+            $table->integer('counter_user_id')->unsigned()->nullable();
+
             $table->integer('market_negotiation_id')->unsigned()->nullable();
             $table->integer('user_market_id')->unsigned();
-            $table->integer('market_negotiation_status_id')->unsigned();
             
             $table->double('bid', 11, 2)->nullable();
             $table->double('offer', 11, 2)->nullable();
@@ -29,12 +30,23 @@ class CreateMarketNegotiationsTable extends Migration
 
             $table->double('bid_premium', 11, 2)->nullable();
             $table->double('offer_premium', 11, 2)->nullable();
-            $table->double('future_reference', 11, 2)->nullable();
+            $table->double('future_reference', 11, 2)->nullable(); // what it will be
             
-           // $table->double('spot_price', 11, 2)->nullable();
-            $table->boolean('has_premium_calc');
-            $table->boolean('is_repeat');
-            $table->boolean('is_accepted');
+            // $table->double('spot_price', 11, 2)->nullable(); // current value
+            $table->boolean('has_premium_calc')->default(false); // ONLY shows to organisation of - user_id
+            $table->boolean('is_repeat')->default(false);
+            $table->boolean('is_accepted')->default(false);
+            $table->boolean('is_private')->default(true);
+
+            // conditions
+            $table->boolean('cond_is_repeat_atw')->nullable();
+            $table->boolean('cond_fok_apply_bid')->nullable();
+            $table->boolean('cond_fok_spin')->nullable();
+            $table->boolean('cond_timeout')->nullable();
+            $table->boolean('cond_is_ocd')->nullable();
+            $table->boolean('cond_is_subject')->nullable();
+            $table->boolean('cond_buy_mid')->nullable();
+            $table->boolean('cond_buy_best')->nullable();
             
             $table->timestamps();
 
@@ -46,9 +58,6 @@ class CreateMarketNegotiationsTable extends Migration
 
             $table->foreign('user_market_id')
                 ->references('id')->on('user_markets');
-
-            $table->foreign('market_negotiation_status_id')
-                ->references('id')->on('market_negotiation_statuses');
         });
 
         Schema::table('user_markets', function (Blueprint $table){

@@ -1,82 +1,85 @@
-module.exports = class UserMarketRequest {
+import UserMarket from './UserMarket';
+import UserMarketQuote from './UserMarketQuote';
+export default class UserMarketRequest {
 
     constructor(options) {
-        this.user_markets = [];
-        this._chosen_user_market = null;
+        this._endpoint = ["/trade/market/", "/"];
+
+        // default internal
+        this._market = null;
+        // default public
+        this.trade_items = {};//with group title as key
+        this.quotes = [];
         const defaults = {
             id: "",
+            trade_structure: "",
             attributes: {
-                expiration_date: moment(),
-                strike: "",
-            }
+                state: "",
+                bid_state: "",
+                offer_state: "",
+            },
+            quote: null,
+            chosen_user_market: null,
+            created_at: moment(),
+            updated_at: moment(),
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
+                if(defaults[key] instanceof moment) {
+                    this[key] = moment(this[key]);
+                }
             } else {
                 this[key] = defaults[key];
             }
         });
 
-        // register user_markets
-        if(options && options.user_markets) {
-            this.addUserMarkets(options.user_markets);
+        // register trade_items
+        if(options && options.trade_items) {
+            this.addTradeItems(options.trade_items);
         }
 
-        // register chosen
-        if(options && options.chosen_user_market) {
-            if(this.user_markets.indexOf(options.chosen_user_market) == -1) {
-                this.addUserMarkets(options.user_markets);
-            }
-            this.setChosenUserMarket(options.chosen_user_market);
+        // register quotes
+        if(options && options.quotes) {
+            this.addUserMarketQuotes(options.quotes);
+        }
+
+        // register user_market
+        if(options && options.user_market) {
+            this.setUserMarket(options.user_market);
         }
     }
 
     /**
-    *   addUserMarket - add user market
-    *   @param {UserMarket} user_market - UserMarket objects
+    *   addUserMarketQuote - add user market quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote objects
     */
-    addUserMarket(user_market) {
-        user_market.setParent(this);
-        this.user_markets.push(user_market);
+    addUserMarketQuote(user_market_quote) {
+        if(!(user_market_quote instanceof UserMarketQuote)) {
+            user_market_quote = new UserMarketQuote(user_market_quote);
+        }
+        user_market_quote.setMarketRequest(this);
+        this.quotes.push(user_market_quote);
     }
 
     /**
-    *   addUserMarkets - add array of user user_markets
-    *   @param {Array} user_markets - array of UserMarket objects
+    *   addUserMarketQuotes - add array of user user_market_quotes
+    *   @param {Array} user_market_quotes - array of UserMarketQuote objects
     */
-    addUserMarkets(user_markets) {
-        user_markets.forEach(user_market => {
-            this.addUserMarket(user_market);
+    addUserMarketQuotes(user_market_quotes) {
+        user_market_quotes.forEach(user_market_quote => {
+            this.addUserMarketQuote(user_market_quote);
         });
     }
 
     /**
-    *   setParent - Set the parent Market
-    *   @param {Market} market - Market object
-    */
-    setParent(market) {
-        this._market = market;
-    }
-
-    /**
-    *   getParent - Get the parent Market
-    *   @return {Market}
-    */
-    getParent() {
-        return this._market;
-    }
-
-    /**
-    *   setChosenUserMarket - set the chosen UserMarket
-    *   @param {UserMarket}
+    *   setUserMarket - Set the UserMarketRequest
+    *   @param {UserMarket} user_market - UserMarket object
     */
     setChosenUserMarket(user_market) {
-        if(this.user_markets.indexOf(user_market) == -1) {
-            this.addUserMarket(user_market);
-        }
-        this._chosen_user_market = user_market;
+        user_market.setMarketRequest(this);
+        this.chosen_user_market = user_market;
     }
 
     /**
@@ -84,7 +87,78 @@ module.exports = class UserMarketRequest {
     *   @return {UserMarket}
     */
     getChosenUserMarket() {
-        return this._chosen_user_market;
+        return this.chosen_user_market;
+    }
+
+    /**
+    *   setUserMarketQuote - Set the UserMarketRequest quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+    */
+    setUserMarketQuote(user_market_quote){
+        user_market_quote.setMarketRequest(this);
+        this.quote = user_market_quote;
+    }
+
+    /**
+    *   setUserMarket - Set the UserMarketRequest UserMarker
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setUserMarket(user_market) {
+        if(!(user_market instanceof UserMarket)) {
+            user_market = new UserMarket(user_market);
+        }
+        console.log(user_market);
+        user_market.setMarketRequest(this);
+        this.user_market = user_market;
+    }
+
+    /**
+    *   getUserMarket - Set the UserMarketRequest UserMarker
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    getUserMarket() {
+        return this.user_market;
+    }
+
+    /**
+    *   addTradeItem - add trade item
+    *   @param {} trade_item - trade item object
+    */
+    addTradeItem(group, title, value) {
+        if(!this.trade_items[group]) {
+            this.trade_items[group] = {};
+        }
+        this.trade_items[group][title] = value;
+    }
+
+    /**
+    *   addTradeItems - add array of trade items
+    *   @param {Array} trade_items - array of trade item objects
+    */
+    addTradeItems(trade_items) {
+        Object.keys(trade_items).forEach(trade_group => {
+
+            Object.keys(trade_items[trade_group]).forEach(title => {
+                this.addTradeItem(trade_group, title, trade_items[trade_group][title]);
+            });
+
+        });
+    }
+
+    /**
+    *   setMarket - Set the parent Market
+    *   @param {Market} market - Market object
+    */
+    setMarket(market) {
+        this._market = market;
+    }
+
+    /**
+    *   getMarket - Get the parent Market
+    *   @return {Market}
+    */
+    getMarket() {
+        return this._market;
     }
 
     /**

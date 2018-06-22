@@ -23,10 +23,17 @@ class CreateMarketsTable extends Migration
             $table->boolean('has_negotiation');
             $table->boolean('needs_spot');
             $table->boolean('has_rebate');
+
+            $table->integer('parent_id')->nullable()->unsigned();
+            $table->boolean('is_displayed');
+
             $table->timestamps();
 
             $table->foreign('market_type_id')
                 ->references('id')->on('market_types');
+
+            $table->foreign('parent_id')
+                ->references('id')->on('markets');
         });
     }
 

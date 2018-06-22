@@ -1,6 +1,7 @@
 .interaction-bar-wrapper {
+    font-family: $mm-font-int-bar;
     height:100%;
-    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content {
+    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
@@ -16,7 +17,6 @@
             opacity: 0;
             height:100%;
             padding:0px;
-            display:inline-block;
             margin:0px;
             padding:0px;
             float:left;
@@ -25,6 +25,10 @@
             overflow: hidden;
         }
         &.active {
+            .interaction-bar-toggle {
+                width: $interaction-toggle-width;
+                opacity: 1;
+            }
             .interaction-content {
                 width: $interaction-bar-width;
                 opacity: 1;
@@ -38,10 +42,16 @@
             border-radius:0px;
         }
         .btn-primary {
-            background-color: $ibar-btn-primary;
+            background-color: $ibar-btn-background-primary;
+            color: $ibar-btn-color-primary;
         }
         .btn-secondary {
-            background-color: $ibar-btn-secondary;
+            background-color: $ibar-btn-background-secondary;
+            color: $ibar-btn-color-secondary;
+        }
+        .btn-default {
+            background-color: $ibar-btn-background-default;
+            color: $ibar-btn-color-default;
         }
         .btn[disabled] {
             background-color: $ibar-btn-inactive;
@@ -56,7 +66,7 @@
         @extend .col;
     }
     .interaction-bar-toggle {
-        width:25px;
+        width:0px;
         height:100%;
         padding:0px;
         display:inline-block;
@@ -64,7 +74,7 @@
         padding:0px;
         float:left;
         position: relative;
-
+        opacity: 0;
         color: #fff;
 
         cursor:pointer;
@@ -75,6 +85,51 @@
             top: 50%;
             margin-top: -50%;
             font-size: 32px;
+        }
+    }
+
+
+
+
+    /*
+    *   Market Negotiation Blocks
+    */
+    .ibar.market-negotiation {
+
+    }
+
+    /*
+    * conditions
+    */
+    .ibar-condition-panel {
+        background-color: $ibar-condition-panel-background;
+        margin:auto;
+        .ibar-condition-panel-content {
+            .title {
+                padding: 5px 7px;
+                background-color: $ibar-condition-panel-title-background;
+                margin:0px;
+                width: 100%;
+                font-size: bold;
+            }
+            .content {
+                padding: 5px 10px;
+                margin:0px;
+                width: 100%;
+                font-size: normal;
+            }
+        }
+    }
+    .ibar-condition:active, .ibar-condition[aria-expanded="true"] {
+        background-color: $ibar-btn-condition-active;
+        width: 85% !important;
+    }
+    .ibar-condition-remove-label {
+        color: yellow;
+        cursor: pointer;
+        > span.remove {
+            color: red;
+            font-weight:bold;
         }
     }
 }

@@ -18,8 +18,13 @@
 *   Interaction Bar
 */
 
+<<<<<<< HEAD
+/*
+*   Chat Bar
+=======
 /* 
 * bootstrap overrides
+>>>>>>> develop
 */
 
 h1 {
@@ -64,6 +69,10 @@ a.mm-base {
 
 /*
 *   Interaction Bar
+*/
+
+/*
+*   Chat Bar
 */
 
 /* 
@@ -11092,13 +11101,13 @@ a.mm-login-button {
 #trade_app h4,
 #trade_app h5,
 #trade_app h6 {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app p,
 #trade_app span,
 #trade_app .market-tab {
-  font-family: "Raleway-SemiBold";
+  font-family: "Muli-Bold";
 }
 
 #trade_app .user-market {
@@ -11418,6 +11427,10 @@ a.mm-login-button {
   color: #3cbdb9;
 }
 
+#mainNav .nav-item.active > a {
+  border-bottom: solid;
+}
+
 .nav-title-image span {
   color: #ffffff;
 }
@@ -11428,6 +11441,11 @@ a.mm-login-button {
 
 #app #mainNav span {
   font-size: 3rem;
+}
+
+#trade_app #mainNav {
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 
 #trade_app #mainNav span {
@@ -11768,6 +11786,13 @@ input:checked + .slider:before {
   margin: auto;
 }
 
+.trade-section.light-theme .market-tab.active,
+.trade-section.dark-theme .market-tab.active {
+  -webkit-box-shadow: 0px 0px 10px 5px #EBC300;
+          box-shadow: 0px 0px 10px 5px #EBC300;
+  border: 0.15em solid #EBC300;
+}
+
 .trade-section.light-theme .market-tab.market-alert,
 .trade-section.dark-theme .market-tab.market-alert {
   background-color: #BB1D1D;
@@ -11786,6 +11811,16 @@ input:checked + .slider:before {
 .trade-section.light-theme .market-tab.market-request .market-tab-state,
 .trade-section.dark-theme .market-tab.market-request .market-tab-state {
   color: #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request-vol,
+.trade-section.dark-theme .market-tab.market-request-vol {
+  border: 0.15em solid #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request-vol .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request-vol .market-tab-state {
+  color: #fff;
 }
 
 .trade-section.light-theme .market-tab.market-request-grey,
@@ -11844,12 +11879,20 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper {
+  font-family: "Muli-Regular";
   height: 100%;
+  /*
+    *   Market Negotiation Blocks
+    */
+  /*
+    * conditions
+    */
 }
 
 .interaction-bar-wrapper .interaction-bar,
 .interaction-bar-wrapper .interaction-bar-content-pane,
-.interaction-bar-wrapper .interaction-bar > .interaction-content {
+.interaction-bar-wrapper .interaction-bar > .interaction-content,
+.interaction-bar-wrapper .interaction-bar > .interaction-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11865,12 +11908,16 @@ input:checked + .slider:before {
   opacity: 0;
   height: 100%;
   padding: 0px;
-  display: inline-block;
   margin: 0px;
   padding: 0px;
   float: left;
   color: #fff;
   overflow: hidden;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-bar-toggle {
+  width: 25px;
+  opacity: 1;
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
@@ -11890,10 +11937,17 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .interaction-bar .btn-primary {
   background-color: #1D3641;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .interaction-bar .btn-secondary {
   background-color: #282828;
+  color: #FFFFFF;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-default {
+  background-color: #1D3641;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .interaction-bar .btn[disabled] {
@@ -11907,7 +11961,7 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
-  width: 25px;
+  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -11915,6 +11969,7 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   position: relative;
+  opacity: 0;
   color: #fff;
   cursor: pointer;
 }
@@ -11927,9 +11982,46 @@ input:checked + .slider:before {
   font-size: 32px;
 }
 
+.interaction-bar-wrapper .ibar-condition-panel {
+  background-color: #282828;
+  margin: auto;
+}
+
+.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content .title {
+  padding: 5px 7px;
+  background-color: #6D6E70;
+  margin: 0px;
+  width: 100%;
+  font-size: bold;
+}
+
+.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content .content {
+  padding: 5px 10px;
+  margin: 0px;
+  width: 100%;
+  font-size: normal;
+}
+
+.interaction-bar-wrapper .ibar-condition:active,
+.interaction-bar-wrapper .ibar-condition[aria-expanded="true"] {
+  background-color: #007D74;
+  width: 85% !important;
+}
+
+.interaction-bar-wrapper .ibar-condition-remove-label {
+  color: yellow;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .ibar-condition-remove-label > span.remove {
+  color: red;
+  font-weight: bold;
+}
+
 .interaction-bar-wrapper .chat-bar,
 .interaction-bar-wrapper .chat-bar-content-pane,
-.interaction-bar-wrapper .chat-bar > .chat-content {
+.interaction-bar-wrapper .chat-bar > .chat-content,
+.interaction-bar-wrapper .chat-bar > .chat-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
@@ -11954,13 +12046,23 @@ input:checked + .slider:before {
   overflow: hidden;
 }
 
+.interaction-bar-wrapper .chat-bar.active .chat-bar-toggle {
+  width: 25px;
+  opacity: 1;
+}
+
 .interaction-bar-wrapper .chat-bar.active .chat-content {
   width: 300px;
   opacity: 1;
 }
 
-.interaction-bar-wrapper .chat-bar .chat-header h1 {
+.interaction-bar-wrapper .chat-bar .chat-header h3 {
   display: inline-block;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-header .close {
+  cursor: pointer;
+  color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header .icon {
@@ -11976,6 +12078,29 @@ input:checked + .slider:before {
   bottom: 0;
 }
 
+.interaction-bar-wrapper .chat-bar-toggle {
+  background-color: #090909;
+  width: 0px;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: left;
+  position: relative;
+  opacity: 0;
+  color: #fff;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .chat-bar-toggle > .icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -50%;
+  font-size: 32px;
+}
+
 .popover .popover-body {
   background-color: #FFFFFF;
   color: #1D3641;
@@ -11985,11 +12110,107 @@ input:checked + .slider:before {
   visibility: hidden;
 }
 
-.Important-markets-menu,
-.Alerts-markets-menu,
-.Confirmations-markets-menu,
-.filter-markets-menu {
+.important-markets-menu,
+.alerts-markets-menu,
+.confirmations-markets-menu,
+.filter-markets-menu,
+.request-market-menu {
   display: inline;
+}
+
+#important-popover,
+#alerts-popover,
+#confirmations-popover {
+  display: inline;
+}
+
+#important-popover .popover,
+#alerts-popover .popover,
+#confirmations-popover .popover {
+  max-width: 400px;
+}
+
+#trade_app .user-header h1 {
+  font-family: "Raleway-SemiBold";
+  font-size: 1rem;
+}
+
+.confirmations-modal .modal-dialog {
+  max-width: 1000px;
+}
+
+.mm-modal {
+  display: inline-block;
+}
+
+.mm-modal .modal-content {
+  background-color: #D3D8DC;
+}
+
+.mm-modal .modal-header {
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-header .modal-title .mm-modal-title {
+  color: #FFFFFF;
+  /* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
+}
+
+.mm-modal .modal-footer {
+  border-top: none;
+  text-align: center;
+}
+
+.mm-modal-button {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-button:focus,
+.mm-modal-button.focus {
+  color: #FFFFFF;
+  background-color: #13524d;
+}
+
+.mm-modal-button:hover {
+  color: #FFFFFF;
+  background-color: #13524d;
+}
+
+.mm-modal-market-button {
+  color: #FFFFFF;
+  background-color: #1D3641;
+  border-radius: 2rem;
+}
+
+.mm-modal-market-button:focus,
+.mm-modal-market-button.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-modal-market-button-alt:focus,
+.mm-modal-market-button-alt.focus {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-alt:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
 }
 
 @font-face {

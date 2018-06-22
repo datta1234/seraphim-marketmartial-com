@@ -39,10 +39,11 @@ class MarketNegotiation extends Model
      * @var array
      */
     protected $fillable = [
+
             "user_id",
+            "counter_user_id",
             "market_negotiation_id",
             "user_market_id",
-            "market_negotiation_status_id",
             "bid",
             "offer",
             "offer_qty",
@@ -52,25 +53,26 @@ class MarketNegotiation extends Model
             "future_reference",
             "has_premium_calc",
             "is_repeat",
-            "is_accepted"
+            "is_accepted",
+
+            "is_private",
+            "cond_is_repeat_atw",
+            "cond_fok_apply_bid",
+            "cond_fok_spin",
+            "cond_timeout",
+            "cond_is_ocd",
+            "cond_is_subject",
+            "cond_buy_mid",
+            "cond_buy_best",
     ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketNegotiationStatuses()
+    public function marketConditions()
     {
-        return $this->belongsTo('App\Models\Market\MarketNegotiationStatus','market_negotiation_status_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function marketNegotiationConditions()
-    {
-        return $this->hasMany('App\Models\Market\MarketNegotiationCondition','market_negotiation_id');
+        return $this->belongsToMany('App\Models\Market\MarketCondition','market_negotiation_condition');
     }
 
     /**

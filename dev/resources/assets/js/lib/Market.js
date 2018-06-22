@@ -1,14 +1,21 @@
-module.exports = class Market {
+export default class Market {
 
     constructor(options) {
         this.market_requests = [];
+        this.children = [];
+        this._parent = null;
         const defaults = {
+            id: "",
             title: "",
             description: "",
+            order: "",
+            market_type_id: "",
+            parent_id: "",
+            is_displayed: true,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -19,6 +26,11 @@ module.exports = class Market {
         if(options && options.market_requests) {
             this.addMarketRequests(options.market_requests);
         }
+
+        // register market children
+        if(options && options.children) {
+            this.addChildren(options.children);
+        }
     }
 
     /**
@@ -26,7 +38,7 @@ module.exports = class Market {
     *   @param {UserMarketRequest} market - UserMarket objects
     */
     addMarketRequest(market_req) {
-        market_req.setParent(this);
+        market_req.setMarket(this);
         this.market_requests.push(market_req);
     }
 
@@ -38,6 +50,44 @@ module.exports = class Market {
         market_requests.forEach(market_req => {
             this.addMarketRequest(market_req);
         });
+    }
+
+    /**
+    *   addChild - add user market
+    *   @param {UserMarketRequest} market - UserMarket objects
+    */
+    addChild(market) {
+        market.setParent(this);
+        this.children.push(market);
+    }
+
+    /**
+    *   addChildren - add array of user market_requests
+    *   @param {Array} market_requests - array of UserChild objects
+    */
+    addChildren(markets) {
+        markets.forEach(market => {
+            if(!(market instanceof Market)) {
+                market = new Market(market);
+            }
+            this.addChild(market);
+        });
+    }
+
+    /**
+    *   setParent - Set the parent Market
+    *   @param {Market} market - Market object
+    */
+    setParent(market) {
+        this._parent = market;
+    }
+
+    /**
+    *   getParent - Get the parent Market
+    *   @return {Market}
+    */
+    getParent() {
+        return this._parent;
     }
 
     /**

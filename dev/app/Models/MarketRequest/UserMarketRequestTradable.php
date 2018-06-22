@@ -27,16 +27,21 @@ class UserMarketRequestTradable extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+            "user_market_request_id",
+            "market_id",
+            "stock_id",
+            "user_market_request_group_id"
+    ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarketRequests()
+    public function userMarketRequest()
     {
         return $this->belongsTo(
-            'App\Models\MarketRequest\UserMarketRequestTradable',
+            'App\Models\MarketRequest\UserMarketRequest',
             'user_market_request_id'
         );
     }
@@ -45,19 +50,7 @@ class UserMarketRequestTradable extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarketRequestGroups()
-    {
-        return $this->hasMany(
-            'App\Models\MarketRequest\UserMarketRequestGroup',
-            'user_market_request_id'
-        );
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function markets()
+    public function market()
     {
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
@@ -66,7 +59,7 @@ class UserMarketRequestTradable extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function stocks()
+    public function stock()
     {
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }

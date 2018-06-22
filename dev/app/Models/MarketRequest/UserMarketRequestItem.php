@@ -28,7 +28,11 @@ class UserMarketRequestItem extends Model
      * @var array
      */
     protected $fillable = [
+        'user_market_request_group_id',
+        'item_id',
         'value',
+        'title',
+        'type'
     ];
 
     /**
@@ -47,7 +51,7 @@ class UserMarketRequestItem extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function items()
+    public function item()
     {
         return $this->belongsTo('App\Models\StructureItems\Item','item_id');
     }
