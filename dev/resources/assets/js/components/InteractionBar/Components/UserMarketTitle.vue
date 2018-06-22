@@ -13,10 +13,12 @@
     export default {
         props: {
             title: {
-                type: String
+                type: String,
+                default: ""
             },
             time: {
-                type: String
+                type: String,
+                default: ""
             }
         },
         mounted() {

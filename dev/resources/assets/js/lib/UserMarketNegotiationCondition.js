@@ -7,16 +7,12 @@ export default class UserMarketNegotiationCondition {
         const defaults = {
             id: "",
             title: "",
-		    options: {
-		        timeout: false,
-		        sell: false,
-		        buy: false,
-		    },
+            alias: "",
             created_at: moment(),
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -25,18 +21,18 @@ export default class UserMarketNegotiationCondition {
     }
 
     /**
-    *   setParent - Sets the conditions UserMarketNegotiation
+    *   setUserMarketNegotiation - Sets the conditions UserMarketNegotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation for the condition
     */
-    setParent(user_market_negotiation) {
+    setUserMarketNegotiation(user_market_negotiation) {
         this._user_market_negotiation = user_market_negotiation;
     }
 
     /**
-    *   getParent - Gets the conditions  UserMarketNegotiation
+    *   getUserMarketNegotiation - Gets the conditions  UserMarketNegotiation
     *   @return {UserMarketNegotiation}
     */
-    getParent() {
+    getUserMarketNegotiation() {
         return this._user_market_negotiation;
     }
 
@@ -51,6 +47,14 @@ export default class UserMarketNegotiationCondition {
             }
         });
         return json;
+    }
+
+    prepareStore() {
+        return {
+            id: this.id,
+            title: this.title,
+            alias: this.alias,
+        };
     }
 
 }

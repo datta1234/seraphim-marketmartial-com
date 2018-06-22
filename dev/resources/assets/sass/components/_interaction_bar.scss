@@ -105,12 +105,31 @@
         background-color: $ibar-condition-panel-background;
         margin:auto;
         .ibar-condition-panel-content {
-            padding-top: 2px;
-            padding-bottom: 2px;    
+            .title {
+                padding: 5px 7px;
+                background-color: $ibar-condition-panel-title-background;
+                margin:0px;
+                width: 100%;
+                font-size: bold;
+            }
+            .content {
+                padding: 5px 10px;
+                margin:0px;
+                width: 100%;
+                font-size: normal;
+            }
         }
     }
     .ibar-condition:active, .ibar-condition[aria-expanded="true"] {
         background-color: $ibar-btn-condition-active;
         width: 85% !important;
+    }
+    .ibar-condition-remove-label {
+        color: yellow;
+        cursor: pointer;
+        > span.remove {
+            color: red;
+            font-weight:bold;
+        }
     }
 }

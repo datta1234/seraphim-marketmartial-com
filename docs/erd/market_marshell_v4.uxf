@@ -138,11 +138,11 @@ layer=-1</panel_attributes>
       <x>686</x>
       <y>1253</y>
       <w>35</w>
-      <h>70</h>
+      <h>91</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -323,20 +323,18 @@ m2=0..n</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>623</x>
-      <y>1309</y>
+      <y>1330</y>
       <w>147</w>
-      <h>119</h>
+      <h>98</h>
     </coordinates>
     <panel_attributes>trade_structure_groups
 --
 id: int(10)
 trade_structure_id: int(11)
 title: varchar(255)
-can_have_stock: boolean
-can_have_market: boolean
-for_select: boolean nullable 
 created_at:timestamp
 updated_at:timestamp
+
 layer=1</panel_attributes>
     <additional_attributes/>
   </element>
@@ -398,19 +396,6 @@ m2=0..n</panel_attributes>
     <additional_attributes>470.0;210.0;470.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
-    <id>UMLPackage</id>
-    <coordinates>
-      <x>1883</x>
-      <y>840</y>
-      <w>847</w>
-      <h>868</h>
-    </coordinates>
-    <panel_attributes>Market
---
-bg=yellow</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>UMLClass</id>
     <coordinates>
       <x>1932</x>
@@ -423,7 +408,6 @@ bg=yellow</panel_attributes>
 id: int(11)
 user_id:int(11)
 user_market_request_id: int(11)
-user_market_status_id: int(11)
 is_trade_away: tinyint(1)
 is_market_maker_notified: tinyint(1)
 current_market_negotiation_id: int(11) nullable
@@ -440,24 +424,6 @@ layer=1</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>2282</x>
-      <y>931</y>
-      <w>224</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>user_market_statuses
---
-id: int(11)
-title: varchar(255)
-created_at: timestamp
-updated_at:timestamp
-
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>1309</x>
@@ -468,24 +434,6 @@ layer=1</panel_attributes>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
     <additional_attributes>890.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>2247</x>
-      <y>1330</y>
-      <w>224</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>market_negotiation_statuses
---
-id: int(11)
-title: varchar(255)
-created_at: timestamp
-updated_at:timestamp
-
-layer=1</panel_attributes>
-    <additional_attributes/>
   </element>
   <element>
     <id>UMLPackage</id>
@@ -1391,20 +1339,6 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2163</x>
-      <y>952</y>
-      <w>133</w>
-      <h>35</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=0..n
-m2=0..1
-</panel_attributes>
-    <additional_attributes>10.0;20.0;170.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
       <x>2016</x>
       <y>1036</y>
       <w>35</w>
@@ -1429,20 +1363,6 @@ m1=0..1
 m2=0..n
 </panel_attributes>
     <additional_attributes>10.0;10.0;130.0;10.0;130.0;200.0;1480.0;200.0;1480.0;1030.0;1620.0;1030.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>2149</x>
-      <y>1365</y>
-      <w>112</w>
-      <h>35</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=0..n
-m2=0..1
-</panel_attributes>
-    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1696,7 +1616,6 @@ spot_price: double(11,2) nullable
 is_repeat: tinyint(1)
 is_accepted: tinyint(1) nullable
 is_private: boolean
-market_negotiation_status_id: int(11)
 
 cond_is_repeat_atw: boolean nullable
 cond_fok_apply_bid: boolean nullable
@@ -2423,5 +2342,18 @@ m2=0..n</panel_attributes>
     <panel_attributes>m1=1
 m2=1</panel_attributes>
     <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1883</x>
+      <y>840</y>
+      <w>847</w>
+      <h>868</h>
+    </coordinates>
+    <panel_attributes>Market
+--
+bg=yellow</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>

@@ -1,3 +1,4 @@
+import Errors from './Errors';
 export default class UserMarket {
 
     constructor(options) {
@@ -8,13 +9,15 @@ export default class UserMarket {
         const defaults = {
             id: "",
             status: "",
+            user_market_request_id: null,
+            current_market_negotiation: null,
             created_at: moment(),
-            current_market_negotiation: null
+            updated_at: moment(),
         }
 
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -25,21 +28,23 @@ export default class UserMarket {
         if(options && options.market_negotiations) {
             this.addNegotiations(options.market_negotiations);
         }
+
     }
 
     /**
-    *   setParent - Set the parent UserMarketRequest
+    *   setMarketRequest - Set the parent UserMarketRequest
     *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
-    setParent(user_market_request) {
+    setMarketRequest(user_market_request) {
+        this.user_market_request_id = user_market_request.id;
         this._user_market_request = user_market_request;
     }
 
     /**
-    *   getParent - Get the parent UserMarketRequest
+    *   getMarketRequest - Get the parent UserMarketRequest
     *   @return {UserMarketRequest}
     */
-    getParent() {
+    getMarketRequest() {
         return this._user_market_request;
     }
 
@@ -48,7 +53,7 @@ export default class UserMarket {
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
     addNegotiation(user_market_negotiation) {
-        user_market_negotiation.setParent(this);
+        user_market_negotiation.setUserMarket(this);
         this.market_negotiations.push(user_market_negotiation);
     }
 
@@ -94,4 +99,32 @@ export default class UserMarket {
         return json;
     }
 
+    prepareStore() {
+        return {
+            user_market_request_id: this.user_market_request_id,
+            current_market_negotiation: this.current_market_negotiation.prepareStore(),
+        };
+    }
+
+    /**
+    *  store
+    */
+    store() {
+        // catch not assigned to a market request yet!
+        if(this.user_market_request_id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+
+        return axios.post("/trade/market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(err => {
+            console.error(err);
+            return new Errors(err);
+        });
+    }
 }

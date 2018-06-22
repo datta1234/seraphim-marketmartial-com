@@ -3,11 +3,12 @@ export default {
         return {
             market_request_state: '',
             market_request_state_label: '',
+            user_market_bid: '',
+            user_market_offer: '',
         }
     },
     methods: {
         loadInteractionBar() {
-            console.log("load Bar");
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
         calcMarketState() {
@@ -21,12 +22,24 @@ export default {
             // TODO: add logic for if current user then "SENT"
             switch(this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
+                    if(this.marketRequest.user_market) {
+                        this.market_request_state = 'request-vol';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
+                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
+                    } else {
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "REQUEST";
+                    }
                 break;
                 case "REQUEST-SENT-VOL":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread+" VOL SPREAD";
+                    if(this.marketRequest.quotes.length > 0) {
+                        this.market_request_state = 'alert';
+                        this.market_request_state_label = "RECEIVED";
+                    } else {
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "SENT";
+                    }
                 break;
                 case "REQUEST":
                     this.market_request_state = 'request';

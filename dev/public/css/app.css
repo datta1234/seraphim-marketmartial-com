@@ -11764,6 +11764,13 @@ input:checked + .slider:before {
   margin: auto;
 }
 
+.trade-section.light-theme .market-tab.active,
+.trade-section.dark-theme .market-tab.active {
+  -webkit-box-shadow: 0px 0px 10px 5px #EBC300;
+          box-shadow: 0px 0px 10px 5px #EBC300;
+  border: 0.15em solid #EBC300;
+}
+
 .trade-section.light-theme .market-tab.market-alert,
 .trade-section.dark-theme .market-tab.market-alert {
   background-color: #BB1D1D;
@@ -11782,6 +11789,16 @@ input:checked + .slider:before {
 .trade-section.light-theme .market-tab.market-request .market-tab-state,
 .trade-section.dark-theme .market-tab.market-request .market-tab-state {
   color: #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request-vol,
+.trade-section.dark-theme .market-tab.market-request-vol {
+  border: 0.15em solid #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request-vol .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request-vol .market-tab-state {
+  color: #fff;
 }
 
 .trade-section.light-theme .market-tab.market-request-grey,
@@ -11946,15 +11963,35 @@ input:checked + .slider:before {
   margin: auto;
 }
 
-.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content {
-  padding-top: 2px;
-  padding-bottom: 2px;
+.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content .title {
+  padding: 5px 7px;
+  background-color: #6D6E70;
+  margin: 0px;
+  width: 100%;
+  font-size: bold;
+}
+
+.interaction-bar-wrapper .ibar-condition-panel .ibar-condition-panel-content .content {
+  padding: 5px 10px;
+  margin: 0px;
+  width: 100%;
+  font-size: normal;
 }
 
 .interaction-bar-wrapper .ibar-condition:active,
 .interaction-bar-wrapper .ibar-condition[aria-expanded="true"] {
   background-color: #007D74;
   width: 85% !important;
+}
+
+.interaction-bar-wrapper .ibar-condition-remove-label {
+  color: yellow;
+  cursor: pointer;
+}
+
+.interaction-bar-wrapper .ibar-condition-remove-label > span.remove {
+  color: red;
+  font-weight: bold;
 }
 
 .interaction-bar-wrapper .chat-bar,

@@ -53,7 +53,8 @@
     "id": 1,
 
     "status": false,
-
+    
+    "user_market_request_id": 1,
     "market_negotiations": [{
         // UserMarketNegotiation
     }],
@@ -83,13 +84,9 @@
 
 // UserMarketNegotiationCondition
 {
+    "id": 1,
     "title": "FoK",
-    "options": {
-        "timeout": true,
-        "sell": true,
-        "buy": false,
-        // ...
-    },
+    "alias": "",
     "created_at": "2018-01-01 11:00:00"
 }
 

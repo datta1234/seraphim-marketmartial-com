@@ -44,7 +44,6 @@ class MarketNegotiation extends Model
             "counter_user_id",
             "market_negotiation_id",
             "user_market_id",
-            "market_negotiation_status_id",
             "bid",
             "offer",
             "offer_qty",
@@ -71,18 +70,9 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketNegotiationStatuses()
+    public function marketConditions()
     {
-        return $this->belongsTo('App\Models\Market\MarketNegotiationStatus','market_negotiation_status_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function marketNegotiationConditions()
-    {
-        return $this->hasMany('App\Models\Market\MarketNegotiationCondition','market_negotiation_id');
+        return $this->belongsToMany('App\Models\Market\MarketCondition','market_negotiation_condition');
     }
 
     /**

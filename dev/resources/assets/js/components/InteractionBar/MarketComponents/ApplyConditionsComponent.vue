@@ -3,7 +3,7 @@
         <b-col>
             <b-row>
                 <b-col>
-                    <b-form-checkbox v-model="show_options" value="true" unchecked-value="false"> Apply a condition</b-form-checkbox>
+                    <b-form-checkbox v-model="show_options" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
                 </b-col>
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
@@ -27,7 +27,7 @@
                     </b-collapse>
                 </b-col>
                 <b-col cols="12" v-for="category in categories">
-                    <b-btn @click="applyCategory(category)" 
+                    <b-btn @click="applyCategory(category)"
                             v-b-toggle="'category_'+category.id" 
                             variant="default" 
                             size="sm" 
@@ -39,10 +39,28 @@
                                 class="w-75 ibar-condition-panel" 
                                 accordion="conditions" 
                                 role="tabpanel">
-                        <div class="ibar-condition-panel-content">
+                        <div class="ibar-condition-panel-content text-left">
                             
-                            <div>
-                                <label></label>
+                            <div v-for="child in category.children" v-if="category.children.length > 0">
+                                <label class="title">{{ child.title }}</label>
+                                <div class="content">
+                                    <b-form-radio-group v-model="child.selected"
+                                                        v-bind:options="getCategoryOptions(child.market_conditions)"
+                                                        stacked
+                                                        v-on:change="updateCategoryConditions"
+                                                        name="">
+                                    </b-form-radio-group>
+                                </div>
+                            </div>
+                            <div v-if="category.children.length == 0">
+                                <div class="content">
+                                    <b-form-radio-group v-model="category.selected"
+                                                        v-bind:options="getCategoryOptions(category.market_conditions)"
+                                                        stacked
+                                                        v-on:change="updateCategoryConditions"
+                                                        name="">
+                                    </b-form-radio-group>
+                                </div>
                             </div>
 
                         </div>
@@ -55,24 +73,63 @@
 <script>
     import axios from 'axios';
 
+    import UserMarketNegotiationCondition from '../../../lib/UserMarketNegotiationCondition';
+
     export default {
+        props: {
+            appliedConditions: {
+                type: Array,
+                default: []
+            },
+            removableConditions: {
+                type: Array,
+                default: []
+            }
+        },
         data() {
             return {
                 show_options: false,
+                chosen_top_level_category: null,
                 conditions: [],
                 categories: [],
             };
         },
+        watch: {
+            'show_options': function(nV) {
+                this.appliedConditions.splice(0, this.appliedConditions.length);
+                this.removableConditions.splice(0, this.removableConditions.length);
+                this.resetCategorySelection(this.categories);
+            }
+        },
         methods: {
+            getCategoryOptions(conditions) {
+                let options = [];
+                conditions.forEach(x => {
+                    options.push({ text: x.title, value: x });
+                });
+                return options;
+            },
+            mutateCategories(cats) {
+                return cats.map(cat => {
+                    if(cat.market_conditions) {
+                        cat.market_conditions = cat.market_conditions.map(x => new UserMarketNegotiationCondition(x));
+                    }
+                    if(cat.children) {
+                        cat.children = this.mutateCategories(cat.children);
+                    }
+                    return cat;
+                });
+            },
             loadConditions() {
                 let self = this;
                 return axios.get('/trade/market-condition')
                 .then(conditionsResponse => {
                     if(conditionsResponse.status == 200) {
                         // set the available market types
-                        self.conditions = conditionsResponse.data.conditions || [];
-                        self.categories = conditionsResponse.data.categories || [];
-                        self.categories.forEach(x => x['opened'] = false);
+                        self.conditions = conditionsResponse.data.conditions.map(x => new UserMarketNegotiationCondition(x)) || [];
+                        self.categories = this.mutateCategories(conditionsResponse.data.categories) || [];
+                        console.log(self.categories);
+                        this.resetCategorySelection(this.categories);
                     } else {
                         console.error(err);    
                     }
@@ -81,14 +138,73 @@
                     console.error(err);
                 });
             },
+            resetCategorySelection(cats) {
+                cats.forEach(cat => {
+                    cat.selected = null;
+                    if(cat.children) {
+                        this.resetCategorySelection(cat.children);
+                    }
+                });
+            },
             applyCondition(condition) {
-                console.log(condition);
+                this.appliedConditions.splice(0, this.appliedConditions.length);
+                // add condition if not already exists
+                if(this.appliedConditions.indexOf(condition) == -1) {
+                    this.appliedConditions.push(condition);
+                }
+
+                let removable = {
+                    title: condition.title
+                };
+                removable.callback = () => {
+                    this.appliedConditions.splice(0, this.appliedConditions.length);
+                    this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
+                    this.show_options = false;
+                    Vue.nextTick(() => {
+                        this.show_options = true;
+                    });
+                };
+                this.removableConditions.splice(0, this.removableConditions.length);
+                this.removableConditions.push(removable);
             },
             applyCategory(category) {
-                this.categories.forEach(x => x.opened = false); // reset
+                this.chosen_top_level_category = category;
+                this.resetCategorySelection(this.categories);
+                this.updateCategoryConditions();
 
-                category.opened = true;
-                console.log(category);
+                let removable = {
+                    title: category.title
+                };
+                removable.callback = () => {
+                    this.chosen_top_level_category = null;
+                    this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
+                    this.resetCategorySelection(this.categories);
+                    this.updateCategoryConditions();
+                    this.show_options = false;
+                    Vue.nextTick(() => {
+                        this.show_options = true;
+                    });
+                };
+                this.removableConditions.splice(0, this.removableConditions.length);
+                this.removableConditions.push(removable);
+            },
+            recurseSelected(category) {
+                if(category.children) {
+                    category.children.forEach((child) => {
+                        this.recurseSelected(child);
+                    });
+                }
+                if(category.selected) {
+                    this.appliedConditions.push(category.selected);
+                }
+            },
+            updateCategoryConditions(changed) {
+                Vue.nextTick(() => {
+                    this.appliedConditions.splice(0, this.appliedConditions.length);
+                    if(this.chosen_top_level_category) {
+                        this.recurseSelected(this.chosen_top_level_category);
+                    }
+                });
             }
         },
         created() {

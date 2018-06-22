@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\TradeScreen;
+namespace App\Http\Controllers\TradeScreen\MarketRequest;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Market\MarketConditionCategory;
-use App\Models\Market\MarketCondition;
+use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
+use App\Models\Market\UserMarket;
 
-class MarketConditionsController extends Controller
+class UserMarketController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,12 +16,7 @@ class MarketConditionsController extends Controller
      */
     public function index()
     {
-        $categories = MarketConditionCategory::topLevel()
-            ->with(['marketConditions', 'children', 'children.marketConditions'])
-            ->get();
-        $conditions = MarketCondition::topLevel()->get();
-
-        return response()->json(compact('categories', 'conditions'));
+        //
     }
 
     /**
@@ -40,9 +35,31 @@ class MarketConditionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UserMarketStoreRequest $request)
     {
-        //
+        $data = $request->all();
+
+        // user market
+        $data['user_id'] = $request->user()->id;
+        $userMarket = UserMarket::create($data);
+
+        // negotiation
+        $data['current_market_negotiation']['user_id'] = $request->user()->id;
+        $marketNegotiation = $userMarket
+            ->marketNegotiations()
+            ->create($data['current_market_negotiation']);
+
+        $userMarket
+            ->currentMarketNegotiation()
+            ->associate($marketNegotiation)
+            ->save();
+
+        // conditions
+        $marketNegotiationConditions = $marketNegotiation
+            ->marketConditions()
+            ->sync(collect($data['current_market_negotiation']['conditions'])->pluck('id'));
+
+        return response()->json($userMarket);
     }
 
     /**

@@ -6,14 +6,16 @@ export default class UserMarketQuote {
         // default public
         const defaults = {
             id: "",
+            is_maker: false,
+            is_interest: false,
 		    bid_only: false,
 		    offer_only: false,
-		    vol_spread: "",
-		    created_at: moment()
+		    vol_spread: null,
+		    time: "",
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -25,7 +27,7 @@ export default class UserMarketQuote {
     *   setParent - Set the parent UserMarketRequest
     *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
     */
-    setParent(user_market_request) {
+    setMarketRequest(user_market_request) {
         this._user_market_request = user_market_request;
     }
 
@@ -33,7 +35,7 @@ export default class UserMarketQuote {
     *   getParent - Get the parent UserMarketRequest
     *   @return {UserMarketRequest}
     */
-    getParent() {
+    getMarketRequest() {
         return this._user_market_request;
     }
 

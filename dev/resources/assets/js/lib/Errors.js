@@ -2,8 +2,8 @@ module.exports =  class Errors {
     /**
      * Create a new Errors instance.
      */
-    constructor() {
-        this.errors = {};
+    constructor(errors) {
+        this.errors = errors || {};
     }
 
 
