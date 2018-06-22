@@ -91837,7 +91837,9 @@ var render = function() {
                                 _c("b-form-input", {
                                   attrs: {
                                     id: "outright-strike-0",
-                                    type: "number"
+                                    type: "number",
+                                    min: "0",
+                                    required: ""
                                   },
                                   model: {
                                     value: field.strike,

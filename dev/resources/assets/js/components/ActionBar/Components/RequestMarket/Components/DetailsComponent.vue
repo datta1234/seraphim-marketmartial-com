@@ -26,9 +26,9 @@
 		      				<b-col v-for="field in form_data.fields" cols="3">
 		      					<b-form-input id="outright-strike-0" 
 		      						type="number"
-		      						
+		      						min="0"
 									v-model="field.strike"
-									>
+									required>
 		      					</b-form-input>
 		      				</b-col>
 						</b-row>
