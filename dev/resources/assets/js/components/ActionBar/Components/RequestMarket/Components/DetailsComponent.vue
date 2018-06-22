@@ -112,7 +112,7 @@
         },
         mounted() {
     		
-    		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
+    		this.form_data.fields.push({is_selected:true,strike: null,quantity: null});
             
             switch(this.data.index_market_object.trade_structure) {
             	case 'Outright':
@@ -121,23 +121,17 @@
             		break;
             	case 'Risky':
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
-
-            		this.form_data.fields[0].is_selected = true;
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
             		this.display.disable_choice = true,
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
-
-            		this.form_data.fields[0].is_selected = true;
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
             		this.display.show_expiry = true,
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
-
-            		this.form_data.fields[0].is_selected = true;
             		this.chosen_option = 0;
             		break;
             	default:

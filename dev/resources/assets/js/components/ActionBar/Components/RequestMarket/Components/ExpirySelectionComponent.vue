@@ -70,7 +70,6 @@
                     console.error(err);
                 });
             },
-
         },
         mounted() {
             this.loadExpiryDate();

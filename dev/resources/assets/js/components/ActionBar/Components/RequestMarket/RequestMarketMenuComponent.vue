@@ -9,7 +9,7 @@
                 {{ modalTitle }}
             </div>
 
-            <component v-bind:is="controllers[modal_data.selected_step_component]" :callback="loadController" :modal_data="modal_data"></component>
+            <component v-bind:is="controllers[modal_data.selected_step_component]" :close_modal="hideModal" :callback="loadController" :modal_data="modal_data"></component>
 
            <!-- Modal footer content -->
            <div slot="modal-footer" class="w-100">
@@ -33,21 +33,6 @@
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     import Details from './Components/DetailsComponent.vue';
     import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
-    
-    /*market/{marketId}/market-request
-    {
-        "trade_structure": "Outright",
-        "trade_structure_groups": [{
-            "is_selected": "1",
-            "stock_code"://either this one
-            "market_id": // or this one not both
-            "fields": {
-                "Expiration Date": "lol",
-                "Strike": "lol",
-                "Quantity": "lol"
-            }
-        }]
-    }*/
 
     export default {
         name: 'RequestMarketMenu',
@@ -70,7 +55,7 @@
                     step: 0,
                     show_modal: false,
                     modal_ref: 'request-market-ref',
-                    selected_step_component: null
+                    selected_step_component: null,
                 },
                 controllers: {
                     Selections: StepSelection,
