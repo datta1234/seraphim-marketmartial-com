@@ -17,7 +17,6 @@ class CreateMarketNegotiationConditionTable extends Migration
             $table->increments('id');
             $table->integer('market_negotiation_id')->unsigned();
             $table->integer('market_condition_id')->unsigned();
-            $table->boolean('is_private');
             $table->timestamps();
 
             $table->foreign('market_negotiation_id')

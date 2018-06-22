@@ -48,10 +48,6 @@
             return {
                 user_market: null,
                 current_negotiation: null,
-
-                user_market_bid: null,
-                user_market_offer: null,
-
                 isActive: false,
             };
         },
@@ -60,6 +56,7 @@
                 return {
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': this.market_request_state == 'request',
+                    'market-request-vol': this.market_request_state == 'request-vol',
                     'market-alert': this.market_request_state == 'alert',
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,

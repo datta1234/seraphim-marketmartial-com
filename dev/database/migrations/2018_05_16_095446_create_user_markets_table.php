@@ -17,10 +17,9 @@ class CreateUserMarketsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();
             $table->integer('user_market_request_id')->unsigned();
-            $table->integer('user_market_status_id')->unsigned();
             $table->integer('current_market_negotiation_id')->unsigned()->nullable();
-            $table->boolean('is_trade_away');
-            $table->boolean('is_market_maker_notified');
+            $table->boolean('is_trade_away')->default(false);
+            $table->boolean('is_market_maker_notified')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
@@ -29,9 +28,6 @@ class CreateUserMarketsTable extends Migration
 
             $table->foreign('user_market_request_id')
                 ->references('id')->on('user_market_requests');
-
-            $table->foreign('user_market_status_id')
-                ->references('id')->on('user_market_statuses');
         });
 
         Schema::table('user_market_requests', function (Blueprint $table){

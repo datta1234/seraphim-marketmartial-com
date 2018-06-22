@@ -32,6 +32,14 @@
 		}
 	}
 
+	.market-tab.market-request-vol {
+		border: 0.15em solid $mm-market-intrest;
+
+		.market-tab-state {
+			color: #fff;
+		}
+	}
+
 	.market-tab.market-request-grey {
 		border: 0.15em solid $mm-market-intrest-greyed;
 

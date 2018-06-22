@@ -32,18 +32,12 @@ class UserMarket extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'is_trade_away',
         'is_market_maker_notified',
+        'user_market_request_id',
     ];
 
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function userMarketStatuses()
-    {
-        return $this->belongsTo('App\Models\Market\UserMarketStatus','user_market_status_id');
-    }
 
     /**
     * Return relation based of _id_foreign index
@@ -76,16 +70,7 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function chosenUserMarketRequests()
-    {
-        return $this->hasMany('App\Models\MarketRequest\UserMarketRequest','chosen_user_market_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function userMarketRequests()
+    public function userMarketRequest()
     {
         return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
     }
@@ -121,8 +106,51 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function users()
+    public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
+
+    /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
+    public function preFormattedQuote()
+    {
+        return [
+            "id"    => $this->id,
+            "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
+            "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
+            "bid_only" => $this->currentMarketNegotiation->offer == null,
+            "offer_only" => $this->currentMarketNegotiation->bid == null,
+            "vol_spread" => (
+                !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
+                $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
+                null 
+            ),
+            "time" => $this->created_at->format("H:i"),
+        ];
+    }
+
+    /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
+    public function preFormatted()
+    {
+        return [
+            "id"    => $this->id,
+            "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
+            "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
+            "bid_only" => $this->currentMarketNegotiation->offer == null,
+            "offer_only" => $this->currentMarketNegotiation->bid == null,
+            "vol_spread" => (
+                !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
+                $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
+                null 
+            ),
+            "time" => $this->created_at->format("H:i"),
+        ];
+    }
+
 }

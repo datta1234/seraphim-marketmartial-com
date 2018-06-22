@@ -5334,9 +5334,14 @@ function concat() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserMarket__ = __webpack_require__(41);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__ = __webpack_require__(505);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
 
 var UserMarketRequest = function () {
     function UserMarketRequest(options) {
@@ -5365,7 +5370,7 @@ var UserMarketRequest = function () {
             updated_at: moment()
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
+            if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
                 if (defaults[key] instanceof moment) {
                     _this[key] = moment(_this[key]);
@@ -5381,8 +5386,13 @@ var UserMarketRequest = function () {
         }
 
         // register quotes
-        if (options && options.user_market_quotes) {
-            this.addUserMarketQuotes(options.user_market_quotes);
+        if (options && options.quotes) {
+            this.addUserMarketQuotes(options.quotes);
+        }
+
+        // register user_market
+        if (options && options.user_market) {
+            this.setUserMarket(options.user_market);
         }
     }
 
@@ -5393,8 +5403,11 @@ var UserMarketRequest = function () {
 
 
     _createClass(UserMarketRequest, [{
-        key: "addUserMarketQuote",
+        key: 'addUserMarketQuote',
         value: function addUserMarketQuote(user_market_quote) {
+            if (!(user_market_quote instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */])) {
+                user_market_quote = new __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */](user_market_quote);
+            }
             user_market_quote.setMarketRequest(this);
             this.quotes.push(user_market_quote);
         }
@@ -5405,7 +5418,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "addUserMarketQuotes",
+        key: 'addUserMarketQuotes',
         value: function addUserMarketQuotes(user_market_quotes) {
             var _this2 = this;
 
@@ -5420,7 +5433,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "setChosenUserMarket",
+        key: 'setChosenUserMarket',
         value: function setChosenUserMarket(user_market) {
             user_market.setMarketRequest(this);
             this.chosen_user_market = user_market;
@@ -5432,7 +5445,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "getChosenUserMarket",
+        key: 'getChosenUserMarket',
         value: function getChosenUserMarket() {
             return this.chosen_user_market;
         }
@@ -5443,10 +5456,37 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "setUserMarketQuote",
+        key: 'setUserMarketQuote',
         value: function setUserMarketQuote(user_market_quote) {
             user_market_quote.setMarketRequest(this);
             this.quote = user_market_quote;
+        }
+
+        /**
+        *   setUserMarket - Set the UserMarketRequest UserMarker
+        *   @param {UserMarket} user_market - UserMarket object
+        */
+
+    }, {
+        key: 'setUserMarket',
+        value: function setUserMarket(user_market) {
+            if (!(user_market instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */])) {
+                user_market = new __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */](user_market);
+            }
+            console.log(user_market);
+            user_market.setMarketRequest(this);
+            this.user_market = user_market;
+        }
+
+        /**
+        *   getUserMarket - Set the UserMarketRequest UserMarker
+        *   @param {UserMarket} user_market - UserMarket object
+        */
+
+    }, {
+        key: 'getUserMarket',
+        value: function getUserMarket() {
+            return this.user_market;
         }
 
         /**
@@ -5455,7 +5495,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "addTradeItem",
+        key: 'addTradeItem',
         value: function addTradeItem(group, title, value) {
             if (!this.trade_items[group]) {
                 this.trade_items[group] = {};
@@ -5469,7 +5509,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "addTradeItems",
+        key: 'addTradeItems',
         value: function addTradeItems(trade_items) {
             var _this3 = this;
 
@@ -5487,7 +5527,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "setMarket",
+        key: 'setMarket',
         value: function setMarket(market) {
             this._market = market;
         }
@@ -5498,7 +5538,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "getMarket",
+        key: 'getMarket',
         value: function getMarket() {
             return this._market;
         }
@@ -5508,7 +5548,7 @@ var UserMarketRequest = function () {
         */
 
     }, {
-        key: "toJSON",
+        key: 'toJSON',
         value: function toJSON() {
             var _this4 = this;
 
@@ -5874,8 +5914,10 @@ var UserMarketNegotiation = function () {
             id: "",
             bid: "",
             offer: "",
-            bid_qty: 0,
-            offer_qty: 0,
+            bid_qty: "",
+            offer_qty: "",
+            is_repeat: false,
+            has_premium_calc: false,
             bid_premium: "",
             offer_premium: "",
             is_put: false,
@@ -5883,7 +5925,7 @@ var UserMarketNegotiation = function () {
             created_at: moment()
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
+            if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
             } else {
                 _this[key] = defaults[key];
@@ -5971,6 +6013,8 @@ var UserMarketNegotiation = function () {
                 offer: this.offer,
                 bid_qty: this.bid_qty,
                 offer_qty: this.offer_qty,
+                is_repeat: this.is_repeat,
+                has_premium_calc: this.has_premium_calc,
                 bid_premium: this.bid_premium,
                 offer_premium: this.offer_premium,
                 conditions: this.conditions.map(function (x) {
@@ -8876,12 +8920,13 @@ Popper.Defaults = Defaults;
     data: function data() {
         return {
             market_request_state: '',
-            market_request_state_label: ''
+            market_request_state_label: '',
+            user_market_bid: '',
+            user_market_offer: ''
         };
     },
     methods: {
         loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
         calcMarketState: function calcMarketState() {
@@ -8895,12 +8940,24 @@ Popper.Defaults = Defaults;
             // TODO: add logic for if current user then "SENT"
             switch (this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
-                    this.market_request_state = '';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    if (this.marketRequest.user_market) {
+                        this.market_request_state = 'request-vol';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
+                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
+                    } else {
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "REQUEST";
+                    }
                     break;
                 case "REQUEST-SENT-VOL":
-                    this.market_request_state = 'alert';
-                    this.market_request_state_label = this.marketRequest.attributes.vol_spread + " VOL SPREAD";
+                    if (this.marketRequest.quotes.length > 0) {
+                        this.market_request_state = 'alert';
+                        this.market_request_state_label = "RECEIVED";
+                    } else {
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "SENT";
+                    }
                     break;
                 case "REQUEST":
                     this.market_request_state = 'request';
@@ -20382,7 +20439,7 @@ var Market = function () {
             is_displayed: true
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
+            if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
             } else {
                 _this[key] = defaults[key];
@@ -20845,7 +20902,7 @@ var UserMarket = function () {
 
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
+            if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
             } else {
                 _this[key] = defaults[key];
@@ -20976,6 +21033,7 @@ var UserMarket = function () {
 
             return axios.post("/trade/market-request/" + this.user_market_request_id + "/user-market", this.prepareStore()).then(function (response) {
                 console.log(response);
+                return response;
             }).catch(function (err) {
                 console.error(err);
                 return new __WEBPACK_IMPORTED_MODULE_0__Errors___default.a(err);
@@ -70985,8 +71043,9 @@ Vue.component('market-tab', __webpack_require__(367));
 // Interaction Bar Component + children
 Vue.component('interaction-bar', __webpack_require__(394));
 Vue.component('ibar-user-market-title', __webpack_require__(424));
-Vue.component('ibar-negotiation-history-contracts', __webpack_require__(427));
-Vue.component('ibar-market-negotiation-contracts', __webpack_require__(430));
+Vue.component('ibar-negotiation-history-contracts', __webpack_require__(496));
+Vue.component('ibar-negotiation-history-market', __webpack_require__(499));
+Vue.component('ibar-market-negotiation-contracts', __webpack_require__(502));
 Vue.component('ibar-apply-conditions', __webpack_require__(433));
 
 // Action Bar Component
@@ -84429,10 +84488,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             user_market: null,
             current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
             isActive: false
         };
     },
@@ -84442,6 +84497,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return {
                 'market-request-grey': this.market_request_state == 'request-grey',
                 'market-request': this.market_request_state == 'request',
+                'market-request-vol': this.market_request_state == 'request-vol',
                 'market-alert': this.market_request_state == 'alert',
                 'market-confirm': this.market_request_state == 'confirm',
                 'active': this.isActive
@@ -86559,6 +86615,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -86581,7 +86646,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
             proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
 
-            removable_conditions: []
+            removable_conditions: [],
+
+            errors: []
         };
     },
 
@@ -86600,13 +86667,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         sendQuote: function sendQuote() {
-            console.log(this.proposed_user_market);
+            var _this = this;
+
             this.proposed_user_market.store().then(function (response) {
                 console.log("Got It: ", response);
+                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
+            }).catch(function (err) {
+                _this.errors = err.errors;
             });
         },
         reset: function reset() {
-            var _this = this;
+            var _this2 = this;
 
             var defaults = {
                 state_premium_calc: false,
@@ -86615,11 +86686,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 market_history: []
             };
             Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
+                _this2[k] = defaults[k];
             });
         },
         init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
             this.reset(); // clear current state
 
             // set up ui data
@@ -86659,10 +86729,21 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.proposed_user_market.negotiations }
-      }),
+      _vm.marketRequest.quotes
+        ? _c("ibar-negotiation-history-market", {
+            staticClass: "mb-3",
+            attrs: { history: _vm.marketRequest.quotes }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.marketRequest.chosen_user_market
+        ? _c("ibar-negotiation-history-contracts", {
+            staticClass: "mb-2",
+            attrs: {
+              history: _vm.marketRequest.chosen_user_market.negotiations
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
@@ -86677,6 +86758,25 @@ var render = function() {
             "b-col",
             { attrs: { cols: "10" } },
             [
+              _vm.errors.length > 1
+                ? _c(
+                    "b-row",
+                    _vm._l(_vm.errors, function(error) {
+                      return _c(
+                        "b-col",
+                        { staticClass: "danger", attrs: { cols: "12" } },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(error) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    })
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _vm.removable_conditions.length > 0
                 ? _c(
                     "b-row",
@@ -88517,394 +88617,12 @@ if (false) {
 }
 
 /***/ }),
-/* 427 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(428)
-/* template */
-var __vue_template__ = __webpack_require__(429)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/Components/NegotiationHistoryContracts.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-05ed7bfc", Component.options)
-  } else {
-    hotAPI.reload("data-v-05ed7bfc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 428 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        history: {
-            type: Array
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 429 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-negotiation-history" } },
-    [
-      _c(
-        "b-col",
-        _vm._l(_vm.history, function(item) {
-          return _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c(
-                    "b-row",
-                    [
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.bid))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.offer))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } }, [
-                _c("p", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(item.time))
-                ])
-              ])
-            ],
-            1
-          )
-        })
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-05ed7bfc", module.exports)
-  }
-}
-
-/***/ }),
-/* 430 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(1)
-/* script */
-var __vue_script__ = __webpack_require__(431)
-/* template */
-var __vue_template__ = __webpack_require__(432)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiationContracts.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1640b262", Component.options)
-  } else {
-    hotAPI.reload("data-v-1640b262", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 431 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(11);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketNegotiation: {
-            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {};
-    },
-    mounted: function mounted() {
-        console.log(this.marketNegotiation);
-    }
-});
-
-/***/ }),
-/* 432 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    {
-      staticClass: "ibar market-negotiation",
-      attrs: { dusk: "ibar-market-negotiation" }
-    },
-    [
-      _c(
-        "b-col",
-        [
-          _c(
-            "b-row",
-            { staticClass: "mb-3" },
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c("b-form", { attrs: { inline: "" } }, [
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
-                          model: {
-                            value: _vm.marketNegotiation.bid_qty,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
-                            },
-                            expression: "marketNegotiation.bid_qty"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Bid" },
-                          model: {
-                            value: _vm.marketNegotiation.bid,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "bid", $$v)
-                            },
-                            expression: "marketNegotiation.bid"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Offer" },
-                          model: {
-                            value: _vm.marketNegotiation.offer,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "offer", $$v)
-                            },
-                            expression: "marketNegotiation.offer"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
-                          model: {
-                            value: _vm.marketNegotiation.offer_qty,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
-                            },
-                            expression: "marketNegotiation.offer_qty"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } })
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1640b262", module.exports)
-  }
-}
-
-/***/ }),
+/* 427 */,
+/* 428 */,
+/* 429 */,
+/* 430 */,
+/* 431 */,
+/* 432 */,
 /* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -89072,8 +88790,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             return options;
         },
-        loadConditions: function loadConditions() {
+        mutateCategories: function mutateCategories(cats) {
             var _this = this;
+
+            return cats.map(function (cat) {
+                if (cat.market_conditions) {
+                    cat.market_conditions = cat.market_conditions.map(function (x) {
+                        return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
+                    });
+                }
+                if (cat.children) {
+                    cat.children = _this.mutateCategories(cat.children);
+                }
+                return cat;
+            });
+        },
+        loadConditions: function loadConditions() {
+            var _this2 = this;
 
             var self = this;
             return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/trade/market-condition').then(function (conditionsResponse) {
@@ -89082,8 +88815,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     self.conditions = conditionsResponse.data.conditions.map(function (x) {
                         return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
                     }) || [];
-                    self.categories = conditionsResponse.data.categories || [];
-                    _this.resetCategorySelection(_this.categories);
+                    self.categories = _this2.mutateCategories(conditionsResponse.data.categories) || [];
+                    console.log(self.categories);
+                    _this2.resetCategorySelection(_this2.categories);
                 } else {
                     console.error(err);
                 }
@@ -89093,17 +88827,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetCategorySelection: function resetCategorySelection(cats) {
-            var _this2 = this;
+            var _this3 = this;
 
             cats.forEach(function (cat) {
                 cat.selected = null;
                 if (cat.children) {
-                    _this2.resetCategorySelection(cat.children);
+                    _this3.resetCategorySelection(cat.children);
                 }
             });
         },
         applyCondition: function applyCondition(condition) {
-            var _this3 = this;
+            var _this4 = this;
 
             this.appliedConditions.splice(0, this.appliedConditions.length);
             // add condition if not already exists
@@ -89115,18 +88849,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: condition.title
             };
             removable.callback = function () {
-                _this3.appliedConditions.splice(0, _this3.appliedConditions.length);
-                _this3.removableConditions.splice(_this3.removableConditions.indexOf(removable), 1);
-                _this3.show_options = false;
+                _this4.appliedConditions.splice(0, _this4.appliedConditions.length);
+                _this4.removableConditions.splice(_this4.removableConditions.indexOf(removable), 1);
+                _this4.show_options = false;
                 Vue.nextTick(function () {
-                    _this3.show_options = true;
+                    _this4.show_options = true;
                 });
             };
             this.removableConditions.splice(0, this.removableConditions.length);
             this.removableConditions.push(removable);
         },
         applyCategory: function applyCategory(category) {
-            var _this4 = this;
+            var _this5 = this;
 
             this.chosen_top_level_category = category;
             this.resetCategorySelection(this.categories);
@@ -89136,38 +88870,37 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 title: category.title
             };
             removable.callback = function () {
-                _this4.chosen_top_level_category = null;
-                _this4.removableConditions.splice(_this4.removableConditions.indexOf(removable), 1);
-                _this4.resetCategorySelection(_this4.categories);
-                _this4.updateCategoryConditions();
-                _this4.show_options = false;
+                _this5.chosen_top_level_category = null;
+                _this5.removableConditions.splice(_this5.removableConditions.indexOf(removable), 1);
+                _this5.resetCategorySelection(_this5.categories);
+                _this5.updateCategoryConditions();
+                _this5.show_options = false;
                 Vue.nextTick(function () {
-                    _this4.show_options = true;
+                    _this5.show_options = true;
                 });
             };
             this.removableConditions.splice(0, this.removableConditions.length);
             this.removableConditions.push(removable);
         },
+        recurseSelected: function recurseSelected(category) {
+            var _this6 = this;
+
+            if (category.children) {
+                category.children.forEach(function (child) {
+                    _this6.recurseSelected(child);
+                });
+            }
+            if (category.selected) {
+                this.appliedConditions.push(category.selected);
+            }
+        },
         updateCategoryConditions: function updateCategoryConditions(changed) {
-            var _this5 = this;
+            var _this7 = this;
 
             Vue.nextTick(function () {
-                _this5.appliedConditions.splice(0, _this5.appliedConditions.length);
-                var recurseSelected = function recurseSelected(category) {
-                    var selected = [];
-                    if (category.children) category.children.forEach(function (child) {
-                        selected = selected.concat(recurseSelected(child));
-                    });
-                    if (category.selected) {
-                        selected.push(category.selected);
-                    }
-                    return selected;
-                };
-
-                if (_this5.chosen_top_level_category) {
-                    recurseSelected(_this5.chosen_top_level_category).forEach(function (newItem) {
-                        _this5.appliedConditions.push(newItem);
-                    });
+                _this7.appliedConditions.splice(0, _this7.appliedConditions.length);
+                if (_this7.chosen_top_level_category) {
+                    _this7.recurseSelected(_this7.chosen_top_level_category);
                 }
             });
         }
@@ -89203,7 +88936,7 @@ var UserMarketNegotiationCondition = function () {
             created_at: moment()
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
-            if (options && options[key]) {
+            if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
             } else {
                 _this[key] = defaults[key];
@@ -95288,6 +95021,750 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 490 */,
+/* 491 */,
+/* 492 */,
+/* 493 */,
+/* 494 */,
+/* 495 */,
+/* 496 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(497)
+/* template */
+var __vue_template__ = __webpack_require__(498)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-08d739c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-08d739c2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 497 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        history: {
+            type: Array
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 498 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-negotiation-history-contracts" } },
+    [
+      _c(
+        "b-col",
+        _vm._l(_vm.history, function(item) {
+          return _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c(
+                    "b-row",
+                    [
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.bid))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.offer))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(item.time))
+                ])
+              ])
+            ],
+            1
+          )
+        })
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-08d739c2", module.exports)
+  }
+}
+
+/***/ }),
+/* 499 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(500)
+/* template */
+var __vue_template__ = __webpack_require__(501)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-27412ed5", Component.options)
+  } else {
+    hotAPI.reload("data-v-27412ed5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 500 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        history: {
+            type: Array
+        }
+    },
+    methods: {
+        getState: function getState(item) {
+            if (item.bid_only) {
+                return "BID ONLY";
+            }
+            if (item.offer_only) {
+                return "OFFER ONLY";
+            }
+            if (item.vol_spread != null) {
+                return item.vol_spread + " VOL SPREAD";
+            }
+            return "";
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 501 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-negotiation-history-market" } },
+    [
+      _c(
+        "b-col",
+        [
+          _vm._l(_vm.history, function(item) {
+            return _c(
+              "b-row",
+              [
+                _c(
+                  "b-col",
+                  { attrs: { cols: "10" } },
+                  [
+                    item.is_interest
+                      ? _c(
+                          "b-row",
+                          { attrs: { "no-gutters": "" } },
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.getState(item)) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _c(
+                                  "b-btn",
+                                  {
+                                    staticClass: "w-100",
+                                    attrs: { size: "sm", variant: "secondary" }
+                                  },
+                                  [_vm._v("HOLD")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _c(
+                                  "b-btn",
+                                  {
+                                    staticClass: "w-100",
+                                    attrs: { size: "sm", variant: "primary" }
+                                  },
+                                  [_vm._v("ACCEPT")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      : _c(
+                          "b-row",
+                          { attrs: { "no-gutters": "" } },
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "12" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.getState(item)) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("b-col", { attrs: { cols: "2" } }, [
+                  _c("p", { staticClass: "text-center" }, [
+                    _c("small", [_vm._v(_vm._s(item.time))])
+                  ])
+                ])
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { staticClass: "justify-content-md-center" },
+            [
+              _c("b-col", { staticClass: "mt-2" }, [
+                _c("p", [
+                  _c("small", [
+                    _vm._v(
+                      "Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed."
+                    )
+                  ])
+                ])
+              ])
+            ],
+            1
+          )
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-27412ed5", module.exports)
+  }
+}
+
+/***/ }),
+/* 502 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(1)
+/* script */
+var __vue_script__ = __webpack_require__(503)
+/* template */
+var __vue_template__ = __webpack_require__(504)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-51ca6a6a", Component.options)
+  } else {
+    hotAPI.reload("data-v-51ca6a6a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 503 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {};
+    },
+    mounted: function mounted() {
+        console.log(this.marketNegotiation);
+    }
+});
+
+/***/ }),
+/* 504 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    {
+      staticClass: "ibar market-negotiation",
+      attrs: { dusk: "ibar-market-negotiation-market" }
+    },
+    [
+      _c(
+        "b-col",
+        [
+          _c(
+            "b-row",
+            { staticClass: "mb-3" },
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c("b-form", { attrs: { inline: "" } }, [
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Qty" },
+                          model: {
+                            value: _vm.marketNegotiation.bid_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
+                            },
+                            expression: "marketNegotiation.bid_qty"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Bid" },
+                          model: {
+                            value: _vm.marketNegotiation.bid,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid", $$v)
+                            },
+                            expression: "marketNegotiation.bid"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Offer" },
+                          model: {
+                            value: _vm.marketNegotiation.offer,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer", $$v)
+                            },
+                            expression: "marketNegotiation.offer"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: { type: "text", placeholder: "Qty" },
+                          model: {
+                            value: _vm.marketNegotiation.offer_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
+                            },
+                            expression: "marketNegotiation.offer_qty"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-51ca6a6a", module.exports)
+  }
+}
+
+/***/ }),
+/* 505 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserMarketQuote = function () {
+    function UserMarketQuote(options) {
+        var _this = this;
+
+        _classCallCheck(this, UserMarketQuote);
+
+        // default internal
+        this._user_market_request = null;
+        // default public
+        var defaults = {
+            id: "",
+            is_maker: false,
+            is_interest: false,
+            bid_only: false,
+            offer_only: false,
+            vol_spread: null,
+            time: ""
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && typeof options[key] !== 'undefined') {
+                _this[key] = options[key];
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+    }
+
+    /**
+    *   setParent - Set the parent UserMarketRequest
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
+    */
+
+
+    _createClass(UserMarketQuote, [{
+        key: "setMarketRequest",
+        value: function setMarketRequest(user_market_request) {
+            this._user_market_request = user_market_request;
+        }
+
+        /**
+        *   getParent - Get the parent UserMarketRequest
+        *   @return {UserMarketRequest}
+        */
+
+    }, {
+        key: "getMarketRequest",
+        value: function getMarketRequest() {
+            return this._user_market_request;
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this2 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this2[key];
+                }
+            });
+            return json;
+        }
+    }]);
+
+    return UserMarketQuote;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarketQuote);
 
 /***/ })
 /******/ ]);

@@ -109,6 +109,17 @@
                 });
                 return options;
             },
+            mutateCategories(cats) {
+                return cats.map(cat => {
+                    if(cat.market_conditions) {
+                        cat.market_conditions = cat.market_conditions.map(x => new UserMarketNegotiationCondition(x));
+                    }
+                    if(cat.children) {
+                        cat.children = this.mutateCategories(cat.children);
+                    }
+                    return cat;
+                });
+            },
             loadConditions() {
                 let self = this;
                 return axios.get('/trade/market-condition')
@@ -116,7 +127,8 @@
                     if(conditionsResponse.status == 200) {
                         // set the available market types
                         self.conditions = conditionsResponse.data.conditions.map(x => new UserMarketNegotiationCondition(x)) || [];
-                        self.categories = conditionsResponse.data.categories || [];
+                        self.categories = this.mutateCategories(conditionsResponse.data.categories) || [];
+                        console.log(self.categories);
                         this.resetCategorySelection(this.categories);
                     } else {
                         console.error(err);    
@@ -176,25 +188,21 @@
                 this.removableConditions.splice(0, this.removableConditions.length);
                 this.removableConditions.push(removable);
             },
+            recurseSelected(category) {
+                if(category.children) {
+                    category.children.forEach((child) => {
+                        this.recurseSelected(child);
+                    });
+                }
+                if(category.selected) {
+                    this.appliedConditions.push(category.selected);
+                }
+            },
             updateCategoryConditions(changed) {
                 Vue.nextTick(() => {
                     this.appliedConditions.splice(0, this.appliedConditions.length);
-                    let recurseSelected = function(category) {
-                        let selected = [];
-                        if(category.children)
-                        category.children.forEach((child) => {
-                            selected = selected.concat(recurseSelected(child));
-                        });
-                        if(category.selected) {
-                            selected.push(category.selected);
-                        }
-                        return selected;
-                    };
-
                     if(this.chosen_top_level_category) {
-                        recurseSelected(this.chosen_top_level_category).forEach(newItem => {
-                            this.appliedConditions.push(newItem);
-                        });
+                        this.recurseSelected(this.chosen_top_level_category);
                     }
                 });
             }

@@ -11791,6 +11791,16 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
+.trade-section.light-theme .market-tab.market-request-vol,
+.trade-section.dark-theme .market-tab.market-request-vol {
+  border: 0.15em solid #2358BD;
+}
+
+.trade-section.light-theme .market-tab.market-request-vol .market-tab-state,
+.trade-section.dark-theme .market-tab.market-request-vol .market-tab-state {
+  color: #fff;
+}
+
 .trade-section.light-theme .market-tab.market-request-grey,
 .trade-section.dark-theme .market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;

@@ -17,7 +17,7 @@ export default class UserMarket {
 
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -120,7 +120,7 @@ export default class UserMarket {
         return axios.post("/trade/market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
         .then(response => {
             console.log(response);
-
+            return response;
         })
         .catch(err => {
             console.error(err);

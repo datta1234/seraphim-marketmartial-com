@@ -12,7 +12,7 @@ export default class UserMarketNegotiationCondition {
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];

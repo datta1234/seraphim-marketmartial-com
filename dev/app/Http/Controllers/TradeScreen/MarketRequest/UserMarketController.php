@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TradeScreen\MarketRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
+use App\Models\Market\UserMarket;
 
 class UserMarketController extends Controller
 {
@@ -36,7 +37,29 @@ class UserMarketController extends Controller
      */
     public function store(UserMarketStoreRequest $request)
     {
-        return response()->json($request->all());
+        $data = $request->all();
+
+        // user market
+        $data['user_id'] = $request->user()->id;
+        $userMarket = UserMarket::create($data);
+
+        // negotiation
+        $data['current_market_negotiation']['user_id'] = $request->user()->id;
+        $marketNegotiation = $userMarket
+            ->marketNegotiations()
+            ->create($data['current_market_negotiation']);
+
+        $userMarket
+            ->currentMarketNegotiation()
+            ->associate($marketNegotiation)
+            ->save();
+
+        // conditions
+        $marketNegotiationConditions = $marketNegotiation
+            ->marketConditions()
+            ->sync(collect($data['current_market_negotiation']['conditions'])->pluck('id'));
+
+        return response()->json($userMarket);
     }
 
     /**

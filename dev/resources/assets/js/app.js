@@ -41,8 +41,9 @@ Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
 // Interaction Bar Component + children
 Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
     Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
-    Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/Components/NegotiationHistoryContracts.vue'));
-    Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationContracts.vue'));
+    Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue'));
+    Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue'));
+    Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
     Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
 
 // Action Bar Component

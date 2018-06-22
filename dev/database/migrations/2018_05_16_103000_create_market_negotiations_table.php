@@ -21,7 +21,6 @@ class CreateMarketNegotiationsTable extends Migration
 
             $table->integer('market_negotiation_id')->unsigned()->nullable();
             $table->integer('user_market_id')->unsigned();
-            $table->integer('market_negotiation_status_id')->unsigned();
             
             $table->double('bid', 11, 2)->nullable();
             $table->double('offer', 11, 2)->nullable();
@@ -34,10 +33,10 @@ class CreateMarketNegotiationsTable extends Migration
             $table->double('future_reference', 11, 2)->nullable(); // what it will be
             
             // $table->double('spot_price', 11, 2)->nullable(); // current value
-            $table->boolean('has_premium_calc'); // ONLY shows to organisation of - user_id
-            $table->boolean('is_repeat');
-            $table->boolean('is_accepted');
-            $table->boolean('is_private');
+            $table->boolean('has_premium_calc')->default(false); // ONLY shows to organisation of - user_id
+            $table->boolean('is_repeat')->default(false);
+            $table->boolean('is_accepted')->default(false);
+            $table->boolean('is_private')->default(true);
 
             // conditions
             $table->boolean('cond_is_repeat_atw')->nullable();
@@ -59,9 +58,6 @@ class CreateMarketNegotiationsTable extends Migration
 
             $table->foreign('user_market_id')
                 ->references('id')->on('user_markets');
-
-            $table->foreign('market_negotiation_status_id')
-                ->references('id')->on('market_negotiation_statuses');
         });
 
         Schema::table('user_markets', function (Blueprint $table){

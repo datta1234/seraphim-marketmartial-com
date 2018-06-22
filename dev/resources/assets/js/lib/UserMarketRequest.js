@@ -1,3 +1,5 @@
+import UserMarket from './UserMarket';
+import UserMarketQuote from './UserMarketQuote';
 export default class UserMarketRequest {
 
     constructor(options) {
@@ -23,7 +25,7 @@ export default class UserMarketRequest {
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
                 if(defaults[key] instanceof moment) {
                     this[key] = moment(this[key]);
@@ -39,8 +41,13 @@ export default class UserMarketRequest {
         }
 
         // register quotes
-        if(options && options.user_market_quotes) {
-            this.addUserMarketQuotes(options.user_market_quotes);
+        if(options && options.quotes) {
+            this.addUserMarketQuotes(options.quotes);
+        }
+
+        // register user_market
+        if(options && options.user_market) {
+            this.setUserMarket(options.user_market);
         }
     }
 
@@ -49,6 +56,9 @@ export default class UserMarketRequest {
     *   @param {UserMarketQuote} user_market_quote - UserMarketQuote objects
     */
     addUserMarketQuote(user_market_quote) {
+        if(!(user_market_quote instanceof UserMarketQuote)) {
+            user_market_quote = new UserMarketQuote(user_market_quote);
+        }
         user_market_quote.setMarketRequest(this);
         this.quotes.push(user_market_quote);
     }
@@ -67,7 +77,7 @@ export default class UserMarketRequest {
     *   setUserMarket - Set the UserMarketRequest
     *   @param {UserMarket} user_market - UserMarket object
     */
-    setChosenUserMarket(user_market){
+    setChosenUserMarket(user_market) {
         user_market.setMarketRequest(this);
         this.chosen_user_market = user_market;
     }
@@ -87,6 +97,27 @@ export default class UserMarketRequest {
     setUserMarketQuote(user_market_quote){
         user_market_quote.setMarketRequest(this);
         this.quote = user_market_quote;
+    }
+
+    /**
+    *   setUserMarket - Set the UserMarketRequest UserMarker
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setUserMarket(user_market) {
+        if(!(user_market instanceof UserMarket)) {
+            user_market = new UserMarket(user_market);
+        }
+        console.log(user_market);
+        user_market.setMarketRequest(this);
+        this.user_market = user_market;
+    }
+
+    /**
+    *   getUserMarket - Set the UserMarketRequest UserMarker
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    getUserMarket() {
+        return this.user_market;
     }
 
     /**

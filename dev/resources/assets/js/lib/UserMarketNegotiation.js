@@ -9,8 +9,10 @@ export default class UserMarketNegotiation {
             id: "",
             bid: "",
             offer: "",
-            bid_qty: 0,
-            offer_qty: 0,
+            bid_qty: "",
+            offer_qty: "",
+            is_repeat: false,
+            has_premium_calc: false,
             bid_premium: "",
             offer_premium: "",
             is_put: false,
@@ -19,7 +21,7 @@ export default class UserMarketNegotiation {
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
-            if(options && options[key]) {
+            if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
             } else {
                 this[key] = defaults[key];
@@ -86,6 +88,8 @@ export default class UserMarketNegotiation {
             offer: this.offer,
             bid_qty: this.bid_qty,
             offer_qty: this.offer_qty,
+            is_repeat: this.is_repeat,
+            has_premium_calc: this.has_premium_calc,
             bid_premium: this.bid_premium,
             offer_premium: this.offer_premium,
             conditions: this.conditions.map(x => x.prepareStore()),
