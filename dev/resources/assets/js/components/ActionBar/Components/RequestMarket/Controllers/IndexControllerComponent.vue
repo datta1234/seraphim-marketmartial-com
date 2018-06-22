@@ -9,10 +9,7 @@
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
     import StructureSelection from '../Components/StructureSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
-    import OutrightDetails from '../Components/OutrightDetailsComponent.vue';
-    import RiskyDetails from '../Components/RiskyDetailsComponent.vue';
-    import FlyDetails from '../Components/FlyDetailsComponent.vue';
-    import CalendarDetails from '../Components/CalendarDetailsComponent.vue';
+    import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
     import Market from '../../../../../lib/Market';
@@ -47,11 +44,8 @@
                     Market: MarketSelection,
                     Structure: StructureSelection,
                     Expiry: ExpirySelection,
-                    Outright: OutrightDetails,
-                    Risky: RiskyDetails,
-                    Fly: FlyDetails,
-                    Calendar: CalendarDetails,
                     Confirm: ConfirmMarketRequest,
+                    Details: Details,
                 },
             };
         },
@@ -100,7 +94,7 @@
                     case 5:
                         this.index_data.index_market_object.expiry_dates = component_data;
                         console.log("CASE 5: ", this.index_data.index_market_object);
-                        this.selected_step_component = this.index_data.index_market_object.trade_structure;
+                        this.selected_step_component = 'Details';
                         console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                         break;
                     case 6:

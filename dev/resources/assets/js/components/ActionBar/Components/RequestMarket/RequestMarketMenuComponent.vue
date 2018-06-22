@@ -31,10 +31,7 @@
     import MarketSelection from './Components/MarketSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
-    import OutrightDetails from './Components/OutrightDetailsComponent.vue';
-    import RiskyDetails from './Components/RiskyDetailsComponent.vue';
-    import FlyDetails from './Components/FlyDetailsComponent.vue';
-    import CalendarDetails from './Components/CalendarDetailsComponent.vue';
+    import Details from './Components/DetailsComponent.vue';
     import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
     
     /*market/{marketId}/market-request
@@ -60,10 +57,7 @@
             MarketSelection,
             StructureSelection,
             ExpirySelection,
-            OutrightDetails,
-            RiskyDetails,
-            FlyDetails,
-            CalendarDetails,
+            Details,
             ConfirmMarketRequest,
         },
         props:{
