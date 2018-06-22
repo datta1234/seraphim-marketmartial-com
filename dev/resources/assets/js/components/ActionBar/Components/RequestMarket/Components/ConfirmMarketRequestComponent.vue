@@ -3,10 +3,10 @@
         <b-container fluid>
         	<b-row class="justify-content-md-center">
                 <b-col cols="3" class="mt-2">
-                    <p>INDEX:</p>
+                    <p>{{ data.market_type.title.toUpperCase() }}:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>{{ data.index_market_object.market }}</p>
+                    <p>{{ data.index_market_object.market.title }}</p>
                 </b-col>
             </b-row>
             <b-row class="justify-content-md-center">
@@ -21,16 +21,16 @@
                 <b-col cols="3" class="mt-2">
                     <p>STRIKE:</p>
                 </b-col>
-                <b-col v-for="option in data.index_market_object.details.options" cols="3" class="mt-2">
-                	<p>{{ option.strike }}<span v-if="option.is_selected"> (CH)</span></p>
+                <b-col v-for="field in data.index_market_object.details.fields" cols="3" class="mt-2">
+                	<p>{{ field.strike }}<span v-if="field.is_selected && data.index_market_object.details.fields.length > 1"> (CH)</span></p>
                 </b-col>
             </b-row>
             <b-row class="justify-content-md-center">
                 <b-col cols="3" class="mt-2">
                     <p>QUANTITY:</p>
                 </b-col>
-                <b-col v-for="option in data.index_market_object.details.options" cols="3" class="mt-2">
-                	<p>{{ option.quantity }}</p>
+                <b-col v-for="field in data.index_market_object.details.fields" cols="3" class="mt-2">
+                	<p>{{ field.quantity }}</p>
                 </b-col>
             </b-row>
             <b-row class="justify-content-md-center">
