@@ -42,6 +42,7 @@
 
                     },
                     number_of_dates: 1,
+                    errors:null,
                 },
                 selected_step_component: null,
                 components: {
