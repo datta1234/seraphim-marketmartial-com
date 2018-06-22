@@ -12078,6 +12078,10 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
+.mm-modal {
+  display: inline-block;
+}
+
 .mm-modal .modal-content {
   background-color: #D3D8DC;
 }
