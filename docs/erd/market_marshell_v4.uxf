@@ -410,6 +410,7 @@ user_id:int(11)
 user_market_request_id: int(11)
 is_trade_away: tinyint(1)
 is_market_maker_notified: tinyint(1)
+is_on_hold: boolean (default: false)
 current_market_negotiation_id: int(11) nullable
 created_at: timestamp
 updated_at: timestamp
@@ -667,6 +668,8 @@ is_married: tinyint(1) nullable
 has_children: tinyint(1) nullable
 last_login: datetime nullable
 hobbies: text nullable
+invite_token: varchar(255) nullable
+invited_at: timestamp nullable
 created_at: timestamp
 updated_at: timestamp
 deleted_at: timestamp nullable
@@ -1108,73 +1111,24 @@ m2=1
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>280</x>
-      <y>588</y>
+      <x>105</x>
+      <y>602</y>
       <w>175</w>
-      <h>140</h>
+      <h>112</h>
     </coordinates>
-    <panel_attributes>user_notifications
+    <panel_attributes>notifications
 --
 id: int(11)
-user_id: int(11)
-data: text
-description: text
-type:  varchar(255)
+type: varchar(255)
+notifiable_type: varchar
 notifiable_id: int(11)
-user_notification_type_id: int(11)
-notifiable_type: varchar(255)
+data: text
 read_at: timestamp
 created_at: timestamp
 updated_at: timestamp
 
 layer=1</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>56</x>
-      <y>609</y>
-      <w>147</w>
-      <h>84</h>
-    </coordinates>
-    <panel_attributes>user_notification_types
---
-id: int(11)
-title: varchar(255)
-created_at: timestamp
-updated_at: timestamp
-
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>196</x>
-      <y>651</y>
-      <w>98</w>
-      <h>35</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=n
-m2=0..1
-</panel_attributes>
-    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>448</x>
-      <y>609</y>
-      <w>182</w>
-      <h>91</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=0..1
-m2=n
-</panel_attributes>
-    <additional_attributes>240.0;100.0;70.0;100.0;70.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -2354,6 +2308,21 @@ m2=1</panel_attributes>
     <panel_attributes>Market
 --
 bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>280</x>
+      <y>637</y>
+      <w>133</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>
+Notification Class per Type
+
+Important, Alert Etc
+layer=1</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
