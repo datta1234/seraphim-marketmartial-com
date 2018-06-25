@@ -142,11 +142,11 @@
              */
             saveMarketRequest() {
                 let new_data = this.formatRequestData();
-                console.log("FINAL DATA WE SENDIN: ", new_data);
+                console.log("Data to send: ", new_data);
                 axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     if(newMarketRequestResponse.status == 200) {
-                        console.log("YAY IT SAVES YO!: ",newMarketRequestResponse);
+                        console.log("Saving: ",newMarketRequestResponse);
                         this.close_modal();
                     } else {
                         console.error(err);    

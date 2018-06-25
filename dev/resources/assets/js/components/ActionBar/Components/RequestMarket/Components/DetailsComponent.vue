@@ -22,7 +22,7 @@
                                 <b-col cols="3" offset="3" class="text-center">    
                                     <b-form-radio :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
                                 </b-col>
-                                <b-col cols="3" class="text-center">
+                                <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
                                     <b-form-radio :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
                                 </b-col>
                             </b-row>
@@ -96,7 +96,6 @@
                 this.form_data.fields.forEach( (element, index) => {
                     element.is_selected = (chosen_index == index) ? true : false;
                 });
-                console.log("YOU BE HER MATEE", this.form_data.fields);
             }
         },
         data() {

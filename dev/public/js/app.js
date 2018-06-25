@@ -91889,10 +91889,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             var new_data = this.formatRequestData();
-            console.log("FINAL DATA WE SENDIN: ", new_data);
+            console.log("Data to send: ", new_data);
             axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
-                    console.log("YAY IT SAVES YO!: ", newMarketRequestResponse);
+                    console.log("Saving: ", newMarketRequestResponse);
                     _this2.close_modal();
                 } else {
                     console.error(err);
@@ -92530,7 +92530,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.form_data.fields.forEach(function (element, index) {
                 element.is_selected = chosen_index == index ? true : false;
             });
-            console.log("YOU BE HER MATEE", this.form_data.fields);
         }
     },
     data: function data() {
@@ -92689,7 +92688,13 @@ var render = function() {
                                     "b-col",
                                     {
                                       staticClass: "text-center",
-                                      attrs: { cols: "3" }
+                                      attrs: {
+                                        cols: "3",
+                                        offset:
+                                          _vm.form_data.fields.length == 3
+                                            ? 3
+                                            : 0
+                                      }
                                     },
                                     [
                                       _c(
@@ -92982,7 +92987,7 @@ var render = function() {
         [
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "start" } },
             [
               _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
                 _c("p", [
@@ -93001,7 +93006,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "start" } },
             [
               _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
                 _c("p", [_vm._v("EXPIRY:")])
@@ -93022,7 +93027,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "start" } },
             [
               _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
                 _c("p", [_vm._v("STRIKE:")])
@@ -93051,7 +93056,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "start" } },
             [
               _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
                 _c("p", [_vm._v("QUANTITY:")])
@@ -93072,7 +93077,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "start" } },
             [
               _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
                 _c("p", [_vm._v("STRUCTURE:")])
@@ -93089,7 +93094,7 @@ var render = function() {
           _vm._v(" "),
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { attrs: { "align-h": "center" } },
             [
               _c(
                 "b-col",

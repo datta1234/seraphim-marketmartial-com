@@ -1,7 +1,7 @@
 <template>
     <div dusk="step-selections" class="step-selections">
         <b-container fluid>
-        	<b-row class="justify-content-md-center">
+            <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>{{ data.market_type.title.toUpperCase() }}:</p>
                 </b-col>
@@ -9,7 +9,7 @@
                     <p>{{ data.index_market_object.market.title }}</p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>EXPIRY:</p>
                 </b-col>
@@ -17,7 +17,7 @@
                     <p>{{ castToMoment(expiry_date) }}</p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>STRIKE:</p>
                 </b-col>
@@ -25,7 +25,7 @@
                 	<p>{{ field.strike }}<span v-if="field.is_selected && data.index_market_object.details.fields.length > 1"> (CH)</span></p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>QUANTITY:</p>
                 </b-col>
@@ -33,7 +33,7 @@
                 	<p>{{ field.quantity }}</p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>STRUCTURE:</p>
                 </b-col>
@@ -41,7 +41,7 @@
                     <p>{{ data.index_market_object.trade_structure }}</p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row align-h="center">
                 <b-col cols="6" class="mt-2">
                     <b-button class="mm-modal-market-button-alt w-100" @click="confirmDetails()">
                         Send Request
