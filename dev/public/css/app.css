@@ -12135,6 +12135,30 @@ input:checked + .slider:before {
 				 */
 }
 
+.mm-modal .modal-body .pagination span,
+.mm-modal .modal-body .pagination a {
+  border: none;
+  background-color: transparent;
+  color: #1c7c74;
+}
+
+.mm-modal .modal-body .pagination .active > a {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-body .custom-radio > label::before {
+  background-color: #FFFFFF;
+}
+
+.mm-modal .modal-body .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-info-text {
+  font-size: 0.9em;
+}
+
 .mm-modal .modal-footer {
   border-top: none;
   text-align: center;

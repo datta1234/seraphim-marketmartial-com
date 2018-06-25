@@ -4,22 +4,31 @@
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails">
-						<b-row v-if="display.show_expiry">
-                            <b-col cols="3">
-                            </b-col>
-                            <b-col v-for="date in data.index_market_object.expiry_dates" cols="3">
+						<b-row v-if="display.show_expiry" align-h="center">
+                            <b-col v-for="(date,key) in data.index_market_object.expiry_dates" 
+                                    cols="3" 
+                                    :offset="(key == 0)? 3:0"
+                                    class="text-center">
                                 <p><strong>{{ castToMoment(date) }}</strong></p>
                             </b-col>
                         </b-row>
+                        
+                        <b-form-radio-group v-if="form_data.fields.length > 1" 
+                                            id="risky-choices" 
+                                            v-model="chosen_option" 
+                                            name="choice"
+                                            class="mb-2">
+                            <b-row align-h="center">
+                                <b-col cols="3" offset="3" class="text-center">    
+                                    <b-form-radio :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
+                                </b-col>
+                                <b-col cols="3" class="text-center">
+                                    <b-form-radio :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
+                                </b-col>
+                            </b-row>
+		      		    </b-form-radio-group>
 
-						<b-form-group v-if="form_data.fields.length > 1" horizontal>
-				      		<b-form-radio-group id="risky-choices" v-model="chosen_option" name="choice">
-				        		<b-form-radio :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
-				        		<b-form-radio :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>
-				      		</b-form-radio-group>
-                    	</b-form-group>
-
-						<b-row>
+						<b-row align-h="center">
 							<b-col cols="3">
 								<label for="outright-strike-0">Strike</label>
 							</b-col>
@@ -33,7 +42,7 @@
 		      				</b-col>
 						</b-row>
 
-						<b-row>
+						<b-row align-h="center">
 							<b-col cols="3">
 								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
@@ -42,6 +51,7 @@
 		      						type="number"
 									min="0"
 									v-model="field.quantity"
+                                    placeholder="500"
 									required>
 		      					</b-form-input>
 		      				</b-col>
@@ -49,14 +59,14 @@
 	   					
 	   					<b-row v-if="form_data.fields.length > 1">
 		   					<b-col class="text-center mt-3">	
-		                		<p>
+		                		<p class="modal-info-text">
 		                			All bids/offers going forward will have to maintain the ratio you set here
 		                		</p>
 		                	</b-col>
 	   					</b-row>
 	                    
-	                    <b-form-group class="text-center">
-	                        <b-button type="submit" class="mm-modal-market-button-alt w-25 mt-3">
+	                    <b-form-group class="text-center mt-4 mb-0">
+	                        <b-button type="submit" class="mm-modal-market-button-alt w-50">
 	                            Submit
 	                        </b-button>
 	                    </b-form-group>
@@ -112,7 +122,7 @@
         },
         mounted() {
     		
-    		this.form_data.fields.push({is_selected:true,strike: null,quantity: null});
+    		this.form_data.fields.push({is_selected:true,strike: null,quantity: 500});
             
             switch(this.data.index_market_object.trade_structure) {
             	case 'Outright':
@@ -120,18 +130,18 @@
             		this.chosen_option = null;
             		break;
             	case 'Risky':
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
             		this.display.disable_choice = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
             		this.display.show_expiry = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: null});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
             		this.chosen_option = 0;
             		break;
             	default:

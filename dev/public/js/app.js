@@ -91772,26 +91772,28 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_StepSelectionComponent_vue__ = __webpack_require__(231);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_StepSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Components_StepSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_MarketSelectionComponent_vue__ = __webpack_require__(232);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_MarketSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_StructureSelectionComponent_vue__ = __webpack_require__(233);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_StructureSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_ExpirySelectionComponent_vue__ = __webpack_require__(234);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_ExpirySelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_DetailsComponent_vue__ = __webpack_require__(235);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_DetailsComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(236);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__Components_ConfirmMarketRequestComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_Market__ = __webpack_require__(34);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__ = __webpack_require__(232);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__ = __webpack_require__(234);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__ = __webpack_require__(235);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(236);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(34);
 //
 //
 //
 //
 //
 //
-
+//
+//
+//
+//
+//
 
 
 
@@ -91828,17 +91830,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     details: null
 
                 },
-                number_of_dates: 1,
-                errors: null
+                number_of_dates: 1
+            },
+            errors: {
+                message: null,
+                data: {
+                    Market: null,
+                    Structure: null,
+                    Expiry: null,
+                    Confirm: null,
+                    Details: null
+                }
             },
             selected_step_component: null,
             components: {
-                Selections: __WEBPACK_IMPORTED_MODULE_0__Components_StepSelectionComponent_vue___default.a,
-                Market: __WEBPACK_IMPORTED_MODULE_1__Components_MarketSelectionComponent_vue___default.a,
-                Structure: __WEBPACK_IMPORTED_MODULE_2__Components_StructureSelectionComponent_vue___default.a,
-                Expiry: __WEBPACK_IMPORTED_MODULE_3__Components_ExpirySelectionComponent_vue___default.a,
-                Confirm: __WEBPACK_IMPORTED_MODULE_5__Components_ConfirmMarketRequestComponent_vue___default.a,
-                Details: __WEBPACK_IMPORTED_MODULE_4__Components_DetailsComponent_vue___default.a
+                Market: __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default.a,
+                Structure: __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default.a,
+                Expiry: __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default.a,
+                Confirm: __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default.a,
+                Details: __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default.a
             }
         };
     },
@@ -91875,6 +91885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log("CASE 3: ", this.index_data.index_market_object);
                     //this.index_data.index_market_object.market = component_data;
                     this.selected_step_component = 'Structure';
+                    this.index_data.number_of_dates = 1;
                     break;
                 case 4:
                     if (component_data == 'Calendar') {
@@ -91931,12 +91942,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log("YAY IT SAVES YO!: ", newMarketRequestResponse);
                     _this2.close_modal();
                 } else {
-                    console.error("NOOOOOOOOOOOOOOO!!!!!!!!", err);
+                    console.error(err);
                 }
-            }, function (err) {
-                console.error("EVEN MORE NOOOOOOOOOOOOOOO!!!!!!!!", err);
+            }).catch(function (err) {
+                _this2.previousStep();
+                if (err.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    _this2.errors.message = err.response.data.message;
+                    _this2.loadErrorStep(err.response.data.errors);
+                } else if (err.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(err.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', err.message);
+                }
+                console.log(err.config);
             });
         },
+
+        //@TODO Finish error handeling
+        /*loadErrorStep(errors) {
+            console.log("Errors: ",errors);
+            for(let prop in errors) {
+                console.log("Validation props: ", prop);
+                console.log("Validation message: ", errors[prop]);
+                if(prop.indexOf(',') != -1) {
+                    let propArr = prop.split('.');
+                    console.log('Prop Array: ', propArr);
+                    switch () {
+                     }
+                } else {
+                    this.errors.data.Structure = errors[prop];
+                }
+            }
+        },*/
         formatRequestData: function formatRequestData() {
             var _this3 = this;
 
@@ -92058,7 +92101,7 @@ var render = function() {
                   _c(
                     "b-button",
                     {
-                      staticClass: "mm-modal-market-button w-100",
+                      staticClass: "mm-modal-market-button-alt w-100",
                       on: {
                         click: function($event) {
                           _vm.nextStep("Index")
@@ -92076,7 +92119,7 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button w-100" },
+                    { staticClass: "mm-modal-market-button-alt w-100" },
                     [_vm._v("EFP")]
                   )
                 ],
@@ -92095,7 +92138,7 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button w-100" },
+                    { staticClass: "mm-modal-market-button-alt w-100" },
                     [_vm._v("Single Stock Options")]
                   )
                 ],
@@ -92107,7 +92150,7 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button w-100" },
+                    { staticClass: "mm-modal-market-button-alt w-100" },
                     [_vm._v("Rolls")]
                   )
                 ],
@@ -92126,7 +92169,7 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button w-100" },
+                    { staticClass: "mm-modal-market-button-alt w-100" },
                     [_vm._v("Options Switch")]
                   )
                 ],
@@ -92138,7 +92181,7 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button w-100" },
+                    { staticClass: "mm-modal-market-button-alt w-100" },
                     [_vm._v("EFP Switch")]
                   )
                 ],
@@ -92226,17 +92269,17 @@ var render = function() {
         [
           _c(
             "b-row",
-            { staticClass: "justify-content-md-center" },
+            { staticClass: "text-center" },
             _vm._l(_vm.data.market_type.markets, function(market) {
               return _vm.data
                 ? _c(
                     "b-col",
-                    { staticClass: "mt-2", attrs: { cols: "6" } },
+                    { staticClass: "mt-2", attrs: { cols: "12" } },
                     [
                       _c(
                         "b-button",
                         {
-                          staticClass: "mm-modal-market-button w-100",
+                          staticClass: "mm-modal-market-button-alt w-50",
                           on: {
                             click: function($event) {
                               _vm.selectMarket(market)
@@ -92361,17 +92404,17 @@ var render = function() {
           _vm.trade_structures
             ? _c(
                 "b-row",
-                { staticClass: "justify-content-md-center" },
+                { staticClass: "text-center" },
                 _vm._l(_vm.trade_structures, function(trade_structure) {
                   return trade_structure.is_selectable
                     ? _c(
                         "b-col",
-                        { staticClass: "mt-2", attrs: { cols: "6" } },
+                        { staticClass: "mt-2", attrs: { cols: "12" } },
                         [
                           _c(
                             "b-button",
                             {
-                              staticClass: "mm-modal-market-button w-100",
+                              staticClass: "mm-modal-market-button-alt w-50",
                               on: {
                                 click: function($event) {
                                   _vm.selectStructure(trade_structure.title)
@@ -92416,6 +92459,12 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -92522,9 +92571,12 @@ var render = function() {
                   _vm.data.number_of_dates > 1
                     ? _c(
                         "b-col",
-                        { staticClass: "mt-0", attrs: { cols: "12" } },
+                        {
+                          staticClass: "mt-0 text-center",
+                          attrs: { cols: "12" }
+                        },
                         [
-                          _c("p", [
+                          _c("p", { staticClass: "modal-info-text" }, [
                             _vm._v(
                               "*Calendar structure requires " +
                                 _vm._s(_vm.data.number_of_dates) +
@@ -92575,6 +92627,7 @@ var render = function() {
                         attrs: {
                           align: "center",
                           "total-rows": _vm.total,
+                          "hide-ellipsis": true,
                           "per-page": _vm.per_page
                         },
                         on: {
@@ -92620,6 +92673,16 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -92737,23 +92800,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
 
-        this.form_data.fields.push({ is_selected: true, strike: null, quantity: null });
+        this.form_data.fields.push({ is_selected: true, strike: null, quantity: 500 });
 
         switch (this.data.index_market_object.trade_structure) {
             case 'Outright':
                 this.display.disable_choice = true, this.chosen_option = null;
                 break;
             case 'Risky':
-                this.form_data.fields.push({ is_selected: false, strike: null, quantity: null });
+                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
                 this.chosen_option = 0;
                 break;
             case 'Fly':
-                this.display.disable_choice = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: null });
-                this.form_data.fields.push({ is_selected: false, strike: null, quantity: null });
+                this.display.disable_choice = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
+                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
                 this.form_data.fields[2].is_selected = true;
                 break;
             case 'Calendar':
-                this.display.show_expiry = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: null });
+                this.display.show_expiry = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
                 this.chosen_option = 0;
                 break;
             default:
@@ -92793,67 +92856,93 @@ var render = function() {
                       _vm.display.show_expiry
                         ? _c(
                             "b-row",
-                            [
-                              _c("b-col", { attrs: { cols: "3" } }),
-                              _vm._v(" "),
-                              _vm._l(
-                                _vm.data.index_market_object.expiry_dates,
-                                function(date) {
-                                  return _c("b-col", { attrs: { cols: "3" } }, [
+                            { attrs: { "align-h": "center" } },
+                            _vm._l(
+                              _vm.data.index_market_object.expiry_dates,
+                              function(date, key) {
+                                return _c(
+                                  "b-col",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: {
+                                      cols: "3",
+                                      offset: key == 0 ? 3 : 0
+                                    }
+                                  },
+                                  [
                                     _c("p", [
                                       _c("strong", [
                                         _vm._v(_vm._s(_vm.castToMoment(date)))
                                       ])
                                     ])
-                                  ])
-                                }
-                              )
-                            ],
-                            2
+                                  ]
+                                )
+                              }
+                            )
                           )
                         : _vm._e(),
                       _vm._v(" "),
                       _vm.form_data.fields.length > 1
                         ? _c(
-                            "b-form-group",
-                            { attrs: { horizontal: "" } },
+                            "b-form-radio-group",
+                            {
+                              staticClass: "mb-2",
+                              attrs: { id: "risky-choices", name: "choice" },
+                              model: {
+                                value: _vm.chosen_option,
+                                callback: function($$v) {
+                                  _vm.chosen_option = $$v
+                                },
+                                expression: "chosen_option"
+                              }
+                            },
                             [
                               _c(
-                                "b-form-radio-group",
-                                {
-                                  attrs: {
-                                    id: "risky-choices",
-                                    name: "choice"
-                                  },
-                                  model: {
-                                    value: _vm.chosen_option,
-                                    callback: function($$v) {
-                                      _vm.chosen_option = $$v
-                                    },
-                                    expression: "chosen_option"
-                                  }
-                                },
+                                "b-row",
+                                { attrs: { "align-h": "center" } },
                                 [
                                   _c(
-                                    "b-form-radio",
+                                    "b-col",
                                     {
-                                      attrs: {
-                                        disabled: _vm.display.disable_choice,
-                                        value: "0"
-                                      }
+                                      staticClass: "text-center",
+                                      attrs: { cols: "3", offset: "3" }
                                     },
-                                    [_vm._v("CHOICE")]
+                                    [
+                                      _c(
+                                        "b-form-radio",
+                                        {
+                                          attrs: {
+                                            disabled:
+                                              _vm.display.disable_choice,
+                                            value: "0"
+                                          }
+                                        },
+                                        [_vm._v("CHOICE")]
+                                      )
+                                    ],
+                                    1
                                   ),
                                   _vm._v(" "),
                                   _c(
-                                    "b-form-radio",
+                                    "b-col",
                                     {
-                                      attrs: {
-                                        disabled: _vm.display.disable_choice,
-                                        value: "1"
-                                      }
+                                      staticClass: "text-center",
+                                      attrs: { cols: "3" }
                                     },
-                                    [_vm._v("CHOICE")]
+                                    [
+                                      _c(
+                                        "b-form-radio",
+                                        {
+                                          attrs: {
+                                            disabled:
+                                              _vm.display.disable_choice,
+                                            value: "1"
+                                          }
+                                        },
+                                        [_vm._v("CHOICE")]
+                                      )
+                                    ],
+                                    1
                                   )
                                 ],
                                 1
@@ -92865,6 +92954,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "b-row",
+                        { attrs: { "align-h": "center" } },
                         [
                           _c("b-col", { attrs: { cols: "3" } }, [
                             _c(
@@ -92904,6 +92994,7 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "b-row",
+                        { attrs: { "align-h": "center" } },
                         [
                           _c("b-col", { attrs: { cols: "3" } }, [
                             _c(
@@ -92928,6 +93019,7 @@ var render = function() {
                                     id: "outright-quantity-0",
                                     type: "number",
                                     min: "0",
+                                    placeholder: "500",
                                     required: ""
                                   },
                                   model: {
@@ -92951,7 +93043,7 @@ var render = function() {
                             "b-row",
                             [
                               _c("b-col", { staticClass: "text-center mt-3" }, [
-                                _c("p", [
+                                _c("p", { staticClass: "modal-info-text" }, [
                                   _vm._v(
                                     "\n\t\t                \t\t\tAll bids/offers going forward will have to maintain the ratio you set here\n\t\t                \t\t"
                                   )
@@ -92964,13 +93056,12 @@ var render = function() {
                       _vm._v(" "),
                       _c(
                         "b-form-group",
-                        { staticClass: "text-center" },
+                        { staticClass: "text-center mt-4 mb-0" },
                         [
                           _c(
                             "b-button",
                             {
-                              staticClass:
-                                "mm-modal-market-button-alt w-25 mt-3",
+                              staticClass: "mm-modal-market-button-alt w-50",
                               attrs: { type: "submit" }
                             },
                             [
@@ -93278,9 +93369,41 @@ var render = function() {
     "div",
     { staticClass: "index-controller", attrs: { dusk: "index-controller" } },
     [
+      _vm.errors.message != null
+        ? _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "12" } },
+                [
+                  _c(
+                    "b-alert",
+                    {
+                      attrs: {
+                        show: "",
+                        dismissible: "",
+                        fade: "",
+                        variant: "danger"
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.errors.message))]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
       _c(_vm.components[_vm.selected_step_component], {
         tag: "component",
-        attrs: { data: _vm.index_data, callback: _vm.loadStepComponent }
+        attrs: {
+          errors: _vm.errors.data[_vm.selected_step_component],
+          data: _vm.index_data,
+          callback: _vm.loadStepComponent
+        }
       })
     ],
     1

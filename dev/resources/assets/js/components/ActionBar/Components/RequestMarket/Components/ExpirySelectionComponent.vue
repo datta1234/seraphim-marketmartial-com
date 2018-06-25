@@ -2,8 +2,8 @@
     <div dusk="step-selections" class="step-selections">
         <b-container fluid>
             <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
-                <b-col class="mt-0" cols="12" v-if="data.number_of_dates > 1">
-                    <p>*Calendar structure requires {{ data.number_of_dates }} expiry dates. Second date selected will continue your market request process</p>
+                <b-col class="mt-0 text-center" cols="12" v-if="data.number_of_dates > 1">
+                    <p class="modal-info-text">*Calendar structure requires {{ data.number_of_dates }} expiry dates. Second date selected will continue your market request process</p>
                 </b-col>
                 <b-col v-for="expiry_date in expiry_dates" cols="4" class="mt-2">
                     <b-button class="mm-modal-market-button w-100" @click="selectExpiryDates(expiry_date.expiration_date)">
@@ -11,7 +11,13 @@
                     </b-button>
                 </b-col>
                 <b-col cols="12" class="mt-5">
-                    <b-pagination @change="changePage($event)" align="center" :total-rows="total" v-model="current_page" :per-page="per_page"></b-pagination>
+                    <b-pagination @change="changePage($event)" 
+                                  align="center" 
+                                  :total-rows="total"
+                                  :hide-ellipsis="true"
+                                  v-model="current_page" 
+                                  :per-page="per_page">
+                    </b-pagination>
                 </b-col>
             </b-row>
         </b-container>
