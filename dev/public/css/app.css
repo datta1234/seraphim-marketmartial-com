@@ -18,8 +18,13 @@
 *   Interaction Bar
 */
 
+<<<<<<< HEAD
 /*
 *   Chat Bar
+=======
+/* 
+* bootstrap overrides
+>>>>>>> develop
 */
 
 h1 {
@@ -43,6 +48,11 @@ a.mm-button,
 button.mm-button {
   font-family: Arial;
   font-size: 1.2rem;
+}
+
+button.mm-base,
+a.mm-base {
+  font-size: 0.9rem;
 }
 
 /* 
@@ -10494,22 +10504,26 @@ a.text-dark:focus {
   }
 }
 
-html,
-body {
-  height: 100%;
+html {
+  min-height: 100%;
+  position: relative;
 }
 
 body {
-  /* background-image: url(/img/background.png);
-	background-size: cover; */
   background-color: #000705;
   overflow-x: hidden;
+  margin-bottom: 65px;
 }
 
 body .page-title h1 {
   color: #ffffff;
   font-family: "Raleway-SemiBold";
   font-size: 3.5rem;
+}
+
+.canvas-body {
+  background-image: url(/img/background.png);
+  background-size: cover;
 }
 
 .card {
@@ -10521,6 +10535,7 @@ body .page-title h1 {
 .card .card-header {
   background-color: #269a9b;
   border: none;
+  color: #ffffff;
 }
 
 .card .card-header span.icon {
@@ -10619,17 +10634,20 @@ body .page-title h1 {
 .mm-button {
   color: #ffffff;
   background-color: #269a9b;
+  border-color: #269a9b;
 }
 
 .mm-button:focus,
 .mm-button.focus {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-button:hover {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-login-button {
@@ -11009,12 +11027,16 @@ a.mm-login-button {
   background-color: transparent;
 }
 
-#trade_body {
-  height: auto;
+.mm-menu .list-group-item.active {
+  background: #269a9b;
+  border-color: #269a9b;
+}
+
+.mm-menu .list-group-item.active > a {
+  color: #ffffff;
 }
 
 #trade_app {
-  height: 100%;
   position: relative;
 }
 
@@ -11826,8 +11848,10 @@ input:checked + .slider:before {
 
 #trade-footer {
   background-color: #303030;
-  position: relative;
   width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 65px;
 }
 
 #trade-footer .footer-links-block {

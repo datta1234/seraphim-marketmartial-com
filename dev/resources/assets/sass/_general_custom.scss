@@ -1,23 +1,32 @@
 
-html, body {
-    height: 100%;
+html {
+    min-height: 100%;
+    position: relative;
 }
 
 body
 {
-	/* background-image: url(/img/background.png);
-	background-size: cover; */
 	background-color: $mm-background-dark;
 	overflow-x: hidden;
-	
-	.page-title {
-		h1 {
+	margin-bottom: 65px;
+
+	.page-title h1 {
 			color: $mm-white;
 			font-family: $mm-font-head;
 			font-size:3.5rem;
 		}
-	}
+	
 }
+
+.canvas-body
+{
+	background-image: url(/img/background.png);
+	background-size: cover;
+}
+
+
+
+
 
 .card {
 	border: none;
@@ -26,7 +35,8 @@ body
 	.card-header {
 		background-color: $mm-panel;
 		border: none;
-		
+		color:  $mm-white;
+
 		span.icon {
 			color: $mm-white;
 			font-size:4rem;
@@ -42,6 +52,8 @@ body
 			padding-right: 2.5em;
 			padding-bottom: 2.5em;
 		} */
+	
+	
 
 		.card-title {
 			color: $mm-heading-dark;
@@ -123,15 +135,19 @@ body
 .mm-button {
 	  color: $mm-white;
 	  background-color: $mm-panel;
+	  border-color: $mm-panel;
 
 	  &:focus,
 	  &.focus {
-	    color: $mm-white;
-	    background-color: darken($mm-panel, 10%);
+		color: $mm-white;
+		background-color: darken($mm-panel, 10%);
+		border-color: darken($mm-panel, 10%);
 	  }
 	  &:hover {
 	    color: $mm-white;
 	    background-color: darken($mm-panel, 10%);
+		border-color: darken($mm-panel, 10%);
+
 	  }
 }
 
@@ -492,4 +508,17 @@ a.mm-login-button {
 .no-backdrop.form-control {
     border: none;
     background-color: transparent;
+}
+
+.mm-menu
+{
+	.list-group-item.active
+	{
+		background: $mm-panel;
+		border-color: $mm-panel;
+		& > a
+		{
+			color: $mm-white;
+		}
+	}
 }

@@ -60,6 +60,7 @@ class EmailController extends Controller
     	{
     		$emailModel = array_key_exists('id', $email) ? $savedModels->firstWhere('id',$email['id']) : New Email(); 
     		$emailModel->fill($email);
+            $emailModel->notifiable = in_array($emailModel->title, config('marketmartial.AutoSetTradeAccounts'));
     		$emailModels[] = $emailModel;
     	}
         $user->emails()->saveMany($emailModels);
@@ -68,7 +69,7 @@ class EmailController extends Controller
        'success'=>'true',
        'data'=>[
             'email' => $user->emails()->with('defaultLabel')->get(),
-            'redirect' => route('user.edit_password')
+            'redirect' => route('trade_settings.edit')
         ],
        'message'=>'email added'];
 

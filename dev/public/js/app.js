@@ -94039,6 +94039,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 var Form = __webpack_require__(476);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -94050,7 +94051,7 @@ var Form = __webpack_require__(476);
             type: String
         },
         'profileCompleteData': {
-            type: Number
+            type: Boolean
         }
     },
     data: function data() {
@@ -94075,7 +94076,7 @@ var Form = __webpack_require__(476);
                 // fields will be update from the server
                 _this.emailSettingForm.updateData({ email: _this.mutableEmailSettingsData });
 
-                if (_this.profileCompleteData == 0) {
+                if (_this.profileCompleteData == false) {
                     window.location.href = response.data.redirect;
                 }
             });
@@ -94099,6 +94100,8 @@ var Form = __webpack_require__(476);
         //load the defaults as users ones
         this.defaultLabelsData = JSON.parse(this.defaultLabels);
         this.emailSettingsData = JSON.parse(this.emailSettings);
+
+        console.log(this.profileCompleteData);
 
         this.defaultLabelsData.forEach(function (label) {
             _this3.mutableEmailSettingsData.push({
@@ -94394,18 +94397,26 @@ var render = function() {
           { staticClass: "col-md-12" },
           [
             _c(
-              "b-btn",
+              "b-button",
               {
-                staticClass: "btn mm-button float-right",
+                staticClass: "mm-button mm-base float-right ml-2",
                 on: { click: _vm.update }
               },
-              [_vm._v("\n         Update\n      ")]
+              [
+                _vm._v(
+                  "\n         " +
+                    _vm._s(
+                      _vm.profileCompleteData == false ? "Next" : "Update"
+                    ) +
+                    "\n      "
+                )
+              ]
             ),
             _vm._v(" "),
             _c(
-              "b-btn",
+              "b-button",
               {
-                staticClass: "btn mm-button float-right",
+                staticClass: "mm-button mm-base float-right",
                 on: { click: _vm.showModal }
               },
               [_vm._v("\n       Add E-mail\n      ")]
@@ -94489,7 +94500,7 @@ var render = function() {
               attrs: { block: "" },
               on: { click: _vm.hideModal }
             },
-            [_vm._v("Save")]
+            [_vm._v(" Save")]
           )
         ],
         1

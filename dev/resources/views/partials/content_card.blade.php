@@ -4,9 +4,9 @@
   </div>
   <div class="card-body">
     <h2 class="card-title text-center">
-		{{ $title }}
+		{{ $title or null}}
     </h2>
-    {{ $decorator }}
+    {{ $decorator or null}}
     <div class="card-text">
 		{{ $body }}
     </div>
