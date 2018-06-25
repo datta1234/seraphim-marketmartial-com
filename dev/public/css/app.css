@@ -12182,6 +12182,10 @@ input:checked + .slider:before {
   font-size: 0.9em;
 }
 
+.mm-modal .modal-warning-text {
+  font-size: 0.7em;
+}
+
 .mm-modal .modal-footer {
   border-top: none;
   text-align: center;

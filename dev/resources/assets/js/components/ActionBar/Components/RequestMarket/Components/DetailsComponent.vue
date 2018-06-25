@@ -54,6 +54,9 @@
                                     placeholder="500"
 									required>
 		      					</b-form-input>
+                                <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
+                                    *Warning: The recommended minimum quantity is 500.
+                                </p>
 		      				</b-col>
 						</b-row>
 	   					

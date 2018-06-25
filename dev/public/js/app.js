@@ -92511,6 +92511,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'Details',
@@ -92788,7 +92791,22 @@ var render = function() {
                                     },
                                     expression: "field.quantity"
                                   }
-                                })
+                                }),
+                                _vm._v(" "),
+                                field.quantity < 500
+                                  ? _c(
+                                      "p",
+                                      {
+                                        staticClass:
+                                          "modal-warning-text text-danger text-center"
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                    *Warning: The recommended minimum quantity is 500.\n                                "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e()
                               ],
                               1
                             )
@@ -93435,10 +93453,10 @@ var render = function() {
     },
     [
       _c(
-        "button",
+        "b-button",
         {
           staticClass: "btn mm-request-button mr-2 p-1",
-          attrs: { type: "button" },
+          attrs: { disabled: !_vm.$root.market_types.length > 0 },
           on: {
             click: function($event) {
               _vm.showModal()
