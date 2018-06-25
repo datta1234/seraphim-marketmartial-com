@@ -1,11 +1,15 @@
 <template>
     <div dusk="index-controller" class="index-controller">
-        <component v-bind:is="components[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
+        <b-row v-if="errors.message != null">
+            <b-col cols="12">
+                <b-alert show dismissible fade variant="danger">{{ errors.message }}</b-alert>
+            </b-col>
+        </b-row>
+        <component v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
 <script>
-    import StepSelection from '../Components/StepSelectionComponent.vue';
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
     import StructureSelection from '../Components/StructureSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
@@ -42,11 +46,19 @@
 
                     },
                     number_of_dates: 1,
-                    errors:null,
+                },
+                errors: {
+                    message: null,
+                    data: {
+                        Market:null,
+                        Structure:null,
+                        Expiry:null,
+                        Confirm:null,
+                        Details:null,
+                    },
                 },
                 selected_step_component: null,
                 components: {
-                    Selections: StepSelection,
                     Market: MarketSelection,
                     Structure: StructureSelection,
                     Expiry: ExpirySelection,
@@ -85,6 +97,7 @@
                         console.log("CASE 3: ", this.index_data.index_market_object);
                         //this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
+                        this.index_data.number_of_dates = 1;
                         break;
                     case 4:
                         if (component_data == 'Calendar') {
@@ -136,12 +149,44 @@
                         console.log("YAY IT SAVES YO!: ",newMarketRequestResponse);
                         this.close_modal();
                     } else {
-                        console.error("NOOOOOOOOOOOOOOO!!!!!!!!",err);    
+                        console.error(err);    
                     }
-                }, err => {
-                    console.error("EVEN MORE NOOOOOOOOOOOOOOO!!!!!!!!",err);
+                }).catch( (err) => {
+                    this.previousStep();
+                    if (err.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        this.errors.message = err.response.data.message;
+                        this.loadErrorStep(err.response.data.errors);
+                    } else if (err.request) {
+                      // The request was made but no response was received
+                      // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                      // http.ClientRequest in node.js
+                      console.log(err.request);
+                    } else {
+                      // Something happened in setting up the request that triggered an Error
+                      console.log('Error', err.message);
+                    }
+                    console.log(err.config);
                 });
             },
+            //@TODO Finish error handeling
+            /*loadErrorStep(errors) {
+                console.log("Errors: ",errors);
+                for(let prop in errors) {
+                    console.log("Validation props: ", prop);
+                    console.log("Validation message: ", errors[prop]);
+                    if(prop.indexOf(',') != -1) {
+                        let propArr = prop.split('.');
+                        console.log('Prop Array: ', propArr);
+                        switch () {
+
+                        }
+                    } else {
+                        this.errors.data.Structure = errors[prop];
+                    }
+                }
+            },*/
             formatRequestData() {
                 let formatted_data = {
                     trade_structure: this.index_data.index_market_object.trade_structure,
