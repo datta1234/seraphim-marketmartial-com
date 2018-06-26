@@ -91791,8 +91791,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Market: null,
                     Structure: null,
                     Expiry: null,
-                    Confirm: null,
-                    Details: null
+                    Details: null,
+                    Confirm: null
                 }
             },
             selected_step_component: null,
@@ -91888,9 +91888,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveMarketRequest: function saveMarketRequest() {
             var _this2 = this;
 
+            //@todo remove this after testing
+            var test_object = {
+                "trade_structure": "Outright",
+                "trade_structure_groups": [{
+                    "is_selected": "",
+                    "market_id": "",
+                    "fields": {
+                        "Expiration Date": "",
+                        "Strike": "",
+                        "Quantity": ""
+                    }
+                }]
+            };
+
             var new_data = this.formatRequestData();
             console.log("Data to send: ", new_data);
-            axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
+            /*axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)*/
+            //@todo remove this after testing
+            axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', test_object).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
                     console.log("Saving: ", newMarketRequestResponse);
                     _this2.close_modal();
@@ -91918,21 +91934,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         //@TODO Finish error handeling
-        /*loadErrorStep(errors) {
-            console.log("Errors: ",errors);
-            for(let prop in errors) {
+        loadErrorStep: function loadErrorStep(errors) {
+            console.log("Errors: ", errors);
+            for (var prop in errors) {
                 console.log("Validation props: ", prop);
                 console.log("Validation message: ", errors[prop]);
-                if(prop.indexOf(',') != -1) {
-                    let propArr = prop.split('.');
+                if (prop.indexOf('.') != -1) {
+                    var propArr = prop.split('.');
                     console.log('Prop Array: ', propArr);
-                    switch () {
-                     }
+                    switch (propArr[2]) {
+                        case "market_id":
+                            this.errors.data.Market[prop] = errors[prop];
+                            this.setLowestStep(2);
+                            break;
+                        case "is_selected":
+                            this.setLowestStep(5);
+                            this.errors.data.Details[prop] = errors[prop];
+                            break;
+                        case "fields":
+                            if (propArr[3] == 'Expiration Date') {
+                                this.setLowestStep(4);
+                                this.errors.data.Expiry[prop] = errors[prop];
+                            } else {
+                                this.setLowestStep(5);
+                                this.errors.data.Details[prop] = errors[prop];
+                            }
+                            break;
+                        default:
+                            errors.data.Confirm[prop] = errors[prop];
+                    }
                 } else {
-                    this.errors.data.Structure = errors[prop];
+                    this.errors.data.Structure[prop] = errors[prop];
+                    this.setLowestStep(3);
                 }
             }
-        },*/
+            console.log("SET BACK TO STEP: ", this.modal_data.step);
+            this.loadStepComponent();
+        },
+        setLowestStep: function setLowestStep(new_step) {
+            if (new_step < this.modal_data.step) {
+                this.modal_data.step = new_step;
+            }
+        },
         formatRequestData: function formatRequestData() {
             var _this3 = this;
 
