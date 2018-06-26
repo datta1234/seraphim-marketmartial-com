@@ -63,7 +63,7 @@
              * Loads Expiry Dates
              */
             loadExpiryDate() {
-                axios.get('trade/safex-expiration-date?page='+this.current_page)
+                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page='+this.current_page)
                 .then(expiryDateResponse => {
                     if(expiryDateResponse.status == 200) {
                         this.current_page = expiryDateResponse.data.current_page;

@@ -20723,7 +20723,7 @@ var UserMarket = function () {
                 });
             }
 
-            return axios.post("/trade/market-request/" + this.user_market_request_id + "/user-market", this.prepareStore()).then(function (response) {
+            return axios.post(axios.defaults.baseUrl + "/trade/market-request/" + this.user_market_request_id + "/user-market", this.prepareStore()).then(function (response) {
                 console.log(response);
                 return response;
             }).catch(function (err) {
@@ -21061,9 +21061,9 @@ window.Popper = __webpack_require__(15).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(23);
+    window.$ = window.jQuery = __webpack_require__(23);
 
-  __webpack_require__(44);
+    __webpack_require__(44);
 } catch (e) {}
 
 /**
@@ -21076,6 +21076,20 @@ window.axios = __webpack_require__(37);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+switch ("development") {
+    case "development":
+        window.axios.defaults.baseUrl = "";
+        break;
+    case "staging":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    case "production":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    default:
+        window.axios.defaults.baseUrl = "";
+}
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
@@ -21085,9 +21099,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**
@@ -70957,7 +70971,7 @@ var app = new Vue({
         },
         loadMarketTypes: function loadMarketTypes() {
             var self = this;
-            return axios.get('/trade/market-type').then(function (marketTypeResponse) {
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type').then(function (marketTypeResponse) {
                 if (marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
@@ -70971,7 +70985,7 @@ var app = new Vue({
         },
         loadMarkets: function loadMarkets(marketType) {
             var self = this;
-            return axios.get('/trade/market-type/' + marketType.id + '/market').then(function (marketResponse) {
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type/' + marketType.id + '/market').then(function (marketResponse) {
                 if (marketResponse.status == 200) {
                     if (!marketType.markets) {
                         marketType.markets = [];
@@ -70992,7 +71006,7 @@ var app = new Vue({
         loadMarketRequests: function loadMarketRequests(market) {
             var self = this;
             console.log("Load Market Request", market);
-            return axios.get('/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
+            return axios.get(axios.defaults.baseUrl + '/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
                 if (marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(function (x) {
                         return new __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketRequest__["a" /* default */](x);
@@ -71007,7 +71021,7 @@ var app = new Vue({
         },
         loadConfig: function loadConfig(config_name, config_file) {
             var self = this;
-            return axios.get('/config/' + config_file).then(function (configResponse) {
+            return axios.get(axios.defaults.baseUrl + '/config/' + config_file).then(function (configResponse) {
                 if (configResponse.status == 200) {
                     // proxy through vue logic
                     self.configs[config_name] = configResponse.data;
@@ -83809,7 +83823,12 @@ var UserMarketQuote = function () {
             bid_only: false,
             offer_only: false,
             vol_spread: null,
-            time: ""
+            time: "",
+
+            bid_qty: null,
+            bid: null,
+            offer: null,
+            offer_qty: null
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
@@ -88765,6 +88784,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -88872,6 +88905,75 @@ var render = function() {
                           ],
                           1
                         )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    item.is_maker
+                      ? _c(
+                          "b-row",
+                          { attrs: { "no-gutters": "" } },
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.bid_qty) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.bid) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.offer) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.offer_qty) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        )
                       : _c(
                           "b-row",
                           { attrs: { "no-gutters": "" } },
@@ -88907,22 +89009,26 @@ var render = function() {
             )
           }),
           _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "justify-content-md-center" },
-            [
-              _c("b-col", { staticClass: "mt-2" }, [
-                _c("p", [
-                  _c("small", [
-                    _vm._v(
-                      "Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed."
-                    )
+          _vm.history.reduce(function(x, y) {
+            return (x = y.is_interest)
+          }, false)
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c("b-col", { staticClass: "mt-2" }, [
+                    _c("p", [
+                      _c("small", [
+                        _vm._v(
+                          "Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed."
+                        )
+                      ])
+                    ])
                   ])
-                ])
-              ])
-            ],
-            1
-          )
+                ],
+                1
+              )
+            : _vm._e()
         ],
         2
       )
@@ -89353,7 +89459,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             var self = this;
-            return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/trade/market-condition').then(function (conditionsResponse) {
+            return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.baseUrl + '/trade/market-condition').then(function (conditionsResponse) {
                 if (conditionsResponse.status == 200) {
                     // set the available market types
                     self.conditions = conditionsResponse.data.conditions.map(function (x) {
@@ -91890,7 +91996,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var new_data = this.formatRequestData();
             console.log("Data to send: ", new_data);
-            axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
+            axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
                     console.log("Saving: ", newMarketRequestResponse);
                     _this2.close_modal();
@@ -92127,7 +92233,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadStructures: function loadStructures() {
             var _this = this;
 
-            axios.get('trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
+            axios.get(axios.defaults.baseUrl + '/trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
                 if (tradeStructureResponse.status == 200) {
                     _this.trade_structures = tradeStructureResponse.data;
                     console.log("WHAT COMES FROM SERVER STRUCTURE? ", _this.trade_structures);
@@ -92287,7 +92393,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadExpiryDate: function loadExpiryDate() {
             var _this = this;
 
-            axios.get('trade/safex-expiration-date?page=' + this.current_page).then(function (expiryDateResponse) {
+            axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page=' + this.current_page).then(function (expiryDateResponse) {
                 if (expiryDateResponse.status == 200) {
                     _this.current_page = expiryDateResponse.data.current_page;
                     _this.per_page = expiryDateResponse.data.per_page;

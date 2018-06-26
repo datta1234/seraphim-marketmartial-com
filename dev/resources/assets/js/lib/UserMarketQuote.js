@@ -12,6 +12,11 @@ export default class UserMarketQuote {
 		    offer_only: false,
 		    vol_spread: null,
 		    time: "",
+
+            bid_qty: null,
+            bid: null,
+            offer: null,
+            offer_qty: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

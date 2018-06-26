@@ -128,6 +128,9 @@ class UserMarketRequest extends Model
              ->keyBy('tradeStructureGroup.title')
              ->map(function($group) {
                 return $group->userMarketRequestItems->keyBy('title')->map(function($item) {
+                    if($item->type == 'expiration date') {
+                        return (new \Carbon\Carbon($item->value))->format("My");
+                    }
                     return $item->value;
                 });
             }),
