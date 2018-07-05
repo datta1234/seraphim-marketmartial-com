@@ -20466,8 +20466,16 @@ var Market = function () {
     _createClass(Market, [{
         key: "addMarketRequest",
         value: function addMarketRequest(market_req) {
-            market_req.setMarket(this);
-            this.market_requests.push(market_req);
+            var is_new_market = true;
+            for (var i = 0; i < this.market_requests.length; i++) {
+                if (this.market_requests[i].id === market_req.id) {
+                    is_new_market = false;
+                }
+            }
+            if (is_new_market) {
+                market_req.setMarket(this);
+                this.market_requests.push(market_req);
+            }
         }
 
         /**
@@ -71024,6 +71032,13 @@ var app = new Vue({
                 }
                 return undefined;
             }, this.configs);
+        },
+        reloadMarketRequests: function reloadMarketRequests() {
+            var _this = this;
+
+            this.display_markets.forEach(function (market) {
+                _this.loadMarketRequests(market);
+            });
         }
     },
     data: {
@@ -71037,7 +71052,7 @@ var app = new Vue({
         configs: {}
     },
     mounted: function mounted() {
-        var _this = this;
+        var _this2 = this;
 
         // load config files
         this.loadConfig("trade_structure", "trade_structure.json").catch(function (err) {
@@ -71045,12 +71060,12 @@ var app = new Vue({
             // @TODO: handle this with critical failure... no config = no working trade screen
         }).then(function (configs) {
             // laod the trade data
-            _this.loadMarketTypes().then(function (market_types) {
+            _this2.loadMarketTypes().then(function (market_types) {
                 var promises = [];
                 market_types.forEach(function (market_type) {
-                    promises.push(_this.loadMarkets(market_type).then(function (markets) {
+                    promises.push(_this2.loadMarkets(market_type).then(function (markets) {
                         markets.forEach(function (market) {
-                            promises.push(_this.loadMarketRequests(market));
+                            promises.push(_this2.loadMarketRequests(market));
                         });
                     }));
                 });
@@ -91904,6 +91919,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (newMarketRequestResponse.status == 200) {
                     console.log("Saving: ", newMarketRequestResponse);
                     _this2.close_modal();
+                    _this2.$root.reloadMarketRequests();
                 } else {
                     console.error(err);
                 }

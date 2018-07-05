@@ -213,6 +213,11 @@ const app = new Vue({
                 }
                 return undefined;
             }, this.configs);
+        },
+        reloadMarketRequests() {
+            this.display_markets.forEach(market => {
+                this.loadMarketRequests(market);
+            });
         }
     },
     data: {

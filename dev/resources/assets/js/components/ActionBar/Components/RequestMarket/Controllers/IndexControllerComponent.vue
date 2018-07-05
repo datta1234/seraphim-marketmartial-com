@@ -158,6 +158,7 @@
                     if(newMarketRequestResponse.status == 200) {
                         console.log("Saving: ",newMarketRequestResponse);
                         this.close_modal();
+                        this.$root.reloadMarketRequests();
                     } else {
                         console.error(err);    
                     }
