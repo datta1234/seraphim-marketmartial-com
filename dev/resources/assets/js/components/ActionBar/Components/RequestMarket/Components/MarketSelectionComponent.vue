@@ -7,7 +7,12 @@
                         {{ market.title }}
                     </b-button>
                 </b-col>
-            </b-row>  
+            </b-row>
+            <b-row v-if="errors.messages.length > 0" class="text-center mt-4">
+                <b-col v-for="error in errors.messages" cols="12">
+                    <p class="text-danger mb-0">{{ error }}</p>
+                </b-col>
+            </b-row>
         </b-container>
     </div>
 </template>
@@ -20,6 +25,9 @@
                 type: Function
             },
             'data': {
+                type: Object
+            },
+            'errors': {
                 type: Object
             }
         },

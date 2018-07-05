@@ -32,11 +32,12 @@
 							<b-col cols="3">
 								<label for="outright-strike-0">Strike</label>
 							</b-col>
-		      				<b-col v-for="field in form_data.fields" cols="3">
+		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
 		      					<b-form-input id="outright-strike-0" 
 		      						type="number"
 		      						min="0"
 									v-model="field.strike"
+                                    :state="inputState(index, 'Strike')"
 									required>
 		      					</b-form-input>
 		      				</b-col>
@@ -46,12 +47,13 @@
 							<b-col cols="3">
 								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
-		      				<b-col v-for="field in form_data.fields" cols="3">
+		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
 		      					<b-form-input id="outright-quantity-0" 
 		      						type="number"
 									min="0"
 									v-model="field.quantity"
                                     placeholder="500"
+                                    :state="inputState(index, 'Quantity')"
 									required>
 		      					</b-form-input>
                                 <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
@@ -59,14 +61,20 @@
                                 </p>
 		      				</b-col>
 						</b-row>
-	   					
-	   					<b-row v-if="form_data.fields.length > 1">
-		   					<b-col class="text-center mt-3">	
-		                		<p class="modal-info-text">
-		                			All bids/offers going forward will have to maintain the ratio you set here
-		                		</p>
-		                	</b-col>
-	   					</b-row>
+
+                        <b-row v-if="form_data.fields.length > 1">
+                            <b-col class="text-center mt-3">    
+                                <p class="modal-info-text">
+                                    All bids/offers going forward will have to maintain the ratio you set here
+                                </p>
+                            </b-col>
+                        </b-row>
+
+                        <b-row v-if="errors.messages.length > 0" class="text-center mt-4">
+                            <b-col v-for="error in errors.messages" cols="12">
+                                <p class="text-danger mb-0">{{ error }}</p>
+                            </b-col>
+                        </b-row>
 	                    
 	                    <b-form-group class="text-center mt-4 mb-0">
 	                        <b-button type="submit" class="mm-modal-market-button-alt w-50">
@@ -88,6 +96,9 @@
                 type: Function
             },
             'data': {
+                type: Object
+            },
+            'errors': {
                 type: Object
             }
         },
@@ -121,6 +132,9 @@
             castToMoment(date_string) {
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
             },
+            inputState(index, type) {
+                return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
+            }
         },
         mounted() {
     		

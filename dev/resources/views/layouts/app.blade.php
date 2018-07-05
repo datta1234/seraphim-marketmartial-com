@@ -23,7 +23,7 @@
     @yield('header-scripts')
     </head>
     <body>
-        <div id="geoBackdrop"></div>
+        <!-- <div id="geoBackdrop"></div> -->
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')

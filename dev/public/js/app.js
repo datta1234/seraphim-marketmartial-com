@@ -91788,11 +91788,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             errors: {
                 message: null,
                 data: {
-                    Market: null,
-                    Structure: null,
-                    Expiry: null,
-                    Details: null,
-                    Confirm: null
+                    Market: {
+                        messages: []
+                    },
+                    Structure: {
+                        messages: []
+                    },
+                    Expiry: {
+                        messages: []
+                    },
+                    Details: {
+                        messages: [],
+                        fields: []
+                    },
+                    Confirm: {
+                        messages: []
+                    }
                 }
             },
             selected_step_component: null,
@@ -91888,25 +91899,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveMarketRequest: function saveMarketRequest() {
             var _this2 = this;
 
-            //@todo remove this after testing
-            var test_object = {
-                "trade_structure": "Outright",
-                "trade_structure_groups": [{
-                    "is_selected": "",
-                    "market_id": "",
-                    "fields": {
-                        "Expiration Date": "",
-                        "Strike": "",
-                        "Quantity": ""
-                    }
-                }]
-            };
-
             var new_data = this.formatRequestData();
-            console.log("Data to send: ", new_data);
-            /*axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)*/
-            //@todo remove this after testing
-            axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', test_object).then(function (newMarketRequestResponse) {
+            axios.post('trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
                     console.log("Saving: ", newMarketRequestResponse);
                     _this2.close_modal();
@@ -91932,43 +91926,70 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(err.config);
             });
         },
-
-        //@TODO Finish error handeling
         loadErrorStep: function loadErrorStep(errors) {
-            console.log("Errors: ", errors);
+            var _this3 = this;
+
             for (var prop in errors) {
-                console.log("Validation props: ", prop);
-                console.log("Validation message: ", errors[prop]);
                 if (prop.indexOf('.') != -1) {
                     var propArr = prop.split('.');
-                    console.log('Prop Array: ', propArr);
                     switch (propArr[2]) {
                         case "market_id":
-                            this.errors.data.Market[prop] = errors[prop];
-                            this.setLowestStep(2);
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Market.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Market.messages.push(element);
+                                }
+                            });
+                            this.setLowestStep(1);
                             break;
                         case "is_selected":
-                            this.setLowestStep(5);
                             this.errors.data.Details[prop] = errors[prop];
+                            this.setLowestStep(4);
                             break;
                         case "fields":
                             if (propArr[3] == 'Expiration Date') {
-                                this.setLowestStep(4);
-                                this.errors.data.Expiry[prop] = errors[prop];
+                                errors[prop].forEach(function (element, key) {
+                                    if (_this3.errors.data.Expiry.messages.indexOf(element) == -1) {
+                                        _this3.errors.data.Expiry.messages.push(element);
+                                    }
+                                });
+                                this.setLowestStep(3);
                             } else {
-                                this.setLowestStep(5);
-                                this.errors.data.Details[prop] = errors[prop];
+                                errors[prop].forEach(function (element, key) {
+                                    if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                        _this3.errors.data.Details.messages.push(element);
+                                    }
+                                });
+                                if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                    this.errors.data.Details.fields.push(prop);
+                                }
+                                this.setLowestStep(4);
                             }
                             break;
                         default:
-                            errors.data.Confirm[prop] = errors[prop];
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Confirm.messages.push(element);
+                                }
+                            });
                     }
                 } else {
-                    this.errors.data.Structure[prop] = errors[prop];
-                    this.setLowestStep(3);
+                    if (prop.indexOf('trade_structure_groups') != -1) {
+                        errors[prop].forEach(function (element, key) {
+                            if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                _this3.errors.data.Details.messages.push(element);
+                            }
+                        });
+                        this.setLowestStep(4);
+                    } else {
+                        errors[prop].forEach(function (element, key) {
+                            if (_this3.errors.data.Structure.messages.indexOf(element) == -1) {
+                                _this3.errors.data.Structure.messages.push(element);
+                            }
+                        });
+                        this.setLowestStep(2);
+                    }
                 }
             }
-            console.log("SET BACK TO STEP: ", this.modal_data.step);
             this.loadStepComponent();
         },
         setLowestStep: function setLowestStep(new_step) {
@@ -91977,7 +91998,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         formatRequestData: function formatRequestData() {
-            var _this3 = this;
+            var _this4 = this;
 
             var formatted_data = {
                 trade_structure: this.index_data.index_market_object.trade_structure,
@@ -91986,9 +92007,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.index_data.index_market_object.details.fields.forEach(function (element, key) {
                 formatted_data.trade_structure_groups.push({
                     is_selected: element.is_selected,
-                    market_id: _this3.index_data.index_market_object.market.id,
+                    market_id: _this4.index_data.index_market_object.market.id,
                     fields: {
-                        "Expiration Date": _this3.castToMoment(formatted_data.trade_structure == 'Calendar' ? _this3.index_data.index_market_object.expiry_dates[key] : _this3.index_data.index_market_object.expiry_dates[0]),
+                        "Expiration Date": _this4.castToMoment(formatted_data.trade_structure == 'Calendar' ? _this4.index_data.index_market_object.expiry_dates[key] : _this4.index_data.index_market_object.expiry_dates[0]),
                         Strike: element.strike,
                         Quantity: element.quantity
                     }
@@ -92029,6 +92050,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'MarketSelection',
@@ -92037,6 +92063,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Function
         },
         'data': {
+            type: Object
+        },
+        'errors': {
             type: Object
         }
     },
@@ -92101,7 +92130,21 @@ var render = function() {
                   )
                 : _vm._e()
             })
-          )
+          ),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-4" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e()
         ],
         1
       )
@@ -92139,6 +92182,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'StructureSelection',
@@ -92147,6 +92195,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Function
         },
         'data': {
+            type: Object
+        },
+        'errors': {
             type: Object
         }
     },
@@ -92237,6 +92288,20 @@ var render = function() {
                     : _vm._e()
                 })
               )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-4" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
             : _vm._e()
         ],
         1
@@ -92287,6 +92352,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ExpirySelection',
@@ -92295,6 +92369,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Function
         },
         'data': {
+            type: Object
+        },
+        'errors': {
             type: Object
         }
     },
@@ -92317,7 +92394,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
         castToMoment: function castToMoment(date_string) {
-            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
+            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'); //return to 
+        },
+        checkPastDate: function checkPastDate(date_string) {
+            return moment(date_string).isBefore();
         },
         changePage: function changePage($event) {
             this.current_page = $event;
@@ -92365,62 +92445,75 @@ var render = function() {
         "b-container",
         { attrs: { fluid: "" } },
         [
+          _vm.data.number_of_dates > 1
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c(
+                    "b-col",
+                    { staticClass: "mt-0 text-center", attrs: { cols: "12" } },
+                    [
+                      _c("p", { staticClass: "modal-info-text" }, [
+                        _vm._v(
+                          "*Calendar structure requires " +
+                            _vm._s(_vm.data.number_of_dates) +
+                            " expiry dates. Second date selected will continue your market request process"
+                        )
+                      ])
+                    ]
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.expiry_dates.length > 0
+            ? _c(
+                "div",
+                { staticClass: "card-columns" },
+                _vm._l(_vm.expiry_dates, function(expiry_date) {
+                  return _c(
+                    "div",
+                    { staticClass: "card card-reset" },
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "mm-modal-market-button w-100",
+                          attrs: {
+                            disabled: _vm.checkPastDate(
+                              expiry_date.expiration_date
+                            )
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.selectExpiryDates(expiry_date.expiration_date)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(
+                                _vm.castToMoment(expiry_date.expiration_date)
+                              ) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                })
+              )
+            : _vm._e(),
+          _vm._v(" "),
           _vm.expiry_dates.length > 0
             ? _c(
                 "b-row",
                 { staticClass: "justify-content-md-center" },
                 [
-                  _vm.data.number_of_dates > 1
-                    ? _c(
-                        "b-col",
-                        {
-                          staticClass: "mt-0 text-center",
-                          attrs: { cols: "12" }
-                        },
-                        [
-                          _c("p", { staticClass: "modal-info-text" }, [
-                            _vm._v(
-                              "*Calendar structure requires " +
-                                _vm._s(_vm.data.number_of_dates) +
-                                " expiry dates. Second date selected will continue your market request process"
-                            )
-                          ])
-                        ]
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm._l(_vm.expiry_dates, function(expiry_date) {
-                    return _c(
-                      "b-col",
-                      { staticClass: "mt-2", attrs: { cols: "4" } },
-                      [
-                        _c(
-                          "b-button",
-                          {
-                            staticClass: "mm-modal-market-button w-100",
-                            on: {
-                              click: function($event) {
-                                _vm.selectExpiryDates(
-                                  expiry_date.expiration_date
-                                )
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(
-                                  _vm.castToMoment(expiry_date.expiration_date)
-                                ) +
-                                "\n                "
-                            )
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  }),
-                  _vm._v(" "),
                   _c(
                     "b-col",
                     { staticClass: "mt-5", attrs: { cols: "12" } },
@@ -92449,7 +92542,21 @@ var render = function() {
                     1
                   )
                 ],
-                2
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
               )
             : _vm._e()
         ],
@@ -92557,6 +92664,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'Details',
@@ -92565,6 +92680,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Function
         },
         'data': {
+            type: Object
+        },
+        'errors': {
             type: Object
         }
     },
@@ -92600,6 +92718,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         castToMoment: function castToMoment(date_string) {
             return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
+        },
+        inputState: function inputState(index, type) {
+            return this.errors.fields.indexOf('trade_structure_groups.' + index + '.fields.' + type) == -1 ? null : false;
         }
     },
     mounted: function mounted() {
@@ -92774,7 +92895,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._l(_vm.form_data.fields, function(field) {
+                          _vm._l(_vm.form_data.fields, function(field, index) {
                             return _c(
                               "b-col",
                               { attrs: { cols: "3" } },
@@ -92784,6 +92905,7 @@ var render = function() {
                                     id: "outright-strike-0",
                                     type: "number",
                                     min: "0",
+                                    state: _vm.inputState(index, "Strike"),
                                     required: ""
                                   },
                                   model: {
@@ -92819,7 +92941,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._l(_vm.form_data.fields, function(field) {
+                          _vm._l(_vm.form_data.fields, function(field, index) {
                             return _c(
                               "b-col",
                               { attrs: { cols: "3" } },
@@ -92830,6 +92952,7 @@ var render = function() {
                                     type: "number",
                                     min: "0",
                                     placeholder: "500",
+                                    state: _vm.inputState(index, "Quantity"),
                                     required: ""
                                   },
                                   model: {
@@ -92870,12 +92993,26 @@ var render = function() {
                               _c("b-col", { staticClass: "text-center mt-3" }, [
                                 _c("p", { staticClass: "modal-info-text" }, [
                                   _vm._v(
-                                    "\n\t\t                \t\t\tAll bids/offers going forward will have to maintain the ratio you set here\n\t\t                \t\t"
+                                    "\n                                    All bids/offers going forward will have to maintain the ratio you set here\n                                "
                                   )
                                 ])
                               ])
                             ],
                             1
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.errors.messages.length > 0
+                        ? _c(
+                            "b-row",
+                            { staticClass: "text-center mt-4" },
+                            _vm._l(_vm.errors.messages, function(error) {
+                              return _c("b-col", { attrs: { cols: "12" } }, [
+                                _c("p", { staticClass: "text-danger mb-0" }, [
+                                  _vm._v(_vm._s(error))
+                                ])
+                              ])
+                            })
                           )
                         : _vm._e(),
                       _vm._v(" "),
@@ -92984,6 +93121,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ConfirmMarketRequest',
@@ -92992,6 +93134,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Function
         },
         'data': {
+            type: Object
+        },
+        'errors': {
             type: Object
         }
     },
@@ -93134,6 +93279,20 @@ var render = function() {
             ],
             1
           ),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e(),
           _vm._v(" "),
           _c(
             "b-row",

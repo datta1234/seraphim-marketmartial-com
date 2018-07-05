@@ -50,11 +50,22 @@
                 errors: {
                     message: null,
                     data: {
-                        Market:null,
-                        Structure:null,
-                        Expiry:null,
-                        Details:null,
-                        Confirm:null,
+                        Market:{
+                            messages:[]
+                        },
+                        Structure:{
+                            messages:[]
+                        },
+                        Expiry:{
+                            messages:[]
+                        },
+                        Details:{
+                            messages:[],
+                            fields:[]
+                        },
+                        Confirm:{
+                            messages:[]
+                        },
                     },
                 },
                 selected_step_component: null,
@@ -141,25 +152,8 @@
              * Saves Market Request
              */
             saveMarketRequest() {
-                //@todo remove this after testing
-                let test_object = {
-                                   "trade_structure": "Outright",
-                                   "trade_structure_groups": [{
-                                       "is_selected": "",
-                                       "market_id": "",
-                                       "fields": {
-                                           "Expiration Date": "",
-                                           "Strike": "",
-                                           "Quantity": ""
-                                       }
-                                   }]
-                                };
-
                 let new_data = this.formatRequestData();
-                console.log("Data to send: ", new_data);
-                /*axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)*/
-                //@todo remove this after testing
-                axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', test_object)
+                axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     if(newMarketRequestResponse.status == 200) {
                         console.log("Saving: ",newMarketRequestResponse);
@@ -186,42 +180,68 @@
                     console.log(err.config);
                 });
             },
-            //@TODO Finish error handeling
             loadErrorStep(errors) {
-                console.log("Errors: ",errors);
                 for(let prop in errors) {
-                    console.log("Validation props: ", prop);
-                    console.log("Validation message: ", errors[prop]);
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
-                        console.log('Prop Array: ', propArr);
                         switch (propArr[2]) {
                             case "market_id":
-                                this.errors.data.Market[prop] = errors[prop];
-                                this.setLowestStep(2);
+                                errors[prop].forEach( (element, key) => {
+                                    if (this.errors.data.Market.messages.indexOf(element) == -1) {
+                                        this.errors.data.Market.messages.push(element);
+                                    }
+                                });
+                                this.setLowestStep(1);
                                 break;
                             case "is_selected":
-                                this.setLowestStep(5);
                                 this.errors.data.Details[prop] = errors[prop];
+                                this.setLowestStep(4);
                                 break;
                             case "fields":
                                 if(propArr[3] == 'Expiration Date') {
-                                    this.setLowestStep(4);
-                                    this.errors.data.Expiry[prop] = errors[prop];
+                                    errors[prop].forEach( (element, key) => {
+                                        if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
+                                            this.errors.data.Expiry.messages.push(element);
+                                        }
+                                    });
+                                    this.setLowestStep(3);
                                 } else {
-                                    this.setLowestStep(5);
-                                    this.errors.data.Details[prop] = errors[prop];
+                                    errors[prop].forEach( (element, key) => {
+                                        if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                            this.errors.data.Details.messages.push(element);
+                                        }
+                                    });
+                                    if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                        this.errors.data.Details.fields.push(prop);
+                                    }
+                                    this.setLowestStep(4);
                                 }
                                 break;
                             default:
-                                errors.data.Confirm[prop] = errors[prop];
+                                errors[prop].forEach( (element, key) => {
+                                    if (this.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                        this.errors.data.Confirm.messages.push(element);
+                                    }
+                                });
                         }
                     } else {
-                        this.errors.data.Structure[prop] = errors[prop];
-                        this.setLowestStep(3);
+                        if (prop.indexOf('trade_structure_groups') != -1) {
+                            errors[prop].forEach( (element, key) => {
+                                if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                    this.errors.data.Details.messages.push(element);
+                                }
+                            });
+                            this.setLowestStep(4);
+                        } else {
+                            errors[prop].forEach( (element, key) => {
+                                if (this.errors.data.Structure.messages.indexOf(element) == -1) {
+                                    this.errors.data.Structure.messages.push(element);
+                                }
+                            });
+                            this.setLowestStep(2);
+                        }
                     }
                 }
-                console.log("SET BACK TO STEP: ", this.modal_data.step);
                 this.loadStepComponent();
             },
             setLowestStep(new_step) {
