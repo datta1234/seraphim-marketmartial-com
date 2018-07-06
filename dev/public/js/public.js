@@ -53249,17 +53249,6 @@ $(document).ready(function () {
     });
 
     /**
-     * Checks if the passed check list is all true and enables form submit
-     */
-    function checkContactForm(check_list, form) {
-        if (check_list.contact_name && check_list.contact_email && check_list.contact_message) {
-            form.find('button[type="submit"]').prop("disabled", false);
-        } else {
-            form.find('button[type="submit"]').prop("disabled", true);
-        }
-    };
-
-    /**
      * Disable contact form until all fields are filled in
      */
     $(function () {
@@ -53268,30 +53257,44 @@ $(document).ready(function () {
             contact_email: false,
             contact_message: false
         };
+        /**
+         * Checks if the passed check list is all true and enables form submit
+         */
+        function checkContactForm(form) {
+            form_check_list.contact_name = form.find('input#name').val() != '' ? true : false;
+            form_check_list.contact_email = form.find('input#contactEmail').val() != '' ? true : false;
+            form_check_list.contact_message = form.find('textarea#contact_message').val() != '' ? true : false;
+            if (form_check_list.contact_name && form_check_list.contact_email && form_check_list.contact_message) {
+                form.find('button[type="submit"]').prop("disabled", false);
+            } else {
+                form.find('button[type="submit"]').prop("disabled", true);
+            }
+        };
         //Listens for input change on name input
         $('#ContactUsForm').find('input#name').on("input", function () {
             console.log("name Type");
-            form_check_list.contact_name = $(this).val() != '' ? true : false;
-            checkContactForm(form_check_list, $('#ContactUsForm'));
+            checkContactForm($('#ContactUsForm'));
         });
         //Listens for input change on email input
         $('#ContactUsForm').find('input#contactEmail').on("input", function () {
             console.log("contact Type");
-            form_check_list.contact_email = $(this).val() != '' ? true : false;
-            checkContactForm(form_check_list, $('#ContactUsForm'));
+            checkContactForm($('#ContactUsForm'));
         });
         //Listens for input change on message textarea
-        $('#ContactUsForm').find('textarea#message').on("input", function () {
+        $('#ContactUsForm').find('textarea#contact_message').on("input", function () {
             console.log("message Type");
-            form_check_list.contact_message = $(this).val() != '' ? true : false;
-            checkContactForm(form_check_list, $('#ContactUsForm'));
+            checkContactForm($('#ContactUsForm'));
         });
-    });
 
-    $(function () {
+        //Focus form on failed request
         if (window.location.href.indexOf("#ContactUsForm") !== -1) {
+            checkContactForm($('#ContactUsForm'));
             document.getElementById("name").focus();
         }
+    });
+
+    $('.alert').on('close.bs.alert', function () {
+        $(this).addClass('alert-ease-out');
     });
 });
 

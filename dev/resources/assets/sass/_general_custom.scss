@@ -522,3 +522,22 @@ a.mm-login-button {
 		}
 	}
 }
+
+
+.toast-holder {
+	position: fixed; 
+	top: 100px; 
+	left: 0px; 
+	right: 0px; 
+	z-index:999;	
+}
+.alert-ease-out {
+	//This timing applies on the way OUT
+  	transition-timing-function: ease-out;
+
+  	//Quick on the way out
+	transition: 0.3s;
+
+	//Hide thing by pushing it outside by default
+	transform: translateY(-130%);
+}

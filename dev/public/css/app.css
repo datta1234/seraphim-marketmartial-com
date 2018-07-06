@@ -11035,6 +11035,23 @@ a.mm-login-button {
   color: #ffffff;
 }
 
+.toast-holder {
+  position: fixed;
+  top: 100px;
+  left: 0px;
+  right: 0px;
+  z-index: 999;
+}
+
+.alert-ease-out {
+  -webkit-transition-timing-function: ease-out;
+          transition-timing-function: ease-out;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  -webkit-transform: translateY(-130%);
+          transform: translateY(-130%);
+}
+
 #trade_app {
   position: relative;
 }

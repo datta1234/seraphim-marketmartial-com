@@ -337,10 +337,10 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" id="message" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
-                        @if ($errors->has('message'))
+                        <textarea class="form-control {{ $errors->has('contact_message') ? ' is-invalid' : '' }}" id="contactMessage" name="contact_message" rows="10" placeholder="Enter your message here...">{{ old('contact_message') }}</textarea>
+                        @if ($errors->has('contact_message'))
                             <div class="alert alert-danger">
-                                <strong>{{ $errors->first('message') }}</strong>
+                                <strong>{{ $errors->first('contact_message') }}</strong>
                             </div>
                         @endif
                     </div>

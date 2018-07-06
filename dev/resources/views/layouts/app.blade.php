@@ -23,6 +23,12 @@
     @yield('header-scripts')
     </head>
     <body class="canvas-body">
+    {{--Alerts--}}
+    <div class="toast-holder">
+        <div class="container">
+            @include('layouts.elements.alerts')
+        </div>
+    </div>
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')
@@ -30,11 +36,6 @@
             {{-- Layout --}}
             <main class="container">
                 <div class="page-body-container mt-3">
-                    {{--Alerts--}}
-                    <div>
-                        <div class="toast-holder"></div>
-                        @include('layouts.elements.alerts')
-                    </div>
                     @yield('content')
                 </div>
             </main> {{-- Main end --}}
