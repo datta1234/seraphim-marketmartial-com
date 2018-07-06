@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
+@section('banner')
+    <header-canvas></header-canvas>
+@endsection
+
 @section('content')
+
+
 <div class="row justify-content-md-end">
     <div class="col col-md-12">
         <p class="float-right active-markets">
