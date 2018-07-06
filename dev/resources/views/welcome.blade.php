@@ -331,7 +331,7 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
+                        <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" id="message" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
                         @if ($errors->has('message'))
                             <div class="alert alert-danger">
                                 <strong>{{ $errors->first('message') }}</strong>
@@ -339,7 +339,7 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <button type="submit" class="btn mm-footer-button float-right">Submit message</button>
+                        <button disabled type="submit" class="btn mm-footer-button float-right">Submit message</button>
                     </div>
                 </form>
             </div>
