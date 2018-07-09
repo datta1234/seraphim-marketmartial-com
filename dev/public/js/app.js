@@ -70811,7 +70811,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(237);
-module.exports = __webpack_require__(484);
+module.exports = __webpack_require__(487);
 
 
 /***/ }),
@@ -70884,6 +70884,7 @@ Vue.component('chat-bar', __webpack_require__(471));
 Vue.component('email-settings', __webpack_require__(474));
 Vue.component('activate-input', __webpack_require__(478));
 Vue.component('toggle-input', __webpack_require__(481));
+Vue.component('day-month-picker', __webpack_require__(484));
 
 /**
  * Takes in a value and splits the value by a splitter in a desired frequency
@@ -94230,8 +94231,6 @@ var Form = __webpack_require__(476);
         this.defaultLabelsData = JSON.parse(this.defaultLabels);
         this.emailSettingsData = JSON.parse(this.emailSettings);
 
-        console.log(this.profileCompleteData);
-
         this.defaultLabelsData.forEach(function (label) {
             _this3.mutableEmailSettingsData.push({
                 'title': label.title,
@@ -94242,6 +94241,7 @@ var Form = __webpack_require__(476);
         });
 
         this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(this.emailSettingsData);
+        console.log(this.mutableEmailSettingsData);
 
         this.emailSettingForm.updateData({ email: this.mutableEmailSettingsData });
     }
@@ -94529,6 +94529,7 @@ var render = function() {
               "b-button",
               {
                 staticClass: "mm-button mm-base float-right ml-2",
+                attrs: { id: "update-btn" },
                 on: { click: _vm.update }
               },
               [
@@ -94959,6 +94960,211 @@ if (false) {
 
 /***/ }),
 /* 484 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(485)
+/* template */
+var __vue_template__ = __webpack_require__(486)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Profile/Components/DayMonthPickerComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1a83a2cf", Component.options)
+  } else {
+    hotAPI.reload("data-v-1a83a2cf", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 485 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    'value': {
+      type: String
+    },
+    'name': {
+      type: String
+    }
+  },
+  data: function data() {
+    return {
+      month: '',
+      day: '',
+      months: [],
+      days: [],
+      monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+      selectedMonth: null,
+      selectedDay: null,
+      selectedDate: null
+    };
+  },
+
+  methods: {
+    dateChange: function dateChange() {
+      var _this = this;
+
+      Vue.nextTick(function () {
+        //set the date to null
+        _this.selectedDate = null;
+
+        if (_this.selectedMonth != null && _this.selectedDay != null) {
+          var month = _this.selectedMonth + 1;
+          _this.selectedDate = moment(month + '-' + _this.selectedDay, 'M-DD', false).format('YYYY-MM-DD');
+        }
+      });
+    }
+  },
+  mounted: function mounted() {
+
+    this.selectedDate = moment(this.value, 'YYYY-MM-DD', false).format('YYYY-MM-DD');
+    this.selectedMonth = moment(this.value, 'YYYY-MM-DD', false).format('M');
+    this.selectedDay = moment(this.value, 'YYYY-MM-DD', false).format('DD');
+
+    this.days.push({ text: "Please Select a day.", value: null });
+    this.months.push({ text: "Please Select a day.", value: null });
+
+    for (var i = 1; i <= 31; i++) {
+      if (i < 10) {
+        this.days.push({ text: '0' + i, value: '0' + i });
+      } else {
+        this.days.push({ text: i, value: i });
+      }
+    }
+
+    for (var i = 0; i < this.monthNames.length; i++) {
+      this.months.push({ text: this.monthNames[i], value: i });
+    }
+  }
+});
+
+/***/ }),
+/* 486 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "day-month-picker" },
+    [
+      _c(
+        "b-row",
+        [
+          _c(
+            "b-col",
+            { attrs: { sm: "6" } },
+            [
+              _c("b-form-select", {
+                staticClass: "day",
+                attrs: { name: "day-month-picker-day", options: _vm.days },
+                on: { change: _vm.dateChange },
+                model: {
+                  value: _vm.selectedDay,
+                  callback: function($$v) {
+                    _vm.selectedDay = $$v
+                  },
+                  expression: "selectedDay"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-col",
+            { attrs: { sm: "6" } },
+            [
+              _c("b-form-select", {
+                staticClass: "month",
+                attrs: { name: "day-month-picker-month", options: _vm.months },
+                on: { change: _vm.dateChange },
+                model: {
+                  value: _vm.selectedMonth,
+                  callback: function($$v) {
+                    _vm.selectedMonth = $$v
+                  },
+                  expression: "selectedMonth"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: _vm.name },
+        domProps: { value: _vm.selectedDate }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1a83a2cf", module.exports)
+  }
+}
+
+/***/ }),
+/* 487 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
