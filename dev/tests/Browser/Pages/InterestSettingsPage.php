@@ -5,7 +5,7 @@ namespace Tests\Browser\Pages;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Page as BasePage;
 
-class UserDetailsPage extends BasePage
+class InterestSettingsPage extends BasePage
 {
     /**
      * Get the URL for the page.
@@ -14,7 +14,7 @@ class UserDetailsPage extends BasePage
      */
     public function url()
     {
-        return '/my-profile';
+        return '/interest-settings';
     }
 
     /**
@@ -36,7 +36,10 @@ class UserDetailsPage extends BasePage
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@hobbies' => 'hobbies',
+            '@is_married' => 'is_married',
+            '@has_children' => 'has_children',
+            '@submit' => 'input[type=submit]'
         ];
     }
 }

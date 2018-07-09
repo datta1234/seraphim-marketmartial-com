@@ -18,7 +18,7 @@
 
   <div class="row">
     <div class="col-md-12">
-        <b-button class="mm-button mm-base float-right ml-2" @click="update">
+        <b-button id="update-btn" class="mm-button mm-base float-right ml-2" @click="update">
          {{ (profileCompleteData == false) ? "Next" : "Update"  }}
       </b-button>
 
@@ -112,7 +112,6 @@
             this.defaultLabelsData = JSON.parse(this.defaultLabels);
             this.emailSettingsData = JSON.parse(this.emailSettings);
             
-            console.log(this.profileCompleteData);
 
             this.defaultLabelsData.forEach((label)=>{
                 this.mutableEmailSettingsData.push({
@@ -124,7 +123,8 @@
             });
 
             this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(this.emailSettingsData);
-            
+            console.log(this.mutableEmailSettingsData);
+
             this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
         }
     }

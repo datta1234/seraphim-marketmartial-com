@@ -22,9 +22,7 @@
 
 			        {{ Form::label('birthdate','Birthdate', ['class' => 'col-sm-4 col-form-label']) }}
 				    <div class="col-sm-8">
-
-					<datepicker input-class="{{ $errors->has('birthdate') ? 'form-control is-invalid' : 'form-control' }}" name="birthdate" placeholder="Birthdate" format="yyyy-MM-dd" value="{{ $user->birthdate }}"></datepicker>
-
+						<day-month-picker name="birthdate" value="{{ $user->birthdate }}" ></day-month-picker>
 				        @if ($errors->has('birthdate'))
 				            <span class="text-danger">
 				                <strong>{{ $errors->first('birthdate') }}</strong>

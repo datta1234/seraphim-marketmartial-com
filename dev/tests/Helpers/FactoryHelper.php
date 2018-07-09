@@ -100,4 +100,15 @@ class FactoryHelper
 		}
 
 	}
+
+	public static function setUpDefaultEmails()
+	{
+		$defaultEmailLabels = config('marketmartial.default_email_labels');
+			foreach ($defaultEmailLabels as $defaultEmailLabel) {
+
+			factory(\App\Models\UserManagement\DefaultLabel::class)->create([
+				'title' =>  $defaultEmailLabel
+			]);	
+		}
+	} 
 }

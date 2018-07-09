@@ -2,6 +2,12 @@
 
 return [
 		"default_role" => "Trader",//pull and use this role for testing as the default role
+        "default_email_labels" => [
+            "Direct",
+            "Group",
+            "Clearer",
+            "Compliance"
+        ],
         "AutoSetTradeAccounts" => [
             "Direct"
         ],
