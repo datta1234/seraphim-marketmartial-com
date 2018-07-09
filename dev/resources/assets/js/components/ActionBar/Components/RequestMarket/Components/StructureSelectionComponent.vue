@@ -47,7 +47,7 @@
              * @todo move to component, logic does not need to be here
              */
             loadStructures() {
-                axios.get('trade/market-type/'+this.data.market_type.id+'/trade-structure')
+                axios.get(axios.defaults.baseUrl + '/trade/market-type/'+this.data.market_type.id+'/trade-structure')
                 .then(tradeStructureResponse => {
                     if(tradeStructureResponse.status == 200) {
                         this.trade_structures = tradeStructureResponse.data;

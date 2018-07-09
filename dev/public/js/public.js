@@ -13610,9 +13610,9 @@ window.Popper = __webpack_require__(15).default;
  */
 
 try {
-  window.$ = window.jQuery = __webpack_require__(23);
+    window.$ = window.jQuery = __webpack_require__(23);
 
-  __webpack_require__(44);
+    __webpack_require__(44);
 } catch (e) {}
 
 /**
@@ -13625,6 +13625,20 @@ window.axios = __webpack_require__(37);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+switch ("development") {
+    case "development":
+        window.axios.defaults.baseUrl = "";
+        break;
+    case "staging":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    case "production":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    default:
+        window.axios.defaults.baseUrl = "";
+}
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just
@@ -13634,9 +13648,9 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 var token = document.head.querySelector('meta[name="csrf-token"]');
 
 if (token) {
-  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
 } else {
-  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 /**

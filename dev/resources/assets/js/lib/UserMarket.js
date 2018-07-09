@@ -117,7 +117,7 @@ export default class UserMarket {
             });
         }
 
-        return axios.post("/trade/market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
+        return axios.post(axios.defaults.baseUrl + "/trade/market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
         .then(response => {
             console.log(response);
             return response;

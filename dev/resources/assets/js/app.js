@@ -144,7 +144,7 @@ const app = new Vue({
         },
         loadMarketTypes() {
             let self = this;
-            return axios.get('/trade/market-type')
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type')
             .then(marketTypeResponse => {
                 if(marketTypeResponse.status == 200) {
                     // set the available market types
@@ -159,7 +159,7 @@ const app = new Vue({
         },
         loadMarkets(marketType) {
             let self = this;
-            return axios.get('/trade/market-type/'+marketType.id+'/market')
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     if(!marketType.markets) {
@@ -181,7 +181,7 @@ const app = new Vue({
         loadMarketRequests(market) {
             let self = this;
             console.log("Load Market Request", market);
-            return axios.get('/trade/market/'+market.id+'/market-request')
+            return axios.get(axios.defaults.baseUrl + '/trade/market/'+market.id+'/market-request')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
@@ -195,7 +195,7 @@ const app = new Vue({
         },
         loadConfig(config_name, config_file) {
             let self = this;
-            return axios.get('/config/'+config_file)
+            return axios.get(axios.defaults.baseUrl + '/config/'+config_file)
             .then(configResponse => {
                 if(configResponse.status == 200) {
                     // proxy through vue logic
@@ -228,7 +228,7 @@ const app = new Vue({
         market_types: [],
 
         // internal properties
-        configs: {},
+        configs: {}
     },
     mounted: function() {
         // load config files

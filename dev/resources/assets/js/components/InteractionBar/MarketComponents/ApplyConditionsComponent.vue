@@ -122,7 +122,7 @@
             },
             loadConditions() {
                 let self = this;
-                return axios.get('/trade/market-condition')
+                return axios.get(axios.defaults.baseUrl + '/trade/market-condition')
                 .then(conditionsResponse => {
                     if(conditionsResponse.status == 200) {
                         // set the available market types

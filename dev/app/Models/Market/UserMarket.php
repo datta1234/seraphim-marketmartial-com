@@ -117,7 +117,7 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
-        return [
+        $data = [
             "id"    => $this->id,
             "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
             "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
@@ -130,6 +130,13 @@ class UserMarket extends Model
             ),
             "time" => $this->created_at->format("H:i"),
         ];
+        if($data['is_maker']) {
+            $data['bid'] = $this->currentMarketNegotiation->bid;
+            $data['offer'] = $this->currentMarketNegotiation->offer;
+            $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
+            $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+        }
+        return $data;
     }
 
     /**
@@ -138,7 +145,7 @@ class UserMarket extends Model
     */
     public function preFormatted()
     {
-        return [
+        $data = [
             "id"    => $this->id,
             "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
             "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
@@ -151,6 +158,13 @@ class UserMarket extends Model
             ),
             "time" => $this->created_at->format("H:i"),
         ];
+        if($data['is_maker']) {
+            $data['bid'] = $this->currentMarketNegotiation->bid;
+            $data['offer'] = $this->currentMarketNegotiation->offer;
+            $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
+            $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+        }
+        return $data;
     }
 
 }
