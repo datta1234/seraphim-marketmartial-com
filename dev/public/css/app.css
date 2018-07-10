@@ -11035,6 +11035,23 @@ a.mm-login-button {
   color: #ffffff;
 }
 
+.toast-holder {
+  position: fixed;
+  top: 100px;
+  left: 0px;
+  right: 0px;
+  z-index: 999;
+}
+
+.alert-ease-out {
+  -webkit-transition-timing-function: ease-out;
+          transition-timing-function: ease-out;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+  -webkit-transform: translateY(-130%);
+          transform: translateY(-130%);
+}
+
 #trade_app {
   position: relative;
 }
@@ -12238,6 +12255,27 @@ input:checked + .slider:before {
 .mm-modal-market-button-alt:hover {
   color: #FFFFFF;
   background-color: #1c7c74;
+}
+
+.shader {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: inline-block;
+}
+
+#header-wrapper {
+  height: 23.6rem;
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  position: absolute;
+}
+
+@media (min-width: 1400px) {
+  #header-wrapper {
+    height: 43.5rem;
+  }
 }
 
 @font-face {
