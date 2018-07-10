@@ -16,7 +16,7 @@ class InterestSettingsUpdate extends DuskTestCase
      *
      * @return void
      */
-    public function testExample()
+    public function updateInterest()
     {
         
         $organisation = factory(\App\Models\UserManagement\Organisation::class)->create(); 
