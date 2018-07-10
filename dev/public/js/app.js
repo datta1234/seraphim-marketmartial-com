@@ -92021,8 +92021,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             var new_data = this.formatRequestData();
-            //axios.post('trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
-
             axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
                     console.log("Saving: ", newMarketRequestResponse);
@@ -92203,7 +92201,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.callback(market);
         }
     },
-    mounted: function mounted() {}
+    mounted: function mounted() {
+        console.log("Market Data LOADED=========:", this.data);
+    }
 });
 
 /***/ }),
@@ -92235,6 +92235,7 @@ var render = function() {
                         "b-button",
                         {
                           staticClass: "mm-modal-market-button-alt w-50",
+                          attrs: { id: market.title + "-market-choice" },
                           on: {
                             click: function($event) {
                               _vm.selectMarket(market)
@@ -92339,8 +92340,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         /**
          * Loads Market Structure
-         *
-         * @todo move to component, logic does not need to be here
          */
         loadStructures: function loadStructures() {
             var _this = this;
@@ -93663,6 +93662,7 @@ var render = function() {
                     "b-button",
                     {
                       staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "index-step-choice" },
                       on: {
                         click: function($event) {
                           _vm.nextStep("Index")
@@ -93680,7 +93680,10 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button-alt w-100" },
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "efp-step-choice" }
+                    },
                     [_vm._v("EFP")]
                   )
                 ],
@@ -93699,7 +93702,10 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button-alt w-100" },
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "single-stock-step-choice" }
+                    },
                     [_vm._v("Single Stock Options")]
                   )
                 ],
@@ -93711,7 +93717,10 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button-alt w-100" },
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "rolls-step-choice" }
+                    },
                     [_vm._v("Rolls")]
                   )
                 ],
@@ -93730,7 +93739,10 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button-alt w-100" },
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "options-switch-step-choice" }
+                    },
                     [_vm._v("Options Switch")]
                   )
                 ],
@@ -93742,7 +93754,10 @@ var render = function() {
                 [
                   _c(
                     "b-button",
-                    { staticClass: "mm-modal-market-button-alt w-100" },
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "efp-switch-step-choice" }
+                    },
                     [_vm._v("EFP Switch")]
                   )
                 ],

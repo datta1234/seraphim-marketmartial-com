@@ -43,8 +43,6 @@
             },
             /**
              * Loads Market Structure
-             *
-             * @todo move to component, logic does not need to be here
              */
             loadStructures() {
                 axios.get(axios.defaults.baseUrl + '/trade/market-type/'+this.data.market_type.id+'/trade-structure')

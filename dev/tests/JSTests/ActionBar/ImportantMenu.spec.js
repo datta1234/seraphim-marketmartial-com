@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
-import ImportantMenu from '../../resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue';
-import Market from '../../resources/assets/js/lib/Market.js';
-import UserMarketRequest from '../../resources/assets/js/lib/UserMarketRequest.js';
+import ImportantMenu from '../../../resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue';
+import Market from '../../../resources/assets/js/lib/Market.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 import { createLocalVue } from '@vue/test-utils';
 import BootstrapVue from 'bootstrap-vue';
 

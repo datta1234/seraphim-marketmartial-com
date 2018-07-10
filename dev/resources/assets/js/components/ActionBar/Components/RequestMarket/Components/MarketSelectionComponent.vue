@@ -3,7 +3,7 @@
         <b-container fluid>
             <b-row class="text-center">
                 <b-col v-if="data" v-for="market in data.market_type.markets" cols="12" class="mt-2">
-                    <b-button class="mm-modal-market-button-alt w-50" @click="selectMarket(market)">
+                    <b-button :id="market.title+'-market-choice'" class="mm-modal-market-button-alt w-50" @click="selectMarket(market)">
                         {{ market.title }}
                     </b-button>
                 </b-col>
@@ -42,7 +42,7 @@
             },
         },
         mounted() {
-            
+
         }
     }
 </script>
