@@ -1,5 +1,6 @@
 <template>
-    <div dusk="step-selections" class="step-selections">
+    <div dusk="expiry-selection" class="step-selections">
+        Expiry
         <b-container fluid>
             <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
                 <b-col class="mt-0 text-center" cols="12" v-if="data.number_of_dates > 1">

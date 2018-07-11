@@ -1,5 +1,7 @@
 <template>
-    <div dusk="step-selections" class="step-selections">
+    <div dusk="market-selection" class="step-selections">
+            market selection
+
         <b-container fluid>
             <b-row class="text-center">
                 <b-col v-if="data" v-for="market in data.market_type.markets" cols="12" class="mt-2">

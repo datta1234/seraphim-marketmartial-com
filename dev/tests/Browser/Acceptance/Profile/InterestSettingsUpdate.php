@@ -11,9 +11,10 @@ use Tests\Browser\Components\DayMonthPicker;
 class InterestSettingsUpdate extends DuskTestCase
 {
     use DatabaseMigrations;
+    
     /**
      * A Dusk test example.
-     *
+     * @test
      * @return void
      */
     public function updateInterest()
