@@ -2,15 +2,19 @@
     <div dusk="expiry-selection" class="step-selections">
         Expiry
         <b-container fluid>
-            <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
-                <b-col class="mt-0 text-center" cols="12" v-if="data.number_of_dates > 1">
+            <b-row v-if="data.number_of_dates > 1" class="justify-content-md-center">
+                <b-col class="mt-0 text-center" cols="12">
                     <p class="modal-info-text">*Calendar structure requires {{ data.number_of_dates }} expiry dates. Second date selected will continue your market request process</p>
                 </b-col>
-                <b-col v-for="expiry_date in expiry_dates" cols="4" class="mt-2">
-                    <b-button class="mm-modal-market-button w-100" @click="selectExpiryDates(expiry_date.expiration_date)">
+            </b-row>
+            <div v-if="expiry_dates.length > 0" class="card-columns">
+                <div v-for="expiry_date in expiry_dates" class="card card-reset">
+                    <b-button :disabled="checkPastDate(expiry_date.expiration_date)" class="mm-modal-market-button w-100" @click="selectExpiryDates(expiry_date.expiration_date)">
                         {{ castToMoment(expiry_date.expiration_date) }}
                     </b-button>
-                </b-col>
+                </div>
+            </div>
+            <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
                 <b-col cols="12" class="mt-5">
                     <b-pagination @change="changePage($event)" 
                                   align="center" 
@@ -19,6 +23,11 @@
                                   v-model="current_page" 
                                   :per-page="per_page">
                     </b-pagination>
+                </b-col>
+            </b-row>
+            <b-row v-if="errors.messages.length > 0" class="text-center mt-3">
+                <b-col v-for="error in errors.messages" cols="12">
+                    <p class="text-danger mb-0">{{ error }}</p>
                 </b-col>
             </b-row>
         </b-container>
@@ -35,6 +44,9 @@
             'data': {
                 type: Object
             },
+            'errors': {
+                type: Object
+            }
         },
         data() {
             return {
@@ -54,7 +66,10 @@
                 }
             },
             castToMoment(date_string) {
-                return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
+                return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'); //return to 
+            },
+            checkPastDate(date_string) {
+                return moment(date_string).isBefore();
             },
             changePage($event) {
                 this.current_page = $event;

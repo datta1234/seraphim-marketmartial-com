@@ -1,5 +1,5 @@
 import { mount } from '@vue/test-utils';
-import FilterMarketsMenu from '../../resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue';
+import FilterMarketsMenu from '../../../resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue';
 
 describe('FilterMarketsMenu.vue', () => {
 

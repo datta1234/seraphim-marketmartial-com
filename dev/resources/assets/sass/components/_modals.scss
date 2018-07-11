@@ -87,6 +87,14 @@
 	}
 }
 
+.mm-modal-market-button:disabled {
+	background-color:$mm-light-grey;
+	
+	&:hover {
+		background-color:$mm-light-grey;	
+	}
+}
+
 
 .mm-modal-market-button-alt {
 	color: $mm-text-white;

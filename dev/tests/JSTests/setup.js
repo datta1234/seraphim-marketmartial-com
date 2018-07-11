@@ -1,5 +1,5 @@
 // setup JSDOM
-require('jsdom-global')()
+require('jsdom-global')();
 
 // make assertion library chai available globally
 global.chai = require('chai');
@@ -9,3 +9,6 @@ global.sinon = require('sinon');
 
 // make moment library available globally
 global.moment = require('moment');
+
+// make moment library available globally
+global.axios = require('axios');

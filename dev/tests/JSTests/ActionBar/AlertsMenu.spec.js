@@ -1,10 +1,10 @@
 import { mount } from '@vue/test-utils';
-import AlertsMenu from '../../resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue';
-import Market from '../../resources/assets/js/lib/Market.js';
-import UserMarketRequest from '../../resources/assets/js/lib/UserMarketRequest.js';
+import AlertsMenu from '../../../resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue';
+import Market from '../../../resources/assets/js/lib/Market.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 import { createLocalVue } from '@vue/test-utils';
 import BootstrapVue from 'bootstrap-vue';
-import { EventBus } from '../../resources/assets/js/lib/EventBus.js';
+import { EventBus } from '../../../resources/assets/js/lib/EventBus.js';
 
 // create an extended `Vue` constructor
 const localVue = createLocalVue();
