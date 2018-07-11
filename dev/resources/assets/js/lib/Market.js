@@ -38,8 +38,16 @@ export default class Market {
     *   @param {UserMarketRequest} market - UserMarket objects
     */
     addMarketRequest(market_req) {
-        market_req.setMarket(this);
-        this.market_requests.push(market_req);
+        let is_new_market = true;
+        for (let i = 0; i < this.market_requests.length; i++) {
+            if (this.market_requests[i].id === market_req.id) {
+                is_new_market = false;
+            }
+        }
+        if (is_new_market) {
+            market_req.setMarket(this);
+            this.market_requests.push(market_req);
+        }
     }
 
     /**

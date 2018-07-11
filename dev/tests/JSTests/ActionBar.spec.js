@@ -95,17 +95,4 @@ describe('ActionBarComponent.vue', () => {
 			EventBus.$emit('toggleSidebar', 'chat');*/
 		});
 	});
-
-	describe('Request a Market', () => {
-
-		it('Opens Request a Market modal', () => {
-			chai.assert(false, "TODO");
-
-		});
-
-		it('Closes Request a Market modal', () => {
-			chai.assert(false, "TODO");
-
-		});
-	});
 });

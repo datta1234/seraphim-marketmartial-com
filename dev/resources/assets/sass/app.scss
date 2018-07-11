@@ -40,17 +40,17 @@
 
 @font-face {
   font-family: 'Muli-Bold';
-  src:  url('/fonts/Muli-Bold.ttf') format('truetype');
+  src:  url($base_url + '/fonts/Muli-Bold.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Muli-Regular';
-  src:  url('/fonts/Muli-Regular.ttf') format('truetype');
+  src:  url($base_url + '/fonts/Muli-Regular.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Raleway-SemiBold';
-  src:  url('/fonts/Raleway-SemiBold.ttf') format('truetype');
+  src:  url($base_url + '/fonts/Raleway-SemiBold.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Roboto-Regular';
-  src:  url('/fonts/Roboto-Regular.ttf') format('truetype');
+  src:  url($base_url + '/fonts/Roboto-Regular.ttf') format('truetype');
 }

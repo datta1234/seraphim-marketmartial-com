@@ -95,10 +95,10 @@ class UserMarketRequestRequest extends FormRequest
 
                 foreach ($tradeStructuregroup->items as $structureItem)
                 {
-                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.numeric"] = "Please ensure that you enter a valid amount.";
-                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.date"] = "Please ensure that you select a valid date.";
+                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.numeric"] = "Please ensure that you enter a valid ".$structureItem->title." amount.";
+                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.date"] = "Please ensure that the selected ".$structureItem->title." is a valid date.";
                     $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.after"] = "Please select a date that is after today.";
-                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.required"] = "Field is required.";
+                    $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}.required"] = $structureItem->title." is required.";
 
                 }
             }

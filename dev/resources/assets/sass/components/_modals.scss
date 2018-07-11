@@ -5,6 +5,9 @@
 }
 
 .mm-modal {
+	
+	display: inline-block; 
+	
 	.modal-content {
 		background-color: $mm-background;
 	}
@@ -21,6 +24,31 @@
 				 */
 			}
 		}
+	}
+	.modal-body {
+		.pagination {
+			span, a {
+		    	border: none;
+    			background-color: transparent;
+    			color: $mm-modal-header;
+			}
+			.active > a {
+				color: $mm-text-white;
+				background-color: $mm-modal-header;
+			}
+		}
+		.custom-radio > label::before {
+			background-color: $mm-text-white;
+		}
+		.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+			background-color: $mm-modal-header;
+		}
+	}
+	.modal-info-text {
+		font-size: 0.9em;
+	}
+	.modal-warning-text {
+		font-size: 0.7em;
 	}
 	.modal-footer {
 		border-top: none;
@@ -56,6 +84,14 @@
 	&:hover {
 		color: $mm-text-white;
 		background-color: $mm-modal-header;
+	}
+}
+
+.mm-modal-market-button:disabled {
+	background-color:$mm-light-grey;
+	
+	&:hover {
+		background-color:$mm-light-grey;	
 	}
 }
 

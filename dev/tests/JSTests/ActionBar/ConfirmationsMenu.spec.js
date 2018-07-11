@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
-import ConfirmationsMenu from '../../resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue';
-import Market from '../../resources/assets/js/lib/Market.js';
-import UserMarketRequest from '../../resources/assets/js/lib/UserMarketRequest.js';
+import ConfirmationsMenu from '../../../resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue';
+import Market from '../../../resources/assets/js/lib/Market.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 import { createLocalVue } from '@vue/test-utils';
 import BootstrapVue from 'bootstrap-vue';
 

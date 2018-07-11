@@ -24,6 +24,20 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+switch(process.env.NODE_ENV) {
+    case "development":
+        window.axios.defaults.baseUrl = "";
+    break;
+    case "staging":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+    break;
+    case "production":
+        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+    break;
+    default:
+        window.axios.defaults.baseUrl = "";
+}
+
 /**
  * Next we will register the CSRF Token as a common header with Axios so that
  * all outgoing HTTP requests automatically have it attached. This is just

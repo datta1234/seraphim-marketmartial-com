@@ -22,6 +22,10 @@
 *   Chat Bar
 */
 
+/* 
+* bootstrap overrides
+*/
+
 h1 {
   font-family: "Raleway-SemiBold";
 }
@@ -43,6 +47,11 @@ a.mm-button,
 button.mm-button {
   font-family: Arial;
   font-size: 1.2rem;
+}
+
+button.mm-base,
+a.mm-base {
+  font-size: 0.9rem;
 }
 
 /* 
@@ -10494,22 +10503,26 @@ a.text-dark:focus {
   }
 }
 
-html,
-body {
-  height: 100%;
+html {
+  min-height: 100%;
+  position: relative;
 }
 
 body {
-  /* background-image: url(/img/background.png);
-	background-size: cover; */
   background-color: #000705;
   overflow-x: hidden;
+  margin-bottom: 65px;
 }
 
 body .page-title h1 {
   color: #ffffff;
   font-family: "Raleway-SemiBold";
   font-size: 3.5rem;
+}
+
+.canvas-body {
+  background-image: url(/img/background.png);
+  background-size: cover;
 }
 
 .card {
@@ -10521,6 +10534,7 @@ body .page-title h1 {
 .card .card-header {
   background-color: #269a9b;
   border: none;
+  color: #ffffff;
 }
 
 .card .card-header span.icon {
@@ -10619,17 +10633,20 @@ body .page-title h1 {
 .mm-button {
   color: #ffffff;
   background-color: #269a9b;
+  border-color: #269a9b;
 }
 
 .mm-button:focus,
 .mm-button.focus {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-button:hover {
   color: #ffffff;
   background-color: #1c7172;
+  border-color: #1c7172;
 }
 
 .mm-login-button {
@@ -11009,12 +11026,16 @@ a.mm-login-button {
   background-color: transparent;
 }
 
-#trade_body {
-  height: auto;
+.mm-menu .list-group-item.active {
+  background: #269a9b;
+  border-color: #269a9b;
+}
+
+.mm-menu .list-group-item.active > a {
+  color: #ffffff;
 }
 
 #trade_app {
-  height: 100%;
   position: relative;
 }
 
@@ -11232,6 +11253,13 @@ a.mm-login-button {
 
 .trade-section.light-theme .mm-transparent-button:hover {
   color: #4c4c4c;
+}
+
+.card-reset {
+  background-color: inherit;
+  border: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 @font-face {
@@ -11826,8 +11854,10 @@ input:checked + .slider:before {
 
 #trade-footer {
   background-color: #303030;
-  position: relative;
   width: 100%;
+  position: absolute;
+  bottom: 0;
+  height: 65px;
 }
 
 #trade-footer .footer-links-block {
@@ -12115,6 +12145,10 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
+.mm-modal {
+  display: inline-block;
+}
+
 .mm-modal .modal-content {
   background-color: #D3D8DC;
 }
@@ -12129,6 +12163,34 @@ input:checked + .slider:before {
 							    	margin-left: 19.6rem;
 				}
 				 */
+}
+
+.mm-modal .modal-body .pagination span,
+.mm-modal .modal-body .pagination a {
+  border: none;
+  background-color: transparent;
+  color: #1c7c74;
+}
+
+.mm-modal .modal-body .pagination .active > a {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-body .custom-radio > label::before {
+  background-color: #FFFFFF;
+}
+
+.mm-modal .modal-body .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #1c7c74;
+}
+
+.mm-modal .modal-info-text {
+  font-size: 0.9em;
+}
+
+.mm-modal .modal-warning-text {
+  font-size: 0.7em;
 }
 
 .mm-modal .modal-footer {
@@ -12167,6 +12229,14 @@ input:checked + .slider:before {
 .mm-modal-market-button:hover {
   color: #FFFFFF;
   background-color: #1c7c74;
+}
+
+.mm-modal-market-button:disabled {
+  background-color: #6D6E70;
+}
+
+.mm-modal-market-button:disabled:hover {
+  background-color: #6D6E70;
 }
 
 .mm-modal-market-button-alt {

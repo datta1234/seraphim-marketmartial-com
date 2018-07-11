@@ -14,6 +14,20 @@
                             <b-btn size="sm" class="w-100" variant="primary">ACCEPT</b-btn>
                         </b-col>
                     </b-row>
+                    <b-row no-gutters v-if="item.is_maker">
+                        <b-col cols="3" class="text-center">
+                            {{ item.bid_qty }}
+                        </b-col>
+                        <b-col cols="3" class="text-center">
+                            {{ item.bid }}
+                        </b-col>
+                        <b-col cols="3" class="text-center">
+                            {{ item.offer }}
+                        </b-col>
+                        <b-col cols="3" class="text-center">
+                            {{ item.offer_qty }}
+                        </b-col>
+                    </b-row>
                     <b-row no-gutters v-else>
                         <b-col cols="12" class="text-center">
                             {{ getState(item) }}
@@ -26,7 +40,7 @@
                     </p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center">
+            <b-row class="justify-content-md-center" v-if="history.reduce((x,y) => x = y.is_interest, false)">
                 <b-col class="mt-2">
                     <p>
                         <small>Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.</small>

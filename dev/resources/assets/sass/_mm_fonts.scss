@@ -1,4 +1,5 @@
 @import './_mm_custom_variables';
+@import './_variables';
 
 h1 {
 	font-family: $mm-font-head;
@@ -17,5 +18,9 @@ button.mm-login-button, a.mm-button, button.mm-button {
 	font-size: 1.2rem;
 }
 
+button.mm-base, a.mm-base
+{
+	font-size: $font-size-base;
+}
 
 

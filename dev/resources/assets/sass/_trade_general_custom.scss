@@ -1,9 +1,10 @@
 #trade_body {
-	height:auto;
+
 }
+
 #trade_app {
-	height: 100%;
 	position: relative;
+
 	.trade-screen-wrapper {
 		position: relative;
 	}
@@ -191,4 +192,10 @@
 			color: lighten($mm-background-alt, 20%);
 		}
 	}
+}
+
+.card-reset {
+	background-color: inherit;
+	border: none;
+    box-shadow: none;
 }

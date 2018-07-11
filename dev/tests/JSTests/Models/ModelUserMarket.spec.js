@@ -1,6 +1,6 @@
-import UserMarket from '../../resources/assets/js/lib/UserMarket.js';
-import UserMarketNegotiation from '../../resources/assets/js/lib/UserMarketNegotiation.js';
-import UserMarketRequest from '../../resources/assets/js/lib/UserMarketRequest.js';
+import UserMarket from '../../../resources/assets/js/lib/UserMarket.js';
+import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNegotiation.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 
 describe('class UserMarket', () => {
 
