@@ -1,5 +1,5 @@
-import UserMarketNegotiation from '../../resources/assets/js/lib/UserMarketNegotiation.js';
-import UserMarketNegotiationCondition from '../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
+import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNegotiation.js';
+import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
 
 describe('class UserMarketNegotiationCondition', () => {
 

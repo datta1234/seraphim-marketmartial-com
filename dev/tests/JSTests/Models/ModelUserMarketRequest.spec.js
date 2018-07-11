@@ -1,7 +1,7 @@
-import UserMarketRequest from '../../resources/assets/js/lib/UserMarketRequest.js';
-import UserMarketQuote from '../../resources/assets/js/lib/UserMarketQuote.js';
-import UserMarket from '../../resources/assets/js/lib/UserMarket.js';
-import Market from '../../resources/assets/js/lib/Market.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
+import UserMarketQuote from '../../../resources/assets/js/lib/UserMarketQuote.js';
+import UserMarket from '../../../resources/assets/js/lib/UserMarket.js';
+import Market from '../../../resources/assets/js/lib/Market.js';
 
 describe('class UserMarketRequest', () => {
 
