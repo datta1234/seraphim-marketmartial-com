@@ -91989,7 +91989,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 case 6:
                     this.modal_data.title = 'Confirm Market Request';
-                    this.index_data.index_market_object.details = component_data;
+                    //this.index_data.index_market_object.details = component_data;
                     console.log("CASE 6: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Confirm';
                     break;
@@ -92201,9 +92201,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.callback(market);
         }
     },
-    mounted: function mounted() {
-        console.log("Market Data LOADED=========:", this.data);
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -92347,7 +92345,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get(axios.defaults.baseUrl + '/trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
                 if (tradeStructureResponse.status == 200) {
                     _this.trade_structures = tradeStructureResponse.data;
-                    console.log("WHAT COMES FROM SERVER STRUCTURE? ", _this.trade_structures);
                 } else {
                     console.error(err);
                 }
@@ -92391,6 +92388,9 @@ var render = function() {
                             "b-button",
                             {
                               staticClass: "mm-modal-market-button-alt w-50",
+                              attrs: {
+                                id: trade_structure.title + "-structure-choice"
+                              },
                               on: {
                                 click: function($event) {
                                   _vm.selectStructure(trade_structure.title)
@@ -92836,6 +92836,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             evt.preventDefault();
             Vue.nextTick(function () {
                 console.log("DATA TO BE SENT", _this.form_data);
+                _this.data.index_market_object.details = _this.form_data;
                 _this.callback(_this.form_data);
             });
         },
@@ -93275,9 +93276,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
         }
     },
-    mounted: function mounted() {
-        console.log("FINAL STEP", this.data);
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -93429,6 +93428,7 @@ var render = function() {
                     "b-button",
                     {
                       staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "confirm-request-market" },
                       on: {
                         click: function($event) {
                           _vm.confirmDetails()

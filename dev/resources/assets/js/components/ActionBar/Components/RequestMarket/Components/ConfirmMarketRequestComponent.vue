@@ -48,7 +48,7 @@
             </b-row>
             <b-row align-h="center">
                 <b-col cols="6" class="mt-2">
-                    <b-button class="mm-modal-market-button-alt w-100" @click="confirmDetails()">
+                    <b-button id="confirm-request-market" class="mm-modal-market-button-alt w-100" @click="confirmDetails()">
                         Send Request
                     </b-button>
                 </b-col>
@@ -84,7 +84,6 @@
             },
         },
         mounted() {
-            console.log("FINAL STEP",this.data);
         }
     }
 </script>

@@ -127,7 +127,7 @@
                         break;
                     case 6:
                         this.modal_data.title = 'Confirm Market Request'
-                        this.index_data.index_market_object.details = component_data;
+                        //this.index_data.index_market_object.details = component_data;
                         console.log("CASE 6: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Confirm';
                         break;

@@ -33,7 +33,6 @@ describe('MarketSelectionComponent.vue', () => {
 
 	it('Select Market', (done) => {
 		let marketSelectionCallback = (market) => {
-			console.log("What is this?: ",JSON.stringify(index_data.index_market_object.market));
 			chai.assert.deepEqual(index_data.index_market_object.market, market, "DTOP is the selected Market set");
 			done();
 		};

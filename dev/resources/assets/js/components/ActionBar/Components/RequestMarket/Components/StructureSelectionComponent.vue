@@ -3,7 +3,7 @@
         <b-container fluid>
             <b-row v-if="trade_structures" class="text-center">
                 <b-col v-for="trade_structure in trade_structures" v-if="trade_structure.is_selectable" cols="12" class="mt-2">
-                    <b-button class="mm-modal-market-button-alt w-50" @click="selectStructure(trade_structure.title)">
+                    <b-button :id="trade_structure.title+'-structure-choice'" class="mm-modal-market-button-alt w-50" @click="selectStructure(trade_structure.title)">
                         {{ trade_structure.title }}
                     </b-button>
                 </b-col>
@@ -49,7 +49,6 @@
                 .then(tradeStructureResponse => {
                     if(tradeStructureResponse.status == 200) {
                         this.trade_structures = tradeStructureResponse.data;
-                        console.log("WHAT COMES FROM SERVER STRUCTURE? ",this.trade_structures);
                     } else {
                         console.error(err);    
                     }

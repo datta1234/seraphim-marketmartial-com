@@ -125,7 +125,8 @@
             submitDetails(evt) {
                 evt.preventDefault();
                 Vue.nextTick( () => {
-                	console.log("DATA TO BE SENT", this.form_data);
+                    console.log("DATA TO BE SENT", this.form_data);
+                    this.data.index_market_object.details = this.form_data;
                 	this.callback(this.form_data);
 				})
             },
