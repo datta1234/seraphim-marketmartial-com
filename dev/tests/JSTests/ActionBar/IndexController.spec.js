@@ -1,5 +1,13 @@
-import { mount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import IndexController from '../../../resources/assets/js/components/ActionBar/Components/RequestMarket/Controllers/IndexControllerComponent.vue';
+import Market from '../../../resources/assets/js/lib/Market.js';
+import { createLocalVue } from '@vue/test-utils';
+import BootstrapVue from 'bootstrap-vue';
+
+// create an extended `Vue` constructor
+const localVue = createLocalVue();
+// install boostrap to this vue instance only
+localVue.use(BootstrapVue);
 
 describe('IndexControllerComponent.vue', () => {
 
@@ -10,7 +18,25 @@ describe('IndexControllerComponent.vue', () => {
 
 	it('Date format casting', () => {
 		chai.assert(false, "TODO");
+		/*const indexControllerDateCastingWrapper = shallowMount(IndexController, {
+			propsData: {
+				callback: () => {},
+				modal_data: {
+					title:'Select A Market',
+                    step: 0,
+                    show_modal: false,
+                    modal_ref: 'request-market-ref',
+                    selected_controller: null,
+				},
+				close_modal: () => {}
+			},
+			localVue
+		});
+		chai.assert.equal( indexControllerDateCastingWrapper.vm.castToMoment("2019-09-19 00:00:00"), "2019-09-19", "The passed date (2019-09-19 00:00:00) was casted to format YYYY-MM-DD (2019-09-19)");*/
+	});
 
+	it('Mount load initial step' , () => {
+		chai.assert(false, "TODO");
 	});
 
 	describe('Change contoller step', () => {
@@ -77,8 +103,8 @@ describe('IndexControllerComponent.vue', () => {
 		});
 
 		it('Post new Market Request', () => {
-			chai.assert(false, "TODO");
-
+			chai.assert(false, "TODO - DO WE TEST THIS?");
+			//mock fake api and stub the axios call, get moxios to work perhaps or use sinon.
 		});
 	});
 

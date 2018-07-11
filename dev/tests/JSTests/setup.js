@@ -12,3 +12,6 @@ global.moment = require('moment');
 
 // make moment library available globally
 global.axios = require('axios');
+
+// make Vue library available globally
+global.Vue = require('vue');

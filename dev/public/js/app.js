@@ -92833,9 +92833,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         submitDetails: function submitDetails(evt) {
             var _this = this;
 
+            console.log("We testin yo: ", evt);
             evt.preventDefault();
             Vue.nextTick(function () {
-                console.log("DATA TO BE SENT", _this.form_data);
+                console.log("DATA TO BE SENT", JSON.stringify(_this.form_data));
                 _this.data.index_market_object.details = _this.form_data;
                 _this.callback(_this.form_data);
             });
@@ -93148,7 +93149,10 @@ var render = function() {
                             "b-button",
                             {
                               staticClass: "mm-modal-market-button-alt w-50",
-                              attrs: { type: "submit" }
+                              attrs: {
+                                id: "submit-index-details",
+                                type: "submit"
+                              }
                             },
                             [
                               _vm._v(
