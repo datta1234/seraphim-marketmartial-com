@@ -1,5 +1,5 @@
 <template>
-    <div dusk="step-selections" class="step-selections">
+    <div dusk="step-selection" class="step-selections">
         <b-container fluid>
             <b-row class="mt-2">
                 <b-col>

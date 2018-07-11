@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Browser\Components\TradeScreen;
+namespace Tests\Browser\Components\TradeScreen\ActionBar\RequestMarket;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
-class MarketTabs extends BaseComponent
+class StepSelectionComponent extends BaseComponent
 {
     /**
      * Get the root selector for the component.
@@ -14,7 +14,7 @@ class MarketTabs extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@step-selection';
     }
 
     /**
@@ -36,7 +36,7 @@ class MarketTabs extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@step-selection',
         ];
     }
 }

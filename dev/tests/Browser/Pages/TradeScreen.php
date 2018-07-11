@@ -25,7 +25,7 @@ class TradeScreen extends BasePage
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs('/trade');
+        $browser->assertPathIs($this->url());
 
     }
 

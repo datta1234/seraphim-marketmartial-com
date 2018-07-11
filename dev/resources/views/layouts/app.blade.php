@@ -22,20 +22,25 @@
     <script src="{{ asset('js/fss.js') }}"></script>
     @yield('header-scripts')
     </head>
+<<<<<<< HEAD
+    <body class="canvas-body">
+    {{--Alerts--}}
+    <div class="toast-holder">
+        <div class="container">
+            @include('layouts.elements.alerts')
+        </div>
+    </div>
+=======
     <body>
         <!-- <div id="geoBackdrop"></div> -->
+>>>>>>> feature/trade-screen
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')
-            
+            @yield('banner')
             {{-- Layout --}}
             <main class="container">
                 <div class="page-body-container mt-3">
-                    {{--Alerts--}}
-                    <div>
-                        <div class="toast-holder"></div>
-                        @include('layouts.elements.alerts')
-                    </div>
                     @yield('content')
                 </div>
             </main> {{-- Main end --}}
