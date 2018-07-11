@@ -1,5 +1,5 @@
 <template>
-    <div dusk="step-selections" class="step-selections">
+    <div dusk="detail" class="step-selections">
         <b-container fluid>
             <b-row class="justify-content-md-center">
             	<b-col cols="12">

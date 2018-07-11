@@ -26,7 +26,7 @@ class ContactUsRequest extends FormRequest
         $rules = [
             'name' => 'required|max:255',
             'contact_email' => 'required|email',
-            'message' => 'required'
+            'contact_message' => 'required'
         ];
 
         return $rules;

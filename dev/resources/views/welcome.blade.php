@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
+@section('banner')
+    <header-canvas></header-canvas>
+@endsection
+
 @section('content')
+
+
 <div class="row justify-content-md-end">
     <div class="col col-md-12">
         <p class="float-right active-markets">
@@ -331,15 +337,15 @@
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
-                        @if ($errors->has('message'))
+                        <textarea class="form-control {{ $errors->has('contact_message') ? ' is-invalid' : '' }}" id="contactMessage" name="contact_message" rows="10" placeholder="Enter your message here...">{{ old('contact_message') }}</textarea>
+                        @if ($errors->has('contact_message'))
                             <div class="alert alert-danger">
-                                <strong>{{ $errors->first('message') }}</strong>
+                                <strong>{{ $errors->first('contact_message') }}</strong>
                             </div>
                         @endif
                     </div>
                     <div class="form-group mb-2">
-                        <button type="submit" class="btn mm-footer-button float-right">Submit message</button>
+                        <button disabled type="submit" class="btn mm-footer-button float-right">Submit message</button>
                     </div>
                 </form>
             </div>

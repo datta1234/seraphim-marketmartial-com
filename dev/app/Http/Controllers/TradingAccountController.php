@@ -81,7 +81,7 @@ class TradingAccountController extends Controller
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('tsandcs.edit')->with('success', 'Trading account settings updated!');
+        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
         
     }
 }
