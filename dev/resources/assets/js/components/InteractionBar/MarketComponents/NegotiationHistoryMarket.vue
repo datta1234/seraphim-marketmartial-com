@@ -14,7 +14,7 @@
                             <b-btn size="sm" class="w-100" variant="primary">ACCEPT</b-btn>
                         </b-col>
                     </b-row>
-                    <b-row no-gutters v-if="item.is_maker">
+                    <b-row no-gutters v-else-if="item.is_maker">
                         <b-col cols="3" class="text-center">
                             {{ item.bid_qty }}
                         </b-col>

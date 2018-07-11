@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-tab" style="width:100%">
+    <div :dusk="'market-tab-'+marketRequest.id" style="width:100%">
         <div class="col col-12 text-center">
             <div class="row">
                 <component :is="tabs[marketRequest.trade_structure]" :market-request="marketRequest"></component>

@@ -1,17 +1,12 @@
 <?php
 
-namespace Tests\Browser\Components\TradeScreen;
+namespace Tests\Browser\Components\TradeScreen\MarketTabs;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
-class MarketTab extends BaseComponent
+class MarketTabOutright extends BaseComponent
 {
- 
-    public function __construct($id = null) {
-        $this->tab_id = $id ? $id : '*';
-    }
-
     /**
      * Get the root selector for the component.
      *
@@ -19,7 +14,7 @@ class MarketTab extends BaseComponent
      */
     public function selector()
     {
-        return '@market-tab-'.$this->tab_id;
+        return '@market-tab-outright';
     }
 
     /**
@@ -41,9 +36,7 @@ class MarketTab extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@market-tab-'.$this->tab_id,
+            '@element' => '@market-tab-outright',
         ];
     }
-
-    
 }

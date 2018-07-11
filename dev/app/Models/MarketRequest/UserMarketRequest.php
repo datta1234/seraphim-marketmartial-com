@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserMarketRequest extends Model
 {
+    use \App\Traits\ResolvesUser;
+
     /**
      * @property integer $id
      * @property integer $user_id
@@ -158,7 +160,7 @@ class UserMarketRequest extends Model
 
     public function getAuthedUserMarketAttribute() {
         return $this->userMarkets()->whereHas('user', function($q) {
-            $q->where('organisation_id', \Auth::user()->organisation_id);
+            $q->where('organisation_id',$this->resolveOrganisationId());
         })->orderBy('updated_at', 'DESC')
             ->with('currentMarketNegotiation')
             ->first();
@@ -178,9 +180,9 @@ class UserMarketRequest extends Model
         ];
 
         // get is this current user the 
-        $self_user = $this->user_id == \Auth::user()->id;
+        $self_user = $this->user_id == $this->resolveUserId();
         // make sure to handle null organisations as false
-        $self_org = ( \Auth::user()->organisation_id == null ? false : $this->user->organisation_id == \Auth::user()->organisation_id );
+        $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
 
         // if not quotes/user_markets preset => REQUEST
         if($this->userMarkets->isEmpty()) {

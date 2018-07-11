@@ -4,6 +4,9 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Models\MarketRequest\UserMarketRequestItem::class, function (Faker $faker) {
     return [
+        "user_market_request_group_id" => function() {
+            return factory(App\Models\UserMarket\UserMarketRequestGroup::class)->create()->id;
+        },
         "item_id" => function() {
             return factory(App\Models\StructureItems\Item::class)->create()->id;
         },

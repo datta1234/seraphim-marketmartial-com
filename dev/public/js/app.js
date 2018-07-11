@@ -86111,7 +86111,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticStyle: { width: "100%" }, attrs: { dusk: "market-tab" } },
+    {
+      staticStyle: { width: "100%" },
+      attrs: { dusk: "market-tab-" + _vm.marketRequest.id }
+    },
     [
       _c("div", { staticClass: "col col-12 text-center" }, [
         _c(
@@ -88861,96 +88864,94 @@ var render = function() {
                           ],
                           1
                         )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    item.is_maker
-                      ? _c(
-                          "b-row",
-                          { attrs: { "no-gutters": "" } },
-                          [
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.bid_qty) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.bid) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.offer) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.offer_qty) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      : _c(
-                          "b-row",
-                          { attrs: { "no-gutters": "" } },
-                          [
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "12" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(_vm.getState(item)) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
+                      : item.is_maker
+                        ? _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.bid_qty) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.bid) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.offer) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.offer_qty) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        : _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "12" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(_vm.getState(item)) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
                   ],
                   1
                 ),
