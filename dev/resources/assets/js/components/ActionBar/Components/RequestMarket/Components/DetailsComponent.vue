@@ -30,10 +30,10 @@
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-strike-0">Strike</label>
+								<label for="strike-0">Strike</label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-strike-0" 
+		      					<b-form-input :id="'quantity-'+index" 
 		      						type="number"
 		      						min="0"
 									v-model="field.strike"
@@ -45,10 +45,10 @@
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
+								<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-quantity-0" 
+		      					<b-form-input :id="'quantity-'+index" 
 		      						type="number"
 									min="0"
 									v-model="field.quantity"

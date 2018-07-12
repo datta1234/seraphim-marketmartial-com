@@ -5,9 +5,14 @@ import BootstrapVue from 'bootstrap-vue';
 
 // create an extended `Vue` constructor
 const localVue = createLocalVue();
+//Mock Vue $root data for component
 localVue.use((Vue) => {
 	Vue.prototype.market_types = {
-		market_types:["TOP40", "DTOP", "DCAP"]
+		market_types:[
+			{"id": 1,"title": "Index Option"},
+			{"id": 2,"title": "Delta One(EFPs, Rolls and EFP Switches)"},
+			{"id": 3,"title": "Single Stock Options"}
+		]
 	};
 });
 // install boostrap to this vue instance only
