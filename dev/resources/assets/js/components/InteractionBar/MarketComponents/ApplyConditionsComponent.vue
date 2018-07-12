@@ -3,7 +3,7 @@
         <b-col>
             <b-row>
                 <b-col>
-                    <b-form-checkbox v-model="show_options" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
+                    <b-form-checkbox v-model="show_options" dusk="ibar-apply-a-condition" name="apply-a-condition" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
                 </b-col>
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">

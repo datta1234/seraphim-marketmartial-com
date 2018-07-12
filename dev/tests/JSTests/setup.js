@@ -12,3 +12,4 @@ global.moment = require('moment');
 
 // make moment library available globally
 global.axios = require('axios');
+global.axios.defaults.baseUrl = "";

@@ -29,12 +29,12 @@
                 </b-row>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
-                        <b-button class="w-100" size="sm" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button class="w-100" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
                     </b-col>
                 </b-row>
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
-                        <b-button class="w-100" size="sm" variant="secondary">No Cares</b-button>
+                        <b-button class="w-100" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>

@@ -6290,8 +6290,8 @@ var UserMarketNegotiation = function () {
             id: "",
             bid: "",
             offer: "",
-            bid_qty: "",
-            offer_qty: "",
+            bid_qty: 500,
+            offer_qty: 500,
             is_repeat: false,
             has_premium_calc: false,
             bid_premium: "",
@@ -86683,7 +86683,11 @@ var render = function() {
                         "b-button",
                         {
                           staticClass: "w-100",
-                          attrs: { size: "sm", variant: "primary" },
+                          attrs: {
+                            size: "sm",
+                            dusk: "ibar-action-send",
+                            variant: "primary"
+                          },
                           on: {
                             click: function($event) {
                               _vm.sendQuote()
@@ -86711,7 +86715,11 @@ var render = function() {
                         "b-button",
                         {
                           staticClass: "w-100",
-                          attrs: { size: "sm", variant: "secondary" }
+                          attrs: {
+                            size: "sm",
+                            dusk: "ibar-action-nocares",
+                            variant: "secondary"
+                          }
                         },
                         [_vm._v("No Cares")]
                       )
@@ -89134,7 +89142,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid-qty",
+                            placeholder: "Qty"
+                          },
                           model: {
                             value: _vm.marketNegotiation.bid_qty,
                             callback: function($$v) {
@@ -89153,7 +89165,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Bid" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid",
+                            placeholder: "Bid"
+                          },
                           model: {
                             value: _vm.marketNegotiation.bid,
                             callback: function($$v) {
@@ -89172,7 +89188,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Offer" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer",
+                            placeholder: "Offer"
+                          },
                           model: {
                             value: _vm.marketNegotiation.offer,
                             callback: function($$v) {
@@ -89191,7 +89211,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer-qty",
+                            placeholder: "Qty"
+                          },
                           model: {
                             value: _vm.marketNegotiation.offer_qty,
                             callback: function($$v) {
@@ -89631,7 +89655,12 @@ var render = function() {
                   _c(
                     "b-form-checkbox",
                     {
-                      attrs: { value: true, "unchecked-value": false },
+                      attrs: {
+                        dusk: "ibar-apply-a-condition",
+                        name: "apply-a-condition",
+                        value: true,
+                        "unchecked-value": false
+                      },
                       model: {
                         value: _vm.show_options,
                         callback: function($$v) {

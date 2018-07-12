@@ -17,7 +17,7 @@ $factory->define(App\Models\MarketRequest\UserMarketRequestItem::class, function
             return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title;
         },
         "value" => function($umrItem) use ($faker) {
-            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title == "expiration date" ? $faker->date('Y-m-d') : $faker->randomNumber(8) ;
+            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title == "Expiration Date" ? $faker->date('My') : $faker->randomNumber(8) ;
         }
     ];
 });

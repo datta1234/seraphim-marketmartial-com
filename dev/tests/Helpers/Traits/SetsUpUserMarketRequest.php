@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Tests\Helpers;
+namespace Tests\Helpers\Traits;
 
-trait SetsUpUserMarketReqeust {
+trait SetsUpUserMarketRequest {
    
-    public function newMarket($market = null, $structure = null) {
+    public function createaMarketData($market = null, $structure = null) {
         // interest
         $userMarket = [
-            'organisation',             =>  null,
-            'user',                     =>  null,
-            'user_maker',               =>  null,
-            'organisation_maker',       =>  null,
-            'market',                   =>  null,
-            'trade_structure',          =>  null,
-            'user_market_request',      =>  null,
-            'user_market',              =>  null,
-            'user_market_negotiation',  =>  null,
+            'organisation_interest'    =>  null,
+            'user_interest'            =>  null,
+            'user_maker'               =>  null,
+            'organisation_maker'       =>  null,
+            'market'                   =>  null,
+            'trade_structure'          =>  null,
+            'user_market_request'      =>  null,
+            'user_market'              =>  null,
+            'user_market_negotiation'  =>  null,
         ];
-        $userMarket['organisation'] = factory(\App\Models\UserManagement\Organisation::class)->create(); 
-        $userMarket['user'] = factory(\App\Models\UserManagement\User::class)->create([
-            'organisation_id'=>$userMarket['organisation']->id
+        $userMarket['organisation_interest'] = factory(\App\Models\UserManagement\Organisation::class)->create(); 
+        $userMarket['user_interest'] = factory(\App\Models\UserManagement\User::class)->create([
+            'organisation_id'=>$userMarket['organisation_interest']->id
         ]);
         // market maker
         $userMarket['organisation_maker'] = factory(\App\Models\UserManagement\Organisation::class)->create(); 
@@ -32,7 +32,7 @@ trait SetsUpUserMarketReqeust {
 
         // market request
         $userMarket['user_market_request'] = factory(\App\Models\MarketRequest\UserMarketRequest::class)->create([
-            'user_id'               =>  $userMarket['user']->id,
+            'user_id'               =>  $userMarket['user_interest']->id,
             'trade_structure_id'    =>  $userMarket['trade_structure']->id,
             'market_id'             =>  $userMarket['market']->id,
         ]);
@@ -51,12 +51,12 @@ trait SetsUpUserMarketReqeust {
         });
         // user market
         $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create([
-            'user_id' => $userMarket['user']->id
+            'user_id' => $userMarket['user_interest']->id
         ]);
         // market negotiation
         $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create([
-            'user_id'               =>  $userMarket['user']->id,
-            'counter_user_id'       =>  $userMarket['user']->id,
+            'user_id'               =>  $userMarket['user_interest']->id,
+            'counter_user_id'       =>  $userMarket['user_interest']->id,
             'market_negotiation_id' =>  null,
 
             'future_reference'      =>  0,
@@ -67,6 +67,8 @@ trait SetsUpUserMarketReqeust {
         $userMarket['user_market']->currentMarketNegotiation()->associate($userMarket['user_market_negotiation'])->save();
         
         $userMarket['user_market_request_formatted'] = $userMarket['user_market_request']->preFormatted();
+        
+        return $userMarket;
 
     }
 }

@@ -6,24 +6,35 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Helper\FactoryHelper;
-use Tests\Helpers\Traits\SetsUpUserMarketReqeust;
+use Tests\Helpers\Traits\SetsUpUserMarketRequest;
 
 use Tests\Browser\Pages\TradeScreen;
 use Tests\Browser\Components\TradeScreen\InteractionBar;
+use Tests\Browser\Components\TradeScreen\InteractionBar\TitleBar;
+use Tests\Browser\Components\TradeScreen\InteractionBar\MarketHistory;
+use Tests\Browser\Components\TradeScreen\InteractionBar\MarketNegotiation;
+use Tests\Browser\Components\TradeScreen\InteractionBar\Conditions;
 use Tests\Browser\Components\TradeScreen\MarketTab;
 use Tests\Browser\Components\TradeScreen\MarketTabs\MarketTabOutright;
 
 class InteractionBarIndexOutrightTest extends DuskTestCase
 {
-    use DatabaseMigrations, SetsUpUserMarketReqeust;
+    use DatabaseMigrations, SetsUpUserMarketRequest;
 
     protected function setUp()
     {
         parent::setUp();
         FactoryHelper::setUpMarkets();
         FactoryHelper::setUpTradeStructures();
+        FactoryHelper::setUpTradeConditions();
 
+        $this->marketData = $this->createaMarketData('TOP40', 'Outright');
         
+    }
+
+    public function testBoth() {
+        $this->marketMaker();
+        $this->marketInterest();
     }
 
     /**
@@ -31,23 +42,41 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
      *
      * @return void
      */
-    public function testMarketMaker()
+    public function marketMaker()
     {
+        $this->perspective = 'maker';
+
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080)
-                ->loginAs($this->user_maker)
+                ->loginAs($this->marketData['user_'.$this->perspective])
                 ->visit(new TradeScreen)
                 // wait for the correct Tab + Contnet
-                ->waitFor(new MarketTab($this->user_market_request_formatted['id']))
-                ->waitForText($this->user_market_request_formatted['trade_items']['default']['Strike'])->screenshot(2)
-                ->within(new MarketTab($this->user_market_request_formatted['id']), function($browser) {
+                ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                ->waitForText($this->marketData['user_market_request_formatted']['trade_items']['default']['Strike'])
+                ->within(new MarketTab($this->marketData['user_market_request_formatted']['id']), function($browser) {
+                    
                     // Click on the qualifiying record
-                    $browser->click(new MarketTab($this->user_market_request_formatted['id']))->screenshot(3);
+                    $browser->click(new MarketTab($this->marketData['user_market_request_formatted']['id']));
                 })
-                ->waitFor(new InteractionBar)->screenshot(4)
+                ->waitFor(new InteractionBar)
+                ->pause(500)
+                ->screenshot($this->perspective.'_open')
                 ->within(new InteractionBar,function($browser) {
-                    $browser->assertSee($this->user_market_request->updated_at->format("H:i"))
-                    ->assertSee('Apply a condition');
+
+                    // Title details displayed correctly
+                    (new TitleBar('Outright',$this->marketData))->assert($browser);
+
+                    // Market Hostory
+                    (new MarketHistory('Outright',$this->marketData,$this->perspective))->assert($browser);
+
+                    // Market Negotiations
+                    (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->assert($browser);
+
+                    // submission buttons are present
+                    $browser->assertVisible('@ibar-action-send')->assertVisible('@ibar-action-nocares');
+
+                    // conditons
+                    (new Conditions())->assert($browser);
 
                 });
         });
@@ -58,23 +87,41 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
      *
      * @return void
      */
-    public function testInterest()
+    public function marketInterest()
     {
+        $this->perspective = 'interest';
+
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080)
-                ->loginAs($this->user)
+                ->loginAs($this->marketData['user_'.$this->perspective])
                 ->visit(new TradeScreen)
                 // wait for the correct Tab + Contnet
-                ->waitFor(new MarketTab($this->user_market_request_formatted['id']))
-                ->waitForText($this->user_market_request_formatted['trade_items']['default']['Strike'])->screenshot(2)
-                ->within(new MarketTab($this->user_market_request_formatted['id']), function($browser) {
+                ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                ->waitForText($this->marketData['user_market_request_formatted']['trade_items']['default']['Strike'])
+                ->within(new MarketTab($this->marketData['user_market_request_formatted']['id']), function($browser) {
+                    
                     // Click on the qualifiying record
-                    $browser->click(new MarketTab($this->user_market_request_formatted['id']))->screenshot(3);
+                    $browser->click(new MarketTab($this->marketData['user_market_request_formatted']['id']));
                 })
-                ->waitFor(new InteractionBar)->screenshot(4)
+                ->waitFor(new InteractionBar)
+                ->pause(500)
+                ->screenshot($this->perspective.'_open')
                 ->within(new InteractionBar,function($browser) {
-                    $browser->assertSee($this->user_market_request->updated_at->format("H:i"))
-                    ->assertSee('Apply a condition');
+
+                    // Title details displayed correctly
+                    (new TitleBar('Outright',$this->marketData))->assert($browser);
+
+                    // Market Hostory
+                    (new MarketHistory('Outright',$this->marketData,$this->perspective))->assert($browser);
+
+                    // Market Negotiations
+                    (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->assert($browser);
+
+                    // submission buttons are present
+                    $browser->assertVisible('@ibar-action-send')->assertVisible('@ibar-action-nocares');
+
+                    // conditons
+                    (new Conditions())->assert($browser);
 
                 });
         });
