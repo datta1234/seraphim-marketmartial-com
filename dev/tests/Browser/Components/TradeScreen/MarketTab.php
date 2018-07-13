@@ -5,8 +5,13 @@ namespace Tests\Browser\Components\TradeScreen;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
-class InteractionBar extends BaseComponent
+class MarketTab extends BaseComponent
 {
+ 
+    public function __construct($id = null) {
+        $this->tab_id = $id ? $id : '*';
+    }
+
     /**
      * Get the root selector for the component.
      *
@@ -14,7 +19,7 @@ class InteractionBar extends BaseComponent
      */
     public function selector()
     {
-        return '@interaction-bar';
+        return '@market-tab-'.$this->tab_id;
     }
 
     /**
@@ -36,7 +41,9 @@ class InteractionBar extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@interaction-bar',
+            '@element' => '@market-tab-'.$this->tab_id,
         ];
     }
+
+    
 }

@@ -7,6 +7,12 @@ use Laravel\Dusk\Component as BaseComponent;
 
 class MarketHistory extends BaseComponent
 {
+    public function __construct($type, &$data, $perspective) {
+        $this->type = $type;
+        $this->marketData = $data;
+        $this->perspective = $perspective;
+    }
+
     /**
      * Get the root selector for the component.
      *
@@ -14,7 +20,7 @@ class MarketHistory extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@ibar-negotiation-history-market';
     }
 
     /**
@@ -26,6 +32,26 @@ class MarketHistory extends BaseComponent
     public function assert(Browser $browser)
     {
         $browser->assertVisible($this->selector());
+
+        switch($this->type) {
+            // Outright
+            case 'Outright':
+                if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
+                    $browser->assertSee('BID ONLY');
+                }   
+                elseif($this->marketData['user_market_request_formatted']['quotes'][0]['offer_only']) {
+                    $browser->assertSee('OFFER ONLY');
+                } else {
+                    $browser->assertSee($this->marketData['user_market_request_formatted']['quotes'][0]['vol_spread'].' VOL SPREAD');
+                }
+            break;
+        }
+
+        if($this->perspective == 'interest') {
+            $browser->assertSee("Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.");
+        } else {
+            $browser->assertDontSee("Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.");
+        }
     }
 
     /**
@@ -36,7 +62,7 @@ class MarketHistory extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@ibar-negotiation-history-market',
         ];
     }
 }
