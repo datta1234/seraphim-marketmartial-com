@@ -7,83 +7,82 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Browser\Pages\TradeScreen;
 use Tests\Browser\Components\TradeScreen\UserHeader;
+use Tests\Helper\FactoryHelper;
+use Tests\Helpers\Traits\SetsUpUserMarketRequest;
+use Tests\Browser\Components\TradeScreen\InteractionBar;
+use Tests\Browser\Components\TradeScreen\MarketTab;
+
 use Carbon\Carbon;
 
 class ActionBarTest extends DuskTestCase
 {
 
-    use DatabaseMigrations;
+    use DatabaseMigrations, SetsUpUserMarketRequest;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->organisation = factory(\App\Models\UserManagement\Organisation::class)->create(); 
-        $this->user = factory(\App\Models\UserManagement\User::class)->create([
-            'organisation_id'=>$this->organisation->id
-        ]);
-        
+        FactoryHelper::setUpMarkets();
+        FactoryHelper::setUpTradeStructures();
+        $this->marketData = $this->createaMarketData('TOP40', 'Outright');
     }
 
-    /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
-    public function testRequestMarketButton()
+
+    public function testRequestButton()
     {
-        
-
+       $this->browse(function (Browser $browser) {
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->assertSee("Request");
+                         });
+        });
     }
 
-    // public function testImportantButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-important]', function($browser) {
-    //                 $browser->assertSee('Important');
-    //             });
-    //     });
-    // }
 
-    // public function testAlertsButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-alerts]', function($browser) {
-    //                 $browser->assertSee('Alerts');
-    //             });
-    //     });
-    // }
+    public function testImportantButton()
+    {
+        $this->browse(function (Browser $browser) {
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->waitForText("Important 1");
+                         });
+        });
+    }
 
-    // public function testConfirmationsButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-confirmations]', function($browser) {
-    //                 $browser->assertSee('Confirmations');
-    //             });
-    //     });
-    // }
+    public function testAlertButton()
+    {
+        $this->browse(function (Browser $browser) {
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->waitForText("Alerts 1");
+                         });
+        });
+    }
 
+    public function testAlertsButton()
+    {
+            factory(App\Models\Market\MarketNegotiation::class)->create([
+                "user_id" => $this->marketData['user_maker']->user->id,
+                "user_market_id" => $this->marketData['user_makert']->id 
+            ]); 
 
-    // public function testAddMarketsButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-add-market]', function($browser) {
-    //                 $browser->assertSee('Markets');
-    //             });
-    //     });
-    // }
+            $this->browse(function (Browser $browser) {
+                $browser->loginAs($this->marketData['user_maker'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->waitForText("Alerts 1");
+                         });
+            });
+    }
 
-    // public function testChatButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-add-market]', function($browser) {
-    //                 $browser->assertSee('Markets');
-    //             });
-    //     });
+  });
     // }
 
 }

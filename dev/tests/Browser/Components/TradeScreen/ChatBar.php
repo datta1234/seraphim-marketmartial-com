@@ -5,7 +5,7 @@ namespace Tests\Browser\Components\TradeScreen;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
-class InteractionBar extends BaseComponent
+class ChatBar extends BaseComponent
 {
     /**
      * Get the root selector for the component.
@@ -14,7 +14,7 @@ class InteractionBar extends BaseComponent
      */
     public function selector()
     {
-        return '@interaction-bar';
+        return '.chat-bar';
     }
 
     /**
@@ -36,7 +36,7 @@ class InteractionBar extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@interaction-bar'
+            '@element' => '.chat-bar',
         ];
     }
 }
