@@ -93,18 +93,22 @@ describe('class UserMarketRequest', () => {
 
 	describe('Getters and Setters', () => {
 
-		it('Test Parent Getter and Setter', () => {
-			let parent_market = new Market({id:"1"});
-			chai.assert.notDeepEqual(user_market_request.getParent(), parent_market, 'getParent() NOT be equal to the Parent set');
-			user_market_request.setParent(parent_market);
-			chai.assert.deepEqual(user_market_request.getParent(), parent_market, 'getParent() be equal to the Parent set');
+		it('Test Market Getter and Setter', () => {
+			let test_market = new Market({id:"1"});
+			chai.assert.notDeepEqual(user_market_request.getMarket(), test_market, 'getMarket() NOT be equal to the Market set');
+			user_market_request.setMarket(test_market);
+			chai.assert.deepEqual(user_market_request.getMarket(), test_market, 'getMarket() be equal to the Market set');
 		});
 
-		it('Test UserMarket Setter', () => {
+		it('Test Chosen User Market Getter and Setter', () => {
 			let user_market = new UserMarket({id:"2"});
 			chai.assert.notDeepEqual(user_market_request.getChosenUserMarket(), user_market, 'getChosenUserMarket() NOT be equal to the user_market set');
 			user_market_request.setChosenUserMarket(user_market);
 			chai.assert.deepEqual(user_market_request.getChosenUserMarket(), user_market, 'getChosenUserMarket() be equal to the user_market set');
+		});
+
+		it('Test Chosen User Market Quote Setter', () => {
+			chai.assert(false, "TODO");			
 		});
 	});
 

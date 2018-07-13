@@ -64,11 +64,11 @@ describe('class UserMarketNegotiation', () => {
 
 	describe('Getters and Setters', () => {
 
-		it('Test Parent Getter and Setter', () => {
+		it('Test User Market Getter and Setter', () => {
 			let parent_user_market = new UserMarket({id:"1"});
-			chai.assert.notDeepEqual(user_market_negotiation.getParent(), parent_user_market, 'getParent() NOT be equal to the Parent set');
-			user_market_negotiation.setParent(parent_user_market);
-			chai.assert.deepEqual(user_market_negotiation.getParent(), parent_user_market, 'getParent() be equal to the Parent set');
+			chai.assert.notDeepEqual(user_market_negotiation.getUserMarket(), parent_user_market, 'getUserMarket() NOT be equal to the Parent set');
+			user_market_negotiation.setUserMarket(parent_user_market);
+			chai.assert.deepEqual(user_market_negotiation.getUserMarket(), parent_user_market, 'getUserMarket() be equal to the Parent set');
 		});
 	});
 
@@ -107,6 +107,13 @@ describe('class UserMarketNegotiation', () => {
 			chai.assert.notInclude(JSON.stringify(user_market_negotiation), '"_market"', 'Should not include _market key');
 			chai.assert.notInclude(JSON.stringify(user_market_negotiation), '"_user_market_request"', 'Should not include _user_market_request key');
 
+		});
+	});
+
+	describe('Test storing User Market Negotiation ', () => {
+		
+		it('Pepare User Market Negotiation object to store', () => {
+			chai.assert.deepEqual
 		});
 	});
 });
