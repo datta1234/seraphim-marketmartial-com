@@ -22,7 +22,7 @@
     <script src="{{ asset('js/fss.js') }}"></script>
     @yield('header-scripts')
     </head>
-    <body class="canvas-body">
+    <body>
     {{--Alerts--}}
     <div class="toast-holder">
         <div class="container">
