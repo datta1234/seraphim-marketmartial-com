@@ -90283,6 +90283,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -90484,7 +90485,11 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { type: "button" },
+                            attrs: {
+                              id: "",
+                              "data-remove-market": key,
+                              type: "button"
+                            },
                             on: {
                               click: function($event) {
                                 _vm.filterMarketTypes(key, false)
@@ -90497,7 +90502,7 @@ var render = function() {
                           "button",
                           {
                             staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { type: "button" },
+                            attrs: { "data-add-market": key, type: "button" },
                             on: {
                               click: function($event) {
                                 _vm.filterMarketTypes(key, true)
@@ -93017,6 +93022,7 @@ var render = function() {
                                         "b-form-radio",
                                         {
                                           attrs: {
+                                            id: "choice-0",
                                             disabled:
                                               _vm.display.disable_choice,
                                             value: "0"
@@ -93045,6 +93051,7 @@ var render = function() {
                                         "b-form-radio",
                                         {
                                           attrs: {
+                                            id: "choice-1",
                                             disabled:
                                               _vm.display.disable_choice,
                                             value: "1"
@@ -93068,11 +93075,9 @@ var render = function() {
                         { attrs: { "align-h": "center" } },
                         [
                           _c("b-col", { attrs: { cols: "3" } }, [
-                            _c(
-                              "label",
-                              { attrs: { for: "outright-strike-0" } },
-                              [_vm._v("Strike")]
-                            )
+                            _c("label", { attrs: { for: "strike-0" } }, [
+                              _vm._v("Strike")
+                            ])
                           ]),
                           _vm._v(" "),
                           _vm._l(_vm.form_data.fields, function(field, index) {
@@ -93082,7 +93087,7 @@ var render = function() {
                               [
                                 _c("b-form-input", {
                                   attrs: {
-                                    id: "outright-strike-0",
+                                    id: "strike-" + index,
                                     type: "number",
                                     min: "0",
                                     state: _vm.inputState(index, "Strike"),
@@ -93128,7 +93133,7 @@ var render = function() {
                               [
                                 _c("b-form-input", {
                                   attrs: {
-                                    id: "outright-quantity-0",
+                                    id: "quantity-" + index,
                                     type: "number",
                                     min: "0",
                                     placeholder: "500",
@@ -93306,7 +93311,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ConfirmMarketRequest',
@@ -93351,7 +93355,6 @@ var render = function() {
       attrs: { dusk: "confirm-market-request" }
     },
     [
-      _vm._v("\n    consfirm reqquest\n    "),
       _c(
         "b-container",
         { attrs: { fluid: "" } },
@@ -95204,9 +95207,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       mutableChecked: this.checked
     };
   },
-  mounted: function mounted() {
-    console.log(this.checked);
-  }
+  mounted: function mounted() {}
 });
 
 /***/ }),

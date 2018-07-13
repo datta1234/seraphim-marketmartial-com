@@ -6,11 +6,10 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Browser\Pages\TradeScreen;
-use Tests\Browser\Components\TradeScreen\UserHeader;
-use Carbon\Carbon;
 
-class InfoBarTest extends DuskTestCase
+class ChangeThemeTest extends DuskTestCase
 {
+
     use DatabaseMigrations;
 
     protected function setUp()
@@ -20,24 +19,23 @@ class InfoBarTest extends DuskTestCase
         $this->user = factory(\App\Models\UserManagement\User::class)->create([
             'organisation_id'=>$this->organisation->id
         ]);   
-        $marketTypes = \App\Models\StructureItems\MarketType::all();
-
     }
 
-    public function testUserHeader()
+    /**
+     * A Dusk test example.
+     *
+     * @return void
+     */
+    public function testChangeTheme()
     {
-        $this->browse(function (Browser $browser) {
-
+         $this->browse(function (Browser $browser) {
                 $browser->loginAs($this->user)
                          ->visit(new TradeScreen)
-                         ->within(new UserHeader,function($browser){
-                           
-                            $browser->checkTime(Carbon::now());
-                            $browser->checkWelcomeMessage($this->user);
-                            $browser->checkRebates($this->user);
+                         ->assertVisible(".light-theme")
+                         ->press("#theme-toggle")
+                         ->assertVisible(".dark-theme");
 
-                         });
+
              });
     }
-   
 }

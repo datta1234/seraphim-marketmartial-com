@@ -20,20 +20,20 @@
                                             class="mb-2">
                             <b-row align-h="center">
                                 <b-col cols="3" offset="3" class="text-center">    
-                                    <b-form-radio :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
+                                    <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
                                 </b-col>
                                 <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                    <b-form-radio :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
+                                    <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
                                 </b-col>
                             </b-row>
 		      		    </b-form-radio-group>
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-strike-0">Strike</label>
+								<label for="strike-0">Strike</label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-strike-0" 
+		      					<b-form-input :id="'strike-'+index" 
 		      						type="number"
 		      						min="0"
 									v-model="field.strike"
@@ -48,7 +48,7 @@
 								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-quantity-0" 
+		      					<b-form-input :id="'quantity-'+index" 
 		      						type="number"
 									min="0"
 									v-model="field.quantity"

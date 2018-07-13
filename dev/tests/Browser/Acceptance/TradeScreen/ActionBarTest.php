@@ -5,9 +5,25 @@ namespace Tests\Browser\TradeScreen;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Browser\Pages\TradeScreen;
+use Tests\Browser\Components\TradeScreen\UserHeader;
+use Carbon\Carbon;
 
 class ActionBarTest extends DuskTestCase
 {
+
+    use DatabaseMigrations;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->organisation = factory(\App\Models\UserManagement\Organisation::class)->create(); 
+        $this->user = factory(\App\Models\UserManagement\User::class)->create([
+            'organisation_id'=>$this->organisation->id
+        ]);
+        
+    }
+
     /**
      * A Dusk test example.
      *
@@ -15,12 +31,8 @@ class ActionBarTest extends DuskTestCase
      */
     public function testRequestMarketButton()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-request-market]', function($browser) {
-                    $browser->assertSee('Request A Market');
-                });
-        });
+        
+
     }
 
     // public function testImportantButton()
@@ -54,24 +66,24 @@ class ActionBarTest extends DuskTestCase
     // }
 
 
-    public function testAddMarketsButton()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-add-market]', function($browser) {
-                    $browser->assertSee('Markets');
-                });
-        });
-    }
+    // public function testAddMarketsButton()
+    // {
+    //     $this->browse(function (Browser $browser) {
+    //         $browser->visit('/trade')
+    //             ->within('#action-bar button[mm-add-market]', function($browser) {
+    //                 $browser->assertSee('Markets');
+    //             });
+    //     });
+    // }
 
-    public function testChatButton()
-    {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-add-market]', function($browser) {
-                    $browser->assertSee('Markets');
-                });
-        });
-    }
+    // public function testChatButton()
+    // {
+    //     $this->browse(function (Browser $browser) {
+    //         $browser->visit('/trade')
+    //             ->within('#action-bar button[mm-add-market]', function($browser) {
+    //                 $browser->assertSee('Markets');
+    //             });
+    //     });
+    // }
 
 }

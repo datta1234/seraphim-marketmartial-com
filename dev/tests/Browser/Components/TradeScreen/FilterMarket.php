@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\Browser\Components\TradeScreen\ActionBar\RequestMarket;
+namespace Tests\Browser\Components\TradeScreen;
 
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\Component as BaseComponent;
 
-class DetailsComponent extends BaseComponent
+class FilterMarket extends BaseComponent
 {
     /**
      * Get the root selector for the component.
@@ -14,7 +14,7 @@ class DetailsComponent extends BaseComponent
      */
     public function selector()
     {
-        return '@detail';
+        return '@filter-markets-menu';
     }
 
     /**
@@ -28,6 +28,13 @@ class DetailsComponent extends BaseComponent
         $browser->assertVisible($this->selector());
     }
 
+  
+
+    public function open(Browser $browser)
+    {
+        $browser->press("@filter-button");
+    }
+
     /**
      * Get the element shortcuts for the component.
      *
@@ -36,7 +43,8 @@ class DetailsComponent extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@detail',
+            '@filter-button' => '#action-filter-market-button',
+            '@pop-over' => '.popover'
         ];
     }
 }

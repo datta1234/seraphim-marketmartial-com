@@ -13,10 +13,11 @@
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 
+                            <button id="" v-if="obj.state" :data-remove-market="key"
                                 type="button" class="btn mm-generic-trade-button w-100"
                                 @click="filterMarketTypes(key, false)">Remove
                             </button>
-                            <button v-else 
+                            <button v-else :data-add-market="key"
                                 type="button" class="btn mm-generic-trade-button w-100"
                                 @click="filterMarketTypes(key, true)">Add
                             </button>
