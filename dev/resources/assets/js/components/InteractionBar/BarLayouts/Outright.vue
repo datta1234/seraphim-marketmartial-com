@@ -10,6 +10,7 @@
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
         <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+
         
 
         <b-row class="mb-5">
@@ -46,6 +47,8 @@
                 <b-form-checkbox v-model="state_premium_calc" value="true" unchecked-value="false"> Apply premium calculator</b-form-checkbox>
             </b-col>
         </b-row> -->
+        <ibar-apply-premium-calculator :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator>
+
 
     </b-container>
 </template>

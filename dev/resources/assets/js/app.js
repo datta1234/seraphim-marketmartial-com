@@ -45,6 +45,7 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue'));
     Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
     Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
+    Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
 
 // Action Bar Component
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
