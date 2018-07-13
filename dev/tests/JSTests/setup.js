@@ -15,3 +15,6 @@ global.axios = require('axios');
 
 // make Vue library available globally
 global.Vue = require('vue');
+
+// set a global base url default for axios
+global.axios.defaults.baseUrl = "";
