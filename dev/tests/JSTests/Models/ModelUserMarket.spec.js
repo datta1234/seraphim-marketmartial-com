@@ -5,6 +5,11 @@ import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketReques
 describe('class UserMarket', () => {
 
 	let user_market = null;
+	let test_conditions = [
+    	new UserMarketNegotiationCondition({id: "1", title: "test title 1", alias: "test_alias_1"}),
+    	new UserMarketNegotiationCondition({id: "2", title: "test title 2", alias: "test_alias_2"}),
+    	new UserMarketNegotiationCondition({id: "3", title: "test title 3", alias: "test_alias_3"})
+    ];
 	let user_market_negotiation_array = [
     	new UserMarketNegotiation({id: "1"}),
     	new UserMarketNegotiation({id: "2"}),
@@ -102,7 +107,8 @@ describe('class UserMarket', () => {
 	describe('Test storing User Market ', () => {
 		
 		it('Pepare user market object to store', () => {
-			chai.assert(false, "TODO");
+			let test_store_data = require(__dirname + '/mockData/UserMarketStoreObject.json');
+			chai.assert.deepEqual(user_market_negotiation.prepareStore(), test_store_data, "The User Market store object is equal to the set object");
 		});
 
 		it('Store user market', () => {
