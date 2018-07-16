@@ -17,4 +17,7 @@ global.axios = require('axios');
 global.Vue = require('vue');
 
 // set a global base url default for axios
-global.axios.defaults.baseUrl = "";
+global.axios.defaults.baseUrl = "http://unit.marketmartial.test";
+
+// make nock library available globally
+global.nock = require('nock');

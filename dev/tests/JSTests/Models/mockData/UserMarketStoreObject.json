@@ -1,29 +1,29 @@
 {
 	"user_market_request_id": 2,
 	"current_market_negotiation": {
-		"bid": "Test bid",
-        "offer": "Test offer",
+		"bid": "Test 1 bid",
+        "offer": "Test 1 offer",
         "bid_qty": 2,
         "offer_qty": 3,
         "is_repeat": true,
         "has_premium_calc": true,
-        "bid_premium": "Test bid premium",
-        "offer_premium": "Test offer premium",
+        "bid_premium": "Test 1 bid premium",
+        "offer_premium": "Test 1 offer premium",
         "conditions": [
         	{
 	            "id": 1,
 	            "title": "test title 1",
-	            "alias": "test_alias_1",
+	            "alias": "test_alias_1"
 	        },
 	        {
 	            "id": 2,
 	            "title": "test title 2",
-	            "alias": "test_alias_2",
+	            "alias": "test_alias_2"
 	        },
 	        {
-	            "id": 2,
+	            "id": 3,
 	            "title": "test title 3",
-	            "alias": "test_alias_3",
+	            "alias": "test_alias_3"
 	        }
         ]
     }
