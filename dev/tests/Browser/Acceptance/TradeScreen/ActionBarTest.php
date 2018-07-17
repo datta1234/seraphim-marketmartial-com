@@ -65,24 +65,5 @@ class ActionBarTest extends DuskTestCase
         });
     }
 
-    public function testAlertsButton()
-    {
-            factory(App\Models\Market\MarketNegotiation::class)->create([
-                "user_id" => $this->marketData['user_maker']->user->id,
-                "user_market_id" => $this->marketData['user_makert']->id 
-            ]); 
-
-            $this->browse(function (Browser $browser) {
-                $browser->loginAs($this->marketData['user_maker'])
-                         ->visit(new TradeScreen)
-                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
-                         ->within(".menu-actions",function($browser){
-                                $browser->waitForText("Alerts 1");
-                         });
-            });
-    }
-
-  });
-    // }
 
 }
