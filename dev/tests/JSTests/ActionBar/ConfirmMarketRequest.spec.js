@@ -31,7 +31,7 @@ describe('ConfirmMarketRequestComponent.vue', () => {
 		      	fields: [
 			        {
 			          is_selected: true,
-			          strike: "455486",
+			          strike: 455486,
 			          quantity: 500
 			        }
 		      	]

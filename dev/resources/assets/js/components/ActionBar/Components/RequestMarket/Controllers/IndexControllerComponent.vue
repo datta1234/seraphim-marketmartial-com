@@ -108,10 +108,10 @@
                         console.log("CASE 3: ", this.index_data.index_market_object);
                         //this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
-                        this.index_data.number_of_dates = 1;
                         break;
                     case 4:
-                        if (component_data == 'Calendar') {
+                        this.index_data.number_of_dates = 1;
+                        if (this.index_data.index_market_object.trade_structure == 'Calendar') {
                             this.index_data.number_of_dates = 2;
                         }
                         //this.modal_data.title += ' > ' + component_data;
@@ -154,7 +154,6 @@
             saveMarketRequest() {
                 let new_data = this.formatRequestData();
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
-
                 .then(newMarketRequestResponse => {
                     if(newMarketRequestResponse.status == 200) {
                         console.log("Saving: ",newMarketRequestResponse);
@@ -196,7 +195,11 @@
                                 this.setLowestStep(1);
                                 break;
                             case "is_selected":
-                                this.errors.data.Details[prop] = errors[prop];
+                                errors[prop].forEach( (element, key) => {
+                                    if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                        this.errors.data.Details.messages.push(element);
+                                    }
+                                });
                                 this.setLowestStep(4);
                                 break;
                             case "fields":

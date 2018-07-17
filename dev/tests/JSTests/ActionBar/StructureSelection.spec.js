@@ -3,13 +3,13 @@ import StructureSelection from '../../../resources/assets/js/components/ActionBa
 import Market from '../../../resources/assets/js/lib/Market.js';
 import { createLocalVue } from '@vue/test-utils';
 import BootstrapVue from 'bootstrap-vue';
-import sinon from 'sinon';
-import axios from 'axios';
+/*import sinon from 'sinon';
+import axios from 'axios';*/
 
 // create an extended `Vue` constructor
 const localVue = createLocalVue();
 // install boostrap and axios to this vue instance only
-localVue.use(BootstrapVue, axios);
+localVue.use(BootstrapVue/*, axios*/);
 
 describe('StructureSelectionComponent.vue', () => {
 		
@@ -71,7 +71,7 @@ describe('StructureSelectionComponent.vue', () => {
 			localVue
 		});
 		loadStructuresWrapper.vm.loadStructures();*/
-		chai.assert(false, "TODO DO WE TEST THIS?");
+		chai.assert(false, "TODO - DO WE TEST THIS?");
 
 	});
 });

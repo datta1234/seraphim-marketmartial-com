@@ -12,3 +12,12 @@ global.moment = require('moment');
 
 // make moment library available globally
 global.axios = require('axios');
+
+// make Vue library available globally
+global.Vue = require('vue');
+
+// set a global base url default for axios
+global.axios.defaults.baseUrl = "http://unit.marketmartial.test";
+
+// make nock library available globally
+global.nock = require('nock');

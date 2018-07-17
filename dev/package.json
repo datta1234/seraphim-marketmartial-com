@@ -10,7 +10,7 @@
     "staging": "cross-env NODE_ENV=staging node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "test": "mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JSTests/setup.js tests/JSTests/**/*.spec.js"
+    "test": "cross-env NODE_ENV=test mocha-webpack --webpack-config=node_modules/laravel-mix/setup/webpack.config.js --require tests/JSTests/setup.js tests/JSTests/**/*.spec.js"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.18",
@@ -25,6 +25,7 @@
     "lodash": "^4.17.4",
     "mocha": "^5.2.0",
     "mocha-webpack": "^1.1.0",
+    "nock": "^9.4.2",
     "popper.js": "^1.12",
     "sinon": "^6.0.0",
     "vue": "^2.5.7"

@@ -8884,6 +8884,9 @@ var UserMarketNegotiation = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -25396,6 +25399,9 @@ var UserMarket = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -36577,6 +36583,9 @@ switch ("development") {
         break;
     case "production":
         window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    case "test":
+        window.axios.defaults.baseUrl = "http://unit.marketmartial.test";
         break;
     default:
         window.axios.defaults.baseUrl = "";
@@ -89652,6 +89661,9 @@ var UserMarketNegotiationCondition = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -91811,6 +91823,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.modal_data.step = 0;
             this.modal_data.show_modal = false;
             this.modal_data.title = 'Select A Market';
+            this.modal_data.selected_controller = null;
             this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
         },
 
@@ -92019,10 +92032,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     console.log("CASE 3: ", this.index_data.index_market_object);
                     //this.index_data.index_market_object.market = component_data;
                     this.selected_step_component = 'Structure';
-                    this.index_data.number_of_dates = 1;
                     break;
                 case 4:
-                    if (component_data == 'Calendar') {
+                    this.index_data.number_of_dates = 1;
+                    if (this.index_data.index_market_object.trade_structure == 'Calendar') {
                         this.index_data.number_of_dates = 2;
                     }
                     //this.modal_data.title += ' > ' + component_data;
@@ -92113,7 +92126,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             this.setLowestStep(1);
                             break;
                         case "is_selected":
-                            this.errors.data.Details[prop] = errors[prop];
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Details.messages.push(element);
+                                }
+                            });
                             this.setLowestStep(4);
                             break;
                         case "fields":
@@ -92891,7 +92908,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             evt.preventDefault();
             Vue.nextTick(function () {
-                console.log("DATA TO BE SENT", _this.form_data);
                 _this.data.index_market_object.details = _this.form_data;
                 _this.callback(_this.form_data);
             });
@@ -92956,7 +92972,10 @@ var render = function() {
                 [
                   _c(
                     "b-form",
-                    { on: { submit: _vm.submitDetails } },
+                    {
+                      attrs: { id: "index-details-form" },
+                      on: { submit: _vm.submitDetails }
+                    },
                     [
                       _vm.display.show_expiry
                         ? _c(
@@ -93068,11 +93087,9 @@ var render = function() {
                         { attrs: { "align-h": "center" } },
                         [
                           _c("b-col", { attrs: { cols: "3" } }, [
-                            _c(
-                              "label",
-                              { attrs: { for: "outright-strike-0" } },
-                              [_vm._v("Strike")]
-                            )
+                            _c("label", { attrs: { for: "strike-0" } }, [
+                              _vm._v("Strike")
+                            ])
                           ]),
                           _vm._v(" "),
                           _vm._l(_vm.form_data.fields, function(field, index) {
@@ -93082,7 +93099,7 @@ var render = function() {
                               [
                                 _c("b-form-input", {
                                   attrs: {
-                                    id: "outright-strike-0",
+                                    id: "quantity-" + index,
                                     type: "number",
                                     min: "0",
                                     state: _vm.inputState(index, "Strike"),
@@ -93109,16 +93126,12 @@ var render = function() {
                         { attrs: { "align-h": "center" } },
                         [
                           _c("b-col", { attrs: { cols: "3" } }, [
-                            _c(
-                              "label",
-                              { attrs: { for: "outright-quantity-0" } },
-                              [
-                                _vm._v("Quantity "),
-                                _vm.form_data.fields.length > 1
-                                  ? _c("span", [_vm._v(" (Ratio)")])
-                                  : _vm._e()
-                              ]
-                            )
+                            _c("label", { attrs: { for: "quantity-0" } }, [
+                              _vm._v("Quantity "),
+                              _vm.form_data.fields.length > 1
+                                ? _c("span", [_vm._v(" (Ratio)")])
+                                : _vm._e()
+                            ])
                           ]),
                           _vm._v(" "),
                           _vm._l(_vm.form_data.fields, function(field, index) {
@@ -93128,7 +93141,7 @@ var render = function() {
                               [
                                 _c("b-form-input", {
                                   attrs: {
-                                    id: "outright-quantity-0",
+                                    id: "quantity-" + index,
                                     type: "number",
                                     min: "0",
                                     placeholder: "500",
@@ -93204,7 +93217,10 @@ var render = function() {
                             "b-button",
                             {
                               staticClass: "mm-modal-market-button-alt w-50",
-                              attrs: { type: "submit" }
+                              attrs: {
+                                id: "submit-index-details",
+                                type: "submit"
+                              }
                             },
                             [
                               _vm._v(
