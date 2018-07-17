@@ -32,9 +32,9 @@ class UserMarketRequest extends Model
      */
     protected $fillable = ["market_id","trade_structure_id","user_market_request_statuses_id","chosen_user_market_id"];
 
-    protected $dates = [
-        'created_at'
-    ];
+    // protected $dates = [
+    //     'created_at'
+    // ];
 
     /**
     * Return relation based of _id_foreign index
@@ -125,6 +125,7 @@ class UserMarketRequest extends Model
     {
         $data = [
             "id"                => $this->id,
+            "market_id"         => $this->market_id,
             "trade_structure"   => $this->tradeStructure->title,
             "trade_items"       => $this->userMarketRequestGroups
              ->keyBy('tradeStructureGroup.title')
