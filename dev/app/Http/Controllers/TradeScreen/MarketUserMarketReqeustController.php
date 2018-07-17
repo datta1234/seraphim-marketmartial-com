@@ -16,6 +16,7 @@ use App\Models\MarketRequest\UserMarketRequestTradable;
 use App\Models\StructureItems\Stock;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\TradeScreen\Market\UserMarketRequestRequest;
+use App\Events\UserMarketRequested;
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -160,10 +161,11 @@ class MarketUserMarketReqeustController extends Controller
             {
                 DB::rollBack();
                 Log::error($e->getMessage());
-                return ['success'=>false,'data'=> null,'message'=>"Could not create market request."];
+                return ['success'=>false,'data'=> null,'message'=>'Could not create market request.'];
             }
 
         //broadCast new market request;
+        event(new UserMarketRequested($userMarketRequest));
 
         return ['success'=>true,'data'=> $responseData,'message'=>"Market Request created successfully."];
     }

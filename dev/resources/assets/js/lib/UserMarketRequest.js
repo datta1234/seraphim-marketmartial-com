@@ -13,6 +13,7 @@ export default class UserMarketRequest {
         const defaults = {
             id: "",
             trade_structure: "",
+            market_id:"",
             attributes: {
                 state: "",
                 bid_state: "",
