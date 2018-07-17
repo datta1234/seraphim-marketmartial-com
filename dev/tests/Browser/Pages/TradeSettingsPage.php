@@ -36,7 +36,7 @@ class TradeSettingsPage extends BasePage
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@submit' => 'input[type=submit]'
         ];
     }
 }

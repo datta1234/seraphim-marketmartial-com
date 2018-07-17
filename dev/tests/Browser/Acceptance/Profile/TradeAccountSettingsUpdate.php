@@ -28,19 +28,25 @@ class TradeAccountSettingsUpdate extends DuskTestCase
         ]);
 
         FactoryHelper::setUpMarkets();
+        $faker = \Faker\Factory::create();
         $markets = Market::all();
 
-        $this->browse(function (Browser $browser) use($user,$markets){
+        $this->browse(function (Browser $browser) use ($user,$markets, $faker){
                 $browser->loginAs($user)
                     ->visit(new TradeSettingsPage)
                     ->assertSee('Trading Account Settings');
 
-            // fields are based of the markets in the database
-            $markets->each(function($market) use($browser){
+        for ($i=0; $i < count($markets); $i++) 
+        { 
+            $browser->assertSee($markets[$i]->title)
+                    ->type('trading_accounts['.$i.'][safex_number]',$faker->bankAccountNumber)
+                    ->type('trading_accounts['.$i.'][sub_account]',$faker->bankAccountNumber);
 
-                $browser->assertSee($market->title);
+        }
 
-            });
+       $browser->press('@submit')
+                ->assertPathIs('/interest-settings')
+                ->assertSee('Tell Us More About Yourself');
 
         });
     }

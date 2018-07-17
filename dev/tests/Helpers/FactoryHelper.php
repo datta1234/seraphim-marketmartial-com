@@ -46,8 +46,30 @@ class FactoryHelper
 						}		
 					}
 				});
-
 		}
+
+		$tradeStructures = \App\Models\StructureItems\TradeStructure::all()->keyBy('title');
+        $marketTypes = \App\Models\StructureItems\MarketType::all()->keyBy('title');
+        
+        $marketTypes['Index Option']->tradeStructures()->sync([
+            $tradeStructures['Outright']->id,
+            $tradeStructures['Risky']->id,
+            $tradeStructures['Calendar']->id,
+            $tradeStructures['Fly']->id,
+            $tradeStructures['Option Switch']->id,
+        ]);
+        $marketTypes['Delta One(EFPs, Rolls and EFP Switches)']->tradeStructures()->sync([
+            $tradeStructures['EFP']->id,
+            $tradeStructures['Rolls']->id,
+            $tradeStructures['EFP Switch']->id,
+        ]);
+        $marketTypes['Single Stock Option']->tradeStructures()->sync([
+            $tradeStructures['Outright']->id,
+            $tradeStructures['Risky']->id,
+            $tradeStructures['Calendar']->id,
+            $tradeStructures['Fly']->id,
+            $tradeStructures['Option Switch']->id,
+        ]);
 	}
 
 	public static function setUpTradeConditions()
@@ -100,4 +122,18 @@ class FactoryHelper
 		}
 
 	}
+
+	public static function setUpDefaultEmails()
+	{
+		$defaultEmailLabels = config('marketmartial.default_email_labels');
+			foreach ($defaultEmailLabels as $defaultEmailLabel) {
+
+			factory(\App\Models\UserManagement\DefaultLabel::class)->create([
+				'title' =>  $defaultEmailLabel
+			]);	
+		}
+	} 
+
+
+
 }

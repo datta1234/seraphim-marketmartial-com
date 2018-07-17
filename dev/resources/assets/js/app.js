@@ -56,6 +56,7 @@ Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
 Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
 Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
+Vue.component('day-month-picker', require('./components/Profile/Components/DayMonthPickerComponent.vue'));
 
 /**
  * Takes in a value and splits the value by a splitter in a desired frequency

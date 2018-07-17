@@ -23,19 +23,19 @@
     @yield('header-scripts')
     </head>
     <body>
-        <!-- <div id="geoBackdrop"></div> -->
+    {{--Alerts--}}
+    <div class="toast-holder">
+        <div class="container">
+            @include('layouts.elements.alerts')
+        </div>
+    </div>
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')
-            
+            @yield('banner')
             {{-- Layout --}}
             <main class="container">
                 <div class="page-body-container mt-3">
-                    {{--Alerts--}}
-                    <div>
-                        <div class="toast-holder"></div>
-                        @include('layouts.elements.alerts')
-                    </div>
                     @yield('content')
                 </div>
             </main> {{-- Main end --}}
