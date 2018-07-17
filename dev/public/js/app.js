@@ -5927,6 +5927,9 @@ var UserMarketNegotiation = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -20604,6 +20607,9 @@ var UserMarket = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -21093,6 +21099,9 @@ switch ("development") {
         break;
     case "production":
         window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
+        break;
+    case "test":
+        window.axios.defaults.baseUrl = "http://unit.marketmartial.test";
         break;
     default:
         window.axios.defaults.baseUrl = "";
@@ -89603,6 +89612,9 @@ var UserMarketNegotiationCondition = function () {
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
                 _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
             } else {
                 _this[key] = defaults[key];
             }
@@ -92149,6 +92161,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
+        console.log("OK lets get some data: ", this.$root.display_markets);
         this.modal_data.title = "Index";
         this.loadIndexMarkets();
         console.log("WHAT STEP IS THIS?==================", this.modal_data.step);

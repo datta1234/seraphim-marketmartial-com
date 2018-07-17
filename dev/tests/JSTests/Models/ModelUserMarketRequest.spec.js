@@ -11,25 +11,33 @@ describe('class UserMarketRequest', () => {
     	new UserMarketQuote({id: "2"}),
     	new UserMarketQuote({id: "3"})
     ];
+
 	let market_request_data = {
 		id: 2,
-        trade_structure: "Test title",
+        trade_structure: "Test structure",
         attributes: {
 	        state: "test state",
 	        bid_state: "test bid state",
 	        offer_state: " test offer state",
         },
         created_at: moment('1969-07-20 00:20:18'),
-        trade_items:[{
-	        id: 1,
-	        title: "Expiration Date",
-	        value: moment('1969-07-20 00:20:18')
-	    },{
-	        id: 2,
-	        title: "Expiration Date",
-	        value: moment('1969-07-20 00:20:18')
-	    }],
-        user_market_quotes: user_market_quotes_array,
+        updated_at: moment('1969-07-20 00:20:18'),
+        trade_items:{
+        	"default": {
+				"Expiration Date": "Feb16",
+				"Strike": "36308428",
+				"Quantity": "92690854"
+			},
+			"Fly Second option": {
+				"Strike": "18350168",
+				"Quantity": "83145595"
+			},
+			"Fly third option": {
+				"Strike": "84097170",
+				"Quantity": "74162463"
+			}
+        },
+        quotes: user_market_quotes_array,
         quote: user_market_quotes_array[0],
         chosen_user_market: new UserMarket({id: "1"}),
 	};
@@ -51,7 +59,8 @@ describe('class UserMarketRequest', () => {
 			chai.assert(default_user_market_request.quote == null,'quote property is default value');
 			chai.assert(default_user_market_request.chosen_user_market == null,'chosen_user_market property is default value');
 			chai.assert(moment.isMoment(default_user_market_request.created_at),'created_at should be of type moment');
-			chai.assert.lengthOf(default_user_market_request.trade_items, 0, 'trade_items array is empty');
+			chai.assert(moment.isMoment(default_user_market_request.updated_at),'updated_at should be of type moment');
+			chai.assert.deepEqual(default_user_market_request.trade_items, {}, 'trade_items object is empty');
 			chai.assert.lengthOf(default_user_market_request.quotes, 0, 'quotes array is empty');
 		});
 
@@ -63,8 +72,9 @@ describe('class UserMarketRequest', () => {
 			chai.assert(user_market_request.attributes.offer_state == market_request_data.attributes.offer_state,'attributes.offer_state property is equal to passed attributes.offer_state value');
 			chai.assert(user_market_request.chosen_user_market == market_request_data.chosen_user_market,'chosen_user_market property is equal to passed chosen_user_market value');
 			chai.assert(user_market_request.created_at.isSame(market_request_data.created_at),'created_at property is equal to passed created_at value');
+			chai.assert(user_market_request.updated_at.isSame(market_request_data.updated_at),'updated_at property is equal to passed updated_at value');
 			chai.assert.deepEqual(user_market_request.quote, market_request_data.quote,'quote property is equal to passed quote value');
-			chai.assert.deepEqual(user_market_request.quotes, market_request_data.user_market_quotes, 'quotes property is equal to passed quotes array');
+			chai.assert.deepEqual(user_market_request.quotes, market_request_data.quotes, 'quotes property is equal to passed quotes array');
 			chai.assert.deepEqual(user_market_request.trade_items, market_request_data.trade_items, 'trade_items property is equal to passed trade_items array');
 
 		});
@@ -108,35 +118,42 @@ describe('class UserMarketRequest', () => {
 		});
 
 		it('Test Chosen User Market Quote Setter', () => {
-			chai.assert(false, "TODO");			
+			let test_set_quote = new UserMarketQuote({id: "8"});
+			chai.assert.notDeepEqual(user_market_request.quote, test_set_quote, 'UserMarketRequest.quote NOT be equal to the test_set_quote set');
+			user_market_request.setUserMarketQuote(test_set_quote);
+			chai.assert.deepEqual(user_market_request.quote, test_set_quote, 'UserMarketRequest.quote be equal to the test_set_quote set');
 		});
 	});
 
 	describe('Add new Trade Items', () => {
 		
 		it('New single Trade Item added', () => {
-			let trade_item = {
-		        id: 3,
-		        title: "Expiration Date",
-		        value: moment('1969-07-20 00:20:18')
-		    };
-			user_market_request.addTradeItem(trade_item);
-			chai.assert.deepInclude(user_market_request.trade_items, trade_item, 'new trade item trade_item should be in user_market_request.trade_items');
+			let test_trade_item = {
+				"Calander option": {
+					"Expiration Date": "Dec90"
+				}	
+			};
+			user_market_request.addTradeItem("Calander option","Expiration Date","Dec90");
+			chai.assert.deepInclude(user_market_request.trade_items, test_trade_item, 'new trade item trade_item should be in user_market_request.trade_items');
 		});
 
 		it('New array of Trade Items added', () => {
-			let trade_items = [{
-		        id: 4,
-		        title: "Expiration Date",
-		        value: moment('1969-07-20 00:20:18')
-		    },{
-		        id: 5,
-		        title: "Expiration Date",
-		        value: moment('1969-07-20 00:20:18')
-		    }];
-			user_market_request.addTradeItems(trade_items);
-			chai.assert.deepInclude(user_market_request.trade_items, trade_items[0], 'new UserMarketRequest trade_items[0] should be in user_market_request.trade_items');
-			chai.assert.deepInclude(user_market_request.trade_items, trade_items[1], 'new UserMarketRequest trade_items[1] should be in user_market_request.trade_items');
+			let test_trade_items = {
+				"Risky options": {
+					"Expiration Date": "Oct85",
+					"Strike": "44509954",
+					"Quantity": "13349781"
+				},
+				"Calander option": {
+					"Expiration Date": "Dec90",
+					"Strike": "18172718",
+					"Quantity": "80227015"
+				}
+			};
+			user_market_request.addTradeItems(test_trade_items);
+
+			chai.assert.containsAllKeys(user_market_request.trade_items , Object.keys(test_trade_items), 'The User Market Request trade items includes all the new trade item groups');
+			chai.assert.deepInclude(user_market_request.trade_items, test_trade_items, 'new UserMarketRequest trade_items should be in user_market_request.trade_items');
 		});
 	});
 
