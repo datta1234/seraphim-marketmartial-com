@@ -1,27 +1,29 @@
 import UserMarket from '../../../resources/assets/js/lib/UserMarket.js';
 import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNegotiation.js';
 import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
+import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
 
 describe('class UserMarket', () => {
 
 	let user_market = null;
-	let user_market_negotiation_array = [
-    	new UserMarketNegotiation({id: "1"}),
-    	new UserMarketNegotiation({id: "2"}),
-    	new UserMarketNegotiation({id: "3"})
-    ];
-	let user_market_data = {
-		id: 2,
-        status: "test status",
-        current_market_negotiation: user_market_negotiation_array[0],
-        created_at: moment('1969-07-20 00:20:18'),
-        market_negotiations: user_market_negotiation_array
-	};
+	let test_conditions = require(__dirname + '/mockData/UserMarketNegotiationConditions.json');
+	let test_negotiations = require(__dirname + '/mockData/UserMarketNegotiations.json');
+	let user_market_data = require(__dirname + '/mockData/UserMarket.json');
+
+	test_negotiations.forEach( (element) => {
+		let condition_array = []
+		test_conditions.forEach((element) => {
+			condition_array.push( new UserMarketNegotiationCondition(element) );
+		});
+		element.user_market_negotiation_condition = condition_array;
+		user_market_data.market_negotiations.push( new UserMarketNegotiation(element) );	
+	});
+
+	user_market_data.current_market_negotiation = user_market_data.market_negotiations[0];
 
 	beforeEach(function() {
     	user_market = new UserMarket(user_market_data);
   	});
-
 
 	describe('UserMarket constructor', () => {
 
@@ -31,6 +33,7 @@ describe('class UserMarket', () => {
 			chai.assert(default_user_market.status == '','status property is default value');
 			chai.assert(default_user_market.current_market_negotiation == null,'current_market_negotiation property is default value');
 			chai.assert(moment.isMoment(default_user_market.created_at),'created_at should be of type moment');
+			chai.assert(moment.isMoment(default_user_market.updated_at),'updated_at should be of type moment');
 			chai.assert.lengthOf(default_user_market.market_negotiations, 0, 'market_negotiations array is empty');
 		});
 
@@ -38,6 +41,7 @@ describe('class UserMarket', () => {
 			chai.assert(user_market.id == user_market_data.id,'id property is equal to passed id value');
 			chai.assert(user_market.status == user_market_data.status,'status property is equal to passed status value');
 			chai.assert(user_market.created_at.isSame(user_market_data.created_at),'created_at property is equal to passed created_at value');
+			chai.assert(user_market.updated_at.isSame(user_market_data.updated_at),'updated_at property is equal to passed updated_at value');
 			chai.assert.deepEqual(user_market.current_market_negotiation, user_market_data.current_market_negotiation, 'current_market_negotiation property is equal to passed current_market_negotiation array');
 			chai.assert.deepEqual(user_market.market_negotiations, user_market_data.market_negotiations, 'market_negotiations property is equal to passed market_negotiations array');
 		});
@@ -45,11 +49,11 @@ describe('class UserMarket', () => {
 
 	describe('Getters and Setters', () => {
 
-		it('Test Parent Getter and Setter', () => {
+		it('Test Market Request Getter and Setter', () => {
 			let parent_market_request = new UserMarketRequest({id:"1"});
-			chai.assert.notDeepEqual(user_market.getParent(), parent_market_request, 'getParent() NOT be equal to the Parent set');
-			user_market.setParent(parent_market_request);
-			chai.assert.deepEqual(user_market.getParent(), parent_market_request, 'getParent() be equal to the Parent set');
+			chai.assert.notDeepEqual(user_market.getMarketRequest(), parent_market_request, 'getMarketRequest() NOT be equal to the Parent set');
+			user_market.setMarketRequest(parent_market_request);
+			chai.assert.deepEqual(user_market.getMarketRequest(), parent_market_request, 'getMarketRequest() be equal to the Parent set');
 		});
 
 		it('Test CurrentNegotiation Getter and Setter', () => {
@@ -95,6 +99,31 @@ describe('class UserMarket', () => {
 			chai.assert.notInclude(JSON.stringify(user_market), '"_user_market_request"', 'Should not include _user_market_request key');
 			chai.assert.notInclude(JSON.stringify(user_market), '"_user_market"', 'Should not include _user_market key');
 
+		});
+	});
+
+
+	describe('Test storing User Market ', () => {
+		
+		it('Pepare user market object to store', () => {
+			let test_store_data = require(__dirname + '/mockData/UserMarketStoreObject.json');
+			chai.assert.deepEqual(user_market.prepareStore(), test_store_data, "The User Market store object is equal to the set object");
+		});
+
+		it('Store user market', (done) => {
+			let storing_object = user_market.prepareStore();
+			let replyCallBack = (uri, requestBody) => {
+				chai.assert.equal(requestBody, JSON.stringify(storing_object), 'The object posted to the url is equal to the response object');
+				done();
+			};
+
+			let api_store_response = nock(axios.defaults.baseUrl)
+			.defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+			.post('/trade/market-request/2/user-market', user_market.prepareStore())
+			.reply(200, replyCallBack)
+			.persist();//always handles
+
+			user_market.store();
 		});
 	});
 

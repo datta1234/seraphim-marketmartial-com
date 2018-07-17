@@ -14,6 +14,9 @@ export default class UserMarketNegotiationCondition {
         Object.keys(defaults).forEach(key => {
             if(options && typeof options[key] !== 'undefined') {
                 this[key] = options[key];
+                if(defaults[key] instanceof moment) {
+                    this[key] = moment(this[key]);
+                }
             } else {
                 this[key] = defaults[key];
             }

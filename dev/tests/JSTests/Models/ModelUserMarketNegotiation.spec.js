@@ -5,10 +5,10 @@ import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/Use
 describe('class UserMarketNegotiation', () => {
 
 	let user_market_negotiation = null;
-	let conditions = [
-    	new UserMarketNegotiationCondition({id: "1"}),
-    	new UserMarketNegotiationCondition({id: "2"}),
-    	new UserMarketNegotiationCondition({id: "3"})
+	let test_conditions = [
+    	new UserMarketNegotiationCondition({id: "1", title: "test title 1", alias: "test_alias_1"}),
+    	new UserMarketNegotiationCondition({id: "2", title: "test title 2", alias: "test_alias_2"}),
+    	new UserMarketNegotiationCondition({id: "3", title: "test title 3", alias: "test_alias_3"})
     ];
 	let user_market_negotiation_data = {
 		id: 2,
@@ -16,12 +16,14 @@ describe('class UserMarketNegotiation', () => {
         offer: "Test offer",
         bid_qty: 2,
         offer_qty: 3,
+        is_repeat: true,
+        has_premium_calc: true,
         bid_premium: "Test bid premium",
         offer_premium: "Test offer premium",
         is_put: true,
         status: "Test status",
         created_at: moment('1969-07-20 00:20:18'),
-        user_market_negotiation_condition: conditions
+        user_market_negotiation_condition: test_conditions
 	};
 
 	beforeEach(function() {
@@ -33,29 +35,33 @@ describe('class UserMarketNegotiation', () => {
 
 		it('UserMarketNegotiation constructed with defaults', () => {
 			let default_user_market_negotiation = new UserMarketNegotiation();
-			chai.assert(default_user_market_negotiation.id == '','id property is default value');
-			chai.assert(default_user_market_negotiation.bid == '','bid property is default value');
-			chai.assert(default_user_market_negotiation.offer == '','offer property is default value');
-			chai.assert(default_user_market_negotiation.bid_qty == 0,'bid_qty property is default value');
-			chai.assert(default_user_market_negotiation.offer_qty == 0,'offer_qty property is default value');
-			chai.assert(default_user_market_negotiation.bid_premium == '','bid_premium property is default value');
-			chai.assert(default_user_market_negotiation.offer_premium == '','offer_premium property is default value');
-			chai.assert(default_user_market_negotiation.is_put == false,'is_put property is default value');
-			chai.assert(default_user_market_negotiation.status == '','status property is default value');
+			chai.assert.equal(default_user_market_negotiation.id, '', 'id property is default value');
+			chai.assert.equal(default_user_market_negotiation.bid, '', 'bid property is default value');
+			chai.assert.equal(default_user_market_negotiation.offer, '', 'offer property is default value');
+			chai.assert.equal(default_user_market_negotiation.bid_qty, 0, 'bid_qty property is default value');
+			chai.assert.equal(default_user_market_negotiation.offer_qty, 0, 'offer_qty property is default value');
+			chai.assert.isFalse(default_user_market_negotiation.is_repeat, 'is_repeat property is default value');
+			chai.assert.isFalse(default_user_market_negotiation.has_premium_calc, 'has_premium_calc property is default value');
+			chai.assert.equal(default_user_market_negotiation.bid_premium, '', 'bid_premium property is default value');
+			chai.assert.equal(default_user_market_negotiation.offer_premium, '', 'offer_premium property is default value');
+			chai.assert.isFalse(default_user_market_negotiation.is_put, 'is_put property is default value');
+			chai.assert.equal(default_user_market_negotiation.status, '', 'status property is default value');
 			chai.assert(moment.isMoment(default_user_market_negotiation.created_at),'created_at should be of type moment');
 			chai.assert.lengthOf(default_user_market_negotiation.conditions, 0, 'conditions array is empty');
 		});
 
 		it('UserMarketNegotiation constructed with passed params', () => {
-			chai.assert(user_market_negotiation.id == user_market_negotiation_data.id,'id property is equal to passed id value');
-			chai.assert(user_market_negotiation.bid == user_market_negotiation_data.bid,'bid property is equal to passed bid value');
-			chai.assert(user_market_negotiation.offer == user_market_negotiation_data.offer,'offer property is equal to passed offer value');
-			chai.assert(user_market_negotiation.bid_qty == user_market_negotiation_data.bid_qty,'bid_qty property is equal to passed bid_qty value');
-			chai.assert(user_market_negotiation.offer_qty == user_market_negotiation_data.offer_qty,'offer_qty property is equal to passed offer_qty value');
-			chai.assert(user_market_negotiation.bid_premium == user_market_negotiation_data.bid_premium,'bid_premium property is equal to passed bid_premium value');
-			chai.assert(user_market_negotiation.offer_premium == user_market_negotiation_data.offer_premium,'offer_premium property is equal to passed offer_premium value');
-			chai.assert(user_market_negotiation.is_put == user_market_negotiation_data.is_put,'is_put property is equal to passed is_put value');
-			chai.assert(user_market_negotiation.status == user_market_negotiation_data.status,'status property is equal to passed status value');
+			chai.assert.equal(user_market_negotiation.id, user_market_negotiation_data.id,'id property is equal to passed id value');
+			chai.assert.equal(user_market_negotiation.bid, user_market_negotiation_data.bid,'bid property is equal to passed bid value');
+			chai.assert.equal(user_market_negotiation.offer, user_market_negotiation_data.offer,'offer property is equal to passed offer value');
+			chai.assert.equal(user_market_negotiation.bid_qty, user_market_negotiation_data.bid_qty,'bid_qty property is equal to passed bid_qty value');
+			chai.assert.equal(user_market_negotiation.offer_qty, user_market_negotiation_data.offer_qty,'offer_qty property is equal to passed offer_qty value');
+			chai.assert.equal(user_market_negotiation.is_repeat, user_market_negotiation_data.is_repeat,'is_repeat property is equal to passed is_repeat value');
+			chai.assert.equal(user_market_negotiation.has_premium_calc, user_market_negotiation_data.has_premium_calc,'has_premium_calc property is equal to passed has_premium_calc value');
+			chai.assert.equal(user_market_negotiation.bid_premium, user_market_negotiation_data.bid_premium,'bid_premium property is equal to passed bid_premium value');
+			chai.assert.equal(user_market_negotiation.offer_premium, user_market_negotiation_data.offer_premium,'offer_premium property is equal to passed offer_premium value');
+			chai.assert.equal(user_market_negotiation.is_put, user_market_negotiation_data.is_put,'is_put property is equal to passed is_put value');
+			chai.assert.equal(user_market_negotiation.status, user_market_negotiation_data.status,'status property is equal to passed status value');
 			
 			chai.assert(user_market_negotiation.created_at.isSame(user_market_negotiation_data.created_at),'created_at property is equal to passed created_at value');
 			chai.assert.deepEqual(user_market_negotiation.conditions, user_market_negotiation_data.user_market_negotiation_condition, 'market_negotiations property is equal to passed market_negotiations array');
@@ -64,11 +70,11 @@ describe('class UserMarketNegotiation', () => {
 
 	describe('Getters and Setters', () => {
 
-		it('Test Parent Getter and Setter', () => {
+		it('Test User Market Getter and Setter', () => {
 			let parent_user_market = new UserMarket({id:"1"});
-			chai.assert.notDeepEqual(user_market_negotiation.getParent(), parent_user_market, 'getParent() NOT be equal to the Parent set');
-			user_market_negotiation.setParent(parent_user_market);
-			chai.assert.deepEqual(user_market_negotiation.getParent(), parent_user_market, 'getParent() be equal to the Parent set');
+			chai.assert.notDeepEqual(user_market_negotiation.getUserMarket(), parent_user_market, 'getUserMarket() NOT be equal to the Parent set');
+			user_market_negotiation.setUserMarket(parent_user_market);
+			chai.assert.deepEqual(user_market_negotiation.getUserMarket(), parent_user_market, 'getUserMarket() be equal to the Parent set');
 		});
 	});
 
@@ -107,6 +113,30 @@ describe('class UserMarketNegotiation', () => {
 			chai.assert.notInclude(JSON.stringify(user_market_negotiation), '"_market"', 'Should not include _market key');
 			chai.assert.notInclude(JSON.stringify(user_market_negotiation), '"_user_market_request"', 'Should not include _user_market_request key');
 
+		});
+	});
+
+	describe('Test storing User Market Negotiation ', () => {
+		
+		it('Pepare User Market Negotiation object to store', () => {
+
+			let test_object = {
+				bid: user_market_negotiation_data.bid,
+	            offer: user_market_negotiation_data.offer,
+	            bid_qty: user_market_negotiation_data.bid_qty,
+	            offer_qty: user_market_negotiation_data.offer_qty,
+	            is_repeat: user_market_negotiation_data.is_repeat,
+	            has_premium_calc: user_market_negotiation_data.has_premium_calc,
+	            bid_premium: user_market_negotiation_data.bid_premium,
+	            offer_premium: user_market_negotiation_data.offer_premium,
+	            conditions: [
+	            	test_conditions[0].prepareStore(),
+	            	test_conditions[1].prepareStore(),
+	            	test_conditions[2].prepareStore()
+	            ],
+			};
+
+			chai.assert.deepEqual(user_market_negotiation.prepareStore(), test_object, "The User Market Negotiation store object is equal to the set object");
 		});
 	});
 });

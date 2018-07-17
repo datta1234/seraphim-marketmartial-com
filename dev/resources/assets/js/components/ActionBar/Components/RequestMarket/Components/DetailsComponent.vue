@@ -3,7 +3,7 @@
         <b-container fluid>
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
-	                <b-form @submit="submitDetails">
+	                <b-form @submit="submitDetails" id="index-details-form">
 						<b-row v-if="display.show_expiry" align-h="center">
                             <b-col v-for="(date,key) in data.index_market_object.expiry_dates" 
                                     cols="3" 
@@ -45,7 +45,7 @@
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
+								<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
 		      					<b-form-input :id="'quantity-'+index" 
@@ -77,7 +77,7 @@
                         </b-row>
 	                    
 	                    <b-form-group class="text-center mt-4 mb-0">
-	                        <b-button type="submit" class="mm-modal-market-button-alt w-50">
+	                        <b-button id="submit-index-details" type="submit" class="mm-modal-market-button-alt w-50">
 	                            Submit
 	                        </b-button>
 	                    </b-form-group>
@@ -125,7 +125,6 @@
             submitDetails(evt) {
                 evt.preventDefault();
                 Vue.nextTick( () => {
-                    console.log("DATA TO BE SENT", this.form_data);
                     this.data.index_market_object.details = this.form_data;
                 	this.callback(this.form_data);
 				})
