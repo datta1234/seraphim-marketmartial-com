@@ -3,7 +3,7 @@ import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNe
 import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
 
 describe('class UserMarketNegotiation', () => {
-
+	//TODO - move test data out to json file
 	let user_market_negotiation = null;
 	let test_conditions = [
     	new UserMarketNegotiationCondition({id: "1", title: "test title 1", alias: "test_alias_1"}),

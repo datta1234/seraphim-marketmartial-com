@@ -4,7 +4,7 @@ import UserMarket from '../../../resources/assets/js/lib/UserMarket.js';
 import Market from '../../../resources/assets/js/lib/Market.js';
 
 describe('class UserMarketRequest', () => {
-
+	//TODO - move test data out to json file
 	let user_market_request = null;
 	let user_market_quotes_array = [
     	new UserMarketQuote({id: "1"}),

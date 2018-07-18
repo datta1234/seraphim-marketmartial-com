@@ -2,7 +2,7 @@ import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNe
 import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
 
 describe('class UserMarketNegotiationCondition', () => {
-
+	//TODO - move test data out to json file
 	let user_market_negotiation_condition = null;
 	let user_market_negotiation_condition_data = {
 		id: 2,
