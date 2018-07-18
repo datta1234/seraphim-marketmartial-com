@@ -13,15 +13,6 @@
 
 Auth::routes();
 
-Route::get('/test', function(){
-	dd(
-		Cache::get('usersMap'),
-		Cache::get('organisationsMap')
-	);
-
-});
-
-
 /*
 *
 *   Public Page Routes

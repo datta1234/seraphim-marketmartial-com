@@ -24,7 +24,10 @@ class ActionBarTest extends DuskTestCase
         parent::setUp();
         FactoryHelper::setUpMarkets();
         FactoryHelper::setUpTradeStructures();
+        FactoryHelper::setUpTradeConditions();
         $this->marketData = $this->createaMarketData('TOP40', 'Outright');
+
+
     }
 
 
