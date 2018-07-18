@@ -4,7 +4,7 @@ namespace Tests\Helpers\Traits;
 
 trait SetsUpUserMarketRequest {
    
-    public function createaMarketData($market = null, $structure = null, $userMarketRequest = [],$userMarket = []) {
+    public function createaMarketData($market = null, $structure = null, $userMarketRequest = [],$userMarketData = []) {
         // interest
         $userMarket = [
             'organisation_interest'    =>  null,
@@ -53,11 +53,11 @@ trait SetsUpUserMarketRequest {
             });
         });
 
-        $userMarket = array_merge($userMarket,[
+        $userMarketData = array_merge($userMarketData,[
             'user_id' => $userMarket['user_interest']->id
         ]);
         // user market
-        $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create($userMarket);
+        $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create($userMarketData);
         
         // market negotiation
         $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create([

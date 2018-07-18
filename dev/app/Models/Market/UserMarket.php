@@ -36,7 +36,7 @@ class UserMarket extends Model
     protected $fillable = [
         'user_id',
         'is_trade_away',
-        'is_hold_on',
+        'is_on_hold',
         'is_market_maker_notified',
         'user_market_request_id',
     ];

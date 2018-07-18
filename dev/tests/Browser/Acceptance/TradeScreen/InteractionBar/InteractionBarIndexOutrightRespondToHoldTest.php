@@ -31,7 +31,7 @@ class InteractionBarIndexOutrightRespondToHoldTest extends DuskTestCase
 
 
         $this->marketData = $this->createaMarketData('TOP40', 'Outright',[],[
-            'is_hold' => true
+            'is_on_hold' => true
         ]);
         
         $userMarket = Factory(\App\Models\Market\UserMarket::class)->create([
