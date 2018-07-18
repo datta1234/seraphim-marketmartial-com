@@ -45,7 +45,7 @@
                 maxLimit: null,
                 minDistance: 20,
                 maxDistance: 400,
-                autopilot: false,
+                autopilot: true,
                 draw: false
             },
 

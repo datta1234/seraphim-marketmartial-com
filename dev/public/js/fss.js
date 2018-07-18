@@ -60,20 +60,35 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
+<<<<<<< HEAD
 /******/ 	return __webpack_require__(__webpack_require__.s = 494);
+=======
+/******/ 	return __webpack_require__(__webpack_require__.s = 493);
+>>>>>>> develop
 /******/ })
 /************************************************************************/
 /******/ ({
 
+<<<<<<< HEAD
 /***/ 494:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(495);
+=======
+/***/ 493:
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(494);
+>>>>>>> develop
 
 
 /***/ }),
 
+<<<<<<< HEAD
 /***/ 495:
+=======
+/***/ 494:
+>>>>>>> develop
 /***/ (function(module, exports) {
 
 //============================================================
