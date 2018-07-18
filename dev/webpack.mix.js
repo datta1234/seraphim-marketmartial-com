@@ -16,5 +16,3 @@ mix.setResourceRoot('/marketmartial/public/')
    .js('resources/assets/js/app.js', 'public/js')
    .js('resources/assets/js/public.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');
-
-mix.js('node_modules/flat-surface-shader-unofficial/dist/fss.js', 'public/js');

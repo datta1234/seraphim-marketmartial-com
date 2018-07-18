@@ -69047,7 +69047,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 maxLimit: null,
                 minDistance: 20,
                 maxDistance: 400,
-                autopilot: false
+                autopilot: true
             }, 'draw', false),
 
             config_options: {
