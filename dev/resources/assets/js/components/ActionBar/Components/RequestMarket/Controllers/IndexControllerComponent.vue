@@ -156,9 +156,9 @@
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     if(newMarketRequestResponse.status == 200) {
-                        console.log("Saving: ",newMarketRequestResponse);
+                        //console.log("Saving: ",newMarketRequestResponse);
                         this.close_modal();
-                        this.$root.reloadMarketRequests();
+                        //this.$root.reloadMarketRequests(); //we using pusher now
                     } else {
                         console.error(err);    
                     }

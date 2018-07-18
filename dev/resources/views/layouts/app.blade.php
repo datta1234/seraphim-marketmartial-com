@@ -21,6 +21,7 @@
         </script>
     @yield('header-scripts')
     </head>
+
     <body>
     {{--Alerts--}}
     <div class="toast-holder">
@@ -28,6 +29,7 @@
             @include('layouts.elements.alerts')
         </div>
     </div>
+
       <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')

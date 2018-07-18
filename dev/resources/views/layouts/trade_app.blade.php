@@ -7,6 +7,11 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    @if(Auth::user()->organisation)
+    <!-- Organisation key -->
+    <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+    @endif
 
     <title>Market Martial</title>
 
@@ -17,6 +22,7 @@
     <script>
     window.Laravel = {!! json_encode([
         'csrfToken' => csrf_token(),
+        'organisationUuid' => is_null(Auth::user()->organisation) ? null : Auth::user()->organisation->uuid 
         ]) !!};
     </script>
     </head>

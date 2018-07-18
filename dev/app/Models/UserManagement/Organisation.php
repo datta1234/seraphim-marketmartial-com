@@ -3,6 +3,7 @@
 namespace App\Models\UserManagement;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Misc\ResolveUuid;
 
 class Organisation extends Model
 {
@@ -56,5 +57,19 @@ class Organisation extends Model
     public function rebates()
     {
         return $this->hasMany('App\Models\Trade\Rebate', 'organisation_id');
+    }
+
+    /**
+    * Return array of collections
+    * @return array
+    */
+    public static function getUuids()
+    {
+        return ResolveUuid::getOrganisationsUuid();
+    }
+
+    public function getUuidAttribute()
+    {
+        return ResolveUuid::getOrganisationUuid($this->id);
     }
 }

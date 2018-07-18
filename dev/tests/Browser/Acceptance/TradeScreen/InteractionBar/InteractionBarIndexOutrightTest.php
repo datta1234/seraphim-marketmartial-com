@@ -50,7 +50,7 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
             $browser->resize(1920, 1080)
                 ->loginAs($this->marketData['user_'.$this->perspective])
                 ->visit(new TradeScreen)
-                // wait for the correct Tab + Contnet
+                // wait for the correct Tab + Content
                 ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
                 ->waitForText($this->marketData['user_market_request_formatted']['trade_items']['default']['Strike'])
                 ->within(new MarketTab($this->marketData['user_market_request_formatted']['id']), function($browser) {

@@ -37,7 +37,10 @@ class TradeScreen extends BasePage
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@toggle-theme'                 => '[data-toggle-theme]',
+            '@active-markets-indicator'     => '#active-markets-indicator',
+            '@action-filter-market-button'  => '#action-filter-market-button',
+            '@action-bar-open-chat'         => '#action-bar-open-chat',  
         ];
     }
 }
