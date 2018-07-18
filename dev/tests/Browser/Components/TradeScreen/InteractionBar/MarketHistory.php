@@ -36,14 +36,15 @@ class MarketHistory extends BaseComponent
         switch($this->type) {
             // Outright
             case 'Outright':
-                if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
+                $this->testOutright();
+                /*if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
                     $browser->assertSee('BID ONLY');
                 }   
                 elseif($this->marketData['user_market_request_formatted']['quotes'][0]['offer_only']) {
                     $browser->assertSee('OFFER ONLY');
                 } else {
                     $browser->assertSee($this->marketData['user_market_request_formatted']['quotes'][0]['vol_spread'].' VOL SPREAD');
-                }
+                }*/
             break;
         }
 
@@ -51,6 +52,18 @@ class MarketHistory extends BaseComponent
             $browser->assertSee("Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.");
         } else {
             $browser->assertDontSee("Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.");
+        }
+    }
+
+    public function testOutright()
+    {
+        if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
+            $browser->assertSee('BID ONLY');
+        }   
+        elseif($this->marketData['user_market_request_formatted']['quotes'][0]['offer_only']) {
+            $browser->assertSee('OFFER ONLY');
+        } else {
+            $browser->assertSee($this->marketData['user_market_request_formatted']['quotes'][0]['vol_spread'].' VOL SPREAD');
         }
     }
 
