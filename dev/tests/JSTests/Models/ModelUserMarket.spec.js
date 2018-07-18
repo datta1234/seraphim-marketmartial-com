@@ -73,6 +73,7 @@ describe('class UserMarket', () => {
 		});
 
 		it('New array of Negotiations added', () => {
+			//TODO - move test data out to json file
 			let user_market_negotiations = [
 				new UserMarketNegotiation({id: "5"}),
 				new UserMarketNegotiation({id: "6"}),

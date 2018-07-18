@@ -2,9 +2,9 @@ import Market from '../../../resources/assets/js/lib/Market.js';
 import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 
 describe('class Market', () => {
-
+	//TODO - move test data out to json file
 	let market = null;
-
+	//let user_market_data = require(__dirname + '/mockData/Market.json');
 	let market_data = {
 		id: 2,
         title: "Test title",

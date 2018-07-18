@@ -3,9 +3,7 @@ import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketReques
 
 describe('class UserMarketQuote', () => {
 
-	
-    
-
+	//TODO - move test data out to json file
 	let user_market_quote = null;
 	let market_quote_data = {
 		id: 2,
@@ -24,7 +22,6 @@ describe('class UserMarketQuote', () => {
 	beforeEach(function() {
     	user_market_quote = new UserMarketQuote(market_quote_data);	
   	});
-
 
 	describe('UserMarketQuote constructor', () => {
 
