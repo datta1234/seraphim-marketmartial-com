@@ -19,7 +19,6 @@
             'csrfToken' => csrf_token(),
             ]) !!};
         </script>
-    <script src="{{ asset('js/fss.js') }}"></script>
     @yield('header-scripts')
     </head>
     <body>
