@@ -6,7 +6,7 @@ use App\Helpers\Misc\ResolveUuid;
 trait ResolvesUser {
     protected function resolveUserId() {
         if(\Auth::user()) {
-            return ResolveUuid::getUserUuid(\Auth::user()->id);
+            return \Auth::user()->id;
         } else {
             return null;
         }
@@ -14,7 +14,7 @@ trait ResolvesUser {
 
     protected function resolveOrganisationId() {
         if(\Auth::user() && \Auth::user()->organisation_id) {
-            return ResolveUuid::getOrganisationUuid(\Auth::user()->organisation_id);
+            return \Auth::user()->organisation_id;
         } else {
             return null;
         }
