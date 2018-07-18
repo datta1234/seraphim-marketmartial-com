@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserMarket extends Model
 {
+    use \App\Traits\ResolvesUser;
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -119,8 +120,8 @@ class UserMarket extends Model
     {
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
+            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
+            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (
@@ -147,8 +148,8 @@ class UserMarket extends Model
     {
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  \Auth::user()->organisation_id == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  \Auth::user()->organisation_id == $this->user->organisation_id,
+            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
+            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (

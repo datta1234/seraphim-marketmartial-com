@@ -6272,6 +6272,147 @@ module.exports = g;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var UserMarketNegotiation = function () {
+    function UserMarketNegotiation(options) {
+        var _this = this;
+
+        _classCallCheck(this, UserMarketNegotiation);
+
+        // default internal
+        this._user_market = null;
+        // default public
+        this.conditions = [];
+        var defaults = {
+            id: "",
+            bid: "",
+            offer: "",
+            bid_qty: 500,
+            offer_qty: 500,
+            is_repeat: false,
+            has_premium_calc: false,
+            bid_premium: "",
+            offer_premium: "",
+            is_put: false,
+            status: "",
+            created_at: moment()
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && typeof options[key] !== 'undefined') {
+                _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+
+        // register conditions
+        if (options && options.user_market_negotiation_condition) {
+            this.addUserMarketNegotiationConditions(options.user_market_negotiation_condition);
+        }
+    }
+
+    /**
+    *   setUserMarket - Sets the negotiations UserMarket
+    *   @param {UserMarket} market - UserMarket for the negotiation
+    */
+
+
+    _createClass(UserMarketNegotiation, [{
+        key: "setUserMarket",
+        value: function setUserMarket(user_market) {
+            this._user_market = user_market;
+        }
+
+        /**
+        *   getUserMarket - Gets the negotiations UserMarket
+        *   @return {UserMarket}
+        */
+
+    }, {
+        key: "getUserMarket",
+        value: function getUserMarket() {
+            return this._user_market;
+        }
+
+        /**
+        *   addNegotiation - add user user_market_negotiation
+        *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+        */
+
+    }, {
+        key: "addUserMarketNegotiationCondition",
+        value: function addUserMarketNegotiationCondition(user_market_negotiation_condition) {
+            user_market_negotiation_condition.setUserMarketNegotiation(this);
+            this.conditions.push(user_market_negotiation_condition);
+        }
+
+        /**
+        *   addNegotiations - add array of user market_negotiations
+        *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
+        */
+
+    }, {
+        key: "addUserMarketNegotiationConditions",
+        value: function addUserMarketNegotiationConditions(user_market_negotiation_conditions) {
+            var _this2 = this;
+
+            user_market_negotiation_conditions.forEach(function (user_market_negotiation_condition) {
+                _this2.addUserMarketNegotiationCondition(user_market_negotiation_condition);
+            });
+        }
+
+        /**
+        * toJSON - override removing internal references
+        */
+
+    }, {
+        key: "toJSON",
+        value: function toJSON() {
+            var _this3 = this;
+
+            var json = {};
+            Object.keys(this).forEach(function (key) {
+                if (key[0] != '_') {
+                    json[key] = _this3[key];
+                }
+            });
+            return json;
+        }
+    }, {
+        key: "prepareStore",
+        value: function prepareStore() {
+            return {
+                bid: this.bid,
+                offer: this.offer,
+                bid_qty: this.bid_qty,
+                offer_qty: this.offer_qty,
+                is_repeat: this.is_repeat,
+                has_premium_calc: this.has_premium_calc,
+                bid_premium: this.bid_premium,
+                offer_premium: this.offer_premium,
+                conditions: this.conditions.map(function (x) {
+                    return x.prepareStore();
+                })
+            };
+        }
+    }]);
+
+    return UserMarketNegotiation;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarketNegotiation);
+
+/***/ }),
+/* 18 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(global) {/**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
@@ -8797,7 +8938,7 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(15)))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8827,7 +8968,7 @@ function pluckProps(keysToPluck, objToPluck) {
 }
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8847,147 +8988,6 @@ function pluckProps(keysToPluck, objToPluck) {
     }
   }
 });
-
-/***/ }),
-/* 20 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var UserMarketNegotiation = function () {
-    function UserMarketNegotiation(options) {
-        var _this = this;
-
-        _classCallCheck(this, UserMarketNegotiation);
-
-        // default internal
-        this._user_market = null;
-        // default public
-        this.conditions = [];
-        var defaults = {
-            id: "",
-            bid: "",
-            offer: "",
-            bid_qty: "",
-            offer_qty: "",
-            is_repeat: false,
-            has_premium_calc: false,
-            bid_premium: "",
-            offer_premium: "",
-            is_put: false,
-            status: "",
-            created_at: moment()
-            // assign options with defaults
-        };Object.keys(defaults).forEach(function (key) {
-            if (options && typeof options[key] !== 'undefined') {
-                _this[key] = options[key];
-                if (defaults[key] instanceof moment) {
-                    _this[key] = moment(_this[key]);
-                }
-            } else {
-                _this[key] = defaults[key];
-            }
-        });
-
-        // register conditions
-        if (options && options.user_market_negotiation_condition) {
-            this.addUserMarketNegotiationConditions(options.user_market_negotiation_condition);
-        }
-    }
-
-    /**
-    *   setUserMarket - Sets the negotiations UserMarket
-    *   @param {UserMarket} market - UserMarket for the negotiation
-    */
-
-
-    _createClass(UserMarketNegotiation, [{
-        key: "setUserMarket",
-        value: function setUserMarket(user_market) {
-            this._user_market = user_market;
-        }
-
-        /**
-        *   getUserMarket - Gets the negotiations UserMarket
-        *   @return {UserMarket}
-        */
-
-    }, {
-        key: "getUserMarket",
-        value: function getUserMarket() {
-            return this._user_market;
-        }
-
-        /**
-        *   addNegotiation - add user user_market_negotiation
-        *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
-        */
-
-    }, {
-        key: "addUserMarketNegotiationCondition",
-        value: function addUserMarketNegotiationCondition(user_market_negotiation_condition) {
-            user_market_negotiation_condition.setUserMarketNegotiation(this);
-            this.conditions.push(user_market_negotiation_condition);
-        }
-
-        /**
-        *   addNegotiations - add array of user market_negotiations
-        *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
-        */
-
-    }, {
-        key: "addUserMarketNegotiationConditions",
-        value: function addUserMarketNegotiationConditions(user_market_negotiation_conditions) {
-            var _this2 = this;
-
-            user_market_negotiation_conditions.forEach(function (user_market_negotiation_condition) {
-                _this2.addUserMarketNegotiationCondition(user_market_negotiation_condition);
-            });
-        }
-
-        /**
-        * toJSON - override removing internal references
-        */
-
-    }, {
-        key: "toJSON",
-        value: function toJSON() {
-            var _this3 = this;
-
-            var json = {};
-            Object.keys(this).forEach(function (key) {
-                if (key[0] != '_') {
-                    json[key] = _this3[key];
-                }
-            });
-            return json;
-        }
-    }, {
-        key: "prepareStore",
-        value: function prepareStore() {
-            return {
-                bid: this.bid,
-                offer: this.offer,
-                bid_qty: this.bid_qty,
-                offer_qty: this.offer_qty,
-                is_repeat: this.is_repeat,
-                has_premium_calc: this.has_premium_calc,
-                bid_premium: this.bid_premium,
-                offer_premium: this.offer_premium,
-                conditions: this.conditions.map(function (x) {
-                    return x.prepareStore();
-                })
-            };
-        }
-    }]);
-
-    return UserMarketNegotiation;
-}();
-
-/* harmony default export */ __webpack_exports__["a"] = (UserMarketNegotiation);
 
 /***/ }),
 /* 21 */
@@ -9925,7 +9925,7 @@ var props = {
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_array__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_dom__ = __webpack_require__(6);
@@ -10553,7 +10553,7 @@ function isObject(obj) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__bv_event_class__ = __webpack_require__(38);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__array__ = __webpack_require__(5);
@@ -22554,7 +22554,7 @@ var props = Object(__WEBPACK_IMPORTED_MODULE_1__utils_object__["a" /* assign */]
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return props; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(12);
 
@@ -23032,7 +23032,7 @@ var unbindTargets = function unbindTargets(vnode, binding, listenTypes) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__clickout__ = __webpack_require__(142);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listen_on_root__ = __webpack_require__(24);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(5);
@@ -23649,7 +23649,7 @@ var props = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_radio_check__ = __webpack_require__(69);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(5);
@@ -36550,7 +36550,7 @@ module.exports = Vue;
 
 
 window._ = __webpack_require__(85);
-window.Popper = __webpack_require__(17).default;
+window.Popper = __webpack_require__(18).default;
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -53745,7 +53745,7 @@ if (token) {
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
 (function (global, factory) {
-   true ? factory(exports, __webpack_require__(42), __webpack_require__(17)) :
+   true ? factory(exports, __webpack_require__(42), __webpack_require__(18)) :
   typeof define === 'function' && define.amd ? define(['exports', 'jquery', 'popper.js'], factory) :
   (factory((global.bootstrap = {}),global.jQuery,global.Popper));
 }(this, (function (exports,$,Popper) { 'use strict';
@@ -59379,7 +59379,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__link_link__ = __webpack_require__(12);
 
@@ -59949,7 +59949,7 @@ Object(__WEBPACK_IMPORTED_MODULE_6__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_prefix_prop_name__ = __webpack_require__(26);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_unprefix_prop_name__ = __webpack_require__(128);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_copyProps__ = __webpack_require__(27);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__mixins_card_mixin__ = __webpack_require__(28);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__card_body__ = __webpack_require__(55);
@@ -62100,7 +62100,7 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_options__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__form_checkbox__ = __webpack_require__(68);
@@ -62249,7 +62249,7 @@ Object(__WEBPACK_IMPORTED_MODULE_2__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_options__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__form_radio__ = __webpack_require__(70);
@@ -62393,7 +62393,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_array__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__form_input_css__ = __webpack_require__(161);
@@ -62625,7 +62625,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_state__ = __webpack_require__(13);
 
 
@@ -63090,7 +63090,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_id__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_form_options__ = __webpack_require__(40);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_form__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_form_size__ = __webpack_require__(20);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__mixins_form_state__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_form_custom__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_array__ = __webpack_require__(5);
@@ -63644,7 +63644,7 @@ var props = {
 "use strict";
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_array__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__link_link__ = __webpack_require__(12);
@@ -64994,7 +64994,7 @@ var props = {
 /* unused harmony export props */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__link_link__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_functional_data_merge__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_pluck_props__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_pluck_props__ = __webpack_require__(19);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_object__ = __webpack_require__(3);
 
 
@@ -69372,7 +69372,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_tooltip_class__ = __webpack_require__(41);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(9);
@@ -69571,7 +69571,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__utils_plugins__["c" /* vueUse */])(VuePlugin
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_popover_class__ = __webpack_require__(76);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_object__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__utils_warn__ = __webpack_require__(9);
@@ -81791,9 +81791,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(455)
+var __vue_script__ = __webpack_require__(458)
 /* template */
-var __vue_template__ = __webpack_require__(456)
+var __vue_template__ = __webpack_require__(459)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -81838,9 +81838,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(457)
+var __vue_script__ = __webpack_require__(460)
 /* template */
-var __vue_template__ = __webpack_require__(458)
+var __vue_template__ = __webpack_require__(461)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -81885,9 +81885,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(459)
+var __vue_script__ = __webpack_require__(462)
 /* template */
-var __vue_template__ = __webpack_require__(460)
+var __vue_template__ = __webpack_require__(463)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -81932,9 +81932,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(461)
+var __vue_script__ = __webpack_require__(464)
 /* template */
-var __vue_template__ = __webpack_require__(462)
+var __vue_template__ = __webpack_require__(465)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -81979,9 +81979,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(463)
+var __vue_script__ = __webpack_require__(466)
 /* template */
-var __vue_template__ = __webpack_require__(464)
+var __vue_template__ = __webpack_require__(467)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -82024,7 +82024,7 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(355);
-module.exports = __webpack_require__(487);
+module.exports = __webpack_require__(490);
 
 
 /***/ }),
@@ -82040,7 +82040,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_Market__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_UserMarket__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarketNegotiation__ = __webpack_require__(17);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -82086,18 +82086,19 @@ Vue.component('ibar-negotiation-history-contracts', __webpack_require__(424));
 Vue.component('ibar-negotiation-history-market', __webpack_require__(427));
 Vue.component('ibar-market-negotiation-contracts', __webpack_require__(430));
 Vue.component('ibar-apply-conditions', __webpack_require__(433));
+Vue.component('ibar-apply-premium-calculator', __webpack_require__(437));
 
 // Action Bar Component
-Vue.component('action-bar', __webpack_require__(437));
+Vue.component('action-bar', __webpack_require__(440));
 
 Vue.component('user-header', __webpack_require__(348));
-Vue.component('chat-bar', __webpack_require__(471));
+Vue.component('chat-bar', __webpack_require__(474));
 
 // Profile Components
-Vue.component('email-settings', __webpack_require__(474));
-Vue.component('activate-input', __webpack_require__(478));
-Vue.component('toggle-input', __webpack_require__(481));
-Vue.component('day-month-picker', __webpack_require__(484));
+Vue.component('email-settings', __webpack_require__(477));
+Vue.component('activate-input', __webpack_require__(481));
+Vue.component('toggle-input', __webpack_require__(484));
+Vue.component('day-month-picker', __webpack_require__(487));
 
 /**
  * Takes in a value and splits the value by a splitter in a desired frequency
@@ -84320,6 +84321,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -84444,10 +84449,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 
 
@@ -84535,60 +84536,48 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-outright" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-outright" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(
-                        _vm.marketRequest.trade_items.default[
-                          this.$root.config("trade_structure.outright.strike")
-                        ]
-                      ) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.outright.strike")
+                  ]
+                ) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -84659,10 +84648,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -84772,56 +84757,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-risky" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-risky" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -84892,10 +84865,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -85004,56 +84973,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-calendar" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-calendar" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -85124,10 +85081,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -85237,56 +85190,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-fly" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-fly" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -85357,10 +85298,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -85470,56 +85407,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-option_switch" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-option_switch" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -85590,10 +85515,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -85703,56 +85624,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-efp" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-efp" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -85823,10 +85732,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -85936,56 +85841,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-rolls" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-rolls" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -86056,10 +85949,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
 //
 //
 //
@@ -86169,56 +86058,44 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "col col-12 text-center",
-      attrs: { dusk: "market-tab-efp_switch" }
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-efp_switch" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
     },
     [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
         _c(
           "div",
-          {
-            staticClass: "col market-tab p-3 mb-2 mt-2",
-            class: _vm.marketState,
-            on: {
-              click: function($event) {
-                _vm.loadInteractionBar()
-              }
-            }
-          },
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
           [
-            _c("div", { staticClass: "row justify-content-md-center" }, [
-              _c(
-                "div",
-                { staticClass: "col col-6 market-tab-name market-tab-name" },
-                [
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                      "    \n                "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col col-6 market-tab-state" }, [
-                _vm.market_request_state_label != ""
-                  ? _c("span", [
-                      _c("span", {}, [
-                        _vm._v(_vm._s(_vm.market_request_state_label))
-                      ])
-                    ])
-                  : _c("span", [
-                      _c("span", { class: _vm.bidState }, [
-                        _vm._v(_vm._s(_vm.user_market_bid))
-                      ]),
-                      _vm._v(" / "),
-                      _c("span", { class: _vm.offerState }, [
-                        _vm._v(_vm._s(_vm.user_market_offer))
-                      ])
-                    ])
-              ])
-            ])
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
           ]
-        )
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
       ])
     ]
   )
@@ -86243,14 +86120,25 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticStyle: { width: "100%" }, attrs: { dusk: "market-tab" } },
+    {
+      staticStyle: { width: "100%" },
+      attrs: { dusk: "market-tab-" + _vm.marketRequest.id }
+    },
     [
-      _c(_vm.tabs[_vm.marketRequest.trade_structure], {
-        tag: "component",
-        attrs: { "market-request": _vm.marketRequest }
-      })
-    ],
-    1
+      _c("div", { staticClass: "col col-12 text-center" }, [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c(_vm.tabs[_vm.marketRequest.trade_structure], {
+              tag: "component",
+              attrs: { "market-request": _vm.marketRequest }
+            })
+          ],
+          1
+        )
+      ])
+    ]
   )
 }
 var staticRenderFns = []
@@ -86429,7 +86317,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__ = __webpack_require__(395);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__ = __webpack_require__(398);
@@ -86556,10 +86444,13 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+//
+//
+//
 //
 //
 //
@@ -86801,7 +86692,11 @@ var render = function() {
                         "b-button",
                         {
                           staticClass: "w-100",
-                          attrs: { size: "sm", variant: "primary" },
+                          attrs: {
+                            size: "sm",
+                            dusk: "ibar-action-send",
+                            variant: "primary"
+                          },
                           on: {
                             click: function($event) {
                               _vm.sendQuote()
@@ -86829,7 +86724,11 @@ var render = function() {
                         "b-button",
                         {
                           staticClass: "w-100",
-                          attrs: { size: "sm", variant: "secondary" }
+                          attrs: {
+                            size: "sm",
+                            dusk: "ibar-action-nocares",
+                            variant: "secondary"
+                          }
                         },
                         [_vm._v("No Cares")]
                       )
@@ -86852,6 +86751,10 @@ var render = function() {
           "applied-conditions": _vm.proposed_user_market_negotiation.conditions,
           "removable-conditions": _vm.removable_conditions
         }
+      }),
+      _vm._v(" "),
+      _c("ibar-apply-premium-calculator", {
+        attrs: { "market-negotiatio": _vm.proposed_user_market_negotiation }
       })
     ],
     1
@@ -86922,7 +86825,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -87142,7 +87045,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -87362,7 +87265,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -87582,7 +87485,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -87802,7 +87705,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -88022,7 +87925,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -88242,7 +88145,7 @@ module.exports = Component.exports
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -88978,96 +88881,94 @@ var render = function() {
                           ],
                           1
                         )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    item.is_maker
-                      ? _c(
-                          "b-row",
-                          { attrs: { "no-gutters": "" } },
-                          [
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.bid_qty) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.bid) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.offer) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(item.offer_qty) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      : _c(
-                          "b-row",
-                          { attrs: { "no-gutters": "" } },
-                          [
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "12" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(_vm.getState(item)) +
-                                    "\n                    "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
+                      : item.is_maker
+                        ? _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.bid_qty) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.bid) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.offer) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.offer_qty) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        : _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "12" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(_vm.getState(item)) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
                   ],
                   1
                 ),
@@ -89172,7 +89073,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -89250,7 +89151,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid-qty",
+                            placeholder: "Qty"
+                          },
                           model: {
                             value: _vm.marketNegotiation.bid_qty,
                             callback: function($$v) {
@@ -89269,7 +89174,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Bid" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid",
+                            placeholder: "Bid"
+                          },
                           model: {
                             value: _vm.marketNegotiation.bid,
                             callback: function($$v) {
@@ -89288,7 +89197,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Offer" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer",
+                            placeholder: "Offer"
+                          },
                           model: {
                             value: _vm.marketNegotiation.offer,
                             callback: function($$v) {
@@ -89307,7 +89220,11 @@ var render = function() {
                       [
                         _c("b-form-input", {
                           staticClass: "w-100",
-                          attrs: { type: "text", placeholder: "Qty" },
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer-qty",
+                            placeholder: "Qty"
+                          },
                           model: {
                             value: _vm.marketNegotiation.offer_qty,
                             callback: function($$v) {
@@ -89750,7 +89667,12 @@ var render = function() {
                   _c(
                     "b-form-checkbox",
                     {
-                      attrs: { value: true, "unchecked-value": false },
+                      attrs: {
+                        dusk: "ibar-apply-a-condition",
+                        name: "apply-a-condition",
+                        value: true,
+                        "unchecked-value": false
+                      },
                       model: {
                         value: _vm.show_options,
                         callback: function($$v) {
@@ -89998,7 +89920,118 @@ var normalizeComponent = __webpack_require__(4)
 /* script */
 var __vue_script__ = __webpack_require__(438)
 /* template */
-var __vue_template__ = __webpack_require__(470)
+var __vue_template__ = __webpack_require__(439)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1ef017fc", Component.options)
+  } else {
+    hotAPI.reload("data-v-1ef017fc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 438 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    methods: {},
+    created: function created() {
+        console.log("ApplyPremium calculator stuff", this.UserMarketNegotiation);
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 439 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    [
+      _c(
+        "b-col",
+        [_c("b-form-checkbox", [_vm._v(" Apply Premium Calculator")])],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1ef017fc", module.exports)
+  }
+}
+
+/***/ }),
+/* 440 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(441)
+/* template */
+var __vue_template__ = __webpack_require__(473)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -90037,26 +90070,26 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 438 */
+/* 441 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(439);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(442);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(442);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(445);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(445);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(448);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(448);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(451);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__ = __webpack_require__(451);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__ = __webpack_require__(454);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_Market__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarket__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -90201,15 +90234,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 439 */
+/* 442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(440)
+var __vue_script__ = __webpack_require__(443)
 /* template */
-var __vue_template__ = __webpack_require__(441)
+var __vue_template__ = __webpack_require__(444)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -90248,7 +90281,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 440 */
+/* 443 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -90256,7 +90289,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(79);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
 //
 //
@@ -90450,7 +90483,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 441 */
+/* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -90574,15 +90607,15 @@ if (false) {
 }
 
 /***/ }),
-/* 442 */
+/* 445 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(443)
+var __vue_script__ = __webpack_require__(446)
 /* template */
-var __vue_template__ = __webpack_require__(444)
+var __vue_template__ = __webpack_require__(447)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -90621,7 +90654,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 443 */
+/* 446 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -90788,7 +90821,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 444 */
+/* 447 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -90965,15 +90998,15 @@ if (false) {
 }
 
 /***/ }),
-/* 445 */
+/* 448 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(446)
+var __vue_script__ = __webpack_require__(449)
 /* template */
-var __vue_template__ = __webpack_require__(447)
+var __vue_template__ = __webpack_require__(450)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91012,7 +91045,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 446 */
+/* 449 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -91119,7 +91152,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 447 */
+/* 450 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -91235,15 +91268,15 @@ if (false) {
 }
 
 /***/ }),
-/* 448 */
+/* 451 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(449)
+var __vue_script__ = __webpack_require__(452)
 /* template */
-var __vue_template__ = __webpack_require__(450)
+var __vue_template__ = __webpack_require__(453)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91282,7 +91315,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 449 */
+/* 452 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -91435,7 +91468,7 @@ var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot
 });
 
 /***/ }),
-/* 450 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -91669,15 +91702,15 @@ if (false) {
 }
 
 /***/ }),
-/* 451 */
+/* 454 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(452)
+var __vue_script__ = __webpack_require__(455)
 /* template */
-var __vue_template__ = __webpack_require__(469)
+var __vue_template__ = __webpack_require__(472)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91716,14 +91749,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 452 */
+/* 455 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__ = __webpack_require__(453);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__ = __webpack_require__(456);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__ = __webpack_require__(466);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__ = __webpack_require__(469);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__ = __webpack_require__(349);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__);
@@ -91856,15 +91889,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 453 */
+/* 456 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(454)
+var __vue_script__ = __webpack_require__(457)
 /* template */
-var __vue_template__ = __webpack_require__(465)
+var __vue_template__ = __webpack_require__(468)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -91903,7 +91936,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 454 */
+/* 457 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92219,7 +92252,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 455 */
+/* 458 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92273,7 +92306,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 456 */
+/* 459 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92355,7 +92388,7 @@ if (false) {
 }
 
 /***/ }),
-/* 457 */
+/* 460 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92429,7 +92462,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 458 */
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92515,7 +92548,7 @@ if (false) {
 }
 
 /***/ }),
-/* 459 */
+/* 462 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92625,7 +92658,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 460 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -92773,7 +92806,7 @@ if (false) {
 }
 
 /***/ }),
-/* 461 */
+/* 464 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -92947,7 +92980,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 462 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -93258,7 +93291,7 @@ if (false) {
 }
 
 /***/ }),
-/* 463 */
+/* 466 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93353,7 +93386,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 464 */
+/* 467 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -93542,7 +93575,7 @@ if (false) {
 }
 
 /***/ }),
-/* 465 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -93604,15 +93637,15 @@ if (false) {
 }
 
 /***/ }),
-/* 466 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(467)
+var __vue_script__ = __webpack_require__(470)
 /* template */
-var __vue_template__ = __webpack_require__(468)
+var __vue_template__ = __webpack_require__(471)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -93651,7 +93684,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 467 */
+/* 470 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -93713,7 +93746,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 468 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -93861,7 +93894,7 @@ if (false) {
 }
 
 /***/ }),
-/* 469 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -93994,7 +94027,7 @@ if (false) {
 }
 
 /***/ }),
-/* 470 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -94085,15 +94118,15 @@ if (false) {
 }
 
 /***/ }),
-/* 471 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(472)
+var __vue_script__ = __webpack_require__(475)
 /* template */
-var __vue_template__ = __webpack_require__(473)
+var __vue_template__ = __webpack_require__(476)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -94132,7 +94165,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 472 */
+/* 475 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -94227,7 +94260,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 473 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -94373,15 +94406,15 @@ if (false) {
 }
 
 /***/ }),
-/* 474 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(475)
+var __vue_script__ = __webpack_require__(478)
 /* template */
-var __vue_template__ = __webpack_require__(477)
+var __vue_template__ = __webpack_require__(480)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -94420,7 +94453,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 475 */
+/* 478 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -94482,7 +94515,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
-var Form = __webpack_require__(476);
+var Form = __webpack_require__(479);
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
         'emailSettings': {
@@ -94559,7 +94592,7 @@ var Form = __webpack_require__(476);
 });
 
 /***/ }),
-/* 476 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -94782,7 +94815,7 @@ module.exports = function () {
 }();
 
 /***/ }),
-/* 477 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -94961,15 +94994,15 @@ if (false) {
 }
 
 /***/ }),
-/* 478 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(479)
+var __vue_script__ = __webpack_require__(482)
 /* template */
-var __vue_template__ = __webpack_require__(480)
+var __vue_template__ = __webpack_require__(483)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -95008,7 +95041,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 479 */
+/* 482 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -95057,7 +95090,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 480 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -95142,15 +95175,15 @@ if (false) {
 }
 
 /***/ }),
-/* 481 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(482)
+var __vue_script__ = __webpack_require__(485)
 /* template */
-var __vue_template__ = __webpack_require__(483)
+var __vue_template__ = __webpack_require__(486)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -95189,7 +95222,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 482 */
+/* 485 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -95226,7 +95259,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 483 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -95270,15 +95303,15 @@ if (false) {
 }
 
 /***/ }),
-/* 484 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(485)
+var __vue_script__ = __webpack_require__(488)
 /* template */
-var __vue_template__ = __webpack_require__(486)
+var __vue_template__ = __webpack_require__(489)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -95317,7 +95350,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 485 */
+/* 488 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -95399,7 +95432,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 486 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -95475,7 +95508,7 @@ if (false) {
 }
 
 /***/ }),
-/* 487 */
+/* 490 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
