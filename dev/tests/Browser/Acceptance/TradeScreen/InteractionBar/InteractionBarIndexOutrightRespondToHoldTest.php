@@ -27,9 +27,38 @@ class InteractionBarIndexOutrightRespondToHoldTest extends DuskTestCase
         FactoryHelper::setUpMarkets();
         FactoryHelper::setUpTradeStructures();
         FactoryHelper::setUpTradeConditions();
+        
 
-        $this->marketData = $this->createaMarketData('TOP40', 'Outright');
-        dd($this->marketData['user_market_request']);
+
+        $this->marketData = $this->createaMarketData('TOP40', 'Outright',[],[
+            'is_hold' => true
+        ]);
+        
+        $userMarket = Factory(\App\Models\Market\UserMarket::class)->create([
+            'user_market_request_id' => $this->marketData['user_market_request']->id,
+            'user_id' => $this->marketData['user_maker']->id
+        ]);
+
+        // negotiation
+        $marketNegotiation = $userMarket
+            ->marketNegotiations()
+            ->create([
+                'bid' => 100,
+                'offer' => 100,
+                'bid_qty' => 500,
+                'offer_qty' => 500,
+                'is_repeat' => false,
+                'has_premium_calc' => false,
+                'bid_premium' => null,
+                'offer_premium' => null,
+                'user_id' => $this->marketData['user_maker']->id
+        ]);
+
+        $userMarket
+            ->currentMarketNegotiation()
+            ->associate($marketNegotiation)
+            ->save();
+
     }
 
     public function testBoth() {
