@@ -118,10 +118,14 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
+       $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->uuid;
+       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->uuid;
+
+
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
+            "is_interest"  =>  $is_interest,
+            "is_maker"   => $is_marker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (
@@ -146,10 +150,13 @@ class UserMarket extends Model
     */
     public function preFormatted()
     {
+        $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->uuid;
+       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->uuid;
+
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
+            "is_interest"  =>  $is_interest,
+            "is_maker"   => $is_marker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (
