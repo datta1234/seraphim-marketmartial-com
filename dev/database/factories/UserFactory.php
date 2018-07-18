@@ -32,6 +32,9 @@ $factory->define(App\Models\UserManagement\User::class, function (Faker $faker) 
 			'is_married' => rand(0,1) == 1,
 			'has_children' => rand(0,1) == 1,
 			'last_login'=> null,
+			'organisation_id' =>  function(){
+				return  factory(App\Models\UserManagement\Organisation::class)->create()->id;
+				},
 			'hobbies'=> $faker->sentence() 
     ];
 });
