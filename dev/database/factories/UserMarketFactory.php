@@ -11,7 +11,7 @@ $factory->define(App\Models\Market\UserMarket::class, function (Faker $faker) {
         },
 		'current_market_negotiation_id' => null,
 		'is_trade_away' => false,
-        'is_hold_on' => true 
+        'is_hold_on' => true,
 		'is_market_maker_notified' => false
     ];
 });
