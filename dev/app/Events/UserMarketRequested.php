@@ -11,6 +11,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\UserManagement\Organisation;
+use Illuminate\Support\Facades\Log;
 
 class UserMarketRequested implements ShouldBroadcast
 {

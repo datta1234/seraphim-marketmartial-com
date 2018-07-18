@@ -86242,7 +86242,7 @@ window.moment = __webpack_require__(0);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
     broadcaster: 'pusher',
-    key: '32c16f87fb0b8b82d4d2',
+    key: 'e86956c85e44edbfbc9c',
     cluster: 'ap2',
     encrypted: true
 });
@@ -86459,6 +86459,8 @@ var app = new Vue({
                 return display_market.id == UserMarketRequestData.market_id;
             });
             if (index !== -1) {
+                console.log("the index", this.display_markets[index]);
+                console.log("the market", new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
                 this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
             }
         }
@@ -86498,8 +86500,10 @@ var app = new Vue({
         });
 
         if (Laravel.organisationUuid) {
+
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
+                console.log("this is what pusher just gave you");
                 _this2.addUserMarketRequest(UserMarketRequest);
             });
         }
