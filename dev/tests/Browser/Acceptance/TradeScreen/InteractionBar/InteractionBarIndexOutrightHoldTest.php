@@ -29,21 +29,38 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
         FactoryHelper::setUpTradeConditions();
 
         $this->marketData = $this->createaMarketData('TOP40', 'Outright');
-        
+        dd($this->marketData);
     }
 
     public function testBoth() {
         $this->marketMaker();
         $this->marketInterest();
     }
-    
+
     /**
      * A Dusk test example.
      *
      * @return void
      */
     public function marketMaker()
-    {
+    {   
+        //To Display intbar - Open alerts dropdown and click alert.
+        //To Display intbar - Click market tab
+        //assert history - check for other org "BID ONLY" , "OFFER ONLY" and  "{num} VOL SPREAD"
+        //assert history - check for my org BID ONLY - "Qty  bid    'nothing'   Qty" - "500    54          500"
+        //assert history - check for my org OFFER ONLY - "Qty  'nothing'   Offer   Qty" - "500         54  500"
+        //assert history - check for my org VOL SPREAD - "Qty  bid    'nothing'   Qty" - "500  52     54  500"
+        //assert history - timestamps for all quotes format (HH:mm)
+
+        //assert lvls marked in yellow
+        //assert text displayed - "Interest has put your market on hold. Would you like to improve your spread?"
+
+        //assert input boxes populated with last amount entered by $this org
+
+        //assert display amend, repeat and pull buttons
+        //assert amend disabled untill values entered into bid or offer
+
+
         $this->perspective = 'maker';
 
         $this->browse(function (Browser $browser) {
@@ -66,7 +83,7 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
                     // Title details displayed correctly
                     (new TitleBar('Outright',$this->marketData))->assert($browser);
 
-                    // Market Hostory
+                    // Market History
                     (new MarketHistory('Outright',$this->marketData,$this->perspective))->assert($browser);
 
                     // Market Negotiations
@@ -89,6 +106,29 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
      */
     public function marketInterest()
     {
+        //To Display intbar - Open alerts dropdown and click alert.
+        //To Display intbar - Click market tab
+        // assert market tab displays “RECEIVED”
+
+        //display intbar
+        //assert title
+
+        //assert history - check for other org "BID ONLY" , "OFFER ONLY" and  "{num} VOL SPREAD"
+        //assert history - check for my org BID ONLY - "Qty  bid    'nothing'   Qty" - "500    54          500"
+        //assert history - check for my org OFFER ONLY - "Qty  'nothing'   Offer   Qty" - "500         54  500"
+        //assert history - check for my org VOL SPREAD - "Qty  bid    'nothing'   Qty" - "500  52     54  500"
+        //assert history - timestamps for all quotes format (HH:mm)
+        //assert history - hold and accept buttons
+
+        //assert send button is disabled untill input boxes filled in
+        //assert enter bid/offer - input boxes display - fill boxes
+        //assert send button is enabled
+
+        //user clicks hold
+        //assert hold is selected
+        //close int bar, open int bar
+        //assert hold is still selected
+
         $this->perspective = 'interest';
 
         $this->browse(function (Browser $browser) {
@@ -125,5 +165,16 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
 
                 });
         });
+    }
+
+    /**
+     * A Dusk test example.
+     *
+     * @return void
+     */
+    public function marketMakerAlsoInterest()
+    {
+        $this->perspective = 'interest';
+
     }
 }
