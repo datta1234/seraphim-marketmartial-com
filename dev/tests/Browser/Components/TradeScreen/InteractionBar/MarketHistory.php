@@ -36,15 +36,7 @@ class MarketHistory extends BaseComponent
         switch($this->type) {
             // Outright
             case 'Outright':
-                $this->testOutright();
-                /*if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
-                    $browser->assertSee('BID ONLY');
-                }   
-                elseif($this->marketData['user_market_request_formatted']['quotes'][0]['offer_only']) {
-                    $browser->assertSee('OFFER ONLY');
-                } else {
-                    $browser->assertSee($this->marketData['user_market_request_formatted']['quotes'][0]['vol_spread'].' VOL SPREAD');
-                }*/
+                $this->testOutright($browser);
             break;
         }
 
@@ -55,8 +47,16 @@ class MarketHistory extends BaseComponent
         }
     }
 
-<<<<<<< HEAD
-    public function testOutright()
+    public function testHoldText(Browser $browser)
+    {
+        if($this->perspective == 'maker') {
+            $browser->assertSee("Interest has put your market on hold. Would you like to improve your spread?");
+        } else {
+            $browser->assertDontSee("Interest has put your market on hold. Would you like to improve your spread?");
+        }
+    }
+
+    public function testOutright(Browser $browser)
     {
         if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
             $browser->assertSee('BID ONLY');
@@ -68,38 +68,47 @@ class MarketHistory extends BaseComponent
         }
     }
 
-=======
-    public function assertVol(Browser $browser, $bid, $offer)
+    public function makerAssertVol(Browser $browser)
     {
           switch($this->type) {
                 // Outright
                 case 'Outright':
-                $browser->assertSee($bid.' '.$offer.' VOL SPREAD');
-                break;
+                    if($bid != null && ) {
+                        $browser->assertSee($this->marketData['user_market_negotiation']->bid);
+                    }
+                    if($offer != null) {
+                        $browser->assertSee($this->marketData['user_market_negotiation']->offer);
+                    }
+                    $browser->assertSee($this->marketData['user_market_negotiation']->bid_qty);
+                    $browser->assertSee($this->marketData['user_market_negotiation']->offer_qty);
+                    break;
             }
     }
 
-    public function interestAssertVol(Browser $browser, $bid, $offer)
+    public function interestAssertVol(Browser $browser)
     {
             switch($this->type) {
                 case 'Outright':
-                    if($offer == 0)
+                    if($this->marketData['user_market_negotiation']->offer == 0)
                     {
                         $browser->assertSee('BID ONLY');
-                    }else if($bid == 0)
+                    }else if($this->marketData['user_market_negotiation']->bid == 0)
                     {
                         $browser->assertSee('OFFER ONLY');
                     }else
                     {
-                      $browser->assertSee($offer - $bid.' VOL SPREAD');
+                      $browser->assertSee($this->marketData['user_market_negotiation']->offer - $this->marketData['user_market_negotiation']->bid.' VOL SPREAD');
                     }
                 break;
 
             }
     }
 
+    public function timestampAssert(Browser $browser)
+    {
+        $browser->assertSee($this->marketData['user_market_negotiation']->updated_at->format('H:i'));
+    }
 
->>>>>>> 0d7623106fcd17c9838cf696c2074236de7b8285
     /**
      * Get the element shortcuts for the component.
      *
@@ -109,6 +118,10 @@ class MarketHistory extends BaseComponent
     {
         return [
             '@element' => '@ibar-negotiation-history-market',
+            '@hold-button' => 'button[type="button"].hold-quote',
+            '@selected-hold-button' => 'button[type="button"].hold-quote.active',
+            '@accept-button' => 'button[type="button"].accept-quote'
+            '@selected-accept-button' => 'button[type="button"].accept-quote.active'
         ];
     }
 }

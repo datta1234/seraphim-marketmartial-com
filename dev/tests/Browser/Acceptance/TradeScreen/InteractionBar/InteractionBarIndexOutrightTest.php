@@ -47,6 +47,7 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
         $this->perspective = 'maker';
 
         $this->browse(function (Browser $browser) {
+            dd($this->marketData['user_'.$this->perspective]);
             $browser->resize(1920, 1080)
                 ->loginAs($this->marketData['user_'.$this->perspective])
                 ->visit(new TradeScreen)

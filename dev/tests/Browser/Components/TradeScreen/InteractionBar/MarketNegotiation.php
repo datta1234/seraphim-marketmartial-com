@@ -42,17 +42,22 @@ class MarketNegotiation extends BaseComponent
                 ->assertVue('marketNegotiation.offer_qty', 500, '@ibar-market-negotiation-market');
     }
 
-    public function ammendVol(Browser $browser, $bid, $offer)
+    public function ammendVol(Browser $browser)
     {
         // ensure defaulting is working
-        $browser->type('@market-negotiation-bid', $bid)
-                ->type('@market-negotiation-offer',$offer);         
+        $browser->type('@market-negotiation-bid', $this->marketData['user_market_negotiation']->bid)
+                ->type('@market-negotiation-offer',$this->marketData['user_market_negotiation']->offer);         
     }
 
-    public function assertVol(Browser $browser, $bid, $offer)
+    public function assertVol(Browser $browser)
     {
-        $browser->assertValue('@market-negotiation-bid', $bid)
-                ->assertValue('@market-negotiation-offer',$offer);  
+        $browser->assertValue('@market-negotiation-bid', $this->marketData['user_market_negotiation']->bid)
+                ->assertValue('@market-negotiation-offer',$this->marketData['user_market_negotiation']->offer);  
+    }
+
+    public function assertQty(Browser $browser) {
+        $browser->assertValue('@market-negotiation-bid-qty', $this->marketData['user_market_negotiation']->bid_qty)
+                ->assertValue('@market-negotiation-offer-qty',$this->marketData['user_market_negotiation']->offer_qty);
     }
 
     /**
