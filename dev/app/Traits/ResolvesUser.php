@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Traits;
+use App\Helpers\Misc\ResolveUuid;
 
 trait ResolvesUser {
     protected function resolveUserId() {
@@ -12,7 +13,7 @@ trait ResolvesUser {
     }
 
     protected function resolveOrganisationId() {
-        if(\Auth::user()) {
+        if(\Auth::user() && \Auth::user()->organisation_id) {
             return \Auth::user()->organisation_id;
         } else {
             return null;

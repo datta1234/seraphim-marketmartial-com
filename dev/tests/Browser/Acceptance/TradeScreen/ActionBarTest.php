@@ -5,73 +5,68 @@ namespace Tests\Browser\TradeScreen;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Browser\Pages\TradeScreen;
+use Tests\Browser\Components\TradeScreen\UserHeader;
+use Tests\Helper\FactoryHelper;
+use Tests\Helpers\Traits\SetsUpUserMarketRequest;
+use Tests\Browser\Components\TradeScreen\InteractionBar;
+use Tests\Browser\Components\TradeScreen\MarketTab;
+
+use Carbon\Carbon;
 
 class ActionBarTest extends DuskTestCase
 {
-    /**
-     * A Dusk test example.
-     *
-     * @return void
-     */
-    public function testRequestMarketButton()
+
+    use DatabaseMigrations, SetsUpUserMarketRequest;
+
+    protected function setUp()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-request-market]', function($browser) {
-                    $browser->assertSee('Request A Market');
-                });
+        parent::setUp();
+        FactoryHelper::setUpMarkets();
+        FactoryHelper::setUpTradeStructures();
+        FactoryHelper::setUpTradeConditions();
+        $this->marketData = $this->createaMarketData('TOP40', 'Outright');
+
+
+    }
+
+
+    public function testRequestButton()
+    {
+       $this->browse(function (Browser $browser) {
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->assertSee("Request");
+                         });
         });
     }
 
-    // public function testImportantButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-important]', function($browser) {
-    //                 $browser->assertSee('Important');
-    //             });
-    //     });
-    // }
 
-    // public function testAlertsButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-alerts]', function($browser) {
-    //                 $browser->assertSee('Alerts');
-    //             });
-    //     });
-    // }
-
-    // public function testConfirmationsButton()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#action-bar button[mm-confirmations]', function($browser) {
-    //                 $browser->assertSee('Confirmations');
-    //             });
-    //     });
-    // }
-
-
-    public function testAddMarketsButton()
+    public function testImportantButton()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-add-market]', function($browser) {
-                    $browser->assertSee('Markets');
-                });
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->waitForText("Important 1");
+                         });
         });
     }
 
-    public function testChatButton()
+    public function testAlertButton()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#action-bar button[mm-add-market]', function($browser) {
-                    $browser->assertSee('Markets');
-                });
+                $browser->loginAs($this->marketData['user_interest'])
+                         ->visit(new TradeScreen)
+                         ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+                         ->within(".menu-actions",function($browser){
+                                $browser->waitForText("Alerts 1");
+                         });
         });
     }
+
 
 }

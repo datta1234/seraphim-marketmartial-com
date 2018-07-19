@@ -11,6 +11,16 @@ require('./components/data-methods');
 window.Vue = require('vue');
 window.moment = require('moment');
 
+import Echo from "laravel-echo"
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'e86956c85e44edbfbc9c',
+    cluster: 'ap2',
+    encrypted: true
+});
+
+
 import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
@@ -220,7 +230,17 @@ const app = new Vue({
             this.display_markets.forEach(market => {
                 this.loadMarketRequests(market);
             });
+        },
+        addUserMarketRequest(UserMarketRequestData) {
+            let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
+            if(index !== -1)
+            {
+                 console.log("the index",this.display_markets[index]);
+                 console.log("the market",new UserMarketRequest(UserMarketRequestData));
+                 this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
+            }
         }
+
     },
     data: {
         // default data
@@ -262,9 +282,24 @@ const app = new Vue({
                 // nada
             });
         });
+        
+        if(Laravel.organisationUuid)
+        {
+
+            window.Echo.private('organisation.'+Laravel.organisationUuid)
+            .listen('UserMarketRequested', (UserMarketRequest) => {
+                //this should be the market thats created
+                console.log("this is what pusher just gave you");
+                this.addUserMarketRequest(UserMarketRequest);
+            }); 
+        }
+
+       
 
     }
 });
+
+
 
 
 // test code

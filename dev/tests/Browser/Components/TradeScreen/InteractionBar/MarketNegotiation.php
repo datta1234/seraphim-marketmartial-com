@@ -60,6 +60,19 @@ class MarketNegotiation extends BaseComponent
         });
     }
 
+    public function ammendVol(Browser $browser, $bid, $offer)
+    {
+        // ensure defaulting is working
+        $browser->type('@market-negotiation-bid', $bid)
+                ->type('@market-negotiation-offer',$offer);         
+    }
+
+    public function assertVol(Browser $browser, $bid, $offer)
+    {
+        $browser->assertValue('@market-negotiation-bid', $bid)
+                ->assertValue('@market-negotiation-offer',$offer);  
+    }
+
     /**
      * Get the element shortcuts for the component.
      *

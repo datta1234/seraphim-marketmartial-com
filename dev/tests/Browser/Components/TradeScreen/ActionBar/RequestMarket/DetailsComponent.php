@@ -14,7 +14,7 @@ class DetailsComponent extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@detail';
     }
 
     /**
@@ -36,7 +36,7 @@ class DetailsComponent extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@detail',
         ];
     }
 }

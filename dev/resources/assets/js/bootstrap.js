@@ -34,6 +34,9 @@ switch(process.env.NODE_ENV) {
     case "production":
         window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public";
     break;
+    case "test":
+        window.axios.defaults.baseUrl = "http://unit.marketmartial.test";
+    break;
     default:
         window.axios.defaults.baseUrl = "";
 }
@@ -60,11 +63,4 @@ if (token) {
 
 // import Echo from 'laravel-echo'
 
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: 'your-pusher-key',
-//     cluster: 'mt1',
-//     encrypted: true
-// });
+window.Pusher = require('pusher-js');

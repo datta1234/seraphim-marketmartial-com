@@ -5,38 +5,39 @@ namespace Tests\Browser\TradeScreen;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Browser\Pages\TradeScreen;
+use Tests\Browser\Components\TradeScreen\UserHeader;
+use Carbon\Carbon;
 
 class InfoBarTest extends DuskTestCase
 {
-    // @TODO: factory user login - test naem displayed
-    // public function testWelcome Message()
-    // {
-    //     $this->browse(function (Browser $browser) {
-    //         $browser->visit('/trade')
-    //             ->within('#info-bar', function($browser) {
-    //                 // $browser->assertSee('Previous Day');
-    //             });
-    //     });
-    // }
+    use DatabaseMigrations;
 
-    public function testClock()
+    protected function setUp()
     {
-        $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#info-bar', function($browser) {
-                    $browser->assertSee('clock');
-                });
-        });
+        parent::setUp();
+        $this->organisation = factory(\App\Models\UserManagement\Organisation::class)->create(); 
+        $this->user = factory(\App\Models\UserManagement\User::class)->create([
+            'organisation_id'=>$this->organisation->id
+        ]);   
+        $marketTypes = \App\Models\StructureItems\MarketType::all();
+
     }
 
-    public function testRebatesDispaly()
+    public function testUserHeader()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/trade')
-                ->within('#info-bar', function($browser) {
-                    $browser->assertSee('Rebates');
-                    // @TODO: value seeded by factory
-                });
-        });
+
+                $browser->loginAs($this->user)
+                         ->visit(new TradeScreen)
+                         ->within(new UserHeader,function($browser){
+                           
+                            $browser->checkTime(Carbon::now());
+                            $browser->checkWelcomeMessage($this->user);
+                            $browser->checkRebates($this->user);
+
+                         });
+             });
     }
+   
 }

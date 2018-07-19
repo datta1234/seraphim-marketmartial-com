@@ -1567,7 +1567,6 @@ offer_qty: double(11,2)
 bid_premium: double(11,2) nullable
 offer_premium: double(11,2) nullable
 has_premium_calc: tinyint(1) 
-future_reference: double(11,2) nullable
 spot_price: double(11,2) nullable
 is_repeat: tinyint(1)
 is_accepted: tinyint(1) nullable

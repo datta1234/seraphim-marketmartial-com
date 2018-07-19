@@ -66,6 +66,34 @@ class MarketHistory extends BaseComponent
             $browser->assertSee("Interest has put your market on hold. Would you like to improve your spread?")
         })
     }
+    public function assertVol(Browser $browser, $bid, $offer)
+    {
+          switch($this->type) {
+                // Outright
+                case 'Outright':
+                $browser->assertSee($bid.' '.$offer.' VOL SPREAD');
+                break;
+            }
+    }
+
+    public function interestAssertVol(Browser $browser, $bid, $offer)
+    {
+            switch($this->type) {
+                case 'Outright':
+                    if($offer == 0)
+                    {
+                        $browser->assertSee('BID ONLY');
+                    }else if($bid == 0)
+                    {
+                        $browser->assertSee('OFFER ONLY');
+                    }else
+                    {
+                      $browser->assertSee($offer - $bid.' VOL SPREAD');
+                    }
+                break;
+
+            }
+    }
 
     /**
      * Get the element shortcuts for the component.

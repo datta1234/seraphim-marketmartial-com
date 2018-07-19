@@ -58,5 +58,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'redirectOnFirstLogin' => \App\Http\Middleware\RedirectOnFirstLogin::class,
+        'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
     ];
 }

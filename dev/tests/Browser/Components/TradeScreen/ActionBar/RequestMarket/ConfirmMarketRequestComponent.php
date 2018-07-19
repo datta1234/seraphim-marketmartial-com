@@ -14,7 +14,7 @@ class ConfirmMarketRequestComponent extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@confirm-market-request';
     }
 
     /**
@@ -28,6 +28,26 @@ class ConfirmMarketRequestComponent extends BaseComponent
         $browser->assertVisible($this->selector());
     }
 
+    public function assertDetails(Browser $browser,$selectedMarket,$selectedTradeStructure,$selectedExpiryDates,$groups)
+    {        
+        $browser->assertSee($selectedMarket);
+        $browser->assertSee($selectedTradeStructure);
+
+        foreach ($selectedExpiryDates as $selectedExpiryDate) 
+        {
+             $browser->assertSee($selectedExpiryDate->format('My'));
+        }
+
+        foreach ($groups as $groupItems) 
+        {
+            foreach ($groupItems as $item => $value) 
+            {
+                 $browser->assertSee($value);
+            }
+        }
+
+    }
+
     /**
      * Get the element shortcuts for the component.
      *
@@ -36,7 +56,7 @@ class ConfirmMarketRequestComponent extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@confirm-market-request',
         ];
     }
 }

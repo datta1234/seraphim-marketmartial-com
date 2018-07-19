@@ -13,15 +13,6 @@
 
 Auth::routes();
 
-
-Route::get('/test', function(){
-return App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first()->toArray();
-
-	dd(App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first()->toArray(),
-		App\Models\StructureItems\TradeStructure::where('title','Outright')->with('tradeStructureGroups.items')->first());
-	exit;
-});
-
 /*
 *
 *   Public Page Routes
@@ -32,7 +23,7 @@ Route::get('/contact', 'PageController@contact')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
-Route::group(['middleware' => ['auth','redirectOnFirstLogin']], function () {
+Route::group(['middleware' => ['auth','redirectOnFirstLogin','timeWindowPreventAction']], function () {
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
 	Route::get('/my-profile', 'UserController@edit')->name('user.edit');
@@ -57,7 +48,7 @@ Route::group(['middleware' => ['auth','redirectOnFirstLogin']], function () {
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAction']], function() {
 
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');

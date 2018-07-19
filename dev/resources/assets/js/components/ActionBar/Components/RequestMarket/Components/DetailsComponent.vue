@@ -3,7 +3,7 @@
         <b-container fluid>
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
-	                <b-form @submit="submitDetails">
+	                <b-form @submit="submitDetails" id="index-details-form">
 						<b-row v-if="display.show_expiry" align-h="center">
                             <b-col v-for="(date,key) in data.index_market_object.expiry_dates" 
                                     cols="3" 
@@ -20,20 +20,20 @@
                                             class="mb-2">
                             <b-row align-h="center">
                                 <b-col cols="3" offset="3" class="text-center">    
-                                    <b-form-radio :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
+                                    <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
                                 </b-col>
                                 <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                    <b-form-radio :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
+                                    <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
                                 </b-col>
                             </b-row>
 		      		    </b-form-radio-group>
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-strike-0">Strike</label>
+								<label for="strike-0">Strike</label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-strike-0" 
+		      					<b-form-input :id="'strike-'+index" 
 		      						type="number"
 		      						min="0"
 									v-model="field.strike"
@@ -45,10 +45,10 @@
 
 						<b-row align-h="center">
 							<b-col cols="3">
-								<label for="outright-quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
+								<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
 		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input id="outright-quantity-0" 
+		      					<b-form-input :id="'quantity-'+index" 
 		      						type="number"
 									min="0"
 									v-model="field.quantity"
@@ -77,7 +77,7 @@
                         </b-row>
 	                    
 	                    <b-form-group class="text-center mt-4 mb-0">
-	                        <b-button type="submit" class="mm-modal-market-button-alt w-50">
+	                        <b-button id="submit-index-details" type="submit" class="mm-modal-market-button-alt w-50">
 	                            Submit
 	                        </b-button>
 	                    </b-form-group>
@@ -125,7 +125,6 @@
             submitDetails(evt) {
                 evt.preventDefault();
                 Vue.nextTick( () => {
-                    console.log("DATA TO BE SENT", this.form_data);
                     this.data.index_market_object.details = this.form_data;
                 	this.callback(this.form_data);
 				})

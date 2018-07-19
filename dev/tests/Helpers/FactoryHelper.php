@@ -1,6 +1,7 @@
 <?php
 
 namespace Tests\Helper;
+use Carbon\Carbon;
 
 class FactoryHelper
 {
@@ -132,8 +133,26 @@ class FactoryHelper
 				'title' =>  $defaultEmailLabel
 			]);	
 		}
+	}
+
+
+	public static function setUpExperationDates()
+	{
+		$fileName = database_path("seeds/data/safex_expiry_dates.csv");
+		if(file_exists($fileName))
+		{
+			$allCsv = array_map('str_getcsv', file($fileName));
+			array_shift($allCsv);
+
+			foreach ($allCsv as $csv) 
+			{
+				$date  = new Carbon($csv[0]);
+				factory(\App\Models\StructureItems\SafexExpirationDate::class)->create([
+					'expiration_date' => $date->format('Y-m-d H:i:s')
+				]);	
+			}
+		}
+
 	} 
-
-
 
 }

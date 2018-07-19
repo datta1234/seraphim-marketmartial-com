@@ -15,6 +15,7 @@ class UserMarket extends Model
 	 * @property integer $current_market_negotiation_id
 	 * @property boolean $is_trade_away
 	 * @property boolean $is_market_maker_notified
+     * @property boolean $is_hold_on
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 * @property \Carbon\Carbon $deleted_at
@@ -35,6 +36,7 @@ class UserMarket extends Model
     protected $fillable = [
         'user_id',
         'is_trade_away',
+        'is_on_hold',
         'is_market_maker_notified',
         'user_market_request_id',
     ];
@@ -118,10 +120,14 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
+       $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+
+
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
+            "is_interest"  =>  $is_interest,
+            "is_maker"   => $is_marker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (
@@ -146,10 +152,13 @@ class UserMarket extends Model
     */
     public function preFormatted()
     {
+        $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+
         $data = [
             "id"    => $this->id,
-            "is_interest"  =>  $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation_id,
-            "is_maker"   =>  $this->resolveOrganisationId() == $this->user->organisation_id,
+            "is_interest"  =>  $is_interest,
+            "is_maker"   => $is_marker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (

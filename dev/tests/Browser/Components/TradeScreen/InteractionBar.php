@@ -36,7 +36,7 @@ class InteractionBar extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@interaction-bar',
+            '@element' => '@interaction-bar'
         ];
     }
 }

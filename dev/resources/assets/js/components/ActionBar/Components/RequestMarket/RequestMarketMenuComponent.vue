@@ -86,6 +86,7 @@
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = false;
                 this.modal_data.title = 'Select A Market';
+                this.modal_data.selected_controller = null;
                 this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
             /**
