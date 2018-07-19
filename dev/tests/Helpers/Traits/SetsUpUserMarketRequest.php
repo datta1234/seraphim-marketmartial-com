@@ -76,9 +76,4 @@ trait SetsUpUserMarketRequest {
         
         return $userMarket;
     }
-
-    public function lol($userId)
-    {
-
-    }
 }
