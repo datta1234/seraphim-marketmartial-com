@@ -10,9 +10,9 @@ class ResolveUuid
 	public static function getUserUuid($id)
 	{
 		$users = Cache::get('usersMap');
-		while(!is_array($users) || (is_array($users) && !array_key_exists($id, $users)))
+		if(!is_array($users) || (is_array($users) && !array_key_exists($id, $users)))
 		{
-          UuidGen::dispatch();
+          UuidGen::dispatch()->onQueue('sync');
 		}
 		return $users[$id];
 	}
@@ -20,9 +20,9 @@ class ResolveUuid
 	public static function getOrganisationUuid($id)
 	{
 		$organisations = Cache::get('organisationsMap');
-		while( !is_array($organisations) || (is_array($organisations) && !array_key_exists($id, $organisations)))
+		if( !is_array($organisations) || (is_array($organisations) && !array_key_exists($id, $organisations)))
 		{
-          UuidGen::dispatch();
+          UuidGen::dispatch()->onQueue('sync');
 		}
 		return $organisations[$id];
 	}
@@ -30,9 +30,9 @@ class ResolveUuid
 	public static function getOrganisationsUuid()
 	{
 		$organisations = Cache::get('organisationsMap');
-		while(!is_array($organisations))
+		if(!is_array($organisations))
 		{
-          UuidGen::dispatch();
+          UuidGen::dispatch()->onQueue('sync');
 		}
 		return $organisations;
 	}
