@@ -19,6 +19,7 @@ class CreateUserMarketsTable extends Migration
             $table->integer('user_market_request_id')->unsigned();
             $table->integer('current_market_negotiation_id')->unsigned()->nullable();
             $table->boolean('is_trade_away')->default(false);
+
             $table->boolean('is_market_maker_notified')->default(false);
             $table->timestamps();
             $table->softDeletes();

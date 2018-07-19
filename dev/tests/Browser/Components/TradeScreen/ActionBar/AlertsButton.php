@@ -14,7 +14,7 @@ class AlertsButton extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@alerts-notification';
     }
 
     /**
@@ -28,6 +28,12 @@ class AlertsButton extends BaseComponent
         $browser->assertVisible($this->selector());
     }
 
+
+    public function assertCount(Browser $browser,$count)
+    {
+        $browser->assertSee($count);
+    }
+
     /**
      * Get the element shortcuts for the component.
      *
@@ -36,7 +42,7 @@ class AlertsButton extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@alerts-notification';,
         ];
     }
 }
