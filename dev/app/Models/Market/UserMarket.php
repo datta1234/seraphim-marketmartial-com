@@ -15,6 +15,7 @@ class UserMarket extends Model
 	 * @property integer $current_market_negotiation_id
 	 * @property boolean $is_trade_away
 	 * @property boolean $is_market_maker_notified
+     * @property boolean $is_hold_on
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 * @property \Carbon\Carbon $deleted_at
@@ -35,6 +36,7 @@ class UserMarket extends Model
     protected $fillable = [
         'user_id',
         'is_trade_away',
+        'is_on_hold',
         'is_market_maker_notified',
         'user_market_request_id',
     ];

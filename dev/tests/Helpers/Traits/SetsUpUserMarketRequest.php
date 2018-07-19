@@ -4,7 +4,7 @@ namespace Tests\Helpers\Traits;
 
 trait SetsUpUserMarketRequest {
    
-    public function createaMarketData($market = null, $structure = null) {
+    public function createaMarketData($market = null, $structure = null, $userMarketRequest = [],$userMarketData = []) {
         // interest
         $userMarket = [
             'organisation_interest'    =>  null,
@@ -31,11 +31,14 @@ trait SetsUpUserMarketRequest {
         $userMarket['trade_structure'] = \App\Models\StructureItems\TradeStructure::where('title', $structure !== null ? $structure : 'Outright')->first();
 
         // market request
-        $userMarket['user_market_request'] = factory(\App\Models\MarketRequest\UserMarketRequest::class)->create([
+        $userMarketRequest = array_merge($userMarketRequest,[
             'user_id'               =>  $userMarket['user_interest']->id,
             'trade_structure_id'    =>  $userMarket['trade_structure']->id,
             'market_id'             =>  $userMarket['market']->id,
         ]);
+
+        $userMarket['user_market_request'] = factory(\App\Models\MarketRequest\UserMarketRequest::class)->create($userMarketRequest);
+
         $userMarket['trade_structure']->tradeStructureGroups->each(function($group) use($userMarket) {
             $userMarketGroup = factory(\App\Models\MarketRequest\UserMarketRequestGroup::class)->create([
                 'trade_structure_group_id'  =>  $userMarket['trade_structure']->id,
@@ -49,10 +52,13 @@ trait SetsUpUserMarketRequest {
                 ]);
             });
         });
-        // user market
-        $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create([
+
+        $userMarketData = array_merge($userMarketData,[
             'user_id' => $userMarket['user_interest']->id
         ]);
+        // user market
+        $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create($userMarketData);
+        
         // market negotiation
         $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create([
             'user_id'               =>  $userMarket['user_interest']->id,
@@ -69,6 +75,5 @@ trait SetsUpUserMarketRequest {
         $userMarket['user_market_request_formatted'] = $userMarket['user_market_request']->preFormatted();
         
         return $userMarket;
-
     }
 }

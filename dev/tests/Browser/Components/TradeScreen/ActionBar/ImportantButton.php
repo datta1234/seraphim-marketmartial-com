@@ -14,7 +14,7 @@ class ImportantButton extends BaseComponent
      */
     public function selector()
     {
-        return '#selector';
+        return '@important-notifications';
     }
 
     /**
@@ -28,6 +28,12 @@ class ImportantButton extends BaseComponent
         $browser->assertVisible($this->selector());
     }
 
+    public function assertCount(Browser $browser,$count)
+    {
+        $browser->assertSee($count);
+
+    }
+
     /**
      * Get the element shortcuts for the component.
      *
@@ -36,7 +42,7 @@ class ImportantButton extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '#selector',
+            '@element' => '@important-notifications',
         ];
     }
 }

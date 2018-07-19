@@ -55,6 +55,7 @@ class MarketHistory extends BaseComponent
         }
     }
 
+<<<<<<< HEAD
     public function testOutright()
     {
         if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
@@ -67,6 +68,38 @@ class MarketHistory extends BaseComponent
         }
     }
 
+=======
+    public function assertVol(Browser $browser, $bid, $offer)
+    {
+          switch($this->type) {
+                // Outright
+                case 'Outright':
+                $browser->assertSee($bid.' '.$offer.' VOL SPREAD');
+                break;
+            }
+    }
+
+    public function interestAssertVol(Browser $browser, $bid, $offer)
+    {
+            switch($this->type) {
+                case 'Outright':
+                    if($offer == 0)
+                    {
+                        $browser->assertSee('BID ONLY');
+                    }else if($bid == 0)
+                    {
+                        $browser->assertSee('OFFER ONLY');
+                    }else
+                    {
+                      $browser->assertSee($offer - $bid.' VOL SPREAD');
+                    }
+                break;
+
+            }
+    }
+
+
+>>>>>>> 0d7623106fcd17c9838cf696c2074236de7b8285
     /**
      * Get the element shortcuts for the component.
      *
