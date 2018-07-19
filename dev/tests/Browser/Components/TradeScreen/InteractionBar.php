@@ -43,7 +43,7 @@ class InteractionBar extends BaseComponent
             '@amend-button' => 'button[type="button"].ibar-action-amend',
             '@amend-disabled-button' => 'button[type="button"][disabled].ibar-action-amend',
             '@repeat-button' => '@ibar-action-repeat',
-            '@pull-button' =>'button[type="button"].ibar-action-pull' ,
+            '@pull-button' =>'@ibar-action-pull' ,
         ];
     }
 }
