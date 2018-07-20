@@ -115,6 +115,11 @@
         },
         methods: {
             sendQuote() {
+
+                // link now that we are saving
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+
+                // save
                 this.proposed_user_market.store()
                 .then(response => {
                     EventBus.$emit('interactionToggle', false);
@@ -140,6 +145,10 @@
 
                     user_market: null,
                     market_history: [],
+
+                    removable_conditions: [],
+
+                    errors: [],
                 };
                 Object.keys(defaults).forEach(k => {
                     this[k] = defaults[k];
@@ -167,7 +176,6 @@
 
                     
                     // relate
-                    this.proposed_user_market.setMarketRequest(this.marketRequest);
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
                     //set the quotes here if they already set

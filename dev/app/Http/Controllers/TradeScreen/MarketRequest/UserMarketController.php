@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TradeScreen\MarketRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
+use App\Http\Requests\TradeScreen\MarketRequest\UserMarketUpdateRequest;
 use App\Models\Market\UserMarket;
 
 class UserMarketController extends Controller
@@ -89,11 +90,17 @@ class UserMarketController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     *
+     * @todo add error handeling and error response
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserMarketUpdateRequest $request, UserMarket $userMarket)
     {
-        //
+        // TODO add error handeling and error response
+          $userMarket = $userMarket->update($request->only('is_on_hold'));
+
+          return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
     }
 
     /**

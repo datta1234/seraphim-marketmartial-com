@@ -4,7 +4,7 @@ namespace Tests\Helpers\Traits;
 
 trait SetsUpUserMarketRequest {
    
-    public function createaMarketData($market = null, $structure = null, $userMarketRequest = [],$userMarketData = []) {
+    public function createaMarketData($market = null, $structure = null, $userMarketRequest = [],$userMarketData = [], $marketNegotiation = []) {
         // interest
         $userMarket = [
             'organisation_interest'    =>  null,
@@ -54,26 +54,28 @@ trait SetsUpUserMarketRequest {
         });
 
         $userMarketData = array_merge($userMarketData,[
-            'user_id' => $userMarket['user_interest']->id
+            'user_id' => $userMarket['user_maker']->id
         ]);
         // user market
         $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create($userMarketData);
         
         // market negotiation
-        $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create([
-            'user_id'               =>  $userMarket['user_interest']->id,
+
+        $marketNegotiation = array_merge($marketNegotiation, [
+            'user_id'               =>  $userMarket['user_maker']->id,
             'counter_user_id'       =>  $userMarket['user_interest']->id,
             'market_negotiation_id' =>  null,
-
             'future_reference'      =>  0,
             'has_premium_calc'      =>  false,
-
             'is_private'            =>  true,
         ]);
+
+        $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create($marketNegotiation);
         $userMarket['user_market']->currentMarketNegotiation()->associate($userMarket['user_market_negotiation'])->save();
-        
         $userMarket['user_market_request_formatted'] = $userMarket['user_market_request']->preFormatted();
-        
+        $userMarket['reset_formatted'] = function() use ($userMarket){
+            $userMarket['user_market_request_formatted'] = $userMarket['user_market_request']->preFormatted();
+        };
         return $userMarket;
     }
 }

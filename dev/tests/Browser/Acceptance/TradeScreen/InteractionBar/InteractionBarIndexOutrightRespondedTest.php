@@ -17,7 +17,7 @@ use Tests\Browser\Components\TradeScreen\InteractionBar\Conditions;
 use Tests\Browser\Components\TradeScreen\MarketTab;
 use Tests\Browser\Components\TradeScreen\MarketTabs\MarketTabOutright;
 
-class InteractionBarIndexOutrightTest extends DuskTestCase
+class InteractionBarIndexOutrightRespondedTest extends DuskTestCase
 {
     use DatabaseMigrations, SetsUpUserMarketRequest;
 
@@ -47,10 +47,11 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
         $this->perspective = 'maker';
 
         $this->browse(function (Browser $browser) {
+            dd($this->marketData['user_'.$this->perspective]);
             $browser->resize(1920, 1080)
                 ->loginAs($this->marketData['user_'.$this->perspective])
                 ->visit(new TradeScreen)
-                // wait for the correct Tab + Contnet
+                // wait for the correct Tab + Content
                 ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
                 ->waitForText($this->marketData['user_market_request_formatted']['trade_items']['default']['Strike'])
                 ->within(new MarketTab($this->marketData['user_market_request_formatted']['id']), function($browser) {
@@ -75,7 +76,7 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
                     // submission buttons are present
                     $browser->assertVisible('@ibar-action-send')->assertVisible('@ibar-action-nocares');
 
-                    // conditons
+                    // conditonsd
                     (new Conditions())->assert($browser);
 
                 });

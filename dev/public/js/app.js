@@ -25429,9 +25429,12 @@ var OBSERVER_CONFIG = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__ = __webpack_require__(10);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
 
 var Market = function () {
     function Market(options) {
@@ -25480,6 +25483,9 @@ var Market = function () {
         key: "addMarketRequest",
         value: function addMarketRequest(market_req) {
             var is_new_market = true;
+            if (!(market_req instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__["a" /* default */])) {
+                market_req = new __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__["a" /* default */](market_req);
+            }
             for (var i = 0; i < this.market_requests.length; i++) {
                 if (this.market_requests[i].id === market_req.id) {
                     is_new_market = false;
@@ -89090,7 +89096,8 @@ var UserMarketQuote = function () {
             bid_qty: null,
             bid: null,
             offer: null,
-            offer_qty: null
+            offer_qty: null,
+            is_on_hold: false
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
@@ -89123,6 +89130,9 @@ var UserMarketQuote = function () {
         value: function getMarketRequest() {
             return this._user_market_request;
         }
+    }, {
+        key: "putOnHold",
+        value: function putOnHold() {}
 
         /**
         * toJSON - override removing internal references
@@ -91432,11 +91442,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // only populate if opened
             if (this.opened) {
-                this.market_request = {};
+                this.market_request = null;
                 this.market_request = marketRequest;
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.market_request);
             } else {
-                this.market_request = {};
                 this.market_request = null;
                 // fire close event if its closing
                 if (this.opened == false) {
@@ -91758,6 +91767,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         sendQuote: function sendQuote() {
             var _this = this;
 
+            // link now that we are saving
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+
+            // save
             this.proposed_user_market.store().then(function (response) {
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
             }).catch(function (err) {
@@ -91806,7 +91819,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.proposed_user_market_negotiation = new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */]();
 
                 // relate
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
                 this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
                 //set the quotes here if they already set
@@ -94064,6 +94076,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -94071,6 +94089,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Array
         }
     },
+    data: function data() {
+        return {};
+    },
+
     methods: {
         getState: function getState(item) {
             if (item.bid_only) {
@@ -94142,9 +94164,19 @@ var render = function() {
                                   "b-btn",
                                   {
                                     staticClass: "w-100",
-                                    attrs: { size: "sm", variant: "secondary" }
+                                    class: { active: item.is_on_hold },
+                                    attrs: { size: "sm", variant: "secondary" },
+                                    on: {
+                                      click: function($event) {
+                                        item.putOnHold()
+                                      }
+                                    }
                                   },
-                                  [_vm._v("HOLD")]
+                                  [
+                                    _vm._v(
+                                      "\n                                HOLD\n                        "
+                                    )
+                                  ]
                                 )
                               ],
                               1

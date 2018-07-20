@@ -36,7 +36,14 @@ class InteractionBar extends BaseComponent
     public function elements()
     {
         return [
-            '@element' => '@interaction-bar'
+            '@element' => '@interaction-bar',
+            '@send-button' => '@ibar-action-send',
+            '@send-disabled-button' => 'button[type="button"][disabled].ibar-action-send',
+            '@nocares-button' => '@ibar-action-nocares',
+            '@amend-button' => 'button[type="button"].ibar-action-amend',
+            '@amend-disabled-button' => 'button[type="button"][disabled].ibar-action-amend',
+            '@repeat-button' => '@ibar-action-repeat',
+            '@pull-button' =>'@ibar-action-pull' ,
         ];
     }
 }

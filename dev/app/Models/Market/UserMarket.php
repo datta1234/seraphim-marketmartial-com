@@ -41,6 +41,19 @@ class UserMarket extends Model
         'user_market_request_id',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user_id'                   => 'int',
+        'is_trade_away'             => 'boolean',
+        'is_on_hold'                => 'boolean',
+        'is_market_maker_notified'  => 'boolean',
+        'user_market_request_id'    => 'int',
+    ];
+
 
     /**
     * Return relation based of _id_foreign index
@@ -120,15 +133,15 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
-        
-       $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+
+       $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
 
 
         $data = [
             "id"    => $this->id,
             "is_interest"  =>  $is_interest,
-            "is_maker"   => $is_marker,
+            "is_maker"   => $is_maker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (
@@ -143,6 +156,10 @@ class UserMarket extends Model
             $data['offer'] = $this->currentMarketNegotiation->offer;
             $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
             $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+            $data['is_on_hold'] = $this->is_on_hold;
+        }
+        if($data['is_interest']) {
+            $data['is_on_hold'] = $this->is_on_hold;
         }
         return $data;
     }
@@ -153,13 +170,13 @@ class UserMarket extends Model
     */
     public function preFormatted()
     {
-        $is_marker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
 
         $data = [
             "id"    => $this->id,
             "is_interest"  =>  $is_interest,
-            "is_maker"   => $is_marker,
+            "is_maker"   => $is_maker,
             "bid_only" => $this->currentMarketNegotiation->offer == null,
             "offer_only" => $this->currentMarketNegotiation->bid == null,
             "vol_spread" => (

@@ -112,16 +112,13 @@ describe('class UserMarket', () => {
 		});
 
 		it('Store user market', (done) => {
-			let storing_object = user_market.prepareStore();
-			let replyCallBack = (uri, requestBody) => {
-				chai.assert.equal(requestBody, JSON.stringify(storing_object), 'The object posted to the url is equal to the response object');
-				done();
-			};
-
+			
 			let api_store_response = nock(axios.defaults.baseUrl)
 			.defaultReplyHeaders({ 'access-control-allow-origin': '*' })
 			.post('/trade/market-request/2/user-market', user_market.prepareStore())
-			.reply(200, replyCallBack)
+			.reply(200, function(){
+				done();
+			})
 			.persist();//always handles
 
 			user_market.store();
