@@ -13,6 +13,11 @@
 
 Auth::routes();
 
+Route::get('/test',function(){
+	$lol = App\Models\MarketRequest\UserMarketRequest::first();
+	$lol->notifyRequested();
+});
+
 /*
 *
 *   Public Page Routes

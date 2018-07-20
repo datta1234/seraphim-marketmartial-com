@@ -3,6 +3,9 @@
 namespace App\Models\MarketRequest;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\UserManagement\Organisation;
+use App\Events\UserMarketRequested;
+
 
 class UserMarketRequest extends Model
 {
@@ -167,6 +170,16 @@ class UserMarketRequest extends Model
             ->first();
     }
 
+    public function notifyRequested()
+    {
+        $organisations = Organisation::verifiedCache();
+        foreach ($organisations  as $organisation) 
+        {
+           event(new UserMarketRequested($this,$organisation));
+        }
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -180,8 +193,6 @@ class UserMarketRequest extends Model
             'offer_state'   => "",
         ];
 
-        // get is this current user the 
-        $self_user = $this->user_id == $this->resolveUserId();
         // make sure to handle null organisations as false
         $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
 

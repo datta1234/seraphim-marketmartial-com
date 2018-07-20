@@ -29,7 +29,18 @@
                 </b-row>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
-                        <b-button class="w-100" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        
+                        <b-button v-if="!is_on_hold" class="w-100" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+
+                        
+
+                         <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-amend" variant="primary" @click="sendQuote()">Amend</b-button>
+
+                        <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-repeat" variant="primary" @click="sendQuote()">Repeat</b-button>
+
+                        <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-pull" variant="primary" @click="sendQuote()">Pull</b-button>
+
+
                     </b-col>
                 </b-row>
                 <b-row class="justify-content-md-center">
@@ -85,6 +96,14 @@
             }
         },
         computed: {
+            'marker_qoute': function(){
+                return this.marketRequest.quotes.find(quote => quote.is_maker);
+            },
+            'is_on_hold': function(){   
+
+                 let quote = this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
+                 return false
+            },
             'market_title': function() {
                 return this.marketRequest.getMarket().title+" "
                 +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+" "
@@ -98,12 +117,22 @@
             sendQuote() {
                 this.proposed_user_market.store()
                 .then(response => {
-                    console.log("Got It: ", response);
                     EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
                     this.errors = err.errors;
                 });
+            },
+            amendQoute() {
+
+                proposed_user_market_negotiation.amend().then(response => {
+                    console.log(response);
+                  //  EventBus.$emit('interactionToggle', false);
+                })
+                .catch(err => {
+                    this.errors = err.errors;
+                });
+
             },
             reset() {
                 let defaults = {
@@ -125,12 +154,23 @@
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
 
                     // set up the new UserMarket as quote to be sent
-                    this.proposed_user_market = new UserMarket();
-                    this.proposed_user_market_negotiation = new UserMarketNegotiation();
+                    if(this.marker_qoute)//already have my qoute
+                    {
+                        this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
+                    }
+                    else
+                    {
+                        this.proposed_user_market = new UserMarket();
+                    }
+                   
+                   this.proposed_user_market_negotiation = new UserMarketNegotiation();     
+
                     
                     // relate
                     this.proposed_user_market.setMarketRequest(this.marketRequest);
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
+                    //set the quotes here if they already set
                 }
 
             }

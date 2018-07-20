@@ -18,15 +18,17 @@ class UserMarketRequested implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $userMarketRequest;
+    private $organisation;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(UserMarketRequest $userMarketRequest)
+    public function __construct(UserMarketRequest $userMarketRequest, $organisation)
     {
         $this->userMarketRequest = $userMarketRequest; 
+        $this->organisation = $organisation;
     }
 
     /**
@@ -36,13 +38,7 @@ class UserMarketRequested implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        $organisationMaps = Organisation::getUuids();
-        $channels = [];
-        foreach ($organisationMaps as $organisationMapValue) 
-        {
-            $channels[] = new PrivateChannel('organisation.'.$organisationMapValue);
-        }
-        return $channels;
+        return new PrivateChannel('organisation.'.$this->organisation->uuid);    
     }
 
     /**
@@ -52,6 +48,6 @@ class UserMarketRequested implements ShouldBroadcast
     */
     public function broadcastWith()
     {
-        return $this->userMarketRequest->preFormatted();
+        return $this->userMarketRequest->setOrgContext($this->organisation)->preFormatted();
     }
 }

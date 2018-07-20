@@ -33,7 +33,16 @@ $factory->define(App\Models\UserManagement\User::class, function (Faker $faker) 
 			'has_children' => rand(0,1) == 1,
 			'last_login'=> null,
 			'organisation_id' =>  function(){
-				return  factory(App\Models\UserManagement\Organisation::class)->create()->id;
+				$organisations = App\Models\UserManagement\Organisation::all();
+
+					if($organisations->count() == 0)
+					{
+						return  factory(App\Models\UserManagement\Organisation::class)->create()->id;
+					}else
+					{
+						return $organisations->random()->id;
+					}
+
 				},
 			'hobbies'=> $faker->sentence() 
     ];

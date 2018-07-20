@@ -1,4 +1,6 @@
 import Errors from './Errors';
+import UserMarketNegotiation from './UserMarketNegotiation';
+
 export default class UserMarket {
 
     constructor(options) {
@@ -56,6 +58,11 @@ export default class UserMarket {
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
     addNegotiation(user_market_negotiation) {
+        
+        if(!(user_market_negotiation instanceof UserMarketNegotiation)) {
+            user_market_negotiation = new UserMarketNegotiation(user_market_negotiation);
+        }
+
         user_market_negotiation.setUserMarket(this);
         this.market_negotiations.push(user_market_negotiation);
     }
@@ -75,9 +82,17 @@ export default class UserMarket {
     *   @param {UserMarket}
     */
     setCurrentNegotiation(negotiation) {
+        if(!(negotiation instanceof UserMarketNegotiation)) {
+            negotiation = new UserMarketNegotiation(negotiation);
+        }
+
+        console.log("do we get in");
         if(this.market_negotiations.indexOf(negotiation) == -1) {
             this.addNegotiation(negotiation);
         }
+
+        
+        
         this.current_market_negotiation = negotiation;
     }
 
@@ -108,6 +123,7 @@ export default class UserMarket {
             current_market_negotiation: this.current_market_negotiation.prepareStore(),
         };
     }
+
 
     /**
     *  store

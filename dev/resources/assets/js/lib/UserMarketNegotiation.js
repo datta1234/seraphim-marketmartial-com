@@ -85,6 +85,30 @@ export default class UserMarketNegotiation {
         return json;
     }
 
+    /**
+    *   patch - server side patch the negotiation with the ne input
+    *   
+    */
+    patch() {
+        // catch not assigned to a market request yet!
+        if(this.user_market_request_id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+
+        return axios.post(axios.defaults.baseUrl + "/trade/market-request/"+this.user_market_request_id+"/user-market/"+this.getUserMarket().id+"/user-market-negotiation/"+this.id, this.prepareStore())
+        .then(response => {
+            console.log(response);
+            return response;
+        })
+        .catch(err => {
+            console.error(err);
+            return new Errors(err);
+        });
+    }
+
+
     prepareStore() {
         return {
             bid: this.bid,

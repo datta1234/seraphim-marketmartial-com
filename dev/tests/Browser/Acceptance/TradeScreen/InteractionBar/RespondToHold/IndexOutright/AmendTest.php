@@ -105,13 +105,16 @@ class AmendTest extends DuskTestCase
 
                     (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->ammendVol($browser,$this->marketNegotiation->bid,$this->marketNegotiation->offer);
 
-                    $browser->click('@ibar-action-send')
-                            ->WaitForText('Response sent to Interest.');
+                    $browser->click('@ibar-action-send');
+
+                    $browser->within(new MarketHistory('Outright',$this->marketData,$this->perspective),function(){
+                           ->WaitForText('Response sent to Interest.');
+                    });
                             
-                            (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->assert($browser);
-                            
-                            (new MarketHistory('Outright',$this->marketData,$this->perspective))
-                            ->assertVol($browser,$this->marketNegotiation->bid,$this->marketNegotiation->offer);
+                    (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->assert($browser);
+                    
+                    (new MarketHistory('Outright',$this->marketData,$this->perspective))
+                    ->assertVol($browser,$this->marketNegotiation->bid,$this->marketNegotiation->offer);
 
 
                 });

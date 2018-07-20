@@ -4,7 +4,7 @@ export default class UserMarketRequest {
 
     constructor(options) {
         this._endpoint = ["/trade/market/", "/"];
-
+        
         // default internal
         this._market = null;
         // default public

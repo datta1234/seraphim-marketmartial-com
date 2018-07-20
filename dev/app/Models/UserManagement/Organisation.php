@@ -4,6 +4,10 @@ namespace App\Models\UserManagement;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Misc\ResolveUuid;
+use App\Traits\ModelCache;
+use App\Observers\OrganisationObserver;
+use App\Helpers\Broadcast\Channel;
+
 
 class Organisation extends Model
 {
@@ -15,6 +19,7 @@ class Organisation extends Model
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
+    use ModelCache;//if you going to use this remember to write the observer for the mode
 
     /**
      * The table associated with the model.
@@ -59,6 +64,11 @@ class Organisation extends Model
         return $this->hasMany('App\Models\Trade\Rebate', 'organisation_id');
     }
 
+    public static function verifiedCache()
+    {
+        return Channel::verifiedOrganisationsCached();
+    }
+
     /**
     * Return array of collections
     * @return array
@@ -72,4 +82,6 @@ class Organisation extends Model
     {
         return ResolveUuid::getOrganisationUuid($this->id);
     }
+
+   
 }

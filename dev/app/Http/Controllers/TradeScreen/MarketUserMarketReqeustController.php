@@ -26,7 +26,7 @@ class MarketUserMarketReqeustController extends Controller
      * @param  \App\Models\StructureItems\Market  $market
      * @return \Illuminate\Http\Response
      */
-    public function index(Market $market)
+    public function index(Request $request,Market $market)
     {
         $userMarketRequests = $market->userMarketRequests()
             ->with([
@@ -36,8 +36,10 @@ class MarketUserMarketReqeustController extends Controller
                 'userMarketRequestGroups.userMarketRequestItems'
             ])->get();
 
-        $output = $userMarketRequests->map(function($marketRequest) {
-            return $marketRequest->preFormatted();
+        $user = $request->user();
+
+        $output = $userMarketRequests->map(function($marketRequest) use ($user) {
+            return $marketRequest->setOrgContext($user->organisation)->preFormatted();
         });
 
         // $output
@@ -165,7 +167,8 @@ class MarketUserMarketReqeustController extends Controller
             }
 
         //broadCast new market request;
-        event(new UserMarketRequested($userMarketRequest));
+        $userMarketRequest->notifyRequested();
+
 
         return ['success'=>true,'data'=> $responseData,'message'=>"Market Request created successfully."];
     }

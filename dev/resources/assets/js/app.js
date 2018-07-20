@@ -285,6 +285,7 @@ const app = new Vue({
         
         if(Laravel.organisationUuid)
         {
+            console.log("the channle you will get stuff from",Laravel.organisationUuid);
 
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {

@@ -18,7 +18,7 @@ use Tests\Browser\Components\TradeScreen\MarketTab;
 use  Tests\Browser\Components\TradeScreen\ActionBar\AlertsButton;
 use Tests\Browser\Components\TradeScreen\MarketTabs\MarketTabOutright;
 
-class RepeatTest extends DuskTestCase
+class PullTest extends DuskTestCase
 {
     use DatabaseMigrations, SetsUpUserMarketRequest;
 
@@ -40,7 +40,6 @@ class RepeatTest extends DuskTestCase
             'user_id' => $this->marketData['user_maker']->id
         ]);
 
-        
         // negotiation
         $this->marketNegotiation = $this->userMarket
             ->marketNegotiations()
@@ -67,7 +66,6 @@ class RepeatTest extends DuskTestCase
     public function testAmend() {
         $this->marketMakerAmend();
         $this->interestAmend();
-
     }
 
     /**
@@ -107,10 +105,13 @@ class RepeatTest extends DuskTestCase
 
                 
 
-                    $browser->press('Pull');
-                    $browser->AssertDontSee('Repeat');
-                    $browser->AssertSee('Amend');
-                    $browser->AssertSee('Pull');
+                    $browser->press('pull');
+
+                   $browser->within(new MarketHistory('Outright',$this->marketData,$this->perspective),function(){
+                           ->WaitForText('Response sent to Interest.');
+                    });
+                       
+                    $
 
                     (new MarketNegotiation('Outright',$this->marketData,$this->perspective))->assertVol($browser,$this->marketNegotiation->bid,$this->marketNegotiation->offer);
                    

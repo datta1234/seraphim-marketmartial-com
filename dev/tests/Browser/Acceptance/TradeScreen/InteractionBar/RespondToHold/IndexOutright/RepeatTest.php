@@ -107,6 +107,11 @@ class RepeatTest extends DuskTestCase
                 
 
                     $browser->press('Repeat');
+
+                   $browser->within(new MarketHistory('Outright',$this->marketData,$this->perspective),function(){
+                           ->WaitForText('Response sent to Interest.');
+                    });
+                       
                     $browser->AssertDontSee('Repeat');
                     $browser->AssertSee('Amend');
                     $browser->AssertSee('Pull');

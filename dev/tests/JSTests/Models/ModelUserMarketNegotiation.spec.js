@@ -1,4 +1,5 @@
 import UserMarket from '../../../resources/assets/js/lib/UserMarket.js';
+import UserMarketRequest from '../../../resources/assets/js/lib/UserMarketRequest.js';
 import UserMarketNegotiation from '../../../resources/assets/js/lib/UserMarketNegotiation.js';
 import UserMarketNegotiationCondition from '../../../resources/assets/js/lib/UserMarketNegotiationCondition.js';
 
@@ -38,8 +39,8 @@ describe('class UserMarketNegotiation', () => {
 			chai.assert.equal(default_user_market_negotiation.id, '', 'id property is default value');
 			chai.assert.equal(default_user_market_negotiation.bid, '', 'bid property is default value');
 			chai.assert.equal(default_user_market_negotiation.offer, '', 'offer property is default value');
-			chai.assert.equal(default_user_market_negotiation.bid_qty, 0, 'bid_qty property is default value');
-			chai.assert.equal(default_user_market_negotiation.offer_qty, 0, 'offer_qty property is default value');
+			chai.assert.equal(default_user_market_negotiation.bid_qty, 500, 'bid_qty property is default value');
+			chai.assert.equal(default_user_market_negotiation.offer_qty, 500, 'offer_qty property is default value');
 			chai.assert.isFalse(default_user_market_negotiation.is_repeat, 'is_repeat property is default value');
 			chai.assert.isFalse(default_user_market_negotiation.has_premium_calc, 'has_premium_calc property is default value');
 			chai.assert.equal(default_user_market_negotiation.bid_premium, '', 'bid_premium property is default value');
@@ -137,6 +138,31 @@ describe('class UserMarketNegotiation', () => {
 			};
 
 			chai.assert.deepEqual(user_market_negotiation.prepareStore(), test_object, "The User Market Negotiation store object is equal to the set object");
+		});
+	});
+
+
+	describe('Test patching the user market Negotiation ', () => {
+		
+		it.only('Pepare User Market Negotiation object to store', () => {
+			//need a full negotitaion as the method will need to have the 
+			let testUserMarketRequest = require(__dirname + '/mockData/UserMarketNegotiationPatchObject.json');
+			let default_user_market_request = new UserMarket(testUserMarketRequest);
+			let current_negotiation = default_user_market_request.getCurrentNegotiation();
+			
+
+			let api_store_response = nock(axios.defaults.baseUrl)
+			
+			//intercept the enpoint thats going to be hit
+			.defaultReplyHeaders({ 'access-control-allow-origin': '*' })
+			.post('/user-market/2/market_negotiation/2', current_negotiation.prepareStore())
+			.reply(200, function(){
+				done();
+			})
+			.persist();//always handles
+
+			current_negotiation.patch();
+
 		});
 	});
 });

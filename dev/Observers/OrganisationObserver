@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Observers;
+
+use App\Models\UserManagement\Organisation;
+use Illuminate\Support\Facades\Cache;
+
+
+class OrganisationObserver
+{
+    /**
+     * Listen to the Organisaion saved event.
+     *
+     * @param  App\Models\UserManagement\Organisation  $organisation
+     * @return void
+     */
+    public function saved(Organisation $organisation)
+    {
+       Cache::forget($organisation->getTable());
+    }
+
+   
+}
