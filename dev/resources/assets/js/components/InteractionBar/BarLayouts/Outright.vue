@@ -96,9 +96,13 @@
         },
         methods: {
             sendQuote() {
+
+                // link now that we are saving
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+
+                // save
                 this.proposed_user_market.store()
                 .then(response => {
-                    console.log("Got It: ", response);
                     EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
@@ -111,6 +115,10 @@
 
                     user_market: null,
                     market_history: [],
+
+                    removable_conditions: [],
+
+                    errors: [],
                 };
                 Object.keys(defaults).forEach(k => {
                     this[k] = defaults[k];
@@ -129,7 +137,6 @@
                     this.proposed_user_market_negotiation = new UserMarketNegotiation();
                     
                     // relate
-                    this.proposed_user_market.setMarketRequest(this.marketRequest);
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
                 }
 

@@ -61,7 +61,7 @@ trait SetsUpUserMarketRequest {
         
         // market negotiation
         $userMarket['user_market_negotiation'] = $userMarket['user_market']->marketNegotiations()->create([
-            'user_id'               =>  $userMarket['user_interest']->id,
+            'user_id'               =>  $userMarket['user_maker']->id,
             'counter_user_id'       =>  $userMarket['user_interest']->id,
             'market_negotiation_id' =>  null,
 

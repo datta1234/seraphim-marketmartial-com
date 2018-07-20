@@ -1,3 +1,4 @@
+import UserMarketRequest from './UserMarketRequest'
 export default class Market {
 
     constructor(options) {
@@ -39,6 +40,9 @@ export default class Market {
     */
     addMarketRequest(market_req) {
         let is_new_market = true;
+        if(!(market_req instanceof UserMarketRequest)) {
+            market_req = new UserMarketRequest(market_req);
+        }
         for (let i = 0; i < this.market_requests.length; i++) {
             if (this.market_requests[i].id === market_req.id) {
                 is_new_market = false;
