@@ -100,9 +100,8 @@
                 return this.marketRequest.quotes.find(quote => quote.is_maker);
             },
             'is_on_hold': function(){   
+                 return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
 
-                 let quote = this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
-                 return false
             },
             'market_title': function() {
                 return this.marketRequest.getMarket().title+" "
@@ -161,6 +160,8 @@
                 if(this.marketRequest) {
                     this.user_market = this.marketRequest.getChosenUserMarket();
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+
+                    console.log("this is the quote =>",this.marker_qoute);
 
                     // set up the new UserMarket as quote to be sent
                     if(this.marker_qoute)//already have my qoute

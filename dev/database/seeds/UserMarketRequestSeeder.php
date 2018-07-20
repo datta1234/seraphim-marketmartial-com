@@ -34,10 +34,10 @@ class UserMarketRequestSeeder extends Seeder
 
 
 
-                // factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
-                //     "market_id" =>  $market->id,
-                //     "trade_structure_id" => $tradeStruct->id
-                // ]);
+                factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
+                    "market_id" =>  $market->id,
+                    "trade_structure_id" => $tradeStruct->id
+                ]);
 
                 //for outright make some that are on hold
                 if($tradeStruct->title == "Outright" && in_array($market->title,["TOP40","DTOP","DCAP"])) 
