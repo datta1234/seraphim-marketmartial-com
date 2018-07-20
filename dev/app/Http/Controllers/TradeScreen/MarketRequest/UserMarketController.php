@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TradeScreen\MarketRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
+use App\Http\Requests\TradeScreen\MarketRequest\UserMarketUpdateRequest;
 use App\Models\Market\UserMarket;
 
 class UserMarketController extends Controller
@@ -91,7 +92,7 @@ class UserMarketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserMarketUpdateRequest $request, $id)
     {
         //
     }
