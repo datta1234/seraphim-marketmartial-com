@@ -1,0 +1,28 @@
+{
+    "id": 2,
+    "title": "Test title",
+    "description": "Test discription",
+    "order": 1,
+    "market_type_id": 3,
+    "market_requests": [{
+        "id": 2,
+        "trade_structure": "Outright",
+        "attributes": {
+            "state": "test 2 state",
+            "bid_state": "test 2 bid state",
+            "offer_state": " test 2 offer state"
+        },
+        "created_at": "1969-07-20 00:20:18",
+        "updated_at": "1969-07-20 00:20:18",
+        "trade_items":{
+            "default": {
+                "Expiration Date": "Feb18",
+                "Strike": "36308428",
+                "Quantity": "92690854"
+            }
+        },
+        "quotes": [],
+        "quote": null,
+        "chosen_user_market": null
+    }]
+}

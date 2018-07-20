@@ -38,8 +38,8 @@ describe('class UserMarketNegotiation', () => {
 			chai.assert.equal(default_user_market_negotiation.id, '', 'id property is default value');
 			chai.assert.equal(default_user_market_negotiation.bid, '', 'bid property is default value');
 			chai.assert.equal(default_user_market_negotiation.offer, '', 'offer property is default value');
-			chai.assert.equal(default_user_market_negotiation.bid_qty, 0, 'bid_qty property is default value');
-			chai.assert.equal(default_user_market_negotiation.offer_qty, 0, 'offer_qty property is default value');
+			chai.assert.equal(default_user_market_negotiation.bid_qty, 500, 'bid_qty property is default value');
+			chai.assert.equal(default_user_market_negotiation.offer_qty, 500, 'offer_qty property is default value');
 			chai.assert.isFalse(default_user_market_negotiation.is_repeat, 'is_repeat property is default value');
 			chai.assert.isFalse(default_user_market_negotiation.has_premium_calc, 'has_premium_calc property is default value');
 			chai.assert.equal(default_user_market_negotiation.bid_premium, '', 'bid_premium property is default value');

@@ -39,7 +39,7 @@
             };
         },
         mounted() {
-            console.log(this.marketNegotiation);
+            // console.log(this.marketNegotiation);
         }
     }
 </script>

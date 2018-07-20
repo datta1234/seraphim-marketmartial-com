@@ -55,7 +55,6 @@ class MarketHistory extends BaseComponent
         }
     }
 
-<<<<<<< HEAD
     public function testOutright()
     {
         if($this->marketData['user_market_request_formatted']['quotes'][0]['bid_only']) {
@@ -68,7 +67,19 @@ class MarketHistory extends BaseComponent
         }
     }
 
-=======
+    public function clickHold($browser) {
+        return $browser->within($this, function($browser) {
+            $browser->click('@market-hold-btn-'.$this->marketData['user_market']->id);
+
+        });
+    }
+
+    public function hasOnHoldMessage($browser) {
+        return $browser->within($this, function($browser) {
+            $browser->assertSee("Interest has put your market on hold. Would you like to improve your spread?")
+        })
+    }
+
     public function assertVol(Browser $browser, $bid, $offer)
     {
           switch($this->type) {
@@ -98,8 +109,6 @@ class MarketHistory extends BaseComponent
             }
     }
 
-
->>>>>>> 0d7623106fcd17c9838cf696c2074236de7b8285
     /**
      * Get the element shortcuts for the component.
      *

@@ -29,22 +29,23 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
         FactoryHelper::setUpTradeConditions();
 
         $this->marketData = $this->createaMarketData('TOP40', 'Outright');
-        
+
     }
 
     public function testBoth() {
-        $this->marketMaker();
-        $this->marketInterest();
+        $this->marketInterestHolds();
+        $this->marketMakerOnHold();
     }
-    
     /**
      * A Dusk test example.
      *
      * @return void
      */
-    public function marketMaker()
+
+    public function marketInterestHolds()
     {
-        $this->perspective = 'maker';
+        $this->perspective = 'interest';
+
 
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080)
@@ -58,6 +59,7 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
                     // Click on the qualifiying record
                     $browser->click(new MarketTab($this->marketData['user_market_request_formatted']['id']));
                 })
+
                 ->waitFor(new InteractionBar)
                 ->pause(500)
                 ->screenshot($this->perspective.'_open')
@@ -87,9 +89,10 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
      *
      * @return void
      */
-    public function marketInterest()
+    public function marketMakerOnHold()
     {
-        $this->perspective = 'interest';
+        $this->perspective = 'maker';
+
 
         $this->browse(function (Browser $browser) {
             $browser->resize(1920, 1080)
@@ -97,12 +100,14 @@ class InteractionBarIndexOutrightHoldTest extends DuskTestCase
                 ->visit(new TradeScreen)
                 // wait for the correct Tab + Contnet
                 ->waitFor(new MarketTab($this->marketData['user_market_request_formatted']['id']))
+
                 ->waitForText($this->marketData['user_market_request_formatted']['trade_items']['default']['Strike'])
                 ->within(new MarketTab($this->marketData['user_market_request_formatted']['id']), function($browser) {
                     
                     // Click on the qualifiying record
                     $browser->click(new MarketTab($this->marketData['user_market_request_formatted']['id']));
                 })
+
                 ->waitFor(new InteractionBar)
                 ->pause(500)
                 ->screenshot($this->perspective.'_open')
