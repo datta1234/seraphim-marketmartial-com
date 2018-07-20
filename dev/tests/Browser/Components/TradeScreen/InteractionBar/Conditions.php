@@ -122,6 +122,13 @@ class Conditions extends BaseComponent
                         ->click('.remove');
             })->assertMissing('.ibar-condition-remove-label');
 
+
+        // TODO: remove selected item on deselecting list item
+
+        // vue data is correct
+        $browser->assertVue('marketNegotiation.bid_qty', 500, '@ibar-market-negotiation-market')
+                ->assertVue('marketNegotiation.offer_qty', 500, '@ibar-market-negotiation-market');
+
     }
     /**
      * Get the element shortcuts for the component.

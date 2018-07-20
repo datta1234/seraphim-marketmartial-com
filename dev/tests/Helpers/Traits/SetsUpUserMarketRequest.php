@@ -60,6 +60,7 @@ trait SetsUpUserMarketRequest {
         $userMarket['user_market'] = $userMarket['user_market_request']->userMarkets()->create($userMarketData);
         
         // market negotiation
+
         $marketNegotiation = array_merge($marketNegotiation, [
             'user_id'               =>  $userMarket['user_maker']->id,
             'counter_user_id'       =>  $userMarket['user_interest']->id,

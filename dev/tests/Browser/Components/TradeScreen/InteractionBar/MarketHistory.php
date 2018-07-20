@@ -68,6 +68,19 @@ class MarketHistory extends BaseComponent
         }
     }
 
+    public function clickHold($browser) {
+        return $browser->within($this, function($browser) {
+            $browser->click('@market-hold-btn-'.$this->marketData['user_market']->id);
+
+        });
+    }
+
+    public function hasOnHoldMessage($browser) {
+        return $browser->within($this, function($browser) {
+            $browser->assertSee("Interest has put your market on hold. Would you like to improve your spread?")
+        })
+    }
+
     public function makerAssertVol(Browser $browser)
     {
           switch($this->type) {

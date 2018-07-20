@@ -17,7 +17,7 @@ use Tests\Browser\Components\TradeScreen\InteractionBar\Conditions;
 use Tests\Browser\Components\TradeScreen\MarketTab;
 use Tests\Browser\Components\TradeScreen\MarketTabs\MarketTabOutright;
 
-class InteractionBarIndexOutrightTest extends DuskTestCase
+class InteractionBarIndexOutrightRespondedTest extends DuskTestCase
 {
     use DatabaseMigrations, SetsUpUserMarketRequest;
 
@@ -76,7 +76,7 @@ class InteractionBarIndexOutrightTest extends DuskTestCase
                     // submission buttons are present
                     $browser->assertVisible('@ibar-action-send')->assertVisible('@ibar-action-nocares');
 
-                    // conditons
+                    // conditonsd
                     (new Conditions())->assert($browser);
 
                 });

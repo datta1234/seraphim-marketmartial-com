@@ -12,6 +12,14 @@ let mix = require('laravel-mix');
  */
 mix;
 
+mix.webpackConfig({
+    resolve: {
+      alias: {
+        '~': path.resolve(__dirname, 'resources/assets/js')
+      }
+    }
+});
+
 mix.setResourceRoot('/marketmartial/public/')
    .js('resources/assets/js/app.js', 'public/js')
    .js('resources/assets/js/public.js', 'public/js')

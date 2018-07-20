@@ -25212,9 +25212,12 @@ var OBSERVER_CONFIG = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__ = __webpack_require__(10);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
 
 var Market = function () {
     function Market(options) {
@@ -25263,6 +25266,9 @@ var Market = function () {
         key: "addMarketRequest",
         value: function addMarketRequest(market_req) {
             var is_new_market = true;
+            if (!(market_req instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__["a" /* default */])) {
+                market_req = new __WEBPACK_IMPORTED_MODULE_0__UserMarketRequest__["a" /* default */](market_req);
+            }
             for (var i = 0; i < this.market_requests.length; i++) {
                 if (this.market_requests[i].id === market_req.id) {
                     is_new_market = false;
@@ -91398,11 +91404,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // only populate if opened
             if (this.opened) {
-                this.market_request = {};
+                this.market_request = null;
                 this.market_request = marketRequest;
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.market_request);
             } else {
-                this.market_request = {};
                 this.market_request = null;
                 // fire close event if its closing
                 if (this.opened == false) {
@@ -91701,8 +91706,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         sendQuote: function sendQuote() {
             var _this = this;
 
+            // link now that we are saving
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+
+            // save
             this.proposed_user_market.store().then(function (response) {
-                console.log("Got It: ", response);
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
             }).catch(function (err) {
                 _this.errors = err.errors;
@@ -91734,7 +91742,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.proposed_user_market_negotiation = new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */]();
 
                 // relate
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
                 this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
             }
         }
