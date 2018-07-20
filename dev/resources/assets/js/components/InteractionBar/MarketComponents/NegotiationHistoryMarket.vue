@@ -8,7 +8,13 @@
                             {{ getState(item) }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <b-btn size="sm" class="w-100" variant="secondary">HOLD</b-btn>
+                            <b-btn v-bind:class="{'active': item.is_on_hold}" 
+                                size="sm" 
+                                class="w-100" 
+                                @click="item.putOnHold()"
+                                variant="secondary">
+                                    HOLD
+                            </b-btn>
                         </b-col>
                         <b-col cols="3" class="text-center">
                             <b-btn size="sm" class="w-100" variant="primary">ACCEPT</b-btn>
@@ -58,6 +64,11 @@
                 type: Array
             }
         },
+        data() {
+            return {
+
+            };
+        },
         methods: {
             getState(item) {
                 if(item.bid_only) {
@@ -70,7 +81,7 @@
                     return item.vol_spread+" VOL SPREAD";
                 }
                 return "";
-            }
+            },
         },
         mounted() {
             

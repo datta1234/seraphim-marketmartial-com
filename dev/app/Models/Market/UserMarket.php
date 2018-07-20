@@ -41,6 +41,19 @@ class UserMarket extends Model
         'user_market_request_id',
     ];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'user_id'                   => 'int',
+        'is_trade_away'             => 'boolean',
+        'is_on_hold'                => 'boolean',
+        'is_market_maker_notified'  => 'boolean',
+        'user_market_request_id'    => 'int',
+    ];
+
 
     /**
     * Return relation based of _id_foreign index
@@ -142,6 +155,10 @@ class UserMarket extends Model
             $data['offer'] = $this->currentMarketNegotiation->offer;
             $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
             $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+            $data['is_on_hold'] = $this->is_on_hold;
+        }
+        if($data['is_interest']) {
+            $data['is_on_hold'] = $this->is_on_hold;
         }
         return $data;
     }

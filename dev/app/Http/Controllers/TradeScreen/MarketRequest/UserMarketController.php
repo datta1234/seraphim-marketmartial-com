@@ -90,11 +90,17 @@ class UserMarketController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
+     *
+     * @todo add error handeling and error response
+     *
      * @return \Illuminate\Http\Response
      */
-    public function update(UserMarketUpdateRequest $request, $id)
+    public function update(UserMarketUpdateRequest $request, UserMarket $userMarket)
     {
-        //
+        // TODO add error handeling and error response
+          $userMarket = $userMarket->update($request->only('is_on_hold'));
+
+          return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
     }
 
     /**

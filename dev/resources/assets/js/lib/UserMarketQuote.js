@@ -17,6 +17,7 @@ export default class UserMarketQuote {
             bid: null,
             offer: null,
             offer_qty: null,
+            is_on_hold: false
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -42,6 +43,10 @@ export default class UserMarketQuote {
     */
     getMarketRequest() {
         return this._user_market_request;
+    }
+
+    putOnHold() {
+        
     }
 
     /**

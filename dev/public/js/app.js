@@ -89052,7 +89052,8 @@ var UserMarketQuote = function () {
             bid_qty: null,
             bid: null,
             offer: null,
-            offer_qty: null
+            offer_qty: null,
+            is_on_hold: false
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
@@ -89085,6 +89086,9 @@ var UserMarketQuote = function () {
         value: function getMarketRequest() {
             return this._user_market_request;
         }
+    }, {
+        key: "putOnHold",
+        value: function putOnHold() {}
 
         /**
         * toJSON - override removing internal references
@@ -93924,6 +93928,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -93931,6 +93941,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: Array
         }
     },
+    data: function data() {
+        return {};
+    },
+
     methods: {
         getState: function getState(item) {
             if (item.bid_only) {
@@ -94002,9 +94016,19 @@ var render = function() {
                                   "b-btn",
                                   {
                                     staticClass: "w-100",
-                                    attrs: { size: "sm", variant: "secondary" }
+                                    class: { active: item.is_on_hold },
+                                    attrs: { size: "sm", variant: "secondary" },
+                                    on: {
+                                      click: function($event) {
+                                        item.putOnHold()
+                                      }
+                                    }
                                   },
-                                  [_vm._v("HOLD")]
+                                  [
+                                    _vm._v(
+                                      "\n                                HOLD\n                        "
+                                    )
+                                  ]
                                 )
                               ],
                               1
