@@ -117,7 +117,6 @@ export default class UserMarketNegotiation {
             });
         }
 
-
         return axios.patch(axios.defaults.baseUrl + "/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
         .then(response => {
             response.data.data = new UserMarketNegotiation(response.data.data);

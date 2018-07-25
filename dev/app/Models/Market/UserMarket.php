@@ -3,10 +3,12 @@
 namespace App\Models\Market;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class UserMarket extends Model
 {
-    use \App\Traits\ResolvesUser;
+    use \App\Traits\ResolvesUser,SoftDeletes;
 	/**
 	 * @property integer $id
 	 * @property integer $user_id

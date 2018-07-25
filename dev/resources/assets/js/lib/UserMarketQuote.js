@@ -46,7 +46,22 @@ export default class UserMarketQuote {
     }
 
     putOnHold() {
+        console.log('putting on hold now :D');
+        // catch not assigned to a user market request yet!
+        if(this._user_market_request == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
         
+        return axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
+        .then(response => {
+            console.log("Putting Quote on Hold response: ", response);
+            return response;
+        })
+        .catch(err => {
+            return new Errors(err);
+        }); 
     }
 
     /**

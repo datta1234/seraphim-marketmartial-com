@@ -201,10 +201,12 @@
                 // save
                 this.proposed_user_market.delete()
                 .then(response => {
-                    EventBus.$emit('interactionToggle', false);
+                    this.history_message = response.data.message;
+                    this.$refs.pullModal.hide();
                 })
                 .catch(err => {
                     this.errors = err.errors;
+                    this.$refs.pullModal.hide();
                 });
 
             },

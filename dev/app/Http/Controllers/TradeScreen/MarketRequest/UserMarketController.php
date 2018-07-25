@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketUpdateRequest;
 use App\Models\Market\UserMarket;
+use App\Models\MarketRequest\UserMarketRequest;
+use App\Events\UserMarketRequested;
 
 class UserMarketController extends Controller
 {
@@ -85,10 +87,6 @@ class UserMarketController extends Controller
         //
     }
 
-    public function amendQoute($id)
-    {
-        dd($request->all);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -100,11 +98,10 @@ class UserMarketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(UserMarketUpdateRequest $request, UserMarket $userMarket)
+    public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
         // TODO add error handeling and error response
           $userMarket = $userMarket->update($request->only('is_on_hold'));
-
           return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
     }
 
@@ -114,9 +111,11 @@ class UserMarketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UserMarket $userMarket)
+    public function destroy(Request $request, UserMarketRequest $userMarketRequest, UserMarket $userMarket)
     {
-      $userMarket->delete();
-      return response()->json(['data' => null, 'message' => 'Response sent to Interest.']);
+        $this->authorize('delete',$userMarket);
+        $userMarket->delete();
+        $userMarketRequest->notifyRequested();
+        return response()->json(['data' => null, 'message' => 'Response sent to Interest.']);
     }
 }

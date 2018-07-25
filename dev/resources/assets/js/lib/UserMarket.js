@@ -136,7 +136,7 @@ export default class UserMarket {
             });
         }
 
-        return axios.post(axios.defaults.baseUrl + "/trade/market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
+        return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
         .then(response => {
             return response;
         })
@@ -158,7 +158,7 @@ export default class UserMarket {
             });
         }
 
-        return axios.delete(axios.defaults.baseUrl + "/trade/market-request/"+this.user_market_request_id+"/user-market/"+this.id)
+        return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id)
         .then(response => {
             return response;
         })
