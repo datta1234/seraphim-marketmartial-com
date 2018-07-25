@@ -27,14 +27,14 @@
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
                         
-                        <b-button v-if="!is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button v-if="!is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
-                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -99,6 +99,7 @@
 
                 removable_conditions: [],
 
+                server_loading: false,
                 errors: [],
             };
         },
@@ -145,23 +146,30 @@
 
                 // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market.store()
                 .then(response => {
+
+                    this.server_loading = false;
                     EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
+                    this.server_loading = false;
+
                     this.errors = err.errors;
                 });
             },
             amendQoute() {
                // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market_negotiation.patch()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.message;
                     this.proposed_user_market_negotiation = response.data.data;
                     
@@ -172,7 +180,7 @@
 
                 })
                 .catch(err => {
-                    
+                    this.server_loading = false;
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
                 });
@@ -181,10 +189,12 @@
             repeatQuote() {
                this.proposed_user_market.setMarketRequest(this.marketRequest);
                this.proposed_user_market_negotiation.is_repeat = true;
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market_negotiation.patch()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.message;
                     this.proposed_user_market_negotiation = response.data.data;
                     
@@ -194,21 +204,24 @@
                     //EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
+                    this.server_loading = false;
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
                 });
             },
             pullQuote() {
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
-
+                this.server_loading = true;
                 // save
                 this.proposed_user_market.delete()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.data.message;
                     EventBus.$emit('interactionToggle', false);
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {
+                    this.server_loading = false;
                     this.errors = err.errors;
                     this.$refs.pullModal.hide();
                 });

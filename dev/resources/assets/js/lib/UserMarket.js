@@ -86,7 +86,6 @@ export default class UserMarket {
             negotiation = new UserMarketNegotiation(negotiation);
         }
 
-        console.log("do we get in");
         if(this.market_negotiations.indexOf(negotiation) == -1) {
             this.addNegotiation(negotiation);
         }

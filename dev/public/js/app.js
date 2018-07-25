@@ -25540,7 +25540,6 @@ var UserMarket = function () {
                 negotiation = new __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__["a" /* default */](negotiation);
             }
 
-            console.log("do we get in");
             if (this.market_negotiations.indexOf(negotiation) == -1) {
                 this.addNegotiation(negotiation);
             }
@@ -91821,6 +91820,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             removable_conditions: [],
 
+            server_loading: false,
             errors: []
         };
     },
@@ -91868,11 +91868,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // link now that we are saving
             this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.server_loading = true;
 
             // save
             this.proposed_user_market.store().then(function (response) {
+
+                _this.server_loading = false;
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
             }).catch(function (err) {
+                _this.server_loading = false;
+
                 _this.errors = err.errors;
             });
         },
@@ -91881,9 +91886,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // link now that we are saving
             this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.server_loading = true;
 
             // save
             this.proposed_user_market_negotiation.patch().then(function (response) {
+                _this2.server_loading = false;
                 _this2.history_message = response.message;
                 _this2.proposed_user_market_negotiation = response.data.data;
 
@@ -91892,7 +91899,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 //EventBus.$emit('interactionToggle', false);
                 _this2.errors = [];
             }).catch(function (err) {
-
+                _this2.server_loading = false;
                 _this2.history_message = err.errors.message;
                 _this2.errors = err.errors.errors;
             });
@@ -91902,9 +91909,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.proposed_user_market.setMarketRequest(this.marketRequest);
             this.proposed_user_market_negotiation.is_repeat = true;
+            this.server_loading = true;
 
             // save
             this.proposed_user_market_negotiation.patch().then(function (response) {
+                _this3.server_loading = false;
                 _this3.history_message = response.message;
                 _this3.proposed_user_market_negotiation = response.data.data;
 
@@ -91913,6 +91922,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.errors = [];
                 //EventBus.$emit('interactionToggle', false);
             }).catch(function (err) {
+                _this3.server_loading = false;
                 _this3.history_message = err.errors.message;
                 _this3.errors = err.errors.errors;
             });
@@ -91921,13 +91931,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this4 = this;
 
             this.proposed_user_market.setMarketRequest(this.marketRequest);
-
+            this.server_loading = true;
             // save
             this.proposed_user_market.delete().then(function (response) {
+                _this4.server_loading = false;
                 _this4.history_message = response.data.message;
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
                 _this4.$refs.pullModal.hide();
             }).catch(function (err) {
+                _this4.server_loading = false;
                 _this4.errors = err.errors;
                 _this4.$refs.pullModal.hide();
             });
@@ -92088,6 +92100,7 @@ var render = function() {
                             {
                               staticClass: "w-100 mt-1",
                               attrs: {
+                                disabled: _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-send",
                                 variant: "primary"
@@ -92108,7 +92121,8 @@ var render = function() {
                             {
                               staticClass: "w-100 mt-1",
                               attrs: {
-                                disabled: _vm.levels_changed,
+                                disabled:
+                                  _vm.levels_changed || _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-amend",
                                 variant: "primary"
@@ -92129,6 +92143,7 @@ var render = function() {
                             {
                               staticClass: "w-100 mt-1",
                               attrs: {
+                                disabled: _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-repeat",
                                 variant: "primary"
@@ -92156,6 +92171,7 @@ var render = function() {
                               ],
                               staticClass: "w-100 mt-1",
                               attrs: {
+                                disabled: _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-pull",
                                 variant: "primary"
