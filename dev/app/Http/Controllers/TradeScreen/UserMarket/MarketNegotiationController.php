@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Tradescreen\UserMarket;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Market\MarketNegotiation;
-use  App\Models\Market\UserMarket;
+use App\Models\Market\UserMarket;
+use App\Http\Requests\Tradescreen\UserMarket\MarketNegotiationUpdateRequest;
 
 class MarketNegotiationController extends Controller
 {
@@ -47,10 +48,22 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function update(MarketNegotiationUpdateRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        $marketNegotiation->update($request->all());  
+
+        $data = $request->all();
+
+        if(array_key_exists('is_repeat',$data) && $data['is_repeat'])
+        {
+            $marketNegotiation->update(['is_repeat'=>true]);
+        }else
+        {
+            $marketNegotiation->update($data);
+        }
+
+        $userMarket->update(['is_on_hold'=>false]);
         $userMarket->userMarketRequest->notifyRequested();
+        
         return response()->json(['data' => $marketNegotiation, 'message' => 'Response sent to Interest.']);
     }
 

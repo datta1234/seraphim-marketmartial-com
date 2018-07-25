@@ -10,16 +10,13 @@
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
         <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
-
-        
+                
 
         <b-row class="mb-5">
             <b-col cols="10">
-                <b-row v-if="errors.length > 1">
-                    <b-col cols="12" v-for="error in errors" class="danger">
-                        {{ error }}
+                    <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                        {{ key }}:{{ error[0] }}
                     </b-col>
-                </b-row>
                 <b-row v-if="removable_conditions.length > 0">
                     <b-col v-for="cond in removable_conditions" class="text-center">
                         <label class="ibar-condition-remove-label" @click="cond.callback">
@@ -171,9 +168,13 @@
                     this.history_message = response.data.message;
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
                     //EventBus.$emit('interactionToggle', false);
+                    this.errors = [];
+
                 })
                 .catch(err => {
-                    this.errors = err.errors;
+                    
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
                 });
 
             },
@@ -189,10 +190,12 @@
                     
                     this.history_message = response.data.message;
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                    this.errors = [];
                     //EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
-                    this.errors = err.errors;
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
                 });
             },
             pullQuote() {
@@ -202,6 +205,7 @@
                 this.proposed_user_market.delete()
                 .then(response => {
                     this.history_message = response.data.message;
+                    EventBus.$emit('interactionToggle', false);
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {

@@ -117,13 +117,15 @@ export default class UserMarketNegotiation {
             });
         }
 
-        return axios.patch(axios.defaults.baseUrl + "/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
-        .then(response => {
-            response.data.data = new UserMarketNegotiation(response.data.data);
-            return response;
-        })
-        .catch(err => {
-            return new Errors(err);
+        return new Promise((resolve, reject) => {
+             axios.patch(axios.defaults.baseUrl + "/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
         });
     }
 }

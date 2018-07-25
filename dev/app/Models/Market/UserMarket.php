@@ -56,6 +56,9 @@ class UserMarket extends Model
         'user_market_request_id'    => 'int',
     ];
 
+    protected $hidden = ["user_id"];
+
+
 
     /**
     * Return relation based of _id_foreign index
