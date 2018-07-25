@@ -139,7 +139,7 @@ export default class UserMarketNegotiation {
                 if(key == "_user_market") {
                     this.setUserMarket(value);
                 } else {
-                    this.key = value;
+                    this[key] = value;
                 }
             });
         }

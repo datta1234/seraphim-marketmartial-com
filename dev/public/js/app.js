@@ -5884,11 +5884,12 @@ var UserMarketRequest = function () {
 
                     if (Array.isArray(value)) {
                         //call array rebind method
+                        _this5._reassignArray(value, _this5[key]);
                     } else if (value instanceof Object) {
                         //call object rebind method
-                        _this5._reassignObject(value, _this5.key);
+                        _this5._reassignObject(value, _this5[key]);
                     } else {
-                        _this5.key = value;
+                        _this5[key] = value;
                     }
                 });
             }
@@ -5902,7 +5903,7 @@ var UserMarketRequest = function () {
             to_arr.forEach(function (element, index) {
                 if (element instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || element instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
                     is_custom_elem_arr = true;
-                    element.update(_this6.key);
+                    element.update(_this6[key]);
                 }
             });
             if (!is_custom_elem_arr) {
@@ -5913,7 +5914,7 @@ var UserMarketRequest = function () {
         key: '_reassignObject',
         value: function _reassignObject(from_obj, to_obj) {
             if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || from_obj instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
-                from_obj.update(this.key);
+                from_obj.update(this[key]);
             } else {
                 if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
                     console.log(to_obj, from_obj);
@@ -6504,7 +6505,7 @@ var UserMarketNegotiation = function () {
     }, {
         key: "update",
         value: function update(user_market_quote) {
-            var _this4 = this;
+            var _this5 = this;
 
             if (user_market_quote !== null) {
                 Object.entries(user_market_quote).forEach(function (_ref) {
@@ -6513,9 +6514,9 @@ var UserMarketNegotiation = function () {
                         value = _ref2[1];
 
                     if (key == "_user_market") {
-                        _this4.setUserMarket(value);
+                        _this5.setUserMarket(value);
                     } else {
-                        _this4.key = value;
+                        _this5[key] = value;
                     }
                 });
             }
@@ -25731,7 +25732,7 @@ var UserMarket = function () {
     }, {
         key: 'update',
         value: function update(user_market) {
-            var _this4 = this;
+            var _this6 = this;
 
             if (user_market !== null) {
                 Object.entries(user_market).forEach(function (_ref) {
@@ -25741,11 +25742,12 @@ var UserMarket = function () {
 
                     if (Array.isArray(value)) {
                         //call array rebind method
+                        _this6._reassignArray(value, _this6[key]);
                     } else if (value instanceof Object) {
                         //call object rebind method
-                        _this4._reassignObject(value, _this4.key);
+                        _this6._reassignObject(value, _this6[key]);
                     } else {
-                        _this4.key = value;
+                        _this6[key] = value;
                     }
                 });
             }
@@ -25753,13 +25755,13 @@ var UserMarket = function () {
     }, {
         key: '_reassignArray',
         value: function _reassignArray(from_arr, to_arr) {
-            var _this5 = this;
+            var _this7 = this;
 
             var is_custom_elem_arr = false;
             to_arr.forEach(function (element, index) {
                 if (element instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__["a" /* default */]) {
                     is_custom_elem_arr = true;
-                    element.update(_this5.key);
+                    element.update(_this7[key]);
                 }
             });
             if (!is_custom_elem_arr) {
@@ -25770,7 +25772,7 @@ var UserMarket = function () {
         key: '_reassignObject',
         value: function _reassignObject(from_obj, to_obj) {
             if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__["a" /* default */]) {
-                from_obj.update(this.key);
+                from_obj.update(this[key]);
             } else {
                 if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
                     Object.assign(to_obj, from_obj);
@@ -89393,7 +89395,7 @@ var UserMarketQuote = function () {
                     if (key == "_user_market_request") {
                         _this3.setMarketRequest(value);
                     } else {
-                        _this3.key = value;
+                        _this3[key] = value;
                     }
                 });
             }

@@ -87,7 +87,7 @@ export default class UserMarketQuote {
                 if(key == "_user_market_request") {
                     this.setMarketRequest(value);
                 } else {
-                    this.key = value;
+                    this[key] = value;
                 }
             });
         }

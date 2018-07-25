@@ -179,11 +179,13 @@ export default class UserMarket {
             Object.entries(user_market).forEach( ([key, value]) => {
                 if(Array.isArray(value)) {
                     //call array rebind method
+                    this._reassignArray(value, this[key]);
+
                 } else if (value instanceof Object) {
                     //call object rebind method
-                    this._reassignObject(value, this.key);
+                    this._reassignObject(value, this[key]);
                 } else {
-                    this.key = value;
+                    this[key] = value;
                 }
             });
         }
@@ -195,7 +197,7 @@ export default class UserMarket {
         to_arr.forEach( (element, index) => {
             if( element instanceof UserMarketNegotiation) {
                 is_custom_elem_arr = true;
-                element.update(this.key);
+                element.update(this[key]);
             }
         });
         if(!is_custom_elem_arr) {
@@ -205,7 +207,7 @@ export default class UserMarket {
 
     _reassignObject(from_obj, to_obj) {
         if( from_obj instanceof UserMarketNegotiation) {
-            from_obj.update(this.key);
+            from_obj.update(this[key]);
         } else {
             if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null) ) {
                 Object.assign(to_obj, from_obj);
