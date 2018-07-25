@@ -53,6 +53,13 @@
                     </p>
                 </b-col>
             </b-row>
+               <b-row class="justify-content-md-center" v-if="message">
+                <b-col class="mt-2">
+                    <p>
+                        <small>{{ message }}</small>
+                    </p>
+                </b-col>
+            </b-row>
         </b-col>
     </b-row>
 </template>
@@ -62,6 +69,9 @@
         props: {
             history: {
                 type: Array
+            },
+            message:{
+                type: String
             }
         },
         data() {

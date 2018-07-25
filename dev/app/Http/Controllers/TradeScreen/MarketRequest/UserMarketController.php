@@ -85,6 +85,11 @@ class UserMarketController extends Controller
         //
     }
 
+    public function amendQoute($id)
+    {
+        dd($request->all);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -109,8 +114,9 @@ class UserMarketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(UserMarket $userMarket)
     {
-        //
+      $userMarket->delete();
+      return response()->json(['data' => null, 'message' => 'Response sent to Interest.']);
     }
 }
