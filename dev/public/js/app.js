@@ -25305,6 +25305,23 @@ var Market = function () {
         }
 
         /**
+        *   updateMarketRequest - updates a current user market
+        *   @param {UserMarketRequest} market_req - UserMarket objects
+        *   @param {Int} index - UserMarket objects
+        */
+
+    }, {
+        key: "updateMarketRequest",
+        value: function updateMarketRequest(market_req, index) {
+            console.log("=======================UPDATING MARKET REQUEST=======================");
+            console.log("Replace: ", this.market_requests[index]);
+            console.log("With: ", market_req);
+            console.log("Before: ", this.market_requests);
+            this.market_requests[index] = market_req;
+            console.log("After: ", this.market_requests);
+        }
+
+        /**
         *   addMarketRequests - add array of user market_requests
         *   @param {Array} market_requests - array of UserMarketRequest objects
         */
@@ -86495,14 +86512,23 @@ var app = new Vue({
                 _this.loadMarketRequests(market);
             });
         },
-        addUserMarketRequest: function addUserMarketRequest(UserMarketRequestData) {
+        updateUserMarketRequest: function updateUserMarketRequest(UserMarketRequestData) {
             var index = this.display_markets.findIndex(function (display_market) {
                 return display_market.id == UserMarketRequestData.market_id;
             });
             if (index !== -1) {
                 console.log("the index", this.display_markets[index]);
                 console.log("the market", new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
-                this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
+                var request_index = this.display_markets[index].market_requests.findIndex(function (market_request) {
+                    return market_request.id == UserMarketRequestData.id;
+                });
+                if (request_index !== -1) {
+                    this.display_markets[index].updateMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData), request_index);
+                } else {
+                    this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
+                }
+            } else {
+                //@TODO: Add logic to display market if not already displaying
             }
         }
     },
@@ -86546,7 +86572,7 @@ var app = new Vue({
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
-                _this2.addUserMarketRequest(UserMarketRequest);
+                _this2.updateUserMarketRequest(UserMarketRequest);
             });
         }
     }

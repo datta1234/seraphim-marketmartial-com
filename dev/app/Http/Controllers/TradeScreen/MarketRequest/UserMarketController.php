@@ -99,9 +99,9 @@ class UserMarketController extends Controller
     public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
         // TODO add error handeling and error response
-          $userMarket = $userMarket->update($request->only('is_on_hold'));
-
-          return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
+            $userMarket = $userMarket->update($request->only('is_on_hold'));
+            $userMarketRequest->notifyRequested();
+            return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
     }
 
     /**

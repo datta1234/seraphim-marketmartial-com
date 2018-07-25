@@ -55,6 +55,20 @@ export default class Market {
     }
 
     /**
+    *   updateMarketRequest - updates a current user market
+    *   @param {UserMarketRequest} market_req - UserMarket objects
+    *   @param {Int} index - UserMarket objects
+    */
+    updateMarketRequest(market_req, index) {
+        console.log("=======================UPDATING MARKET REQUEST=======================");
+        console.log("Replace: ", this.market_requests[index]);
+        console.log("With: ", market_req);
+        console.log("Before: ", this.market_requests);
+        this.market_requests[index] = market_req;
+        console.log("After: ", this.market_requests);
+    }
+
+    /**
     *   addMarketRequests - add array of user market_requests
     *   @param {Array} market_requests - array of UserMarketRequest objects
     */

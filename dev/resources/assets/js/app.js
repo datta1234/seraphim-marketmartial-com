@@ -231,13 +231,20 @@ const app = new Vue({
                 this.loadMarketRequests(market);
             });
         },
-        addUserMarketRequest(UserMarketRequestData) {
+        updateUserMarketRequest(UserMarketRequestData) {
             let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
             if(index !== -1)
             {
-                 console.log("the index",this.display_markets[index]);
-                 console.log("the market",new UserMarketRequest(UserMarketRequestData));
-                 this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
+                console.log("the index",this.display_markets[index]);
+                console.log("the market",new UserMarketRequest(UserMarketRequestData));
+                let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
+                if(request_index !== -1) {
+                    this.display_markets[index].updateMarketRequest(new UserMarketRequest(UserMarketRequestData), request_index);
+                } else {
+                    this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
+                }
+            } else {
+                //@TODO: Add logic to display market if not already displaying
             }
         }
 
@@ -291,7 +298,7 @@ const app = new Vue({
             .listen('UserMarketRequested', (UserMarketRequest) => {
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
-                this.addUserMarketRequest(UserMarketRequest);
+                this.updateUserMarketRequest(UserMarketRequest);
             }); 
         }
 

@@ -81,4 +81,8 @@ describe('class Market', () => {
 
 		});
 	});
+
+	it('updateMarketRequest', () => {
+		chai.assert(false, 'TODO');
+	});
 });
