@@ -4,7 +4,7 @@
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         
         <!-- VOL SPREAD History - Market-->
-        <ibar-negotiation-history-market :history="marketRequest.quotes" v-if="marketRequest.quotes" class="mb-3"></ibar-negotiation-history-market>
+        <ibar-negotiation-history-market :message="history_message" :history="marketRequest.quotes" v-if="marketRequest.quotes" class="mb-3"></ibar-negotiation-history-market>
 
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
@@ -30,15 +30,27 @@
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
                         
-                        <b-button v-if="!is_on_hold" class="w-100" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button v-if="!is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
+                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
 
-                         <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-amend" variant="primary" @click="sendQuote()">Amend</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-repeat" variant="primary" @click="sendQuote()">Repeat</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100" size="sm" dusk="ibar-action-pull" variant="primary" @click="sendQuote()">Pull</b-button>
+                        <!-- Modal Component -->
+                        <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
+                            <p>Are you sure you want to pull this quote?</p>
+                         <div slot="modal-footer" class="w-100">
+                            <b-row align-v="center">
+                                <b-col cols="12">
+                                    <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                    <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                </b-col>
+                            </b-row>
+                       </div>
+                        </b-modal>
 
 
                     </b-col>
@@ -85,6 +97,9 @@
                 proposed_user_market: new UserMarket(),
                 proposed_user_market_negotiation: new UserMarketNegotiation(),
 
+                default_user_market_negotiation:new UserMarketNegotiation(),
+                history_message: null,
+
                 removable_conditions: [],
 
                 errors: [],
@@ -102,6 +117,22 @@
             'is_on_hold': function(){   
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
 
+            },
+            'levels_changed':function(){
+       
+                let props = ["bid_qty","bid","offer","offer_qty" ];
+                for (var i = 0; i < props.length; i++) {
+                    var propName = props[i];
+
+                    // If values of same property are not equal,
+                    // objects are not equivalent
+                    if (this.proposed_user_market_negotiation[propName] !== this.default_user_market_negotiation[propName])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            
             },
             'market_title': function() {
                 return this.marketRequest.getMarket().title+" "
@@ -128,13 +159,54 @@
                 });
             },
             amendQoute() {
+               // link now that we are saving
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
 
-                proposed_user_market_negotiation.amend().then(response => {
-                    console.log(response);
-                  //  EventBus.$emit('interactionToggle', false);
+                // save
+                this.proposed_user_market_negotiation.patch()
+                .then(response => {
+                    this.history_message = response.message;
+                    this.proposed_user_market_negotiation = response.data.data;
+                    
+                    this.history_message = response.data.message;
+                    this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                    //EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
                     this.errors = err.errors;
+                });
+
+            },
+            repeatQuote() {
+               this.proposed_user_market.setMarketRequest(this.marketRequest);
+               this.proposed_user_market_negotiation.is_repeat = true;
+
+                // save
+                this.proposed_user_market_negotiation.patch()
+                .then(response => {
+                    this.history_message = response.message;
+                    this.proposed_user_market_negotiation = response.data.data;
+                    
+                    this.history_message = response.data.message;
+                    this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                    //EventBus.$emit('interactionToggle', false);
+                })
+                .catch(err => {
+                    this.errors = err.errors;
+                });
+            },
+            pullQuote() {
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+
+                // save
+                this.proposed_user_market.delete()
+                .then(response => {
+                    this.history_message = response.data.message;
+                    this.$refs.pullModal.hide();
+                })
+                .catch(err => {
+                    this.errors = err.errors;
+                    this.$refs.pullModal.hide();
                 });
 
             },
@@ -153,6 +225,9 @@
                     this[k] = defaults[k];
                 });
             },
+            hideModal() {
+                this.$refs.pullModal.hide();
+            },
             init() {
                 this.reset(); // clear current state
 
@@ -161,19 +236,20 @@
                     this.user_market = this.marketRequest.getChosenUserMarket();
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
 
-                    console.log("this is the quote =>",this.marker_qoute);
+                   this.proposed_user_market_negotiation = new UserMarketNegotiation();   
 
                     // set up the new UserMarket as quote to be sent
                     if(this.marker_qoute)//already have my qoute
                     {
                         this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
+                        //use the id from the usermarket
+                        this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
                     }
                     else
                     {
                         this.proposed_user_market = new UserMarket();
                     }
                    
-                   this.proposed_user_market_negotiation = new UserMarketNegotiation();     
 
                     
                     // relate

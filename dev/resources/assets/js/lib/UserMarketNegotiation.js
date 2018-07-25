@@ -1,3 +1,5 @@
+import Errors from './Errors';
+
 export default class UserMarketNegotiation {
 
     constructor(options) {
@@ -85,32 +87,10 @@ export default class UserMarketNegotiation {
         return json;
     }
 
-    /**
-    *   patch - server side patch the negotiation with the ne input
-    *   
-    */
-    patch() {
-        // catch not assigned to a market request yet!
-        if(this.user_market_request_id == null) {
-            return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
-            });
-        }
-
-        return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.getUserMarket().id+"/user-market-negotiation/"+this.id, this.prepareStore())
-        .then(response => {
-            console.log(response);
-            return response;
-        })
-        .catch(err => {
-            console.error(err);
-            return new Errors(err);
-        });
-    }
-
-
+  
     prepareStore() {
         return {
+            id: this.id,
             bid: this.bid,
             offer: this.offer,
             bid_qty: this.bid_qty,
@@ -121,5 +101,29 @@ export default class UserMarketNegotiation {
             offer_premium: this.offer_premium,
             conditions: this.conditions.map(x => x.prepareStore()),
         };
+    }
+
+    /**
+    *  store
+    */
+    patch() {
+
+        console.log("here it goes off",this._user_market.id)
+
+        // catch not assigned to a market request yet!
+        if(this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+        return axios.patch(axios.defaults.baseUrl + "/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
+        .then(response => {
+            response.data.data = new UserMarketNegotiation(response.data.data);
+            return response;
+        })
+        .catch(err => {
+            return new Errors(err);
+        });
     }
 }

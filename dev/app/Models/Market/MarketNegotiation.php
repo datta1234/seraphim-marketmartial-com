@@ -66,6 +66,8 @@ class MarketNegotiation extends Model
             "cond_buy_best",
     ];
 
+    protected $hidden = ["user_id","counter_user_id"];
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

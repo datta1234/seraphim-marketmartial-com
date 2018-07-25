@@ -144,4 +144,28 @@ export default class UserMarket {
             return new Errors(err);
         });
     }
+
+
+    
+    /**
+    *  delete
+    */
+    delete() {
+        // catch not assigned to a market request yet!
+        if(this.user_market_request_id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+
+        return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id)
+        .then(response => {
+            return response;
+        })
+        .catch(err => {
+            return new Errors(err);
+        });
+    }
+
+  
 }
