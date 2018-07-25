@@ -4,9 +4,9 @@ namespace App\Policies;
 
 use App\Models\UserManagement\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Market\UserMarket;
+use App\Models\Market\MarketNegotiation;
 
-class UserMarketPolicy
+class MarketNegotiationPolicy
 {
     use HandlesAuthorization;
 
@@ -20,15 +20,15 @@ class UserMarketPolicy
         //
     }
 
-    /**
+     /**
      * Determine if the given post can be updated by the user.
      *
      * @param  \App\User  $user
      * @param  \App\UserMarket  $userMarket
      * @return bool
      */
-    public function delete(User $user, UserMarket $userMarket)
+    public function updateOnHold(User $user, MarketNegotiation $userMarketNegotiation)
     {
-        return $user->id === $userMarket->user_id;
+        return $request->user()->id === $marketNegotiation->user_id,$marketNegotiation->userMarkets->is_on_hold;
     }
 }

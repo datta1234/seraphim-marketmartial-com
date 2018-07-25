@@ -10,16 +10,13 @@
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
         <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
-
-        
+                
 
         <b-row class="mb-5">
             <b-col cols="10">
-                <b-row v-if="errors.length > 1">
-                    <b-col cols="12" v-for="error in errors" class="danger">
-                        {{ error }}
+                    <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                        {{ key }}:{{ error[0] }}
                     </b-col>
-                </b-row>
                 <b-row v-if="removable_conditions.length > 0">
                     <b-col v-for="cond in removable_conditions" class="text-center">
                         <label class="ibar-condition-remove-label" @click="cond.callback">
@@ -30,14 +27,14 @@
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
                         
-                        <b-button v-if="!is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button v-if="!is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
-                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -102,6 +99,7 @@
 
                 removable_conditions: [],
 
+                server_loading: false,
                 errors: [],
             };
         },
@@ -148,63 +146,82 @@
 
                 // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market.store()
                 .then(response => {
+
+                    this.server_loading = false;
                     EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
+                    this.server_loading = false;
+
                     this.errors = err.errors;
                 });
             },
             amendQoute() {
                // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market_negotiation.patch()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.message;
                     this.proposed_user_market_negotiation = response.data.data;
                     
                     this.history_message = response.data.message;
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
                     //EventBus.$emit('interactionToggle', false);
+                    this.errors = [];
+
                 })
                 .catch(err => {
-                    this.errors = err.errors;
+                    this.server_loading = false;
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
                 });
 
             },
             repeatQuote() {
                this.proposed_user_market.setMarketRequest(this.marketRequest);
                this.proposed_user_market_negotiation.is_repeat = true;
+                this.server_loading = true;
 
                 // save
                 this.proposed_user_market_negotiation.patch()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.message;
                     this.proposed_user_market_negotiation = response.data.data;
                     
                     this.history_message = response.data.message;
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                    this.errors = [];
                     //EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
-                    this.errors = err.errors;
+                    this.server_loading = false;
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
                 });
             },
             pullQuote() {
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
-
+                this.server_loading = true;
                 // save
                 this.proposed_user_market.delete()
                 .then(response => {
+                    this.server_loading = false;
                     this.history_message = response.data.message;
+                    EventBus.$emit('interactionToggle', false);
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {
+                    this.server_loading = false;
                     this.errors = err.errors;
                     this.$refs.pullModal.hide();
                 });
