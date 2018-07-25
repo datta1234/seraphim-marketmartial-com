@@ -175,4 +175,47 @@ export default class UserMarketRequest {
         return json;
     }
 
+    /**
+    *   update - updates this User Market Request
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
+    */
+    update(user_market_request) {
+        if(user_market_request !== null){
+            Object.entries(user_market_request).forEach( ([key, value]) => {
+                if(Array.isArray(value)) {
+                    //call array rebind method
+                } else if (value instanceof Object) {
+                    //call object rebind method
+                    this._reassignObject(value, this.key);
+                } else {
+                    this.key = value;
+                }
+            });
+        }
+    }
+
+
+    _reassignArray(from_arr, to_arr) {
+        let is_custom_elem_arr = false;
+        to_arr.forEach( (element, index) => {
+            if( element instanceof UserMarket || element instanceof UserMarketQuote) {
+                is_custom_elem_arr = true;
+                element.update(this.key);
+            }
+        });
+        if(!is_custom_elem_arr) {
+            to_arr = from_arr;
+        }
+    }
+
+    _reassignObject(from_obj, to_obj) {
+        if( from_obj instanceof UserMarket || from_obj instanceof UserMarketQuote) {
+            from_obj.update(this.key);
+        } else {
+            if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
+                console.log(to_obj, from_obj);
+                Object.assign(to_obj, from_obj);
+            }
+        }
+    }
 }

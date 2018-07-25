@@ -95,6 +95,8 @@
             putQuoteOnHold(quote) {
                 if(!quote.is_on_hold) {
                     let save_quote = quote.putOnHold();
+                    //@TODO FIND out why this does not work.
+                    quote.is_on_hold = true;
                 }
             }
         },

@@ -5638,6 +5638,8 @@ function warn(message) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserMarket__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__ = __webpack_require__(360);
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5862,6 +5864,62 @@ var UserMarketRequest = function () {
                 }
             });
             return json;
+        }
+
+        /**
+        *   update - updates this User Market Request
+        *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
+        */
+
+    }, {
+        key: 'update',
+        value: function update(user_market_request) {
+            var _this5 = this;
+
+            if (user_market_request !== null) {
+                Object.entries(user_market_request).forEach(function (_ref) {
+                    var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        value = _ref2[1];
+
+                    if (Array.isArray(value)) {
+                        //call array rebind method
+                    } else if (value instanceof Object) {
+                        //call object rebind method
+                        _this5._reassignObject(value, _this5.key);
+                    } else {
+                        _this5.key = value;
+                    }
+                });
+            }
+        }
+    }, {
+        key: '_reassignArray',
+        value: function _reassignArray(from_arr, to_arr) {
+            var _this6 = this;
+
+            var is_custom_elem_arr = false;
+            to_arr.forEach(function (element, index) {
+                if (element instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || element instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
+                    is_custom_elem_arr = true;
+                    element.update(_this6.key);
+                }
+            });
+            if (!is_custom_elem_arr) {
+                to_arr = from_arr;
+            }
+        }
+    }, {
+        key: '_reassignObject',
+        value: function _reassignObject(from_obj, to_obj) {
+            if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || from_obj instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
+                from_obj.update(this.key);
+            } else {
+                if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
+                    console.log(to_obj, from_obj);
+                    Object.assign(to_obj, from_obj);
+                }
+            }
         }
     }]);
 
@@ -6275,6 +6333,8 @@ module.exports = g;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Errors__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Errors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Errors__);
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6431,6 +6491,31 @@ var UserMarketNegotiation = function () {
             }).catch(function (err) {
                 return new __WEBPACK_IMPORTED_MODULE_0__Errors___default.a(err);
             });
+        }
+
+        /**
+        *   update - updates this User Market Quote
+        *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+        */
+
+    }, {
+        key: "update",
+        value: function update(user_market_quote) {
+            var _this4 = this;
+
+            if (user_market_quote !== null) {
+                Object.entries(user_market_quote).forEach(function (_ref) {
+                    var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        value = _ref2[1];
+
+                    if (key == "_user_market") {
+                        _this4.setUserMarket(value);
+                    } else {
+                        _this4.key = value;
+                    }
+                });
+            }
         }
     }]);
 
@@ -25314,6 +25399,8 @@ var Market = function () {
         *   updateMarketRequest - updates a current user market
         *   @param {UserMarketRequest} market_req - UserMarket objects
         *   @param {Int} index - UserMarket objects
+        *   
+        *   @todo make general Market update method that updates all market requests
         */
 
     }, {
@@ -25323,7 +25410,7 @@ var Market = function () {
             console.log("Replace: ", this.market_requests[index]);
             console.log("With: ", market_req);
             console.log("Before: ", this.market_requests);
-            this.market_requests[index] = market_req;
+            this.market_requests[index].update(market_req);
             console.log("After: ", this.market_requests);
         }
 
@@ -25426,6 +25513,8 @@ var Market = function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Errors__ = __webpack_require__(225);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Errors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Errors__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__ = __webpack_require__(17);
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25622,6 +25711,63 @@ var UserMarket = function () {
             }).catch(function (err) {
                 return new __WEBPACK_IMPORTED_MODULE_0__Errors___default.a(err);
             });
+        }
+
+        /**
+        *   update - updates this User Market
+        *   @param {UserMarket} user_market - UserMarket object
+        *
+        *   @TODO add more complex assignment
+        */
+
+    }, {
+        key: 'update',
+        value: function update(user_market) {
+            var _this4 = this;
+
+            if (user_market !== null) {
+                Object.entries(user_market).forEach(function (_ref) {
+                    var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        value = _ref2[1];
+
+                    if (Array.isArray(value)) {
+                        //call array rebind method
+                    } else if (value instanceof Object) {
+                        //call object rebind method
+                        _this4._reassignObject(value, _this4.key);
+                    } else {
+                        _this4.key = value;
+                    }
+                });
+            }
+        }
+    }, {
+        key: '_reassignArray',
+        value: function _reassignArray(from_arr, to_arr) {
+            var _this5 = this;
+
+            var is_custom_elem_arr = false;
+            to_arr.forEach(function (element, index) {
+                if (element instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__["a" /* default */]) {
+                    is_custom_elem_arr = true;
+                    element.update(_this5.key);
+                }
+            });
+            if (!is_custom_elem_arr) {
+                to_arr = from_arr;
+            }
+        }
+    }, {
+        key: '_reassignObject',
+        value: function _reassignObject(from_obj, to_obj) {
+            if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketNegotiation__["a" /* default */]) {
+                from_obj.update(this.key);
+            } else {
+                if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
+                    Object.assign(to_obj, from_obj);
+                }
+            }
         }
     }]);
 
@@ -89122,6 +89268,8 @@ var Datepicker = {render: function(){var _vm=this;var _h=_vm.$createElement;var 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -89216,6 +89364,31 @@ var UserMarketQuote = function () {
                 }
             });
             return json;
+        }
+
+        /**
+        *   update - updates this User Market Quote
+        *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+        */
+
+    }, {
+        key: "update",
+        value: function update(user_market_quote) {
+            var _this3 = this;
+
+            if (user_market_quote !== null) {
+                Object.entries(user_market_quote).forEach(function (_ref) {
+                    var _ref2 = _slicedToArray(_ref, 2),
+                        key = _ref2[0],
+                        value = _ref2[1];
+
+                    if (key == "_user_market_request") {
+                        _this3.setMarketRequest(value);
+                    } else {
+                        _this3.key = value;
+                    }
+                });
+            }
         }
     }]);
 
@@ -94334,6 +94507,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         putQuoteOnHold: function putQuoteOnHold(quote) {
             if (!quote.is_on_hold) {
                 var save_quote = quote.putOnHold();
+                //@TODO FIND out why this does not work.
+                quote.is_on_hold = true;
             }
         }
     },

@@ -167,5 +167,48 @@ export default class UserMarket {
         });
     }
 
-  
+    /**
+    *   update - updates this User Market
+    *   @param {UserMarket} user_market - UserMarket object
+    *
+    *   @TODO add more complex assignment
+    */
+    update(user_market) {
+        if(user_market !== null){
+            Object.entries(user_market).forEach( ([key, value]) => {
+                if(Array.isArray(value)) {
+                    //call array rebind method
+                } else if (value instanceof Object) {
+                    //call object rebind method
+                    this._reassignObject(value, this.key);
+                } else {
+                    this.key = value;
+                }
+            });
+        }
+    }
+
+
+    _reassignArray(from_arr, to_arr) {
+        let is_custom_elem_arr = false;
+        to_arr.forEach( (element, index) => {
+            if( element instanceof UserMarketNegotiation) {
+                is_custom_elem_arr = true;
+                element.update(this.key);
+            }
+        });
+        if(!is_custom_elem_arr) {
+            to_arr = from_arr;
+        }
+    }
+
+    _reassignObject(from_obj, to_obj) {
+        if( from_obj instanceof UserMarketNegotiation) {
+            from_obj.update(this.key);
+        } else {
+            if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null) ) {
+                Object.assign(to_obj, from_obj);
+            }
+        }
+    }
 }

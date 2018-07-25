@@ -126,4 +126,20 @@ export default class UserMarketNegotiation {
             return new Errors(err);
         });
     }
+
+    /**
+    *   update - updates this User Market Quote
+    *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
+    */
+    update(user_market_quote) {
+        if(user_market_quote !== null){
+            Object.entries(user_market_quote).forEach( ([key, value]) => {
+                if(key == "_user_market") {
+                    this.setUserMarket(value);
+                } else {
+                    this.key = value;
+                }
+            });
+        }
+    }
 }

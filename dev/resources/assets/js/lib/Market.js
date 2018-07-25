@@ -58,13 +58,15 @@ export default class Market {
     *   updateMarketRequest - updates a current user market
     *   @param {UserMarketRequest} market_req - UserMarket objects
     *   @param {Int} index - UserMarket objects
+    *   
+    *   @todo make general Market update method that updates all market requests
     */
     updateMarketRequest(market_req, index) {
         console.log("=======================UPDATING MARKET REQUEST=======================");
         console.log("Replace: ", this.market_requests[index]);
         console.log("With: ", market_req);
         console.log("Before: ", this.market_requests);
-        this.market_requests[index] = market_req;
+        this.market_requests[index].update(market_req);
         console.log("After: ", this.market_requests);
     }
 
