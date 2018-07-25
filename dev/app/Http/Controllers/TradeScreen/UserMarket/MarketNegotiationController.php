@@ -49,7 +49,8 @@ class MarketNegotiationController extends Controller
      */
     public function update(Request $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        $marketNegotiation->update($request->all());    
+        $marketNegotiation->update($request->all());  
+        $userMarket->userMarketRequest->notifyRequested();
         return response()->json(['data' => $marketNegotiation, 'message' => 'Response sent to Interest.']);
     }
 
