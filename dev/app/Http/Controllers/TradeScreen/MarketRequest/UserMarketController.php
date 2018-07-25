@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketStoreRequest;
 use App\Http\Requests\TradeScreen\MarketRequest\UserMarketUpdateRequest;
 use App\Models\Market\UserMarket;
+use App\Models\MarketRequest\UserMarketRequest;
 
 class UserMarketController extends Controller
 {
@@ -95,7 +96,7 @@ class UserMarketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(UserMarketUpdateRequest $request, UserMarket $userMarket)
+    public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
         // TODO add error handeling and error response
           $userMarket = $userMarket->update($request->only('is_on_hold'));

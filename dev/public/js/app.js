@@ -6401,7 +6401,7 @@ var UserMarketNegotiation = function () {
                 });
             }
 
-            return axios.post(axios.defaults.baseUrl + "/trade/market-request/" + this.user_market_request_id + "/user-market/" + this.getUserMarket().id + "/user-market-negotiation/" + this.id, this.prepareStore()).then(function (response) {
+            return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/" + this.user_market_request_id + "/user-market/" + this.getUserMarket().id + "/user-market-negotiation/" + this.id, this.prepareStore()).then(function (response) {
                 console.log(response);
                 return response;
             }).catch(function (err) {
@@ -25573,7 +25573,7 @@ var UserMarket = function () {
                 });
             }
 
-            return axios.post(axios.defaults.baseUrl + "/trade/market-request/" + this.user_market_request_id + "/user-market", this.prepareStore()).then(function (response) {
+            return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/" + this.user_market_request_id + "/user-market", this.prepareStore()).then(function (response) {
                 return response;
             }).catch(function (err) {
                 return new __WEBPACK_IMPORTED_MODULE_0__Errors___default.a(err);
@@ -86541,11 +86541,11 @@ var app = new Vue({
         });
 
         if (Laravel.organisationUuid) {
-            console.log("the channle you will get stuff from", Laravel.organisationUuid);
+            console.log("the channel you will get stuff from", Laravel.organisationUuid);
 
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
-                console.log("this is what pusher just gave you");
+                console.log("this is what pusher just gave you", UserMarketRequest);
                 _this2.addUserMarketRequest(UserMarketRequest);
             });
         }
@@ -89130,7 +89130,22 @@ var UserMarketQuote = function () {
         }
     }, {
         key: "putOnHold",
-        value: function putOnHold() {}
+        value: function putOnHold() {
+            console.log('putting on hold now :D');
+            // catch not assigned to a user market request yet!
+            if (this._user_market_request == null) {
+                return new Promise(function (resolve, reject) {
+                    reject(new Errors(["Invalid Market Request"]));
+                });
+            }
+
+            return axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/' + this._user_market_request.id + '/user-market/' + this.id, { 'is_on_hold': true }).then(function (response) {
+                console.log("Putting Quote on Hold response: ", response);
+                return response;
+            }).catch(function (err) {
+                return new Errors(err);
+            });
+        }
 
         /**
         * toJSON - override removing internal references
@@ -94107,6 +94122,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return item.vol_spread + " VOL SPREAD";
             }
             return "";
+        },
+        putQuoteOnHold: function putQuoteOnHold(quote) {
+            if (!quote.is_on_hold) {
+                var save_quote = quote.putOnHold();
+            }
         }
     },
     mounted: function mounted() {}
@@ -94170,7 +94190,7 @@ var render = function() {
                                     attrs: { size: "sm", variant: "secondary" },
                                     on: {
                                       click: function($event) {
-                                        item.putOnHold()
+                                        _vm.putQuoteOnHold(item)
                                       }
                                     }
                                   },

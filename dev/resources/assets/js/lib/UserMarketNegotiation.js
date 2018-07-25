@@ -97,7 +97,7 @@ export default class UserMarketNegotiation {
             });
         }
 
-        return axios.post(axios.defaults.baseUrl + "/trade/market-request/"+this.user_market_request_id+"/user-market/"+this.getUserMarket().id+"/user-market-negotiation/"+this.id, this.prepareStore())
+        return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.getUserMarket().id+"/user-market-negotiation/"+this.id, this.prepareStore())
         .then(response => {
             console.log(response);
             return response;

@@ -12,14 +12,12 @@ class UserMarketUpdateRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        dd('LOL');
-        /*if($this->has('is_on_hold') && $this->userMarket) {
-            return true
-        }*/
-        //check if current user org is the org related to the User Market Request linked to this user market id
-        //allow changes to is_on_hold only
-        // this->has(is_on_hold) && this->userMarket->userMarketRequest->user->org_id == this->user->org_id
+    {   
+        // TODO move $this->user_market->userMarketRequest->user->organisation_id to model method on userMarketRequest
+        if($this->has('is_on_hold') && $this->user_market->userMarketRequest->user->organisation_id == \Auth::user()->organisation_id) {
+            return true;
+        }
+        
         return false;
     }
 

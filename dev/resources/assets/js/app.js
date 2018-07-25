@@ -285,12 +285,12 @@ const app = new Vue({
         
         if(Laravel.organisationUuid)
         {
-            console.log("the channle you will get stuff from",Laravel.organisationUuid);
+            console.log("the channel you will get stuff from",Laravel.organisationUuid);
 
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {
                 //this should be the market thats created
-                console.log("this is what pusher just gave you");
+                console.log("this is what pusher just gave you", UserMarketRequest);
                 this.addUserMarketRequest(UserMarketRequest);
             }); 
         }

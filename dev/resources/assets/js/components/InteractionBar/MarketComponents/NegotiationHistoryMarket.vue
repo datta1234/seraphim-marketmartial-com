@@ -11,7 +11,7 @@
                             <b-btn v-bind:class="{'active': item.is_on_hold}" 
                                 size="sm" 
                                 class="w-100" 
-                                @click="item.putOnHold()"
+                                @click="putQuoteOnHold(item)"
                                 variant="secondary">
                                     HOLD
                             </b-btn>
@@ -82,6 +82,11 @@
                 }
                 return "";
             },
+            putQuoteOnHold(quote) {
+                if(!quote.is_on_hold) {
+                    let save_quote = quote.putOnHold();
+                }
+            }
         },
         mounted() {
             
