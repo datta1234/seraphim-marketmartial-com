@@ -30,19 +30,17 @@
         </div>
     </div>
 
-      <div id="app">
+    <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')
-            @yield('banner')
+            <header-canvas></header-canvas>
             {{-- Layout --}}
             <main class="container">
                 <div class="page-body-container mt-3">
                     @yield('content')
                 </div>
             </main> {{-- Main end --}}
-            <div class="push"></div>
         </div>
-        <div class="push-down"></div>
     </div>
 
     <div class="site-sub-footer mt-5 mb-0">

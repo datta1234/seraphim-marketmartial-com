@@ -84,10 +84,12 @@ export default class UserMarketQuote {
     update(user_market_quote) {
         if(user_market_quote !== null){
             Object.entries(user_market_quote).forEach( ([key, value]) => {
-                if(key == "_user_market_request") {
-                    this.setMarketRequest(value);
-                } else {
-                    this[key] = value;
+                if(value !== null){
+                    if(key == "_user_market_request") {
+                        this.setMarketRequest(value);
+                    } else {
+                        this[key] = value;
+                    }
                 }
             });
         }

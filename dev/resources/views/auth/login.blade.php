@@ -59,5 +59,5 @@
         </form>
     @endslot
 @endcomponent
-<div class="login-reset-clear"></div>
+<!-- <div class="login-reset-clear"></div> -->
 @endsection

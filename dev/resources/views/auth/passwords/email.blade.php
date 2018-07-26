@@ -46,6 +46,6 @@
         </form>
     @endslot
 @endcomponent
-<div class="email-reset-clear"></div>
+<!-- <div class="email-reset-clear"></div> -->
 
 @endsection

@@ -10915,6 +10915,7 @@ a.mm-login-button {
 
 .home-sub-footer {
   background-color: #303030;
+  position: relative;
 }
 
 .home-sub-footer h3 {
@@ -11476,7 +11477,7 @@ a.mm-login-button {
 }
 
 #main-footer {
-  position: relative;
+  position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -11507,51 +11508,13 @@ a.mm-login-button {
   color: #ffffff;
 }
 
-@media (min-width: 768px) {
-  .contact-us-clear {
-    margin-bottom: 6.3em;
-  }
-}
-
-@media (min-width: 992px) {
-  .contact-us-clear {
-    margin-bottom: 4.5em;
-  }
+.push-down {
+  margin-bottom: 12rem;
 }
 
 @media (min-width: 768px) {
-  .email-reset-clear {
-    margin-bottom: 28em;
-  }
-}
-
-@media (min-width: 992px) {
-  .email-reset-clear {
-    margin-bottom: 4.6em;
-  }
-}
-
-@media (min-width: 1400px) {
-  .email-reset-clear {
-    margin-bottom: 26.2em;
-  }
-}
-
-@media (min-width: 768px) {
-  .login-reset-clear {
-    margin-bottom: 25.3em;
-  }
-}
-
-@media (min-width: 992px) {
-  .login-reset-clear {
-    margin-bottom: 50.6em;
-  }
-}
-
-@media (min-width: 1400px) {
-  .login-reset-clear {
-    margin-bottom: 23.7em;
+  .push-down {
+    font-size: 9rem;
   }
 }
 
@@ -12284,17 +12247,11 @@ input:checked + .slider:before {
 }
 
 #header-wrapper {
-  height: 23.6rem;
+  height: 100%;
   width: 100%;
   display: block;
   overflow: hidden;
-  position: absolute;
-}
-
-@media (min-width: 1400px) {
-  #header-wrapper {
-    height: 43.5rem;
-  }
+  position: fixed;
 }
 
 @font-face {
