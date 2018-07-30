@@ -34,14 +34,17 @@ class UserMarketRequestSeeder extends Seeder
 
 
 
-                factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
-                    "market_id" =>  $market->id,
-                    "trade_structure_id" => $tradeStruct->id
-                ]);
+               
 
                 //for outright make some that are on hold
                 if($tradeStruct->title == "Outright" && in_array($market->title,["TOP40","DTOP","DCAP"])) 
                 {
+
+                 factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
+                        "market_id" =>  $market->id,
+                        "trade_structure_id" => $tradeStruct->id
+                    ]);
+                     
                     $userMarketRequest = factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
                         "market_id" =>  $market->id,
                         "trade_structure_id" => $tradeStruct->id,
@@ -74,12 +77,13 @@ class UserMarketRequestSeeder extends Seeder
 
                     $userMarket->current_market_negotiation_id = $marketNegotiation->id;
                     $userMarket->save();
+                    var_dump($user->email);
 
 
                 }
                  
             }
 
-        // }
+        }
     }
 }
