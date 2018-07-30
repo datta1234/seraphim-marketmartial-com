@@ -6,14 +6,9 @@
 }
 #header-wrapper{
     
-    height: 23.6rem;
-
-    @media (min-width: 1400px) {
-        height: 43.5rem;
-    }
-
+    height: 100%;
     width: 100%;
     display: block;
     overflow: hidden;
-    position: absolute;
+    position: fixed;
 }

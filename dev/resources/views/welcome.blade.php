@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@section('banner')
-    <header-canvas></header-canvas>
-@endsection
-
 @section('content')
 
 

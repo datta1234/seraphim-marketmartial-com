@@ -1,6 +1,6 @@
 #main-footer {
 
-	position: relative;
+	position: absolute;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -32,41 +32,10 @@
 	}	
 }
 
-//@TODO Remove these and implement a proper clear
-.contact-us-clear {
+.push-down {
+	margin-bottom: 12rem;
+
 	@media (min-width: 768px) {
-		margin-bottom: 6.3em;
-	}
-	
-	@media (min-width: 992px) {
-		margin-bottom: 4.5em;
-	}
-}
-
-.email-reset-clear {
-	@media (min-width: 768px) {
-		margin-bottom: 28em;
-	}
-	
-	@media (min-width: 992px) {
-		margin-bottom: 4.6em;
-	}
-
-	@media (min-width: 1400px) {
-		margin-bottom: 26.2em;
-	}
-}
-
-.login-reset-clear {
-	@media (min-width: 768px) {
-		margin-bottom: 25.3em;
-	}
-	
-	@media (min-width: 992px) {
-		margin-bottom: 50.6em;
-	}
-
-	@media (min-width: 1400px) {
-		margin-bottom: 23.7em;
+		font-size: 9rem;
 	}
 }

@@ -17,7 +17,8 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: 'e86956c85e44edbfbc9c',
     cluster: 'ap2',
-    encrypted: true
+    encrypted: true,
+    authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
 
 
