@@ -2,6 +2,8 @@
 
 use Faker\Generator as Faker;
 
+$safexExpirationdates = App\Models\StructureItems\SafexExpirationDate::all();
+
 $factory->define(App\Models\MarketRequest\UserMarketRequestItem::class, function (Faker $faker) {
     return [
         "user_market_request_group_id" => function() {
@@ -17,7 +19,7 @@ $factory->define(App\Models\MarketRequest\UserMarketRequestItem::class, function
             return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title;
         },
         "value" => function($umrItem) use ($faker) {
-            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title == "expiration date" ? $faker->date() : $faker->randomNumber(8) ;
+            return App\Models\StructureItems\Item::find($umrItem['item_id'])->itemType->title == "expiration date" ? $safexExpirationdates->random()->expiration_date : $faker->randomNumber(8) ;
         }
     ];
 });
