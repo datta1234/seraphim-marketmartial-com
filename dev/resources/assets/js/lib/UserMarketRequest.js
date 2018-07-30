@@ -181,11 +181,12 @@ export default class UserMarketRequest {
     */
     update(user_market_request) {
         if(user_market_request !== null){
-            Object.entries(user_market_request).forEach( ([key, value]) => {
+            /*Object.entries(user_market_request).forEach( ([key, value]) => {
+                console.log("LOOP OBJECT: ", key, ' - ', value);
                 if(value !== null){
                     if(Array.isArray(value)) {
                         //call array rebind method
-                        this._reassignArray(value,this[key], key);
+                        this._reassignArray(value,this[key]);
                     } else if (value instanceof Object) {
                         //call object rebind method
                         this._reassignObject(value, this[key], key);
@@ -193,17 +194,25 @@ export default class UserMarketRequest {
                         this[key] = value;
                     }
                 }
+            });*/
+            Object.keys(user_market_request).forEach(key => {
+                if(key[0] != '_' && user_market_request[key] != null) {
+                    console.log(key);
+                }
             });
         }
     }
 
 
-    _reassignArray(from_arr, to_arr, obj_prop) {
+    _reassignArray(from_arr, to_arr) {
+        console.log("from_arr ", from_arr);
+        console.log("to_arr ", to_arr);
         let is_custom_elem_arr = false;
         to_arr.forEach( (element, index) => {
             if( element instanceof UserMarket || element instanceof UserMarketQuote) {
                 is_custom_elem_arr = true;
-                element.update(this[obj_prop]);
+                console.log("Custom element: ", );
+                //element.update(from_arr[index]);
             }
         });
         if(!is_custom_elem_arr) {
@@ -212,13 +221,16 @@ export default class UserMarketRequest {
     }
 
     _reassignObject(from_obj, to_obj, obj_prop) {
-        if( from_obj instanceof UserMarket || from_obj instanceof UserMarketQuote) {
+        console.log("from_obj ", from_obj);
+        console.log("to_obj ", to_obj);
+        console.log("obj_prop ", obj_prop);
+        /*if( from_obj instanceof UserMarket || from_obj instanceof UserMarketQuote) {
             from_obj.update(this[obj_prop]);
         } else {
             if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
                 console.log(to_obj, from_obj);
                 Object.assign(to_obj, from_obj);
             }
-        }
+        }*/
     }
 }

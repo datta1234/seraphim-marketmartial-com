@@ -67,7 +67,7 @@ export default class Market {
         console.log("With: ", market_req);
         console.log("Before: ", this.market_requests);
         this.market_requests[index].update(market_req);
-        console.log("After: ", this.market_requests);
+        /*console.log("After: ", this.market_requests);*/
     }
 
     /**

@@ -5638,8 +5638,6 @@ function warn(message) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__UserMarket__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__ = __webpack_require__(360);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5874,38 +5872,39 @@ var UserMarketRequest = function () {
     }, {
         key: 'update',
         value: function update(user_market_request) {
-            var _this5 = this;
-
             if (user_market_request !== null) {
-                Object.entries(user_market_request).forEach(function (_ref) {
-                    var _ref2 = _slicedToArray(_ref, 2),
-                        key = _ref2[0],
-                        value = _ref2[1];
-
-                    if (value !== null) {
-                        if (Array.isArray(value)) {
+                /*Object.entries(user_market_request).forEach( ([key, value]) => {
+                    console.log("LOOP OBJECT: ", key, ' - ', value);
+                    if(value !== null){
+                        if(Array.isArray(value)) {
                             //call array rebind method
-                            _this5._reassignArray(value, _this5[key], key);
+                            this._reassignArray(value,this[key]);
                         } else if (value instanceof Object) {
                             //call object rebind method
-                            _this5._reassignObject(value, _this5[key], key);
+                            this._reassignObject(value, this[key], key);
                         } else {
-                            _this5[key] = value;
+                            this[key] = value;
                         }
+                    }
+                });*/
+                Object.keys(user_market_request).forEach(function (key) {
+                    if (key[0] != '_' && user_market_request[key] != null) {
+                        console.log(key);
                     }
                 });
             }
         }
     }, {
         key: '_reassignArray',
-        value: function _reassignArray(from_arr, to_arr, obj_prop) {
-            var _this6 = this;
-
+        value: function _reassignArray(from_arr, to_arr) {
+            console.log("from_arr ", from_arr);
+            console.log("to_arr ", to_arr);
             var is_custom_elem_arr = false;
             to_arr.forEach(function (element, index) {
                 if (element instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || element instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
                     is_custom_elem_arr = true;
-                    element.update(_this6[obj_prop]);
+                    console.log("Custom element: ");
+                    //element.update(from_arr[index]);
                 }
             });
             if (!is_custom_elem_arr) {
@@ -5915,14 +5914,17 @@ var UserMarketRequest = function () {
     }, {
         key: '_reassignObject',
         value: function _reassignObject(from_obj, to_obj, obj_prop) {
-            if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_0__UserMarket__["a" /* default */] || from_obj instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarketQuote__["a" /* default */]) {
+            console.log("from_obj ", from_obj);
+            console.log("to_obj ", to_obj);
+            console.log("obj_prop ", obj_prop);
+            /*if( from_obj instanceof UserMarket || from_obj instanceof UserMarketQuote) {
                 from_obj.update(this[obj_prop]);
             } else {
-                if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
+                if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
                     console.log(to_obj, from_obj);
                     Object.assign(to_obj, from_obj);
                 }
-            }
+            }*/
         }
     }]);
 
@@ -25419,7 +25421,7 @@ var Market = function () {
             console.log("With: ", market_req);
             console.log("Before: ", this.market_requests);
             this.market_requests[index].update(market_req);
-            console.log("After: ", this.market_requests);
+            /*console.log("After: ", this.market_requests);*/
         }
 
         /**
@@ -86713,6 +86715,7 @@ var app = new Vue({
                     return market_request.id == UserMarketRequestData.id;
                 });
                 if (request_index !== -1) {
+                    console.log("HIT 1");
                     this.display_markets[index].updateMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData), request_index);
                 } else {
                     this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
