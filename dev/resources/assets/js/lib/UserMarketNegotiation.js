@@ -1,8 +1,13 @@
+import BaseModel from './BaseModel';
 import Errors from './Errors';
 
-export default class UserMarketNegotiation {
+export default class UserMarketNegotiation extends BaseModel {
 
     constructor(options) {
+        super({
+            used_model_list: []
+        });
+
         // default internal
         this._user_market = null;
         // default public
@@ -73,20 +78,6 @@ export default class UserMarketNegotiation {
             this.addUserMarketNegotiationCondition(user_market_negotiation_condition);
         });
     }
-
-    /**
-    * toJSON - override removing internal references
-    */
-    toJSON() {
-        let json = {};
-        Object.keys(this).forEach(key => {
-            if(key[0] != '_') {
-                json[key] = this[key];
-            }
-        });
-        return json;
-    }
-
   
     prepareStore() {
         return {

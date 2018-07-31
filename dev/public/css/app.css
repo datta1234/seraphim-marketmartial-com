@@ -10521,7 +10521,7 @@ body .page-title h1 {
 }
 
 .canvas-body {
-  background-image: url(/img/background.png);
+  background-image: url("/img/background.png");
   background-size: cover;
 }
 

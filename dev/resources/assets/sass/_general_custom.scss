@@ -20,7 +20,7 @@ body
 
 .canvas-body
 {
-	background-image: url(/img/background.png);
+	background-image: url($base_url + '/img/background.png');
 	background-size: cover;
 }
 

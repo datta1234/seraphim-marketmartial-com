@@ -1,7 +1,12 @@
+import BaseModel from './BaseModel';
 import UserMarketRequest from './UserMarketRequest'
-export default class Market {
+export default class Market extends BaseModel {
 
     constructor(options) {
+        super({
+            used_model_list: [UserMarketRequest]
+        });
+
         this.market_requests = [];
         this.children = [];
         this._parent = null;
@@ -117,18 +122,4 @@ export default class Market {
     getParent() {
         return this._parent;
     }
-
-    /**
-    * toJSON - override removing internal references
-    */
-    toJSON() {
-        let json = {};
-        Object.keys(this).forEach(key => {
-            if(key[0] != '_') {
-                json[key] = this[key];
-            }
-        });
-        return json;
-    }
-
 }

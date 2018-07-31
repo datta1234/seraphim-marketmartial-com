@@ -1,6 +1,12 @@
-export default class UserMarketQuote {
+import BaseModel from './BaseModel';
+
+export default class UserMarketQuote extends BaseModel {
 
     constructor(options) {
+        super({
+            used_model_list: []
+        });
+
         // default internal
         this._user_market_request = null;
         // default public
@@ -62,19 +68,6 @@ export default class UserMarketQuote {
         .catch(err => {
             return new Errors(err);
         }); 
-    }
-
-    /**
-    * toJSON - override removing internal references
-    */
-    toJSON() {
-        let json = {};
-        Object.keys(this).forEach(key => {
-            if(key[0] != '_') {
-                json[key] = this[key];
-            }
-        });
-        return json;
     }
 
     /**
