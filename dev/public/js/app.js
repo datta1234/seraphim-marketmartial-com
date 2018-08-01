@@ -86662,35 +86662,6 @@ Vue.component('activate-input', __webpack_require__(484));
 Vue.component('toggle-input', __webpack_require__(487));
 Vue.component('day-month-picker', __webpack_require__(490));
 
-/**
- * Takes in a value and splits the value by a splitter in a desired frequency
- *
- * @param {string|number} val - the desired value to split
- * @param {string} splitter - the splitter to split the value by
- * @param {number} frequency - the frequency in which to apply the split to the value
- *
- * @return {string} the newly splitted value
- */
-var splitValHelper = function splitValHelper(val, splitter, frequency) {
-    var tempVal = '' + val;
-    var floatVal = '';
-    //Check if our passed value is a float
-    if (("" + val).indexOf('.') !== -1) {
-        floatVal = tempVal.slice(tempVal.indexOf('.'));
-        tempVal = tempVal.slice(0, tempVal.indexOf('.'));
-    }
-    //Creates an array of chars reverses and itterates through it
-    return tempVal.split('').reverse().reduce(function (x, y) {
-        //adds a space on the spesified frequency position
-        if (x[x.length - 1].length == frequency) {
-            x.push("");
-        }
-        x[x.length - 1] = y + x[x.length - 1];
-        return x;
-        //Concats the array to a string back in the correct order
-    }, [""]).reverse().join(splitter) + floatVal;
-};
-
 Vue.mixin({
     methods: {
         /**
@@ -86714,8 +86685,38 @@ Vue.mixin({
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                    return sbl + splitValHelper(calcVal, ' ', 3);
+                    return sbl + this.splitValHelper(calcVal, ' ', 3);
             }
+        },
+
+        /**
+         * Takes in a value and splits the value by a splitter in a desired frequency
+         *
+         * @param {string|number} val - the desired value to split
+         * @param {string} splitter - the splitter to split the value by
+         * @param {number} frequency - the frequency in which to apply the split to the value
+         *
+         * @return {string} the newly splitted value
+         */
+        splitValHelper: function splitValHelper(val, splitter, frequency) {
+            console.log("Splitting: ", val);
+            var tempVal = '' + val;
+            var floatVal = '';
+            //Check if our passed value is a float
+            if (("" + val).indexOf('.') !== -1) {
+                floatVal = tempVal.slice(tempVal.indexOf('.'));
+                tempVal = tempVal.slice(0, tempVal.indexOf('.'));
+            }
+            //Creates an array of chars reverses and itterates through it
+            return tempVal.split('').reverse().reduce(function (x, y) {
+                //adds a space on the spesified frequency position
+                if (x[x.length - 1].length == frequency) {
+                    x.push("");
+                }
+                x[x.length - 1] = y + x[x.length - 1];
+                return x;
+                //Concats the array to a string back in the correct order
+            }, [""]).reverse().join(splitter) + floatVal;
         }
     }
 });
@@ -90126,9 +90127,13 @@ var render = function() {
             _vm._v(
               "\n            " +
                 _vm._s(
-                  _vm.marketRequest.trade_items.default[
-                    this.$root.config("trade_structure.outright.strike")
-                  ]
+                  _vm.splitValHelper(
+                    _vm.marketRequest.trade_items.default[
+                      this.$root.config("trade_structure.outright.strike")
+                    ],
+                    " ",
+                    3
+                  )
                 ) +
                 "    \n        "
             )
