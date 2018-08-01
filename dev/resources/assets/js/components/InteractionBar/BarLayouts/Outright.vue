@@ -274,7 +274,6 @@
 
                     //set the quotes here if they already set
                 }
-
             }
         },
         mounted() {

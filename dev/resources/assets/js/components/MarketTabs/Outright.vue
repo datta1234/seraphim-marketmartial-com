@@ -53,6 +53,7 @@
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
+                    'market-hold': this.market_request_state == 'request-vol-hold',
                     'market-alert': this.market_request_state == 'alert',
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
