@@ -1,8 +1,13 @@
+import BaseModel from './BaseModel';
 import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
-export default class UserMarketRequest {
+export default class UserMarketRequest extends BaseModel {
 
     constructor(options) {
+        super({
+            _used_model_list: [UserMarket,UserMarketQuote]
+        });
+
         this._endpoint = ["/trade/market/", "/"];
         
         // default internal
@@ -160,65 +165,5 @@ export default class UserMarketRequest {
     */
     getMarket() {
         return this._market;
-    }
-
-    /**
-    * toJSON - override removing internal references
-    */
-    toJSON() {
-        let json = {};
-        Object.keys(this).forEach(key => {
-            if(key[0] != '_') {
-                json[key] = this[key];
-            }
-        });
-        return json;
-    }
-
-    /**
-    *   update - updates this User Market Request
-    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
-    */
-    update(user_market_request) {
-        if(user_market_request !== null){
-            Object.entries(user_market_request).forEach( ([key, value]) => {
-                if(value !== null){
-                    if(Array.isArray(value)) {
-                        //call array rebind method
-                        this._reassignArray(value,this[key], key);
-                    } else if (value instanceof Object) {
-                        //call object rebind method
-                        this._reassignObject(value, this[key], key);
-                    } else {
-                        this[key] = value;
-                    }
-                }
-            });
-        }
-    }
-
-
-    _reassignArray(from_arr, to_arr, obj_prop) {
-        let is_custom_elem_arr = false;
-        to_arr.forEach( (element, index) => {
-            if( element instanceof UserMarket || element instanceof UserMarketQuote) {
-                is_custom_elem_arr = true;
-                element.update(this[obj_prop]);
-            }
-        });
-        if(!is_custom_elem_arr) {
-            to_arr = from_arr;
-        }
-    }
-
-    _reassignObject(from_obj, to_obj, obj_prop) {
-        if( from_obj instanceof UserMarket || from_obj instanceof UserMarketQuote) {
-            from_obj.update(this[obj_prop]);
-        } else {
-            if( !(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
-                console.log(to_obj, from_obj);
-                Object.assign(to_obj, from_obj);
-            }
-        }
     }
 }
