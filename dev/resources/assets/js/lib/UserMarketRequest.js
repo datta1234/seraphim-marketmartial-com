@@ -5,8 +5,8 @@ export default class UserMarketRequest extends BaseModel {
 
     constructor(options) {
         super({
-            used_model_list: [UserMarket,UserMarketQuote]}
-        );
+            _used_model_list: [UserMarket,UserMarketQuote]
+        });
 
         this._endpoint = ["/trade/market/", "/"];
         

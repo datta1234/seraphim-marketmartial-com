@@ -6,7 +6,7 @@ export default class UserMarket extends BaseModel {
 
     constructor(options) {
         super({
-            used_model_list: [UserMarketNegotiation]
+            _used_model_list: [UserMarketNegotiation]
         });
 
         // default internal

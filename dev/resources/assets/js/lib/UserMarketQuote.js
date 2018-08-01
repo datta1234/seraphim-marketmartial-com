@@ -4,7 +4,7 @@ export default class UserMarketQuote extends BaseModel {
 
     constructor(options) {
         super({
-            used_model_list: []
+            _used_model_list: []
         });
 
         // default internal

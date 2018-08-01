@@ -5,7 +5,7 @@ export default class UserMarketNegotiation extends BaseModel {
 
     constructor(options) {
         super({
-            used_model_list: []
+            _used_model_list: []
         });
 
         // default internal

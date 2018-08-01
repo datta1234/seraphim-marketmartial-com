@@ -2,7 +2,7 @@ export default class BaseModel {
 
     constructor(options) {
         const defaults = {
-            used_model_list: []
+            _used_model_list: []
         }
 
         // assign options with defaults
@@ -21,15 +21,20 @@ export default class BaseModel {
      *   @param {Object} update_object - Object of type Class extended from BaseModel
      */
     update(update_object) {
-        Object.keys(update_object).forEach(key => {
+        console.log("THIS IS THE OBJECT WE ARE UPDATING WITH: ", update_object);
+        Object.keys(update_object).forEach( key => {
             if(key[0] != '_' && update_object[key] != null) {
-                if(Array.isArray(value)) {
+                if(Array.isArray(update_object[key], key)) {
+                    console.log("IS ARRAY - key: ",key, " value: " ,update_object[key]);
                     //call array rebind method
                     this._updateArray(update_object[key],key);
-                } else if (value instanceof Object) {
+                } else if (update_object[key] instanceof Object) {
                     //call object rebind method
+                    console.log("IS OBJECT - key: ",key, " value: " ,update_object[key]);
+                    console.lo
                     this._updateObject(update_object[key],key);
                 } else {
+                    console.log("IS JUST VALUE - key: ",key, " value: " ,update_object[key]);
                     this[key] = update_object[key];
                 }    
             }
@@ -50,7 +55,7 @@ export default class BaseModel {
         this._validateArray(update_arr);
 
         // check list of Models if one call update 
-        if(_isModelInstance(update_arr[0]).is_model) {
+        if(this._isModelInstance(update_arr[0]).is_model) {
             
             // loop to add or update new array objects
             for (let i = 0; i < update_arr.length; i++) {
@@ -60,6 +65,7 @@ export default class BaseModel {
                 if(index == -1){
                     this[key].push(update_arr[i]);
                 } else {
+                    console.log("CALLING UPDATE on: ", update_arr[i]);
                     this[key][index].update(update_arr[i]);
                 }
             }
@@ -76,7 +82,7 @@ export default class BaseModel {
             }
         // update array (check if we can just assign or need to pop and push all new ones)
         } else {
-            this[key] = user_market_request[key];
+            this[key] = update_arr[key];
         }
     }
 
@@ -90,7 +96,8 @@ export default class BaseModel {
      */
     _updateObject(update_obj, key) {
 
-        if(_isModelInstance(update_obj).is_model) {
+        if(this._isModelInstance(update_obj).is_model) {
+            console.log("CALLING UPDATE on: ", update_obj);
             this[key].update(update_obj);
         } else {
             if( !(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
@@ -108,7 +115,9 @@ export default class BaseModel {
      */
     _isModelInstance(check_elem) {
         let elem_state = {is_model:false, instance_of:null};
-        this.used_model_list.forEach( (elem) => {
+        console.log("TEST TEST: ", this._used_model_list);
+        console.log("ELEM TO CHECK: ",check_elem);
+        this._used_model_list.forEach( (elem) => {
             if (check_elem instanceof elem) {
                 elem_state.is_model = true;
                 elem_state.instance_of = elem;
@@ -129,7 +138,7 @@ export default class BaseModel {
     _validateArray(arr_to_validate) {
         //check if all array values are the same instance else trow exception
         let is_valid = !!arr_to_validate.reduce( (acc, current) => { 
-            let custom_check = isModelInstance(acc);
+            let custom_check = this._isModelInstance(acc);
             if(custom_check.is_model) {
                 return (current instanceof custom_check.instance_of) ? acc : NaN;
             }

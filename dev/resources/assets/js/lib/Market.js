@@ -4,7 +4,7 @@ export default class Market extends BaseModel {
 
     constructor(options) {
         super({
-            used_model_list: [UserMarketRequest]
+            _used_model_list: [UserMarketRequest]
         });
 
         this.market_requests = [];
@@ -72,7 +72,7 @@ export default class Market extends BaseModel {
         console.log("With: ", market_req);
         console.log("Before: ", this.market_requests);
         this.market_requests[index].update(market_req);
-        /*console.log("After: ", this.market_requests);*/
+        console.log("After: ", this.market_requests);
     }
 
     /**
