@@ -27,7 +27,7 @@
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
                         
-                        <b-button v-if="!is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button v-if="!is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
                          <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>

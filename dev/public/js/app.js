@@ -86699,7 +86699,6 @@ Vue.mixin({
          * @return {string} the newly splitted value
          */
         splitValHelper: function splitValHelper(val, splitter, frequency) {
-            console.log("Splitting: ", val);
             var tempVal = '' + val;
             var floatVal = '';
             //Check if our passed value is a float
@@ -92405,7 +92404,8 @@ var render = function() {
                             {
                               staticClass: "w-100 mt-1",
                               attrs: {
-                                disabled: _vm.server_loading,
+                                disabled:
+                                  _vm.levels_changed || _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-send",
                                 variant: "primary"
