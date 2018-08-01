@@ -1,3 +1,4 @@
+
 export default class BaseModel {
 
     constructor(options) {
@@ -21,20 +22,16 @@ export default class BaseModel {
      *   @param {Object} update_object - Object of type Class extended from BaseModel
      */
     update(update_object) {
-        console.log("THIS IS THE OBJECT WE ARE UPDATING WITH: ", update_object);
         Object.keys(update_object).forEach( key => {
             if(key[0] != '_' && update_object[key] != null) {
                 if(Array.isArray(update_object[key], key)) {
-                    console.log("IS ARRAY - key: ",key, " value: " ,update_object[key]);
                     //call array rebind method
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
                     //call object rebind method
-                    console.log("IS OBJECT - key: ",key, " value: " ,update_object[key]);
                     console.lo
                     this._updateObject(update_object[key],key);
                 } else {
-                    console.log("IS JUST VALUE - key: ",key, " value: " ,update_object[key]);
                     this[key] = update_object[key];
                 }    
             }
@@ -65,7 +62,6 @@ export default class BaseModel {
                 if(index == -1){
                     this[key].push(update_arr[i]);
                 } else {
-                    console.log("CALLING UPDATE on: ", update_arr[i]);
                     this[key][index].update(update_arr[i]);
                 }
             }
@@ -97,7 +93,6 @@ export default class BaseModel {
     _updateObject(update_obj, key) {
 
         if(this._isModelInstance(update_obj).is_model) {
-            console.log("CALLING UPDATE on: ", update_obj);
             this[key].update(update_obj);
         } else {
             if( !(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
@@ -115,8 +110,6 @@ export default class BaseModel {
      */
     _isModelInstance(check_elem) {
         let elem_state = {is_model:false, instance_of:null};
-        console.log("TEST TEST: ", this._used_model_list);
-        console.log("ELEM TO CHECK: ",check_elem);
         this._used_model_list.forEach( (elem) => {
             if (check_elem instanceof elem) {
                 elem_state.is_model = true;
