@@ -11,4 +11,8 @@ return [
         'interest'  =>  "REQUEST-SENT-VOL",
         'other'     =>  "REQUEST-VOL",
     ],
+    // state when a UserMarketRequest is created and quotes have been sent on it and quote has been put on hold
+    'request-vol-hold'   =>  [
+        'quoter'    =>  "REQUEST-VOL-HOLD"
+    ],
 ];

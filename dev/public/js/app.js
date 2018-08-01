@@ -9771,6 +9771,17 @@ function copyProps(props) {
                         this.market_request_state_label = "REQUEST";
                     }
                     break;
+                case "REQUEST-VOL-HOLD":
+                    if (this.marketRequest.user_market) {
+                        this.market_request_state = 'request-vol-hold';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
+                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
+                    } else {
+                        this.market_request_state = 'request';
+                        this.market_request_state_label = "REQUEST";
+                    }
+                    break;
                 case "REQUEST-SENT-VOL":
                     if (this.marketRequest.quotes.length > 0) {
                         this.market_request_state = 'alert';
@@ -86662,35 +86673,6 @@ Vue.component('activate-input', __webpack_require__(484));
 Vue.component('toggle-input', __webpack_require__(487));
 Vue.component('day-month-picker', __webpack_require__(490));
 
-/**
- * Takes in a value and splits the value by a splitter in a desired frequency
- *
- * @param {string|number} val - the desired value to split
- * @param {string} splitter - the splitter to split the value by
- * @param {number} frequency - the frequency in which to apply the split to the value
- *
- * @return {string} the newly splitted value
- */
-var splitValHelper = function splitValHelper(val, splitter, frequency) {
-    var tempVal = '' + val;
-    var floatVal = '';
-    //Check if our passed value is a float
-    if (("" + val).indexOf('.') !== -1) {
-        floatVal = tempVal.slice(tempVal.indexOf('.'));
-        tempVal = tempVal.slice(0, tempVal.indexOf('.'));
-    }
-    //Creates an array of chars reverses and itterates through it
-    return tempVal.split('').reverse().reduce(function (x, y) {
-        //adds a space on the spesified frequency position
-        if (x[x.length - 1].length == frequency) {
-            x.push("");
-        }
-        x[x.length - 1] = y + x[x.length - 1];
-        return x;
-        //Concats the array to a string back in the correct order
-    }, [""]).reverse().join(splitter) + floatVal;
-};
-
 Vue.mixin({
     methods: {
         /**
@@ -86714,8 +86696,37 @@ Vue.mixin({
                 case 1: // 100 < x < 1000
                 case 0: // x < 100
                 default:
-                    return sbl + splitValHelper(calcVal, ' ', 3);
+                    return sbl + this.splitValHelper(calcVal, ' ', 3);
             }
+        },
+
+        /**
+         * Takes in a value and splits the value by a splitter in a desired frequency
+         *
+         * @param {string|number} val - the desired value to split
+         * @param {string} splitter - the splitter to split the value by
+         * @param {number} frequency - the frequency in which to apply the split to the value
+         *
+         * @return {string} the newly splitted value
+         */
+        splitValHelper: function splitValHelper(val, splitter, frequency) {
+            var tempVal = '' + val;
+            var floatVal = '';
+            //Check if our passed value is a float
+            if (("" + val).indexOf('.') !== -1) {
+                floatVal = tempVal.slice(tempVal.indexOf('.'));
+                tempVal = tempVal.slice(0, tempVal.indexOf('.'));
+            }
+            //Creates an array of chars reverses and itterates through it
+            return tempVal.split('').reverse().reduce(function (x, y) {
+                //adds a space on the spesified frequency position
+                if (x[x.length - 1].length == frequency) {
+                    x.push("");
+                }
+                x[x.length - 1] = y + x[x.length - 1];
+                return x;
+                //Concats the array to a string back in the correct order
+            }, [""]).reverse().join(splitter) + floatVal;
         }
     }
 });
@@ -90055,10 +90066,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         marketState: function marketState() {
+            console.log("HERE=====================================", this.market_request_state);
             return {
                 'market-request-grey': this.market_request_state == 'request-grey',
                 'market-request': this.market_request_state == 'request',
                 'market-request-vol': this.market_request_state == 'request-vol',
+                'market-hold': this.market_request_state == 'request-vol-hold',
                 'market-alert': this.market_request_state == 'alert',
                 'market-confirm': this.market_request_state == 'confirm',
                 'active': this.isActive
@@ -90127,9 +90140,13 @@ var render = function() {
             _vm._v(
               "\n            " +
                 _vm._s(
-                  _vm.marketRequest.trade_items.default[
-                    this.$root.config("trade_structure.outright.strike")
-                  ]
+                  _vm.splitValHelper(
+                    _vm.marketRequest.trade_items.default[
+                      this.$root.config("trade_structure.outright.strike")
+                    ],
+                    " ",
+                    3
+                  )
                 ) +
                 "    \n        "
             )
@@ -92296,6 +92313,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 //set the quotes here if they already set
             }
+            console.log("=============================We want to know this: ", this.marketRequest);
         }
     },
     mounted: function mounted() {
@@ -92407,7 +92425,8 @@ var render = function() {
                             {
                               staticClass: "w-100 mt-1",
                               attrs: {
-                                disabled: _vm.server_loading,
+                                disabled:
+                                  _vm.levels_changed || _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-send",
                                 variant: "primary"

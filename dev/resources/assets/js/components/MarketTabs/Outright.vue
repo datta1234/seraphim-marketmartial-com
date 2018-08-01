@@ -2,7 +2,7 @@
     <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
         <div class="row justify-content-md-center">
             <div class="col col-6 market-tab-name market-tab-name">
-                {{ marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")] }}    
+                {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], ' ', 3) }}    
             </div>
             <div class="col col-6 market-tab-state">
                 
@@ -53,6 +53,7 @@
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
+                    'market-hold': this.market_request_state == 'request-vol-hold',
                     'market-alert': this.market_request_state == 'alert',
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
