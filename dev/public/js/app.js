@@ -89446,7 +89446,8 @@ var UserMarketQuote = function (_BaseModel) {
             bid: null,
             offer: null,
             offer_qty: null,
-            is_on_hold: false
+            is_on_hold: false,
+            is_repeat: false
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
             if (options && typeof options[key] !== 'undefined') {
@@ -92092,7 +92093,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -92132,6 +92132,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         'marker_qoute': function marker_qoute() {
+
             return this.marketRequest.quotes.find(function (quote) {
                 return quote.is_maker;
             });
@@ -92236,7 +92237,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.proposed_user_market.delete().then(function (response) {
                 _this4.server_loading = false;
                 _this4.history_message = response.data.message;
-                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
+                // EventBus.$emit('interactionToggle', false);
                 _this4.$refs.pullModal.hide();
             }).catch(function (err) {
                 _this4.server_loading = false;
@@ -92283,6 +92284,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     } else {
                     this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
                 }
+
+                if (this.marker_qoute && this.marker_qoute.is_on_hold) {
+                    this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+                }
+
+                console.log("marker quote =>", this.marker_qoute);
 
                 // relate
                 this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
@@ -94889,7 +94896,9 @@ var render = function() {
                 { staticClass: "justify-content-md-center" },
                 [
                   _c("b-col", { staticClass: "mt-2" }, [
-                    _c("p", [_c("small", [_vm._v(_vm._s(_vm.message))])])
+                    _c("p", { staticClass: "text-center" }, [
+                      _c("small", [_vm._v(_vm._s(_vm.message))])
+                    ])
                   ])
                 ],
                 1

@@ -5,13 +5,12 @@
         
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market :message="history_message" :history="marketRequest.quotes" v-if="marketRequest.quotes" class="mb-3"></ibar-negotiation-history-market>
-
+   
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
         <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
-                
-
+        
         <b-row class="mb-5">
             <b-col cols="10">
                     <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
@@ -110,6 +109,7 @@
         },
         computed: {
             'marker_qoute': function(){
+
                 return this.marketRequest.quotes.find(quote => quote.is_maker);
             },
             'is_on_hold': function(){   
@@ -217,7 +217,7 @@
                 .then(response => {
                     this.server_loading = false;
                     this.history_message = response.data.message;
-                    EventBus.$emit('interactionToggle', false);
+                   // EventBus.$emit('interactionToggle', false);
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {
@@ -266,6 +266,13 @@
                     {
                         this.proposed_user_market = new UserMarket();
                     }
+
+                    if(this.marker_qoute && this.marker_qoute.is_on_hold)
+                    {
+                        this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+                    }
+
+                    console.log("marker quote =>",this.marker_qoute);
                    
 
                     

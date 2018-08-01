@@ -161,6 +161,7 @@ class UserMarket extends Model
             $data['offer'] = $this->currentMarketNegotiation->offer;
             $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
             $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+            $data['is_repeat'] = $this->currentMarketNegotiation->is_repeat;
             $data['is_on_hold'] = $this->is_on_hold;
         }
         if($data['is_interest']) {
