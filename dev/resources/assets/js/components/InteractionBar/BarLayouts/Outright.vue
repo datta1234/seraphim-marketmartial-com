@@ -25,11 +25,13 @@
                 </b-row>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
+
                         <!-- || (marker_qoute && !is_on_hold) && ( !marker_qoute|| (marker_qoute && !marker_qoute.is_repeat)) -->
-                        <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
-                         <b-button v-if=" marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+                         <b-button v-if=" marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+
 
                         <b-button v-if="is_on_hold && (marker_qoute && !marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
@@ -116,20 +118,41 @@
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
 
             },
-            'levels_changed':function(){
-       
-                let props = ["bid_qty","bid","offer","offer_qty" ];
-                for (var i = 0; i < props.length; i++) {
-                    var propName = props[i];
+            'check_invalid':function(){
+                let quote = this.marketRequest.quotes.find(quote => quote.is_maker);
+                let invalid_states = {
+                    all_empty: false,
+                    bid_pair: false,
+                    offer_pair: false,
+                    previous: false
+                };
 
-                    // If values of same property are not equal,
-                    // objects are not equivalent
-                    if (this.proposed_user_market_negotiation[propName] !== this.default_user_market_negotiation[propName])
-                    {
-                        return false;
-                    }
+                // Check for all empty
+                invalid_states.all_empty = this.proposed_user_market_negotiation.bid ==''
+                    && this.proposed_user_market_negotiation.bid_qty ==''
+                    && this.proposed_user_market_negotiation.offer ==''
+                    && this.proposed_user_market_negotiation.offer_qty =='';
+                // Check that bid and bid_qty are present together
+                invalid_states.bid_pair = (this.proposed_user_market_negotiation.bid !=''  
+                    && this.proposed_user_market_negotiation.bid_qty =='') 
+                    || (this.proposed_user_market_negotiation.bid ==''  
+                    && this.proposed_user_market_negotiation.bid_qty !='');
+             
+                // Check bid offer and offer_qty are present together
+                 invalid_states.offer_pair = (this.proposed_user_market_negotiation.offer !=''  
+                    && this.proposed_user_market_negotiation.offer_qty =='') 
+                    || (this.proposed_user_market_negotiation.offer ==''  
+                    && this.proposed_user_market_negotiation.offer_qty !='');
+                // Check for previous quote
+                if(typeof quote != 'undefined') {
+                    // Check new quote is equal to old quote
+                    invalid_states.previous = this.proposed_user_market_negotiation.bid ==quote.bid
+                    && this.proposed_user_market_negotiation.bid_qty ==quote.bid_qty
+                    && this.proposed_user_market_negotiation.offer ==quote.offer
+                    && this.proposed_user_market_negotiation.offer_qty ==quote.offer_qty;
                 }
-                return true;
+
+                return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
             },
             'market_title': function() {

@@ -92112,6 +92112,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -92161,19 +92163,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return quote.is_maker && quote.is_on_hold;
             });
         },
-        'levels_changed': function levels_changed() {
+        'check_invalid': function check_invalid() {
+            var quote = this.marketRequest.quotes.find(function (quote) {
+                return quote.is_maker;
+            });
+            var invalid_states = {
+                all_empty: false,
+                bid_pair: false,
+                offer_pair: false,
+                previous: false
+            };
 
-            var props = ["bid_qty", "bid", "offer", "offer_qty"];
-            for (var i = 0; i < props.length; i++) {
-                var propName = props[i];
+            // Check for all empty
+            invalid_states.all_empty = this.proposed_user_market_negotiation.bid == '' && this.proposed_user_market_negotiation.bid_qty == '' && this.proposed_user_market_negotiation.offer == '' && this.proposed_user_market_negotiation.offer_qty == '';
+            // Check that bid and bid_qty are present together
+            invalid_states.bid_pair = this.proposed_user_market_negotiation.bid != '' && this.proposed_user_market_negotiation.bid_qty == '' || this.proposed_user_market_negotiation.bid == '' && this.proposed_user_market_negotiation.bid_qty != '';
 
-                // If values of same property are not equal,
-                // objects are not equivalent
-                if (this.proposed_user_market_negotiation[propName] !== this.default_user_market_negotiation[propName]) {
-                    return false;
-                }
+            // Check bid offer and offer_qty are present together
+            invalid_states.offer_pair = this.proposed_user_market_negotiation.offer != '' && this.proposed_user_market_negotiation.offer_qty == '' || this.proposed_user_market_negotiation.offer == '' && this.proposed_user_market_negotiation.offer_qty != '';
+            // Check for previous quote
+            if (typeof quote != 'undefined') {
+                // Check new quote is equal to old quote
+                invalid_states.previous = this.proposed_user_market_negotiation.bid == quote.bid && this.proposed_user_market_negotiation.bid_qty == quote.bid_qty && this.proposed_user_market_negotiation.offer == quote.offer && this.proposed_user_market_negotiation.offer_qty == quote.offer_qty;
             }
-            return true;
+
+            return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
         },
         'market_title': function market_title() {
             return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
@@ -92426,7 +92440,7 @@ var render = function() {
                               staticClass: "w-100 mt-1",
                               attrs: {
                                 disabled:
-                                  _vm.levels_changed || _vm.server_loading,
+                                  _vm.check_invalid || _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-send",
                                 variant: "primary"
@@ -92450,7 +92464,7 @@ var render = function() {
                               staticClass: "w-100 mt-1",
                               attrs: {
                                 disabled:
-                                  _vm.levels_changed || _vm.server_loading,
+                                  _vm.check_invalid || _vm.server_loading,
                                 size: "sm",
                                 dusk: "ibar-action-amend",
                                 variant: "primary"
