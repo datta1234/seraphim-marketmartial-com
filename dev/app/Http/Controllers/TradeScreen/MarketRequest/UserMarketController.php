@@ -117,6 +117,6 @@ class UserMarketController extends Controller
         $this->authorize('delete',$userMarket);
         $userMarket->delete();
         $userMarketRequest->notifyRequested();
-        return response()->json(['data' => null, 'message' => 'Response sent to Interest.']);
+        return response()->json(['data' => null, 'message' => 'Your quote has been pulled.']);
     }
 }

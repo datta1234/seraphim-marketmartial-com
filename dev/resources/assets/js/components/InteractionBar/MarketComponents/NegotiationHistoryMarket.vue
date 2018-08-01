@@ -55,8 +55,8 @@
             </b-row>
                <b-row class="justify-content-md-center" v-if="message">
                 <b-col class="mt-2">
-                    <p>
-                        <small>{{ message }}</small>
+                    <p class="text-center">
+                        <small >{{ message }}</small>
                     </p>
                 </b-col>
             </b-row>
