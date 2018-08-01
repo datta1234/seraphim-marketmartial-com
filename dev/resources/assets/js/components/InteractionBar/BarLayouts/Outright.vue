@@ -25,15 +25,15 @@
                 </b-row>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
-                        
-                        <b-button v-if="!is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <!-- || (marker_qoute && !is_on_hold) && ( !marker_qoute|| (marker_qoute && !marker_qoute.is_repeat)) -->
+                        <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
 
                         
-                         <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+                         <b-button v-if=" marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="levels_changed || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-if="is_on_hold && (marker_qoute && !marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="is_on_hold" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-if="marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -51,7 +51,7 @@
 
                     </b-col>
                 </b-row>
-                <b-row class="justify-content-md-center">
+                <b-row class="justify-content-md-center" v-if="!marker_qoute">
                     <b-col cols="6">
                         <b-button class="w-100" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
@@ -152,8 +152,9 @@
                 this.proposed_user_market.store()
                 .then(response => {
 
+                    this.history_message = response.data.message;
                     this.server_loading = false;
-                    EventBus.$emit('interactionToggle', false);
+                    //EventBus.$emit('interactionToggle', false);
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -235,7 +236,7 @@
                     market_history: [],
 
                     removable_conditions: [],
-
+                    history_message: null,
                     errors: [],
                 };
                 Object.keys(defaults).forEach(k => {
@@ -247,7 +248,6 @@
             },
             init() {
                 this.reset(); // clear current state
-
                 // set up ui data
                 if(this.marketRequest) {
                     this.user_market = this.marketRequest.getChosenUserMarket();
@@ -266,11 +266,13 @@
                     {
                         this.proposed_user_market = new UserMarket();
                     }
-
                     if(this.marker_qoute && this.marker_qoute.is_on_hold)
                     {
                         this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
                     }
+
+                    
+
 
                     console.log("marker quote =>",this.marker_qoute);
                    

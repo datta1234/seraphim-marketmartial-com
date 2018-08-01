@@ -61,15 +61,16 @@ export default class UserMarketQuote extends BaseModel {
                 reject(new Errors(["Invalid Market Request"]));
             });
         }
-        
-        return axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
-        .then(response => {
-            console.log("Putting Quote on Hold response: ", response);
-            return response;
-        })
-        .catch(err => {
-            return new Errors(err);
-        }); 
+        return new Promise((resolve, reject) => {
+
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
+            .then(response => {
+               resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            }); 
+        });
     }
 
     /**

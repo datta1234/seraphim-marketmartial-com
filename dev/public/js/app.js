@@ -89495,6 +89495,8 @@ var UserMarketQuote = function (_BaseModel) {
     }, {
         key: "putOnHold",
         value: function putOnHold() {
+            var _this2 = this;
+
             console.log('putting on hold now :D');
             // catch not assigned to a user market request yet!
             if (this._user_market_request == null) {
@@ -89502,12 +89504,13 @@ var UserMarketQuote = function (_BaseModel) {
                     reject(new Errors(["Invalid Market Request"]));
                 });
             }
+            return new Promise(function (resolve, reject) {
 
-            return axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/' + this._user_market_request.id + '/user-market/' + this.id, { 'is_on_hold': true }).then(function (response) {
-                console.log("Putting Quote on Hold response: ", response);
-                return response;
-            }).catch(function (err) {
-                return new Errors(err);
+                axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/' + _this2._user_market_request.id + '/user-market/' + _this2.id, { 'is_on_hold': true }).then(function (response) {
+                    resolve(response);
+                }).catch(function (err) {
+                    reject(new Errors(err.response.data));
+                });
             });
         }
 
@@ -89519,7 +89522,7 @@ var UserMarketQuote = function (_BaseModel) {
     }, {
         key: "update",
         value: function update(user_market_quote) {
-            var _this2 = this;
+            var _this3 = this;
 
             if (user_market_quote !== null) {
                 Object.entries(user_market_quote).forEach(function (_ref) {
@@ -89529,9 +89532,9 @@ var UserMarketQuote = function (_BaseModel) {
 
                     if (value !== null) {
                         if (key == "_user_market_request") {
-                            _this2.setMarketRequest(value);
+                            _this3.setMarketRequest(value);
                         } else {
-                            _this2[key] = value;
+                            _this3[key] = value;
                         }
                     }
                 });
@@ -90066,7 +90069,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         marketState: function marketState() {
-            console.log("HERE=====================================", this.market_request_state);
             return {
                 'market-request-grey': this.market_request_state == 'request-grey',
                 'market-request': this.market_request_state == 'request',
@@ -92191,8 +92193,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market.store().then(function (response) {
 
+                _this.history_message = response.data.message;
                 _this.server_loading = false;
-                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionToggle', false);
+                //EventBus.$emit('interactionToggle', false);
             }).catch(function (err) {
                 _this.server_loading = false;
 
@@ -92272,7 +92275,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 market_history: [],
 
                 removable_conditions: [],
-
+                history_message: null,
                 errors: []
             };
             Object.keys(defaults).forEach(function (k) {
@@ -92284,7 +92287,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         init: function init() {
             this.reset(); // clear current state
-
             // set up ui data
             if (this.marketRequest) {
                 this.user_market = this.marketRequest.getChosenUserMarket();
@@ -92301,7 +92303,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     } else {
                     this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
                 }
-
                 if (this.marker_qoute && this.marker_qoute.is_on_hold) {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
                 }
@@ -92313,7 +92314,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 //set the quotes here if they already set
             }
-            console.log("=============================We want to know this: ", this.marketRequest);
         }
     },
     mounted: function mounted() {
@@ -92419,7 +92419,7 @@ var render = function() {
                     "b-col",
                     { attrs: { cols: "6" } },
                     [
-                      !_vm.is_on_hold
+                      !_vm.marker_qoute
                         ? _c(
                             "b-button",
                             {
@@ -92441,7 +92441,9 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.is_on_hold
+                      _vm.marker_qoute ||
+                      _vm.is_on_hold ||
+                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
                         ? _c(
                             "b-button",
                             {
@@ -92463,7 +92465,8 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.is_on_hold
+                      _vm.is_on_hold &&
+                      (_vm.marker_qoute && !_vm.marker_qoute.is_repeat)
                         ? _c(
                             "b-button",
                             {
@@ -92484,7 +92487,9 @@ var render = function() {
                           )
                         : _vm._e(),
                       _vm._v(" "),
-                      _vm.is_on_hold
+                      _vm.marker_qoute ||
+                      _vm.is_on_hold ||
+                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
                         ? _c(
                             "b-button",
                             {
@@ -92580,32 +92585,34 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c(
-                "b-row",
-                { staticClass: "justify-content-md-center" },
-                [
-                  _c(
-                    "b-col",
-                    { attrs: { cols: "6" } },
+              !_vm.marker_qoute
+                ? _c(
+                    "b-row",
+                    { staticClass: "justify-content-md-center" },
                     [
                       _c(
-                        "b-button",
-                        {
-                          staticClass: "w-100",
-                          attrs: {
-                            size: "sm",
-                            dusk: "ibar-action-nocares",
-                            variant: "secondary"
-                          }
-                        },
-                        [_vm._v("No Cares")]
+                        "b-col",
+                        { attrs: { cols: "6" } },
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "w-100",
+                              attrs: {
+                                size: "sm",
+                                dusk: "ibar-action-nocares",
+                                variant: "secondary"
+                              }
+                            },
+                            [_vm._v("No Cares")]
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
                   )
-                ],
-                1
-              )
+                : _vm._e()
             ],
             2
           )
@@ -94665,8 +94672,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             type: String
         }
     },
+    computed: {
+        vm_message: function vm_message() {
+            return this.history_message == null ? this.message : this.history_message;
+        }
+    },
     data: function data() {
-        return {};
+        return {
+            history_message: null
+        };
     },
 
     methods: {
@@ -94683,10 +94697,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return "";
         },
         putQuoteOnHold: function putQuoteOnHold(quote) {
+            var _this = this;
+
             if (!quote.is_on_hold) {
-                var save_quote = quote.putOnHold();
-                //@TODO FIND out why this does not work.
-                quote.is_on_hold = true;
+
+                quote.putOnHold().then(function (response) {
+
+                    _this.history_message = response.data.message;
+                    //@TODO FIND out why this does not work.
+                    quote.is_on_hold = true;
+                }).catch(function (err) {
+                    _this.errors = err.errors;
+                });
             }
         }
     },
@@ -94909,14 +94931,14 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm.message
+          _vm.vm_message
             ? _c(
                 "b-row",
                 { staticClass: "justify-content-md-center" },
                 [
                   _c("b-col", { staticClass: "mt-2" }, [
                     _c("p", { staticClass: "text-center" }, [
-                      _c("small", [_vm._v(_vm._s(_vm.message))])
+                      _c("small", [_vm._v(_vm._s(_vm.vm_message))])
                     ])
                   ])
                 ],

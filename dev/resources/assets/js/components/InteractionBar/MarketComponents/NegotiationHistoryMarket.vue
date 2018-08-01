@@ -53,10 +53,10 @@
                     </p>
                 </b-col>
             </b-row>
-               <b-row class="justify-content-md-center" v-if="message">
+               <b-row class="justify-content-md-center" v-if="vm_message">
                 <b-col class="mt-2">
                     <p class="text-center">
-                        <small >{{ message }}</small>
+                        <small >{{ vm_message }}</small>
                     </p>
                 </b-col>
             </b-row>
@@ -74,9 +74,15 @@
                 type: String
             }
         },
+        computed: {
+            vm_message: function()
+            {
+                return (this.history_message == null) ? this.message : this.history_message;
+            }
+        },
         data() {
             return {
-
+                history_message: null 
             };
         },
         methods: {
@@ -94,9 +100,20 @@
             },
             putQuoteOnHold(quote) {
                 if(!quote.is_on_hold) {
-                    let save_quote = quote.putOnHold();
-                    //@TODO FIND out why this does not work.
-                    quote.is_on_hold = true;
+
+                    quote.putOnHold()
+                    .then(response => {
+                        
+                        this.history_message = response.data.message;
+                        //@TODO FIND out why this does not work.
+                        quote.is_on_hold = true;
+
+                    })
+                    .catch(err => {
+                        this.errors = err.errors;
+                    });
+
+          
                 }
             }
         },

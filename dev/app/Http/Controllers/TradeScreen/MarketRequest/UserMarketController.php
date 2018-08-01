@@ -61,8 +61,9 @@ class UserMarketController extends Controller
         $marketNegotiationConditions = $marketNegotiation
             ->marketConditions()
             ->sync(collect($data['current_market_negotiation']['conditions'])->pluck('id'));
+            
+        return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
 
-        return response()->json($userMarket);
     }
 
     /**
@@ -103,7 +104,16 @@ class UserMarketController extends Controller
         // TODO add error handeling and error response
         $userMarket = $userMarket->update($request->only('is_on_hold'));
         $userMarketRequest->notifyRequested();
-        return response()->json(['data' => $userMarket, 'message' => 'User Market successfully updated']);
+        
+        if($request->input('is_on_hold'))
+        {
+             $message = 'You have placed a market on hold. Response sent to counterparty.';
+        }else
+        {
+            $message = 'user market updated';
+        }
+
+        return response()->json(['data' => $userMarket, 'message' => $message]);
     }
 
     /**
