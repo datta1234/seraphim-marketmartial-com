@@ -90173,7 +90173,15 @@ var render = function() {
         _c("div", { staticClass: "col col-6 market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+                _c(
+                  "span",
+                  {
+                    class: {
+                      "user-action": _vm.market_request_state_label == "SENT"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.market_request_state_label))]
+                )
               ])
             : _c("span", [
                 _c("span", { class: _vm.bidState }, [
