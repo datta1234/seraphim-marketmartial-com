@@ -5901,6 +5901,15 @@ EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
     }
 });
 
+// @TODO figure out if we need this and complete it or remove it
+EventBus.$on('dataLoaded', function (type, state) {
+    switch (type) {
+        case "mountData":
+            EventBus.$emit("mountData", state);
+            break;
+    }
+});
+
 /***/ }),
 /* 12 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -9773,7 +9782,7 @@ function copyProps(props) {
                     break;
                 case "REQUEST-VOL-HOLD":
                     if (this.marketRequest.user_market) {
-                        this.market_request_state = 'request-vol-hold';
+                        this.market_request_state = 'alert';
                         this.market_request_state_label = "";
                         this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
                         this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
@@ -86604,6 +86613,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_UserMarket__ = __webpack_require__(81);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarketNegotiation__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_EventBus_js__ = __webpack_require__(11);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -86637,6 +86647,8 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_bootstrap_vue__["a" /* default */]);
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+
 
 
 
@@ -86887,6 +86899,10 @@ var app = new Vue({
             }).then(function (all_market_requests) {
                 // nada
             });
+        }).then(function () {
+            // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
+            /* console.log("FIRE EVENT!!!!!");
+             EventBus.$emit('dataLoaded', 'mountData', true);*/
         });
 
         if (Laravel.organisationUuid) {
@@ -90073,7 +90089,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'market-request-grey': this.market_request_state == 'request-grey',
                 'market-request': this.market_request_state == 'request',
                 'market-request-vol': this.market_request_state == 'request-vol',
-                'market-hold': this.market_request_state == 'request-vol-hold',
                 'market-alert': this.market_request_state == 'alert',
                 'market-confirm': this.market_request_state == 'confirm',
                 'active': this.isActive
@@ -96132,19 +96147,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.market_quantities.alert = 0;
             this.market_quantities.confirm = 0;
             this.markets.forEach(function (market) {
-                market.market_requests.forEach(function (request) {
-                    switch (request.attributes.state) {
-                        case "vol-spread-alert":
+                console.log("Checking quantities", market);
+                market.market_requests.forEach(function (market_request) {
+                    switch (market_request.attributes.state) {
+                        case "REQUEST-SENT-VOL":
+                            if (market_request.quotes.length > 0) {
+                                _this.market_quantities.alert++;
+                            } else {
+                                _this.market_quantities.important++;
+                            }
+                            break;
+                        case "REQUEST-VOL-HOLD":
+                            if (market_request.user_market) {
+                                _this.market_quantities.alert++;
+                            } else {
+                                _this.market_quantities.important++;
+                            }
+                            break;
                         case "alert":
                             _this.market_quantities.alert++;
                             break;
                         case "confirm":
                             _this.market_quantities.confirm++;
                             break;
-                        case "request":
-                        case "request-grey":
+                        case "REQUEST":
+                        case "REQUEST-SENT":
                         case "sent":
-                        case "vol-spread":
+                        case "REQUEST-VOL":
                         default:
                             _this.market_quantities.important++;
                     }
@@ -96692,7 +96721,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                 acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
                     switch (obj2.attributes.state) {
-                        case "vol-spread-alert":
+                        case "REQUEST-SENT-VOL":
+                            if (obj2.quotes.length > 0) {
+                                return acc2;
+                            } else {
+                                return acc2.concat(obj2);
+                            }
+                            break;
+                        case "REQUEST-VOL-HOLD":
+                            if (obj2.user_market) {
+                                return acc2;
+                            } else {
+                                return acc2.concat(obj2);
+                            }
+                            break;
                         case "alert":
                         case "confirm":
                             return acc2;
@@ -97037,8 +97079,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -97067,11 +97107,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         notificationList: function notificationList() {
             //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
+            var result = this.markets.reduce(function (acc, obj) {
                 //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                 acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
                     switch (obj2.attributes.state) {
-                        case "vol-spread-alert":
+                        case "REQUEST-SENT-VOL":
+                            if (obj2.quotes.length > 0) {
+                                return acc2.concat(obj2);
+                            }
+                            break;
+                        case "REQUEST-VOL-HOLD":
+                            if (obj2.user_market) {
+                                return acc2.concat(obj2);
+                            }
+                            break;
                         case "alert":
                             return acc2.concat(obj2);
                             break;
@@ -97081,6 +97130,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }, []);
                 return acc;
             }, {});
+            console.log("Compiled list of alerts: ", result);
+            return result;
         }
     },
     methods: {
@@ -97161,8 +97212,22 @@ var render = function() {
                                 " " +
                                   _vm._s(key) +
                                   " " +
-                                  _vm._s(market_request.attributes.strike) +
-                                  " \n                        "
+                                  _vm._s(
+                                    market_request.trade_items.default
+                                      ? market_request.trade_items.default[
+                                          "Strike"
+                                        ]
+                                      : ""
+                                  ) +
+                                  " " +
+                                  _vm._s(
+                                    market_request.trade_items.default
+                                      ? market_request.trade_items.default[
+                                          "Expiration Date"
+                                        ]
+                                      : ""
+                                  ) +
+                                  "\n                      "
                               )
                             ])
                           ]),

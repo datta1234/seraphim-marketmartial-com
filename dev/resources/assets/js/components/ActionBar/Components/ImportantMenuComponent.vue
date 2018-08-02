@@ -75,7 +75,20 @@
                     //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                     acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
                         switch(obj2.attributes.state) {    
-                            case "vol-spread-alert":
+                            case "REQUEST-SENT-VOL":
+                                if(obj2.quotes.length > 0) {
+                                    return acc2;
+                                } else {
+                                    return acc2.concat(obj2);
+                                }  
+                            break;
+                            case "REQUEST-VOL-HOLD":
+                                if(obj2.user_market) {
+                                    return acc2;
+                                } else {
+                                    return acc2.concat(obj2);
+                                }
+                            break;
                             case "alert":
                             case "confirm":
                                 return acc2;

@@ -39,6 +39,8 @@ import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
 import UserMarketNegotiation from './lib/UserMarketNegotiation';
 
+import { EventBus } from './lib/EventBus.js';
+
 // datepicker
 Vue.component('Datepicker', Datepicker);
 
@@ -290,6 +292,10 @@ const app = new Vue({
             .then(all_market_requests => {
                 // nada
             });
+        }).then( () => {
+            // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
+           /* console.log("FIRE EVENT!!!!!");
+            EventBus.$emit('dataLoaded', 'mountData', true);*/
         });
         
         if(Laravel.organisationUuid)
