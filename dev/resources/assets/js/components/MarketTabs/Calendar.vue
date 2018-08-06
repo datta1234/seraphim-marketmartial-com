@@ -74,6 +74,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
+                this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }
