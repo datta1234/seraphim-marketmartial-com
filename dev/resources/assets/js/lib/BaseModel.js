@@ -22,17 +22,25 @@ export default class BaseModel {
      *   @param {Object} update_object - Object of type Class extended from BaseModel
      */
     update(update_object) {
-        Object.keys(update_object).forEach( key => {
+        Object.keys(this).forEach( key => {
+            console.log("Test Updating: ", key);
             if(key[0] != '_' && update_object[key] != null) {
+                console.log("Updating: ", key);
                 if(Array.isArray(update_object[key], key)) {
                     //call array rebind method
+                    console.log("Updating as Array: ", key);
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
                     //call object rebind method
-                    console.lo
+                    console.log("Updating as Obj: ", key);
                     this._updateObject(update_object[key],key);
                 } else {
-                    this[key] = update_object[key];
+                    console.log("Updating as else: ", key);
+                    if(this[key] instanceof moment) {
+                        this[key] = moment(update_object[key]);
+                    } else {
+                        this[key] = update_object[key];
+                    }
                 }    
             }
         });
@@ -52,7 +60,7 @@ export default class BaseModel {
         this._validateArray(update_arr);
 
         // check list of Models if one call update 
-        if(this._isModelInstance(update_arr[0]).is_model) {
+        if(this._isModelInstance(this[key][0]).is_model) {
             
             // loop to add or update new array objects
             for (let i = 0; i < update_arr.length; i++) {
@@ -92,7 +100,7 @@ export default class BaseModel {
      */
     _updateObject(update_obj, key) {
 
-        if(this._isModelInstance(update_obj).is_model) {
+        if(this._isModelInstance(this[key]).is_model) {
             this[key].update(update_obj);
         } else {
             if( !(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
@@ -129,6 +137,9 @@ export default class BaseModel {
      *   @throws "The array values are not of a uniform type"
      */
     _validateArray(arr_to_validate) {
+        if(arr_to_validate.length == 0) {
+            return true;
+        }
         //check if all array values are the same instance else trow exception
         let is_valid = !!arr_to_validate.reduce( (acc, current) => { 
             let custom_check = this._isModelInstance(acc);

@@ -11819,17 +11819,25 @@ var BaseModel = function () {
         value: function update(update_object) {
             var _this2 = this;
 
-            Object.keys(update_object).forEach(function (key) {
+            Object.keys(this).forEach(function (key) {
+                console.log("Test Updating: ", key);
                 if (key[0] != '_' && update_object[key] != null) {
+                    console.log("Updating: ", key);
                     if (Array.isArray(update_object[key], key)) {
                         //call array rebind method
+                        console.log("Updating as Array: ", key);
                         _this2._updateArray(update_object[key], key);
                     } else if (update_object[key] instanceof Object) {
                         //call object rebind method
-                        console.lo;
+                        console.log("Updating as Obj: ", key);
                         _this2._updateObject(update_object[key], key);
                     } else {
-                        _this2[key] = update_object[key];
+                        console.log("Updating as else: ", key);
+                        if (_this2[key] instanceof moment) {
+                            _this2[key] = moment(update_object[key]);
+                        } else {
+                            _this2[key] = update_object[key];
+                        }
                     }
                 }
             });
@@ -11854,7 +11862,7 @@ var BaseModel = function () {
             this._validateArray(update_arr);
 
             // check list of Models if one call update 
-            if (this._isModelInstance(update_arr[0]).is_model) {
+            if (this._isModelInstance(this[key][0]).is_model) {
                 var _loop = function _loop(i) {
                     var index = _this3[key].findIndex(function (element) {
                         return element.id == update_arr[i].id;
@@ -11906,7 +11914,7 @@ var BaseModel = function () {
         key: '_updateObject',
         value: function _updateObject(update_obj, key) {
 
-            if (this._isModelInstance(update_obj).is_model) {
+            if (this._isModelInstance(this[key]).is_model) {
                 this[key].update(update_obj);
             } else {
                 if (!(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
@@ -11951,6 +11959,9 @@ var BaseModel = function () {
         value: function _validateArray(arr_to_validate) {
             var _this4 = this;
 
+            if (arr_to_validate.length == 0) {
+                return true;
+            }
             //check if all array values are the same instance else trow exception
             var is_valid = !!arr_to_validate.reduce(function (acc, current) {
                 var custom_check = _this4._isModelInstance(acc);
@@ -25622,10 +25633,11 @@ var Market = function (_BaseModel) {
 
     }, {
         key: 'updateMarketRequest',
-        value: function updateMarketRequest(market_req, index) {}
-        // @TODO fix updating root property before we enable this again.
-        //this.market_requests[index].update(market_req);
-
+        value: function updateMarketRequest(market_req, index) {
+            // @TODO fix updating root property before we enable this again.
+            this.market_requests[index].update(market_req);
+            console.log(this.market_requests[index], market_req);
+        }
 
         /**
         *   addMarketRequests - add array of user market_requests
@@ -86898,7 +86910,7 @@ var app = new Vue({
                 });
                 if (request_index !== -1) {
                     console.log("HIT 1");
-                    this.display_markets[index].updateMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData), request_index);
+                    this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
                 } else {
                     this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_5__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
                 }
@@ -90385,6 +90397,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -90601,6 +90614,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -90818,6 +90832,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -91035,6 +91050,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -91252,6 +91268,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -91469,6 +91486,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -91686,6 +91704,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             console.log("load Bar");
+            this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         }
@@ -92257,6 +92276,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
         },
         'market_title': function market_title() {
+            console.log(this.marketRequest, this.marketRequest.getMarket());
             return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
         },
         'market_time': function market_time() {

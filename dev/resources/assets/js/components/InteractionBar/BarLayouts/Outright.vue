@@ -156,6 +156,7 @@
             
             },
             'market_title': function() {
+                console.log(this.marketRequest, this.marketRequest.getMarket());
                 return this.marketRequest.getMarket().title+" "
                 +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+" "
                 +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
