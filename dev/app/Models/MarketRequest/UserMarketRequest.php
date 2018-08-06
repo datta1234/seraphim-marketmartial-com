@@ -198,12 +198,13 @@ class UserMarketRequest extends Model
         // make sure to handle null organisations as false
         $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
 
+        // TODO - remove due to cached action variable, no longer needed
         // checks if organisation is a quoter
-        $is_on_hold = $this->userMarkets()
+        /*$is_on_hold = $this->userMarkets()
         ->where('is_on_hold', true)
         ->wherehas( 'user', function($query) {
             $query->where('organisation_id', $this->resolveOrganisationId());
-        })->exists();
+        })->exists();*/
         
         // if not quotes/user_markets preset => REQUEST
         if($this->userMarkets->isEmpty()) {
@@ -217,8 +218,6 @@ class UserMarketRequest extends Model
         else {
             if($self_org) {
                 $attributes['state'] = config('marketmartial.market_request_states.request-vol.interest');
-            } elseif($is_on_hold) {
-                $attributes['state'] = config('marketmartial.market_request_states.request-vol-hold.quoter');
             } else {
                 $attributes['state'] = config('marketmartial.market_request_states.request-vol.other');
             }
