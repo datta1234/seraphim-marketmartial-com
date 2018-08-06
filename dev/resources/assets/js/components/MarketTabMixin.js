@@ -76,6 +76,16 @@ export default {
                     this.market_request_state = '';
                     this.market_request_state_label = '';
             }
+        },
+        /**
+         *   toggleActionTaken - calls actionTaken() on this User Market Request
+         *      when an action is required.
+         */
+        toggleActionTaken() {
+            if(this.marketRequest.attributes.action_needed) {
+                let result = this.marketRequest.actionTaken();
+                console.log("Result from taking action: ", result);
+            }
         }
     }
 }

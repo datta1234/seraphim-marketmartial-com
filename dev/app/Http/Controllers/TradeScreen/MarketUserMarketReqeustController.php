@@ -221,4 +221,26 @@ class MarketUserMarketReqeustController extends Controller
     {
         //
     }
+
+    /**
+     * Changes cached variable's state on a User Market Request related to the current
+     *  Authed Organisation to track Alerts on User Market Requests for an Organisation
+     *
+     * @param  \Illuminate\Http\Request\Request $request
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function actionTaken(Request $request, UserMarketRequest $userMarketRequest)
+    {   
+        if(!$request->input('action_needed')) {
+            if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
+                $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));
+                return ['success'=>true,'data'=> ["action_needed" => false],'message'=>"Action successfully updated."];
+            } else {
+                return ['success'=>true,'data'=> ["action_needed" => false],'message'=>"No action currently tracked."];
+            }
+        }
+        return ['success'=>false,'data'=> null,'message'=>'Failed to update action.'];
+    }
 }

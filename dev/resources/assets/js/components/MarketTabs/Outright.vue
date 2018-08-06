@@ -53,7 +53,7 @@
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
-                    'market-alert': this.market_request_state == 'alert',
+                    'market-alert': this.marketRequest.attributes.action_needed,
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
                 }
@@ -72,6 +72,7 @@
         methods: {
             loadInteractionBar() {
                 console.log("load Bar");
+                this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }

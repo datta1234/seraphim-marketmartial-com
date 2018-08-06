@@ -59,15 +59,19 @@
                 let result = this.markets.reduce( function(acc, obj) {
                     //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                     acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
-                        switch(obj2.attributes.state) {    
+                        switch(obj2.attributes.state) {
                             case "REQUEST-SENT-VOL":
-                                if(obj2.quotes.length > 0) {
+                                if(obj2.attributes.action_needed) {
                                     return acc2.concat(obj2);
-                                }    
+                                } else {
+                                    return acc2;
+                                }
                             break;
                             case "REQUEST-VOL-HOLD":
-                                if(obj2.user_market) {
+                                if(obj2.attributes.action_needed) {
                                     return acc2.concat(obj2);
+                                } else {
+                                    return acc2;
                                 }
                             break;
                             case "alert":

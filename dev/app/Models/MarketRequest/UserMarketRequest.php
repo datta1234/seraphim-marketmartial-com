@@ -10,6 +10,7 @@ use App\Events\UserMarketRequested;
 class UserMarketRequest extends Model
 {
     use \App\Traits\ResolvesUser;
+    use \App\Traits\ActionListCache;
 
     /**
      * @property integer $id
@@ -191,6 +192,7 @@ class UserMarketRequest extends Model
             'state' => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state' => "",
             'offer_state'   => "",
+            'action_needed' => ""
         ];
 
         // make sure to handle null organisations as false
@@ -228,6 +230,12 @@ class UserMarketRequest extends Model
         */
         $attributes['bid_state'] = $this->authedUserMarket && $this->authedUserMarket->currentMarketNegotiation->bid ? 'action' : '';
         $attributes['offer_state'] = $this->authedUserMarket && $this->authedUserMarket->currentMarketNegotiation->offer ? 'action' : '';
+
+        /*
+        *   Action needed (Alert)
+        */
+        $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
+        $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
 
         return $attributes;
     }
