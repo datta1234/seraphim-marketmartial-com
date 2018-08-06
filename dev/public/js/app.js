@@ -9809,17 +9809,6 @@ function copyProps(props) {
                         this.market_request_state_label = "REQUEST";
                     }
                     break;
-                case "REQUEST-VOL-HOLD":
-                    if (this.marketRequest.user_market) {
-                        this.market_request_state = 'alert';
-                        this.market_request_state_label = "";
-                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
-                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
-                    } else {
-                        this.market_request_state = 'request';
-                        this.market_request_state_label = "REQUEST";
-                    }
-                    break;
                 case "REQUEST-SENT-VOL":
                     if (this.marketRequest.quotes.length > 0) {
                         this.market_request_state = 'alert';

@@ -143,7 +143,7 @@ class UserMarketRequest extends Model
             }),
             "attributes" => $this->resolveRequestAttributes(),
             "quotes"    => $this->userMarkets->map(function($item){ 
-                return $item->preFormattedQuote(); 
+                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
             }),
 
             "user_market"   =>  $this->authedUserMarket, //UserMarket
@@ -176,7 +176,7 @@ class UserMarketRequest extends Model
         $organisations = Organisation::verifiedCache();
         foreach ($organisations  as $organisation) 
         {
-           event(new UserMarketRequested($this,$organisation));
+            event(new UserMarketRequested($this,$organisation));
         }
     }
 
@@ -197,14 +197,6 @@ class UserMarketRequest extends Model
 
         // make sure to handle null organisations as false
         $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
-
-        // TODO - remove due to cached action variable, no longer needed
-        // checks if organisation is a quoter
-        /*$is_on_hold = $this->userMarkets()
-        ->where('is_on_hold', true)
-        ->wherehas( 'user', function($query) {
-            $query->where('organisation_id', $this->resolveOrganisationId());
-        })->exists();*/
         
         // if not quotes/user_markets preset => REQUEST
         if($this->userMarkets->isEmpty()) {
