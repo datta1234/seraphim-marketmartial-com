@@ -87,18 +87,17 @@
                 this.market_quantities.alert = 0;
                 this.market_quantities.confirm = 0;
                 this.markets.forEach(market => {
-                console.log("Checking quantities", market);
                     market.market_requests.forEach(market_request => {
                         switch(market_request.attributes.state) {    
                             case "REQUEST-SENT-VOL":
-                                if(market_request.quotes.length > 0) {
+                                if(market_request.attributes.action_needed) {
                                     this.market_quantities.alert++;
                                 } else {
                                     this.market_quantities.important++;
                                 }
                             break;
                             case "REQUEST-VOL-HOLD":
-                                if(market_request.user_market) {
+                                if(market_request.attributes.action_needed) {
                                     this.market_quantities.alert++;
                                 } else {
                                    this.market_quantities.important++; 

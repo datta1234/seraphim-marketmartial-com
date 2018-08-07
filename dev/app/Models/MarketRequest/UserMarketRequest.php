@@ -10,6 +10,7 @@ use App\Events\UserMarketRequested;
 class UserMarketRequest extends Model
 {
     use \App\Traits\ResolvesUser;
+    use \App\Traits\ActionListCache;
 
     /**
      * @property integer $id
@@ -145,7 +146,7 @@ class UserMarketRequest extends Model
             }),
             "attributes" => $this->resolveRequestAttributes(),
             "quotes"    => $this->userMarkets->map(function($item){ 
-                return $item->preFormattedQuote(); 
+                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
             }),
 
             "user_market"   =>  $this->authedUserMarket, //UserMarket
@@ -178,7 +179,7 @@ class UserMarketRequest extends Model
         $organisations = Organisation::verifiedCache();
         foreach ($organisations  as $organisation) 
         {
-           event(new UserMarketRequested($this,$organisation));
+            event(new UserMarketRequested($this,$organisation));
         }
     }
 
@@ -194,17 +195,11 @@ class UserMarketRequest extends Model
             'state' => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state' => "",
             'offer_state'   => "",
+            'action_needed' => ""
         ];
 
         // make sure to handle null organisations as false
         $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
-
-        // checks if organisation is a quoter
-        $is_on_hold = $this->userMarkets()
-        ->where('is_on_hold', true)
-        ->wherehas( 'user', function($query) {
-            $query->where('organisation_id', $this->resolveOrganisationId());
-        })->exists();
         
         // if not quotes/user_markets preset => REQUEST
         if($this->userMarkets->isEmpty()) {
@@ -218,8 +213,6 @@ class UserMarketRequest extends Model
         else {
             if($self_org) {
                 $attributes['state'] = config('marketmartial.market_request_states.request-vol.interest');
-            } elseif($is_on_hold) {
-                $attributes['state'] = config('marketmartial.market_request_states.request-vol-hold.quoter');
             } else {
                 $attributes['state'] = config('marketmartial.market_request_states.request-vol.other');
             }
@@ -231,6 +224,12 @@ class UserMarketRequest extends Model
         */
         $attributes['bid_state'] = $this->authedUserMarket && $this->authedUserMarket->currentMarketNegotiation->bid ? 'action' : '';
         $attributes['offer_state'] = $this->authedUserMarket && $this->authedUserMarket->currentMarketNegotiation->offer ? 'action' : '';
+
+        /*
+        *   Action needed (Alert)
+        */
+        $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
+        $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
 
         return $attributes;
     }

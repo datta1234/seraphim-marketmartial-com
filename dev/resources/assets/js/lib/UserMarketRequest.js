@@ -1,6 +1,8 @@
 import BaseModel from './BaseModel';
 import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
+import Errors from './Errors';
+
 export default class UserMarketRequest extends BaseModel {
 
     constructor(options) {
@@ -23,6 +25,7 @@ export default class UserMarketRequest extends BaseModel {
                 state: "",
                 bid_state: "",
                 offer_state: "",
+                action_needed: false,
             },
             quote: null,
             chosen_user_market: null,
@@ -165,5 +168,27 @@ export default class UserMarketRequest extends BaseModel {
     */
     getMarket() {
         return this._market;
+    }
+
+    /**
+    *   actionTaken - Alerts the server that an action has been taken on a Market Request
+    *   @return response from the request or the error
+    */
+    actionTaken() {
+        if(!this.attributes.action_needed) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["No actions needed"]));
+            });
+        }
+        return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', {'action_needed': false})
+            .then(response => {
+                this.attributes.action_needed = response.data.data.action_needed;
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            }); 
+        });
     }
 }

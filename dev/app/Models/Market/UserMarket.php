@@ -138,7 +138,6 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
-
        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
 
@@ -176,6 +175,7 @@ class UserMarket extends Model
     */
     public function preFormatted()
     {
+
         $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
 

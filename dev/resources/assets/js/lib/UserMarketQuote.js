@@ -1,4 +1,5 @@
 import BaseModel from './BaseModel';
+import Errors from './Errors';
 
 export default class UserMarketQuote extends BaseModel {
 
