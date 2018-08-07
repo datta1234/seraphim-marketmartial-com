@@ -50,7 +50,7 @@ class MarketNegotiationController extends Controller
      */
     public function update(MarketNegotiationUpdateRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-
+        $this->authorize('update',$userMarket);
         $data = $request->all();
 
         if(array_key_exists('is_repeat',$data) && $data['is_repeat'])

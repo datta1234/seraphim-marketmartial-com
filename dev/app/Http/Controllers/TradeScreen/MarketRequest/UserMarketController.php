@@ -38,10 +38,12 @@ class UserMarketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserMarketStoreRequest $request)
-    {
+    public function store(UserMarketStoreRequest $request,UserMarketRequest $userMarketRequest)
+    {   
+        $user = $request->user();
+             
+        $this->authorize('addQoute',$userMarketRequest);     
         $data = $request->all();
-
         // user market
         $data['user_id'] = $request->user()->id;
         $userMarket = UserMarket::create($data);
@@ -101,6 +103,7 @@ class UserMarketController extends Controller
      */
     public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
+        $this->authorize('update',$userMarket);
         // TODO add error handeling and error response
         $userMarket = $userMarket->update($request->only('is_on_hold'));
         $userMarketRequest->notifyRequested();

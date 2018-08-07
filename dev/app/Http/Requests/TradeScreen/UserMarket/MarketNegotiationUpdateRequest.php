@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Requests\Tradescreen\UserMarket;
-
 use Illuminate\Foundation\Http\FormRequest;
+use \Illuminate\Contracts\Validation\Validator;
 
 class MarketNegotiationUpdateRequest extends FormRequest
 {
@@ -24,11 +24,36 @@ class MarketNegotiationUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_repeat'     =>  'boolean',
-            'bid'           =>  'required_without_all:is_repeat,offer|nullable|numeric',
-            'offer'         =>  'required_without_all:is_repeat,bid|nullable|numeric',
-            'bid_qty'       =>  'required|numeric',
-            'offer_qty'     =>  'required|numeric'
         ];
+    }
+
+    /**
+    * 
+    *
+    * @param \Illuminate\Contracts\Validation\Validator $validator
+    * @return void
+    */
+    public function withValidator(Validator $validator)
+    {
+        $validator->sometimes(['is_repeat','offer'], 'required|boolean', function ($input) {
+            return is_null($input->bid) && is_null($input->offer);
+        }); 
+
+        $validator->sometimes(['bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
+            return !is_null($input->bid_qty);
+        }); 
+
+        $validator->sometimes(['offer'], 'required_with:offer_qty|required_without_all:is_repeat,bid|nullable|numeric', function ($input) {
+            return !is_null($input->offer_qty);
+        }); 
+
+        $validator->sometimes(['bid'], 'required|numeric', function ($input) {
+            return !is_null($input->bid_qty);
+        }); 
+
+        $validator->sometimes(['offer'], 'required_with:offer|numeric', function ($input) {
+            return !is_null($input->offer_qty);
+
+        }); 
     }
 }
