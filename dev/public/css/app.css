@@ -11784,11 +11784,6 @@ input:checked + .slider:before {
   background-color: #BB1D1D;
 }
 
-.trade-section.light-theme .market-tab.market-hold,
-.trade-section.dark-theme .market-tab.market-hold {
-  background-color: #BB1D1D;
-}
-
 .trade-section.light-theme .market-tab.market-confirm,
 .trade-section.dark-theme .market-tab.market-confirm {
   background-color: #E17428;

@@ -8,9 +8,7 @@
                 <div v-for="(maket,key) in notificationList" class="col-12">
                     <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} 
-                            <!-- @TODO Change this to include expiration -->
-                            <!-- {{ market_request.attributes.expiration_date.format("MMM DD") }} -->
+                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}
                           </h6>
                         </div>
                         <div class="col-6">
@@ -58,11 +56,20 @@
              */
             notificationList: function() {
                 //Iterates through an array of Markets and compiles an object with Market.title as key
-                return this.markets.reduce( function(acc, obj) {
+                let result = this.markets.reduce( function(acc, obj) {
                     //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
                     acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
                         switch(obj2.attributes.state) {    
-                            case "vol-spread-alert":
+                            case "REQUEST-SENT-VOL":
+                                if(obj2.quotes.length > 0) {
+                                    return acc2.concat(obj2);
+                                }    
+                            break;
+                            case "REQUEST-VOL-HOLD":
+                                if(obj2.user_market) {
+                                    return acc2.concat(obj2);
+                                }
+                            break;
                             case "alert":
                                 return acc2.concat(obj2);
                             break;
@@ -72,6 +79,8 @@
                     }, []);
                     return acc;
                 }, {});
+                console.log("Compiled list of alerts: ",result);
+                return result;
             },
         },
         methods: {

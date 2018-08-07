@@ -7,7 +7,7 @@
             <div class="col col-6 market-tab-state">
                 
                 <span v-if="market_request_state_label != ''">
-                    <span class="">{{ market_request_state_label }}</span>
+                    <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
                 </span>
                 <span v-else>
                     <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
@@ -53,7 +53,6 @@
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
-                    'market-hold': this.market_request_state == 'request-vol-hold',
                     'market-alert': this.market_request_state == 'alert',
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,

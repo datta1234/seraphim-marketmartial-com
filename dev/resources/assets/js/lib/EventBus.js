@@ -27,3 +27,12 @@ EventBus.$on('toggleSidebar', (sidebar, state, payload) => {
         break;
     }
 });
+
+// @TODO figure out if we need this and complete it or remove it
+EventBus.$on('dataLoaded', (type, state) => {
+    switch(type) {
+        case "mountData":
+            EventBus.$emit("mountData", state);
+        break;
+    }
+});

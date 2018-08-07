@@ -87,19 +87,33 @@
                 this.market_quantities.alert = 0;
                 this.market_quantities.confirm = 0;
                 this.markets.forEach(market => {
-                    market.market_requests.forEach(request => {
-                        switch(request.attributes.state) {    
-                            case "vol-spread-alert":
+                console.log("Checking quantities", market);
+                    market.market_requests.forEach(market_request => {
+                        switch(market_request.attributes.state) {    
+                            case "REQUEST-SENT-VOL":
+                                if(market_request.quotes.length > 0) {
+                                    this.market_quantities.alert++;
+                                } else {
+                                    this.market_quantities.important++;
+                                }
+                            break;
+                            case "REQUEST-VOL-HOLD":
+                                if(market_request.user_market) {
+                                    this.market_quantities.alert++;
+                                } else {
+                                   this.market_quantities.important++; 
+                                }
+                            break;
                             case "alert":
                                 this.market_quantities.alert++;
                             break;
                             case "confirm":
                                 this.market_quantities.confirm++;
                             break;
-                            case "request":
-                            case "request-grey":
+                            case "REQUEST":
+                            case "REQUEST-SENT":
                             case "sent":
-                            case "vol-spread":
+                            case "REQUEST-VOL":
                             default:
                                 this.market_quantities.important++;
                         }
@@ -131,8 +145,8 @@
             },
         },
         mounted() {
-           this.reloadQuantities();
-           this.chatBarListener();
+            this.reloadQuantities();
+            this.chatBarListener();
         }
     }
 
