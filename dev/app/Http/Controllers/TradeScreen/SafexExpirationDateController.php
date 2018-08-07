@@ -17,6 +17,6 @@ class  SafexExpirationDateController extends Controller
      */
     public function index()
     {
-        return SafexExpirationDate::where('expiration_date','>',Carbon::now())->paginate(12);
+        return SafexExpirationDate::paginate(12);
     }
 }

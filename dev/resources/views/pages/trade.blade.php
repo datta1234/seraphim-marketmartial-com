@@ -5,7 +5,7 @@
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
-		<div class="trade-section col-12 light-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
+		<div class="trade-section col-12 dark-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
 			<user-header 
 				user_name="{{ $user->full_name }}" 
 				@if( isset($organisation) ) 

@@ -62,15 +62,15 @@ class MarketNegotiationController extends Controller
         }
 
         $userMarket->update(['is_on_hold'=>false]);
-        $userMarket->userMarketRequest->notifyRequested();
-        
         // Set action that needs to be taken for the org related to this userMarketRequest
         $userMarket->userMarketRequest->setAction(
             $userMarket->userMarketRequest->user->organisation->id,
             $userMarket->userMarketRequest->id,
             true
         );
-
+        
+        $userMarket->userMarketRequest->notifyRequested();
+        
         return response()->json(['data' => $marketNegotiation, 'message' => 'Response sent to Interest.']);
     }
 
