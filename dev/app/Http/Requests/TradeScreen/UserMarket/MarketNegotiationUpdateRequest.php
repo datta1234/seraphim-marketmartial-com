@@ -47,12 +47,12 @@ class MarketNegotiationUpdateRequest extends FormRequest
             return !is_null($input->offer_qty);
         }); 
 
-        $validator->sometimes(['bid'], 'required|numeric', function ($input) {
-            return !is_null($input->bid_qty);
+        $validator->sometimes(['bid_qty'], 'required|numeric', function ($input) {
+            return !is_null($input->bid);
         }); 
 
-        $validator->sometimes(['offer'], 'required_with:offer|numeric', function ($input) {
-            return !is_null($input->offer_qty);
+        $validator->sometimes(['offer_qty'], 'required_with:offer|numeric', function ($input) {
+            return !is_null($input->offer);
 
         }); 
     }

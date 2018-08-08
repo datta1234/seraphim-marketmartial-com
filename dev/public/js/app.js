@@ -92217,6 +92217,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             removable_conditions: [],
 
             server_loading: false,
+            check_invalid: false,
             errors: []
         };
     },
@@ -92224,6 +92225,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'marketRequest': function marketRequest() {
             this.init();
+        },
+        'marketRequest.quotes': {
+            handler: function handler() {
+                this.setDefaultQuantities();
+            }
         }
     },
     computed: {
@@ -92233,36 +92239,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return quote.is_maker;
             });
         },
+        'last_qoute': function last_qoute() {
+            return this.marketRequest.quotes.length == 0 ? null : this.marketRequest.quotes[this.marketRequest.quotes.length - 1];
+        },
         'is_on_hold': function is_on_hold() {
             return this.marketRequest.quotes.find(function (quote) {
                 return quote.is_maker && quote.is_on_hold;
             });
-        },
-        'check_invalid': function check_invalid() {
-            var quote = this.marketRequest.quotes.find(function (quote) {
-                return quote.is_maker;
-            });
-            var invalid_states = {
-                all_empty: false,
-                bid_pair: false,
-                offer_pair: false,
-                previous: false
-            };
-
-            // Check for all empty
-            invalid_states.all_empty = this.proposed_user_market_negotiation.bid == '' && this.proposed_user_market_negotiation.bid_qty == '' && this.proposed_user_market_negotiation.offer == '' && this.proposed_user_market_negotiation.offer_qty == '';
-            // Check that bid and bid_qty are present together
-            invalid_states.bid_pair = this.proposed_user_market_negotiation.bid != '' && this.proposed_user_market_negotiation.bid_qty == '' || this.proposed_user_market_negotiation.bid == '' && this.proposed_user_market_negotiation.bid_qty != '';
-
-            // Check bid offer and offer_qty are present together
-            invalid_states.offer_pair = this.proposed_user_market_negotiation.offer != '' && this.proposed_user_market_negotiation.offer_qty == '' || this.proposed_user_market_negotiation.offer == '' && this.proposed_user_market_negotiation.offer_qty != '';
-            // Check for previous quote
-            if (typeof quote != 'undefined') {
-                // Check new quote is equal to old quote
-                invalid_states.previous = this.proposed_user_market_negotiation.bid == quote.bid && this.proposed_user_market_negotiation.bid_qty == quote.bid_qty && this.proposed_user_market_negotiation.offer == quote.offer && this.proposed_user_market_negotiation.offer_qty == quote.offer_qty;
-            }
-
-            return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
         },
         'market_title': function market_title() {
             console.log(this.marketRequest, this.marketRequest.getMarket());
@@ -92273,6 +92256,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     methods: {
+        validateProposal: function validateProposal(check_invalid) {
+            console.log("event just got caught");
+            this.check_invalid = check_invalid;
+        },
         sendQuote: function sendQuote() {
             var _this = this;
 
@@ -92289,7 +92276,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (err) {
                 _this.server_loading = false;
 
-                _this.errors = err.errors;
+                _this.history_message = err.errors.message;
+                _this.errors = err.errors.errors;
             });
         },
         amendQoute: function amendQoute() {
@@ -92375,7 +92363,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         hideModal: function hideModal() {
             this.$refs.pullModal.hide();
         },
+        setDefaultQuantities: function setDefaultQuantities() {
+            console.log("default method hit");
+
+            if (this.last_qoute != null) {
+                this.proposed_user_market_negotiation.offer_qty = this.last_qoute.offer_qty;
+                this.proposed_user_market_negotiation.bid_qty = this.last_qoute.bid_qty;
+            } else {
+                this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
+                this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+            }
+        },
         init: function init() {
+            console.log("the info method ran");
             this.reset(); // clear current state
             // set up ui data
             if (this.marketRequest) {
@@ -92391,14 +92391,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         //use the id from the usermarket
                         this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
                     } else {
+
                     this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
                 }
                 if (this.marker_qoute && this.marker_qoute.is_on_hold) {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
                 }
 
-                console.log("marker quote =>", this.marker_qoute);
-
+                //  this.setDefaultQuantities();
                 // relate
                 this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
@@ -92449,7 +92449,12 @@ var render = function() {
       _vm._v(" "),
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+        attrs: {
+          "check-invalid": _vm.check_invalid,
+          "marker-qoute": _vm.marker_qoute,
+          "market-negotiation": _vm.proposed_user_market_negotiation
+        },
+        on: { "validate-proposal": _vm.validateProposal }
       }),
       _vm._v(" "),
       _c(
@@ -95106,6 +95111,7 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__ = __webpack_require__(361);
 //
 //
 //
@@ -95133,6 +95139,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -95140,10 +95147,52 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         marketNegotiation: {
             type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        },
+        markerQoute: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__["a" /* default */]
+        }
+    },
+    watch: {
+        marketNegotiation: {
+            handler: function handler() {
+                this.$emit('validate-proposal', this.check_invalid);
+            },
+            deep: true
         }
     },
     data: function data() {
         return {};
+    },
+
+    computed: {
+        'check_invalid': function check_invalid() {
+            var invalid_states = {
+                all_empty: false,
+                bid_pair: false,
+                offer_pair: false,
+                previous: false
+            };
+
+            //new
+            invalid_states.all_empty = this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) && this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty);
+
+            // Check that bid and bid_qty are present together
+            invalid_states.bid_pair = !this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) || this.is_empty(this.marketNegotiation.bid) && !this.is_empty(this.marketNegotiation.bid_qty);
+
+            // Check bid offer and offer_qty are present together
+            invalid_states.offer_pair = !this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty) || this.is_empty(this.marketNegotiation.offer) && !this.is_empty(this.marketNegotiation.offer_qty);
+            // Check for previous quote
+            if (typeof markerQoute != 'undefined') {
+                // Check new markerQoute is equal to old markerQoute
+                invalid_states.previous = this.marketNegotiation.bid == markerQoute.bid && this.marketNegotiation.bid_qty == markerQoute.bid_qty && this.marketNegotiation.offer == markerQoute.offer && this.marketNegotiation.offer_qty == markerQoute.offer_qty;
+            }
+            return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
+        }
+    },
+    methods: {
+        'is_empty': function is_empty(value) {
+            return value === undefined || value === null || value === '';
+        }
     },
     mounted: function mounted() {
         console.log(this.marketNegotiation);

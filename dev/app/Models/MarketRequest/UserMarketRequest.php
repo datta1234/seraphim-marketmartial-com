@@ -109,7 +109,7 @@ class UserMarketRequest extends Model
     */
     public function userMarkets()
     {
-        return $this->hasMany('App\Models\Market\UserMarket','user_market_request_id');
+        return $this->hasMany('App\Models\Market\UserMarket','user_market_request_id')->orderBy('updated_at', 'desc');
     }
 
     /**
