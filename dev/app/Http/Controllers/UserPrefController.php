@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserPrefController extends Controller
 {
@@ -13,7 +14,12 @@ class UserPrefController extends Controller
      */
     public function index()
     {
-        return 'TEST ALL THE STUFFS';
+        $user = Auth::user();
+        $userPreferences = [
+            "prefered_market_types" => $user->marketInterests()->with('markets')->get()->toArray(),
+        ];
+
+        return response()->json($userPreferences);
     }
 
     /**
@@ -45,7 +51,7 @@ class UserPrefController extends Controller
      */
     public function show($id)
     {
-        return 'TEST SINGLE STUFF'.$id;
+        //
     }
 
     /**
@@ -68,7 +74,9 @@ class UserPrefController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Auth::user()->marketInterests()->attach($id);
+        $prefered_market_type = Auth::user()->marketInterests()->where('market_type_id','=',$id)->with('markets')->first();
+        return response()->json(['data' => $prefered_market_type, 'message' => 'Your account preferences have been successfully been updated.']);
     }
 
     /**
@@ -79,6 +87,7 @@ class UserPrefController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = Auth::user()->marketInterests()->detach($id);
+        return response()->json(['data' => $id, 'message' => 'Your account preferences have been successfully been updated.']);
     }
 }

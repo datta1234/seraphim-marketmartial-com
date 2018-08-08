@@ -25710,8 +25710,6 @@ var Market = function (_BaseModel) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Errors__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__UserMarketNegotiation__ = __webpack_require__(17);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25906,66 +25904,6 @@ var UserMarket = function (_BaseModel) {
                     reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
                 });
             });
-        }
-
-        /**
-        *   update - updates this User Market
-        *   @param {UserMarket} user_market - UserMarket object
-        *
-        *   @TODO add more complex assignment
-        */
-
-    }, {
-        key: 'update',
-        value: function update(user_market) {
-            var _this5 = this;
-
-            if (user_market !== null) {
-                Object.entries(user_market).forEach(function (_ref) {
-                    var _ref2 = _slicedToArray(_ref, 2),
-                        key = _ref2[0],
-                        value = _ref2[1];
-
-                    if (value !== null) {
-                        if (Array.isArray(value)) {
-                            //call array rebind method
-                            _this5._reassignArray(value, _this5[key], key);
-                        } else if (value instanceof Object) {
-                            //call object rebind method
-                            _this5._reassignObject(value, _this5[key], key);
-                        } else {
-                            _this5[key] = value;
-                        }
-                    }
-                });
-            }
-        }
-    }, {
-        key: '_reassignArray',
-        value: function _reassignArray(from_arr, to_arr, obj_prop) {
-            var _this6 = this;
-
-            var is_custom_elem_arr = false;
-            to_arr.forEach(function (element, index) {
-                if (element instanceof __WEBPACK_IMPORTED_MODULE_2__UserMarketNegotiation__["a" /* default */]) {
-                    is_custom_elem_arr = true;
-                    element.update(_this6[obj_prop]);
-                }
-            });
-            if (!is_custom_elem_arr) {
-                to_arr = from_arr;
-            }
-        }
-    }, {
-        key: '_reassignObject',
-        value: function _reassignObject(from_obj, to_obj, obj_prop) {
-            if (from_obj instanceof __WEBPACK_IMPORTED_MODULE_2__UserMarketNegotiation__["a" /* default */]) {
-                from_obj.update(this[obj_prop]);
-            } else {
-                if (!(typeof to_obj == 'undefined') && !(to_obj == null) && !(typeof from_obj == 'undefined') && !(from_obj == null)) {
-                    Object.assign(to_obj, from_obj);
-                }
-            }
         }
     }]);
 
@@ -86816,6 +86754,7 @@ var app = new Vue({
                 if (marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
+                    console.log("Market Types: ", self.market_types);
                 } else {
                     console.error(err);
                 }
@@ -86872,6 +86811,19 @@ var app = new Vue({
                 }
             });
         },
+        loadUserConfig: function loadUserConfig() {
+            var self = this;
+            return axios.get(axios.defaults.baseUrl + '/user-pref').then(function (configResponse) {
+                if (configResponse.status == 200) {
+                    self.configs["user_preferences"] = configResponse.data;
+                    return configResponse.data;
+                } else {
+                    self.configs["user_preferences"] = null;
+                    console.error(err);
+                }
+                return self.configs["user_preferences"];
+            });
+        },
         config: function config(path) {
             return path.split('.').reduce(function (acc, cur) {
                 if (acc && typeof acc[cur] !== 'undefined') {
@@ -86913,8 +86865,8 @@ var app = new Vue({
         market_order: ['TOP 40', 'DTOP', 'DCAP', 'SINGLES', 'DELTA ONE'],
         no_cares: [],
         display_markets: [],
+        hidden_markets: [],
         market_types: [],
-        user_pref: {},
         // internal properties
         configs: {}
     },
@@ -86925,17 +86877,22 @@ var app = new Vue({
         this.loadConfig("trade_structure", "trade_structure.json").catch(function (err) {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
+        }).then(function () {
+            _this2.loadUserConfig();
         }).then(function (configs) {
             // load the trade data
-            _this2.loadMarketTypes().then(function (market_types) {
+            _this2.loadMarketTypes();
+            _this2.loadUserConfig().then(function (user_preferences) {
                 var promises = [];
-                market_types.forEach(function (market_type) {
-                    promises.push(_this2.loadMarkets(market_type).then(function (markets) {
-                        markets.forEach(function (market) {
-                            promises.push(_this2.loadMarketRequests(market));
-                        });
-                    }));
-                });
+                if (user_preferences !== null) {
+                    user_preferences.prefered_market_types.forEach(function (market_type) {
+                        promises.push(_this2.loadMarkets(market_type).then(function (markets) {
+                            markets.forEach(function (market) {
+                                promises.push(_this2.loadMarketRequests(market));
+                            });
+                        }));
+                    });
+                }
                 return Promise.all(promises);
             }).then(function (all_market_requests) {
                 // nada
@@ -96407,19 +96364,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        onShow: function onShow() {
-            this.init();
-            /* This is called just before the popover is shown */
-            this.checkSelected();
-        },
-
         /**
-         * Saves the user's Market preference to the server
-         *
-         * @todo implement post reqeust to update user preference
+         * This is called just before the popover is shown
          */
-        onSaveMarketSetting: function onSaveMarketSetting(popover_ref) {
-            this.onDismiss();
+        onShow: function onShow() {
+            this.checkSelected();
         },
 
         /**
@@ -96443,11 +96392,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             });
             Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
-                if (_this.availableSelectedMarketTypes[key].marketType !== null) {
-                    _this.availableSelectedMarketTypes[key].state = true;
-                } else {
-                    _this.availableSelectedMarketTypes[key].state = false;
-                }
+                _this.availableSelectedMarketTypes[key].state = false;
+            });
+
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                _this.$root.config("user_preferences.prefered_market_types").forEach(function (prefered_market_type) {
+                    if (_this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
+                        _this.availableSelectedMarketTypes[key].state = true;
+                    }
+                });
             });
         },
 
@@ -96457,33 +96410,62 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
             var _this2 = this;
 
-            this.availableSelectedMarketTypes[market_type].marketType.markets.forEach(function (market) {
-                if (actionCheck) {
-                    _this2.addMarket(market);
-                } else {
-                    _this2.removeMarket(market);
-                }
-            });
+            if (actionCheck) {
+                this.addUserPreferenceMarketType(market_type).then(function (market_type) {
+                    _this2.addMarket(market_type);
+                });
+            } else {
+                this.removeUserPreferenceMarketType(market_type).then(function () {
+                    _this2.availableSelectedMarketTypes[market_type].marketType.markets.forEach(function (market) {
+                        _this2.removeMarket(market);
+                    });
+                });
+            }
         },
 
         /**
          * Adds a selected Market to Display Markets
          * 
          * @param {string} $market a string detailing a Market.title to be added
-         *
-         * @todo make a reqeust to update view data from server 
          */
-        addMarket: function addMarket(market) {
-            //this.markets.push( this.loadMarketData(market) );
+        addMarket: function addMarket(market_type) {
+            var _this3 = this;
+
+            this.$root.loadMarkets(market_type).then(function (markets) {
+                var promises = [];
+                markets.forEach(function (market) {
+                    promises.push(_this3.$root.loadMarketRequests(market));
+                });
+                return Promise.all(promises);
+            });
             this.checkSelected();
+        },
+
+        /**
+         * Adds a selected Market Type to the users preferences and saves it to the server
+         * 
+         * @param {string} $market_type a string detailing a MarketType.title to be added
+         */
+        addUserPreferenceMarketType: function addUserPreferenceMarketType(market_type) {
+            var _this4 = this;
+
+            return axios.patch(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences")).then(function (response) {
+                if (response.status == 200) {
+                    _this4.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
+                    return _this4.$root.configs["user_preferences"].prefered_market_types[_this4.$root.configs["user_preferences"].prefered_market_types.length - 1];
+                } else {
+                    return null;
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
         },
 
         /**
          * Removes a selected Market from Display Markets
          * 
          * @param {string} $market a string detailing a Market.title to be removed
-         *
-         * @todo make a push the updated Display Markets list to the server 
          */
         removeMarket: function removeMarket(market) {
             var index = this.markets.findIndex(function (element) {
@@ -96492,7 +96474,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (index !== -1) {
                 this.markets.splice(index, 1);
             }
+            // make api call to amend user pref for market types
             this.checkSelected();
+        },
+
+        /**
+         * Removes a selected Market Type from the users preferences and saves it to the server
+         * 
+         * @param {string} $market_type a string detailing a MarketType.title to be removed
+         */
+        removeUserPreferenceMarketType: function removeUserPreferenceMarketType(market_type) {
+            var _this5 = this;
+
+            // write delete end to apply new pref
+            return axios.delete(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id).then(function (response) {
+                if (response.status == 200) {
+                    var index = _this5.$root.configs["user_preferences"].prefered_market_types.findIndex(function (element) {
+                        return element.id == response.data.data;
+                    });
+                    if (index !== -1) {
+                        return _this5.$root.configs["user_preferences"].prefered_market_types.splice(index, 1);
+                    }
+                    return null;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
         },
 
         /**
@@ -96500,8 +96509,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         onDismiss: function onDismiss() {
             this.$refs[this.popover_ref].$emit('close');
-        },
-        init: function init() {}
+        }
     },
     mounted: function mounted() {}
 });
@@ -96598,7 +96606,7 @@ var render = function() {
                 {
                   staticClass: "btn mm-generic-trade-button w-100",
                   attrs: { type: "button" },
-                  on: { click: _vm.onSaveMarketSetting }
+                  on: { click: _vm.onDismiss }
                 },
                 [_vm._v("OK")]
               )
