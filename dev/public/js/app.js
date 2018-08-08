@@ -86914,7 +86914,7 @@ var app = new Vue({
         no_cares: [],
         display_markets: [],
         market_types: [],
-
+        user_pref: {},
         // internal properties
         configs: {}
     },
@@ -86926,7 +86926,7 @@ var app = new Vue({
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         }).then(function (configs) {
-            // laod the trade data
+            // load the trade data
             _this2.loadMarketTypes().then(function (market_types) {
                 var promises = [];
                 market_types.forEach(function (market_type) {
@@ -96391,24 +96391,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             availableSelectedMarketTypes: {
                 'INDEX': {
                     state: false,
-                    markets: ['TOP 40', 'DTOP', 'DCAP']
+                    marketType: null
                 },
                 'SINGLES': {
                     state: false,
-                    markets: ['SINGLES']
+                    marketType: null
                 },
                 'DELTA ONE': {
                     state: false,
-                    markets: ['DELTA ONE']
+                    marketType: null
                 }
             },
-            randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
             popover_ref: 'add-market-ref'
         };
     },
 
     methods: {
         onShow: function onShow() {
+            this.init();
             /* This is called just before the popover is shown */
             this.checkSelected();
         },
@@ -96423,18 +96423,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         /**
-         * Creates a bolean list of availableSelectedMarkets from markets prop
+         * Creates a boolean list of availableSelectedMarkets from markets prop
          */
         checkSelected: function checkSelected() {
             var _this = this;
 
-            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
-                _this.availableSelectedMarketTypes[key].state = false;
+            this.$root.market_types.forEach(function (market_type) {
+                switch (market_type.title) {
+                    case "Index Option":
+                        _this.availableSelectedMarketTypes['INDEX'].marketType = market_type;
+                        break;
+                    case "Delta One(EFPs, Rolls and EFP Switches)":
+                        _this.availableSelectedMarketTypes['DELTA ONE'].marketType = market_type;
+                        break;
+
+                    case "Single Stock Options":
+                        _this.availableSelectedMarketTypes['SINGLES'].marketType = market_type;
+                        break;
+                }
             });
-            this.markets.forEach(function (market) {
-                Object.keys(_this.availableSelectedMarketTypes).forEach(function (key) {
-                    if (_this.availableSelectedMarketTypes[key].markets.includes(market.title)) _this.availableSelectedMarketTypes[key].state = true;
-                });
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                if (_this.availableSelectedMarketTypes[key].marketType !== null) {
+                    _this.availableSelectedMarketTypes[key].state = true;
+                } else {
+                    _this.availableSelectedMarketTypes[key].state = false;
+                }
             });
         },
 
@@ -96444,7 +96457,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
             var _this2 = this;
 
-            this.availableSelectedMarketTypes[market_type].markets.forEach(function (market) {
+            this.availableSelectedMarketTypes[market_type].marketType.markets.forEach(function (market) {
                 if (actionCheck) {
                     _this2.addMarket(market);
                 } else {
@@ -96461,7 +96474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @todo make a reqeust to update view data from server 
          */
         addMarket: function addMarket(market) {
-            this.markets.push(this.loadMarketData(market));
+            //this.markets.push( this.loadMarketData(market) );
             this.checkSelected();
         },
 
@@ -96474,7 +96487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         removeMarket: function removeMarket(market) {
             var index = this.markets.findIndex(function (element) {
-                return element.title == market;
+                return element.id == market.id;
             });
             if (index !== -1) {
                 this.markets.splice(index, 1);
@@ -96483,41 +96496,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         /**
-         * Creates dummy market reqeusts for Newly added Market
-         *
-         * @todo remove once data is being pulled from server 
-         */
-        loadMarketData: function loadMarketData(market) {
-            this.randomID += this.randomID + "1";
-            return new __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]({
-                title: market,
-                market_requests: [new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__["a" /* default */]({
-                    id: this.randomID,
-                    attributes: {
-                        expiration_date: moment("2018-03-17 00:00:00"),
-                        strike: "17 000",
-                        state: 'confirm',
-                        bid_state: 'action',
-                        offer_state: ''
-                    },
-                    user_markets: [new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
-                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                    }), new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
-                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                    })],
-                    chosen_user_market: new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__["a" /* default */]({
-                        current_market_negotiation: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__["a" /* default */]({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                    })
-                })]
-            });
-        },
-
-        /**
          * Closes popover
          */
         onDismiss: function onDismiss() {
             this.$refs[this.popover_ref].$emit('close');
-        }
+        },
+        init: function init() {}
     },
     mounted: function mounted() {}
 });

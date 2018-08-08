@@ -60,23 +60,23 @@
                 availableSelectedMarketTypes: {
                     'INDEX': {
                         state: false,
-                        markets: ['TOP 40','DTOP','DCAP'],
+                        marketType: null,
                     },
                     'SINGLES': {
                         state: false,
-                        markets: ['SINGLES'],
+                        marketType: null,
                     },
                     'DELTA ONE': {
                         state: false,
-                        markets: ['DELTA ONE'],
+                        marketType: null,
                     }
                 },
-                randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
                 popover_ref: 'add-market-ref',
             };
         },
         methods: {
             onShow () {
+                this.init();
                 /* This is called just before the popover is shown */
                 this.checkSelected();
             },
@@ -89,24 +89,36 @@
                 this.onDismiss();
             },
             /**
-             * Creates a bolean list of availableSelectedMarkets from markets prop
+             * Creates a boolean list of availableSelectedMarkets from markets prop
              */
             checkSelected() {
-                Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
-                    this.availableSelectedMarketTypes[key].state = false;
+                this.$root.market_types.forEach( (market_type) => {
+                    switch(market_type.title) {
+                        case "Index Option":
+                            this.availableSelectedMarketTypes['INDEX'].marketType = market_type;
+                        break;
+                        case "Delta One(EFPs, Rolls and EFP Switches)":
+                            this.availableSelectedMarketTypes['DELTA ONE'].marketType = market_type;
+                        break;
+
+                        case "Single Stock Options":
+                            this.availableSelectedMarketTypes['SINGLES'].marketType = market_type;
+                        break;
+                    }
                 });
-                this.markets.forEach((market) => {
-                    Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
-                        if( this.availableSelectedMarketTypes[key].markets.includes(market.title) )
+                Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
+                    if(this.availableSelectedMarketTypes[key].marketType !== null) {
                         this.availableSelectedMarketTypes[key].state = true;
-                    });
+                    } else {
+                        this.availableSelectedMarketTypes[key].state = false;
+                    }
                 });
             },
             /**
              * Filters the user's Market Type preference 
              */
             filterMarketTypes(market_type, actionCheck) {
-                this.availableSelectedMarketTypes[market_type].markets.forEach((market) => {
+                this.availableSelectedMarketTypes[market_type].marketType.markets.forEach((market) => {
                     if(actionCheck) {
                         this.addMarket(market);
                     } else {
@@ -122,7 +134,7 @@
              * @todo make a reqeust to update view data from server 
              */
             addMarket(market) {
-               this.markets.push( this.loadMarketData(market) );
+               //this.markets.push( this.loadMarketData(market) );
                this.checkSelected();
             },
             /**
@@ -134,7 +146,7 @@
              */
             removeMarket(market) {
                 let index = this.markets.findIndex(function(element) {
-                    return element.title == market;
+                    return element.id == market.id;
                 });
                 if(index !== -1) {
                     this.markets.splice(index , 1);
@@ -142,47 +154,17 @@
                 this.checkSelected();
             },
             /**
-             * Creates dummy market reqeusts for Newly added Market
-             *
-             * @todo remove once data is being pulled from server 
-             */
-            loadMarketData(market) {
-                this.randomID += this.randomID + "1"
-                return new Market({
-                    title: market,
-                    market_requests: [
-                        new UserMarketRequest({
-                            id: this.randomID,
-                            attributes: {
-                                expiration_date: moment("2018-03-17 00:00:00"),
-                                strike: "17 000",
-                                state: 'confirm',
-                                bid_state: 'action',
-                                offer_state: '',
-                            },
-                            user_markets: [
-                                new UserMarket({
-                                    current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                                }),
-                                new UserMarket({
-                                    current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                                })
-                            ],
-                            chosen_user_market: new UserMarket({
-                                current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                            })
-                        })
-                    ]
-                });
-            },
-            /**
              * Closes popover
              */
             onDismiss() {
                 this.$refs[this.popover_ref].$emit('close');
             },
+            init() {
+
+            }
         },
         mounted() {
+
         }
     }
 </script>

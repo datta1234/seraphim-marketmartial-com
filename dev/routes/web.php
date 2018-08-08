@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth','redirectOnFirstLogin','timeWindowPreventA
 
 	Route::get('/interest-settings', 'InterestController@edit')->name('interest.edit');
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
+
+	Route::resource('user-pref', 'UserPrefController');
 });
 
 

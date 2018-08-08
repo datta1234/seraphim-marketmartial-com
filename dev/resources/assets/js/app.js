@@ -259,7 +259,7 @@ const app = new Vue({
         no_cares: [],
         display_markets: [],
         market_types: [],
-
+        user_pref: {},
         // internal properties
         configs: {}
     },
@@ -271,7 +271,7 @@ const app = new Vue({
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
         .then(configs => {
-            // laod the trade data
+            // load the trade data
             this.loadMarketTypes()
             .then(market_types => {
                 let promises = [];
