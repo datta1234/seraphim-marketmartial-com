@@ -11891,15 +11891,11 @@ var BaseModel = function () {
             // test array items are all of the same instance 
             this._validateArray(update_arr);
 
-            console.log("updateing our key now", update_arr, key);
-
             //@todo not entirly sure why ther's a check on the first model in array cause doesnt work on an empty array
 
             //this._isModelInstance(this[key][0]).is_model
             if (_typeof(this._relations[key]) != undefined) {
                 var _loop = function _loop(i) {
-
-                    console.log("in our loop for the update");
 
                     var index = _this3[key].findIndex(function (element) {
                         return element.id == update_arr[i].id;
@@ -11907,14 +11903,8 @@ var BaseModel = function () {
 
                     if (index == -1) {
 
-                        console.log("this is the new object we updating with", update_arr[i]);
-
                         _this3._relations[key].addMethod(update_arr[i]);
-
                         //this[key].push(update_arr[i]);    
-
-
-                        console.log("we are done updating", _this3);
                     } else {
                         _this3[key][index].update(update_arr[i]);
                     }
@@ -92306,9 +92296,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         'marketRequest.quotes': {
             handler: function handler() {
-                this.setDefaultQuantities();
                 this.updateUserMessages();
-                this.setUpProposal();
+                //  this.setUpProposal();
             },
             deep: true
         }
@@ -92358,7 +92347,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 _this.history_message = response.data.message;
                 _this.server_loading = false;
-                //EventBus.$emit('interactionToggle', false);
+                _this.errors = [];
             }).catch(function (err) {
                 _this.server_loading = false;
 
@@ -92376,12 +92365,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market_negotiation.patch().then(function (response) {
                 _this2.server_loading = false;
-                _this2.history_message = response.message;
-                _this2.proposed_user_market_negotiation = response.data.data;
-
                 _this2.history_message = response.data.message;
-                _this2.proposed_user_market.setCurrentNegotiation(_this2.proposed_user_market_negotiation);
-                //EventBus.$emit('interactionToggle', false);
                 _this2.errors = [];
             }).catch(function (err) {
                 _this2.server_loading = false;
@@ -92439,26 +92423,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 user_market: null,
                 market_history: [],
 
-                removable_conditions: [],
+                proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
+                proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
+
+                default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
                 history_message: null,
+
+                removable_conditions: [],
+
+                server_loading: false,
+                check_invalid: false,
                 errors: []
             };
             Object.keys(defaults).forEach(function (k) {
                 _this5[k] = defaults[k];
             });
+
+            console.log("the reset method git called");
         },
         setUpProposal: function setUpProposal() {
 
             // set up the new UserMarket as quote to be sent
             if (this.marker_qoute) //already have my qoute
                 {
-
                     this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
-                    console.log("full maker quote", this.marker_qoute);
-
-                    //use the id from the usermarket, as they can only be one
-                    console.log(this.proposed_user_market, "this is the proposed user market");
-                    // this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
                 } else {
                 this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
             }
@@ -92468,11 +92456,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$refs.pullModal.hide();
         },
         setDefaultQuantities: function setDefaultQuantities() {
-            if (this.last_qoute != null && (this.last_qoute.offer_qty != null || this.last_qoute.bid_qty != null)) {
-                console.log("offer quote", this.last_qoute.offer_qty);
 
-                this.proposed_user_market_negotiation.offer_qty = this.last_qoute.offer_qty;
-                this.proposed_user_market_negotiation.bid_qty = this.last_qoute.bid_qty;
+            console.log("this is the maker qoute", this.marker_qoute);
+
+            if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
+                console.log("offer quote", this.marker_qoute.offer_qty);
+
+                this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
+                this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;
             } else {
                 this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
                 this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
@@ -92486,8 +92477,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.user_market = this.marketRequest.getChosenUserMarket();
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
                 this.setUpProposal();
+                this.setDefaultQuantities();
+                this.updateUserMessages();
 
-                //  this.setDefaultQuantities();
                 // relate
 
 

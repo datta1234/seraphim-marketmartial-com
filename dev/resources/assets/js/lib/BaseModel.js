@@ -65,7 +65,6 @@ export default class BaseModel {
         // test array items are all of the same instance 
         this._validateArray(update_arr);
 
-        console.log("updateing our key now",update_arr, key);
 
        
        //@todo not entirly sure why ther's a check on the first model in array cause doesnt work on an empty array
@@ -76,7 +75,6 @@ export default class BaseModel {
             // loop to add or update new array objects
             for (let i = 0; i < update_arr.length; i++) {
                 
-                console.log("in our loop for the update");
 
                 let index = this[key].findIndex((element) => {
                     return element.id == update_arr[i].id;
@@ -84,17 +82,10 @@ export default class BaseModel {
 
                 if(index == -1){
 
-                    console.log("this is the new object we updating with",update_arr[i]);
                     
                     this._relations[key].addMethod(update_arr[i]);
-                   
                     //this[key].push(update_arr[i]);    
-                    
-
-                    console.log("we are done updating",this);
-                    
-                
-                
+                                        
                 } else {
                     this[key][index].update(update_arr[i]);
                 }

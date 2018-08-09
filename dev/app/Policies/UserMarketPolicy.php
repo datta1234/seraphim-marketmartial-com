@@ -30,19 +30,7 @@ class UserMarketPolicy
     public function update(User $user, UserMarket $userMarket)
     {
         return $user->orgnisation_id === $userMarket->user->orgnisation_id;
-    }
-
-      /**
-     * Determine if the given usermarket can be updated by the user.
-     *
-     * @param  \App\User  $user
-     * @param  \App\UserMarket  $userMarket
-     * @return bool
-     */
-    public function update(User $user, UserMarket $userMarket)
-    {
-        return $user->orgnisation_id === $userMarket->user->orgnisation_id;
-    }
+    }    
 
      /**
      * Determine if the given usermarket can be placed on hold the user.
@@ -53,17 +41,16 @@ class UserMarketPolicy
      */
     public function placeOnHold(User $user, UserMarket $userMarket)
     {
-        return $this->user_market->userMarketRequest->user->organisation_id == $user->organisation_id;
+        return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
     }
 
 
     public function updateNegotiation(User $user, UserMarket $userMarket)
     {
-        return $this->marketNegotiations()->where('user_id',$user->id)->exists;
+        return $userMarket->marketNegotiations()->where('user_id',$user->id)->exists();
     }
 
     
-
     /**
      * Determine if the given usermarket can be deleted by the user.
      *
