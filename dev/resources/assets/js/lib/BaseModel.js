@@ -3,7 +3,8 @@ export default class BaseModel {
 
     constructor(options) {
         const defaults = {
-            _used_model_list: []
+            _used_model_list: [],
+            _relations:{}
         }
 
         // assign options with defaults
@@ -23,19 +24,24 @@ export default class BaseModel {
      */
     update(update_object) {
         Object.keys(this).forEach( key => {
-            console.log("Test Updating: ", key);
+            //console.log("Test Updating: ", key);
+            // console.log("############=====#######");
+            // console.log("the key is",key);
+            // console.log("is array test",Array.isArray(update_object[key], key));
+            // console.log("############=====#######");
+
             if(key[0] != '_' && update_object[key] != null) {
-                console.log("Updating: ", key);
+                //console.log("Updating: ", key);
                 if(Array.isArray(update_object[key], key)) {
                     //call array rebind method
-                    console.log("Updating as Array: ", key);
+                    //console.log("Updating as Array: ", key);
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
                     //call object rebind method
-                    console.log("Updating as Obj: ", key);
+                    //console.log("Updating as Obj: ", key);
                     this._updateObject(update_object[key],key);
                 } else {
-                    console.log("Updating as else: ", key);
+                    //console.log("Updating as else: ", key);
                     if(this[key] instanceof moment) {
                         this[key] = moment(update_object[key]);
                     } else {
@@ -59,16 +65,36 @@ export default class BaseModel {
         // test array items are all of the same instance 
         this._validateArray(update_arr);
 
-        // check list of Models if one call update 
-        if(this._isModelInstance(this[key][0]).is_model) {
-            
+        console.log("updateing our key now",update_arr, key);
+
+       
+       //@todo not entirly sure why ther's a check on the first model in array cause doesnt work on an empty array
+
+       //this._isModelInstance(this[key][0]).is_model
+        if(typeof this._relations[key] != undefined) {
+
             // loop to add or update new array objects
             for (let i = 0; i < update_arr.length; i++) {
+                
+                console.log("in our loop for the update");
+
                 let index = this[key].findIndex((element) => {
                     return element.id == update_arr[i].id;
                 });
+
                 if(index == -1){
-                    this[key].push(update_arr[i]);
+
+                    console.log("this is the new object we updating with",update_arr[i]);
+                    
+                    this._relations[key].addMethod(update_arr[i]);
+                   
+                    //this[key].push(update_arr[i]);    
+                    
+
+                    console.log("we are done updating",this);
+                    
+                
+                
                 } else {
                     this[key][index].update(update_arr[i]);
                 }

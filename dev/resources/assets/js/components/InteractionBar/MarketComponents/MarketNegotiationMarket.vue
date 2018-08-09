@@ -86,6 +86,9 @@
                     && this.marketNegotiation.offer == markerQoute.offer
                     && this.marketNegotiation.offer_qty == markerQoute.offer_qty;
                 }
+                
+                console.log("markery negoti",this.marketNegotiation.offer,this.marketNegotiation.offer_qty);
+
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
             }
@@ -93,7 +96,7 @@
         methods: {
             'is_empty': function(value){
                 return value === undefined || value === null || value === '';
-            },
+            }
         },
         mounted() {
             console.log(this.marketNegotiation);

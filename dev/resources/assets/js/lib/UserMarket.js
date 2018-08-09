@@ -5,8 +5,14 @@ import UserMarketNegotiation from './UserMarketNegotiation';
 export default class UserMarket extends BaseModel {
 
     constructor(options) {
-        super({
-            _used_model_list: [UserMarketNegotiation]
+
+       super({
+            _used_model_list: [UserMarketNegotiation],
+            _relations:{
+               market_negotiations:{
+                    addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
+               } 
+            }
         });
 
         // default internal
@@ -127,7 +133,7 @@ export default class UserMarket extends BaseModel {
             });
         }
         return new Promise((resolve, reject) => {
-            return axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
+            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
             .then(response => {
                resolve(response);
             })

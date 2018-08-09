@@ -112,7 +112,10 @@
             'marketRequest.quotes': {
                 handler:function() {
                     this.setDefaultQuantities();
-                }
+                    this.updateUserMessages();
+                    this.setUpProposal();
+                },
+                deep: true
             }
         },
         computed: {
@@ -141,6 +144,14 @@
             validateProposal:function(check_invalid)
             {
                 this.check_invalid = check_invalid;
+            },
+            updateUserMessages:function()
+            {
+                //if the users market qoute is placed on hold notify the the current user if it is theres
+                if(this.marker_qoute && this.marker_qoute.is_on_hold)
+                {
+                    this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+                }
             },
             sendQuote() {
 
@@ -191,11 +202,12 @@
             },
             repeatQuote() {
                this.proposed_user_market.setMarketRequest(this.marketRequest);
-               this.proposed_user_market_negotiation.is_repeat = true;
-                this.server_loading = true;
+               //this.proposed_user_market_negotiation.is_repeat = true;
+              
+               this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.patch()
+                this.proposed_user_market_negotiation.repeat()
                 .then(response => {
                     this.server_loading = false;
                     this.history_message = response.message;
@@ -245,14 +257,34 @@
                     this[k] = defaults[k];
                 });
             },
+            setUpProposal(){
+
+                // set up the new UserMarket as quote to be sent
+                if(this.marker_qoute)//already have my qoute
+                {
+
+                    this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
+                    console.log("full maker quote",this.marker_qoute);
+
+                    //use the id from the usermarket, as they can only be one
+                    console.log(this.proposed_user_market,"this is the proposed user market");
+                    // this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
+                }
+                else
+                {
+                    this.proposed_user_market = new UserMarket();
+                }
+                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
+            },
             hideModal() {
                 this.$refs.pullModal.hide();
             },
             setDefaultQuantities() {
-                    console.log("default method hit");
-
-                if(this.last_qoute != null)
+                if(this.last_qoute != null && (this.last_qoute.offer_qty != null || this.last_qoute.bid_qty != null) )
                 {
+                    console.log("offer quote",this.last_qoute.offer_qty);
+
                     this.proposed_user_market_negotiation.offer_qty = this.last_qoute.offer_qty;
                     this.proposed_user_market_negotiation.bid_qty = this.last_qoute.bid_qty;  
 
@@ -264,36 +296,17 @@
 
             },
             init() {
-                console.log("the info method ran");
                 this.reset(); // clear current state
-                // set up ui data
+                
+                // set up up data
                 if(this.marketRequest) {
                     this.user_market = this.marketRequest.getChosenUserMarket();
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-
-                   this.proposed_user_market_negotiation = new UserMarketNegotiation();   
-
-                    // set up the new UserMarket as quote to be sent
-                    if(this.marker_qoute)//already have my qoute
-                    {
-                        this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
-                        //use the id from the usermarket
-                        this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
-                    }
-                    else
-                    {
-                        
-                        this.proposed_user_market = new UserMarket();
-
-                    }
-                    if(this.marker_qoute && this.marker_qoute.is_on_hold)
-                    {
-                        this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                    }
+                    this.setUpProposal();
 
                   //  this.setDefaultQuantities();
                     // relate
-                    this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+             
 
                     //set the quotes here if they already set
                 }

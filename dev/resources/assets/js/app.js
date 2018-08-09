@@ -25,6 +25,7 @@ window.Echo = new Echo({
 import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 
@@ -43,6 +44,8 @@ import { EventBus } from './lib/EventBus.js';
 
 // datepicker
 Vue.component('Datepicker', Datepicker);
+
+Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
 
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\TradeScreen\MarketRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
+use \Illuminate\Contracts\Validation\Validator;
 
 class UserMarketUpdateRequest extends FormRequest
 {
@@ -14,11 +15,12 @@ class UserMarketUpdateRequest extends FormRequest
     public function authorize()
     {   
         // TODO move $this->user_market->userMarketRequest->user->organisation_id to model method on userMarketRequest
-        if($this->has('is_on_hold') && $this->user_market->userMarketRequest->user->organisation_id == \Auth::user()->organisation_id) {
-            return true;
-        }
+        // if($this->has('is_on_hold') && $this->user_market->userMarketRequest->user->organisation_id == \Auth::user()->organisation_id) {
+        //     return true;
+        // }
+        //this code has been moved to a policy
         
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +31,34 @@ class UserMarketUpdateRequest extends FormRequest
     public function rules()
     {   //add rules for is_on_hold and correlating message
         return [
-            'is_on_hold' => 'required|boolean'
+            'is_on_hold' => 'sometimes|required|boolean'
         ];
+    }
+
+     /**
+    * 
+    *
+    * @param \Illuminate\Contracts\Validation\Validator $validator
+    * @return void
+    */
+    public function withValidator(Validator $validator)
+    {
+
+        $validator->sometimes(['bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
+            return !is_null($input->bid_qty);
+        }); 
+
+        $validator->sometimes(['offer'], 'required_with:offer_qty|required_without_all:is_repeat,bid|nullable|numeric', function ($input) {
+            return !is_null($input->offer_qty);
+        }); 
+
+        $validator->sometimes(['bid_qty'], 'required|numeric', function ($input) {
+            return !is_null($input->bid);
+        }); 
+
+        $validator->sometimes(['offer_qty'], 'required_with:offer|numeric', function ($input) {
+            return !is_null($input->offer);
+
+        }); 
     }
 }

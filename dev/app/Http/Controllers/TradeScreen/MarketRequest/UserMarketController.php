@@ -72,6 +72,8 @@ class UserMarketController extends Controller
             true
         );
         
+        $userMarketRequest->notifyRequested();
+
         return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
 
     }
@@ -111,22 +113,41 @@ class UserMarketController extends Controller
      */
     public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
-        $this->authorize('update',$userMarket);
-        // TODO add error handeling and error response
-        $success = $userMarket->update($request->only('is_on_hold'));
-        $userMarketRequest->notifyRequested();
 
-        if($request->input('is_on_hold'))
+
+        if($request->has('is_on_hold') && $request->input('is_on_hold'))
         {
+
+           $this->authorize('placeOnHold',$userMarket);
+            $success = $userMarket->placeOnHold();
             $message = 'You have placed a market on hold. Response sent to counterparty.';
-            
             // Set action that needs to be taken for the org being put on hold
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
         }else
         {
-            $message = 'user market updated';
+            $this->authorize('updateNegotiation',$userMarket);
+            //the market maker allowed responses
+            if($request->has('is_repeat') && $request->input('is_repeat'))
+            {
+                $success = $userMarket->repeatNegotiation($request->user());
+            }else
+            {
+                $success = $userMarket->updateNegotiation($request->user(),$request->all());
+            }
+
+            // Set action that needs to be taken for the org related to this userMarketRequest
+            $userMarket->userMarketRequest->setAction(
+                $userMarket->userMarketRequest->user->organisation->id,
+                $userMarket->userMarketRequest->id,
+                true
+            );
+
+            $message = 'Response sent to Interest.';
+
         }
 
+        // TODO add error handeling and error response
+        $userMarketRequest->notifyRequested();
 
         return response()->json(['data' => $success, 'message' => $message]);
     }
