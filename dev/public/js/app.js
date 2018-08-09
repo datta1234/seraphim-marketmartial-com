@@ -87006,6 +87006,15 @@ var app = new Vue({
                 }
             }
         },
+        loadNoCares: function loadNoCares() {
+            if (localStorage.getItem('no_cares_market_request')) {
+                try {
+                    this.no_cares = JSON.parse(localStorage.getItem('no_cares_market_request'));
+                } catch (e) {
+                    localStorage.removeItem('no_cares_market_request');
+                }
+            }
+        },
         loadMarketTypes: function loadMarketTypes() {
             var self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type').then(function (marketTypeResponse) {
@@ -87094,7 +87103,6 @@ var app = new Vue({
                     return market_request.id == UserMarketRequestData.id;
                 });
                 if (request_index !== -1) {
-                    console.log("HIT 1");
                     this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
                 } else {
                     this.display_markets[index].addMarketRequest(new __WEBPACK_IMPORTED_MODULE_6__lib_UserMarketRequest__["a" /* default */](UserMarketRequestData));
@@ -87134,7 +87142,9 @@ var app = new Vue({
                 });
                 return Promise.all(promises);
             }).then(function (all_market_requests) {
-                // nada
+
+                //load the no cares from storage
+                _this2.loadNoCares();
             });
         }).then(function () {
             // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
@@ -87143,8 +87153,6 @@ var app = new Vue({
         });
 
         if (Laravel.organisationUuid) {
-            console.log("the channel you will get stuff from", Laravel.organisationUuid);
-
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
@@ -96309,23 +96317,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'markets': {
             handler: function handler() {
                 console.log('change list');
-                this.reloadQuantities();
+                this.reloadNotifications();
             },
             deep: true
         },
         'no_cares': {
             handler: function handler() {
                 console.log('added no care', this.no_cares);
+                this.reloadNotifications();
             },
             deep: true
         }
     },
     data: function data() {
         return {
-            market_quantities: {
-                important: 1,
-                alert: 1,
-                confirm: 1
+            market_notifications: {
+                important: [],
+                alert: [],
+                confirm: []
             },
             modals: {
                 select_market: false
@@ -96336,44 +96345,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         /**
-         * Resets the quantities counters and updates each of the market_quantities
+         * Resets the quantities counters and updates each of the market_notifications
          *      counters according to the matching market requests
          */
-        reloadQuantities: function reloadQuantities() {
+        reloadNotifications: function reloadNotifications() {
             var _this = this;
 
-            this.market_quantities.important = 0;
-            this.market_quantities.alert = 0;
-            this.market_quantities.confirm = 0;
+            this.market_notifications.important = [];
+            this.market_notifications.alert = [];
+            this.market_notifications.confirm = [];
+
+            var important_states = ['REQUEST-SENT-VOL', 'REQUEST-VOL-HOLD', 'REQUEST', 'REQUEST-SENT', 'sent', 'REQUEST-VOL'];
+            var alert_states = ['alert'];
+            var confirm_states = ['confirm'];
+
             this.markets.forEach(function (market) {
+
                 market.market_requests.forEach(function (market_request) {
-                    switch (market_request.attributes.state) {
-                        case "REQUEST-SENT-VOL":
-                            if (market_request.attributes.action_needed) {
-                                _this.market_quantities.alert++;
-                            } else {
-                                _this.market_quantities.important++;
-                            }
-                            break;
-                        case "REQUEST-VOL-HOLD":
-                            if (market_request.attributes.action_needed) {
-                                _this.market_quantities.alert++;
-                            } else {
-                                _this.market_quantities.important++;
-                            }
-                            break;
-                        case "alert":
-                            _this.market_quantities.alert++;
-                            break;
-                        case "confirm":
-                            _this.market_quantities.confirm++;
-                            break;
-                        case "REQUEST":
-                        case "REQUEST-SENT":
-                        case "sent":
-                        case "REQUEST-VOL":
-                        default:
-                            _this.market_quantities.important++;
+
+                    if (market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
+                        {
+                            _this.market_notifications.alert.push(market_request);
+                        } else if (important_states.indexOf(market_request.attributes.state) > -1 && _this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
+                        {
+                            _this.market_notifications.important.push(market_request);
+                        }
+
+                    if (confirm_states.indexOf(market_request.attributes.state) > -1) {
+                        _this.market_notifications.confirm.push(market_request);
                     }
                 });
             });
@@ -96405,7 +96404,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.reloadQuantities();
+        this.reloadNotifications();
         this.chatBarListener();
     }
 });
@@ -96885,15 +96884,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ImportantMenu',
     props: {
-        'markets': {
+        'notifications': {
             type: Array
-        },
-        'count': {
-            type: Number
         },
         'no_cares': {
             type: Array
@@ -96906,45 +96908,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
-    computed: {
-        /**
-         * Compiles a notification list for Important market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "REQUEST-SENT-VOL":
-                            if (obj2.quotes.length > 0) {
-                                return acc2;
-                            } else {
-                                return acc2.concat(obj2);
-                            }
-                            break;
-                        case "REQUEST-VOL-HOLD":
-                            if (obj2.user_market) {
-                                return acc2;
-                            } else {
-                                return acc2.concat(obj2);
-                            }
-                            break;
-                        case "alert":
-                        case "confirm":
-                            return acc2;
-                            break;
-                        default:
-                            return acc2.concat(obj2);
-                    }
-                }, []);
-                return acc;
-            }, {});
-        }
-    },
     methods: {
         /**
          * Closes popover
@@ -96957,16 +96920,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         /**
          * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
          *
-         * @param {string} $market a string detailing the related Market.title
          * @param {string} $id a string id detailing the UserMarketRequests to be removed
          *
          * @todo Change $market to be the Market.id not Market.title
          */
-        addToNoCares: function addToNoCares(market, id) {
-            console.log("HIT HERE: ", id);
+        addToNoCares: function addToNoCares(key, id) {
+
             if (!this.no_cares.includes(id)) {
                 this.no_cares.push(id);
-                this.removeMarketRequest(market, id);
+                this.notifications.splice(key, 1);
+                this.saveNoCares();
             }
         },
 
@@ -96977,39 +96940,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * @todo Change market to be the Market.id not Market.title
          */
         applyBulkNoCares: function applyBulkNoCares() {
-            var _this = this;
-
             if (this.status) {
-                for (var market in this.notificationList) {
-                    if (this.notificationList[market].length > 0) {
-                        this.notificationList[market].forEach(function (market_request) {
-                            if (!_this.no_cares.includes(market_request.id)) {
-                                _this.no_cares.push(market_request.id);
-                                _this.removeMarketRequest(market, market_request.id);
-                            }
-                        });
-                    }
-                }
-            }
-            this.onDismiss();
-        },
 
-        /**
-         * Removes a single Important UserMarketRequest by id from the Markets array
-         *
-         * @param {string} $market a string detailing the related Market.title
-         * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
-         *
-         * @todo Change $market to be the Market.id not Market.title
-         */
-        removeMarketRequest: function removeMarketRequest(market, market_request_id) {
-            var market_index = this.markets.findIndex(function (element) {
-                return element.title == market;
-            });
-            var market_request_index = this.markets[market_index].market_requests.findIndex(function (element) {
-                return element.id == market_request_id;
-            });
-            this.markets[market_index].market_requests.splice(market_request_index, 1);
+                for (var i = 0; i < this.notifications.length; i++) {
+                    this.no_cares.push(this.notifications[i].id);
+                };
+                this.notifications.splice(0, this.notifications.length);
+                this.saveNoCares();
+            }
+            // this.onDismiss();
+        },
+        saveNoCares: function saveNoCares() {
+            var parsed = JSON.stringify(this.no_cares);
+            localStorage.setItem('no_cares_market_request', parsed);
         }
     },
     mounted: function mounted() {}
@@ -97036,7 +96979,10 @@ var render = function() {
           staticClass: "btn mm-important-button mr-2 p-1",
           attrs: { id: "action-important-button", type: "button" }
         },
-        [_vm._v("Important "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+        [
+          _vm._v("Important "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
       ),
       _vm._v(" "),
       _c("div", { attrs: { id: "important-popover" } }),
@@ -97047,7 +96993,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "important-popover",
-            triggers: "focus",
+            triggers: "click blur",
             placement: "bottom",
             target: "action-important-button"
           }
@@ -97056,126 +97002,116 @@ var render = function() {
           _c(
             "div",
             { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_requests) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-2" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(
-                                    market_requests.trade_items.default
-                                      ? market_requests.trade_items.default[
-                                          "Strike"
-                                        ]
-                                      : ""
-                                  ) +
-                                  " " +
-                                  _vm._s(
-                                    market_requests.trade_items.default
-                                      ? market_requests.trade_items.default[
-                                          "Expiration Date"
-                                        ]
-                                      : ""
-                                  )
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: {
-                                  id: "important-nocare-" + market_requests.id,
-                                  type: "button"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    _vm.addToNoCares(key, market_requests.id)
-                                  }
-                                }
-                              },
-                              [_vm._v("No Cares\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
-              }),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-12 mt-2" },
-                [
-                  _c(
-                    "b-form-group",
-                    [
-                      _c(
-                        "b-form-checkbox",
-                        {
-                          attrs: { id: "select-bulk-nocares", value: "true" },
-                          model: {
-                            value: _vm.status,
-                            callback: function($$v) {
-                              _vm.status = $$v
-                            },
-                            expression: "status"
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                        Select All\n                    "
+            _vm._l(_vm.notifications, function(market_request, key) {
+              return _c("div", { staticClass: "col-12" }, [
+                _c("div", { staticClass: "row mt-2" }, [
+                  _c("div", { staticClass: "col-6 text-center" }, [
+                    _c("h6", { staticClass: "w-100 m-0" }, [
+                      _vm._v(
+                        " " +
+                          _vm._s(market_request.getMarket().title) +
+                          " " +
+                          _vm._s(
+                            market_request.trade_items.default
+                              ? market_request.trade_items.default["Strike"]
+                              : ""
+                          ) +
+                          " " +
+                          _vm._s(
+                            market_request.trade_items.default
+                              ? market_request.trade_items.default[
+                                  "Expiration Date"
+                                ]
+                              : ""
                           )
-                        ]
                       )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { id: "apply-bulk-nocares-button", type: "button" },
-                    on: { click: _vm.applyBulkNoCares }
-                  },
-                  [_vm._v("OK")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { id: "dismiss-important-popover", type: "button" },
-                    on: {
-                      click: function($event) {
-                        _vm.onDismiss()
-                      }
-                    }
-                  },
-                  [_vm._v("Cancel")]
-                )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn mm-generic-trade-button w-100",
+                        attrs: {
+                          id: "important-nocare-" + market_request.id,
+                          type: "button"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.addToNoCares(key, market_request.id)
+                          }
+                        }
+                      },
+                      [_vm._v("No Cares\n                          ")]
+                    )
+                  ])
+                ])
               ])
-            ],
-            2
-          )
+            })
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "row text-center" }, [
+            _c(
+              "div",
+              { staticClass: "col-12 mt-2" },
+              [
+                _c(
+                  "b-form-group",
+                  [
+                    _c(
+                      "b-form-checkbox",
+                      {
+                        attrs: { id: "select-bulk-nocares", value: "true" },
+                        model: {
+                          value: _vm.status,
+                          callback: function($$v) {
+                            _vm.status = $$v
+                          },
+                          expression: "status"
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Select All\n                    "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { id: "apply-bulk-nocares-button", type: "button" },
+                  on: { click: _vm.applyBulkNoCares }
+                },
+                [_vm._v("OK")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { id: "dismiss-important-popover", type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.onDismiss()
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          ])
         ]
       )
     ],
@@ -97282,12 +97218,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'AlertsMenu',
     props: {
-        'markets': {
+        'notifications': {
             type: Array
-        },
-        // @todo: Could be moved to internal property and add a count to notification list
-        'count': {
-            type: Number
         }
     },
     data: function data() {
@@ -97296,46 +97228,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         };
     },
 
-    computed: {
-        /**
-         * Compiles a notification list for Alert market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            var result = this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "REQUEST-SENT-VOL":
-                            if (obj2.attributes.action_needed) {
-                                return acc2.concat(obj2);
-                            } else {
-                                return acc2;
-                            }
-                            break;
-                        case "REQUEST-VOL-HOLD":
-                            if (obj2.attributes.action_needed) {
-                                return acc2.concat(obj2);
-                            } else {
-                                return acc2;
-                            }
-                            break;
-                        case "alert":
-                            return acc2.concat(obj2);
-                            break;
-                        default:
-                            return acc2;
-                    }
-                }, []);
-                return acc;
-            }, {});
-            console.log("Compiled list of alerts: ", result);
-            return result;
-        }
-    },
     methods: {
         /**
          * Closes popover
@@ -97401,62 +97293,53 @@ var render = function() {
             "div",
             { staticClass: "row text-center" },
             [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_request) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-1" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(
-                                    market_request.trade_items.default
-                                      ? market_request.trade_items.default[
-                                          "Strike"
-                                        ]
-                                      : ""
-                                  ) +
-                                  " " +
-                                  _vm._s(
-                                    market_request.trade_items.default
-                                      ? market_request.trade_items.default[
-                                          "Expiration Date"
-                                        ]
-                                      : ""
-                                  ) +
-                                  "\n                      "
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: {
-                                  id: "alert-view-" + market_request.id,
-                                  type: "button"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    _vm.loadInteractionBar(market_request)
-                                  }
-                                }
-                              },
-                              [_vm._v("View\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
+              _vm._l(_vm.notifications, function(market_request, key) {
+                return _c("div", { staticClass: "col-12" }, [
+                  _c("div", { staticClass: "row mt-1" }, [
+                    _c("div", { staticClass: "col-6 text-center" }, [
+                      _c("h6", { staticClass: "w-100 m-0" }, [
+                        _vm._v(
+                          "  " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default["Strike"]
+                                : ""
+                            ) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default[
+                                    "Expiration Date"
+                                  ]
+                                : ""
+                            ) +
+                            "\n                      "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mm-generic-trade-button w-100",
+                          attrs: {
+                            id: "alert-view-" + market_request.id,
+                            type: "button"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.loadInteractionBar(market_request)
+                            }
+                          }
+                        },
+                        [_vm._v("View\n                        ")]
+                      )
+                    ])
+                  ])
+                ])
               }),
               _vm._v(" "),
               _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
@@ -97620,11 +97503,8 @@ var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ConfirmationsMenu',
     props: {
-        'markets': {
+        'notifications': {
             type: Array
-        },
-        'count': {
-            type: Number
         }
     },
     data: function data() {
@@ -97643,30 +97523,6 @@ var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot
         };
     },
 
-    computed: {
-        /**
-         * Compiles a notification list for Confirmation market reqeusts with Market as key
-         *      and a market requests array as value
-         *
-         * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-         */
-        notificationList: function notificationList() {
-            //Iterates through an array of Markets and compiles an object with Market.title as key
-            return this.markets.reduce(function (acc, obj) {
-                //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                acc[obj.title] = obj.market_requests.reduce(function (acc2, obj2) {
-                    switch (obj2.attributes.state) {
-                        case "confirm":
-                            return acc2.concat(obj2);
-                            break;
-                        default:
-                            return acc2;
-                    }
-                }, []);
-                return acc;
-            }, {});
-        }
-    },
     methods: {
         /**
          * Closes popover
@@ -97731,48 +97587,41 @@ var render = function() {
             "div",
             { staticClass: "row text-center" },
             [
-              _vm._l(_vm.notificationList, function(maket, key) {
-                return _c(
-                  "div",
-                  { staticClass: "col-12" },
-                  _vm._l(maket, function(market_request) {
-                    return maket.length > 0
-                      ? _c("div", { staticClass: "row mt-1" }, [
-                          _c("div", { staticClass: "col-6 text-center" }, [
-                            _c("h6", { staticClass: "w-100 m-0" }, [
-                              _vm._v(
-                                " " +
-                                  _vm._s(key) +
-                                  " " +
-                                  _vm._s(market_request.attributes.strike) +
-                                  " \n                        "
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col-6" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: {
-                                  id: "confirmations-view-" + market_request.id,
-                                  type: "button"
-                                },
-                                on: {
-                                  click: function($event) {
-                                    _vm.loadModal(market_request)
-                                  }
-                                }
-                              },
-                              [_vm._v("View\n                        ")]
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  })
-                )
+              _vm._l(_vm.notifications, function(market_request) {
+                return _c("div", { staticClass: "col-12" }, [
+                  _c("div", { staticClass: "row mt-1" }, [
+                    _c("div", { staticClass: "col-6 text-center" }, [
+                      _c("h6", { staticClass: "w-100 m-0" }, [
+                        _vm._v(
+                          " " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(market_request.attributes.strike) +
+                            " \n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mm-generic-trade-button w-100",
+                          attrs: {
+                            id: "confirmations-view-" + market_request.id,
+                            type: "button"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.loadModal(market_request)
+                            }
+                          }
+                        },
+                        [_vm._v("View\n                        ")]
+                      )
+                    ])
+                  ])
+                ])
               }),
               _vm._v(" "),
               _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
@@ -100262,25 +100111,25 @@ var render = function() {
             _vm._v(" "),
             _c("important-menu", {
               attrs: {
-                count: _vm.market_quantities.important,
+                notifications: _vm.market_notifications.important,
                 markets: _vm.markets,
                 no_cares: _vm.no_cares
               }
             }),
             _vm._v(" "),
-            _vm.market_quantities.alert > 0
+            _vm.market_notifications.alert.length > 0
               ? _c("alerts-menu", {
                   attrs: {
-                    count: _vm.market_quantities.alert,
+                    notifications: _vm.market_notifications.alert,
                     markets: _vm.markets
                   }
                 })
               : _vm._e(),
             _vm._v(" "),
-            _vm.market_quantities.confirm > 0
+            _vm.market_notifications.confirm.length > 0
               ? _c("confirmations-menu", {
                   attrs: {
-                    count: _vm.market_quantities.confirm,
+                    notifications: _vm.market_notifications.confirm,
                     markets: _vm.markets
                   }
                 })

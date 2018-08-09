@@ -160,6 +160,15 @@ const app = new Vue({
                 }
             }
         },
+        loadNoCares(){
+                 if (localStorage.getItem('no_cares_market_request')) {
+                  try {
+                    this.no_cares = JSON.parse(localStorage.getItem('no_cares_market_request'));
+                  } catch(e) {
+                    localStorage.removeItem('no_cares_market_request');
+                  }
+                }
+            },
         loadMarketTypes() {
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type')
@@ -245,7 +254,6 @@ const app = new Vue({
                 console.log("the market",new UserMarketRequest(UserMarketRequestData));*/
                 let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
                 if(request_index !== -1) {
-                    console.log("HIT 1");
                     this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
                 } else {
                     this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
@@ -293,7 +301,10 @@ const app = new Vue({
                 return Promise.all(promises);
             })
             .then(all_market_requests => {
-                // nada
+                
+                //load the no cares from storage
+                this.loadNoCares();
+
             });
         }).then( () => {
             // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
@@ -303,8 +314,6 @@ const app = new Vue({
         
         if(Laravel.organisationUuid)
         {
-            console.log("the channel you will get stuff from",Laravel.organisationUuid);
-
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {
                 //this should be the market thats created

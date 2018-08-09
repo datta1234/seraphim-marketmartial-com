@@ -3,9 +3,9 @@
         <div class="row mt-2 menu-actions">
             <div class="col-9">
                 <request-market-menu></request-market-menu>
-                <important-menu :count="market_quantities.important" :markets="markets" :no_cares="no_cares"></important-menu>
-                <alerts-menu :count="market_quantities.alert" :markets="markets" v-if="market_quantities.alert>0"></alerts-menu>
-                <confirmations-menu :count="market_quantities.confirm" :markets="markets" v-if="market_quantities.confirm>0"></confirmations-menu>
+                <important-menu :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
+                <alerts-menu :notifications="market_notifications.alert" :markets="markets" v-if="market_notifications.alert.length >0"></alerts-menu>
+                <confirmations-menu :notifications="market_notifications.confirm" :markets="markets" v-if="market_notifications.confirm.length >0"></confirmations-menu>
             </div>
             <div class="col-3">
                 <div class="float-right">
@@ -53,23 +53,25 @@
             'markets': {
                 handler: function(){
                     console.log('change list');
-                    this.reloadQuantities();
+                    this.reloadNotifications();
                 },
                 deep: true
             },
             'no_cares': {
                 handler: function(){
                     console.log('added no care', this.no_cares);
+                    this.reloadNotifications();
+
                 },
                 deep: true
             }
         },
         data() {
             return {
-                market_quantities: {
-                    important: 1,
-                    alert: 1,
-                    confirm: 1,
+                market_notifications: {
+                    important: [],
+                    alert: [],
+                    confirm: [],
                 },
                 modals: {
                     select_market: false
@@ -79,45 +81,42 @@
         },
         methods: {
             /**
-             * Resets the quantities counters and updates each of the market_quantities
+             * Resets the quantities counters and updates each of the market_notifications
              *      counters according to the matching market requests
              */
-            reloadQuantities() {
-                this.market_quantities.important = 0;
-                this.market_quantities.alert = 0;
-                this.market_quantities.confirm = 0;
+            reloadNotifications() {
+                this.market_notifications.important = [];
+                this.market_notifications.alert = [];
+                this.market_notifications.confirm = [];
+
+                let important_states = ['REQUEST-SENT-VOL','REQUEST-VOL-HOLD','REQUEST','REQUEST-SENT','sent','REQUEST-VOL'];
+                let alert_states = ['alert'];
+                let confirm_states = ['confirm'];
+
+
                 this.markets.forEach(market => {
+
                     market.market_requests.forEach(market_request => {
-                        switch(market_request.attributes.state) {    
-                            case "REQUEST-SENT-VOL":
-                                if(market_request.attributes.action_needed) {
-                                    this.market_quantities.alert++;
-                                } else {
-                                    this.market_quantities.important++;
-                                }
-                            break;
-                            case "REQUEST-VOL-HOLD":
-                                if(market_request.attributes.action_needed) {
-                                    this.market_quantities.alert++;
-                                } else {
-                                   this.market_quantities.important++; 
-                                }
-                            break;
-                            case "alert":
-                                this.market_quantities.alert++;
-                            break;
-                            case "confirm":
-                                this.market_quantities.confirm++;
-                            break;
-                            case "REQUEST":
-                            case "REQUEST-SENT":
-                            case "sent":
-                            case "REQUEST-VOL":
-                            default:
-                                this.market_quantities.important++;
+
+
+                        if(market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
+                        {
+                            this.market_notifications.alert.push(market_request);
+
+                        }else if(important_states.indexOf(market_request.attributes.state) > -1 && this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
+                        {
+                            this.market_notifications.important.push(market_request);
                         }
+
+                        if(confirm_states.indexOf(market_request.attributes.state) > -1)
+                        {
+                            this.market_notifications.confirm.push(market_request);
+                        }
+
+                  
                     });
                 });
+
             },
             toggleBar(set) {
                 if(typeof set != 'undefined') {
@@ -144,7 +143,7 @@
             },
         },
         mounted() {
-            this.reloadQuantities();
+            this.reloadNotifications();
             this.chatBarListener();
         }
     }
