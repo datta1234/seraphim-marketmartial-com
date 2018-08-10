@@ -7,9 +7,7 @@
                 </b-col>
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
-                <b-col cols="12">
-                    Select a Condition
-                </b-col>
+            
                 <b-col cols="12" v-for="condition in conditions">
                     <b-btn @click="applyCondition(condition)" 
                             v-b-toggle="'condition_'+condition.id" 
@@ -147,25 +145,39 @@
                 });
             },
             applyCondition(condition) {
+                console.log("got called");
+                let conExist = this.appliedConditions.indexOf(condition) != -1;
+
                 this.appliedConditions.splice(0, this.appliedConditions.length);
                 // add condition if not already exists
-                if(this.appliedConditions.indexOf(condition) == -1) {
+                
+                if(!conExist) {
                     this.appliedConditions.push(condition);
+                    
+                    let removable = {
+                        title: condition.title
+                    };
+
+                    removable.callback = () => {
+                        this.appliedConditions.splice(0, this.appliedConditions.length);
+                        this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
+                        this.show_options = false;
+
+                        Vue.nextTick(() => {
+                            this.show_options = true;
+                        });
+                    };
+
+
+                    this.removableConditions.splice(0, this.removableConditions.length);
+                    this.removableConditions.push(removable); 
+                }else
+                {
+                    this.removableConditions.splice(0, this.removableConditions.length);
                 }
 
-                let removable = {
-                    title: condition.title
-                };
-                removable.callback = () => {
-                    this.appliedConditions.splice(0, this.appliedConditions.length);
-                    this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
-                    this.show_options = false;
-                    Vue.nextTick(() => {
-                        this.show_options = true;
-                    });
-                };
-                this.removableConditions.splice(0, this.removableConditions.length);
-                this.removableConditions.push(removable);
+                  
+                
             },
             applyCategory(category) {
                 this.chosen_top_level_category = category;
@@ -200,6 +212,7 @@
             },
             updateCategoryConditions(changed) {
                 Vue.nextTick(() => {
+                    console.log("the update got called");
                     this.appliedConditions.splice(0, this.appliedConditions.length);
                     if(this.chosen_top_level_category) {
                         this.recurseSelected(this.chosen_top_level_category);

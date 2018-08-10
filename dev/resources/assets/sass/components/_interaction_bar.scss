@@ -1,7 +1,7 @@
 .interaction-bar-wrapper {
     font-family: $mm-font-int-bar;
     height:100%;
-    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-bar-toggle {
+    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-content > .interaction-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
@@ -9,8 +9,8 @@
     .interaction-bar {
         @extend .col-auto;
         padding:0px;
-        width: auto;
         position:relative;
+        width: 0px;
 
         .interaction-content {
             width:0px;
@@ -22,16 +22,26 @@
             float:left;
             color:#fff;
 
-            overflow: hidden;
+            // overflow-y: auto;
+            position: relative;
         }
         &.active {
-            .interaction-bar-toggle {
-                width: $interaction-toggle-width;
-                opacity: 1;
-            }
+            width: $interaction-bar-width + $interaction-toggle-width;
+
             .interaction-content {
-                width: $interaction-bar-width;
                 opacity: 1;
+                position: fixed;
+                z-index: 9999; //also houses a modal and its hidden if the position is fixed
+                width: $interaction-bar-width + $interaction-toggle-width;
+
+                .interaction-bar-toggle {
+                    width: $interaction-toggle-width;
+                    opacity: 1;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+
             }
         }
         input[type="number"],input[type="text"] {

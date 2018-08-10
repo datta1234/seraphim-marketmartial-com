@@ -99,7 +99,33 @@ export default class UserMarketNegotiation extends BaseModel {
     */
     patch() {
 
-        console.log("here it goes off",this._user_market.id)
+        // catch not assigned to a market request yet!
+        if(this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+
+        return new Promise((resolve, reject) => {
+            let user_market_request_id = this.getUserMarket().getMarketRequest().id;
+
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/" + user_market_request_id+"/user-market/"+this._user_market.id, this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+
+    /**
+    *  store
+    */
+    repeat() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -108,8 +134,11 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
 
+
         return new Promise((resolve, reject) => {
-             axios.patch(axios.defaults.baseUrl + "/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
+            let user_market_request_id = this.getUserMarket().getMarketRequest().id;
+
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/" + user_market_request_id+"/user-market/"+this._user_market.id,{'is_repeat':true})
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);

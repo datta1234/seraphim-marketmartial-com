@@ -11878,15 +11878,15 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .interaction-bar,
 .interaction-bar-wrapper .interaction-bar-content-pane,
 .interaction-bar-wrapper .interaction-bar > .interaction-content,
-.interaction-bar-wrapper .interaction-bar > .interaction-bar-toggle {
+.interaction-bar-wrapper .interaction-bar > .interaction-content > .interaction-bar-toggle {
   -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
   transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
 }
 
 .interaction-bar-wrapper .interaction-bar {
   padding: 0px;
-  width: auto;
   position: relative;
+  width: 0px;
 }
 
 .interaction-bar-wrapper .interaction-bar .interaction-content {
@@ -11898,17 +11898,26 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   color: #fff;
-  overflow: hidden;
+  position: relative;
 }
 
-.interaction-bar-wrapper .interaction-bar.active .interaction-bar-toggle {
-  width: 25px;
-  opacity: 1;
+.interaction-bar-wrapper .interaction-bar.active {
+  width: 375px;
 }
 
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
-  width: 350px;
   opacity: 1;
+  position: fixed;
+  z-index: 9999;
+  width: 375px;
+}
+
+.interaction-bar-wrapper .interaction-bar.active .interaction-content .interaction-bar-toggle {
+  width: 25px;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .interaction-bar-wrapper .interaction-bar input[type="number"],

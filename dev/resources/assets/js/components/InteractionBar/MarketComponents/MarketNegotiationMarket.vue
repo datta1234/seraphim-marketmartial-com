@@ -27,16 +27,76 @@
 
 <script>
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+    import UserMarketQuote from '../../../lib/UserMarketQuote';
 
+    
     export default {
         props: {
             marketNegotiation: {
                 type: UserMarketNegotiation
+            },
+            markerQoute: {
+                type: UserMarketQuote
+            }
+        },
+        watch: {
+            marketNegotiation: {
+                handler:function() {
+                    this.$emit('validate-proposal', this.check_invalid);
+                },
+                deep: true
             }
         },
         data() {
             return {
             };
+        },
+        computed: {
+            'check_invalid':function(){
+                let invalid_states = {
+                    all_empty: false,
+                    bid_pair: false,
+                    offer_pair: false,
+                    previous: false
+                };
+
+                //new
+                invalid_states.all_empty = this.is_empty(this.marketNegotiation.bid)
+                    && this.is_empty(this.marketNegotiation.bid_qty)
+                    && this.is_empty(this.marketNegotiation.offer)
+                    && this.is_empty(this.marketNegotiation.offer_qty);
+
+                // Check that bid and bid_qty are present together
+                invalid_states.bid_pair = (!this.is_empty(this.marketNegotiation.bid)  
+                    && this.is_empty(this.marketNegotiation.bid_qty)) 
+                    || (this.is_empty(this.marketNegotiation.bid)  
+                    && !this.is_empty(this.marketNegotiation.bid_qty));
+             
+             
+                // Check bid offer and offer_qty are present together
+                 invalid_states.offer_pair = ( !this.is_empty(this.marketNegotiation.offer)  
+                    && this.is_empty(this.marketNegotiation.offer_qty)) 
+                    || (this.is_empty(this.marketNegotiation.offer)  
+                    && !this.is_empty(this.marketNegotiation.offer_qty));
+                // Check for previous quote
+                if(typeof markerQoute != 'undefined') {
+                    // Check new markerQoute is equal to old markerQoute
+                    invalid_states.previous = this.marketNegotiation.bid == markerQoute.bid
+                    && this.marketNegotiation.bid_qty == markerQoute.bid_qty
+                    && this.marketNegotiation.offer == markerQoute.offer
+                    && this.marketNegotiation.offer_qty == markerQoute.offer_qty;
+                }
+                
+                console.log("markery negoti",this.marketNegotiation.offer,this.marketNegotiation.offer_qty);
+
+                return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
+            
+            }
+        },
+        methods: {
+            'is_empty': function(value){
+                return value === undefined || value === null || value === '';
+            }
         },
         mounted() {
             console.log(this.marketNegotiation);

@@ -5,10 +5,10 @@
         <!-- Confirmations market popover -->
         <b-popover container="confirmations-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-confirmations-button">
             <div class="row text-center">
-                <div v-for="(maket,key) in notificationList" class="col-12">
-                    <div v-if="maket.length > 0" v-for="market_request in maket" class="row mt-1">
+                <div v-for="market_request in notifications" class="col-12">
+                    <div class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_request.attributes.strike }} 
+                            <h6 class="w-100 m-0"> {{ market_request.getMarket().title }} {{ market_request.attributes.strike }} 
                             <!-- @TODO Change this to include expiration -->
                             <!-- {{ market_request.attributes.expiration_date.format("MMM DD") }} -->
                         </h6>
@@ -79,12 +79,9 @@
     export default {
         name: 'ConfirmationsMenu',
         props:{
-            'markets': {
+            'notifications': {
                 type: Array
-            },
-            'count': {
-                type: Number
-            },
+            }
         },
         data() {
             return {
@@ -100,30 +97,6 @@
                 },
                 popover_ref: 'confirmation-market-ref', 
             };
-        },
-        computed: {
-            /**
-             * Compiles a notification list for Confirmation market reqeusts with Market as key
-             *      and a market requests array as value
-             *
-             * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-             */
-            notificationList: function() {
-                //Iterates through an array of Markets and compiles an object with Market.title as key
-                return this.markets.reduce( function(acc, obj) {
-                    //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                    acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
-                        switch(obj2.attributes.state) {    
-                            case "confirm":
-                                return acc2.concat(obj2);
-                            break;
-                            default:
-                                return acc2;
-                        }
-                    }, []);
-                    return acc;
-                }, {});
-            },
         },
         methods: {
             /**

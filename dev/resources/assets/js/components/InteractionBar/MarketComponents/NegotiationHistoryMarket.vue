@@ -2,19 +2,18 @@
     <b-row dusk="ibar-negotiation-history-market">
         <b-col>
             <b-row v-for="item in history">            
-                <b-col cols="10">
+                <b-col cols="10" >
                     <b-row no-gutters v-if="item.is_interest">
                         <b-col cols="6" class="text-center">
                             {{ getState(item) }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <b-btn v-bind:class="{'active': item.is_on_hold}" 
-                                size="sm" 
-                                class="w-100" 
+                            <button v-bind:class="{'btn-primary': item.is_on_hold,'btn-secondary': !item.is_on_hold}" 
+                                class="w-100 btn btn-sm" 
                                 @click="putQuoteOnHold(item)"
-                                variant="secondary">
+                                >
                                     HOLD
-                            </b-btn>
+                            </button>
                         </b-col>
                         <b-col cols="3" class="text-center">
                             <b-btn size="sm" class="w-100" variant="primary">ACCEPT</b-btn>

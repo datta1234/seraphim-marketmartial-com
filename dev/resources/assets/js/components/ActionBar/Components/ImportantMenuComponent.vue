@@ -1,24 +1,29 @@
 <template>
     <div dusk="important-markets-menu" class="important-markets-menu">
-        <button id="action-important-button" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ count }}</strong></button>
+        <button id="action-important-button" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ notifications.length }}</strong></button>
         <div id="important-popover"></div>
         <!-- Important market popover -->
-        <b-popover container="important-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-important-button">
+        <b-popover container="important-popover" triggers="click blur" placement="bottom" :ref="popover_ref" target="action-important-button">
             <div class="row text-center">
-                <div v-for="(maket,key) in notificationList" class="col-12">
-                    <div v-if="maket.length > 0" v-for="market_requests in maket" class="row mt-2">
-                        <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ key }} {{ market_requests.trade_items.default ? market_requests.trade_items.default["Strike"] : '' }} {{ market_requests.trade_items.default ? market_requests.trade_items.default["Expiration Date"] : '' }}</h6>
-                        </div>
-                        <div class="col-6">
-                            <button
-                                :id="'important-nocare-' + market_requests.id"
-                                type="button" class="btn mm-generic-trade-button w-100"
-                                @click="addToNoCares(key, market_requests.id)">No Cares
-                            </button>
+                <div v-for="(market_request,key) in notifications" class="col-12">
+                        <div class="row mt-2">
+                          
+                          <div class="col-6 text-center">
+                              <h6 class="w-100 m-0"> {{ market_request.getMarket().title }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}</h6>
+                          </div>
+                          <div class="col-6">
+                              <button
+                                  :id="'important-nocare-' + market_request.id"
+                                  type="button" class="btn mm-generic-trade-button w-100"
+                                  @click="addToNoCares(key,market_request.id)">No Cares
+                              </button>
+                          </div>
+                 
                         </div>
                     </div>
                 </div>
+                <div class="row text-center">
+
                 <div class="col-12 mt-2">
                     <b-form-group>
                         <b-form-checkbox 
@@ -29,14 +34,15 @@
                         </b-form-checkbox>
                     </b-form-group>
                 </div>
-                
-                <div class="col-6 mt-1">
-                    <button id="apply-bulk-nocares-button" type="button" class="btn mm-generic-trade-button w-100" @click="applyBulkNoCares">OK</button>
+                     <div class="col-6 mt-1">
+                      <button id="apply-bulk-nocares-button" type="button" class="btn mm-generic-trade-button w-100" @click="applyBulkNoCares">OK</button>
+                  </div>
+                  <div class="col-6 mt-1">
+                      <button id="dismiss-important-popover" type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss()">Cancel</button>
+                  </div>
                 </div>
-                <div class="col-6 mt-1">
-                    <button id="dismiss-important-popover" type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss()">Cancel</button>
-                </div>
-            </div>
+               
+
         </b-popover>
         <!-- END Important market popover -->
     </div>
@@ -46,11 +52,8 @@
     export default {
       name: 'ImportantMenu',
     	props:{
-          'markets': {
+          'notifications': {
             type: Array
-          },
-          'count': {
-            type: Number
           },
           'no_cares': {
             type: Array
@@ -61,45 +64,6 @@
                 status: false,
                 popover_ref: 'important-market-ref',
             };
-        },
-        computed: {
-            /**
-             * Compiles a notification list for Important market reqeusts with Market as key
-             *      and a market requests array as value
-             *
-             * @return {Object} in format {/lib/Market.title: /lib/UserMarketRequest [] }
-             */
-            notificationList: function() {
-                //Iterates through an array of Markets and compiles an object with Market.title as key
-                return this.markets.reduce( function(acc, obj) {
-                    //Iterates through an array of UserMarketRequests and compiles a new array of Important UserMarketRequests 
-                    acc[obj.title] = obj.market_requests.reduce( function(acc2, obj2) {
-                        switch(obj2.attributes.state) {    
-                            case "REQUEST-SENT-VOL":
-                                if(obj2.quotes.length > 0) {
-                                    return acc2;
-                                } else {
-                                    return acc2.concat(obj2);
-                                }  
-                            break;
-                            case "REQUEST-VOL-HOLD":
-                                if(obj2.user_market) {
-                                    return acc2;
-                                } else {
-                                    return acc2.concat(obj2);
-                                }
-                            break;
-                            case "alert":
-                            case "confirm":
-                                return acc2;
-                            break;
-                            default:
-                                return acc2.concat(obj2);
-                        }
-                    }, []);
-                    return acc;
-                }, {});
-            },
         },
         methods: {
             /**
@@ -112,16 +76,16 @@
             /**
              * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
              *
-             * @param {string} $market a string detailing the related Market.title
              * @param {string} $id a string id detailing the UserMarketRequests to be removed
              *
              * @todo Change $market to be the Market.id not Market.title
              */
-            addToNoCares(market, id) {
-                console.log("HIT HERE: ", id)
+            addToNoCares(key,id) {
+
                 if(!this.no_cares.includes(id)) {
                     this.no_cares.push(id);
-                    this.removeMarketRequest(market, id);
+                    this.notifications.splice(key,1);
+                    this.saveNoCares();
                 }
             },
             /**
@@ -132,39 +96,23 @@
              */
             applyBulkNoCares() {
                 if(this.status) {
-                    for (var market in this.notificationList) {
-                        if(this.notificationList[market].length > 0) {
-                            this.notificationList[market].forEach( (market_request) => {
-                                if(!this.no_cares.includes(market_request.id)) {
-                                    this.no_cares.push(market_request.id);
-                                    this.removeMarketRequest(market, market_request.id);
-                                }
-                            });
-                        }
-                    }
+
+                  for (let i=0 ; i < this.notifications.length; i++) {
+                    this.no_cares.push(this.notifications[i].id);
+                  };
+                  this.notifications.splice(0,this.notifications.length);
+                  this.saveNoCares();
+
                 }
-                this.onDismiss();
+                // this.onDismiss();
             },
-            /**
-             * Removes a single Important UserMarketRequest by id from the Markets array
-             *
-             * @param {string} $market a string detailing the related Market.title
-             * @param {string} $market_request_id a string id detailing the UserMarketRequests to be removed
-             *
-             * @todo Change $market to be the Market.id not Market.title
-             */
-            removeMarketRequest(market, market_request_id) {
-                let market_index = this.markets.findIndex( (element) => {
-                    return element.title == market;
-                });
-                let market_request_index = this.markets[market_index].market_requests.findIndex( (element) => {
-                    return element.id == market_request_id;
-                });
-                this.markets[market_index].market_requests.splice(market_request_index, 1);
-            },
+            saveNoCares(){
+                const parsed = JSON.stringify(this.no_cares);
+                localStorage.setItem('no_cares_market_request', parsed);
+            }
+            
         },
         mounted() {
-
         }
     }
 </script>

@@ -9,7 +9,7 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :history="marketRequest.chosen_user_market.negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-        <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-5" @validate-proposal="validateProposal" :check-invalid="check_invalid" :marker-qoute="marker_qoute" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
         
         <b-row class="mb-5">
             <b-col cols="10">
@@ -101,12 +101,20 @@
                 removable_conditions: [],
 
                 server_loading: false,
+                check_invalid: false,
                 errors: [],
             };
         },
         watch: {
             'marketRequest': function() {
                 this.init();
+            },
+            'marketRequest.quotes': {
+                handler:function() {
+                    this.updateUserMessages();
+                  //  this.setUpProposal();
+                },
+                deep: true
             }
         },
         computed: {
@@ -114,46 +122,12 @@
 
                 return this.marketRequest.quotes.find(quote => quote.is_maker);
             },
+            'last_qoute': function (){
+                return this.marketRequest.quotes.length == 0 ? null : this.marketRequest.quotes[this.marketRequest.quotes.length - 1];
+            },
             'is_on_hold': function(){   
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
 
-            },
-            'check_invalid':function(){
-                let quote = this.marketRequest.quotes.find(quote => quote.is_maker);
-                let invalid_states = {
-                    all_empty: false,
-                    bid_pair: false,
-                    offer_pair: false,
-                    previous: false
-                };
-
-                // Check for all empty
-                invalid_states.all_empty = this.proposed_user_market_negotiation.bid ==''
-                    && this.proposed_user_market_negotiation.bid_qty ==''
-                    && this.proposed_user_market_negotiation.offer ==''
-                    && this.proposed_user_market_negotiation.offer_qty =='';
-                // Check that bid and bid_qty are present together
-                invalid_states.bid_pair = (this.proposed_user_market_negotiation.bid !=''  
-                    && this.proposed_user_market_negotiation.bid_qty =='') 
-                    || (this.proposed_user_market_negotiation.bid ==''  
-                    && this.proposed_user_market_negotiation.bid_qty !='');
-             
-                // Check bid offer and offer_qty are present together
-                 invalid_states.offer_pair = (this.proposed_user_market_negotiation.offer !=''  
-                    && this.proposed_user_market_negotiation.offer_qty =='') 
-                    || (this.proposed_user_market_negotiation.offer ==''  
-                    && this.proposed_user_market_negotiation.offer_qty !='');
-                // Check for previous quote
-                if(typeof quote != 'undefined') {
-                    // Check new quote is equal to old quote
-                    invalid_states.previous = this.proposed_user_market_negotiation.bid ==quote.bid
-                    && this.proposed_user_market_negotiation.bid_qty ==quote.bid_qty
-                    && this.proposed_user_market_negotiation.offer ==quote.offer
-                    && this.proposed_user_market_negotiation.offer_qty ==quote.offer_qty;
-                }
-
-                return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
-            
             },
             'market_title': function() {
                 console.log(this.marketRequest, this.marketRequest.getMarket());
@@ -166,6 +140,18 @@
             }
         },
         methods: {
+            validateProposal:function(check_invalid)
+            {
+                this.check_invalid = check_invalid;
+            },
+            updateUserMessages:function()
+            {
+                //if the users market qoute is placed on hold notify the the current user if it is theres
+                if(this.marker_qoute && this.marker_qoute.is_on_hold)
+                {
+                    this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+                }
+            },
             sendQuote() {
 
                 // link now that we are saving
@@ -178,12 +164,15 @@
 
                     this.history_message = response.data.message;
                     this.server_loading = false;
-                    //EventBus.$emit('interactionToggle', false);
+                    this.errors = [];
+
                 })
                 .catch(err => {
                     this.server_loading = false;
 
-                    this.errors = err.errors;
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
+
                 });
             },
             amendQoute() {
@@ -194,13 +183,8 @@
                 // save
                 this.proposed_user_market_negotiation.patch()
                 .then(response => {
-                    this.server_loading = false;
-                    this.history_message = response.message;
-                    this.proposed_user_market_negotiation = response.data.data;
-                    
+                    this.server_loading = false;                    
                     this.history_message = response.data.message;
-                    this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-                    //EventBus.$emit('interactionToggle', false);
                     this.errors = [];
 
                 })
@@ -213,11 +197,12 @@
             },
             repeatQuote() {
                this.proposed_user_market.setMarketRequest(this.marketRequest);
-               this.proposed_user_market_negotiation.is_repeat = true;
-                this.server_loading = true;
+               //this.proposed_user_market_negotiation.is_repeat = true;
+              
+               this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.patch()
+                this.proposed_user_market_negotiation.repeat()
                 .then(response => {
                     this.server_loading = false;
                     this.history_message = response.message;
@@ -259,51 +244,72 @@
                     user_market: null,
                     market_history: [],
 
-                    removable_conditions: [],
+                    proposed_user_market: new UserMarket(),
+                    proposed_user_market_negotiation: new UserMarketNegotiation(),
+
+                    default_user_market_negotiation:new UserMarketNegotiation(),
                     history_message: null,
+
+                    removable_conditions: [],
+
+                    server_loading: false,
+                    check_invalid: false,
                     errors: [],
-                };
+                    };
                 Object.keys(defaults).forEach(k => {
                     this[k] = defaults[k];
                 });
+
+                console.log("the reset method git called");
+            },
+            setUpProposal(){
+
+                // set up the new UserMarket as quote to be sent
+                if(this.marker_qoute)//already have my qoute
+                {
+                    this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
+                }
+                else
+                {
+                    this.proposed_user_market = new UserMarket();
+                }
+                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
             },
             hideModal() {
                 this.$refs.pullModal.hide();
             },
+            setDefaultQuantities() {
+
+                console.log("this is the maker qoute",this.marker_qoute);
+
+                if(this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null) )
+                {
+                    console.log("offer quote",this.marker_qoute.offer_qty);
+
+                    this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
+                    this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;  
+
+                }else
+                {                    
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+                }
+
+            },
             init() {
                 this.reset(); // clear current state
-                // set up ui data
+                
+                // set up up data
                 if(this.marketRequest) {
                     this.user_market = this.marketRequest.getChosenUserMarket();
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                    this.setUpProposal();
+                    this.setDefaultQuantities();
+                    this.updateUserMessages();
 
-                   this.proposed_user_market_negotiation = new UserMarketNegotiation();   
-
-                    // set up the new UserMarket as quote to be sent
-                    if(this.marker_qoute)//already have my qoute
-                    {
-                        this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
-                        //use the id from the usermarket
-                        this.proposed_user_market_negotiation.id = this.marker_qoute.getMarketRequest().getUserMarket().getCurrentNegotiation().id;
-                    }
-                    else
-                    {
-                        this.proposed_user_market = new UserMarket();
-                    }
-                    if(this.marker_qoute && this.marker_qoute.is_on_hold)
-                    {
-                        this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                    }
-
-                    
-
-
-                    console.log("marker quote =>",this.marker_qoute);
-                   
-
-                    
                     // relate
-                    this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+             
 
                     //set the quotes here if they already set
                 }

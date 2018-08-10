@@ -132,6 +132,23 @@ class UserMarket extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    public function placeOnHold()
+    {
+        return $this->update(['is_on_hold'=>true]);
+    }
+
+    public function repeatNegotiation($user)
+    {
+      $marketNegotiation =  $this->marketNegotiations()->where('user_id',$user->id)->first(); 
+      return  $marketNegotiation->update(['is_repeat'=>true]);    
+    }
+
+    public function updateNegotiation($user,$data)
+    {
+      $marketNegotiation =  $this->marketNegotiations()->where('user_id',$user->id)->first(); 
+      return  $marketNegotiation->update($data);
+    }
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
