@@ -6314,8 +6314,6 @@ module.exports = g;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BaseModel__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Errors__);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6495,33 +6493,6 @@ var UserMarketNegotiation = function (_BaseModel) {
                     reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
                 });
             });
-        }
-
-        /**
-        *   update - updates this User Market Quote
-        *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
-        */
-
-    }, {
-        key: 'update',
-        value: function update(user_market_quote) {
-            var _this5 = this;
-
-            if (user_market_quote !== null) {
-                Object.entries(user_market_quote).forEach(function (_ref) {
-                    var _ref2 = _slicedToArray(_ref, 2),
-                        key = _ref2[0],
-                        value = _ref2[1];
-
-                    if (value !== null) {
-                        if (key == "_user_market") {
-                            _this5.setUserMarket(value);
-                        } else {
-                            _this5[key] = value;
-                        }
-                    }
-                });
-            }
         }
     }]);
 
@@ -86348,8 +86319,6 @@ exports.push([module.i, ".fade-enter-active, .fade-leave-active {\n    transitio
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BaseModel__ = __webpack_require__(42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors__ = __webpack_require__(82);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Errors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Errors__);
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -86442,33 +86411,6 @@ var UserMarketQuote = function (_BaseModel) {
                     reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
                 });
             });
-        }
-
-        /**
-        *   update - updates this User Market Quote
-        *   @param {UserMarketQuote} user_market_quote - UserMarketQuote object
-        */
-
-    }, {
-        key: 'update',
-        value: function update(user_market_quote) {
-            var _this3 = this;
-
-            if (user_market_quote !== null) {
-                Object.entries(user_market_quote).forEach(function (_ref) {
-                    var _ref2 = _slicedToArray(_ref, 2),
-                        key = _ref2[0],
-                        value = _ref2[1];
-
-                    if (value !== null) {
-                        if (key == "_user_market_request") {
-                            _this3.setMarketRequest(value);
-                        } else {
-                            _this3[key] = value;
-                        }
-                    }
-                });
-            }
         }
     }]);
 
@@ -90226,27 +90168,23 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(
-                  _vm.splitValHelper(
-                    _vm.marketRequest.trade_items.default[
-                      this.$root.config("trade_structure.outright.strike")
-                    ],
-                    " ",
-                    3
-                  )
-                ) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(
+                _vm.splitValHelper(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.outright.strike")
+                  ],
+                  " ",
+                  3
+                )
+              ) +
+              "  \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c(
