@@ -8,7 +8,7 @@
                 <div v-for="market_request in notifications" class="col-12">
                     <div class="row mt-1">
                         <div class="col-6 text-center">
-                            <h6 class="w-100 m-0"> {{ market_request.getMarket().title }} {{ market_request.attributes.strike }} 
+                            <h6 class="w-100 m-0 popover-over-text"> {{ market_request.getMarket().title }} {{ market_request.attributes.strike }} 
                             <!-- @TODO Change this to include expiration -->
                             <!-- {{ market_request.attributes.expiration_date.format("MMM DD") }} -->
                         </h6>

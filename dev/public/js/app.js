@@ -96625,7 +96625,7 @@ var render = function() {
               _vm._l(_vm.availableSelectedMarketTypes, function(obj, key) {
                 return _c("div", { staticClass: "row mt-1" }, [
                   _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
-                    _c("h5", { staticClass: "w-100 m-0" }, [
+                    _c("h5", { staticClass: "w-100 m-0 popover-over-text" }, [
                       _vm._v(_vm._s(key))
                     ])
                   ]),
@@ -96820,6 +96820,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ImportantMenu',
@@ -96923,7 +96924,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "important-popover",
-            triggers: "click blur",
+            triggers: "click",
             placement: "bottom",
             target: "action-important-button"
           }
@@ -96935,8 +96936,8 @@ var render = function() {
             _vm._l(_vm.notifications, function(market_request, key) {
               return _c("div", { staticClass: "col-12" }, [
                 _c("div", { staticClass: "row mt-2" }, [
-                  _c("div", { staticClass: "col-6 text-center" }, [
-                    _c("h6", { staticClass: "w-100 m-0" }, [
+                  _c("div", { staticClass: "col-6 text-center  pt-2 pb-2" }, [
+                    _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
                       _vm._v(
                         " " +
                           _vm._s(market_request.getMarket().title) +
@@ -96963,6 +96964,7 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn mm-generic-trade-button w-100",
+                        class: { selected: _vm.status },
                         attrs: {
                           id: "important-nocare-" + market_request.id,
                           type: "button"
@@ -96988,6 +96990,7 @@ var render = function() {
               [
                 _c(
                   "b-form-group",
+                  { staticClass: "bulk-no-cares" },
                   [
                     _c(
                       "b-form-checkbox",
@@ -97003,7 +97006,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Select All\n                    "
+                          "\n                        Apply No Care to All\n                    "
                         )
                       ]
                     )

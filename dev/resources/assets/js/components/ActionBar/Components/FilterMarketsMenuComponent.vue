@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
-                            <h5 class="w-100 m-0">{{ key }}</h5>
+                            <h5 class="w-100 m-0 popover-over-text">{{ key }}</h5>
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 

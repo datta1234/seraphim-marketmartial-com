@@ -12098,7 +12098,18 @@ input:checked + .slider:before {
 
 .popover .popover-body {
   background-color: #FFFFFF;
-  color: #1D3641;
+}
+
+.popover .popover-body .popover-over-text {
+  color: #1D3641 !important;
+}
+
+.popover .popover-body button.selected {
+  background-color: #0d191e;
+}
+
+.popover .popover-body .bulk-no-cares label {
+  padding-top: 3px;
 }
 
 .popover .arrow {
