@@ -9809,7 +9809,6 @@ function copyProps(props) {
 
             // run tests
             // TODO: add logic for if current user then "SENT"
-            console.log("===========================HIT===========================", this.marketRequest);
             switch (this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
                     if (this.marketRequest.user_market) {
@@ -92283,6 +92282,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.history_message = response.data.message;
                 _this.server_loading = false;
                 _this.errors = [];
+                _this.setUpProposal();
             }).catch(function (err) {
                 _this.server_loading = false;
 
