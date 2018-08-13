@@ -1,6 +1,6 @@
 <template>
     <div dusk="confirmations-markets-menu" class="confirmations-markets-menu">
-        <button id="action-confirmations-button" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ count }}</strong></button>
+        <button id="action-confirmations-button" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ notifications.length }}</strong></button>
         <div id="confirmations-popover"></div>
         <!-- Confirmations market popover -->
         <b-popover container="confirmations-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-confirmations-button">

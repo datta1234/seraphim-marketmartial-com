@@ -96947,7 +96947,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "important-popover",
-            triggers: "click blur",
+            triggers: "click",
             placement: "bottom",
             target: "action-important-button"
           }
@@ -96958,7 +96958,7 @@ var render = function() {
             { staticClass: "row text-center" },
             _vm._l(_vm.notifications, function(market_request, key) {
               return _c("div", { staticClass: "col-12" }, [
-                _c("div", { staticClass: "row mt-2" }, [
+                _c("div", { staticClass: "row mt-1" }, [
                   _c("div", { staticClass: "col-6 text-center  pt-2 pb-2" }, [
                     _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
                       _vm._v(
@@ -97228,7 +97228,10 @@ var render = function() {
           staticClass: "btn mm-alert-button mr-2 p-1",
           attrs: { id: "action-alert-button", type: "button" }
         },
-        [_vm._v("Alerts "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+        [
+          _vm._v("Alerts "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
       ),
       _vm._v(" "),
       _c("div", { attrs: { id: "alerts-popover" } }),
@@ -97239,7 +97242,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "alerts-popover",
-            triggers: "focus",
+            triggers: "click",
             placement: "bottom",
             target: "action-alert-button"
           }
@@ -97252,7 +97255,7 @@ var render = function() {
               _vm._l(_vm.notifications, function(market_request, key) {
                 return _c("div", { staticClass: "col-12" }, [
                   _c("div", { staticClass: "row mt-1" }, [
-                    _c("div", { staticClass: "col-6 text-center" }, [
+                    _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
                       _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
                         _vm._v(
                           "  " +
@@ -97298,7 +97301,7 @@ var render = function() {
                 ])
               }),
               _vm._v(" "),
-              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+              _c("div", { staticClass: "col-6 offset-6 mt-3" }, [
                 _c(
                   "button",
                   {
@@ -97522,7 +97525,10 @@ var render = function() {
           staticClass: "btn mm-confirmation-button mr-2 p-1",
           attrs: { id: "action-confirmations-button", type: "button" }
         },
-        [_vm._v("Confirmations "), _c("strong", [_vm._v(_vm._s(_vm.count))])]
+        [
+          _vm._v("Confirmations "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
       ),
       _vm._v(" "),
       _c("div", { attrs: { id: "confirmations-popover" } }),

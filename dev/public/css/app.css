@@ -12134,6 +12134,7 @@ input:checked + .slider:before {
 #alerts-popover .popover,
 #confirmations-popover .popover {
   max-width: 400px;
+  min-width: 400px;
 }
 
 #trade_app .user-header h1 {
