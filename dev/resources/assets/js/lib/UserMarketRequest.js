@@ -30,6 +30,7 @@ export default class UserMarketRequest extends BaseModel {
             id: "",
             trade_structure: "",
             market_id:"",
+            is_interest:false,
             attributes: {
                 state: "",
                 bid_state: "",
