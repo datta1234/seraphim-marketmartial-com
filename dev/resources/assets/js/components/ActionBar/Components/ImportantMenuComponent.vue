@@ -31,7 +31,7 @@
                             id="select-bulk-nocares"
                             v-model="status" 
                             value="true">
-                            Apply No Care to All
+                            Apply No Cares to All
                         </b-form-checkbox>
                     </b-form-group>
                 </div>

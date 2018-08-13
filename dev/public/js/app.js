@@ -89742,6 +89742,8 @@ module.exports = Component.exports
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
 //
 //
 //
@@ -89765,6 +89767,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -89776,13 +89779,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         'market.market_requests': function marketMarket_requests(nV, oV) {
-            // console.log("Markets Updated", oV, nV);
             this.market_date_groups = this.mapMarketRequestGroups(nV);
+            this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
         }
     },
     data: function data() {
         return {
-            market_date_groups: {}
+            market_date_groups: {},
+            market_date_groups_order: []
         };
     },
 
@@ -89799,6 +89803,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 x[date].push(y);
                 return x;
             }, {});
+        },
+        sortMarketRequestGroups: function sortMarketRequestGroups(unsorted_date_groups) {
+            var dates = [];
+            Object.keys(unsorted_date_groups).forEach(function (date) {
+                dates.push(date);
+            });
+
+            if (dates.length > 0) {
+                for (var i = 0; i < dates.length - 1; i++) {
+                    for (var j = 0; j < dates.length - i - 1; j++) {
+                        if (__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j + 1], 'MMMYY').isBefore(__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j], 'MMMYY'))) {
+                            var temp = dates[j];
+                            dates[j] = dates[j + 1];
+                            dates[j + 1] = temp;
+                        }
+                    }
+                }
+            }
+            return dates;
         }
     },
     mounted: function mounted() {
@@ -89830,16 +89853,16 @@ var render = function() {
           _c(
             "div",
             { staticClass: "user-market-group col-12" },
-            _vm._l(_vm.market_date_groups, function(m_reqs, exp_date) {
+            _vm._l(_vm.market_date_groups_order, function(date) {
               return _c(
                 "div",
                 { staticClass: "row mt-3 pr-3 pl-3" },
                 [
                   _c("div", { staticClass: "col-12" }, [
-                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(exp_date))])
+                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(date))])
                   ]),
                   _vm._v(" "),
-                  _vm._l(m_reqs, function(m_req) {
+                  _vm._l(_vm.market_date_groups[date], function(m_req) {
                     return _c("market-tab", {
                       attrs: { "market-request": m_req }
                     })
@@ -97006,7 +97029,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                        Apply No Care to All\n                    "
+                          "\n                        Apply No Cares to All\n                    "
                         )
                       ]
                     )
@@ -97230,7 +97253,7 @@ var render = function() {
                 return _c("div", { staticClass: "col-12" }, [
                   _c("div", { staticClass: "row mt-1" }, [
                     _c("div", { staticClass: "col-6 text-center" }, [
-                      _c("h6", { staticClass: "w-100 m-0" }, [
+                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
                         _vm._v(
                           "  " +
                             _vm._s(market_request.getMarket().title) +
@@ -97524,7 +97547,7 @@ var render = function() {
                 return _c("div", { staticClass: "col-12" }, [
                   _c("div", { staticClass: "row mt-1" }, [
                     _c("div", { staticClass: "col-6 text-center" }, [
-                      _c("h6", { staticClass: "w-100 m-0" }, [
+                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
                         _vm._v(
                           " " +
                             _vm._s(market_request.getMarket().title) +
