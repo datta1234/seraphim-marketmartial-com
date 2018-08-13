@@ -1,7 +1,20 @@
 .popover {
 	.popover-body {
 		background-color: $mm-text-white;
-		color: $mm-market-important;
+		.popover-over-text {
+			color: $mm-market-important !important;
+		}
+		button.selected {
+			background-color: darken($mm-market-important, 10%);
+		}
+		.bulk-no-cares {
+			label {
+				padding-top: 3px;
+			}
+		}
+		.market-request-link {
+			cursor:pointer;
+		}
 	}
 	.arrow {
 		visibility: hidden;
@@ -16,5 +29,6 @@
 	display: inline;
 	.popover {
 		max-width:400px;
+		min-width:400px;
 	}
 }

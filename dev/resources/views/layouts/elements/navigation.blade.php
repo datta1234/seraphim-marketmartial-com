@@ -1,9 +1,15 @@
 <nav id="mainNav" class="navbar navbar-default sticky-top">
     <div class="{{ ( isset($layout) && isset($layout['fluid']) && $layout['fluid'] ? 'container-fluid' : 'container' ) }}">
       	<div class="navbar-header">
-        	<a class="navbar-brand nav-title-image" href="{{ url('/') }}">
-				<span class="icon icon-mm-logo"></span>
-        	</a>
+      		@if(Auth::check())
+				<a class="navbar-brand nav-title-image" href="{{ route('trade') }}">
+					<span class="icon icon-mm-logo"></span>
+	        	</a>
+      		@else
+	        	<a class="navbar-brand nav-title-image" href="{{ url('/') }}">
+					<span class="icon icon-mm-logo"></span>
+	        	</a>
+        	@endif
       	</div>
   		<ul class="nav justify-content-end">
 			@if(Auth::check())

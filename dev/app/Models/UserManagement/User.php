@@ -137,7 +137,7 @@ class User extends Authenticatable
     */
     public function marketInterests()
     {
-        return $this->belongsToMany('App\Models\StructureItems\Market', 'user_market_interests', 'user_id', 'market_id');
+        return $this->belongsToMany('App\Models\StructureItems\MarketType', 'user_market_interests', 'user_id', 'market_type_id');
     }
 
     /**

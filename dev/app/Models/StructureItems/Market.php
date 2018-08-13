@@ -71,15 +71,6 @@ class Market extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userInterests()
-    {
-        return $this->belongsToMany('App\Models\UserManagement\User', 'user_market_interests', 'user_id', 'market_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function userWatched()
     {
         return $this->belongsToMany('App\Models\UserManagement\User', 'user_market_watched', 'user_id', 'market_id');

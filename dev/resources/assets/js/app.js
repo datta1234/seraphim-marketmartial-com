@@ -176,6 +176,7 @@ const app = new Vue({
                 if(marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
+                    console.log("Market Types: ", self.market_types);
                 } else {
                     console.error(err);    
                 }
@@ -233,6 +234,20 @@ const app = new Vue({
                 }
             });
         },
+        loadUserConfig() {
+            let self = this;
+            return axios.get(axios.defaults.baseUrl + '/user-pref')
+            .then(configResponse => {
+                if(configResponse.status == 200) {
+                    self.configs["user_preferences"] = configResponse.data;
+                    return configResponse.data;
+                } else {
+                    self.configs["user_preferences"] = null;
+                    console.error(err);
+                }
+                return self.configs["user_preferences"];
+            });
+        },
         config(path) {
             return path.split('.').reduce((acc, cur) => {
                 if(acc && typeof acc[cur] !== 'undefined') {
@@ -269,8 +284,8 @@ const app = new Vue({
         market_order:['TOP 40','DTOP','DCAP','SINGLES','DELTA ONE'],
         no_cares: [],
         display_markets: [],
+        hidden_markets: [],
         market_types: [],
-
         // internal properties
         configs: {}
     },
@@ -281,23 +296,29 @@ const app = new Vue({
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
+        .then( () => {
+            this.loadUserConfig();
+        })
         .then(configs => {
-            // laod the trade data
-            this.loadMarketTypes()
-            .then(market_types => {
+            // load the trade data
+            this.loadMarketTypes();
+            this.loadUserConfig()
+            .then(user_preferences => {
                 let promises = [];
-                market_types.forEach(market_type => {
-                    promises.push(
-                        this.loadMarkets(market_type)
-                        .then(markets => {
-                            markets.forEach(market => {
-                                promises.push(
-                                    this.loadMarketRequests(market)
-                                );
-                            });
-                        })
-                    );
-                });
+                if(user_preferences !== null) {
+                    user_preferences.prefered_market_types.forEach(market_type => {
+                        promises.push(
+                            this.loadMarkets(market_type)
+                            .then(markets => {
+                                markets.forEach(market => {
+                                    promises.push(
+                                        this.loadMarketRequests(market)
+                                    );
+                                });
+                            })
+                        );
+                    });
+                }
                 return Promise.all(promises);
             })
             .then(all_market_requests => {

@@ -1,16 +1,16 @@
 <template>
     <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
         <div class="row justify-content-md-center">
-            <div class="col col-6 market-tab-name market-tab-name">
-                {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], ' ', 3) }}    
+            <div class="col market-tab-name market-tab-name">
+                    {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}  
             </div>
-            <div class="col col-6 market-tab-state">
+            <div class="col market-tab-state">
                 
                 <span v-if="market_request_state_label != ''">
                     <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
                 </span>
                 <span v-else>
-                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
                 </span>
             </div>
         </div>
@@ -32,7 +32,7 @@
             'marketRequest.attributes.state': function(nV, oV) {
                 this.calcMarketState();
             },
-            'marketRequest.user_markets': function(nV, oV) {
+            'marketRequest.user_market': function(nV, oV) {
                 this.calcMarketState();
             },
             'marketRequest.chosen_user_market': function(nV, oV) {

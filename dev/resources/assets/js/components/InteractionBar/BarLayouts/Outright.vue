@@ -159,7 +159,7 @@
                     this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
-
+                    this.setUpProposal();
                 })
                 .catch(err => {
                     this.server_loading = false;

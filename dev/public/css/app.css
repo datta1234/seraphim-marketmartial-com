@@ -11452,7 +11452,7 @@ a.mm-login-button {
 }
 
 #mainNav .nav-item.active > a {
-  border-bottom: solid;
+  border-bottom: 0.1rem solid;
 }
 
 .nav-title-image span {
@@ -11760,6 +11760,11 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.trade-section.light-theme .market-group-title,
+.trade-section.dark-theme .market-group-title {
+  font-size: 1.1rem;
+}
+
 .trade-section.light-theme .market-tab,
 .trade-section.dark-theme .market-tab {
   background-color: #071a22;
@@ -11768,7 +11773,8 @@ input:checked + .slider:before {
   -webkit-box-shadow: 4px 4px 8px -1px #000000;
           box-shadow: 4px 4px 8px -1px #000000;
   cursor: pointer;
-  max-width: 350px;
+  /* max-width: 350px; */
+  max-width: 297.5px;
   margin: auto;
 }
 
@@ -12101,7 +12107,22 @@ input:checked + .slider:before {
 
 .popover .popover-body {
   background-color: #FFFFFF;
-  color: #1D3641;
+}
+
+.popover .popover-body .popover-over-text {
+  color: #1D3641 !important;
+}
+
+.popover .popover-body button.selected {
+  background-color: #0d191e;
+}
+
+.popover .popover-body .bulk-no-cares label {
+  padding-top: 3px;
+}
+
+.popover .popover-body .market-request-link {
+  cursor: pointer;
 }
 
 .popover .arrow {
@@ -12126,6 +12147,7 @@ input:checked + .slider:before {
 #alerts-popover .popover,
 #confirmations-popover .popover {
   max-width: 400px;
+  min-width: 400px;
 }
 
 #trade_app .user-header h1 {

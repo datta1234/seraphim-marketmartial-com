@@ -46,4 +46,13 @@ class MarketType extends Model
     {
         return $this->belongsToMany('App\Models\StructureItems\TradeStructure', 'market_types_trade_structures', 'market_type_id', 'trade_structure_id');
     }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userInterests()
+    {
+        return $this->belongsToMany('App\Models\UserManagement\User','user_market_interests','user_id','market_type_id');
+    }
 }

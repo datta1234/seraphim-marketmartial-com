@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
-                            <h5 class="w-100 m-0">{{ key }}</h5>
+                            <h5 class="w-100 m-0 popover-over-text">{{ key }}</h5>
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 
@@ -29,7 +29,7 @@
                 </div>
                 
                 <div class="col-6 offset-6 mt-1">
-                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onSaveMarketSetting">OK</button>
+                    <button type="button" class="btn mm-generic-trade-button w-100" @click="onDismiss">OK</button>
                 </div>
             </div>
         </b-popover>
@@ -60,45 +60,54 @@
                 availableSelectedMarketTypes: {
                     'INDEX': {
                         state: false,
-                        markets: ['TOP 40','DTOP','DCAP'],
+                        marketType: null,
                     },
                     'SINGLES': {
                         state: false,
-                        markets: ['SINGLES'],
+                        marketType: null,
                     },
                     'DELTA ONE': {
                         state: false,
-                        markets: ['DELTA ONE'],
+                        marketType: null,
                     }
                 },
-                randomID: "5", //@TODO REMOVE WHEN ID's ARE ADDED
                 popover_ref: 'add-market-ref',
             };
         },
         methods: {
+            /**
+             * This is called just before the popover is shown
+             */
             onShow () {
-                /* This is called just before the popover is shown */
                 this.checkSelected();
             },
             /**
-             * Saves the user's Market preference to the server
-             *
-             * @todo implement post reqeust to update user preference
-             */
-            onSaveMarketSetting(popover_ref) {
-                this.onDismiss();
-            },
-            /**
-             * Creates a bolean list of availableSelectedMarkets from markets prop
+             * Creates a boolean list of availableSelectedMarkets from markets prop
              */
             checkSelected() {
+                this.$root.market_types.forEach( (market_type) => {
+                    switch(market_type.title) {
+                        case "Index Option":
+                            this.availableSelectedMarketTypes['INDEX'].marketType = market_type;
+                        break;
+                        case "Delta One(EFPs, Rolls and EFP Switches)":
+                            this.availableSelectedMarketTypes['DELTA ONE'].marketType = market_type;
+                        break;
+
+                        case "Single Stock Options":
+                            this.availableSelectedMarketTypes['SINGLES'].marketType = market_type;
+                        break;
+                    }
+                });
                 Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
                     this.availableSelectedMarketTypes[key].state = false;
                 });
-                this.markets.forEach((market) => {
-                    Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
-                        if( this.availableSelectedMarketTypes[key].markets.includes(market.title) )
-                        this.availableSelectedMarketTypes[key].state = true;
+                
+                Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
+                    this.$root.config("user_preferences.prefered_market_types").forEach( (prefered_market_type) => {
+                        if(this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
+                            this.availableSelectedMarketTypes[key].state = true;
+                        }
                     });
                 });
             },
@@ -106,73 +115,94 @@
              * Filters the user's Market Type preference 
              */
             filterMarketTypes(market_type, actionCheck) {
-                this.availableSelectedMarketTypes[market_type].markets.forEach((market) => {
-                    if(actionCheck) {
-                        this.addMarket(market);
-                    } else {
-                        this.removeMarket(market);
-                    }
-                });
+                if(actionCheck) {
+                    this.addUserPreferenceMarketType(market_type)
+                    .then( (market_type) => {
+                        this.addMarket(market_type);
+                    });
+                } else {
+                    this.removeUserPreferenceMarketType(market_type)
+                    .then( () => {
+                        this.availableSelectedMarketTypes[market_type].marketType.markets.forEach((market) => {
+                            this.removeMarket(market);
+                        });
+                    });
+                }
             },
             /**
              * Adds a selected Market to Display Markets
              * 
              * @param {string} $market a string detailing a Market.title to be added
-             *
-             * @todo make a reqeust to update view data from server 
              */
-            addMarket(market) {
-               this.markets.push( this.loadMarketData(market) );
-               this.checkSelected();
+            addMarket(market_type) {
+                this.$root.loadMarkets(market_type)
+                .then(markets => {
+                    let promises = [];
+                    markets.forEach(market => {
+                        promises.push(
+                            this.$root.loadMarketRequests(market)
+                        );
+                    });
+                    return Promise.all(promises);
+                });
+                this.checkSelected();
+            },
+            /**
+             * Adds a selected Market Type to the users preferences and saves it to the server
+             * 
+             * @param {string} $market_type a string detailing a MarketType.title to be added
+             */
+            addUserPreferenceMarketType(market_type) {
+                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences"))
+                .then(response => {
+                    if(response.status == 200) {
+                        this.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
+                        return this.$root.configs["user_preferences"].prefered_market_types[this.$root.configs["user_preferences"].prefered_market_types.length-1];
+                    } else {
+                        return null;
+                        console.error(err);
+                    }
+                }, err => {
+                    console.error(err);
+                });
             },
             /**
              * Removes a selected Market from Display Markets
              * 
              * @param {string} $market a string detailing a Market.title to be removed
-             *
-             * @todo make a push the updated Display Markets list to the server 
              */
             removeMarket(market) {
                 let index = this.markets.findIndex(function(element) {
-                    return element.title == market;
+                    return element.id == market.id;
                 });
                 if(index !== -1) {
                     this.markets.splice(index , 1);
                 }
+                // make api call to amend user pref for market types
                 this.checkSelected();
             },
             /**
-             * Creates dummy market reqeusts for Newly added Market
-             *
-             * @todo remove once data is being pulled from server 
+             * Removes a selected Market Type from the users preferences and saves it to the server
+             * 
+             * @param {string} $market_type a string detailing a MarketType.title to be removed
              */
-            loadMarketData(market) {
-                this.randomID += this.randomID + "1"
-                return new Market({
-                    title: market,
-                    market_requests: [
-                        new UserMarketRequest({
-                            id: this.randomID,
-                            attributes: {
-                                expiration_date: moment("2018-03-17 00:00:00"),
-                                strike: "17 000",
-                                state: 'confirm',
-                                bid_state: 'action',
-                                offer_state: '',
-                            },
-                            user_markets: [
-                                new UserMarket({
-                                    current_market_negotiation: new UserMarketNegotiation({ bid: 23.3, bid_qty: 50000000, offer: 23.3, offer_qty: 50000000 })
-                                }),
-                                new UserMarket({
-                                    current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                                })
-                            ],
-                            chosen_user_market: new UserMarket({
-                                current_market_negotiation: new UserMarketNegotiation({ bid: 30, bid_qty: 50000000, offer: 25, offer_qty: 50000000 })
-                            })
-                        })
-                    ]
+            removeUserPreferenceMarketType(market_type) {
+                // write delete end to apply new pref
+                return axios.delete(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id)
+                .then(response => {
+                    if(response.status == 200) {
+                        let index = this.$root.configs["user_preferences"].prefered_market_types.findIndex(function(element) {
+                            return element.id == response.data.data;
+                        });
+                        if(index !== -1) {
+                            return this.$root.configs["user_preferences"].prefered_market_types.splice(index , 1);
+                        }
+                        return null;
+                    } else {
+                        console.error(err);
+                    }
+                }, err => {
+                    console.error(err);
                 });
             },
             /**
@@ -183,6 +213,7 @@
             },
         },
         mounted() {
+
         }
     }
 </script>

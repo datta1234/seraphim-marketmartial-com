@@ -6,16 +6,20 @@
         <b-popover container="important-popover" triggers="click blur" placement="bottom" :ref="popover_ref" target="action-important-button">
             <div class="row text-center">
                 <div v-for="(market_request,key) in notifications" class="col-12">
-                        <div class="row mt-2">
+                        <div class="row mt-1">
                           
-                          <div class="col-6 text-center">
-                              <h6 class="w-100 m-0"> {{ market_request.getMarket().title }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}</h6>
+                          <div class="col-6 text-center  pt-2 pb-2">
+                                <h6 class="w-100 m-0 popover-over-text market-request-link"
+                                    @click="loadInteractionBar(market_request)"> 
+                                    {{ market_request.getMarket().title }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}
+                                </h6>
                           </div>
                           <div class="col-6">
                               <button
                                   :id="'important-nocare-' + market_request.id"
                                   type="button" class="btn mm-generic-trade-button w-100"
-                                  @click="addToNoCares(key,market_request.id)">No Cares
+                                  @click="addToNoCares(key,market_request.id)"
+                                  v-bind:class="{ selected: status }">No Cares
                               </button>
                           </div>
                  
@@ -25,12 +29,12 @@
                 <div class="row text-center">
 
                 <div class="col-12 mt-2">
-                    <b-form-group>
+                    <b-form-group class="bulk-no-cares">
                         <b-form-checkbox 
                             id="select-bulk-nocares"
                             v-model="status" 
                             value="true">
-                            Select All
+                            Apply No Cares to All
                         </b-form-checkbox>
                     </b-form-group>
                 </div>
@@ -49,6 +53,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../../lib/EventBus.js';
     export default {
       name: 'ImportantMenu',
     	props:{
@@ -109,8 +114,18 @@
             saveNoCares(){
                 const parsed = JSON.stringify(this.no_cares);
                 localStorage.setItem('no_cares_market_request', parsed);
-            }
-            
+            },
+            /**
+             * Loads the Interaction Sidebar with the related UserMarketRequest
+             *
+             * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+             *      to the Interaction Sidebar.
+             *
+             * @fires /lib/EventBus#toggleSidebar
+             */
+            loadInteractionBar(market_request) {
+                EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
+            },
         },
         mounted() {
         }
