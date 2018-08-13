@@ -3,7 +3,7 @@
         <button id="action-important-button" type="button" class="btn mm-important-button mr-2 p-1" >Important <strong>{{ notifications.length }}</strong></button>
         <div id="important-popover"></div>
         <!-- Important market popover -->
-        <b-popover container="important-popover" triggers="click" placement="bottom" :ref="popover_ref" target="action-important-button">
+        <b-popover container="important-popover" triggers="click blur" placement="bottom" :ref="popover_ref" target="action-important-button">
             <div class="row text-center">
                 <div v-for="(market_request,key) in notifications" class="col-12">
                         <div class="row mt-2">

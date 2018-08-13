@@ -90224,7 +90224,7 @@ var render = function() {
                 _c("span", { class: _vm.bidState }, [
                   _vm._v(_vm._s(_vm.user_market_bid))
                 ]),
-                _vm._v(" / "),
+                _vm._v(" / "),
                 _c("span", { class: _vm.offerState }, [
                   _vm._v(_vm._s(_vm.user_market_offer))
                 ])
@@ -96947,7 +96947,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "important-popover",
-            triggers: "click",
+            triggers: "click blur",
             placement: "bottom",
             target: "action-important-button"
           }
