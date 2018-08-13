@@ -9,7 +9,10 @@
                         <div class="row mt-1">
                           
                           <div class="col-6 text-center  pt-2 pb-2">
-                              <h6 class="w-100 m-0 popover-over-text"> {{ market_request.getMarket().title }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}</h6>
+                                <h6 class="w-100 m-0 popover-over-text market-request-link"
+                                    @click="loadInteractionBar(market_request)"> 
+                                    {{ market_request.getMarket().title }} {{ market_request.trade_items.default ? market_request.trade_items.default["Strike"] : '' }} {{ market_request.trade_items.default ? market_request.trade_items.default["Expiration Date"] : '' }}
+                                </h6>
                           </div>
                           <div class="col-6">
                               <button
@@ -50,6 +53,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../../lib/EventBus.js';
     export default {
       name: 'ImportantMenu',
     	props:{
@@ -110,8 +114,18 @@
             saveNoCares(){
                 const parsed = JSON.stringify(this.no_cares);
                 localStorage.setItem('no_cares_market_request', parsed);
-            }
-            
+            },
+            /**
+             * Loads the Interaction Sidebar with the related UserMarketRequest
+             *
+             * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+             *      to the Interaction Sidebar.
+             *
+             * @fires /lib/EventBus#toggleSidebar
+             */
+            loadInteractionBar(market_request) {
+                EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
+            },
         },
         mounted() {
         }

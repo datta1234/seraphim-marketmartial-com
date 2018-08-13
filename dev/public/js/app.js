@@ -96802,6 +96802,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(11);
 //
 //
 //
@@ -96853,6 +96854,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ImportantMenu',
@@ -96916,6 +96921,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveNoCares: function saveNoCares() {
             var parsed = JSON.stringify(this.no_cares);
             localStorage.setItem('no_cares_market_request', parsed);
+        },
+
+        /**
+         * Loads the Interaction Sidebar with the related UserMarketRequest
+         *
+         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+         *      to the Interaction Sidebar.
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        loadInteractionBar: function loadInteractionBar(market_request) {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
         }
     },
     mounted: function mounted() {}
@@ -96969,26 +96986,39 @@ var render = function() {
               return _c("div", { staticClass: "col-12" }, [
                 _c("div", { staticClass: "row mt-1" }, [
                   _c("div", { staticClass: "col-6 text-center  pt-2 pb-2" }, [
-                    _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
-                      _vm._v(
-                        " " +
-                          _vm._s(market_request.getMarket().title) +
-                          " " +
-                          _vm._s(
-                            market_request.trade_items.default
-                              ? market_request.trade_items.default["Strike"]
-                              : ""
-                          ) +
-                          " " +
-                          _vm._s(
-                            market_request.trade_items.default
-                              ? market_request.trade_items.default[
-                                  "Expiration Date"
-                                ]
-                              : ""
-                          )
-                      )
-                    ])
+                    _c(
+                      "h6",
+                      {
+                        staticClass:
+                          "w-100 m-0 popover-over-text market-request-link",
+                        on: {
+                          click: function($event) {
+                            _vm.loadInteractionBar(market_request)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          " \n                                " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default["Strike"]
+                                : ""
+                            ) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default[
+                                    "Expiration Date"
+                                  ]
+                                : ""
+                            ) +
+                            "\n                            "
+                        )
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-6" }, [

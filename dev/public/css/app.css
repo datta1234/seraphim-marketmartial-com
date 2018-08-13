@@ -12112,6 +12112,10 @@ input:checked + .slider:before {
   padding-top: 3px;
 }
 
+.popover .popover-body .market-request-link {
+  cursor: pointer;
+}
+
 .popover .arrow {
   visibility: hidden;
 }
