@@ -9,9 +9,12 @@ export default class UserMarketRequest extends BaseModel {
         super({
             _used_model_list: [UserMarket,UserMarketQuote],
             _relations:{
-               quotes:{
+                quotes:{
                     addMethod: (quote) => { this.addUserMarketQuote(quote) },
-               } 
+                },
+                user_market: {
+                    setMethod: (user_market) => { this.setUserMarket(user_market) },
+                }
             }
         });
 
@@ -22,6 +25,7 @@ export default class UserMarketRequest extends BaseModel {
         // default public
         this.trade_items = {};//with group title as key
         this.quotes = [];
+        this.user_market = null;
         const defaults = {
             id: "",
             trade_structure: "",

@@ -70,7 +70,7 @@ export default class BaseModel {
        //@todo not entirly sure why ther's a check on the first model in array cause doesnt work on an empty array
 
        //this._isModelInstance(this[key][0]).is_model
-        if(typeof this._relations[key] != undefined) {
+        if(typeof this._relations[key] != 'undefined' && typeof this._relations[key].addMethod != 'undefined') {
 
             // loop to add or update new array objects
             for (let i = 0; i < update_arr.length; i++) {
@@ -119,6 +119,8 @@ export default class BaseModel {
 
         if(this._isModelInstance(this[key]).is_model) {
             this[key].update(update_obj);
+        } else if(typeof this._relations[key] != 'undefined' && typeof this._relations[key].setMethod != 'undefined') {
+            this._relations[key].setMethod(update_obj);
         } else {
             if( !(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
                 Object.assign(this[key], update_obj);

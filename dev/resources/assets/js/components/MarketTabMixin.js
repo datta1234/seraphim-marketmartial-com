@@ -20,6 +20,7 @@ export default {
             
             // run tests
             // TODO: add logic for if current user then "SENT"
+            console.log("===========================HIT===========================", this.marketRequest);
             switch(this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
                     if(this.marketRequest.user_market) {

@@ -32,7 +32,7 @@
             'marketRequest.attributes.state': function(nV, oV) {
                 this.calcMarketState();
             },
-            'marketRequest.user_markets': function(nV, oV) {
+            'marketRequest.user_market': function(nV, oV) {
                 this.calcMarketState();
             },
             'marketRequest.chosen_user_market': function(nV, oV) {
@@ -71,7 +71,7 @@
         },
         methods: {
             loadInteractionBar() {
-                console.log("load Bar");
+                console.log("load Bar ", this.marketRequest);
                 this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);

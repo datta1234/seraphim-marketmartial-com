@@ -5667,6 +5667,11 @@ var UserMarketRequest = function (_BaseModel) {
                     addMethod: function addMethod(quote) {
                         _this.addUserMarketQuote(quote);
                     }
+                },
+                user_market: {
+                    setMethod: function setMethod(user_market) {
+                        _this.setUserMarket(user_market);
+                    }
                 }
             }
         }));
@@ -5678,6 +5683,7 @@ var UserMarketRequest = function (_BaseModel) {
         // default public
         _this.trade_items = {}; //with group title as key
         _this.quotes = [];
+        _this.user_market = null;
         var defaults = {
             id: "",
             trade_structure: "",
@@ -9803,6 +9809,7 @@ function copyProps(props) {
 
             // run tests
             // TODO: add logic for if current user then "SENT"
+            console.log("===========================HIT===========================", this.marketRequest);
             switch (this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
                     if (this.marketRequest.user_market) {
@@ -11865,7 +11872,7 @@ var BaseModel = function () {
             //@todo not entirly sure why ther's a check on the first model in array cause doesnt work on an empty array
 
             //this._isModelInstance(this[key][0]).is_model
-            if (_typeof(this._relations[key]) != undefined) {
+            if (typeof this._relations[key] != 'undefined' && typeof this._relations[key].addMethod != 'undefined') {
                 var _loop = function _loop(i) {
 
                     var index = _this3[key].findIndex(function (element) {
@@ -11923,6 +11930,8 @@ var BaseModel = function () {
 
             if (this._isModelInstance(this[key]).is_model) {
                 this[key].update(update_obj);
+            } else if (typeof this._relations[key] != 'undefined' && typeof this._relations[key].setMethod != 'undefined') {
+                this._relations[key].setMethod(update_obj);
             } else {
                 if (!(typeof this[key] == 'undefined') && !(this[key] == null) && !(typeof update_obj == 'undefined') && !(update_obj == null)) {
                     Object.assign(this[key], update_obj);
@@ -90107,7 +90116,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
             this.calcMarketState();
         },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+        'marketRequest.user_market': function marketRequestUser_market(nV, oV) {
             this.calcMarketState();
         },
         'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
@@ -90147,7 +90156,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
+            console.log("load Bar ", this.marketRequest);
             this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
@@ -96947,7 +96956,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "important-popover",
-            triggers: "click",
+            triggers: "click blur",
             placement: "bottom",
             target: "action-important-button"
           }
@@ -97242,7 +97251,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "alerts-popover",
-            triggers: "click",
+            triggers: "focus",
             placement: "bottom",
             target: "action-alert-button"
           }
