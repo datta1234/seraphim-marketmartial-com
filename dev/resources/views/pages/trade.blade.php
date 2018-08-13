@@ -19,7 +19,7 @@
 			<!-- END Actions and Alerts -->
 
 			<!-- Markets sections -->
-			<div class="row user-markets mt-5">
+			<div class="row user-markets mt-3">
 				<market-group v-for="market in display_markets" :market="market" class="col"></market-group>
 			</div>
 

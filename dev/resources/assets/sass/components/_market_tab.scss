@@ -1,4 +1,7 @@
 .trade-section.light-theme, .trade-section.dark-theme {
+	.market-group-title {
+		font-size: 1.1rem;
+	}
 	.market-tab {
 		background-color: $mm-market-tab;
 		color: $mm-text-white;
@@ -7,7 +10,8 @@
 
 		cursor: pointer;
 
-		max-width: 350px;
+		/* max-width: 350px; */
+		max-width: 297.5px;
 		margin: auto;
 
 		&.active {

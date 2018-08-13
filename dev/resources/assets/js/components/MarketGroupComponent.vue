@@ -3,7 +3,7 @@
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">
-                    <h2 class="text-center">{{ market.title }}</h2> 
+                    <h2 class="text-center market-group-title">{{ market.title }}</h2> 
                 </div>
                 <div class="user-market-group col-12">
 
