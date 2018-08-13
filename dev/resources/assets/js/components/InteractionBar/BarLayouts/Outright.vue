@@ -27,7 +27,7 @@
                     <b-col cols="6">
 
                         <!-- || (marker_qoute && !is_on_hold) && ( !marker_qoute|| (marker_qoute && !marker_qoute.is_repeat)) -->
-                        <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                       
 
                         
                          <b-button v-if=" marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
@@ -55,7 +55,8 @@
                 </b-row>
                 <b-row class="justify-content-md-center" v-if="!marker_qoute">
                     <b-col cols="6">
-                        <b-button class="w-100" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
+                         <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>
@@ -108,13 +109,6 @@
         watch: {
             'marketRequest': function() {
                 this.init();
-            },
-            'marketRequest.quotes': {
-                handler:function() {
-                    this.updateUserMessages();
-                  //  this.setUpProposal();
-                },
-                deep: true
             }
         },
         computed: {
@@ -205,10 +199,11 @@
                 this.proposed_user_market_negotiation.repeat()
                 .then(response => {
                     this.server_loading = false;
-                    this.history_message = response.message;
                     this.proposed_user_market_negotiation = response.data.data;
                     
                     this.history_message = response.data.message;
+                    console.log("we are the best");
+
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
                     this.errors = [];
                     //EventBus.$emit('interactionToggle', false);
@@ -260,7 +255,6 @@
                     this[k] = defaults[k];
                 });
 
-                console.log("the reset method git called");
             },
             setUpProposal(){
 
@@ -281,7 +275,6 @@
             },
             setDefaultQuantities() {
 
-                console.log("this is the maker qoute",this.marker_qoute);
 
                 if(this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null) )
                 {
@@ -309,8 +302,8 @@
                     this.updateUserMessages();
 
                     // relate
-             
-
+                    EventBus.$emit('interactionChange',this.marketRequest);
+                    console.log("this just got opened!!!!!!");
                     //set the quotes here if they already set
                 }
             }

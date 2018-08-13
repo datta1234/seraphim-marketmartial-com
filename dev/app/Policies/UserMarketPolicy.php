@@ -47,7 +47,12 @@ class UserMarketPolicy
 
     public function updateNegotiation(User $user, UserMarket $userMarket)
     {
-        return $userMarket->marketNegotiations()->where('user_id',$user->id)->exists();
+        return $userMarket->marketNegotiations()->where(function($query) use ($user)
+        {
+            $query->whereHas('users',function($query) use ($user){
+                $query->where('organisation_id', $user->organisation_id);
+            });
+        })->exists();
     }
 
     

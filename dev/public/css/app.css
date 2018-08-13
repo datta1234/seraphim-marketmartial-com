@@ -11834,6 +11834,7 @@ input:checked + .slider:before {
 
 #trade-footer {
   background-color: #303030;
+  z-index: 10000;
   width: 100%;
   position: absolute;
   bottom: 0;
@@ -11899,6 +11900,8 @@ input:checked + .slider:before {
   float: left;
   color: #fff;
   position: relative;
+  padding-bottom: 150px;
+  margin-bottom: 150px;
 }
 
 .interaction-bar-wrapper .interaction-bar.active {

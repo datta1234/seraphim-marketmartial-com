@@ -90225,7 +90225,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
             this.toggleActionTaken();
             this.isActive = true;
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
@@ -90240,8 +90239,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             _this.isActive = false;
         });
         __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
+            if (_this.marketRequest.id !== marketRequest.id) {
                 _this.isActive = false;
+            } else {
+                _this.isActive = true;
             }
         });
     }
@@ -92265,6 +92266,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -92301,13 +92303,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'marketRequest': function marketRequest() {
             this.init();
-        },
-        'marketRequest.quotes': {
-            handler: function handler() {
-                this.updateUserMessages();
-                //  this.setUpProposal();
-            },
-            deep: true
         }
     },
     computed: {
@@ -92392,10 +92387,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market_negotiation.repeat().then(function (response) {
                 _this3.server_loading = false;
-                _this3.history_message = response.message;
                 _this3.proposed_user_market_negotiation = response.data.data;
 
                 _this3.history_message = response.data.message;
+                console.log("we are the best");
+
                 _this3.proposed_user_market.setCurrentNegotiation(_this3.proposed_user_market_negotiation);
                 _this3.errors = [];
                 //EventBus.$emit('interactionToggle', false);
@@ -92446,8 +92442,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Object.keys(defaults).forEach(function (k) {
                 _this5[k] = defaults[k];
             });
-
-            console.log("the reset method git called");
         },
         setUpProposal: function setUpProposal() {
 
@@ -92464,8 +92458,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$refs.pullModal.hide();
         },
         setDefaultQuantities: function setDefaultQuantities() {
-
-            console.log("this is the maker qoute", this.marker_qoute);
 
             if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
                 console.log("offer quote", this.marker_qoute.offer_qty);
@@ -92489,8 +92481,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.updateUserMessages();
 
                 // relate
-
-
+                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
+                console.log("this just got opened!!!!!!");
                 //set the quotes here if they already set
             }
         }
@@ -92603,28 +92595,6 @@ var render = function() {
                     "b-col",
                     { attrs: { cols: "6" } },
                     [
-                      !_vm.marker_qoute
-                        ? _c(
-                            "b-button",
-                            {
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                disabled:
-                                  _vm.check_invalid || _vm.server_loading,
-                                size: "sm",
-                                dusk: "ibar-action-send",
-                                variant: "primary"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.sendQuote()
-                                }
-                              }
-                            },
-                            [_vm._v("Send")]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
                       _vm.marker_qoute ||
                       _vm.is_on_hold ||
                       (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
@@ -92778,10 +92748,32 @@ var render = function() {
                         "b-col",
                         { attrs: { cols: "6" } },
                         [
+                          !_vm.marker_qoute
+                            ? _c(
+                                "b-button",
+                                {
+                                  staticClass: "w-100 mt-1",
+                                  attrs: {
+                                    disabled:
+                                      _vm.check_invalid || _vm.server_loading,
+                                    size: "sm",
+                                    dusk: "ibar-action-send",
+                                    variant: "primary"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.sendQuote()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Send")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
                           _c(
                             "b-button",
                             {
-                              staticClass: "w-100",
+                              staticClass: "w-100 mt-1",
                               attrs: {
                                 size: "sm",
                                 dusk: "ibar-action-nocares",
@@ -95022,7 +95014,7 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                        " +
-                                      _vm._s(item.bid) +
+                                      _vm._s(item.bid ? item.bid : "-") +
                                       "\n                    "
                                   )
                                 ]
@@ -95037,7 +95029,7 @@ var render = function() {
                                 [
                                   _vm._v(
                                     "\n                        " +
-                                      _vm._s(item.offer) +
+                                      _vm._s(item.offer ? item.offer : "-") +
                                       "\n                    "
                                   )
                                 ]
@@ -96316,14 +96308,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'markets': {
             handler: function handler() {
-                console.log('change list');
                 this.reloadNotifications();
             },
             deep: true
         },
         'no_cares': {
             handler: function handler() {
-                console.log('added no care', this.no_cares);
                 this.reloadNotifications();
             },
             deep: true
@@ -96355,7 +96345,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.market_notifications.alert = [];
             this.market_notifications.confirm = [];
 
-            var important_states = ['REQUEST-SENT-VOL', 'REQUEST-VOL-HOLD', 'REQUEST', 'REQUEST-SENT', 'sent', 'REQUEST-VOL'];
+            var important_states = ['REQUEST-SENT-VOL', 'REQUEST', 'REQUEST-SENT', 'sent', 'REQUEST-VOL'];
+
+            //'REQUEST-SENT, 'REQUEST-SENT-VOL'
             var alert_states = ['alert'];
             var confirm_states = ['confirm'];
 

@@ -139,13 +139,27 @@ class UserMarket extends Model
 
     public function repeatNegotiation($user)
     {
-      $marketNegotiation =  $this->marketNegotiations()->where('user_id',$user->id)->first(); 
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
+        {
+            $query->whereHas('users',function($query) use ($user){
+                $query->where('organisation_id', $user->organisation_id);
+            });
+        })->first();
+        $this->update(['is_on_hold'=>false]);
+
       return  $marketNegotiation->update(['is_repeat'=>true]);    
     }
 
     public function updateNegotiation($user,$data)
     {
-      $marketNegotiation =  $this->marketNegotiations()->where('user_id',$user->id)->first(); 
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
+        {
+            $query->whereHas('users',function($query) use ($user){
+                $query->where('organisation_id', $user->organisation_id);
+            });
+        })->first();
+        $this->update(['is_on_hold'=>false]);
+      
       return  $marketNegotiation->update($data);
     }
 

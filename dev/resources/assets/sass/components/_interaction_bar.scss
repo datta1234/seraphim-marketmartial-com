@@ -24,6 +24,11 @@
 
             // overflow-y: auto;
             position: relative;
+
+            padding-bottom: 150px;
+            margin-bottom: 150px;
+            // background: red;
+
         }
         &.active {
             width: $interaction-bar-width + $interaction-toggle-width;

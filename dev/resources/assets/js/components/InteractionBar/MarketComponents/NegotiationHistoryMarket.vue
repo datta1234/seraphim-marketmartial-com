@@ -24,10 +24,10 @@
                             {{ item.bid_qty }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            {{ item.bid }}
+                            {{ item.bid ? item.bid : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            {{ item.offer }}
+                            {{ item.offer ? item.offer : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
                             {{ item.offer_qty }}

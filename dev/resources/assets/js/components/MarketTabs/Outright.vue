@@ -71,7 +71,6 @@
         },
         methods: {
             loadInteractionBar() {
-                console.log("load Bar");
                 this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
@@ -84,8 +83,11 @@
                 this.isActive = false;
             });
             EventBus.$on('interactionChange', (marketRequest) => {
-                if(this.marketRequest !== marketRequest) {
+                if(this.marketRequest.id !== marketRequest.id) {
                     this.isActive = false;
+                }else
+                {
+                    this.isActive = true;
                 }
             });
         }

@@ -52,16 +52,13 @@
         watch: {
             'markets': {
                 handler: function(){
-                    console.log('change list');
                     this.reloadNotifications();
                 },
                 deep: true
             },
             'no_cares': {
                 handler: function(){
-                    console.log('added no care', this.no_cares);
                     this.reloadNotifications();
-
                 },
                 deep: true
             }
@@ -89,7 +86,9 @@
                 this.market_notifications.alert = [];
                 this.market_notifications.confirm = [];
 
-                let important_states = ['REQUEST-SENT-VOL','REQUEST-VOL-HOLD','REQUEST','REQUEST-SENT','sent','REQUEST-VOL'];
+                let important_states = ['REQUEST-SENT-VOL','REQUEST','REQUEST-SENT','sent','REQUEST-VOL'];
+
+                //'REQUEST-SENT, 'REQUEST-SENT-VOL'
                 let alert_states = ['alert'];
                 let confirm_states = ['confirm'];
 
