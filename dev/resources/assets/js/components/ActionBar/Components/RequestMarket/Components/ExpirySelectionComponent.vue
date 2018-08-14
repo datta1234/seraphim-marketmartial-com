@@ -59,7 +59,8 @@
         methods: {
             selectExpiryDates(date) {
                 this.selected_dates.push(date);
-                if(this.selected_dates.length == this.data.number_of_dates) {    
+                if(this.selected_dates.length == this.data.number_of_dates) {
+                    this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                     this.data.index_market_object.expiry_dates = this.selected_dates;
                     this.callback();//add title dates
                 }

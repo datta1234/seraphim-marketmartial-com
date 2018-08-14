@@ -86868,6 +86868,17 @@ Vue.mixin({
                 return x;
                 //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
+        },
+        dateStringArraySort: function dateStringArraySort(date_string_array, format) {
+            for (var i = 0; i < date_string_array.length - 1; i++) {
+                for (var j = 0; j < date_string_array.length - i - 1; j++) {
+                    if (moment(date_string_array[j + 1], format).isBefore(moment(date_string_array[j], format))) {
+                        var temp = date_string_array[j];
+                        date_string_array[j] = date_string_array[j + 1];
+                        date_string_array[j + 1] = temp;
+                    }
+                }
+            }
         }
     }
 });
@@ -89798,7 +89809,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         'market.market_requests': function marketMarket_requests(nV, oV) {
             this.market_date_groups = this.mapMarketRequestGroups(nV);
             this.reorderMarketRequestStrike(this.market_date_groups);
-            console.log("================market_date_groups: ", this.market_date_groups);
             this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
         }
     },
@@ -89830,15 +89840,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
 
             if (dates.length > 0) {
-                for (var i = 0; i < dates.length - 1; i++) {
-                    for (var j = 0; j < dates.length - i - 1; j++) {
-                        if (__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j + 1], 'MMMYY').isBefore(__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j], 'MMMYY'))) {
-                            var temp = dates[j];
-                            dates[j] = dates[j + 1];
-                            dates[j + 1] = temp;
-                        }
-                    }
-                }
+                this.$root.dateStringArraySort(dates, 'MMMYY');
             }
             return dates;
         },
@@ -98711,6 +98713,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectExpiryDates: function selectExpiryDates(date) {
             this.selected_dates.push(date);
             if (this.selected_dates.length == this.data.number_of_dates) {
+                this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                 this.data.index_market_object.expiry_dates = this.selected_dates;
                 this.callback(); //add title dates
             }

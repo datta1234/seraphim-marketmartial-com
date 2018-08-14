@@ -41,7 +41,6 @@
             'market.market_requests': function (nV, oV) {
                 this.market_date_groups = this.mapMarketRequestGroups(nV);
                 this.reorderMarketRequestStrike(this.market_date_groups);
-                console.log("================market_date_groups: ", this.market_date_groups);
                 this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
             }
         },
@@ -70,15 +69,7 @@
                 });
 
                 if(dates.length > 0) {
-                    for(let i = 0; i < dates.length - 1; i++) {
-                        for(let j = 0; j < dates.length - i - 1; j++) {
-                            if( moment(dates[j+1],'MMMYY').isBefore(moment(dates[j],'MMMYY')) ) {
-                                let temp = dates[j];
-                                dates[j] = dates[j+1];
-                                dates[j+1] = temp;
-                            }
-                        }
-                    }
+                    this.$root.dateStringArraySort(dates, 'MMMYY');
                 }
                 return dates;
             },

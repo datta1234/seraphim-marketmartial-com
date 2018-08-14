@@ -131,6 +131,17 @@ Vue.mixin({
             //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
         },
+        dateStringArraySort(date_string_array, format) {
+            for(let i = 0; i < date_string_array.length - 1; i++) {
+                for(let j = 0; j < date_string_array.length - i - 1; j++) {
+                    if( moment(date_string_array[j+1],format).isBefore(moment(date_string_array[j],format)) ) {
+                        let temp = date_string_array[j];
+                        date_string_array[j] = date_string_array[j+1];
+                        date_string_array[j+1] = temp;
+                    }
+                }
+            }
+        },
     }
 });
 
