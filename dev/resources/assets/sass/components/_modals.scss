@@ -54,6 +54,9 @@
 		.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
 			background-color: $mm-modal-header;
 		}
+		.details-choice-badge {
+			font-size: 1em;
+		}
 	}
 	.modal-info-text {
 		font-size: 0.9em;

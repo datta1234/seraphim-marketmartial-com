@@ -12199,6 +12199,10 @@ input:checked + .slider:before {
   background-color: #1c7c74;
 }
 
+.mm-modal .modal-body .details-choice-badge {
+  font-size: 1em;
+}
+
 .mm-modal .modal-info-text {
   font-size: 0.9em;
 }

@@ -95057,7 +95057,7 @@ var render = function() {
                     _c("p", [
                       _c("small", [
                         _vm._v(
-                          "Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed."
+                          "Note: Quotes will default to HOLD after 30 minutes."
                         )
                       ])
                     ])
@@ -98777,11 +98777,7 @@ var render = function() {
                     { staticClass: "mt-0 text-center", attrs: { cols: "12" } },
                     [
                       _c("p", { staticClass: "modal-info-text" }, [
-                        _vm._v(
-                          "*Calendar structure requires " +
-                            _vm._s(_vm.data.number_of_dates) +
-                            " expiry dates. Second date selected will continue your market request process"
-                        )
+                        _vm._v("*Select two dates to continue")
                       ])
                     ]
                   )
@@ -98904,6 +98900,19 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -99134,77 +99143,162 @@ var render = function() {
                       _vm._v(" "),
                       _vm.form_data.fields.length > 1
                         ? _c(
-                            "b-form-radio-group",
-                            {
-                              staticClass: "mb-2",
-                              attrs: { id: "risky-choices", name: "choice" },
-                              model: {
-                                value: _vm.chosen_option,
-                                callback: function($$v) {
-                                  _vm.chosen_option = $$v
-                                },
-                                expression: "chosen_option"
-                              }
-                            },
+                            "b-row",
+                            { attrs: { "align-h": "center" } },
                             [
-                              _c(
-                                "b-row",
-                                { attrs: { "align-h": "center" } },
-                                [
-                                  _c(
+                              _vm.display.disable_choice
+                                ? _c(
                                     "b-col",
-                                    {
-                                      staticClass: "text-center",
-                                      attrs: { cols: "3", offset: "3" }
-                                    },
+                                    { attrs: { cols: "12 mb-2" } },
                                     [
                                       _c(
-                                        "b-form-radio",
-                                        {
-                                          attrs: {
-                                            id: "choice-0",
-                                            disabled:
-                                              _vm.display.disable_choice,
-                                            value: "0"
-                                          }
-                                        },
-                                        [_vm._v("CHOICE")]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "b-col",
-                                    {
-                                      staticClass: "text-center",
-                                      attrs: {
-                                        cols: "3",
-                                        offset:
-                                          _vm.form_data.fields.length == 3
-                                            ? 3
-                                            : 0
-                                      }
-                                    },
-                                    [
-                                      _c(
-                                        "b-form-radio",
-                                        {
-                                          attrs: {
-                                            id: "choice-1",
-                                            disabled:
-                                              _vm.display.disable_choice,
-                                            value: "1"
-                                          }
-                                        },
-                                        [_vm._v("CHOICE")]
+                                        "b-row",
+                                        [
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: { cols: "3", offset: "3" }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: {
+                                                cols: "3",
+                                                offset:
+                                                  _vm.form_data.fields.length ==
+                                                  3
+                                                    ? 3
+                                                    : 0
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
                                       )
                                     ],
                                     1
                                   )
-                                ],
-                                1
-                              )
+                                : _c(
+                                    "b-col",
+                                    { attrs: { cols: "12" } },
+                                    [
+                                      _c(
+                                        "b-form-radio-group",
+                                        {
+                                          staticClass: "mb-2",
+                                          attrs: {
+                                            id: "risky-choices",
+                                            name: "choice"
+                                          },
+                                          model: {
+                                            value: _vm.chosen_option,
+                                            callback: function($$v) {
+                                              _vm.chosen_option = $$v
+                                            },
+                                            expression: "chosen_option"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "b-row",
+                                            { attrs: { "align-h": "center" } },
+                                            [
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset: "3"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-0",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "0"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset:
+                                                      _vm.form_data.fields
+                                                        .length == 3
+                                                        ? 3
+                                                        : 0
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-1",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "1"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
                             ],
                             1
                           )
@@ -99314,7 +99408,7 @@ var render = function() {
                               _c("b-col", { staticClass: "text-center mt-3" }, [
                                 _c("p", { staticClass: "modal-info-text" }, [
                                   _vm._v(
-                                    "\n                                    All bids/offers going forward will have to maintain the ratio you set here\n                                "
+                                    "\n                                    All trades will maintain the above ratio.\n                                "
                                   )
                                 ])
                               ])

@@ -13,20 +13,33 @@
                             </b-col>
                         </b-row>
                         
-                        <b-form-radio-group v-if="form_data.fields.length > 1" 
-                                            id="risky-choices" 
-                                            v-model="chosen_option" 
-                                            name="choice"
-                                            class="mb-2">
-                            <b-row align-h="center">
-                                <b-col cols="3" offset="3" class="text-center">    
-                                    <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
-                                </b-col>
-                                <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                    <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
-                                </b-col>
-                            </b-row>
-		      		    </b-form-radio-group>
+                        <b-row v-if="form_data.fields.length > 1" align-h="center">
+                            <b-col v-if="display.disable_choice" cols="12 mb-2">
+                                <b-row>
+                                    <b-col cols="3" offset="3" class="text-center">    
+                                        <b-badge variant="info details-choice-badge">CHOICE</b-badge>
+                                    </b-col>
+                                    <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
+                                        <b-badge variant="info details-choice-badge">CHOICE</b-badge>    
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col v-else cols="12">
+                                <b-form-radio-group id="risky-choices" 
+                                                    v-model="chosen_option" 
+                                                    name="choice"
+                                                    class="mb-2">
+                                    <b-row align-h="center">
+                                        <b-col cols="3" offset="3" class="text-center">    
+                                            <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
+                                        </b-col>
+                                        <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
+                                            <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
+                                        </b-col>
+                                    </b-row>
+        		      		    </b-form-radio-group>
+                            </b-col>
+                        </b-row>
 
 						<b-row align-h="center">
 							<b-col cols="3">
@@ -65,7 +78,7 @@
                         <b-row v-if="form_data.fields.length > 1">
                             <b-col class="text-center mt-3">    
                                 <p class="modal-info-text">
-                                    All bids/offers going forward will have to maintain the ratio you set here
+                                    All trades will maintain the above ratio.
                                 </p>
                             </b-col>
                         </b-row>
