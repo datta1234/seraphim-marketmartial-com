@@ -98685,6 +98685,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ExpirySelection',
@@ -98705,13 +98710,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             current_page: 1,
             per_page: 12,
             total: null,
-            selected_dates: []
+            selected_dates: [],
+            duplicate_date: false
         };
     },
 
     methods: {
         selectExpiryDates: function selectExpiryDates(date) {
-            this.selected_dates.push(date);
+            this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
+            if (!this.duplicate_date) {
+                this.selected_dates.push(date);
+            }
             if (this.selected_dates.length == this.data.number_of_dates) {
                 this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                 this.data.index_market_object.expiry_dates = this.selected_dates;
@@ -98827,6 +98836,21 @@ var render = function() {
                     1
                   )
                 })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.duplicate_date
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                [
+                  _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v("Cannot select duplicate dates.")
+                    ])
+                  ])
+                ],
+                1
               )
             : _vm._e(),
           _vm._v(" "),

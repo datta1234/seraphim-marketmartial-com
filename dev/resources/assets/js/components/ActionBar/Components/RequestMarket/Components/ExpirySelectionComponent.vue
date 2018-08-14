@@ -13,6 +13,11 @@
                     </b-button>
                 </div>
             </div>
+            <b-row v-if="duplicate_date" class="text-center mt-3">
+                <b-col cols="12">
+                    <p class="text-danger mb-0">Cannot select duplicate dates.</p>
+                </b-col>
+            </b-row>
             <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
                 <b-col cols="12" class="mt-5">
                     <b-pagination @change="changePage($event)" 
@@ -54,11 +59,15 @@
                 per_page:12,
                 total:null,
                 selected_dates:[],
+                duplicate_date: false,
             };
         },
         methods: {
             selectExpiryDates(date) {
-                this.selected_dates.push(date);
+                this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
+                if(!this.duplicate_date) {
+                    this.selected_dates.push(date);
+                }
                 if(this.selected_dates.length == this.data.number_of_dates) {
                     this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                     this.data.index_market_object.expiry_dates = this.selected_dates;
