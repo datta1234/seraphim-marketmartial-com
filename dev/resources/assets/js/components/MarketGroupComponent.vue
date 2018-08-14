@@ -12,9 +12,11 @@
                         <div class="col-12">
                             <p class="mb-1">{{ date }}</p>
                         </div>
-                        <market-tab :market-request="m_req" v-for="m_req in market_date_groups[date]"></market-tab>
+                        <market-tab :market-request="m_req" v-for="m_req in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
                     
+                </div>
+                <div>
                 </div>
             </div>
         </div>
@@ -30,6 +32,9 @@
         props: {
             'market': {
                 type: Market
+            },
+            'no_cares':{
+                type: Array
             }
         },
         watch: {

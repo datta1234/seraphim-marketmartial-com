@@ -11,6 +11,9 @@ export default {
         loadInteractionBar() {
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
+        hasNoCaresUnderCares(marketRequest){
+
+        },
         calcMarketState() {
             // set new refs
             // this.user_market = this.marketRequest.getChosenUserMarket();
@@ -28,7 +31,9 @@ export default {
                         this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
                         this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
                     } else {
+                        
                         this.market_request_state = 'request';
+
                         this.market_request_state_label = "REQUEST";
                     }
                 break;
@@ -46,7 +51,7 @@ export default {
                     this.market_request_state_label = "REQUEST";
                 break;
                 case "REQUEST-SENT":
-                    this.market_request_state = 'request';
+                   // this.market_request_state = 'request';
                     this.market_request_state_label = "SENT";
                 break;
                 case "alert":

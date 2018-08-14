@@ -202,7 +202,6 @@
                     this.proposed_user_market_negotiation = response.data.data;
                     
                     this.history_message = response.data.message;
-                    console.log("we are the best");
 
                     this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
                     this.errors = [];
@@ -303,7 +302,6 @@
 
                     // relate
                     EventBus.$emit('interactionChange',this.marketRequest);
-                    console.log("this just got opened!!!!!!");
                     //set the quotes here if they already set
                 }
             }

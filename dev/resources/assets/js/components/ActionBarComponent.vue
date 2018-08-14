@@ -86,9 +86,9 @@
                 this.market_notifications.alert = [];
                 this.market_notifications.confirm = [];
 
-                let important_states = ['REQUEST-SENT-VOL','REQUEST','REQUEST-SENT','sent','REQUEST-VOL'];
+                let important_states = ['REQUEST','REQUEST-VOL'];
 
-                //'REQUEST-SENT, 'REQUEST-SENT-VOL'
+                //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
                 let alert_states = ['alert'];
                 let confirm_states = ['confirm'];
 
@@ -97,14 +97,16 @@
 
                     market.market_requests.forEach(market_request => {
 
-
                         if(market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
                         {
                             this.market_notifications.alert.push(market_request);
 
                         }else if(important_states.indexOf(market_request.attributes.state) > -1 && this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
                         {
-                            this.market_notifications.important.push(market_request);
+                            if(!market_request.quotes.find(quote => quote.is_maker) && !market_request.is_interest)
+                            {
+                                this.market_notifications.important.push(market_request);
+                            }
                         }
 
                         if(confirm_states.indexOf(market_request.attributes.state) > -1)

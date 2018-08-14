@@ -133,6 +133,7 @@ class UserMarketRequest extends Model
         $data = [
             "id"                => $this->id,
             "market_id"         => $this->market_id,
+            "is_interest"       => $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId(),
             "trade_structure"   => $this->tradeStructure->title,
             "trade_items"       => $this->userMarketRequestGroups
              ->keyBy('tradeStructureGroup.title')

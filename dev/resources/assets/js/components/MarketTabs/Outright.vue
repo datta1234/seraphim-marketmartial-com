@@ -26,6 +26,9 @@
         props: {
             marketRequest: {
                 type: UserMarketRequest
+            },
+             no_cares: {
+                type: Array
             }
         },
         watch: {
@@ -51,7 +54,7 @@
             marketState: function() {
                 return {
                     'market-request-grey': this.market_request_state == 'request-grey',
-                    'market-request': this.market_request_state == 'request',
+                    'market-request': !this.marketRequest.is_interest  && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
                     'market-alert': this.marketRequest.attributes.action_needed,
                     'market-confirm': this.market_request_state == 'confirm',

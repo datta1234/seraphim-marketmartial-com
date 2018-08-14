@@ -5735,6 +5735,7 @@ var UserMarketRequest = function (_BaseModel) {
             id: "",
             trade_structure: "",
             market_id: "",
+            is_interest: false,
             attributes: {
                 state: "",
                 bid_state: "",
@@ -9800,6 +9801,7 @@ function copyProps(props) {
         loadInteractionBar: function loadInteractionBar() {
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
+        hasNoCaresUnderCares: function hasNoCaresUnderCares(marketRequest) {},
         calcMarketState: function calcMarketState() {
             // set new refs
             // this.user_market = this.marketRequest.getChosenUserMarket();
@@ -9817,7 +9819,9 @@ function copyProps(props) {
                         this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
                         this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
                     } else {
+
                         this.market_request_state = 'request';
+
                         this.market_request_state_label = "REQUEST";
                     }
                     break;
@@ -9835,7 +9839,7 @@ function copyProps(props) {
                     this.market_request_state_label = "REQUEST";
                     break;
                 case "REQUEST-SENT":
-                    this.market_request_state = 'request';
+                    // this.market_request_state = 'request';
                     this.market_request_state_label = "SENT";
                     break;
                 case "alert":
@@ -89775,6 +89779,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -89783,6 +89789,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         'market': {
             type: __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]
+        },
+        'no_cares': {
+            type: Array
         }
     },
     watch: {
@@ -89872,14 +89881,16 @@ var render = function() {
                   _vm._v(" "),
                   _vm._l(_vm.market_date_groups[date], function(m_req) {
                     return _c("market-tab", {
-                      attrs: { "market-request": m_req }
+                      attrs: { "market-request": m_req, no_cares: _vm.no_cares }
                     })
                   })
                 ],
                 2
               )
             })
-          )
+          ),
+          _vm._v(" "),
+          _c("div")
         ])
       ])
     ]
@@ -90003,6 +90014,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         marketRequest: {
             type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        },
+        no_cares: {
+            type: Array
         }
     },
     data: function data() {
@@ -90109,6 +90123,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     props: {
         marketRequest: {
             type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        },
+        no_cares: {
+            type: Array
         }
     },
     watch: {
@@ -90135,7 +90152,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         marketState: function marketState() {
             return {
                 'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
+                'market-request': !this.marketRequest.is_interest && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
                 'market-request-vol': this.market_request_state == 'request-vol',
                 'market-alert': this.marketRequest.attributes.action_needed,
                 'market-confirm': this.market_request_state == 'confirm',
@@ -91800,7 +91817,10 @@ var render = function() {
           [
             _c(_vm.tabs[_vm.marketRequest.trade_structure], {
               tag: "component",
-              attrs: { "market-request": _vm.marketRequest }
+              attrs: {
+                "market-request": _vm.marketRequest,
+                no_cares: _vm.no_cares
+              }
             })
           ],
           1
@@ -92317,7 +92337,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.proposed_user_market_negotiation = response.data.data;
 
                 _this3.history_message = response.data.message;
-                console.log("we are the best");
 
                 _this3.proposed_user_market.setCurrentNegotiation(_this3.proposed_user_market_negotiation);
                 _this3.errors = [];
@@ -92409,7 +92428,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 // relate
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
-                console.log("this just got opened!!!!!!");
                 //set the quotes here if they already set
             }
         }
@@ -94925,8 +94943,10 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.bid_qty) +
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.bid_qty ? item.bid_qty : "-"
+                                      ) +
                                       "\n                    "
                                   )
                                 ]
@@ -94970,8 +94990,10 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.offer_qty) +
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.offer_qty ? item.offer_qty : "-"
+                                      ) +
                                       "\n                    "
                                   )
                                 ]
@@ -96272,9 +96294,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.market_notifications.alert = [];
             this.market_notifications.confirm = [];
 
-            var important_states = ['REQUEST-SENT-VOL', 'REQUEST', 'REQUEST-SENT', 'sent', 'REQUEST-VOL'];
+            var important_states = ['REQUEST', 'REQUEST-VOL'];
 
-            //'REQUEST-SENT, 'REQUEST-SENT-VOL'
+            //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
             var alert_states = ['alert'];
             var confirm_states = ['confirm'];
 
@@ -96287,7 +96309,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             _this.market_notifications.alert.push(market_request);
                         } else if (important_states.indexOf(market_request.attributes.state) > -1 && _this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
                         {
-                            _this.market_notifications.important.push(market_request);
+                            if (!market_request.quotes.find(function (quote) {
+                                return quote.is_maker;
+                            }) && !market_request.is_interest) {
+                                _this.market_notifications.important.push(market_request);
+                            }
                         }
 
                     if (confirm_states.indexOf(market_request.attributes.state) > -1) {
