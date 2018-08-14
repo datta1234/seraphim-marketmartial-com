@@ -51,7 +51,7 @@
         data() {
             return {
                 modal_data: {
-                    title:'Select A Market',
+                    title:['Select A Market'],
                     step: 0,
                     show_modal: false,
                     modal_ref: 'request-market-ref',
@@ -65,7 +65,7 @@
         },
         computed: {
             modalTitle: function() {
-                return this.modal_data.title;
+                return this.modal_data.title.join(' > ');
             }
         },
         methods: {
@@ -85,7 +85,7 @@
             hideModal() {
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = false;
-                this.modal_data.title = 'Select A Market';
+                this.modal_data.title = ['Select A Market'];
                 this.modal_data.selected_controller = null;
                 this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
@@ -102,6 +102,7 @@
             previousStep() {
                 this.modal_data.step--;
                 if(this.modal_data.step == 1) {
+                    this.modal_data.title = ['Select A Market'];
                     this.modal_data.selected_controller = 'Selections';
                     this.modal_data.step = 0;
                 } else {

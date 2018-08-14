@@ -38,7 +38,7 @@
         methods: {
             selectMarket(market) {
                 this.data.index_market_object.market = market;
-                this.callback(market);
+                this.callback(market.title);
             },
         },
         mounted() {
