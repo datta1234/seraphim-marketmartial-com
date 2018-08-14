@@ -40,6 +40,8 @@
         watch: {
             'market.market_requests': function (nV, oV) {
                 this.market_date_groups = this.mapMarketRequestGroups(nV);
+                this.reorderMarketRequestStrike(this.market_date_groups);
+                console.log("================market_date_groups: ", this.market_date_groups);
                 this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
             }
         },
@@ -79,7 +81,15 @@
                     }
                 }
                 return dates;
-            }
+            },
+            reorderMarketRequestStrike: function(date_groups) {
+                Object.keys(date_groups).forEach( (date) => {
+                    date_groups[date].sort( (a, b) => {
+                        return a.trade_items.default.Strike - b.trade_items.default.Strike;
+                    });
+                });
+            },
+
         },
         mounted() {
             this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);

@@ -89797,6 +89797,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'market.market_requests': function marketMarket_requests(nV, oV) {
             this.market_date_groups = this.mapMarketRequestGroups(nV);
+            this.reorderMarketRequestStrike(this.market_date_groups);
+            console.log("================market_date_groups: ", this.market_date_groups);
             this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
         }
     },
@@ -89839,7 +89841,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
             return dates;
+        },
+        reorderMarketRequestStrike: function reorderMarketRequestStrike(date_groups) {
+            Object.keys(date_groups).forEach(function (date) {
+                date_groups[date].sort(function (a, b) {
+                    return a.trade_items.default.Strike - b.trade_items.default.Strike;
+                });
+            });
         }
+
     },
     mounted: function mounted() {
         this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
