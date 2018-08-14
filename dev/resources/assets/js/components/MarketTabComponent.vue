@@ -2,7 +2,7 @@
     <div :dusk="'market-tab-'+marketRequest.id" style="width:100%">
         <div class="col col-12 text-center">
             <div class="row">
-                <component :is="tabs[marketRequest.trade_structure]" :market-request="marketRequest"></component>
+                <component :is="tabs[marketRequest.trade_structure]" :market-request="marketRequest" :no_cares="no_cares"></component>
             </div>
         </div>
     </div>
@@ -35,6 +35,9 @@
         props: {
             marketRequest: {
                 type: UserMarketRequest
+            },
+            no_cares: {
+                type: Array
             }
         },
         data() {
