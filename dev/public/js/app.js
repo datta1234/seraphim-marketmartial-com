@@ -11821,30 +11821,29 @@ var BaseModel = function () {
 
 
     _createClass(BaseModel, [{
-        key: "update",
+        key: 'update',
         value: function update(update_object) {
             var _this2 = this;
 
-            console.log("+++++++++++++++++++++++++++++++++++++++++++++++UPDATING THIS", this);
             Object.keys(this).forEach(function (key) {
                 //console.log("Test Updating: ", key);
                 // console.log("############=====#######");
                 // console.log("the key is",key);
                 // console.log("is array test",Array.isArray(update_object[key], key));
                 // console.log("############=====#######");
-                console.log("===================UPDATE===================");
-                console.log("Updating: ", key, ' with ', update_object[key]);
+
                 if (key[0] != '_' && update_object[key] != null) {
+                    //console.log("Updating: ", key);
                     if (Array.isArray(update_object[key], key)) {
                         //call array rebind method
-                        console.log("Updating as Array: ", key);
+                        //console.log("Updating as Array: ", key);
                         _this2._updateArray(update_object[key], key);
                     } else if (update_object[key] instanceof Object) {
                         //call object rebind method
-                        console.log("Updating as Obj: ", key);
+                        //console.log("Updating as Obj: ", key);
                         _this2._updateObject(update_object[key], key);
                     } else {
-                        console.log("Updating as else: ", key);
+                        //console.log("Updating as else: ", key);
                         if (_this2[key] instanceof moment) {
                             _this2[key] = moment(update_object[key]);
                         } else {
@@ -11852,7 +11851,6 @@ var BaseModel = function () {
                         }
                     }
                 }
-                console.log("===================END UPDATE===================");
             });
         }
 
@@ -11867,7 +11865,7 @@ var BaseModel = function () {
          */
 
     }, {
-        key: "_updateArray",
+        key: '_updateArray',
         value: function _updateArray(update_arr, key) {
             var _this3 = this;
 
@@ -11930,7 +11928,7 @@ var BaseModel = function () {
          */
 
     }, {
-        key: "_updateObject",
+        key: '_updateObject',
         value: function _updateObject(update_obj, key) {
 
             if (this._isModelInstance(this[key]).is_model) {
@@ -11953,7 +11951,7 @@ var BaseModel = function () {
          */
 
     }, {
-        key: "_isModelInstance",
+        key: '_isModelInstance',
         value: function _isModelInstance(check_elem) {
             var elem_state = { is_model: false, instance_of: null };
             this._used_model_list.forEach(function (elem) {
@@ -11976,7 +11974,7 @@ var BaseModel = function () {
          */
 
     }, {
-        key: "_validateArray",
+        key: '_validateArray',
         value: function _validateArray(arr_to_validate) {
             var _this4 = this;
 
@@ -11990,7 +11988,7 @@ var BaseModel = function () {
                     return current instanceof custom_check.instance_of ? acc : NaN;
                 }
 
-                return (typeof acc === "undefined" ? "undefined" : _typeof(acc)) == (typeof current === "undefined" ? "undefined" : _typeof(current)) ? acc : NaN;
+                return (typeof acc === 'undefined' ? 'undefined' : _typeof(acc)) == (typeof current === 'undefined' ? 'undefined' : _typeof(current)) ? acc : NaN;
             });
 
             if (!is_valid) {
@@ -12003,7 +12001,7 @@ var BaseModel = function () {
          */
 
     }, {
-        key: "toJSON",
+        key: 'toJSON',
         value: function toJSON() {
             var _this5 = this;
 
@@ -25912,7 +25910,6 @@ var UserMarket = function (_BaseModel) {
                     reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(["Invalid Market Request"]));
                 });
             }
-            console.log("HELLO WE ARE HERE NO: ", this.prepareStore());
             return new Promise(function (resolve, reject) {
                 axios.post(axios.defaults.baseUrl + "/trade/user-market-request/" + _this3.user_market_request_id + "/user-market", _this3.prepareStore()).then(function (response) {
                     resolve(response);
@@ -94946,8 +94943,10 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.bid_qty) +
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.bid_qty ? item.bid_qty : "-"
+                                      ) +
                                       "\n                    "
                                   )
                                 ]
@@ -94991,8 +94990,10 @@ var render = function() {
                                 },
                                 [
                                   _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.offer_qty) +
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.offer_qty ? item.offer_qty : "-"
+                                      ) +
                                       "\n                    "
                                   )
                                 ]

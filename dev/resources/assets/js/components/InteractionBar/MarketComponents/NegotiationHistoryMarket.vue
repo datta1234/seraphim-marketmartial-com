@@ -21,7 +21,7 @@
                     </b-row>
                     <b-row no-gutters v-else-if="item.is_maker">
                         <b-col cols="3" class="text-center">
-                            {{ item.bid_qty }}
+                             {{ item.bid_qty ? item.bid_qty : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
                             {{ item.bid ? item.bid : "-"  }}
@@ -30,7 +30,7 @@
                             {{ item.offer ? item.offer : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            {{ item.offer_qty }}
+                             {{ item.offer_qty ? item.offer_qty : "-"  }}
                         </b-col>
                     </b-row>
                     <b-row no-gutters v-else>
