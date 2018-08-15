@@ -40,34 +40,34 @@ class UserMarketRequestSeeder extends Seeder
                 if($tradeStruct->title == "Outright" && in_array($market->title,["TOP40","DTOP","DCAP"])) 
                 {
 
-                 factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
-                        "market_id" =>  $market->id,
-                        "trade_structure_id" => $tradeStruct->id
-                    ]);
-                     
+                   $interestUser = App\Models\UserManagement\User::inRandomOrder()->first(); 
+                   $markerUser = App\Models\UserManagement\User::inRandomOrder()->where('organisation_id','<>',$interestUser->organisation_id)->first(); 
+
+
+            
                     $userMarketRequest = factory(App\Models\MarketRequest\UserMarketRequest::class)->create([
                         "market_id" =>  $market->id,
                         "trade_structure_id" => $tradeStruct->id,
+                        "user_id" => $interestUser->id,
                     ]);
                 
                
-                    $user = factory(App\Models\UserManagement\User::class)->create();
 
                     // user market
                     $userMarket =  $userMarketRequest->userMarkets()->create([
-                        'user_id' => $user->id,
+                        'user_id' => $markerUser->id,
                         'is_on_hold' => true
                     ]);
 
                     // market negotiation
                     $marketNegotiation = $userMarket->marketNegotiations()->create([
-                        'user_id'               =>  $user->id,
+                        'user_id'               =>  $markerUser->id,
                         'counter_user_id'       =>  $userMarketRequest->user_id,
                         'market_negotiation_id' =>  null,
-                        'bid' => 10,
-                        'offer' => 16,
-                        'bid_qty' => 500,
-                        'offer_qty' => 300,
+                        'bid' => rand(0,1000),
+                        'offer' => rand(0,1000),
+                        'bid_qty' => rand(0,1000),
+                        'offer_qty' => rand(0,1000),
                         'future_reference'      =>  0,
                         'has_premium_calc'      =>  false,
 
@@ -77,7 +77,7 @@ class UserMarketRequestSeeder extends Seeder
 
                     $userMarket->current_market_negotiation_id = $marketNegotiation->id;
                     $userMarket->save();
-                    var_dump($user->email);
+                    var_dump($interestUser->email);
 
 
                 }

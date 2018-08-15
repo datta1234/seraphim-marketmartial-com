@@ -11907,7 +11907,7 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .interaction-bar.active .interaction-content {
   opacity: 1;
   position: fixed;
-  z-index: 9999;
+  z-index: 1030;
   width: 375px;
 }
 

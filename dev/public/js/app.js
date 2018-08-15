@@ -86408,7 +86408,6 @@ var UserMarketQuote = function (_BaseModel) {
         value: function putOnHold() {
             var _this2 = this;
 
-            console.log('putting on hold now :D');
             // catch not assigned to a user market request yet!
             if (this._user_market_request == null) {
                 return new Promise(function (resolve, reject) {
@@ -86418,6 +86417,26 @@ var UserMarketQuote = function (_BaseModel) {
             return new Promise(function (resolve, reject) {
 
                 axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/' + _this2._user_market_request.id + '/user-market/' + _this2.id, { 'is_on_hold': true }).then(function (response) {
+                    resolve(response);
+                }).catch(function (err) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
+                });
+            });
+        }
+    }, {
+        key: 'accept',
+        value: function accept() {
+            var _this3 = this;
+
+            // catch not assigned to a user market request yet!
+            if (this._user_market_request == null) {
+                return new Promise(function (resolve, reject) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(["Invalid Market Request"]));
+                });
+            }
+            return new Promise(function (resolve, reject) {
+
+                axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/' + _this3._user_market_request.id + '/user-market/' + _this3.id, { 'accept': true }).then(function (response) {
                     resolve(response);
                 }).catch(function (err) {
                     reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
@@ -94831,6 +94850,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.errors = err.errors;
                 });
             }
+        },
+        acceptQuote: function acceptQuote(quote) {
+            var _this2 = this;
+
+            quote.accept().then(function (response) {
+                _this2.history_message = response.data.message;
+            }).catch(function (err) {
+                _this2.errors = err.errors;
+            });
         }
     },
     mounted: function mounted() {}
@@ -94920,7 +94948,12 @@ var render = function() {
                                   "b-btn",
                                   {
                                     staticClass: "w-100",
-                                    attrs: { size: "sm", variant: "primary" }
+                                    attrs: { size: "sm", variant: "primary" },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.acceptQuote(item)
+                                      }
+                                    }
                                   },
                                   [_vm._v("ACCEPT")]
                                 )

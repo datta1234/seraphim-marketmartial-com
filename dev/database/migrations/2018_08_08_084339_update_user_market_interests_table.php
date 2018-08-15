@@ -34,7 +34,7 @@ class UpdateUserMarketInterestsTable extends Migration
                 $table->dropForeign(['market_type_id']);
                 $table->dropColumn('market_type_id');
 
-                $table->integer('market_id')->unsigned();
+                $table->integer('market_id')->nullable()->unsigned();
                 $table->foreign('market_id')
                     ->references('id')->on('markets');
         });

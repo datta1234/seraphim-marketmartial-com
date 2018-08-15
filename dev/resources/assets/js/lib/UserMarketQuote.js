@@ -55,7 +55,6 @@ export default class UserMarketQuote extends BaseModel {
     }
 
     putOnHold() {
-        console.log('putting on hold now :D');
         // catch not assigned to a user market request yet!
         if(this._user_market_request == null) {
             return new Promise((resolve, reject) => {
@@ -65,6 +64,25 @@ export default class UserMarketQuote extends BaseModel {
         return new Promise((resolve, reject) => {
 
            axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
+            .then(response => {
+               resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            }); 
+        });
+    }
+
+    accept() {
+        // catch not assigned to a user market request yet!
+        if(this._user_market_request == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+        return new Promise((resolve, reject) => {
+
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'accept': true})
             .then(response => {
                resolve(response);
             })

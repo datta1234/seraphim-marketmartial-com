@@ -123,6 +123,14 @@ class UserMarketController extends Controller
             $message = 'You have placed a market on hold. Response sent to counterparty.';
             // Set action that needs to be taken for the org being put on hold
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
+        }elseif($request->has('accept') && $request->input('accept'))
+        {
+            $this->authorize('accept',$userMarket);
+            $success = $userMarket->accept();
+            $message = 'You have accepted the market. Response sent to counterparty.';
+
+            // Set action that needs to be taken for the org being put on hold
+            $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
         }else
         {
             $this->authorize('updateNegotiation',$userMarket);

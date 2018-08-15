@@ -45,6 +45,19 @@ class UserMarketPolicy
     }
 
 
+    /**
+     * Determine if the given usermarket accept the user.
+     *
+     * @param  \App\User  $user
+     * @param  \App\UserMarket  $userMarket
+     * @return bool
+     */
+    public function accept(User $user, UserMarket $userMarket)
+    {
+        return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
+    }
+
+
     public function updateNegotiation(User $user, UserMarket $userMarket)
     {
         return $userMarket->marketNegotiations()->where(function($query) use ($user)

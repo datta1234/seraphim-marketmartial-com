@@ -19,7 +19,6 @@ class UserMarketUpdateRequest extends FormRequest
         //     return true;
         // }
         //this code has been moved to a policy
-        
         return true;
     }
 
@@ -31,7 +30,9 @@ class UserMarketUpdateRequest extends FormRequest
     public function rules()
     {   //add rules for is_on_hold and correlating message
         return [
-            'is_on_hold' => 'sometimes|required|boolean'
+            'is_on_hold' => 'sometimes|required|boolean',
+            'accept' => 'sometimes|required|boolean'
+
         ];
     }
 

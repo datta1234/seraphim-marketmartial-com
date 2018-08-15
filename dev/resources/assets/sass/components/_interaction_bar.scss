@@ -36,7 +36,7 @@
             .interaction-content {
                 opacity: 1;
                 position: fixed;
-                z-index: 9999; //also houses a modal and its hidden if the position is fixed
+                z-index: 1030; //also houses a modal and its hidden if the position is fixed
                 width: $interaction-bar-width + $interaction-toggle-width;
 
                 .interaction-bar-toggle {

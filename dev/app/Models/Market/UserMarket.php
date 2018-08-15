@@ -137,6 +137,13 @@ class UserMarket extends Model
         return $this->update(['is_on_hold'=>true]);
     }
 
+    public function accept()
+    {
+        $marketRequest = $this->userMarketRequest;
+        $marketRequest->chosenUserMarket()->associate($this);
+        return $marketRequest->save();
+    }
+
     public function repeatNegotiation($user)
     {
         $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)

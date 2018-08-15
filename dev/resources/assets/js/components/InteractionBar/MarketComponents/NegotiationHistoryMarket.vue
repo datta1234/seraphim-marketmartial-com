@@ -16,7 +16,7 @@
                             </button>
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <b-btn size="sm" class="w-100" variant="primary">ACCEPT</b-btn>
+                            <b-btn size="sm" class="w-100" variant="primary" @click="acceptQuote(item)">ACCEPT</b-btn>
                         </b-col>
                     </b-row>
                     <b-row no-gutters v-else-if="item.is_maker">
@@ -114,6 +114,15 @@
 
           
                 }
+            },
+            acceptQuote(quote){
+                 quote.accept()
+                    .then(response => {
+                        this.history_message = response.data.message;
+                    })
+                    .catch(err => {
+                        this.errors = err.errors;
+                    });
             }
         },
         mounted() {
