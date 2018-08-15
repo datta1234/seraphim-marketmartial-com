@@ -86887,6 +86887,17 @@ Vue.mixin({
                 return x;
                 //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
+        },
+        dateStringArraySort: function dateStringArraySort(date_string_array, format) {
+            for (var i = 0; i < date_string_array.length - 1; i++) {
+                for (var j = 0; j < date_string_array.length - i - 1; j++) {
+                    if (moment(date_string_array[j + 1], format).isBefore(moment(date_string_array[j], format))) {
+                        var temp = date_string_array[j];
+                        date_string_array[j] = date_string_array[j + 1];
+                        date_string_array[j + 1] = temp;
+                    }
+                }
+            }
         }
     }
 });
@@ -89816,6 +89827,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     watch: {
         'market.market_requests': function marketMarket_requests(nV, oV) {
             this.market_date_groups = this.mapMarketRequestGroups(nV);
+            this.reorderMarketRequestStrike(this.market_date_groups);
             this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
         }
     },
@@ -89847,18 +89859,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
 
             if (dates.length > 0) {
-                for (var i = 0; i < dates.length - 1; i++) {
-                    for (var j = 0; j < dates.length - i - 1; j++) {
-                        if (__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j + 1], 'MMMYY').isBefore(__WEBPACK_IMPORTED_MODULE_1_moment___default()(dates[j], 'MMMYY'))) {
-                            var temp = dates[j];
-                            dates[j] = dates[j + 1];
-                            dates[j + 1] = temp;
-                        }
-                    }
-                }
+                this.$root.dateStringArraySort(dates, 'MMMYY');
             }
             return dates;
+        },
+        reorderMarketRequestStrike: function reorderMarketRequestStrike(date_groups) {
+            Object.keys(date_groups).forEach(function (date) {
+                date_groups[date].sort(function (a, b) {
+                    return a.trade_items.default.Strike - b.trade_items.default.Strike;
+                });
+            });
         }
+
     },
     mounted: function mounted() {
         this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
@@ -95080,7 +95092,7 @@ var render = function() {
                     _c("p", [
                       _c("small", [
                         _vm._v(
-                          "Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed."
+                          "Note: Quotes will default to HOLD after 30 minutes."
                         )
                       ])
                     ])
@@ -97942,7 +97954,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             modal_data: {
-                title: 'Select A Market',
+                title: ['Select A Market'],
                 step: 0,
                 show_modal: false,
                 modal_ref: 'request-market-ref',
@@ -97957,7 +97969,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     computed: {
         modalTitle: function modalTitle() {
-            return this.modal_data.title;
+            return this.modal_data.title.join(' > ');
         }
     },
     methods: {
@@ -97978,7 +97990,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         hideModal: function hideModal() {
             this.modal_data.step = 0;
             this.modal_data.show_modal = false;
-            this.modal_data.title = 'Select A Market';
+            this.modal_data.title = ['Select A Market'];
             this.modal_data.selected_controller = null;
             this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
         },
@@ -97997,6 +98009,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         previousStep: function previousStep() {
             this.modal_data.step--;
             if (this.modal_data.step == 1) {
+                this.modal_data.title = ['Select A Market'];
                 this.modal_data.selected_controller = 'Selections';
                 this.modal_data.step = 0;
             } else {
@@ -98152,7 +98165,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 Expiry: __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default.a,
                 Confirm: __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default.a,
                 Details: __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default.a
-            }
+            },
+            temp_title: []
         };
     },
 
@@ -98161,6 +98175,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * Returns to previous modal step 
          */
         previousStep: function previousStep() {
+            this.modal_data.title.pop();
             this.modal_data.step--;
         },
 
@@ -98178,15 +98193,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         loadStepComponent: function loadStepComponent(component_data) {
             if (component_data != 'back') {
                 this.nextStep();
+                this.modal_data.title.push(component_data);
+            } else {
+                if (this.modal_data.title[0] == 'Confirm Market Request') {
+                    this.modal_data.title = this.temp_title;
+                }
+                this.modal_data.title.pop();
             }
             switch (this.modal_data.step) {
                 case 2:
                     this.selected_step_component = 'Market';
                     break;
                 case 3:
-                    //this.modal_data.title += ' > ' + component_data.title;
-                    console.log("CASE 3: ", this.index_data.index_market_object);
-                    //this.index_data.index_market_object.market = component_data;
                     this.selected_step_component = 'Structure';
                     break;
                 case 4:
@@ -98194,21 +98212,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     if (this.index_data.index_market_object.trade_structure == 'Calendar') {
                         this.index_data.number_of_dates = 2;
                     }
-                    //this.modal_data.title += ' > ' + component_data;
-                    //this.index_data.index_market_object.trade_structure = component_data;
-                    console.log("CASE 4: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Expiry';
                     break;
                 case 5:
-                    //this.index_data.index_market_object.expiry_dates = component_data;
-                    console.log("CASE 5: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Details';
-                    console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                     break;
                 case 6:
-                    this.modal_data.title = 'Confirm Market Request';
-                    //this.index_data.index_market_object.details = component_data;
-                    console.log("CASE 6: ", this.index_data.index_market_object);
+                    this.temp_title = this.modal_data.title;
+                    this.modal_data.title = ['Confirm Market Request'];
                     this.selected_step_component = 'Confirm';
                     break;
                 case 7:
@@ -98241,9 +98252,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var new_data = this.formatRequestData();
             axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
-                    //console.log("Saving: ",newMarketRequestResponse);
                     _this2.close_modal();
-                    //this.$root.reloadMarketRequests(); //we using pusher now
                 } else {
                     console.error(err);
                 }
@@ -98366,7 +98375,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        this.modal_data.title = "Index";
+        this.modal_data.title = ["Index"];
         this.loadIndexMarkets();
         console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
         this.selected_step_component = 'Market';
@@ -98420,7 +98429,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         selectMarket: function selectMarket(market) {
             this.data.index_market_object.market = market;
-            this.callback(market);
+            this.callback(market.title);
         }
     },
     mounted: function mounted() {}
@@ -98555,6 +98564,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         selectStructure: function selectStructure(trade_structure) {
             this.data.index_market_object.trade_structure = trade_structure;
+            console.log("SENDING THIS BACK: ", trade_structure);
             this.callback(trade_structure);
         },
 
@@ -98706,6 +98716,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: 'ExpirySelection',
@@ -98726,16 +98741,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             current_page: 1,
             per_page: 12,
             total: null,
-            selected_dates: []
+            selected_dates: [],
+            duplicate_date: false
         };
     },
 
     methods: {
         selectExpiryDates: function selectExpiryDates(date) {
-            this.selected_dates.push(date);
+            var _this = this;
+
+            this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
+            if (!this.duplicate_date) {
+                this.selected_dates.push(date);
+            }
             if (this.selected_dates.length == this.data.number_of_dates) {
+                this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                 this.data.index_market_object.expiry_dates = this.selected_dates;
-                this.callback(); //add title dates
+
+                this.callback(this.selected_dates.map(function (current) {
+                    return _this.castToMoment(current);
+                }).join(' / '));
             }
         },
         castToMoment: function castToMoment(date_string) {
@@ -98753,14 +98778,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          * Loads Expiry Dates
          */
         loadExpiryDate: function loadExpiryDate() {
-            var _this = this;
+            var _this2 = this;
 
             axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page=' + this.current_page).then(function (expiryDateResponse) {
                 if (expiryDateResponse.status == 200) {
-                    _this.current_page = expiryDateResponse.data.current_page;
-                    _this.per_page = expiryDateResponse.data.per_page;
-                    _this.total = expiryDateResponse.data.total;
-                    _this.expiry_dates = expiryDateResponse.data.data;
+                    _this2.current_page = expiryDateResponse.data.current_page;
+                    _this2.per_page = expiryDateResponse.data.per_page;
+                    _this2.total = expiryDateResponse.data.total;
+                    _this2.expiry_dates = expiryDateResponse.data.data;
                 } else {
                     console.error(err);
                 }
@@ -98800,11 +98825,7 @@ var render = function() {
                     { staticClass: "mt-0 text-center", attrs: { cols: "12" } },
                     [
                       _c("p", { staticClass: "modal-info-text" }, [
-                        _vm._v(
-                          "*Calendar structure requires " +
-                            _vm._s(_vm.data.number_of_dates) +
-                            " expiry dates. Second date selected will continue your market request process"
-                        )
+                        _vm._v("*Select two dates to continue")
                       ])
                     ]
                   )
@@ -98851,6 +98872,21 @@ var render = function() {
                     1
                   )
                 })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.duplicate_date
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                [
+                  _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v("Cannot select duplicate dates.")
+                    ])
+                  ])
+                ],
+                1
               )
             : _vm._e(),
           _vm._v(" "),
@@ -98927,6 +98963,19 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -99157,77 +99206,162 @@ var render = function() {
                       _vm._v(" "),
                       _vm.form_data.fields.length > 1
                         ? _c(
-                            "b-form-radio-group",
-                            {
-                              staticClass: "mb-2",
-                              attrs: { id: "risky-choices", name: "choice" },
-                              model: {
-                                value: _vm.chosen_option,
-                                callback: function($$v) {
-                                  _vm.chosen_option = $$v
-                                },
-                                expression: "chosen_option"
-                              }
-                            },
+                            "b-row",
+                            { attrs: { "align-h": "center" } },
                             [
-                              _c(
-                                "b-row",
-                                { attrs: { "align-h": "center" } },
-                                [
-                                  _c(
+                              _vm.display.disable_choice
+                                ? _c(
                                     "b-col",
-                                    {
-                                      staticClass: "text-center",
-                                      attrs: { cols: "3", offset: "3" }
-                                    },
+                                    { attrs: { cols: "12 mb-2" } },
                                     [
                                       _c(
-                                        "b-form-radio",
-                                        {
-                                          attrs: {
-                                            id: "choice-0",
-                                            disabled:
-                                              _vm.display.disable_choice,
-                                            value: "0"
-                                          }
-                                        },
-                                        [_vm._v("CHOICE")]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "b-col",
-                                    {
-                                      staticClass: "text-center",
-                                      attrs: {
-                                        cols: "3",
-                                        offset:
-                                          _vm.form_data.fields.length == 3
-                                            ? 3
-                                            : 0
-                                      }
-                                    },
-                                    [
-                                      _c(
-                                        "b-form-radio",
-                                        {
-                                          attrs: {
-                                            id: "choice-1",
-                                            disabled:
-                                              _vm.display.disable_choice,
-                                            value: "1"
-                                          }
-                                        },
-                                        [_vm._v("CHOICE")]
+                                        "b-row",
+                                        [
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: { cols: "3", offset: "3" }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: {
+                                                cols: "3",
+                                                offset:
+                                                  _vm.form_data.fields.length ==
+                                                  3
+                                                    ? 3
+                                                    : 0
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
                                       )
                                     ],
                                     1
                                   )
-                                ],
-                                1
-                              )
+                                : _c(
+                                    "b-col",
+                                    { attrs: { cols: "12" } },
+                                    [
+                                      _c(
+                                        "b-form-radio-group",
+                                        {
+                                          staticClass: "mb-2",
+                                          attrs: {
+                                            id: "risky-choices",
+                                            name: "choice"
+                                          },
+                                          model: {
+                                            value: _vm.chosen_option,
+                                            callback: function($$v) {
+                                              _vm.chosen_option = $$v
+                                            },
+                                            expression: "chosen_option"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "b-row",
+                                            { attrs: { "align-h": "center" } },
+                                            [
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset: "3"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-0",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "0"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset:
+                                                      _vm.form_data.fields
+                                                        .length == 3
+                                                        ? 3
+                                                        : 0
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-1",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "1"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
                             ],
                             1
                           )
@@ -99337,7 +99471,7 @@ var render = function() {
                               _c("b-col", { staticClass: "text-center mt-3" }, [
                                 _c("p", { staticClass: "modal-info-text" }, [
                                   _vm._v(
-                                    "\n                                    All bids/offers going forward will have to maintain the ratio you set here\n                                "
+                                    "\n                                    All trades will maintain the above ratio.\n                                "
                                   )
                                 ])
                               ])

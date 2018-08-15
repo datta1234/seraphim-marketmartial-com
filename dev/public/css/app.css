@@ -12149,8 +12149,14 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
-.mm-modal .modal-body {
-  color: #000;
+.trade-section.dark-theme .mm-modal .modal-body,
+.trade-section.light-theme .mm-modal .modal-body {
+  color: #1D3641;
+}
+
+.trade-section.dark-theme .mm-modal .modal-body p,
+.trade-section.light-theme .mm-modal .modal-body p {
+  color: #1D3641 !important;
 }
 
 .mm-modal {
@@ -12191,6 +12197,10 @@ input:checked + .slider:before {
 
 .mm-modal .modal-body .custom-radio .custom-control-input:checked ~ .custom-control-label::before {
   background-color: #1c7c74;
+}
+
+.mm-modal .modal-body .details-choice-badge {
+  font-size: 1em;
 }
 
 .mm-modal .modal-info-text {
