@@ -12150,12 +12150,14 @@ input:checked + .slider:before {
 }
 
 .trade-section.dark-theme .mm-modal .modal-body,
-.trade-section.light-theme .mm-modal .modal-body {
+.trade-section.light-theme .mm-modal .modal-body,
+.interaction-content .mm-modal .modal-body {
   color: #1D3641;
 }
 
 .trade-section.dark-theme .mm-modal .modal-body p,
-.trade-section.light-theme .mm-modal .modal-body p {
+.trade-section.light-theme .mm-modal .modal-body p,
+.interaction-content .mm-modal .modal-body p {
   color: #1D3641 !important;
 }
 
