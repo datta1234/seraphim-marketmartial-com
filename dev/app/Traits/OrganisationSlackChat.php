@@ -20,9 +20,17 @@ trait OrganisationSlackChat {
             "validate" => true,
             "name" => $channel_name
         ];
-        $header = ["Authorization" => "Bearer ".env('SLACK_AUTH_BEARER')];
+        $header = [
+            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            'Content-Type' =>'application/json', 
+            'Accept' => 'application/json'
+        ];
         $client = new Client();
-        $response = $client->post(env('SLACK_API_URL').'/groups.create', $header, json_encode($body));
+        $response = $client->request('POST', env('SLACK_API_URL').'/groups.create', [
+                'headers' => $header,
+                'body'  =>  json_encode($body)
+        ]);
+        return json_decode($response->getBody());
     }
 
     public function sendMessage($message, $user_name)

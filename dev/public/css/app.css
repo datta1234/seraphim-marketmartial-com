@@ -12022,8 +12022,8 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .chat-bar {
   padding: 0px;
-  width: auto;
   position: relative;
+  width: 0px;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-content {
@@ -12038,16 +12038,36 @@ input:checked + .slider:before {
   float: left;
   color: #fff;
   overflow: hidden;
+  position: relative;
+  padding-bottom: 150px;
+  margin-bottom: 150px;
 }
 
-.interaction-bar-wrapper .chat-bar.active .chat-bar-toggle {
-  width: 25px;
-  opacity: 1;
+.interaction-bar-wrapper .chat-bar.active {
+  width: 325px;
+  /* .chat-bar-toggle {
+                width: $chat-toggle-width;
+                opacity: 1;
+            }
+            .chat-content {
+                width:$chat-bar-width;
+                opacity: 1;
+            } */
 }
 
 .interaction-bar-wrapper .chat-bar.active .chat-content {
-  width: 300px;
   opacity: 1;
+  position: fixed;
+  z-index: 1030;
+  width: 325px;
+}
+
+.interaction-bar-wrapper .chat-bar.active .chat-content .chat-bar-toggle {
+  width: 25px;
+  opacity: 1;
+  position: absolute;
+  right: 300px;
+  top: 0;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header h3 {
@@ -12063,13 +12083,15 @@ input:checked + .slider:before {
   font-size: 2em;
 }
 
-.interaction-bar-wrapper .chat-bar .chats {
+.interaction-bar-wrapper .chat-bar .chat-history {
   background-color: #FFFFFF;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-action-wrapper {
+  width: 300px;
   position: absolute;
-  bottom: 0;
+  bottom: 85px;
+  right: 0;
 }
 
 .interaction-bar-wrapper .chat-bar-toggle {

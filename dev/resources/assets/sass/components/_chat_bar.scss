@@ -7,8 +7,8 @@
     .chat-bar {
         @extend .col-auto;
         padding:0px;
-        width: auto;
         position:relative;
+        width: 0px;
 
         .chat-content {
             background-color: $mm-interaction-bar-bg;
@@ -23,15 +23,38 @@
             color:#fff;
 
             overflow: hidden;
+
+            position: relative;
+
+            padding-bottom: 150px;
+            margin-bottom: 150px;
         }
         &.active {
-            .chat-bar-toggle {
+            width: $chat-bar-width + $chat-toggle-width;
+
+            /* .chat-bar-toggle {
                 width: $chat-toggle-width;
                 opacity: 1;
             }
             .chat-content {
                 width:$chat-bar-width;
                 opacity: 1;
+            } */
+
+            .chat-content {
+                opacity: 1;
+                position: fixed;
+                z-index: 1030; //also houses a modal and its hidden if the position is fixed
+                width: $chat-bar-width + $chat-toggle-width;
+
+                .chat-bar-toggle {
+                    width: $chat-toggle-width;
+                    opacity: 1;
+                    position: absolute;
+                    right: 0 + $chat-bar-width;
+                    top: 0;
+                }
+
             }
         }
         .chat-header {
@@ -47,13 +70,15 @@
             }
         }
 
-        .chats {
+        .chat-history {
            background-color: $mm-text-white; 
         }
 
         .chat-action-wrapper {
+            width: $chat-bar-width;
             position: absolute;
-            bottom: 0;
+            bottom: 150px - $trade-footer-height;
+            right: 0;
         }
     }
     .chat-bar-content-pane {
