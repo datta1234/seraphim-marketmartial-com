@@ -19,24 +19,29 @@
                     </div>
                 </div>
                 <div class="chat-action-wrapper row mt-1 mb-3">
-                    <div class="col-12">
-                        <form action="" method="POST">
-                            <div class="form-group mb-2">
-                                <textarea class="form-control" name="message" value="" rows="6" placeholder="Enter your message here..."></textarea>
-                            </div>
-                            <div class="form-group mb-2">
-                                <button type="submit" class="btn mm-generic-trade-button">Send message</button>
-                            </div>
-                        </form>
+                    <div class="text-center col-12 mt-1">
+                        <button type="button" class="btn mm-generic-trade-button w-100">No cares, thanks</button>
                     </div>
-                    <div class="col-12 mt-1">
-                        <button type="button" class="btn mm-generic-trade-button float-right w-50">No cares, thanks</button>
+                    <div class="text-center col-12 mt-1">
+                        <button type="button" class="btn mm-generic-trade-button w-100">Looking</button>
                     </div>
-                    <div class="col-12 mt-1">
-                        <button type="button" class="btn mm-generic-trade-button float-right w-50">Looking</button>
+                    <div class="text-center col-12 mt-1">
+                        <button type="button" class="btn mm-generic-trade-button w-100">Please call me</button>
                     </div>
-                    <div class="col-12 mt-1">
-                        <button type="button" class="btn mm-generic-trade-button float-right w-50">Please call me</button>
+                    <div class="col-12 mt-2">
+                        <b-form @submit="sendMessage" id="chat-message-form">
+                            <b-form-textarea class="mb-2"
+                                             v-model="message"
+                                             placeholder="Enter your message here..."
+                                             :rows="6"
+                                             :max-rows="6"
+                                             :no-resize="true">
+                            </b-form-textarea>
+                            
+                            <b-form-group class="text-center mb-2">
+                                <button type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
+                            </b-form-group>
+                        </b-form>
                     </div>
                 </div>
             </div>
@@ -51,9 +56,30 @@
         data() {
             return {
                 opened: false,
+                message: "",
             };
         },
         methods: {
+            sendMessage(evt) {
+                evt.preventDefault();
+                if(this.message) {
+                    axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", {message: this.message})
+                    .then(response => {
+                        // TODO add message to list with sending icon
+                        // NOTE when we get response from pusher we will check against message and change icon to sent(check) icon
+                        // response.data.data.message
+                        // response.data.data.time_stamp
+                        // response.data.data.user_name
+                        console.log("SUCCESS: ",response);
+                    })
+                    .catch(err => {
+                        reject(new Errors(err.response.data));
+                    });
+                } else {
+                    console.log("I AM EMPTY!");
+                    // handle empty message field
+                }
+            },
             toggleBar(set) {
                 if(typeof set != 'undefined') {
                     this.opened = set == true;

@@ -159,7 +159,7 @@ export default class BaseModel {
         if(arr_to_validate.length == 0) {
             return true;
         }
-        //check if all array values are the same instance else trow exception
+        //check if all array values are the same instance else throw exception
         let is_valid = !!arr_to_validate.reduce( (acc, current) => { 
             let custom_check = this._isModelInstance(acc);
             if(custom_check.is_model) {

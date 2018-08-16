@@ -11981,7 +11981,7 @@ var BaseModel = function () {
             if (arr_to_validate.length == 0) {
                 return true;
             }
-            //check if all array values are the same instance else trow exception
+            //check if all array values are the same instance else throw exception
             var is_valid = !!arr_to_validate.reduce(function (acc, current) {
                 var custom_check = _this4._isModelInstance(acc);
                 if (custom_check.is_model) {
@@ -100468,16 +100468,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            opened: false
+            opened: false,
+            message: ""
         };
     },
 
     methods: {
+        sendMessage: function sendMessage(evt) {
+            evt.preventDefault();
+            if (this.message) {
+                axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", { message: this.message }).then(function (response) {
+                    // TODO add message to list with sending icon
+                    // NOTE when we get response from pusher we will check against message and change icon to sent(check) icon
+                    // response.data.data.message
+                    // response.data.data.time_stamp
+                    // response.data.data.user_name
+                    console.log("SUCCESS: ", response);
+                }).catch(function (err) {
+                    reject(new Errors(err.response.data));
+                });
+            } else {
+                console.log("I AM EMPTY!");
+                // handle empty message field
+            }
+        },
         toggleBar: function toggleBar(set) {
             if (typeof set != 'undefined') {
                 this.opened = set == true;
@@ -100564,7 +100588,58 @@ var render = function() {
           _vm._v(" "),
           _vm._m(0),
           _vm._v(" "),
-          _vm._m(1)
+          _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
+            _vm._m(1),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-12 mt-2" },
+              [
+                _c(
+                  "b-form",
+                  {
+                    attrs: { id: "chat-message-form" },
+                    on: { submit: _vm.sendMessage }
+                  },
+                  [
+                    _c("b-form-textarea", {
+                      staticClass: "mb-2",
+                      attrs: {
+                        placeholder: "Enter your message here...",
+                        rows: 6,
+                        "max-rows": 6,
+                        "no-resize": true
+                      },
+                      model: {
+                        value: _vm.message,
+                        callback: function($$v) {
+                          _vm.message = $$v
+                        },
+                        expression: "message"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("b-form-group", { staticClass: "text-center mb-2" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mm-generic-trade-button w-100",
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Send message")]
+                      )
+                    ])
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          ])
         ])
       ])
     ]
@@ -100583,66 +100658,45 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-action-wrapper row mt-1 mb-3" }, [
-      _c("div", { staticClass: "col-12" }, [
-        _c("form", { attrs: { action: "", method: "POST" } }, [
-          _c("div", { staticClass: "form-group mb-2" }, [
-            _c("textarea", {
-              staticClass: "form-control",
-              attrs: {
-                name: "message",
-                value: "",
-                rows: "6",
-                placeholder: "Enter your message here..."
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-group mb-2" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn mm-generic-trade-button",
-                attrs: { type: "submit" }
-              },
-              [_vm._v("Send message")]
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-12 mt-1" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn mm-generic-trade-button float-right w-50",
-            attrs: { type: "button" }
-          },
-          [_vm._v("No cares, thanks")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-12 mt-1" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn mm-generic-trade-button float-right w-50",
-            attrs: { type: "button" }
-          },
-          [_vm._v("Looking")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-12 mt-1" }, [
-        _c(
-          "button",
-          {
-            staticClass: "btn mm-generic-trade-button float-right w-50",
-            attrs: { type: "button" }
-          },
-          [_vm._v("Please call me")]
-        )
-      ])
+    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-generic-trade-button w-100",
+          attrs: { type: "button" }
+        },
+        [_vm._v("No cares, thanks")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-generic-trade-button w-100",
+          attrs: { type: "button" }
+        },
+        [_vm._v("Looking")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-generic-trade-button w-100",
+          attrs: { type: "button" }
+        },
+        [_vm._v("Please call me")]
+      )
     ])
   }
 ]

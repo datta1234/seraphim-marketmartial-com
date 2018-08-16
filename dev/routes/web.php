@@ -69,6 +69,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAct
     Route::resource('market-condition', 'TradeScreen\MarketConditionsController');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
 
+    Route::resource('organisation-chat', 'TradeScreen\ChatController');
 
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
 });
