@@ -37,15 +37,20 @@ class ChatController extends Controller
      */
     public function store(SendSlackChatRequest $request)
     {
-        if( $request->has('message') ) {
+        if( $request->has('new_message') || $request->has('quick_message') ) {
             $user = Auth::user();
-            $response = $user->organisation->sendMessage($request->input('message'), $user->full_name);
+            $response = null;
+            if( $request->has('new_message') ) {
+                $response = $user->organisation->sendMessage(str_replace(env('SLACK_ADMIN_REF'),"<@".env('SLACK_ADMIN_ID').">",$request->input('new_message')), $user->full_name);
+            } else {
+                $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name);
+            }
             if($response->ok) {
                 return [
                     'success' => false,
                     'data' => [
                         "user_name" => $response->message->username, 
-                        "message" => $response->message->text , 
+                        "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 
                         "time_stamp" => $response->message->ts 
                     ],
                     'message' => 'Message sent.'

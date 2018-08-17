@@ -100484,9 +100484,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -100494,7 +100491,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             opened: false,
             new_message: "",
-            display_messages: []
+            quick_message: "",
+            display_messages: [{
+                "user_name": "Destany Kerluke",
+                "time_stamp": "1534493646.000100",
+                "message": "This is a test."
+            }, {
+                "user_name": "Destany Kerluke",
+                "time_stamp": "1534493646.000100",
+                "message": "This is a test."
+            }, {
+                "user_name": "Destany Kerluke",
+                "time_stamp": "1534493646.000100",
+                "message": "This is a test."
+            }]
         };
     },
 
@@ -100503,19 +100513,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             evt.preventDefault();
-            if (this.new_message) {
-                axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", { message: this.new_message }).then(function (response) {
+            if (this.new_message || this.quick_message) {
+                var sendMessage = this.new_message ? { new_message: this.new_message } : { quick_message: this.quick_message };
+                axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage).then(function (response) {
                     // TODO add message to list with sending icon
                     // NOTE when we get response from pusher we will check against message and change icon to sent(check) icon
                     // response.data.data.message
                     // response.data.data.time_stamp
                     // response.data.data.user_name
+                    var chat_history = _this.$refs.chat_history;
+                    // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
+                    var should_scroll = false;
+                    if (chat_history.scrollTop === chat_history.scrollHeight - chat_history.offsetHeight) {
+                        should_scroll = true;
+                    }
                     _this.new_message = "";
+                    _this.quick_message = "";
                     _this.display_messages.push(response.data.data);
+
+                    chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
                 }).catch(function (err) {
                     reject(new Errors(err.response.data));
                 });
             } else {
+                this.new_message = "";
+                this.quick_message = "";
                 console.log("I AM EMPTY!");
                 // handle empty message field
             }
@@ -100544,10 +100566,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         chatBarListener: function chatBarListener() {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
         }
     },
     mounted: function mounted() {
         this.chatBarListener();
+        var chat_history = this.$refs.chat_history;
+        chat_history.scrollTop = chat_history.scrollHeight;
     }
 });
 
@@ -100581,148 +100608,178 @@ var render = function() {
           [_c("span", { staticClass: "icon icon-arrows-right" })]
         ),
         _vm._v(" "),
-        _c("div", { staticClass: "container-fluid" }, [
-          _c("div", { staticClass: "chat-header row pt-1" }, [
-            _c("div", { staticClass: "col-12 text-center" }, [
-              _c("span", { staticClass: "icon icon-chat float-left" }),
-              _vm._v(" "),
-              _c("h3", [_vm._v("Messages")]),
-              _vm._v(" "),
-              _c(
-                "h3",
-                {
-                  staticClass: "float-right close",
-                  attrs: { id: "chat-bar-dismiss" },
-                  on: {
-                    click: function($event) {
-                      _vm.fireChatBar()
-                    }
+        _c("div", { staticClass: "container-fluid organisation-chat" }, [
+          _c("div", { staticClass: "chat-header text-center pt-1 mb-3 pr-2" }, [
+            _c("span", { staticClass: "icon icon-chat float-left" }),
+            _vm._v(" "),
+            _c("h3", { staticClass: "pr-3" }, [_vm._v("Messages")]),
+            _vm._v(" "),
+            _c(
+              "h3",
+              {
+                staticClass: "float-right close",
+                attrs: { id: "chat-bar-dismiss" },
+                on: {
+                  click: function($event) {
+                    _vm.fireChatBar()
                   }
-                },
-                [_vm._v("x")]
-              )
-            ])
+                }
+              },
+              [_vm._v("x")]
+            )
           ]),
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "chat-action-wrapper row mt-1 mb-3" },
+            { staticClass: "chat-inner-wrapper pr-2" },
             [
               _c(
-                "b-row",
+                "b-card",
+                { ref: "chat_history", staticClass: "chat-history" },
+                _vm._l(_vm.display_messages, function(message, index) {
+                  return _c(
+                    "b-row",
+                    {
+                      staticClass: " chat-block",
+                      class: { "mt-4": index != 0 }
+                    },
+                    [
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "chat-user-name",
+                          attrs: { cols: "12 mb-0 pt-3" }
+                        },
+                        [
+                          _c("h6", { staticClass: "m-0" }, [
+                            _vm._v(_vm._s(message.user_name))
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "chat-message mt-3",
+                          attrs: { cols: "12" }
+                        },
+                        [_c("p", [_vm._v(_vm._s(message.message))])]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        {
+                          staticClass: "chat-time",
+                          attrs: { cols: "12 mt-0" }
+                        },
+                        [
+                          _c("h6", { staticClass: "float-right" }, [
+                            _vm._v(_vm._s(_vm.castToMoment(message.time_stamp)))
+                          ])
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                })
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "chat-actions" },
                 [
                   _c(
-                    "b-col",
+                    "b-form",
                     {
-                      staticClass: "chat-history h-100",
-                      attrs: { cols: "12" }
+                      attrs: { id: "chat-message-form" },
+                      on: { submit: _vm.sendMessage }
                     },
-                    _vm._l(_vm.display_messages, function(message, index) {
-                      return _c(
-                        "b-row",
-                        { staticClass: "mt-2" },
+                    [
+                      _c("b-form-group", { staticClass: "text-center mb-1" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.quick_message = "No cares, thanks"
+                              }
+                            }
+                          },
+                          [_vm._v("No cares, thanks")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("b-form-group", { staticClass: "text-center mb-1" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.quick_message = "Looking"
+                              }
+                            }
+                          },
+                          [_vm._v("Looking")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("b-form-group", { staticClass: "text-center mb-1" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "submit" },
+                            on: {
+                              click: function($event) {
+                                _vm.quick_message = "Please call me"
+                              }
+                            }
+                          },
+                          [_vm._v("Please call me")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("b-form-textarea", {
+                        staticClass: "mb-1 mt-1",
+                        attrs: {
+                          placeholder: "Enter your message here...",
+                          rows: 6,
+                          "max-rows": 6,
+                          "no-resize": true
+                        },
+                        model: {
+                          value: _vm.new_message,
+                          callback: function($$v) {
+                            _vm.new_message = $$v
+                          },
+                          expression: "new_message"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "b-form-group",
+                        { staticClass: "text-center mb-0 pb-0" },
                         [
                           _c(
-                            "b-col",
-                            { staticClass: "chat-time", attrs: { cols: "6" } },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(message.time_stamp) +
-                                  "\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "b-col",
+                            "button",
                             {
-                              staticClass: "chat-user-name",
-                              attrs: { cols: "6" }
+                              staticClass: "btn mm-generic-trade-button w-100",
+                              attrs: { type: "submit" }
                             },
-                            [
-                              _vm._v(
-                                "\n                                " +
-                                  _vm._s(message.user_name) +
-                                  "\n                            "
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "b-col",
-                            {
-                              staticClass: "chat-message",
-                              attrs: { cols: "12" }
-                            },
-                            [_c("p", [_vm._v(_vm._s(message.message))])]
+                            [_vm._v("Send message")]
                           )
-                        ],
-                        1
+                        ]
                       )
-                    })
+                    ],
+                    1
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "chat-actions row mt-1 mb-3" }, [
-                _vm._m(0),
-                _vm._v(" "),
-                _vm._m(1),
-                _vm._v(" "),
-                _vm._m(2),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-12 mt-2" },
-                  [
-                    _c(
-                      "b-form",
-                      {
-                        attrs: { id: "chat-message-form" },
-                        on: { submit: _vm.sendMessage }
-                      },
-                      [
-                        _c("b-form-textarea", {
-                          staticClass: "mb-2",
-                          attrs: {
-                            placeholder: "Enter your message here...",
-                            rows: 6,
-                            "max-rows": 6,
-                            "no-resize": true
-                          },
-                          model: {
-                            value: _vm.new_message,
-                            callback: function($$v) {
-                              _vm.new_message = $$v
-                            },
-                            expression: "new_message"
-                          }
-                        }),
-                        _vm._v(" "),
-                        _c(
-                          "b-form-group",
-                          { staticClass: "text-center mb-2 pb-2" },
-                          [
-                            _c(
-                              "button",
-                              {
-                                staticClass:
-                                  "btn mm-generic-trade-button w-100",
-                                attrs: { type: "submit" }
-                              },
-                              [_vm._v("Send message")]
-                            )
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ])
+              )
             ],
             1
           )
@@ -100731,53 +100788,7 @@ var render = function() {
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-generic-trade-button w-100",
-          attrs: { type: "button" }
-        },
-        [_vm._v("No cares, thanks")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-generic-trade-button w-100",
-          attrs: { type: "button" }
-        },
-        [_vm._v("Looking")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center col-12 mt-1" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-generic-trade-button w-100",
-          attrs: { type: "button" }
-        },
-        [_vm._v("Please call me")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

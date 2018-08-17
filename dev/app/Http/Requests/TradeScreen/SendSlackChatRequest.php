@@ -24,16 +24,20 @@ class SendSlackChatRequest extends FormRequest
     public function rules()
     {
         return [
-            'message' => 'required|string|max:1000',
+            'new_message' => 'required_without:quick_message|string|max:1000',
+            'quick_message' => 'required_without:new_message|string|max:1000',
         ];
     }
 
     public function messages()
     {
         return [
-            'message.required' => 'Message is required',
-            'message.string' => 'Only text messages are accepted',
-            'message.max' => 'Messages cannot be larger than a 1000 characters',
+            'new_message.required' => 'Message is required',
+            'new_message.string' => 'Only text messages are accepted',
+            'new_message.max' => 'Messages cannot be larger than a 1000 characters',
+            'quick_message.required' => 'Message is required',
+            'quick_message.string' => 'Only text messages are accepted',
+            'quick_message.max' => 'Messages cannot be larger than a 1000 characters',
         ];  
     }
 }
