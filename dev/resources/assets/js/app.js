@@ -351,6 +351,10 @@ const app = new Vue({
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
                 this.updateUserMarketRequest(UserMarketRequest);
+            })
+            .listen('ChatMessageReceived', (received_org_message) => {
+                console.log("Pusher got a new message ", received_org_message);
+                this.$emit('chatMessageReceived', received_org_message);
             }); 
         }
 

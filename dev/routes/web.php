@@ -73,4 +73,3 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAct
 
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
 });
-

@@ -14,23 +14,32 @@
 
                 <div class="chat-inner-wrapper pr-2">
                     <b-card ref="chat_history" class="chat-history">
-                        <b-row v-bind:class="{'mt-4':index != 0}" v-for="(message, index) in display_messages" class=" chat-block">
-                            <b-col cols="12 mb-0 pt-3" class="chat-user-name">
-                                <h6 class="m-0">{{ message.user_name }}</h6>
-                            </b-col>
-                            <b-col cols="12" class="chat-message mt-3">
-                                <p>{{ message.message }}</p>
-                            </b-col>
-                            <b-col cols="12 mt-0" class="chat-time">
-                                <h6 class="float-right">{{ castToMoment(message.time_stamp) }}</h6>
-                            </b-col>
+                        <b-row  v-for="(message, index) in display_messages" 
+                                v-bind:class="{
+                                    'mt-4': index != 0, 
+                                    'admin-chat': message.user_name == 'Market Martial',
+                                    'own-chat': message.user_name == $root.config('user_preferences.user_name'), 
+                                }">
+                            <b-col :offset-md="message.user_name == $root.config('user_preferences.user_name')? 2 : 0" 
+                                    cols="10" 
+                                    class="chat-block">
+                                <b-row>
+                                    <b-col cols="12" class="chat-user-name mb-0 pt-3">
+                                        <h6 class="m-0">{{ messageUserName(message.user_name) }}</h6>
+                                    </b-col>
+                                    <b-col cols="12" class="chat-message mt-3">
+                                        <p>{{ message.message }}</p>
+                                    </b-col>
+                                    <b-col cols="12" class="chat-time mt-0">
+                                        <h6 v-bind:class="{'float-right': message.user_name != $root.config('user_preferences.user_name'), 
+                                        }">{{ castToMoment(message.time_stamp) }}</h6>
+                                    </b-col>
+                                </b-row>
+                            </b-col>    
                         </b-row>
                     </b-card>
                     
                     <div class="chat-actions">
-                        <!-- <button type="button" class="btn mm-generic-trade-button mt-1 w-100">No cares, thanks</button>
-                        <button type="button" class="btn mm-generic-trade-button mt-1 w-100">Looking</button>
-                        <button type="button" class="btn mm-generic-trade-button mt-1 w-100">Please call me</button> -->
                         <b-form @submit="sendMessage" id="chat-message-form">
                             <b-form-group class="text-center mb-1">
                                 <button @click="quick_message = 'No cares, thanks'" type="submit" class="btn mm-generic-trade-button w-100">No cares, thanks</button>
@@ -69,23 +78,7 @@
                 opened: false,
                 new_message: "",
                 quick_message: "",
-                display_messages: [
-                    /*{
-                        "user_name": "Destany Kerluke",
-                        "time_stamp": "1534493646.000100",
-                        "message": "This is a test.",
-                    },
-                    {
-                        "user_name": "Destany Kerluke",
-                        "time_stamp": "1534493646.000100",
-                        "message": "This is a test.",
-                    },
-                    {
-                        "user_name": "Destany Kerluke",
-                        "time_stamp": "1534493646.000100",
-                        "message": "This is a test.",
-                    }*/
-                ]
+                display_messages: []
             };
         },
         methods: {
@@ -110,7 +103,9 @@
                         this.quick_message = "";
                         this.display_messages.push(response.data.data);
                         
-                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                        Vue.nextTick( () => {
+                            chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                        });
                     })
                     .catch(err => {
                         reject(new Errors(err.response.data));
@@ -146,6 +141,14 @@
             chatBarListener() {
                 EventBus.$on('chatToggle', this.toggleBar);
             },
+            /**
+             * Listens for a chatMessageReceived event firing
+             *
+             * @event /$root#chatMessageReceived
+             */
+            newChatMessageListener() {
+                this.$root.$on('chatMessageReceived', this.addNewMessage);
+            },
             castToMoment(date_string) {
                 return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
             },
@@ -154,19 +157,29 @@
                 .then(chatHistoryResponse => {
                     if(chatHistoryResponse.status == 200) {
                         this.display_messages = chatHistoryResponse.data.data;
+                        Vue.nextTick( () => {
+                            this.$refs.chat_history.scrollTop = this.$refs.chat_history.scrollHeight;
+                        });
                     } else {
                         console.error(err);    
                     }
                 }, err => {
                     console.error(err);
+                }).then( () => {
+
                 });
-            }
+            },
+            addNewMessage(message) {
+                this.display_messages.push(message);
+            },
+            messageUserName(username) {
+                return username == this.$root.config('user_preferences.user_name')? "You": username;
+            },
         },
         mounted() {
             this.chatBarListener();
+            this.newChatMessageListener();
             this.loadChatHistory();
-            let chat_history = this.$refs.chat_history;
-            chat_history.scrollTop = chat_history.scrollHeight;
         }
     }
 </script>

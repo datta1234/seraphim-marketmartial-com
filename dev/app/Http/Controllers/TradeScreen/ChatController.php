@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\TradeScreen\SendSlackChatRequest;
+use App\Models\ApiIntegration\SlackIntegration;
+use App\Models\UserManagement\Organisation;
 
 class ChatController extends Controller
 {
@@ -112,5 +114,35 @@ class ChatController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function receiveChat(Request $request)
+    {
+        if( $request->has('token') && $request->input('token') === env('SLACK_AUTH_BEARER') ) {
+            
+            // Checks for slack challenge to set up endpoint to slack events
+            if( $request->has('challenge') ) {
+                return ['challenge'=>$request->input('challenge')];
+            }
+
+            // Checks if it is a new message event to send through pusher
+            if( $request->has('event') ) {
+                $eventData = $request->input('event');
+                $organisation = Organisation::whereHas('slackIntegrations', function ($query) use ($eventData) {
+                    $query->where([
+                        ['field', 'channel'], 
+                        ['value', $eventData["channel"]]
+                    ]);
+                })->first();
+
+                // send message through pusher
+                if($organisation !== null) {
+                    $organisation->receiveMessage($eventData);
+                }
+                return response("received", 200);
+            }
+        }
+
+        return response("Unauthorized", 401);
     }
 }

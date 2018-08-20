@@ -12137,6 +12137,16 @@ input:checked + .slider:before {
   background-color: #B1B1B1;
 }
 
+.organisation-chat .admin-chat .chat-block {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.organisation-chat .own-chat .chat-block {
+  color: #1D3641;
+  background-color: #9fe29f;
+}
+
 .popover .popover-body {
   background-color: #FFFFFF;
 }

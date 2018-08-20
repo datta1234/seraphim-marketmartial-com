@@ -122,11 +122,24 @@
 
 .organisation-chat {
     .chat-block {
-        color: $mm-market-important;
+        color: $mm-chat-text;
         border-radius: 0.6rem;
         background-color: $mm-chat-block;
 
         .chat-message {
+        }
+    }
+    .admin-chat {
+        .chat-block {
+            color: $mm-chat-admin-text;
+            background-color: $mm-chat-block-admin;
+        }
+    }
+
+    .own-chat {
+        .chat-block {
+            color: $mm-chat-own-text;
+            background-color: $mm-chat-block-own;
         }
     }
 }

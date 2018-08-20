@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Request;
+use App\Events\ChatMessageReceived;
 
 trait OrganisationSlackChat {
 
@@ -64,11 +64,6 @@ trait OrganisationSlackChat {
         return json_decode($response->getBody());
     }
 
-    public function receiveMessage()
-    {
-        // User pusher to send new messages received from endpoint to channel users
-    }
-
     public function channelMessageHistory()
     {
         $header = [
@@ -80,8 +75,7 @@ trait OrganisationSlackChat {
         $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$this->slack_channel->value, [
                 'headers' => $header,
         ])->getBody());
-        //@TODO sanitise messages to only contain the info we need and replace "<@".env('SLACK_ADMIN_ID')."> " in messages with env('SLACK_ADMIN_REF') like in ChatController@store
-        /*dd($response);*/
+
         $formatted_messages = array();
         foreach ($response->messages as $message) {
             if($message->type === 'message') {
@@ -101,5 +95,28 @@ trait OrganisationSlackChat {
             }
         }
         return array_reverse($formatted_messages);    
+    }
+
+    public function receiveMessage($eventData)
+    {
+        if($eventData["type"] === 'message') {
+            if(array_key_exists('subtype',$eventData) && $eventData["subtype"] === 'bot_message') {
+                $formatted_message_bot = array(
+                    "user_name" => $eventData["username"],
+                    "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $eventData["text"]),
+                    "time_stamp" => $eventData["ts"]
+                );
+                
+                event(new ChatMessageReceived($this,$formatted_message_bot));
+            } elseif(array_key_exists('user',$eventData) && $eventData["user"] === env('SLACK_ADMIN_ID') && !array_key_exists('subtype',$eventData)) {
+                $formatted_message_admin = array(
+                    "user_name" => "Market Martial",
+                    "message" => $eventData["text"],
+                    "time_stamp" => $eventData["ts"]
+                );
+                
+                event(new ChatMessageReceived($this,$formatted_message_admin));
+            }
+        }
     }
 }

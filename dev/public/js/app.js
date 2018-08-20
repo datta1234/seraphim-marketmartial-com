@@ -87098,6 +87098,9 @@ var app = new Vue({
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
                 _this2.updateUserMarketRequest(UserMarketRequest);
+            }).listen('ChatMessageReceived', function (received_org_message) {
+                console.log("Pusher got a new message ", received_org_message);
+                _this2.$emit('chatMessageReceived', received_org_message);
             });
         }
     }
@@ -100484,6 +100487,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -100492,23 +100504,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             opened: false,
             new_message: "",
             quick_message: "",
-            display_messages: [
-                /*{
-                    "user_name": "Destany Kerluke",
-                    "time_stamp": "1534493646.000100",
-                    "message": "This is a test.",
-                },
-                {
-                    "user_name": "Destany Kerluke",
-                    "time_stamp": "1534493646.000100",
-                    "message": "This is a test.",
-                },
-                {
-                    "user_name": "Destany Kerluke",
-                    "time_stamp": "1534493646.000100",
-                    "message": "This is a test.",
-                }*/
-            ]
+            display_messages: []
         };
     },
 
@@ -100535,7 +100531,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.quick_message = "";
                     _this.display_messages.push(response.data.data);
 
-                    chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                    Vue.nextTick(function () {
+                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                    });
                 }).catch(function (err) {
                     reject(new Errors(err.response.data));
                 });
@@ -100571,6 +100569,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         chatBarListener: function chatBarListener() {
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
         },
+
+        /**
+         * Listens for a chatMessageReceived event firing
+         *
+         * @event /$root#chatMessageReceived
+         */
+        newChatMessageListener: function newChatMessageListener() {
+            this.$root.$on('chatMessageReceived', this.addNewMessage);
+        },
         castToMoment: function castToMoment(date_string) {
             return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
         },
@@ -100580,19 +100587,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             axios.get(axios.defaults.baseUrl + '/trade/organisation-chat').then(function (chatHistoryResponse) {
                 if (chatHistoryResponse.status == 200) {
                     _this2.display_messages = chatHistoryResponse.data.data;
+                    Vue.nextTick(function () {
+                        _this2.$refs.chat_history.scrollTop = _this2.$refs.chat_history.scrollHeight;
+                    });
                 } else {
                     console.error(err);
                 }
             }, function (err) {
                 console.error(err);
-            });
+            }).then(function () {});
+        },
+        addNewMessage: function addNewMessage(message) {
+            this.display_messages.push(message);
+        },
+        messageUserName: function messageUserName(username) {
+            return username == this.$root.config('user_preferences.user_name') ? "You" : username;
         }
     },
     mounted: function mounted() {
         this.chatBarListener();
+        this.newChatMessageListener();
         this.loadChatHistory();
-        var chat_history = this.$refs.chat_history;
-        chat_history.scrollTop = chat_history.scrollHeight;
     }
 });
 
@@ -100658,43 +100673,91 @@ var render = function() {
                   return _c(
                     "b-row",
                     {
-                      staticClass: " chat-block",
-                      class: { "mt-4": index != 0 }
+                      class: {
+                        "mt-4": index != 0,
+                        "admin-chat": message.user_name == "Market Martial",
+                        "own-chat":
+                          message.user_name ==
+                          _vm.$root.config("user_preferences.user_name")
+                      }
                     },
                     [
                       _c(
                         "b-col",
                         {
-                          staticClass: "chat-user-name",
-                          attrs: { cols: "12 mb-0 pt-3" }
+                          staticClass: "chat-block",
+                          attrs: {
+                            "offset-md":
+                              message.user_name ==
+                              _vm.$root.config("user_preferences.user_name")
+                                ? 2
+                                : 0,
+                            cols: "10"
+                          }
                         },
                         [
-                          _c("h6", { staticClass: "m-0" }, [
-                            _vm._v(_vm._s(message.user_name))
-                          ])
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        {
-                          staticClass: "chat-message mt-3",
-                          attrs: { cols: "12" }
-                        },
-                        [_c("p", [_vm._v(_vm._s(message.message))])]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        {
-                          staticClass: "chat-time",
-                          attrs: { cols: "12 mt-0" }
-                        },
-                        [
-                          _c("h6", { staticClass: "float-right" }, [
-                            _vm._v(_vm._s(_vm.castToMoment(message.time_stamp)))
-                          ])
-                        ]
+                          _c(
+                            "b-row",
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "chat-user-name mb-0 pt-3",
+                                  attrs: { cols: "12" }
+                                },
+                                [
+                                  _c("h6", { staticClass: "m-0" }, [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.messageUserName(message.user_name)
+                                      )
+                                    )
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "chat-message mt-3",
+                                  attrs: { cols: "12" }
+                                },
+                                [_c("p", [_vm._v(_vm._s(message.message))])]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "chat-time mt-0",
+                                  attrs: { cols: "12" }
+                                },
+                                [
+                                  _c(
+                                    "h6",
+                                    {
+                                      class: {
+                                        "float-right":
+                                          message.user_name !=
+                                          _vm.$root.config(
+                                            "user_preferences.user_name"
+                                          )
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.castToMoment(message.time_stamp)
+                                        )
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
                       )
                     ],
                     1
