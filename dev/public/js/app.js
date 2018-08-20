@@ -100492,19 +100492,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             opened: false,
             new_message: "",
             quick_message: "",
-            display_messages: [{
-                "user_name": "Destany Kerluke",
-                "time_stamp": "1534493646.000100",
-                "message": "This is a test."
-            }, {
-                "user_name": "Destany Kerluke",
-                "time_stamp": "1534493646.000100",
-                "message": "This is a test."
-            }, {
-                "user_name": "Destany Kerluke",
-                "time_stamp": "1534493646.000100",
-                "message": "This is a test."
-            }]
+            display_messages: [
+                /*{
+                    "user_name": "Destany Kerluke",
+                    "time_stamp": "1534493646.000100",
+                    "message": "This is a test.",
+                },
+                {
+                    "user_name": "Destany Kerluke",
+                    "time_stamp": "1534493646.000100",
+                    "message": "This is a test.",
+                },
+                {
+                    "user_name": "Destany Kerluke",
+                    "time_stamp": "1534493646.000100",
+                    "message": "This is a test.",
+                }*/
+            ]
         };
     },
 
@@ -100569,10 +100573,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         castToMoment: function castToMoment(date_string) {
             return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
+        },
+        loadChatHistory: function loadChatHistory() {
+            var _this2 = this;
+
+            axios.get(axios.defaults.baseUrl + '/trade/organisation-chat').then(function (chatHistoryResponse) {
+                if (chatHistoryResponse.status == 200) {
+                    _this2.display_messages = chatHistoryResponse.data.data;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
         }
     },
     mounted: function mounted() {
         this.chatBarListener();
+        this.loadChatHistory();
         var chat_history = this.$refs.chat_history;
         chat_history.scrollTop = chat_history.scrollHeight;
     }

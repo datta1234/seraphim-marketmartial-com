@@ -16,7 +16,13 @@ class ChatController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+
+        return [
+            'success' => true,
+            'data' => $user->organisation->channelMessageHistory(),
+            'message' => 'Message sent.'
+        ];
     }
 
     /**
@@ -47,7 +53,7 @@ class ChatController extends Controller
             }
             if($response->ok) {
                 return [
-                    'success' => false,
+                    'success' => true,
                     'data' => [
                         "user_name" => $response->message->username, 
                         "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 

@@ -68,4 +68,38 @@ trait OrganisationSlackChat {
     {
         // User pusher to send new messages received from endpoint to channel users
     }
+
+    public function channelMessageHistory()
+    {
+        $header = [
+            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            'Content-Type' =>'application/json', 
+            'Accept' => 'application/json'
+        ];
+        $client = new Client();
+        $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$this->slack_channel->value, [
+                'headers' => $header,
+        ])->getBody());
+        //@TODO sanitise messages to only contain the info we need and replace "<@".env('SLACK_ADMIN_ID')."> " in messages with env('SLACK_ADMIN_REF') like in ChatController@store
+        /*dd($response);*/
+        $formatted_messages = array();
+        foreach ($response->messages as $message) {
+            if($message->type === 'message') {
+                if(property_exists($message,'subtype') && $message->subtype === 'bot_message') {
+                    $formatted_messages[] = (object) array(
+                        "user_name" => $message->username,
+                        "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $message->text),
+                        "time_stamp" => $message->ts
+                    );
+                } elseif(property_exists($message,'user') && $message->user === env('SLACK_ADMIN_ID') && !property_exists($message,'subtype')) {
+                    $formatted_messages[] = (object) array(
+                        "user_name" => "Market Martial",
+                        "message" => $message->text,
+                        "time_stamp" => $message->ts
+                    );
+                }
+            }
+        }
+        return array_reverse($formatted_messages);    
+    }
 }

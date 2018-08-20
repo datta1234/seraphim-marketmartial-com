@@ -70,7 +70,7 @@
                 new_message: "",
                 quick_message: "",
                 display_messages: [
-                    {
+                    /*{
                         "user_name": "Destany Kerluke",
                         "time_stamp": "1534493646.000100",
                         "message": "This is a test.",
@@ -84,7 +84,7 @@
                         "user_name": "Destany Kerluke",
                         "time_stamp": "1534493646.000100",
                         "message": "This is a test.",
-                    }
+                    }*/
                 ]
             };
         },
@@ -149,9 +149,22 @@
             castToMoment(date_string) {
                 return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
             },
+            loadChatHistory() {
+                axios.get(axios.defaults.baseUrl + '/trade/organisation-chat')
+                .then(chatHistoryResponse => {
+                    if(chatHistoryResponse.status == 200) {
+                        this.display_messages = chatHistoryResponse.data.data;
+                    } else {
+                        console.error(err);    
+                    }
+                }, err => {
+                    console.error(err);
+                });
+            }
         },
         mounted() {
             this.chatBarListener();
+            this.loadChatHistory();
             let chat_history = this.$refs.chat_history;
             chat_history.scrollTop = chat_history.scrollHeight;
         }
