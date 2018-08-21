@@ -72,22 +72,21 @@
                     || (this.is_empty(this.marketNegotiation.bid)  
                     && !this.is_empty(this.marketNegotiation.bid_qty));
              
-             
                 // Check bid offer and offer_qty are present together
-                 invalid_states.offer_pair = ( !this.is_empty(this.marketNegotiation.offer)  
+                invalid_states.offer_pair = ( !this.is_empty(this.marketNegotiation.offer)  
                     && this.is_empty(this.marketNegotiation.offer_qty)) 
                     || (this.is_empty(this.marketNegotiation.offer)  
                     && !this.is_empty(this.marketNegotiation.offer_qty));
-                // Check for previous quote
-                if(typeof markerQoute != 'undefined') {
-                    // Check new markerQoute is equal to old markerQoute
-                    invalid_states.previous = this.marketNegotiation.bid == markerQoute.bid
-                    && this.marketNegotiation.bid_qty == markerQoute.bid_qty
-                    && this.marketNegotiation.offer == markerQoute.offer
-                    && this.marketNegotiation.offer_qty == markerQoute.offer_qty;
-                }
                 
-                console.log("markery negoti",this.marketNegotiation.offer,this.marketNegotiation.offer_qty);
+                // Check for previous quote
+                if(typeof this.markerQoute != 'undefined') {
+
+                    // Check new markerQoute is equal to old markerQoute
+                    invalid_states.previous = this.marketNegotiation.bid == this.markerQoute.bid
+                    && this.marketNegotiation.bid_qty == this.markerQoute.bid_qty
+                    && this.marketNegotiation.offer == this.markerQoute.offer
+                    && this.marketNegotiation.offer_qty == this.markerQoute.offer_qty;
+                }
 
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
