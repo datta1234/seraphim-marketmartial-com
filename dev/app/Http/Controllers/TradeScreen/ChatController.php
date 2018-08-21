@@ -28,16 +28,6 @@ class ChatController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -71,51 +61,6 @@ class ChatController extends Controller
         return ['success'=>false,'data'=> null,'message'=>'Invalid request.'];
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function receiveChat(Request $request)
     {
         if( $request->has('token') && $request->input('token') === env('SLACK_AUTH_BEARER') ) {
@@ -139,8 +84,8 @@ class ChatController extends Controller
                 if($organisation !== null) {
                     $organisation->receiveMessage($eventData);
                 }
-                return response("received", 200);
             }
+            return response("received", 200);
         }
 
         return response("Unauthorized", 401);
