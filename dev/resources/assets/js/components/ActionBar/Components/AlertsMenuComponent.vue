@@ -59,7 +59,11 @@
              * @fires /lib/EventBus#toggleSidebar
              */
             loadInteractionBar(market_request) {
+                if(market_request.attributes.action_needed) {
+                    market_request.actionTaken();
+                }
                 EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
+                this.$refs[this.popover_ref].$emit('close');
             },
         },
         mounted() {

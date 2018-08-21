@@ -97106,7 +97106,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         * @fires /lib/EventBus#toggleSidebar
         */
         loadInteractionBar: function loadInteractionBar(market_request) {
+            if (market_request.attributes.action_needed) {
+                market_request.actionTaken();
+            }
             __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
+            this.$refs[this.popover_ref].$emit('close');
         }
     },
     mounted: function mounted() {}
