@@ -69,7 +69,7 @@
                 <b-form-checkbox v-model="state_premium_calc" value="true" unchecked-value="false"> Apply premium calculator</b-form-checkbox>
             </b-col>
         </b-row> -->
-        <ibar-apply-premium-calculator :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator>
+        <!-- <ibar-apply-premium-calculator :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
 
 
     </b-container>

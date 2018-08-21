@@ -9,11 +9,11 @@
 
         <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
 
-        <b-row class="mb-2">
+        <!-- <b-row class="mb-2">
             <b-col>
                 <b-form-checkbox v-model="state_premium_calc" value="true" unchecked-value="false"> Apply premium calculator</b-form-checkbox>
             </b-col>
-        </b-row>
+        </b-row> -->
 
     </b-container>
 </template>

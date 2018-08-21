@@ -92781,10 +92781,6 @@ var render = function() {
           "applied-conditions": _vm.proposed_user_market_negotiation.conditions,
           "removable-conditions": _vm.removable_conditions
         }
-      }),
-      _vm._v(" "),
-      _c("ibar-apply-premium-calculator", {
-        attrs: { "market-negotiatio": _vm.proposed_user_market_negotiation }
       })
     ],
     1
@@ -92977,35 +92973,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -93197,35 +93165,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -93417,35 +93357,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -93637,35 +93549,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -93857,35 +93741,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -94077,35 +93933,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
@@ -94297,35 +94125,7 @@ var render = function() {
       _c("ibar-market-negotiation-contracts", {
         staticClass: "mb-5",
         attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-2" },
-        [
-          _c(
-            "b-col",
-            [
-              _c(
-                "b-form-checkbox",
-                {
-                  attrs: { value: "true", "unchecked-value": "false" },
-                  model: {
-                    value: _vm.state_premium_calc,
-                    callback: function($$v) {
-                      _vm.state_premium_calc = $$v
-                    },
-                    expression: "state_premium_calc"
-                  }
-                },
-                [_vm._v(" Apply premium calculator")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
+      })
     ],
     1
   )
