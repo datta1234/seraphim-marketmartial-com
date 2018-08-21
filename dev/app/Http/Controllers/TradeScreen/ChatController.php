@@ -19,7 +19,7 @@ class ChatController extends Controller
     public function index()
     {
         $user = Auth::user();
-
+        // TODO add failure logic
         return [
             'success' => true,
             'data' => $user->organisation->channelMessageHistory(),
