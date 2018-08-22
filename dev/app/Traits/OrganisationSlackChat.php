@@ -2,6 +2,8 @@
 
 namespace App\Traits;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 use App\Events\ChatMessageReceived;
 
 trait OrganisationSlackChat {
@@ -25,12 +27,23 @@ trait OrganisationSlackChat {
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
-        $client = new Client();
-        $response = $client->request('POST', env('SLACK_API_URL').'/groups.create', [
-                'headers' => $header,
-                'body'  =>  json_encode($body)
-        ]);
-        return json_decode($response->getBody());
+        try {
+            $client = new Client();
+            $response = $client->request('POST', env('SLACK_API_URL').'/groups.create', [
+                    'headers' => $header,
+                    'body'  =>  json_encode($body)
+            ]);
+            return json_decode($response->getBody());
+
+        } catch(RequestException $e) {
+            \Log::error($e);
+            $error_data = array("Request" => Psr7\str($e->getRequest()));
+            if ($e->hasResponse()) {
+                $error_data["Response"] = Psr7\str($e->getResponse());
+            }
+            \Log::error(array( "Errors" => $error_data));
+            return false;
+        }
     }
 
     public function sendMessage($message, $user_name)
@@ -56,11 +69,24 @@ trait OrganisationSlackChat {
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
-        $client = new Client();
-        $response = $client->request('POST', env('SLACK_API_URL').'/chat.postMessage', [
-                'headers' => $header,
-                'body'  =>  json_encode($body)
-        ]);
+        $response = null;
+
+        try {
+            $client = new Client();
+            $response = $client->request('POST', env('SLACK_API_URL').'/chat.postMessage', [
+                    'headers' => $header,
+                    'body'  =>  json_encode($body)
+            ]);
+
+        } catch(RequestException $e) {
+            \Log::error($e);
+            $error_data = array("Request" => Psr7\str($e->getRequest()));
+            if ($e->hasResponse()) {
+                $error_data["Response"] = Psr7\str($e->getResponse());
+            }
+            \Log::error(array( "Errors" => $error_data));
+            return false;
+        }
         return json_decode($response->getBody());
     }
 
@@ -71,10 +97,23 @@ trait OrganisationSlackChat {
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
-        $client = new Client();
-        $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$this->slack_channel->value, [
-                'headers' => $header,
-        ])->getBody());
+        $response = null;
+
+        try {
+            $client = new Client();
+            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$this->slack_channel->value, [
+                    'headers' => $header,
+            ])->getBody());
+
+        } catch(RequestException $e) {
+            \Log::error($e);
+            $error_data = array("Request" => Psr7\str($e->getRequest()));
+            if ($e->hasResponse()) {
+                $error_data["Response"] = Psr7\str($e->getResponse());
+            }
+            \Log::error(array( "Errors" => $error_data));
+            return false;
+        }
 
         $formatted_messages = array();
         foreach ($response->messages as $message) {

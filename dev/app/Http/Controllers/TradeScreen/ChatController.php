@@ -19,12 +19,12 @@ class ChatController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // TODO add failure logic
-        return [
-            'success' => true,
-            'data' => $user->organisation->channelMessageHistory(),
-            'message' => 'Message sent.'
-        ];
+        $message_history = $user->organisation->channelMessageHistory();
+
+        if( $message_history === false ) {
+            return ['success'=>false,'data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'];
+        }
+        return ['success' => true,'data' => $message_history,'message' => 'Message sent.'];
     }
 
     /**
@@ -43,7 +43,9 @@ class ChatController extends Controller
             } else {
                 $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name);
             }
-            if($response->ok) {
+            if($response === false) {
+                return ['success'=>false,'data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'];
+            } else {
                 return [
                     'success' => true,
                     'data' => [
@@ -53,9 +55,6 @@ class ChatController extends Controller
                     ],
                     'message' => 'Message sent.'
                 ];       
-            } else {
-                // @TODO add logging to log the issue so admin can resolve or check the issue
-                return ['success'=>false,'data'=> null,'message'=>'Failed to send message, retry and if the problem persists contact the admin.'];
             }
         }
         return ['success'=>false,'data'=> null,'message'=>'Invalid request.'];
