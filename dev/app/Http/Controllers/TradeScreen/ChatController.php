@@ -22,7 +22,7 @@ class ChatController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $message_history = $user->organisation->channelMessageHistory();
+        $message_history = $user->organisation->channelMessageHistory($user->organisation);
 
         if( $message_history === false ) {
             return ['success'=>false,'data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'];
@@ -42,9 +42,9 @@ class ChatController extends Controller
             $user = Auth::user();
             $response = null;
             if( $request->has('new_message') ) {
-                $response = $user->organisation->sendMessage(str_replace(env('SLACK_ADMIN_REF'),"<@".env('SLACK_ADMIN_ID').">",$request->input('new_message')), $user->full_name);
+                $response = $user->organisation->sendMessage(str_replace(env('SLACK_ADMIN_REF'),"<@".env('SLACK_ADMIN_ID').">",$request->input('new_message')), $user->full_name, $user->organisation);
             } else {
-                $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name);
+                $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name, $user->organisation);
             }
             if($response === false) {
                 return ['success'=>false,'data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'];
@@ -82,7 +82,7 @@ class ChatController extends Controller
 
             // send message through pusher
             if($organisation !== null) {
-                $organisation->receiveMessage($eventData);
+                $organisation->receiveMessage($eventData, $organisation);
             }
         }
         return response("Received", 200);

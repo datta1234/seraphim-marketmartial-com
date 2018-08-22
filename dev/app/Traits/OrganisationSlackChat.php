@@ -46,7 +46,7 @@ trait OrganisationSlackChat {
         }
     }
 
-    public function sendMessage($message, $user_name)
+    public function sendMessage($message, $user_name, $organisation)
     {
         /*logic to send a message to slack channel url
         url - https://slack.com/api/chat.postMessage
@@ -62,7 +62,7 @@ trait OrganisationSlackChat {
             "text" => $message,
             "as_user" => false,
             "username" => $user_name,
-            "channel" => $this->slack_channel->value
+            "channel" => $organisation->slack_channel->value
         ];
         $header = [
             "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
@@ -90,7 +90,7 @@ trait OrganisationSlackChat {
         return json_decode($response->getBody());
     }
 
-    public function channelMessageHistory()
+    public function channelMessageHistory($organisation)
     {
         $header = [
             "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
@@ -101,7 +101,7 @@ trait OrganisationSlackChat {
 
         try {
             $client = new Client();
-            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$this->slack_channel->value, [
+            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$organisation->slack_channel->value, [
                     'headers' => $header,
             ])->getBody());
 
@@ -136,7 +136,7 @@ trait OrganisationSlackChat {
         return array_reverse($formatted_messages);    
     }
 
-    public function receiveMessage($eventData)
+    public function receiveMessage($eventData, $organisation)
     {
         if($eventData["type"] === 'message') {
             if(array_key_exists('subtype',$eventData) && $eventData["subtype"] === 'bot_message') {
@@ -146,7 +146,7 @@ trait OrganisationSlackChat {
                     "time_stamp" => $eventData["ts"]
                 );
                 
-                event(new ChatMessageReceived($this,$formatted_message_bot));
+                event(new ChatMessageReceived($organisation,$formatted_message_bot));
             } elseif(array_key_exists('user',$eventData) && $eventData["user"] === env('SLACK_ADMIN_ID') && !array_key_exists('subtype',$eventData)) {
                 $formatted_message_admin = array(
                     "user_name" => "Market Martial",
@@ -154,7 +154,7 @@ trait OrganisationSlackChat {
                     "time_stamp" => $eventData["ts"]
                 );
                 
-                event(new ChatMessageReceived($this,$formatted_message_admin));
+                event(new ChatMessageReceived($organisation,$formatted_message_admin));
             }
         }
     }
