@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* @import url('https://fonts.googleapis.com/css?family=Raleway:600');
 @import url('https://fonts.googleapis.com/css?family=Muli:700');
 @import url('https://fonts.googleapis.com/css?family=Roboto'); */
@@ -12017,20 +12019,23 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .chat-bar > .chat-content,
 .interaction-bar-wrapper .chat-bar > .chat-content > .chat-bar-toggle,
 .interaction-bar-wrapper .chat-bar > .chat-content > .organisation-chat {
-  -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
-  transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+  -webkit-transition: margin-right 0.25s linear;
+  /* Chrome 1-25, Safari 3.2+ */
+  /* Firefox 4-15 */
+  /* Opera 10.50–12.00 */
+  transition: margin-right 0.25s linear;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 }
 
 .interaction-bar-wrapper .chat-bar {
   padding: 0px;
   position: relative;
-  width: 0px;
+  width: 325px;
+  margin-right: -325px;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-content {
   background-color: #090909;
-  width: 0px;
-  opacity: 0;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -12039,36 +12044,29 @@ input:checked + .slider:before {
   float: left;
   color: #fff;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  z-index: 1030;
+  width: 325px;
   padding-bottom: 150px;
   margin-bottom: 150px;
 }
 
-.interaction-bar-wrapper .chat-bar.active {
-  width: 325px;
+.interaction-bar-wrapper .chat-bar .chat-content .organisation-chat {
+  width: 300px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
-.interaction-bar-wrapper .chat-bar.active .chat-content {
-  opacity: 1;
-  position: fixed;
-  z-index: 1030;
-  width: 325px;
-}
-
-.interaction-bar-wrapper .chat-bar.active .chat-content .chat-bar-toggle {
+.interaction-bar-wrapper .chat-bar .chat-content .chat-bar-toggle {
   width: 25px;
-  opacity: 1;
   position: absolute;
   right: 300px;
   top: 0;
 }
 
-.interaction-bar-wrapper .chat-bar.active .chat-content .organisation-chat {
-  width: 300px;
-  opacity: 1;
-  position: absolute;
-  right: 0;
-  top: 0;
+.interaction-bar-wrapper .chat-bar.active {
+  margin-right: 0px;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header h3 {
@@ -12095,7 +12093,6 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .chat-bar-toggle {
   background-color: #090909;
-  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -12103,7 +12100,6 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   position: relative;
-  opacity: 0;
   color: #fff;
   cursor: pointer;
 }
@@ -12118,7 +12114,6 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .organisation-chat {
   background-color: #090909;
-  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -12126,7 +12121,6 @@ input:checked + .slider:before {
   padding: 0px;
   float: right;
   position: relative;
-  opacity: 0;
   color: #fff;
   padding-bottom: 120px;
 }

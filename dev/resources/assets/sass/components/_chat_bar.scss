@@ -1,20 +1,19 @@
 .interaction-bar-wrapper {
     .chat-bar, .chat-bar-content-pane, .chat-bar > .chat-content, .chat-bar > .chat-content > .chat-bar-toggle, .chat-bar > .chat-content >.organisation-chat {
-        -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
-        -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
-        transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        -webkit-transition: margin-right 0.25s linear;  /* Chrome 1-25, Safari 3.2+ */
+        -moz-transition:    margin-right 0.25s linear;  /* Firefox 4-15 */
+        -o-transition:      margin-right 0.25s linear;  /* Opera 10.50–12.00 */
+        transition:         margin-right 0.25s linear;  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
     }
     .chat-bar {
         @extend .col-auto;
         padding:0px;
         position:relative;
-        width: 0px;
-        // Change animation from width to negative margin
-
+        width: $chat-bar-width + $chat-toggle-width;
+        margin-right: 0px - $chat-bar-width - $chat-toggle-width;
+        
         .chat-content {
             background-color: $mm-interaction-bar-bg;
-            width:0px;
-            opacity: 0;
             height:100%;
             padding:0px;
             display:inline-block;
@@ -25,35 +24,28 @@
 
             overflow: hidden;
 
-            position: relative;
-
+            position: fixed;
+            z-index: 1030; //also houses a modal and its hidden if the position is fixed
+            width: $chat-bar-width + $chat-toggle-width;
+            
             padding-bottom: 150px;
             margin-bottom: 150px;
+            
+            .organisation-chat {
+                width: $chat-bar-width;
+                position: absolute;
+                right: 0;
+                top: 0;    
+            }
+            .chat-bar-toggle {
+                width: $chat-toggle-width;
+                position: absolute;
+                right: 0 + $chat-bar-width;
+                top: 0;
+            }
         }
         &.active {
-            width: $chat-bar-width + $chat-toggle-width;
-
-            .chat-content {
-                opacity: 1;
-                position: fixed;
-                z-index: 1030; //also houses a modal and its hidden if the position is fixed
-                width: $chat-bar-width + $chat-toggle-width;
-
-                .chat-bar-toggle {
-                    width: $chat-toggle-width;
-                    opacity: 1;
-                    position: absolute;
-                    right: 0 + $chat-bar-width;
-                    top: 0;
-                }
-                .organisation-chat {
-                    width: $chat-bar-width;
-                    opacity: 1;
-                    position: absolute;
-                    right: 0;
-                    top: 0;    
-                }
-            }
+            margin-right: 0px;
         }
         .chat-header {
             h3 {
@@ -82,7 +74,6 @@
     }
     .chat-bar-toggle {
         background-color: $mm-interaction-bar-bg;
-        width:0px;
         height:100%;
         padding:0px;
         display:inline-block;
@@ -90,7 +81,6 @@
         padding:0px;
         float:left;
         position: relative;
-        opacity: 0;
         color: #fff;
 
         cursor:pointer;
@@ -105,7 +95,6 @@
     }
     .organisation-chat {
         background-color: $mm-interaction-bar-bg;
-        width:0px;
         height:100%;
         padding:0px;
         display:inline-block;
@@ -113,7 +102,6 @@
         padding:0px;
         float:right;
         position: relative;
-        opacity: 0;
         color: #fff;
 
         padding-bottom: 120px;

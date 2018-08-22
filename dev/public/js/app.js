@@ -88404,9 +88404,9 @@ var UserMarketQuote = function (_BaseModel) {
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(365)
+var __vue_script__ = __webpack_require__(366)
 /* template */
-var __vue_template__ = __webpack_require__(366)
+var __vue_template__ = __webpack_require__(367)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88451,9 +88451,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(464)
+var __vue_script__ = __webpack_require__(465)
 /* template */
-var __vue_template__ = __webpack_require__(465)
+var __vue_template__ = __webpack_require__(466)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88498,9 +88498,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(466)
+var __vue_script__ = __webpack_require__(467)
 /* template */
-var __vue_template__ = __webpack_require__(467)
+var __vue_template__ = __webpack_require__(468)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88545,9 +88545,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(468)
+var __vue_script__ = __webpack_require__(469)
 /* template */
-var __vue_template__ = __webpack_require__(469)
+var __vue_template__ = __webpack_require__(470)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88592,9 +88592,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(470)
+var __vue_script__ = __webpack_require__(471)
 /* template */
-var __vue_template__ = __webpack_require__(471)
+var __vue_template__ = __webpack_require__(472)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88639,9 +88639,9 @@ module.exports = Component.exports
 var disposed = false
 var normalizeComponent = __webpack_require__(4)
 /* script */
-var __vue_script__ = __webpack_require__(472)
+var __vue_script__ = __webpack_require__(473)
 /* template */
-var __vue_template__ = __webpack_require__(473)
+var __vue_template__ = __webpack_require__(474)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -88704,7 +88704,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_vue_fontawesome__ = __webpack_require__(364);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__fortawesome_vue_fontawesome___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__fortawesome_vue_fontawesome__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__fortawesome_fontawesome_svg_core__ = __webpack_require__(350);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__fortawesome_free_solid_svg_icons__ = __webpack_require__(482);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__fortawesome_free_solid_svg_icons__ = __webpack_require__(365);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_Market__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__lib_UserMarket__ = __webpack_require__(81);
@@ -88772,23 +88772,23 @@ Vue.component('font-awesome-icon', __WEBPACK_IMPORTED_MODULE_5__fortawesome_vue_
 Vue.component('user-header', __webpack_require__(352));
 
 // Market Tab Components
-Vue.component('market-group', __webpack_require__(367));
-Vue.component('market-tab', __webpack_require__(370));
+Vue.component('market-group', __webpack_require__(368));
+Vue.component('market-tab', __webpack_require__(371));
 
 // Interaction Bar Component + children
-Vue.component('interaction-bar', __webpack_require__(397));
-Vue.component('ibar-user-market-title', __webpack_require__(427));
-Vue.component('ibar-negotiation-history-contracts', __webpack_require__(430));
-Vue.component('ibar-negotiation-history-market', __webpack_require__(433));
-Vue.component('ibar-market-negotiation-contracts', __webpack_require__(436));
-Vue.component('ibar-apply-conditions', __webpack_require__(439));
-Vue.component('ibar-apply-premium-calculator', __webpack_require__(443));
+Vue.component('interaction-bar', __webpack_require__(398));
+Vue.component('ibar-user-market-title', __webpack_require__(428));
+Vue.component('ibar-negotiation-history-contracts', __webpack_require__(431));
+Vue.component('ibar-negotiation-history-market', __webpack_require__(434));
+Vue.component('ibar-market-negotiation-contracts', __webpack_require__(437));
+Vue.component('ibar-apply-conditions', __webpack_require__(440));
+Vue.component('ibar-apply-premium-calculator', __webpack_require__(444));
 
 // Action Bar Component
-Vue.component('action-bar', __webpack_require__(446));
+Vue.component('action-bar', __webpack_require__(447));
 
 Vue.component('user-header', __webpack_require__(352));
-Vue.component('chat-bar', __webpack_require__(480));
+Vue.component('chat-bar', __webpack_require__(481));
 
 // Profile Components
 Vue.component('email-settings', __webpack_require__(484));
@@ -92111,10810 +92111,6 @@ module.exports=function(t){function e(o){if(r[o])return r[o].exports;var n=r[o]=
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['user_name', 'organisation', 'total_rebate'],
-    data: function data() {
-        return {
-            time: {
-                location: 'SA',
-                computed_time: '',
-                _interval: null
-            }
-        };
-    },
-
-    methods: {
-        /**
-         * Creates a running clock from the current date and time.
-         *
-         * @todo Change clock time to be sent an initialsed from the backend
-         */
-        showTime: function showTime() {
-            //Getting current time and setting our time object.
-            this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
-        }
-    },
-    mounted: function mounted() {
-        //Sets interval for running clock
-        this.time._interval = setInterval(this.showTime, 1000);
-    }
-});
-
-/***/ }),
-/* 366 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "user-header", attrs: { dusk: "user-header" } },
-    [
-      _c("div", { staticClass: "row sub-nav pt-3" }, [
-        _c("div", { staticClass: "col-6 user-details" }, [
-          _vm.organisation
-            ? _c("h1", { staticClass: "pt-1" }, [
-                _vm._v(
-                  "Welcome " +
-                    _vm._s(_vm.user_name) +
-                    " (" +
-                    _vm._s(_vm.organisation) +
-                    ")"
-                )
-              ])
-            : _c("h1", { staticClass: "pt-1" }, [
-                _vm._v("Welcome " + _vm._s(_vm.user_name))
-              ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-2 current-time" }, [
-          _c("p", { staticClass: "pt-1" }, [
-            _vm._v(_vm._s(_vm.time.computed_time))
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 total-rebate" }, [
-          _c("p", { staticClass: "float-right pt-1" }, [
-            _vm._v("Rebates: "),
-            _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
-          ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0a1acdbe", module.exports)
-  }
-}
-
-/***/ }),
-/* 367 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(368)
-/* template */
-var __vue_template__ = __webpack_require__(369)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketGroupComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-e92bdb5e", Component.options)
-  } else {
-    hotAPI.reload("data-v-e92bdb5e", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 368 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        'market': {
-            type: __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]
-        },
-        'no_cares': {
-            type: Array
-        }
-    },
-    watch: {
-        'market.market_requests': function marketMarket_requests(nV, oV) {
-            this.market_date_groups = this.mapMarketRequestGroups(nV);
-            this.reorderMarketRequestStrike(this.market_date_groups);
-            this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
-        }
-    },
-    data: function data() {
-        return {
-            market_date_groups: {},
-            market_date_groups_order: []
-        };
-    },
-
-    methods: {
-        mapMarketRequestGroups: function mapMarketRequestGroups(markets) {
-            var _this = this;
-
-            // map markets to dates
-            return markets.reduce(function (x, y) {
-                var date = y.trade_items.default ? y.trade_items.default[_this.$root.config("trade_structure.outright.expiration_date")] : '';
-                if (!x[date]) {
-                    x[date] = [];
-                }
-                x[date].push(y);
-                return x;
-            }, {});
-        },
-        sortMarketRequestGroups: function sortMarketRequestGroups(unsorted_date_groups) {
-            var dates = [];
-            Object.keys(unsorted_date_groups).forEach(function (date) {
-                dates.push(date);
-            });
-
-            if (dates.length > 0) {
-                this.$root.dateStringArraySort(dates, 'MMMYY');
-            }
-            return dates;
-        },
-        reorderMarketRequestStrike: function reorderMarketRequestStrike(date_groups) {
-            Object.keys(date_groups).forEach(function (date) {
-                date_groups[date].sort(function (a, b) {
-                    return a.trade_items.default.Strike - b.trade_items.default.Strike;
-                });
-            });
-        }
-
-    },
-    mounted: function mounted() {
-        this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
-        console.log(this.market_date_groups);
-    }
-});
-
-/***/ }),
-/* 369 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "user-market", attrs: { dusk: "market-group" } },
-    [
-      _c("div", { staticClass: "container-fluid h-100" }, [
-        _c("div", { staticClass: "row h-100" }, [
-          _c("div", { staticClass: "col-12" }, [
-            _c("h2", { staticClass: "text-center market-group-title" }, [
-              _vm._v(_vm._s(_vm.market.title))
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "user-market-group col-12" },
-            _vm._l(_vm.market_date_groups_order, function(date) {
-              return _c(
-                "div",
-                { staticClass: "row mt-3 pr-3 pl-3" },
-                [
-                  _c("div", { staticClass: "col-12" }, [
-                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(date))])
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.market_date_groups[date], function(m_req) {
-                    return _c("market-tab", {
-                      attrs: { "market-request": m_req, no_cares: _vm.no_cares }
-                    })
-                  })
-                ],
-                2
-              )
-            })
-          ),
-          _vm._v(" "),
-          _c("div")
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-e92bdb5e", module.exports)
-  }
-}
-
-/***/ }),
-/* 370 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(371)
-/* template */
-var __vue_template__ = __webpack_require__(396)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6f815fbb", Component.options)
-  } else {
-    hotAPI.reload("data-v-6f815fbb", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 371 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__ = __webpack_require__(372);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__ = __webpack_require__(375);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__ = __webpack_require__(378);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__ = __webpack_require__(381);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__ = __webpack_require__(384);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__ = __webpack_require__(387);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__ = __webpack_require__(390);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__ = __webpack_require__(393);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        MarketTabOutright: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
-        MarketTabRisky: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
-        MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
-        MarketTabFly: __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
-        OptionSwitch: __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
-        EFP: __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
-        Rolls: __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
-        EFPSwitch: __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
-    },
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        },
-        no_cares: {
-            type: Array
-        }
-    },
-    data: function data() {
-        return {
-            tabs: {
-                'Outright': __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
-                'Risky': __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
-                'Calendar': __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
-                'Fly': __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
-                'Option Switch': __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
-                'EFP': __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
-                'Rolls': __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
-                'EFP Switch': __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
-            }
-        };
-    },
-
-    computed: {},
-    methods: {},
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 372 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(373)
-/* template */
-var __vue_template__ = __webpack_require__(374)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/Outright.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6e1e795c", Component.options)
-  } else {
-    hotAPI.reload("data-v-6e1e795c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 373 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        },
-        no_cares: {
-            type: Array
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_market': function marketRequestUser_market(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': !this.marketRequest.is_interest && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
-                'market-request-vol': this.market_request_state == 'request-vol',
-                'market-alert': this.marketRequest.attributes.action_needed,
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest.id !== marketRequest.id) {
-                _this.isActive = false;
-            } else {
-                _this.isActive = true;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 374 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-outright" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
-          _vm._v(
-            "\n                " +
-              _vm._s(
-                _vm.splitValHelper(
-                  _vm.marketRequest.trade_items.default[
-                    this.$root.config("trade_structure.outright.strike")
-                  ],
-                  " ",
-                  3
-                )
-              ) +
-              "  \n        "
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c(
-                  "span",
-                  {
-                    class: {
-                      "user-action": _vm.market_request_state_label == "SENT"
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.market_request_state_label))]
-                )
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6e1e795c", module.exports)
-  }
-}
-
-/***/ }),
-/* 375 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(376)
-/* template */
-var __vue_template__ = __webpack_require__(377)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/Risky.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5df3c2a8", Component.options)
-  } else {
-    hotAPI.reload("data-v-5df3c2a8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 376 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 377 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-risky" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5df3c2a8", module.exports)
-  }
-}
-
-/***/ }),
-/* 378 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(379)
-/* template */
-var __vue_template__ = __webpack_require__(380)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/Calendar.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-ba66ade8", Component.options)
-  } else {
-    hotAPI.reload("data-v-ba66ade8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 379 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 380 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-calendar" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-ba66ade8", module.exports)
-  }
-}
-
-/***/ }),
-/* 381 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(382)
-/* template */
-var __vue_template__ = __webpack_require__(383)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/Fly.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5ecff995", Component.options)
-  } else {
-    hotAPI.reload("data-v-5ecff995", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 382 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 383 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-fly" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5ecff995", module.exports)
-  }
-}
-
-/***/ }),
-/* 384 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(385)
-/* template */
-var __vue_template__ = __webpack_require__(386)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/OptionSwitch.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-153a8557", Component.options)
-  } else {
-    hotAPI.reload("data-v-153a8557", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 385 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 386 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-option_switch" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-153a8557", module.exports)
-  }
-}
-
-/***/ }),
-/* 387 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(388)
-/* template */
-var __vue_template__ = __webpack_require__(389)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/EFP.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-326059de", Component.options)
-  } else {
-    hotAPI.reload("data-v-326059de", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 388 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 389 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-efp" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-326059de", module.exports)
-  }
-}
-
-/***/ }),
-/* 390 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(391)
-/* template */
-var __vue_template__ = __webpack_require__(392)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/Rolls.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-613c4e90", Component.options)
-  } else {
-    hotAPI.reload("data-v-613c4e90", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 391 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 392 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-rolls" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-613c4e90", module.exports)
-  }
-}
-
-/***/ }),
-/* 393 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(394)
-/* template */
-var __vue_template__ = __webpack_require__(395)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/MarketTabs/EFPSwitch.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6240ada5", Component.options)
-  } else {
-    hotAPI.reload("data-v-6240ada5", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 394 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
-        }
-    },
-    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
-    data: function data() {
-        return {
-            user_market: null,
-            current_negotiation: null,
-
-            user_market_bid: null,
-            user_market_offer: null,
-
-            isActive: false
-        };
-    },
-
-    computed: {
-        marketState: function marketState() {
-            return {
-                'market-request-grey': this.market_request_state == 'request-grey',
-                'market-request': this.market_request_state == 'request',
-                'market-alert': this.market_request_state == 'alert',
-                'market-confirm': this.market_request_state == 'confirm',
-                'active': this.isActive
-            };
-        },
-        bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
-        },
-        offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
-        }
-    },
-    methods: {
-        loadInteractionBar: function loadInteractionBar() {
-            console.log("load Bar");
-            this.toggleActionTaken();
-            this.isActive = true;
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-        }
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        // initial setup of states
-        this.calcMarketState();
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
-            _this.isActive = false;
-        });
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
-            if (_this.marketRequest !== marketRequest) {
-                _this.isActive = false;
-            }
-        });
-    }
-});
-
-/***/ }),
-/* 395 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "col market-tab p-3 mb-2 mt-2",
-      class: _vm.marketState,
-      attrs: { dusk: "market-tab-efp_switch" },
-      on: {
-        click: function($event) {
-          _vm.loadInteractionBar()
-        }
-      }
-    },
-    [
-      _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
-          _vm.market_request_state_label != ""
-            ? _c("span", [
-                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
-              ])
-            : _c("span", [
-                _c("span", { class: _vm.bidState }, [
-                  _vm._v(_vm._s(_vm.user_market_bid))
-                ]),
-                _vm._v(" / "),
-                _c("span", { class: _vm.offerState }, [
-                  _vm._v(_vm._s(_vm.user_market_offer))
-                ])
-              ])
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6240ada5", module.exports)
-  }
-}
-
-/***/ }),
-/* 396 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticStyle: { width: "100%" },
-      attrs: { dusk: "market-tab-" + _vm.marketRequest.id }
-    },
-    [
-      _c("div", { staticClass: "col col-12 text-center" }, [
-        _c(
-          "div",
-          { staticClass: "row" },
-          [
-            _c(_vm.tabs[_vm.marketRequest.trade_structure], {
-              tag: "component",
-              attrs: {
-                "market-request": _vm.marketRequest,
-                no_cares: _vm.no_cares
-              }
-            })
-          ],
-          1
-        )
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6f815fbb", module.exports)
-  }
-}
-
-/***/ }),
-/* 397 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(398)
-/* template */
-var __vue_template__ = __webpack_require__(426)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBarComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-19452975", Component.options)
-  } else {
-    hotAPI.reload("data-v-19452975", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 398 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__ = __webpack_require__(399);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        'ibar-negotiation-bar': __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default.a
-    },
-    data: function data() {
-        return {
-            opened: false,
-            market_request: null
-        };
-    },
-
-    computed: {},
-    methods: {
-        toggleBar: function toggleBar(set, marketRequest) {
-            if (typeof set != 'undefined') {
-                this.opened = set == true;
-            } else {
-                this.opened = !this.opened;
-            }
-
-            // only populate if opened
-            if (this.opened) {
-                this.market_request = null;
-                this.market_request = marketRequest;
-                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.market_request);
-            } else {
-                this.market_request = null;
-                // fire close event if its closing
-                if (this.opened == false) {
-                    __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionClose');
-                }
-            }
-        }
-    },
-    mounted: function mounted() {
-        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionToggle', this.toggleBar);
-    }
-});
-
-/***/ }),
-/* 399 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(400)
-/* template */
-var __vue_template__ = __webpack_require__(425)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/NegotiationBar.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-07934dce", Component.options)
-  } else {
-    hotAPI.reload("data-v-07934dce", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 400 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__ = __webpack_require__(401);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__ = __webpack_require__(404);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__ = __webpack_require__(407);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__ = __webpack_require__(410);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__ = __webpack_require__(413);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__ = __webpack_require__(416);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__ = __webpack_require__(419);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__ = __webpack_require__(422);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__);
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        BarLayoutOutright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
-        BarLayoutRisky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
-        BarLayoutCalendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
-        BarLayoutFly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
-        BarLayoutOptionSwitch: __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
-        BarLayoutEFP: __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
-        BarLayoutEFPSwitch: __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
-        BarLayoutRolls: __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
-    },
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            layouts: {
-                'Outright': __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
-                'Risky': __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
-                'Calendar': __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
-                'Fly': __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
-                'Option Switch': __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
-                'EFP': __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
-                'EFPSwitch': __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
-                'Rolls': __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
-            }
-        };
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 401 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(402)
-/* template */
-var __vue_template__ = __webpack_require__(403)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Outright.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-848aa7e0", Component.options)
-  } else {
-    hotAPI.reload("data-v-848aa7e0", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 402 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-
-            proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
-            proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
-
-            default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
-            history_message: null,
-
-            removable_conditions: [],
-
-            server_loading: false,
-            check_invalid: false,
-            errors: []
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'marker_qoute': function marker_qoute() {
-
-            return this.marketRequest.quotes.find(function (quote) {
-                return quote.is_maker;
-            });
-        },
-        'last_qoute': function last_qoute() {
-            return this.marketRequest.quotes.length == 0 ? null : this.marketRequest.quotes[this.marketRequest.quotes.length - 1];
-        },
-        'is_on_hold': function is_on_hold() {
-            return this.marketRequest.quotes.find(function (quote) {
-                return quote.is_maker && quote.is_on_hold;
-            });
-        },
-        'market_title': function market_title() {
-            console.log(this.marketRequest, this.marketRequest.getMarket());
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
-        },
-        'market_time': function market_time() {
-            return this.marketRequest.updated_at.format("HH:mm");
-        }
-    },
-    methods: {
-        validateProposal: function validateProposal(check_invalid) {
-            this.check_invalid = check_invalid;
-        },
-        updateUserMessages: function updateUserMessages() {
-            //if the users market qoute is placed on hold notify the the current user if it is theres
-            if (this.marker_qoute && this.marker_qoute.is_on_hold) {
-                this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-            }
-        },
-        sendQuote: function sendQuote() {
-            var _this = this;
-
-            // link now that we are saving
-            this.proposed_user_market.setMarketRequest(this.marketRequest);
-            this.server_loading = true;
-
-            // save
-            this.proposed_user_market.store().then(function (response) {
-
-                _this.history_message = response.data.message;
-                _this.server_loading = false;
-                _this.errors = [];
-                _this.setUpProposal();
-            }).catch(function (err) {
-                _this.server_loading = false;
-
-                _this.history_message = err.errors.message;
-                _this.errors = err.errors.errors;
-            });
-        },
-        amendQoute: function amendQoute() {
-            var _this2 = this;
-
-            // link now that we are saving
-            this.proposed_user_market.setMarketRequest(this.marketRequest);
-            this.server_loading = true;
-
-            // save
-            this.proposed_user_market_negotiation.patch().then(function (response) {
-                _this2.server_loading = false;
-                _this2.history_message = response.data.message;
-                _this2.errors = [];
-            }).catch(function (err) {
-                _this2.server_loading = false;
-                _this2.history_message = err.errors.message;
-                _this2.errors = err.errors.errors;
-            });
-        },
-        repeatQuote: function repeatQuote() {
-            var _this3 = this;
-
-            this.proposed_user_market.setMarketRequest(this.marketRequest);
-            //this.proposed_user_market_negotiation.is_repeat = true;
-
-            this.server_loading = true;
-
-            // save
-            this.proposed_user_market_negotiation.repeat().then(function (response) {
-                _this3.server_loading = false;
-                _this3.proposed_user_market_negotiation = response.data.data;
-
-                _this3.history_message = response.data.message;
-
-                _this3.proposed_user_market.setCurrentNegotiation(_this3.proposed_user_market_negotiation);
-                _this3.errors = [];
-                //EventBus.$emit('interactionToggle', false);
-            }).catch(function (err) {
-                _this3.server_loading = false;
-                _this3.history_message = err.errors.message;
-                _this3.errors = err.errors.errors;
-            });
-        },
-        pullQuote: function pullQuote() {
-            var _this4 = this;
-
-            this.proposed_user_market.setMarketRequest(this.marketRequest);
-            this.server_loading = true;
-            // save
-            this.proposed_user_market.delete().then(function (response) {
-                _this4.server_loading = false;
-                _this4.history_message = response.data.message;
-                // EventBus.$emit('interactionToggle', false);
-                _this4.$refs.pullModal.hide();
-            }).catch(function (err) {
-                _this4.server_loading = false;
-                _this4.errors = err.errors;
-                _this4.$refs.pullModal.hide();
-            });
-        },
-        reset: function reset() {
-            var _this5 = this;
-
-            var defaults = {
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-
-                proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
-                proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
-
-                default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
-                history_message: null,
-
-                removable_conditions: [],
-
-                server_loading: false,
-                check_invalid: false,
-                errors: []
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this5[k] = defaults[k];
-            });
-        },
-        setUpProposal: function setUpProposal() {
-
-            // set up the new UserMarket as quote to be sent
-            if (this.marker_qoute) //already have my qoute
-                {
-                    this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
-                } else {
-                this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
-            }
-            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-        },
-        hideModal: function hideModal() {
-            this.$refs.pullModal.hide();
-        },
-        setDefaultQuantities: function setDefaultQuantities() {
-
-            if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
-                console.log("offer quote", this.marker_qoute.offer_qty);
-
-                this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
-                this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;
-            } else {
-                this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
-                this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
-            }
-        },
-        init: function init() {
-            this.reset(); // clear current state
-
-            // set up up data
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setUpProposal();
-                this.setDefaultQuantities();
-                this.updateUserMessages();
-
-                // relate
-                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
-                //set the quotes here if they already set
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 403 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-outright" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _vm.marketRequest.quotes
-        ? _c("ibar-negotiation-history-market", {
-            staticClass: "mb-3",
-            attrs: {
-              message: _vm.history_message,
-              history: _vm.marketRequest.quotes
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.marketRequest.chosen_user_market
-        ? _c("ibar-negotiation-history-contracts", {
-            staticClass: "mb-2",
-            attrs: {
-              history: _vm.marketRequest.chosen_user_market.negotiations
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: {
-          "check-invalid": _vm.check_invalid,
-          "marker-qoute": _vm.marker_qoute,
-          "market-negotiation": _vm.proposed_user_market_negotiation
-        },
-        on: { "validate-proposal": _vm.validateProposal }
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        { staticClass: "mb-5" },
-        [
-          _c(
-            "b-col",
-            { attrs: { cols: "10" } },
-            [
-              _vm._l(_vm.errors, function(error, key) {
-                return _c(
-                  "b-col",
-                  { staticClass: "text-danger", attrs: { cols: "12" } },
-                  [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(key) +
-                        ":" +
-                        _vm._s(error[0]) +
-                        "\n                "
-                    )
-                  ]
-                )
-              }),
-              _vm._v(" "),
-              _vm.removable_conditions.length > 0
-                ? _c(
-                    "b-row",
-                    _vm._l(_vm.removable_conditions, function(cond) {
-                      return _c("b-col", { staticClass: "text-center" }, [
-                        _c(
-                          "label",
-                          {
-                            staticClass: "ibar-condition-remove-label",
-                            on: { click: cond.callback }
-                          },
-                          [
-                            _vm._v(
-                              "\n                        " +
-                                _vm._s(cond.title) +
-                                "  "
-                            ),
-                            _c("span", { staticClass: "remove" }, [_vm._v("X")])
-                          ]
-                        )
-                      ])
-                    })
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _c(
-                "b-row",
-                { staticClass: "justify-content-md-center mb-1" },
-                [
-                  _c(
-                    "b-col",
-                    { attrs: { cols: "6" } },
-                    [
-                      _vm.marker_qoute ||
-                      _vm.is_on_hold ||
-                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
-                        ? _c(
-                            "b-button",
-                            {
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                disabled:
-                                  _vm.check_invalid || _vm.server_loading,
-                                size: "sm",
-                                dusk: "ibar-action-amend",
-                                variant: "primary"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.amendQoute()
-                                }
-                              }
-                            },
-                            [_vm._v("Amend")]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.is_on_hold &&
-                      (_vm.marker_qoute && !_vm.marker_qoute.is_repeat)
-                        ? _c(
-                            "b-button",
-                            {
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                disabled: _vm.server_loading,
-                                size: "sm",
-                                dusk: "ibar-action-repeat",
-                                variant: "primary"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.repeatQuote()
-                                }
-                              }
-                            },
-                            [_vm._v("Repeat")]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.marker_qoute ||
-                      _vm.is_on_hold ||
-                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
-                        ? _c(
-                            "b-button",
-                            {
-                              directives: [
-                                {
-                                  name: "b-modal",
-                                  rawName: "v-b-modal.pullQuote",
-                                  modifiers: { pullQuote: true }
-                                }
-                              ],
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                disabled: _vm.server_loading,
-                                size: "sm",
-                                dusk: "ibar-action-pull",
-                                variant: "primary"
-                              }
-                            },
-                            [_vm._v("Pull")]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "b-modal",
-                        {
-                          ref: "pullModal",
-                          staticClass: "mm-modal mx-auto",
-                          attrs: { id: "pullQuote", title: "Pull Market" }
-                        },
-                        [
-                          _c("p", [
-                            _vm._v("Are you sure you want to pull this quote?")
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            {
-                              staticClass: "w-100",
-                              attrs: { slot: "modal-footer" },
-                              slot: "modal-footer"
-                            },
-                            [
-                              _c(
-                                "b-row",
-                                { attrs: { "align-v": "center" } },
-                                [
-                                  _c(
-                                    "b-col",
-                                    { attrs: { cols: "12" } },
-                                    [
-                                      _c(
-                                        "b-button",
-                                        {
-                                          staticClass:
-                                            "mm-modal-button mr-2 w-25",
-                                          on: {
-                                            click: function($event) {
-                                              _vm.pullQuote()
-                                            }
-                                          }
-                                        },
-                                        [_vm._v("Pull")]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "b-button",
-                                        {
-                                          staticClass:
-                                            "btn mm-modal-button ml-2 w-25 btn-secondary",
-                                          on: {
-                                            click: function($event) {
-                                              _vm.hideModal()
-                                            }
-                                          }
-                                        },
-                                        [_vm._v("Cancel")]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              !_vm.marker_qoute
-                ? _c(
-                    "b-row",
-                    { staticClass: "justify-content-md-center" },
-                    [
-                      _c(
-                        "b-col",
-                        { attrs: { cols: "6" } },
-                        [
-                          !_vm.marker_qoute
-                            ? _c(
-                                "b-button",
-                                {
-                                  staticClass: "w-100 mt-1",
-                                  attrs: {
-                                    disabled:
-                                      _vm.check_invalid || _vm.server_loading,
-                                    size: "sm",
-                                    dusk: "ibar-action-send",
-                                    variant: "primary"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.sendQuote()
-                                    }
-                                  }
-                                },
-                                [_vm._v("Send")]
-                              )
-                            : _vm._e(),
-                          _vm._v(" "),
-                          _c(
-                            "b-button",
-                            {
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                size: "sm",
-                                dusk: "ibar-action-nocares",
-                                variant: "secondary"
-                              }
-                            },
-                            [_vm._v("No Cares")]
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                : _vm._e()
-            ],
-            2
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("ibar-apply-conditions", {
-        staticClass: "mb-5",
-        attrs: {
-          "applied-conditions": _vm.proposed_user_market_negotiation.conditions,
-          "removable-conditions": _vm.removable_conditions
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-848aa7e0", module.exports)
-  }
-}
-
-/***/ }),
-/* 404 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(405)
-/* template */
-var __vue_template__ = __webpack_require__(406)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Risky.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-185bef10", Component.options)
-  } else {
-    hotAPI.reload("data-v-185bef10", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 405 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 406 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-risky" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-185bef10", module.exports)
-  }
-}
-
-/***/ }),
-/* 407 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(408)
-/* template */
-var __vue_template__ = __webpack_require__(409)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Calendar.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1b2e4880", Component.options)
-  } else {
-    hotAPI.reload("data-v-1b2e4880", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 408 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 409 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-calendar" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1b2e4880", module.exports)
-  }
-}
-
-/***/ }),
-/* 410 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(411)
-/* template */
-var __vue_template__ = __webpack_require__(412)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Fly.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-36e3e661", Component.options)
-  } else {
-    hotAPI.reload("data-v-36e3e661", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 411 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 412 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-fly" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-36e3e661", module.exports)
-  }
-}
-
-/***/ }),
-/* 413 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(414)
-/* template */
-var __vue_template__ = __webpack_require__(415)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/OptionSwitch.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-01563e0b", Component.options)
-  } else {
-    hotAPI.reload("data-v-01563e0b", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 414 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 415 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-option_switch" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-01563e0b", module.exports)
-  }
-}
-
-/***/ }),
-/* 416 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(417)
-/* template */
-var __vue_template__ = __webpack_require__(418)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFP.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-82388046", Component.options)
-  } else {
-    hotAPI.reload("data-v-82388046", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 417 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 418 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-82388046", module.exports)
-  }
-}
-
-/***/ }),
-/* 419 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(420)
-/* template */
-var __vue_template__ = __webpack_require__(421)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFPSwitch.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-062ad171", Component.options)
-  } else {
-    hotAPI.reload("data-v-062ad171", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 420 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 421 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp_switch" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-062ad171", module.exports)
-  }
-}
-
-/***/ }),
-/* 422 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(423)
-/* template */
-var __vue_template__ = __webpack_require__(424)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Rolls.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1ba47af8", Component.options)
-  } else {
-    hotAPI.reload("data-v-1ba47af8", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 423 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketRequest: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {
-            bid: null,
-            offer: null,
-            bid_qty: 0,
-            offer_qty: 0,
-
-            state_conditions: false,
-            state_premium_calc: false,
-
-            user_market: null,
-            market_history: [],
-            market_time: ""
-        };
-    },
-
-    watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
-        }
-    },
-    computed: {
-        'market_title': function market_title() {
-            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
-        }
-    },
-    methods: {
-        setMarketTitle: function setMarketTitle() {},
-        setMarketTime: function setMarketTime() {
-            this.market_time = "10:10";
-        },
-        reset: function reset() {
-            var _this = this;
-
-            var defaults = {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
-                state_premium_calc: false,
-
-                user_market: null,
-                market_history: [],
-                market_time: ""
-            };
-            Object.keys(defaults).forEach(function (k) {
-                _this[k] = defaults[k];
-            });
-        },
-        init: function init() {
-            console.log("Mounted BAR", this.marketRequest);
-            this.reset();
-            if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
-                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                this.setMarketTitle();
-                this.setMarketTime();
-            }
-        }
-    },
-    mounted: function mounted() {
-        this.init();
-    }
-});
-
-/***/ }),
-/* 424 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-container",
-    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-rolls" } },
-    [
-      _c("ibar-user-market-title", {
-        staticClass: "mt-1 mb-3",
-        attrs: { title: _vm.market_title, time: _vm.market_time }
-      }),
-      _vm._v(" "),
-      _c("ibar-negotiation-history-contracts", {
-        staticClass: "mb-2",
-        attrs: { history: _vm.market_history }
-      }),
-      _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1ba47af8", module.exports)
-  }
-}
-
-/***/ }),
-/* 425 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { attrs: { dusk: "ibar-negotiation-bar" } },
-    [
-      _vm.marketRequest != null
-        ? _c(_vm.layouts[_vm.marketRequest.trade_structure], {
-            tag: "component",
-            attrs: { "market-request": _vm.marketRequest }
-          })
-        : _vm._e()
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-07934dce", module.exports)
-  }
-}
-
-/***/ }),
-/* 426 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "interaction-bar",
-      class: { active: _vm.opened },
-      attrs: { dusk: "interaction-bar" }
-    },
-    [
-      _c(
-        "VuePerfectScrollbar",
-        { ref: "barContent", staticClass: "interaction-content" },
-        [
-          _c("ibar-negotiation-bar", {
-            attrs: { "market-request": _vm.market_request }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "interaction-bar-toggle",
-              on: {
-                click: function($event) {
-                  _vm.toggleBar(false)
-                }
-              }
-            },
-            [_c("span", { staticClass: "icon icon-arrows-left" })]
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-19452975", module.exports)
-  }
-}
-
-/***/ }),
-/* 427 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(428)
-/* template */
-var __vue_template__ = __webpack_require__(429)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/Components/UserMarketTitle.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0dcd9682", Component.options)
-  } else {
-    hotAPI.reload("data-v-0dcd9682", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 428 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        title: {
-            type: String,
-            default: ""
-        },
-        time: {
-            type: String,
-            default: ""
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 429 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-user-market-title" } },
-    [
-      _c("b-col", { attrs: { cols: "10" } }, [
-        _c("h5", [_vm._v(_vm._s(_vm.title))])
-      ]),
-      _vm._v(" "),
-      _c("b-col", { attrs: { cols: "2" } }, [
-        _c("p", { staticClass: "pull-right" }, [_vm._v(_vm._s(_vm.time))])
-      ])
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0dcd9682", module.exports)
-  }
-}
-
-/***/ }),
-/* 430 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(431)
-/* template */
-var __vue_template__ = __webpack_require__(432)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-08d739c2", Component.options)
-  } else {
-    hotAPI.reload("data-v-08d739c2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 431 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        history: {
-            type: Array
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 432 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-negotiation-history-contracts" } },
-    [
-      _c(
-        "b-col",
-        _vm._l(_vm.history, function(item) {
-          return _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c(
-                    "b-row",
-                    [
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.bid))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.offer))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } }, [
-                _c("p", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(item.time))
-                ])
-              ])
-            ],
-            1
-          )
-        })
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-08d739c2", module.exports)
-  }
-}
-
-/***/ }),
-/* 433 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(434)
-/* template */
-var __vue_template__ = __webpack_require__(435)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-27412ed5", Component.options)
-  } else {
-    hotAPI.reload("data-v-27412ed5", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 434 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        history: {
-            type: Array
-        },
-        message: {
-            type: String
-        }
-    },
-    computed: {
-        vm_message: function vm_message() {
-            return this.history_message == null ? this.message : this.history_message;
-        }
-    },
-    data: function data() {
-        return {
-            history_message: null
-        };
-    },
-
-    methods: {
-        getState: function getState(item) {
-            if (item.bid_only) {
-                return "BID ONLY";
-            }
-            if (item.offer_only) {
-                return "OFFER ONLY";
-            }
-            if (item.vol_spread != null) {
-                return item.vol_spread + " VOL SPREAD";
-            }
-            return "";
-        },
-        putQuoteOnHold: function putQuoteOnHold(quote) {
-            var _this = this;
-
-            if (!quote.is_on_hold) {
-
-                quote.putOnHold().then(function (response) {
-
-                    _this.history_message = response.data.message;
-                    //@TODO FIND out why this does not work.
-                    quote.is_on_hold = true;
-                }).catch(function (err) {
-                    _this.errors = err.errors;
-                });
-            }
-        },
-        acceptQuote: function acceptQuote(quote) {
-            var _this2 = this;
-
-            quote.accept().then(function (response) {
-                _this2.history_message = response.data.message;
-            }).catch(function (err) {
-                _this2.errors = err.errors;
-            });
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 435 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-negotiation-history-market" } },
-    [
-      _c(
-        "b-col",
-        [
-          _vm._l(_vm.history, function(item) {
-            return _c(
-              "b-row",
-              [
-                _c(
-                  "b-col",
-                  { attrs: { cols: "10" } },
-                  [
-                    item.is_interest
-                      ? _c(
-                          "b-row",
-                          { attrs: { "no-gutters": "" } },
-                          [
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "6" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                        " +
-                                    _vm._s(_vm.getState(item)) +
-                                    "\n                    "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _c(
-                                  "button",
-                                  {
-                                    staticClass: "w-100 btn btn-sm",
-                                    class: {
-                                      "btn-primary": item.is_on_hold,
-                                      "btn-secondary": !item.is_on_hold
-                                    },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.putQuoteOnHold(item)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                HOLD\n                        "
-                                    )
-                                  ]
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "b-col",
-                              {
-                                staticClass: "text-center",
-                                attrs: { cols: "3" }
-                              },
-                              [
-                                _c(
-                                  "b-btn",
-                                  {
-                                    staticClass: "w-100",
-                                    attrs: { size: "sm", variant: "primary" },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.acceptQuote(item)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("ACCEPT")]
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      : item.is_maker
-                        ? _c(
-                            "b-row",
-                            { attrs: { "no-gutters": "" } },
-                            [
-                              _c(
-                                "b-col",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { cols: "3" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                         " +
-                                      _vm._s(
-                                        item.bid_qty ? item.bid_qty : "-"
-                                      ) +
-                                      "\n                    "
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "b-col",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { cols: "3" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.bid ? item.bid : "-") +
-                                      "\n                    "
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "b-col",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { cols: "3" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                        " +
-                                      _vm._s(item.offer ? item.offer : "-") +
-                                      "\n                    "
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "b-col",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { cols: "3" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                         " +
-                                      _vm._s(
-                                        item.offer_qty ? item.offer_qty : "-"
-                                      ) +
-                                      "\n                    "
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
-                        : _c(
-                            "b-row",
-                            { attrs: { "no-gutters": "" } },
-                            [
-                              _c(
-                                "b-col",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { cols: "12" }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                        " +
-                                      _vm._s(_vm.getState(item)) +
-                                      "\n                    "
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("b-col", { attrs: { cols: "2" } }, [
-                  _c("p", { staticClass: "text-center" }, [
-                    _c("small", [_vm._v(_vm._s(item.time))])
-                  ])
-                ])
-              ],
-              1
-            )
-          }),
-          _vm._v(" "),
-          _vm.history.reduce(function(x, y) {
-            return (x = y.is_interest)
-          }, false)
-            ? _c(
-                "b-row",
-                { staticClass: "justify-content-md-center" },
-                [
-                  _c("b-col", { staticClass: "mt-2" }, [
-                    _c("p", [
-                      _c("small", [
-                        _vm._v(
-                          "Note: Quotes will default to HOLD after 30 minutes."
-                        )
-                      ])
-                    ])
-                  ])
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.vm_message
-            ? _c(
-                "b-row",
-                { staticClass: "justify-content-md-center" },
-                [
-                  _c("b-col", { staticClass: "mt-2" }, [
-                    _c("p", { staticClass: "text-center" }, [
-                      _c("small", [_vm._v(_vm._s(_vm.vm_message))])
-                    ])
-                  ])
-                ],
-                1
-              )
-            : _vm._e()
-        ],
-        2
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-27412ed5", module.exports)
-  }
-}
-
-/***/ }),
-/* 436 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(437)
-/* template */
-var __vue_template__ = __webpack_require__(438)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-51ca6a6a", Component.options)
-  } else {
-    hotAPI.reload("data-v-51ca6a6a", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 437 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__ = __webpack_require__(351);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketNegotiation: {
-            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
-        },
-        markerQoute: {
-            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__["a" /* default */]
-        }
-    },
-    watch: {
-        marketNegotiation: {
-            handler: function handler() {
-                this.$emit('validate-proposal', this.check_invalid);
-            },
-            deep: true
-        }
-    },
-    data: function data() {
-        return {};
-    },
-
-    computed: {
-        'check_invalid': function check_invalid() {
-            var invalid_states = {
-                all_empty: false,
-                bid_pair: false,
-                offer_pair: false,
-                previous: false
-            };
-
-            //new
-            invalid_states.all_empty = this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) && this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty);
-
-            // Check that bid and bid_qty are present together
-            invalid_states.bid_pair = !this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) || this.is_empty(this.marketNegotiation.bid) && !this.is_empty(this.marketNegotiation.bid_qty);
-
-            // Check bid offer and offer_qty are present together
-            invalid_states.offer_pair = !this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty) || this.is_empty(this.marketNegotiation.offer) && !this.is_empty(this.marketNegotiation.offer_qty);
-
-            // Check for previous quote
-            if (typeof this.markerQoute != 'undefined') {
-
-                // Check new markerQoute is equal to old markerQoute
-                invalid_states.previous = this.marketNegotiation.bid == this.markerQoute.bid && this.marketNegotiation.bid_qty == this.markerQoute.bid_qty && this.marketNegotiation.offer == this.markerQoute.offer && this.marketNegotiation.offer_qty == this.markerQoute.offer_qty;
-            }
-
-            return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
-        }
-    },
-    methods: {
-        'is_empty': function is_empty(value) {
-            return value === undefined || value === null || value === '';
-        }
-    },
-    mounted: function mounted() {
-        console.log(this.marketNegotiation);
-    }
-});
-
-/***/ }),
-/* 438 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    {
-      staticClass: "ibar market-negotiation",
-      attrs: { dusk: "ibar-market-negotiation-market" }
-    },
-    [
-      _c(
-        "b-col",
-        [
-          _c(
-            "b-row",
-            { staticClass: "mb-3" },
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
-                [
-                  _c("b-form", { attrs: { inline: "" } }, [
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: {
-                            type: "text",
-                            dusk: "market-negotiation-bid-qty",
-                            placeholder: "Qty"
-                          },
-                          model: {
-                            value: _vm.marketNegotiation.bid_qty,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
-                            },
-                            expression: "marketNegotiation.bid_qty"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: {
-                            type: "text",
-                            dusk: "market-negotiation-bid",
-                            placeholder: "Bid"
-                          },
-                          model: {
-                            value: _vm.marketNegotiation.bid,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "bid", $$v)
-                            },
-                            expression: "marketNegotiation.bid"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: {
-                            type: "text",
-                            dusk: "market-negotiation-offer",
-                            placeholder: "Offer"
-                          },
-                          model: {
-                            value: _vm.marketNegotiation.offer,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "offer", $$v)
-                            },
-                            expression: "marketNegotiation.offer"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "w-25 p-1" },
-                      [
-                        _c("b-form-input", {
-                          staticClass: "w-100",
-                          attrs: {
-                            type: "text",
-                            dusk: "market-negotiation-offer-qty",
-                            placeholder: "Qty"
-                          },
-                          model: {
-                            value: _vm.marketNegotiation.offer_qty,
-                            callback: function($$v) {
-                              _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
-                            },
-                            expression: "marketNegotiation.offer_qty"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } })
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-51ca6a6a", module.exports)
-  }
-}
-
-/***/ }),
-/* 439 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(440)
-/* template */
-var __vue_template__ = __webpack_require__(442)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5a251bc6", Component.options)
-  } else {
-    hotAPI.reload("data-v-5a251bc6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 440 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(84);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__ = __webpack_require__(441);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        appliedConditions: {
-            type: Array,
-            default: []
-        },
-        removableConditions: {
-            type: Array,
-            default: []
-        }
-    },
-    data: function data() {
-        return {
-            show_options: false,
-            chosen_top_level_category: null,
-            conditions: [],
-            categories: []
-        };
-    },
-
-    watch: {
-        'show_options': function show_options(nV) {
-            this.appliedConditions.splice(0, this.appliedConditions.length);
-            this.removableConditions.splice(0, this.removableConditions.length);
-            this.resetCategorySelection(this.categories);
-        }
-    },
-    methods: {
-        getCategoryOptions: function getCategoryOptions(conditions) {
-            var options = [];
-            conditions.forEach(function (x) {
-                options.push({ text: x.title, value: x });
-            });
-            return options;
-        },
-        mutateCategories: function mutateCategories(cats) {
-            var _this = this;
-
-            return cats.map(function (cat) {
-                if (cat.market_conditions) {
-                    cat.market_conditions = cat.market_conditions.map(function (x) {
-                        return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
-                    });
-                }
-                if (cat.children) {
-                    cat.children = _this.mutateCategories(cat.children);
-                }
-                return cat;
-            });
-        },
-        loadConditions: function loadConditions() {
-            var _this2 = this;
-
-            var self = this;
-            return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.baseUrl + '/trade/market-condition').then(function (conditionsResponse) {
-                if (conditionsResponse.status == 200) {
-                    // set the available market types
-                    self.conditions = conditionsResponse.data.conditions.map(function (x) {
-                        return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
-                    }) || [];
-                    self.categories = _this2.mutateCategories(conditionsResponse.data.categories) || [];
-                    console.log(self.categories);
-                    _this2.resetCategorySelection(_this2.categories);
-                } else {
-                    console.error(err);
-                }
-                return conditionsResponse.data;
-            }, function (err) {
-                console.error(err);
-            });
-        },
-        resetCategorySelection: function resetCategorySelection(cats) {
-            var _this3 = this;
-
-            cats.forEach(function (cat) {
-                cat.selected = null;
-                if (cat.children) {
-                    _this3.resetCategorySelection(cat.children);
-                }
-            });
-        },
-        applyCondition: function applyCondition(condition) {
-            var _this4 = this;
-
-            console.log("got called");
-            var conExist = this.appliedConditions.indexOf(condition) != -1;
-
-            this.appliedConditions.splice(0, this.appliedConditions.length);
-            // add condition if not already exists
-
-            if (!conExist) {
-                this.appliedConditions.push(condition);
-
-                var removable = {
-                    title: condition.title
-                };
-
-                removable.callback = function () {
-                    _this4.appliedConditions.splice(0, _this4.appliedConditions.length);
-                    _this4.removableConditions.splice(_this4.removableConditions.indexOf(removable), 1);
-                    _this4.show_options = false;
-
-                    Vue.nextTick(function () {
-                        _this4.show_options = true;
-                    });
-                };
-
-                this.removableConditions.splice(0, this.removableConditions.length);
-                this.removableConditions.push(removable);
-            } else {
-                this.removableConditions.splice(0, this.removableConditions.length);
-            }
-        },
-        applyCategory: function applyCategory(category) {
-            var _this5 = this;
-
-            this.chosen_top_level_category = category;
-            this.resetCategorySelection(this.categories);
-            this.updateCategoryConditions();
-
-            var removable = {
-                title: category.title
-            };
-            removable.callback = function () {
-                _this5.chosen_top_level_category = null;
-                _this5.removableConditions.splice(_this5.removableConditions.indexOf(removable), 1);
-                _this5.resetCategorySelection(_this5.categories);
-                _this5.updateCategoryConditions();
-                _this5.show_options = false;
-                Vue.nextTick(function () {
-                    _this5.show_options = true;
-                });
-            };
-            this.removableConditions.splice(0, this.removableConditions.length);
-            this.removableConditions.push(removable);
-        },
-        recurseSelected: function recurseSelected(category) {
-            var _this6 = this;
-
-            if (category.children) {
-                category.children.forEach(function (child) {
-                    _this6.recurseSelected(child);
-                });
-            }
-            if (category.selected) {
-                this.appliedConditions.push(category.selected);
-            }
-        },
-        updateCategoryConditions: function updateCategoryConditions(changed) {
-            var _this7 = this;
-
-            Vue.nextTick(function () {
-                console.log("the update got called");
-                _this7.appliedConditions.splice(0, _this7.appliedConditions.length);
-                if (_this7.chosen_top_level_category) {
-                    _this7.recurseSelected(_this7.chosen_top_level_category);
-                }
-            });
-        }
-    },
-    created: function created() {
-        this.loadConditions();
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 441 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BaseModel__ = __webpack_require__(42);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-
-
-var UserMarketNegotiationCondition = function (_BaseModel) {
-    _inherits(UserMarketNegotiationCondition, _BaseModel);
-
-    function UserMarketNegotiationCondition(options) {
-        _classCallCheck(this, UserMarketNegotiationCondition);
-
-        // default internal
-        var _this = _possibleConstructorReturn(this, (UserMarketNegotiationCondition.__proto__ || Object.getPrototypeOf(UserMarketNegotiationCondition)).call(this, {
-            _used_model_list: []
-        }));
-
-        _this._user_market_negotiation = null;
-        // default public
-        var defaults = {
-            id: "",
-            title: "",
-            alias: "",
-            created_at: moment()
-            // assign options with defaults
-        };Object.keys(defaults).forEach(function (key) {
-            if (options && typeof options[key] !== 'undefined') {
-                _this[key] = options[key];
-                if (defaults[key] instanceof moment) {
-                    _this[key] = moment(_this[key]);
-                }
-            } else {
-                _this[key] = defaults[key];
-            }
-        });
-        return _this;
-    }
-
-    /**
-    *   setUserMarketNegotiation - Sets the conditions UserMarketNegotiation
-    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation for the condition
-    */
-
-
-    _createClass(UserMarketNegotiationCondition, [{
-        key: "setUserMarketNegotiation",
-        value: function setUserMarketNegotiation(user_market_negotiation) {
-            this._user_market_negotiation = user_market_negotiation;
-        }
-
-        /**
-        *   getUserMarketNegotiation - Gets the conditions  UserMarketNegotiation
-        *   @return {UserMarketNegotiation}
-        */
-
-    }, {
-        key: "getUserMarketNegotiation",
-        value: function getUserMarketNegotiation() {
-            return this._user_market_negotiation;
-        }
-    }, {
-        key: "prepareStore",
-        value: function prepareStore() {
-            return {
-                id: this.id,
-                title: this.title,
-                alias: this.alias
-            };
-        }
-    }]);
-
-    return UserMarketNegotiationCondition;
-}(__WEBPACK_IMPORTED_MODULE_0__BaseModel__["a" /* default */]);
-
-/* harmony default export */ __webpack_exports__["a"] = (UserMarketNegotiationCondition);
-
-/***/ }),
-/* 442 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    { attrs: { dusk: "ibar-apply-conditions" } },
-    [
-      _c(
-        "b-col",
-        [
-          _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-form-checkbox",
-                    {
-                      attrs: {
-                        dusk: "ibar-apply-a-condition",
-                        name: "apply-a-condition",
-                        value: true,
-                        "unchecked-value": false
-                      },
-                      model: {
-                        value: _vm.show_options,
-                        callback: function($$v) {
-                          _vm.show_options = $$v
-                        },
-                        expression: "show_options"
-                      }
-                    },
-                    [_vm._v(" Apply a condition")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.show_options
-            ? _c(
-                "b-row",
-                { staticClass: "text-center", attrs: { role: "tablist" } },
-                [
-                  _vm._l(_vm.conditions, function(condition) {
-                    return _c(
-                      "b-col",
-                      { attrs: { cols: "12" } },
-                      [
-                        _c(
-                          "b-btn",
-                          {
-                            directives: [
-                              {
-                                name: "b-toggle",
-                                rawName: "v-b-toggle",
-                                value: "condition_" + condition.id,
-                                expression: "'condition_'+condition.id"
-                              }
-                            ],
-                            staticClass: "w-75 mt-2 ibar-condition",
-                            attrs: {
-                              variant: "default",
-                              size: "sm",
-                              role: "tab"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.applyCondition(condition)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(condition.title) +
-                                "\n                "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c("b-collapse", {
-                          staticClass: "w-75 ibar-condition-panel",
-                          attrs: {
-                            id: "condition_" + condition.id,
-                            accordion: "conditions",
-                            role: "tabpanel"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  }),
-                  _vm._v(" "),
-                  _vm._l(_vm.categories, function(category) {
-                    return _c(
-                      "b-col",
-                      { attrs: { cols: "12" } },
-                      [
-                        _c(
-                          "b-btn",
-                          {
-                            directives: [
-                              {
-                                name: "b-toggle",
-                                rawName: "v-b-toggle",
-                                value: "category_" + category.id,
-                                expression: "'category_'+category.id"
-                              }
-                            ],
-                            staticClass: "w-75 mt-2 ibar-condition",
-                            attrs: {
-                              variant: "default",
-                              size: "sm",
-                              role: "tab"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.applyCategory(category)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(category.title) +
-                                "\n                "
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "b-collapse",
-                          {
-                            staticClass: "w-75 ibar-condition-panel",
-                            attrs: {
-                              id: "category_" + category.id,
-                              accordion: "conditions",
-                              role: "tabpanel"
-                            }
-                          },
-                          [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "ibar-condition-panel-content text-left"
-                              },
-                              [
-                                _vm._l(category.children, function(child) {
-                                  return category.children.length > 0
-                                    ? _c("div", [
-                                        _c("label", { staticClass: "title" }, [
-                                          _vm._v(_vm._s(child.title))
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "div",
-                                          { staticClass: "content" },
-                                          [
-                                            _c("b-form-radio-group", {
-                                              attrs: {
-                                                options: _vm.getCategoryOptions(
-                                                  child.market_conditions
-                                                ),
-                                                stacked: "",
-                                                name: ""
-                                              },
-                                              on: {
-                                                change:
-                                                  _vm.updateCategoryConditions
-                                              },
-                                              model: {
-                                                value: child.selected,
-                                                callback: function($$v) {
-                                                  _vm.$set(
-                                                    child,
-                                                    "selected",
-                                                    $$v
-                                                  )
-                                                },
-                                                expression: "child.selected"
-                                              }
-                                            })
-                                          ],
-                                          1
-                                        )
-                                      ])
-                                    : _vm._e()
-                                }),
-                                _vm._v(" "),
-                                category.children.length == 0
-                                  ? _c("div", [
-                                      _c(
-                                        "div",
-                                        { staticClass: "content" },
-                                        [
-                                          _c("b-form-radio-group", {
-                                            attrs: {
-                                              options: _vm.getCategoryOptions(
-                                                category.market_conditions
-                                              ),
-                                              stacked: "",
-                                              name: ""
-                                            },
-                                            on: {
-                                              change:
-                                                _vm.updateCategoryConditions
-                                            },
-                                            model: {
-                                              value: category.selected,
-                                              callback: function($$v) {
-                                                _vm.$set(
-                                                  category,
-                                                  "selected",
-                                                  $$v
-                                                )
-                                              },
-                                              expression: "category.selected"
-                                            }
-                                          })
-                                        ],
-                                        1
-                                      )
-                                    ])
-                                  : _vm._e()
-                              ],
-                              2
-                            )
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  })
-                ],
-                2
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5a251bc6", module.exports)
-  }
-}
-
-/***/ }),
-/* 443 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(444)
-/* template */
-var __vue_template__ = __webpack_require__(445)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1ef017fc", Component.options)
-  } else {
-    hotAPI.reload("data-v-1ef017fc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 444 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: {
-        marketNegotiation: {
-            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
-        }
-    },
-    data: function data() {
-        return {};
-    },
-
-    methods: {},
-    created: function created() {
-        console.log("ApplyPremium calculator stuff", this.UserMarketNegotiation);
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 445 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "b-row",
-    [
-      _c(
-        "b-col",
-        [_c("b-form-checkbox", [_vm._v(" Apply Premium Calculator")])],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1ef017fc", module.exports)
-  }
-}
-
-/***/ }),
-/* 446 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(447)
-/* template */
-var __vue_template__ = __webpack_require__(479)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBarComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-79b015f7", Component.options)
-  } else {
-    hotAPI.reload("data-v-79b015f7", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 447 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(448);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(451);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(454);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(457);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__ = __webpack_require__(460);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_Market__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarket__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-//component imports
-
-
-
-
-
-//lib imports
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    components: {
-        FilterMarketsMenu: __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default.a,
-        ImportantMenu: __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default.a,
-        AlertsMenu: __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default.a,
-        ConfirmationsMenu: __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default.a,
-        RequestMarketMenu: __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default.a
-    },
-    props: {
-        'markets': {
-            type: Array
-        },
-        'no_cares': {
-            type: Array
-        }
-    },
-    watch: {
-        'markets': {
-            handler: function handler() {
-                this.reloadNotifications();
-            },
-            deep: true
-        },
-        'no_cares': {
-            handler: function handler() {
-                this.reloadNotifications();
-            },
-            deep: true
-        }
-    },
-    data: function data() {
-        return {
-            market_notifications: {
-                important: [],
-                alert: [],
-                confirm: []
-            },
-            modals: {
-                select_market: false
-            },
-            chat_opened: false
-        };
-    },
-
-    methods: {
-        /**
-         * Resets the quantities counters and updates each of the market_notifications
-         *      counters according to the matching market requests
-         */
-        reloadNotifications: function reloadNotifications() {
-            var _this = this;
-
-            this.market_notifications.important = [];
-            this.market_notifications.alert = [];
-            this.market_notifications.confirm = [];
-
-            var important_states = ['REQUEST', 'REQUEST-VOL'];
-
-            //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
-            var alert_states = ['alert'];
-            var confirm_states = ['confirm'];
-
-            this.markets.forEach(function (market) {
-
-                market.market_requests.forEach(function (market_request) {
-
-                    if (market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
-                        {
-                            _this.market_notifications.alert.push(market_request);
-                        } else if (important_states.indexOf(market_request.attributes.state) > -1 && _this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
-                        {
-                            if (!market_request.quotes.find(function (quote) {
-                                return quote.is_maker;
-                            }) && !market_request.is_interest) {
-                                _this.market_notifications.important.push(market_request);
-                            }
-                        }
-
-                    if (confirm_states.indexOf(market_request.attributes.state) > -1) {
-                        _this.market_notifications.confirm.push(market_request);
-                    }
-                });
-            });
-        },
-        toggleBar: function toggleBar(set) {
-            if (typeof set != 'undefined') {
-                this.chat_opened = set == true;
-            } else {
-                this.chat_opened = !this.chat_opened;
-            }
-        },
-
-        /**
-         * Loads the Chat Sidebar
-         *
-         * @fires /lib/EventBus#toggleSidebar
-         */
-        loadChatBar: function loadChatBar() {
-            __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
-        },
-
-        /**
-         * Listens for a chatToggle event firing
-         *
-         * @event /lib/EventBus#chatToggle
-         */
-        chatBarListener: function chatBarListener() {
-            __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
-        }
-    },
-    mounted: function mounted() {
-        this.reloadNotifications();
-        this.chatBarListener();
-    }
-});
-
-/***/ }),
-/* 448 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(449)
-/* template */
-var __vue_template__ = __webpack_require__(450)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6b6758c2", Component.options)
-  } else {
-    hotAPI.reload("data-v-6b6758c2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 449 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(80);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__ = __webpack_require__(81);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__ = __webpack_require__(17);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'FilterMarketsMenu',
-    props: {
-        'markets': {
-            type: Array
-        },
-        'popoverRef': {
-            type: String
-        },
-        'closeCallback': {
-            type: Function
-        }
-    },
-    data: function data() {
-        return {
-            availableSelectedMarketTypes: {
-                'INDEX': {
-                    state: false,
-                    marketType: null
-                },
-                'SINGLES': {
-                    state: false,
-                    marketType: null
-                },
-                'DELTA ONE': {
-                    state: false,
-                    marketType: null
-                }
-            },
-            popover_ref: 'add-market-ref'
-        };
-    },
-
-    methods: {
-        /**
-         * This is called just before the popover is shown
-         */
-        onShow: function onShow() {
-            this.checkSelected();
-        },
-
-        /**
-         * Creates a boolean list of availableSelectedMarkets from markets prop
-         */
-        checkSelected: function checkSelected() {
-            var _this = this;
-
-            this.$root.market_types.forEach(function (market_type) {
-                switch (market_type.title) {
-                    case "Index Option":
-                        _this.availableSelectedMarketTypes['INDEX'].marketType = market_type;
-                        break;
-                    case "Delta One(EFPs, Rolls and EFP Switches)":
-                        _this.availableSelectedMarketTypes['DELTA ONE'].marketType = market_type;
-                        break;
-
-                    case "Single Stock Options":
-                        _this.availableSelectedMarketTypes['SINGLES'].marketType = market_type;
-                        break;
-                }
-            });
-            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
-                _this.availableSelectedMarketTypes[key].state = false;
-            });
-
-            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
-                _this.$root.config("user_preferences.prefered_market_types").forEach(function (prefered_market_type) {
-                    if (_this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
-                        _this.availableSelectedMarketTypes[key].state = true;
-                    }
-                });
-            });
-        },
-
-        /**
-         * Filters the user's Market Type preference 
-         */
-        filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
-            var _this2 = this;
-
-            if (actionCheck) {
-                this.addUserPreferenceMarketType(market_type).then(function (market_type) {
-                    _this2.addMarket(market_type);
-                });
-            } else {
-                this.removeUserPreferenceMarketType(market_type).then(function () {
-                    _this2.availableSelectedMarketTypes[market_type].marketType.markets.forEach(function (market) {
-                        _this2.removeMarket(market);
-                    });
-                });
-            }
-        },
-
-        /**
-         * Adds a selected Market to Display Markets
-         * 
-         * @param {string} $market a string detailing a Market.title to be added
-         */
-        addMarket: function addMarket(market_type) {
-            var _this3 = this;
-
-            this.$root.loadMarkets(market_type).then(function (markets) {
-                var promises = [];
-                markets.forEach(function (market) {
-                    promises.push(_this3.$root.loadMarketRequests(market));
-                });
-                return Promise.all(promises);
-            });
-            this.checkSelected();
-        },
-
-        /**
-         * Adds a selected Market Type to the users preferences and saves it to the server
-         * 
-         * @param {string} $market_type a string detailing a MarketType.title to be added
-         */
-        addUserPreferenceMarketType: function addUserPreferenceMarketType(market_type) {
-            var _this4 = this;
-
-            return axios.patch(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences")).then(function (response) {
-                if (response.status == 200) {
-                    _this4.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
-                    return _this4.$root.configs["user_preferences"].prefered_market_types[_this4.$root.configs["user_preferences"].prefered_market_types.length - 1];
-                } else {
-                    return null;
-                    console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            });
-        },
-
-        /**
-         * Removes a selected Market from Display Markets
-         * 
-         * @param {string} $market a string detailing a Market.title to be removed
-         */
-        removeMarket: function removeMarket(market) {
-            var index = this.markets.findIndex(function (element) {
-                return element.id == market.id;
-            });
-            if (index !== -1) {
-                this.markets.splice(index, 1);
-            }
-            // make api call to amend user pref for market types
-            this.checkSelected();
-        },
-
-        /**
-         * Removes a selected Market Type from the users preferences and saves it to the server
-         * 
-         * @param {string} $market_type a string detailing a MarketType.title to be removed
-         */
-        removeUserPreferenceMarketType: function removeUserPreferenceMarketType(market_type) {
-            var _this5 = this;
-
-            // write delete end to apply new pref
-            return axios.delete(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id).then(function (response) {
-                if (response.status == 200) {
-                    var index = _this5.$root.configs["user_preferences"].prefered_market_types.findIndex(function (element) {
-                        return element.id == response.data.data;
-                    });
-                    if (index !== -1) {
-                        return _this5.$root.configs["user_preferences"].prefered_market_types.splice(index, 1);
-                    }
-                    return null;
-                } else {
-                    console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            });
-        },
-
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 450 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "filter-markets-menu",
-      attrs: { dusk: "filter-markets-menu" }
-    },
-    [
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            triggers: "focus",
-            placement: "bottomleft",
-            target: "action-filter-market-button"
-          },
-          on: { show: _vm.onShow }
-        },
-        [
-          _c("div", { staticClass: "row text-center" }, [
-            _c(
-              "div",
-              { staticClass: "col-12" },
-              _vm._l(_vm.availableSelectedMarketTypes, function(obj, key) {
-                return _c("div", { staticClass: "row mt-1" }, [
-                  _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
-                    _c("h5", { staticClass: "w-100 m-0 popover-over-text" }, [
-                      _vm._v(_vm._s(key))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    obj.state
-                      ? _c(
-                          "button",
-                          {
-                            staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: {
-                              id: "",
-                              "data-remove-market": key,
-                              type: "button"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.filterMarketTypes(key, false)
-                              }
-                            }
-                          },
-                          [_vm._v("Remove\n                        ")]
-                        )
-                      : _c(
-                          "button",
-                          {
-                            staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { "data-add-market": key, type: "button" },
-                            on: {
-                              click: function($event) {
-                                _vm.filterMarketTypes(key, true)
-                              }
-                            }
-                          },
-                          [_vm._v("Add\n                        ")]
-                        )
-                  ])
-                ])
-              })
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-12" }, [
-              _c("p", { staticClass: "m-2" }, [
-                _vm._v(
-                  "DCap and Dtop: Only displayed when markets are requested"
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { type: "button" },
-                  on: { click: _vm.onDismiss }
-                },
-                [_vm._v("OK")]
-              )
-            ])
-          ])
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "btn mm-transparent-button mr-2",
-        attrs: { id: "action-filter-market-button", type: "button" }
-      },
-      [_c("span", { staticClass: "icon icon-add" }), _vm._v(" Markets\n    ")]
-    )
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6b6758c2", module.exports)
-  }
-}
-
-/***/ }),
-/* 451 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(452)
-/* template */
-var __vue_template__ = __webpack_require__(453)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-97ac4208", Component.options)
-  } else {
-    hotAPI.reload("data-v-97ac4208", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 452 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'ImportantMenu',
-    props: {
-        'notifications': {
-            type: Array
-        },
-        'no_cares': {
-            type: Array
-        }
-    },
-    data: function data() {
-        return {
-            status: false,
-            popover_ref: 'important-market-ref'
-        };
-    },
-
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.status = false;
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-         * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
-         *
-         * @param {string} $id a string id detailing the UserMarketRequests to be removed
-         *
-         * @todo Change $market to be the Market.id not Market.title
-         */
-        addToNoCares: function addToNoCares(key, id) {
-
-            if (!this.no_cares.includes(id)) {
-                this.no_cares.push(id);
-                this.notifications.splice(key, 1);
-                this.saveNoCares();
-            }
-        },
-
-        /**
-         * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
-         *      closes the popover
-         *
-         * @todo Change market to be the Market.id not Market.title
-         */
-        applyBulkNoCares: function applyBulkNoCares() {
-            if (this.status) {
-
-                for (var i = 0; i < this.notifications.length; i++) {
-                    this.no_cares.push(this.notifications[i].id);
-                };
-                this.notifications.splice(0, this.notifications.length);
-                this.saveNoCares();
-            }
-            // this.onDismiss();
-        },
-        saveNoCares: function saveNoCares() {
-            var parsed = JSON.stringify(this.no_cares);
-            localStorage.setItem('no_cares_market_request', parsed);
-        },
-
-        /**
-         * Loads the Interaction Sidebar with the related UserMarketRequest
-         *
-         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
-         *      to the Interaction Sidebar.
-         *
-         * @fires /lib/EventBus#toggleSidebar
-         */
-        loadInteractionBar: function loadInteractionBar(market_request) {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 453 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "important-markets-menu",
-      attrs: { dusk: "important-markets-menu" }
-    },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-important-button mr-2 p-1",
-          attrs: { id: "action-important-button", type: "button" }
-        },
-        [
-          _vm._v("Important "),
-          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { attrs: { id: "important-popover" } }),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            container: "important-popover",
-            triggers: "click blur",
-            placement: "bottom",
-            target: "action-important-button"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            _vm._l(_vm.notifications, function(market_request, key) {
-              return _c("div", { staticClass: "col-12" }, [
-                _c("div", { staticClass: "row mt-1" }, [
-                  _c("div", { staticClass: "col-6 text-center  pt-2 pb-2" }, [
-                    _c(
-                      "h6",
-                      {
-                        staticClass:
-                          "w-100 m-0 popover-over-text market-request-link",
-                        on: {
-                          click: function($event) {
-                            _vm.loadInteractionBar(market_request)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          " \n                                " +
-                            _vm._s(market_request.getMarket().title) +
-                            " " +
-                            _vm._s(
-                              market_request.trade_items.default
-                                ? market_request.trade_items.default["Strike"]
-                                : ""
-                            ) +
-                            " " +
-                            _vm._s(
-                              market_request.trade_items.default
-                                ? market_request.trade_items.default[
-                                    "Expiration Date"
-                                  ]
-                                : ""
-                            ) +
-                            "\n                            "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "col-6" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn mm-generic-trade-button w-100",
-                        class: { selected: _vm.status },
-                        attrs: {
-                          id: "important-nocare-" + market_request.id,
-                          type: "button"
-                        },
-                        on: {
-                          click: function($event) {
-                            _vm.addToNoCares(key, market_request.id)
-                          }
-                        }
-                      },
-                      [_vm._v("No Cares\n                          ")]
-                    )
-                  ])
-                ])
-              ])
-            })
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "row text-center" }, [
-            _c(
-              "div",
-              { staticClass: "col-12 mt-2" },
-              [
-                _c(
-                  "b-form-group",
-                  { staticClass: "bulk-no-cares" },
-                  [
-                    _c(
-                      "b-form-checkbox",
-                      {
-                        attrs: { id: "select-bulk-nocares", value: "true" },
-                        model: {
-                          value: _vm.status,
-                          callback: function($$v) {
-                            _vm.status = $$v
-                          },
-                          expression: "status"
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                        Apply No Cares to All\n                    "
-                        )
-                      ]
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { id: "apply-bulk-nocares-button", type: "button" },
-                  on: { click: _vm.applyBulkNoCares }
-                },
-                [_vm._v("OK")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-6 mt-1" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn mm-generic-trade-button w-100",
-                  attrs: { id: "dismiss-important-popover", type: "button" },
-                  on: {
-                    click: function($event) {
-                      _vm.onDismiss()
-                    }
-                  }
-                },
-                [_vm._v("Cancel")]
-              )
-            ])
-          ])
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-97ac4208", module.exports)
-  }
-}
-
-/***/ }),
-/* 454 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(455)
-/* template */
-var __vue_template__ = __webpack_require__(456)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0edeefd2", Component.options)
-  } else {
-    hotAPI.reload("data-v-0edeefd2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 455 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'AlertsMenu',
-    props: {
-        'notifications': {
-            type: Array
-        }
-    },
-    data: function data() {
-        return {
-            popover_ref: 'alert-market-ref'
-        };
-    },
-
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-        * Loads the Interaction Sidebar with the related UserMarketRequest
-        *
-        * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
-        *      to the Interaction Sidebar.
-        *
-        * @fires /lib/EventBus#toggleSidebar
-        */
-        loadInteractionBar: function loadInteractionBar(market_request) {
-            if (market_request.attributes.action_needed) {
-                market_request.actionTaken();
-            }
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
-            this.$refs[this.popover_ref].$emit('close');
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 456 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "alerts-markets-menu",
-      attrs: { dusk: "alerts-markets-menu" }
-    },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-alert-button mr-2 p-1",
-          attrs: { id: "action-alert-button", type: "button" }
-        },
-        [
-          _vm._v("Alerts "),
-          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { attrs: { id: "alerts-popover" } }),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            container: "alerts-popover",
-            triggers: "focus",
-            placement: "bottom",
-            target: "action-alert-button"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notifications, function(market_request, key) {
-                return _c("div", { staticClass: "col-12" }, [
-                  _c("div", { staticClass: "row mt-1" }, [
-                    _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
-                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
-                        _vm._v(
-                          "  " +
-                            _vm._s(market_request.getMarket().title) +
-                            " " +
-                            _vm._s(
-                              market_request.trade_items.default
-                                ? market_request.trade_items.default["Strike"]
-                                : ""
-                            ) +
-                            " " +
-                            _vm._s(
-                              market_request.trade_items.default
-                                ? market_request.trade_items.default[
-                                    "Expiration Date"
-                                  ]
-                                : ""
-                            ) +
-                            "\n                      "
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-6" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn mm-generic-trade-button w-100",
-                          attrs: {
-                            id: "alert-view-" + market_request.id,
-                            type: "button"
-                          },
-                          on: {
-                            click: function($event) {
-                              _vm.loadInteractionBar(market_request)
-                            }
-                          }
-                        },
-                        [_vm._v("View\n                        ")]
-                      )
-                    ])
-                  ])
-                ])
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 offset-6 mt-3" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: { id: "dismiss-alert-popover", type: "button" },
-                    on: { click: _vm.onDismiss }
-                  },
-                  [_vm._v("OK")]
-                )
-              ])
-            ],
-            2
-          )
-        ]
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0edeefd2", module.exports)
-  }
-}
-
-/***/ }),
-/* 457 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(458)
-/* template */
-var __vue_template__ = __webpack_require__(459)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-351d97c0", Component.options)
-  } else {
-    hotAPI.reload("data-v-351d97c0", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 458 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__ = __webpack_require__(11);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-var place_holder_data_options = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' }];
-var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot': 'N/A', 'Future': 'N/A', 'Contracts': 'N/A', 'Expriry': 'N/A' }];
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'ConfirmationsMenu',
-    props: {
-        'notifications': {
-            type: Array
-        }
-    },
-    data: function data() {
-        return {
-            modals: {
-                show_modal: false,
-                market_request: {
-                    type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__["a" /* default */]
-                },
-                table_data: {
-                    options: place_holder_data_options,
-                    futures: place_holder_data_futures
-                }
-            },
-            popover_ref: 'confirmation-market-ref'
-        };
-    },
-
-    methods: {
-        /**
-         * Closes popover
-         */
-        onDismiss: function onDismiss() {
-            this.$refs[this.popover_ref].$emit('close');
-        },
-
-        /**
-         * Loads the Confirmation Modal with the related UserMarketRequest 
-         *
-         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
-         *      to the Interaction Sidebar.
-         */
-        loadModal: function loadModal(market_request) {
-            this.modals.market_request = market_request;
-            this.modals.show_modal = true;
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 459 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "confirmations-markets-menu",
-      attrs: { dusk: "confirmations-markets-menu" }
-    },
-    [
-      _c(
-        "button",
-        {
-          staticClass: "btn mm-confirmation-button mr-2 p-1",
-          attrs: { id: "action-confirmations-button", type: "button" }
-        },
-        [
-          _vm._v("Confirmations "),
-          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
-        ]
-      ),
-      _vm._v(" "),
-      _c("div", { attrs: { id: "confirmations-popover" } }),
-      _vm._v(" "),
-      _c(
-        "b-popover",
-        {
-          ref: _vm.popover_ref,
-          attrs: {
-            container: "confirmations-popover",
-            triggers: "focus",
-            placement: "bottom",
-            target: "action-confirmations-button"
-          }
-        },
-        [
-          _c(
-            "div",
-            { staticClass: "row text-center" },
-            [
-              _vm._l(_vm.notifications, function(market_request) {
-                return _c("div", { staticClass: "col-12" }, [
-                  _c("div", { staticClass: "row mt-1" }, [
-                    _c("div", { staticClass: "col-6 text-center" }, [
-                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
-                        _vm._v(
-                          " " +
-                            _vm._s(market_request.getMarket().title) +
-                            " " +
-                            _vm._s(market_request.attributes.strike) +
-                            " \n                        "
-                        )
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "col-6" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn mm-generic-trade-button w-100",
-                          attrs: {
-                            id: "confirmations-view-" + market_request.id,
-                            type: "button"
-                          },
-                          on: {
-                            click: function($event) {
-                              _vm.loadModal(market_request)
-                            }
-                          }
-                        },
-                        [_vm._v("View\n                        ")]
-                      )
-                    ])
-                  ])
-                ])
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn mm-generic-trade-button w-100",
-                    attrs: {
-                      id: "dismiss-confirmations-popover",
-                      type: "button"
-                    },
-                    on: { click: _vm.onDismiss }
-                  },
-                  [_vm._v("OK")]
-                )
-              ])
-            ],
-            2
-          )
-        ]
-      ),
-      _vm._v(" "),
-      _vm.modals.show_modal
-        ? _c(
-            "b-modal",
-            {
-              staticClass: "confirmations-modal",
-              attrs: { size: "lg" },
-              model: {
-                value: _vm.modals.show_modal,
-                callback: function($$v) {
-                  _vm.$set(_vm.modals, "show_modal", $$v)
-                },
-                expression: "modals.show_modal"
-              }
-            },
-            [
-              _c(
-                "div",
-                { attrs: { slot: "modal-title" }, slot: "modal-title" },
-                [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(_vm.modals.market_request.attributes.strike) +
-                      "\n        "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "b-container",
-                { attrs: { fluid: "" } },
-                [
-                  _c("p", [
-                    _vm._v(
-                      "Thank you for your trade! Please check before accepting."
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("p", [_vm._v("Date: ")]),
-                  _vm._v(" "),
-                  _c("p", [_vm._v("Structure: ")]),
-                  _vm._v(" "),
-                  _c("div", { staticStyle: { Display: "inline" } }, [
-                    _c("h3", [_vm._v("Option")])
-                  ]),
-                  _vm._v(" "),
-                  _c("b-table", {
-                    attrs: {
-                      responsive: "",
-                      hover: "",
-                      items: _vm.modals.table_data.options
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("div", { staticStyle: { Display: "inline" } }, [
-                    _c("h3", [_vm._v("Futures")])
-                  ]),
-                  _vm._v(" "),
-                  _c("b-table", {
-                    attrs: {
-                      responsive: "",
-                      hover: "",
-                      items: _vm.modals.table_data.futures
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "b-row",
-                    [
-                      _c("b-col", { attrs: { md: "5", "offset-md": "7" } }, [
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn mm-generic-trade-button w-100 mb-1",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("I'm Happy, Trade Confirmed")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass:
-                              "btn mm-generic-trade-button w-100 mb-1",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Delta / Refs - Recalculate & Dispute")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "button",
-                          {
-                            staticClass: "btn mm-generic-trade-button w-100",
-                            attrs: { type: "button" }
-                          },
-                          [_vm._v("Send")]
-                        )
-                      ])
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", {
-                staticClass: "w-100",
-                attrs: { slot: "modal-footer" },
-                slot: "modal-footer"
-              })
-            ],
-            1
-          )
-        : _vm._e()
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-351d97c0", module.exports)
-  }
-}
-
-/***/ }),
-/* 460 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(461)
-/* template */
-var __vue_template__ = __webpack_require__(478)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/RequestMarketMenuComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1fefbb97", Component.options)
-  } else {
-    hotAPI.reload("data-v-1fefbb97", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 461 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__ = __webpack_require__(462);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__ = __webpack_require__(475);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__ = __webpack_require__(353);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue__ = __webpack_require__(354);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'RequestMarketMenu',
-    components: {
-        StepSelection: __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default.a,
-        IndexController: __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default.a,
-        MarketSelection: __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue___default.a,
-        StructureSelection: __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue___default.a,
-        ExpirySelection: __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue___default.a,
-        Details: __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue___default.a,
-        ConfirmMarketRequest: __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue___default.a
-    },
-    props: {},
-    data: function data() {
-        return {
-            modal_data: {
-                title: ['Select A Market'],
-                step: 0,
-                show_modal: false,
-                modal_ref: 'request-market-ref',
-                selected_controller: null
-            },
-            controllers: {
-                Selections: __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default.a,
-                Index: __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default.a
-            }
-        };
-    },
-
-    computed: {
-        modalTitle: function modalTitle() {
-            return this.modal_data.title.join(' > ');
-        }
-    },
-    methods: {
-        /**
-         * Loads the Reqeust a Market Modal 
-         */
-        showModal: function showModal() {
-            this.modal_data.selected_controller = 'Selections';
-            this.modal_data.step = 0;
-            this.modal_data.show_modal = true;
-            console.log("RUNNING: ", this.modal_data.selected_controller, this.modal_data.show_modal, this.modal_data);
-            this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
-        },
-
-        /**
-         * Closes the Reqeust a Market Modal 
-         */
-        hideModal: function hideModal() {
-            this.modal_data.step = 0;
-            this.modal_data.show_modal = false;
-            this.modal_data.title = ['Select A Market'];
-            this.modal_data.selected_controller = null;
-            this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
-        },
-
-        /**
-         * Loads component contoller 
-         */
-        loadController: function loadController(name) {
-            this.nextStep();
-            this.modal_data.selected_controller = name;
-        },
-
-        /**
-         * Returns to previous modal step 
-         */
-        previousStep: function previousStep() {
-            this.modal_data.step--;
-            if (this.modal_data.step == 1) {
-                this.modal_data.title = ['Select A Market'];
-                this.modal_data.selected_controller = 'Selections';
-                this.modal_data.step = 0;
-            } else {
-                this.$refs['currentController'].$emit('modal_step', 'back');
-            }
-        },
-        nextStep: function nextStep() {
-            //receives name of next componenet to load
-            this.modal_data.step++;
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 462 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(463)
-/* template */
-var __vue_template__ = __webpack_require__(474)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/Controllers/IndexControllerComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5e15a78b", Component.options)
-  } else {
-    hotAPI.reload("data-v-5e15a78b", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 463 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__ = __webpack_require__(353);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__ = __webpack_require__(354);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__ = __webpack_require__(355);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__ = __webpack_require__(356);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(357);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(80);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'IndexController',
-    props: {
-        'close_modal': {
-            type: Function
-        },
-        'callback': {
-            type: Function
-        },
-        'modal_data': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {
-            index_data: {
-                market_type_title: 'Index Option',
-                market_type: null,
-                index_market_object: {
-
-                    market: null,
-                    trade_structure: '',
-                    trade_structure_groups: [],
-                    expiry_dates: [],
-                    details: null
-
-                },
-                number_of_dates: 1
-            },
-            errors: {
-                message: null,
-                data: {
-                    Market: {
-                        messages: []
-                    },
-                    Structure: {
-                        messages: []
-                    },
-                    Expiry: {
-                        messages: []
-                    },
-                    Details: {
-                        messages: [],
-                        fields: []
-                    },
-                    Confirm: {
-                        messages: []
-                    }
-                }
-            },
-            selected_step_component: null,
-            components: {
-                Market: __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default.a,
-                Structure: __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default.a,
-                Expiry: __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default.a,
-                Confirm: __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default.a,
-                Details: __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default.a
-            },
-            temp_title: []
-        };
-    },
-
-    methods: {
-        /**
-         * Returns to previous modal step 
-         */
-        previousStep: function previousStep() {
-            this.modal_data.title.pop();
-            this.modal_data.step--;
-        },
-
-        /**
-         * Goes to next modal step 
-         */
-        nextStep: function nextStep() {
-            this.modal_data.step++;
-            console.log("STEP=========================: ", this.modal_data.step);
-        },
-
-        /**
-         * Loads step component 
-         */
-        loadStepComponent: function loadStepComponent(component_data) {
-            if (component_data != 'back') {
-                this.nextStep();
-                this.modal_data.title.push(component_data);
-            } else {
-                if (this.modal_data.title[0] == 'Confirm Market Request') {
-                    this.modal_data.title = this.temp_title;
-                }
-                this.modal_data.title.pop();
-            }
-            switch (this.modal_data.step) {
-                case 2:
-                    this.selected_step_component = 'Market';
-                    break;
-                case 3:
-                    this.selected_step_component = 'Structure';
-                    break;
-                case 4:
-                    this.index_data.number_of_dates = 1;
-                    if (this.index_data.index_market_object.trade_structure == 'Calendar') {
-                        this.index_data.number_of_dates = 2;
-                    }
-                    this.selected_step_component = 'Expiry';
-                    break;
-                case 5:
-                    this.selected_step_component = 'Details';
-                    break;
-                case 6:
-                    this.temp_title = this.modal_data.title;
-                    this.modal_data.title = ['Confirm Market Request'];
-                    this.selected_step_component = 'Confirm';
-                    break;
-                case 7:
-                    this.saveMarketRequest();
-                default:
-            }
-        },
-
-        /**
-         * Loads Index Markets 
-         */
-        loadIndexMarkets: function loadIndexMarkets() {
-            var _this = this;
-
-            if (Array.isArray(this.$root.market_types)) {
-                this.$root.market_types.forEach(function (element) {
-                    if (element.title == _this.index_data.market_type_title) {
-                        _this.index_data.market_type = element;
-                    }
-                });
-            }
-        },
-
-        /**
-         * Saves Market Request
-         */
-        saveMarketRequest: function saveMarketRequest() {
-            var _this2 = this;
-
-            var new_data = this.formatRequestData();
-            axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
-                if (newMarketRequestResponse.status == 200) {
-                    _this2.close_modal();
-                } else {
-                    console.error(err);
-                }
-            }).catch(function (err) {
-                _this2.previousStep();
-                if (err.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    _this2.errors.message = err.response.data.message;
-                    _this2.loadErrorStep(err.response.data.errors);
-                } else if (err.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(err.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log('Error', err.message);
-                }
-                console.log(err.config);
-            });
-        },
-        loadErrorStep: function loadErrorStep(errors) {
-            var _this3 = this;
-
-            for (var prop in errors) {
-                if (prop.indexOf('.') != -1) {
-                    var propArr = prop.split('.');
-                    switch (propArr[2]) {
-                        case "market_id":
-                            errors[prop].forEach(function (element, key) {
-                                if (_this3.errors.data.Market.messages.indexOf(element) == -1) {
-                                    _this3.errors.data.Market.messages.push(element);
-                                }
-                            });
-                            this.setLowestStep(1);
-                            break;
-                        case "is_selected":
-                            errors[prop].forEach(function (element, key) {
-                                if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
-                                    _this3.errors.data.Details.messages.push(element);
-                                }
-                            });
-                            this.setLowestStep(4);
-                            break;
-                        case "fields":
-                            if (propArr[3] == 'Expiration Date') {
-                                errors[prop].forEach(function (element, key) {
-                                    if (_this3.errors.data.Expiry.messages.indexOf(element) == -1) {
-                                        _this3.errors.data.Expiry.messages.push(element);
-                                    }
-                                });
-                                this.setLowestStep(3);
-                            } else {
-                                errors[prop].forEach(function (element, key) {
-                                    if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
-                                        _this3.errors.data.Details.messages.push(element);
-                                    }
-                                });
-                                if (this.errors.data.Details.fields.indexOf(prop) == -1) {
-                                    this.errors.data.Details.fields.push(prop);
-                                }
-                                this.setLowestStep(4);
-                            }
-                            break;
-                        default:
-                            errors[prop].forEach(function (element, key) {
-                                if (_this3.errors.data.Confirm.messages.indexOf(element) == -1) {
-                                    _this3.errors.data.Confirm.messages.push(element);
-                                }
-                            });
-                    }
-                } else {
-                    if (prop.indexOf('trade_structure_groups') != -1) {
-                        errors[prop].forEach(function (element, key) {
-                            if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
-                                _this3.errors.data.Details.messages.push(element);
-                            }
-                        });
-                        this.setLowestStep(4);
-                    } else {
-                        errors[prop].forEach(function (element, key) {
-                            if (_this3.errors.data.Structure.messages.indexOf(element) == -1) {
-                                _this3.errors.data.Structure.messages.push(element);
-                            }
-                        });
-                        this.setLowestStep(2);
-                    }
-                }
-            }
-            this.loadStepComponent();
-        },
-        setLowestStep: function setLowestStep(new_step) {
-            if (new_step < this.modal_data.step) {
-                this.modal_data.step = new_step;
-            }
-        },
-        formatRequestData: function formatRequestData() {
-            var _this4 = this;
-
-            var formatted_data = {
-                trade_structure: this.index_data.index_market_object.trade_structure,
-                trade_structure_groups: []
-            };
-            this.index_data.index_market_object.details.fields.forEach(function (element, key) {
-                formatted_data.trade_structure_groups.push({
-                    is_selected: element.is_selected,
-                    market_id: _this4.index_data.index_market_object.market.id,
-                    fields: {
-                        "Expiration Date": _this4.castToMoment(formatted_data.trade_structure == 'Calendar' ? _this4.index_data.index_market_object.expiry_dates[key] : _this4.index_data.index_market_object.expiry_dates[0]),
-                        Strike: element.strike,
-                        Quantity: element.quantity
-                    }
-                });
-            });
-            return formatted_data;
-        },
-        castToMoment: function castToMoment(date_string) {
-            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
-        }
-    },
-    mounted: function mounted() {
-        this.modal_data.title = ["Index"];
-        this.loadIndexMarkets();
-        console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
-        this.selected_step_component = 'Market';
-        this.$on('modal_step', this.loadStepComponent);
-    }
-});
-
-/***/ }),
-/* 464 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'MarketSelection',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'data': {
-            type: Object
-        },
-        'errors': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {};
-    },
-
-    methods: {
-        selectMarket: function selectMarket(market) {
-            this.data.index_market_object.market = market;
-            this.callback(market.title);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 465 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "step-selections", attrs: { dusk: "market-selection" } },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _c(
-            "b-row",
-            { staticClass: "text-center" },
-            _vm._l(_vm.data.market_type.markets, function(market) {
-              return _vm.data
-                ? _c(
-                    "b-col",
-                    { staticClass: "mt-2", attrs: { cols: "12" } },
-                    [
-                      _c(
-                        "b-button",
-                        {
-                          staticClass: "mm-modal-market-button-alt w-50",
-                          attrs: { id: market.title + "-market-choice" },
-                          on: {
-                            click: function($event) {
-                              _vm.selectMarket(market)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(market.title) +
-                              "\n                "
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                : _vm._e()
-            })
-          ),
-          _vm._v(" "),
-          _vm.errors.messages.length > 0
-            ? _c(
-                "b-row",
-                { staticClass: "text-center mt-4" },
-                _vm._l(_vm.errors.messages, function(error) {
-                  return _c("b-col", { attrs: { cols: "12" } }, [
-                    _c("p", { staticClass: "text-danger mb-0" }, [
-                      _vm._v(_vm._s(error))
-                    ])
-                  ])
-                })
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0337fb9c", module.exports)
-  }
-}
-
-/***/ }),
-/* 466 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'StructureSelection',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'data': {
-            type: Object
-        },
-        'errors': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {
-            trade_structures: null
-        };
-    },
-
-    methods: {
-        selectStructure: function selectStructure(trade_structure) {
-            this.data.index_market_object.trade_structure = trade_structure;
-            console.log("SENDING THIS BACK: ", trade_structure);
-            this.callback(trade_structure);
-        },
-
-        /**
-         * Loads Market Structure
-         */
-        loadStructures: function loadStructures() {
-            var _this = this;
-
-            axios.get(axios.defaults.baseUrl + '/trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
-                if (tradeStructureResponse.status == 200) {
-                    _this.trade_structures = tradeStructureResponse.data;
-                } else {
-                    console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            });
-        }
-    },
-    mounted: function mounted() {
-        this.loadStructures();
-    }
-});
-
-/***/ }),
-/* 467 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "step-selections", attrs: { dusk: "structure-selection" } },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _vm.trade_structures
-            ? _c(
-                "b-row",
-                { staticClass: "text-center" },
-                _vm._l(_vm.trade_structures, function(trade_structure) {
-                  return trade_structure.is_selectable
-                    ? _c(
-                        "b-col",
-                        { staticClass: "mt-2", attrs: { cols: "12" } },
-                        [
-                          _c(
-                            "b-button",
-                            {
-                              staticClass: "mm-modal-market-button-alt w-50",
-                              attrs: {
-                                id: trade_structure.title + "-structure-choice"
-                              },
-                              on: {
-                                click: function($event) {
-                                  _vm.selectStructure(trade_structure.title)
-                                }
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n                    " +
-                                  _vm._s(trade_structure.title) +
-                                  "\n                "
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      )
-                    : _vm._e()
-                })
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.errors.messages.length > 0
-            ? _c(
-                "b-row",
-                { staticClass: "text-center mt-4" },
-                _vm._l(_vm.errors.messages, function(error) {
-                  return _c("b-col", { attrs: { cols: "12" } }, [
-                    _c("p", { staticClass: "text-danger mb-0" }, [
-                      _vm._v(_vm._s(error))
-                    ])
-                  ])
-                })
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-37ab4d2f", module.exports)
-  }
-}
-
-/***/ }),
-/* 468 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'ExpirySelection',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'data': {
-            type: Object
-        },
-        'errors': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {
-            expiry_dates: [],
-            current_page: 1,
-            per_page: 12,
-            total: null,
-            selected_dates: [],
-            duplicate_date: false
-        };
-    },
-
-    methods: {
-        selectExpiryDates: function selectExpiryDates(date) {
-            var _this = this;
-
-            this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
-            if (!this.duplicate_date) {
-                this.selected_dates.push(date);
-            }
-            if (this.selected_dates.length == this.data.number_of_dates) {
-                this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
-                this.data.index_market_object.expiry_dates = this.selected_dates;
-
-                this.callback(this.selected_dates.map(function (current) {
-                    return _this.castToMoment(current);
-                }).join(' / '));
-            }
-        },
-        castToMoment: function castToMoment(date_string) {
-            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'); //return to 
-        },
-        checkPastDate: function checkPastDate(date_string) {
-            return moment(date_string).isBefore();
-        },
-        changePage: function changePage($event) {
-            this.current_page = $event;
-            this.loadExpiryDate();
-        },
-
-        /**
-         * Loads Expiry Dates
-         */
-        loadExpiryDate: function loadExpiryDate() {
-            var _this2 = this;
-
-            axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page=' + this.current_page).then(function (expiryDateResponse) {
-                if (expiryDateResponse.status == 200) {
-                    _this2.current_page = expiryDateResponse.data.current_page;
-                    _this2.per_page = expiryDateResponse.data.per_page;
-                    _this2.total = expiryDateResponse.data.total;
-                    _this2.expiry_dates = expiryDateResponse.data.data;
-                } else {
-                    console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            });
-        }
-    },
-    mounted: function mounted() {
-        this.loadExpiryDate();
-    }
-});
-
-/***/ }),
-/* 469 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "step-selections", attrs: { dusk: "expiry-selection" } },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _vm.data.number_of_dates > 1
-            ? _c(
-                "b-row",
-                { staticClass: "justify-content-md-center" },
-                [
-                  _c(
-                    "b-col",
-                    { staticClass: "mt-0 text-center", attrs: { cols: "12" } },
-                    [
-                      _c("p", { staticClass: "modal-info-text" }, [
-                        _vm._v("*Select two dates to continue")
-                      ])
-                    ]
-                  )
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.expiry_dates.length > 0
-            ? _c(
-                "div",
-                { staticClass: "card-columns" },
-                _vm._l(_vm.expiry_dates, function(expiry_date) {
-                  return _c(
-                    "div",
-                    { staticClass: "card card-reset" },
-                    [
-                      _c(
-                        "b-button",
-                        {
-                          staticClass: "mm-modal-market-button w-100",
-                          attrs: {
-                            disabled: _vm.checkPastDate(
-                              expiry_date.expiration_date
-                            )
-                          },
-                          on: {
-                            click: function($event) {
-                              _vm.selectExpiryDates(expiry_date.expiration_date)
-                            }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(
-                                _vm.castToMoment(expiry_date.expiration_date)
-                              ) +
-                              "\n                "
-                          )
-                        ]
-                      )
-                    ],
-                    1
-                  )
-                })
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.duplicate_date
-            ? _c(
-                "b-row",
-                { staticClass: "text-center mt-3" },
-                [
-                  _c("b-col", { attrs: { cols: "12" } }, [
-                    _c("p", { staticClass: "text-danger mb-0" }, [
-                      _vm._v("Cannot select duplicate dates.")
-                    ])
-                  ])
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.expiry_dates.length > 0
-            ? _c(
-                "b-row",
-                { staticClass: "justify-content-md-center" },
-                [
-                  _c(
-                    "b-col",
-                    { staticClass: "mt-5", attrs: { cols: "12" } },
-                    [
-                      _c("b-pagination", {
-                        attrs: {
-                          align: "center",
-                          "total-rows": _vm.total,
-                          "hide-ellipsis": true,
-                          "per-page": _vm.per_page
-                        },
-                        on: {
-                          change: function($event) {
-                            _vm.changePage($event)
-                          }
-                        },
-                        model: {
-                          value: _vm.current_page,
-                          callback: function($$v) {
-                            _vm.current_page = $$v
-                          },
-                          expression: "current_page"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _vm.errors.messages.length > 0
-            ? _c(
-                "b-row",
-                { staticClass: "text-center mt-3" },
-                _vm._l(_vm.errors.messages, function(error) {
-                  return _c("b-col", { attrs: { cols: "12" } }, [
-                    _c("p", { staticClass: "text-danger mb-0" }, [
-                      _vm._v(_vm._s(error))
-                    ])
-                  ])
-                })
-              )
-            : _vm._e()
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5dc5702e", module.exports)
-  }
-}
-
-/***/ }),
-/* 470 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'Details',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'data': {
-            type: Object
-        },
-        'errors': {
-            type: Object
-        }
-    },
-    watch: {
-        'chosen_option': function chosen_option(chosen_index) {
-            this.form_data.fields.forEach(function (element, index) {
-                element.is_selected = chosen_index == index ? true : false;
-            });
-        }
-    },
-    data: function data() {
-        return {
-            display: {
-                show_expiry: false,
-                disable_choice: false
-            },
-            chosen_option: null,
-            form_data: {
-                fields: []
-            }
-        };
-    },
-
-    methods: {
-        submitDetails: function submitDetails(evt) {
-            var _this = this;
-
-            evt.preventDefault();
-            Vue.nextTick(function () {
-                _this.data.index_market_object.details = _this.form_data;
-                _this.callback(_this.form_data);
-            });
-        },
-        castToMoment: function castToMoment(date_string) {
-            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
-        },
-        inputState: function inputState(index, type) {
-            return this.errors.fields.indexOf('trade_structure_groups.' + index + '.fields.' + type) == -1 ? null : false;
-        }
-    },
-    mounted: function mounted() {
-
-        this.form_data.fields.push({ is_selected: true, strike: null, quantity: 500 });
-
-        switch (this.data.index_market_object.trade_structure) {
-            case 'Outright':
-                this.display.disable_choice = true, this.chosen_option = null;
-                break;
-            case 'Risky':
-                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
-                this.chosen_option = 0;
-                break;
-            case 'Fly':
-                this.display.disable_choice = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
-                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
-                this.form_data.fields[2].is_selected = true;
-                break;
-            case 'Calendar':
-                this.display.show_expiry = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
-                this.chosen_option = 0;
-                break;
-            default:
-
-        }
-    }
-});
-
-/***/ }),
-/* 471 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "step-selections", attrs: { dusk: "detail" } },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _c(
-            "b-row",
-            { staticClass: "justify-content-md-center" },
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "12" } },
-                [
-                  _c(
-                    "b-form",
-                    {
-                      attrs: { id: "index-details-form" },
-                      on: { submit: _vm.submitDetails }
-                    },
-                    [
-                      _vm.display.show_expiry
-                        ? _c(
-                            "b-row",
-                            { attrs: { "align-h": "center" } },
-                            _vm._l(
-                              _vm.data.index_market_object.expiry_dates,
-                              function(date, key) {
-                                return _c(
-                                  "b-col",
-                                  {
-                                    staticClass: "text-center",
-                                    attrs: {
-                                      cols: "3",
-                                      offset: key == 0 ? 3 : 0
-                                    }
-                                  },
-                                  [
-                                    _c("p", [
-                                      _c("strong", [
-                                        _vm._v(_vm._s(_vm.castToMoment(date)))
-                                      ])
-                                    ])
-                                  ]
-                                )
-                              }
-                            )
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.form_data.fields.length > 1
-                        ? _c(
-                            "b-row",
-                            { attrs: { "align-h": "center" } },
-                            [
-                              _vm.display.disable_choice
-                                ? _c(
-                                    "b-col",
-                                    { attrs: { cols: "12 mb-2" } },
-                                    [
-                                      _c(
-                                        "b-row",
-                                        [
-                                          _c(
-                                            "b-col",
-                                            {
-                                              staticClass: "text-center",
-                                              attrs: { cols: "3", offset: "3" }
-                                            },
-                                            [
-                                              _c(
-                                                "b-badge",
-                                                {
-                                                  attrs: {
-                                                    variant:
-                                                      "info details-choice-badge"
-                                                  }
-                                                },
-                                                [_vm._v("CHOICE")]
-                                              )
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "b-col",
-                                            {
-                                              staticClass: "text-center",
-                                              attrs: {
-                                                cols: "3",
-                                                offset:
-                                                  _vm.form_data.fields.length ==
-                                                  3
-                                                    ? 3
-                                                    : 0
-                                              }
-                                            },
-                                            [
-                                              _c(
-                                                "b-badge",
-                                                {
-                                                  attrs: {
-                                                    variant:
-                                                      "info details-choice-badge"
-                                                  }
-                                                },
-                                                [_vm._v("CHOICE")]
-                                              )
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                                : _c(
-                                    "b-col",
-                                    { attrs: { cols: "12" } },
-                                    [
-                                      _c(
-                                        "b-form-radio-group",
-                                        {
-                                          staticClass: "mb-2",
-                                          attrs: {
-                                            id: "risky-choices",
-                                            name: "choice"
-                                          },
-                                          model: {
-                                            value: _vm.chosen_option,
-                                            callback: function($$v) {
-                                              _vm.chosen_option = $$v
-                                            },
-                                            expression: "chosen_option"
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "b-row",
-                                            { attrs: { "align-h": "center" } },
-                                            [
-                                              _c(
-                                                "b-col",
-                                                {
-                                                  staticClass: "text-center",
-                                                  attrs: {
-                                                    cols: "3",
-                                                    offset: "3"
-                                                  }
-                                                },
-                                                [
-                                                  _c(
-                                                    "b-form-radio",
-                                                    {
-                                                      attrs: {
-                                                        id: "choice-0",
-                                                        disabled:
-                                                          _vm.display
-                                                            .disable_choice,
-                                                        value: "0"
-                                                      }
-                                                    },
-                                                    [_vm._v("CHOICE")]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "b-col",
-                                                {
-                                                  staticClass: "text-center",
-                                                  attrs: {
-                                                    cols: "3",
-                                                    offset:
-                                                      _vm.form_data.fields
-                                                        .length == 3
-                                                        ? 3
-                                                        : 0
-                                                  }
-                                                },
-                                                [
-                                                  _c(
-                                                    "b-form-radio",
-                                                    {
-                                                      attrs: {
-                                                        id: "choice-1",
-                                                        disabled:
-                                                          _vm.display
-                                                            .disable_choice,
-                                                        value: "1"
-                                                      }
-                                                    },
-                                                    [_vm._v("CHOICE")]
-                                                  )
-                                                ],
-                                                1
-                                              )
-                                            ],
-                                            1
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    ],
-                                    1
-                                  )
-                            ],
-                            1
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "b-row",
-                        { attrs: { "align-h": "center" } },
-                        [
-                          _c("b-col", { attrs: { cols: "3" } }, [
-                            _c("label", { attrs: { for: "strike-0" } }, [
-                              _vm._v("Strike")
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.form_data.fields, function(field, index) {
-                            return _c(
-                              "b-col",
-                              { attrs: { cols: "3" } },
-                              [
-                                _c("b-form-input", {
-                                  attrs: {
-                                    id: "strike-" + index,
-                                    type: "number",
-                                    min: "0",
-                                    state: _vm.inputState(index, "Strike"),
-                                    required: ""
-                                  },
-                                  model: {
-                                    value: field.strike,
-                                    callback: function($$v) {
-                                      _vm.$set(field, "strike", $$v)
-                                    },
-                                    expression: "field.strike"
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          })
-                        ],
-                        2
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-row",
-                        { attrs: { "align-h": "center" } },
-                        [
-                          _c("b-col", { attrs: { cols: "3" } }, [
-                            _c("label", { attrs: { for: "quantity-0" } }, [
-                              _vm._v("Quantity "),
-                              _vm.form_data.fields.length > 1
-                                ? _c("span", [_vm._v(" (Ratio)")])
-                                : _vm._e()
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _vm._l(_vm.form_data.fields, function(field, index) {
-                            return _c(
-                              "b-col",
-                              { attrs: { cols: "3" } },
-                              [
-                                _c("b-form-input", {
-                                  attrs: {
-                                    id: "quantity-" + index,
-                                    type: "number",
-                                    min: "0",
-                                    placeholder: "500",
-                                    state: _vm.inputState(index, "Quantity"),
-                                    required: ""
-                                  },
-                                  model: {
-                                    value: field.quantity,
-                                    callback: function($$v) {
-                                      _vm.$set(field, "quantity", $$v)
-                                    },
-                                    expression: "field.quantity"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                field.quantity < 500
-                                  ? _c(
-                                      "p",
-                                      {
-                                        staticClass:
-                                          "modal-warning-text text-danger text-center"
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                                    *Warning: The recommended minimum quantity is 500.\n                                "
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e()
-                              ],
-                              1
-                            )
-                          })
-                        ],
-                        2
-                      ),
-                      _vm._v(" "),
-                      _vm.form_data.fields.length > 1
-                        ? _c(
-                            "b-row",
-                            [
-                              _c("b-col", { staticClass: "text-center mt-3" }, [
-                                _c("p", { staticClass: "modal-info-text" }, [
-                                  _vm._v(
-                                    "\n                                    All trades will maintain the above ratio.\n                                "
-                                  )
-                                ])
-                              ])
-                            ],
-                            1
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.errors.messages.length > 0
-                        ? _c(
-                            "b-row",
-                            { staticClass: "text-center mt-4" },
-                            _vm._l(_vm.errors.messages, function(error) {
-                              return _c("b-col", { attrs: { cols: "12" } }, [
-                                _c("p", { staticClass: "text-danger mb-0" }, [
-                                  _vm._v(_vm._s(error))
-                                ])
-                              ])
-                            })
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "b-form-group",
-                        { staticClass: "text-center mt-4 mb-0" },
-                        [
-                          _c(
-                            "b-button",
-                            {
-                              staticClass: "mm-modal-market-button-alt w-50",
-                              attrs: {
-                                id: "submit-index-details",
-                                type: "submit"
-                              }
-                            },
-                            [
-                              _vm._v(
-                                "\n\t                            Submit\n\t                        "
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-f3802a40", module.exports)
-  }
-}
-
-/***/ }),
-/* 472 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'ConfirmMarketRequest',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'data': {
-            type: Object
-        },
-        'errors': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {};
-    },
-
-    methods: {
-        confirmDetails: function confirmDetails() {
-            this.callback();
-        },
-        castToMoment: function castToMoment(date_string) {
-            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 473 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "step-selections",
-      attrs: { dusk: "confirm-market-request" }
-    },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _c(
-            "b-row",
-            { attrs: { "align-h": "start" } },
-            [
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [
-                  _vm._v(_vm._s(_vm.data.market_type.title.toUpperCase()) + ":")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [
-                  _vm._v(_vm._s(_vm.data.index_market_object.market.title))
-                ])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { attrs: { "align-h": "start" } },
-            [
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [_vm._v("EXPIRY:")])
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.data.index_market_object.expiry_dates, function(
-                expiry_date
-              ) {
-                return _c(
-                  "b-col",
-                  { staticClass: "mt-2", attrs: { cols: "3" } },
-                  [_c("p", [_vm._v(_vm._s(_vm.castToMoment(expiry_date)))])]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { attrs: { "align-h": "start" } },
-            [
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [_vm._v("STRIKE:")])
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.data.index_market_object.details.fields, function(
-                field
-              ) {
-                return _c(
-                  "b-col",
-                  { staticClass: "mt-2", attrs: { cols: "3" } },
-                  [
-                    _c("p", [
-                      _vm._v(_vm._s(field.strike)),
-                      field.is_selected &&
-                      _vm.data.index_market_object.details.fields.length > 1
-                        ? _c("span", [_vm._v(" (CH)")])
-                        : _vm._e()
-                    ])
-                  ]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { attrs: { "align-h": "start" } },
-            [
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [_vm._v("QUANTITY:")])
-              ]),
-              _vm._v(" "),
-              _vm._l(_vm.data.index_market_object.details.fields, function(
-                field
-              ) {
-                return _c(
-                  "b-col",
-                  { staticClass: "mt-2", attrs: { cols: "3" } },
-                  [_c("p", [_vm._v(_vm._s(field.quantity))])]
-                )
-              })
-            ],
-            2
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { attrs: { "align-h": "start" } },
-            [
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [_vm._v("STRUCTURE:")])
-              ]),
-              _vm._v(" "),
-              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
-                _c("p", [
-                  _vm._v(_vm._s(_vm.data.index_market_object.trade_structure))
-                ])
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.errors.messages.length > 0
-            ? _c(
-                "b-row",
-                { staticClass: "text-center mt-3" },
-                _vm._l(_vm.errors.messages, function(error) {
-                  return _c("b-col", { attrs: { cols: "12" } }, [
-                    _c("p", { staticClass: "text-danger mb-0" }, [
-                      _vm._v(_vm._s(error))
-                    ])
-                  ])
-                })
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { attrs: { "align-h": "center" } },
-            [
-              _c(
-                "b-col",
-                { staticClass: "mt-2", attrs: { cols: "6" } },
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "confirm-request-market" },
-                      on: {
-                        click: function($event) {
-                          _vm.confirmDetails()
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                    Send Request\n                "
-                      )
-                    ]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-020b6796", module.exports)
-  }
-}
-
-/***/ }),
-/* 474 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "index-controller", attrs: { dusk: "index-controller" } },
-    [
-      _vm.errors.message != null
-        ? _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "12" } },
-                [
-                  _c(
-                    "b-alert",
-                    {
-                      attrs: {
-                        show: "",
-                        dismissible: "",
-                        fade: "",
-                        variant: "danger"
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.errors.message))]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _c(_vm.components[_vm.selected_step_component], {
-        tag: "component",
-        attrs: {
-          errors: _vm.errors.data[_vm.selected_step_component],
-          data: _vm.index_data,
-          callback: _vm.loadStepComponent
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5e15a78b", module.exports)
-  }
-}
-
-/***/ }),
-/* 475 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(476)
-/* template */
-var __vue_template__ = __webpack_require__(477)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/Components/StepSelectionComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-67137ffc", Component.options)
-  } else {
-    hotAPI.reload("data-v-67137ffc", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 476 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    name: 'StepSelection',
-    props: {
-        'callback': {
-            type: Function
-        },
-        'modal_data': {
-            type: Object
-        }
-    },
-    data: function data() {
-        return {};
-    },
-
-    methods: {
-        nextStep: function nextStep(step) {
-            this.modal_data.step++;
-            console.log("Current Step===================: ", this.modal_data.step);
-            this.callback(step);
-        }
-    },
-    mounted: function mounted() {}
-});
-
-/***/ }),
-/* 477 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "step-selections", attrs: { dusk: "step-selection" } },
-    [
-      _c(
-        "b-container",
-        { attrs: { fluid: "" } },
-        [
-          _c(
-            "b-row",
-            { staticClass: "mt-2" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "index-step-choice" },
-                      on: {
-                        click: function($event) {
-                          _vm.nextStep("Index")
-                        }
-                      }
-                    },
-                    [_vm._v("Index Options")]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "efp-step-choice" }
-                    },
-                    [_vm._v("EFP")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "mt-2" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "single-stock-step-choice" }
-                    },
-                    [_vm._v("Single Stock Options")]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "rolls-step-choice" }
-                    },
-                    [_vm._v("Rolls")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-row",
-            { staticClass: "mt-2" },
-            [
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "options-switch-step-choice" }
-                    },
-                    [_vm._v("Options Switch")]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                [
-                  _c(
-                    "b-button",
-                    {
-                      staticClass: "mm-modal-market-button-alt w-100",
-                      attrs: { id: "efp-switch-step-choice" }
-                    },
-                    [_vm._v("EFP Switch")]
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-67137ffc", module.exports)
-  }
-}
-
-/***/ }),
-/* 478 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "request-market-menu",
-      attrs: { dusk: "request-market-menu" }
-    },
-    [
-      _c(
-        "b-button",
-        {
-          staticClass: "btn mm-request-button mr-2 p-1",
-          attrs: { disabled: !_vm.$root.market_types.length > 0 },
-          on: {
-            click: function($event) {
-              _vm.showModal()
-            }
-          }
-        },
-        [_vm._v("Request a Market")]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-modal",
-        {
-          ref: _vm.modal_data.modal_ref,
-          staticClass: "mm-modal mx-auto",
-          attrs: { size: "lg" },
-          model: {
-            value: _vm.modal_data.show_modal,
-            callback: function($$v) {
-              _vm.$set(_vm.modal_data, "show_modal", $$v)
-            },
-            expression: "modal_data.show_modal"
-          }
-        },
-        [
-          _c(
-            "div",
-            {
-              staticClass: "mm-modal-title",
-              attrs: { slot: "modal-title" },
-              slot: "modal-title"
-            },
-            [_vm._v("\n            " + _vm._s(_vm.modalTitle) + "\n        ")]
-          ),
-          _vm._v(" "),
-          _c(_vm.controllers[_vm.modal_data.selected_controller], {
-            ref: "currentController",
-            tag: "component",
-            attrs: {
-              close_modal: _vm.hideModal,
-              callback: _vm.loadController,
-              modal_data: _vm.modal_data
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "w-100",
-              attrs: { slot: "modal-footer" },
-              slot: "modal-footer"
-            },
-            [
-              _c(
-                "b-row",
-                { attrs: { "align-v": "center" } },
-                [
-                  _c(
-                    "b-col",
-                    { attrs: { cols: "12" } },
-                    [
-                      _vm.modal_data.step > 0
-                        ? _c(
-                            "b-button",
-                            {
-                              staticClass: "mm-modal-button mr-2 w-25",
-                              on: {
-                                click: function($event) {
-                                  _vm.previousStep()
-                                }
-                              }
-                            },
-                            [_vm._v("Back")]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "b-button",
-                        {
-                          staticClass: "mm-modal-button ml-2 w-25",
-                          on: {
-                            click: function($event) {
-                              _vm.hideModal()
-                            }
-                          }
-                        },
-                        [_vm._v("Cancel")]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1fefbb97", module.exports)
-  }
-}
-
-/***/ }),
-/* 479 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
-    [
-      _c("div", { staticClass: "row mt-2 menu-actions" }, [
-        _c(
-          "div",
-          { staticClass: "col-9" },
-          [
-            _c("request-market-menu"),
-            _vm._v(" "),
-            _c("important-menu", {
-              attrs: {
-                notifications: _vm.market_notifications.important,
-                markets: _vm.markets,
-                no_cares: _vm.no_cares
-              }
-            }),
-            _vm._v(" "),
-            _vm.market_notifications.alert.length > 0
-              ? _c("alerts-menu", {
-                  attrs: {
-                    notifications: _vm.market_notifications.alert,
-                    markets: _vm.markets
-                  }
-                })
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.market_notifications.confirm.length > 0
-              ? _c("confirmations-menu", {
-                  attrs: {
-                    notifications: _vm.market_notifications.confirm,
-                    markets: _vm.markets
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3" }, [
-          _c(
-            "div",
-            { staticClass: "float-right" },
-            [
-              _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
-              _vm._v(" "),
-              !_vm.chat_opened
-                ? _c(
-                    "button",
-                    {
-                      staticClass: "btn mm-transparent-button mr-2",
-                      attrs: { id: "action-bar-open-chat", type: "button" },
-                      on: {
-                        click: function($event) {
-                          _vm.loadChatBar()
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "icon icon-chat" }),
-                      _vm._v(" Chat\n                ")
-                    ]
-                  )
-                : _vm._e()
-            ],
-            1
-          )
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-79b015f7", module.exports)
-  }
-}
-
-/***/ }),
-/* 480 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(4)
-/* script */
-var __vue_script__ = __webpack_require__(481)
-/* template */
-var __vue_template__ = __webpack_require__(483)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/components/ChatBarComponent.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0fc412d9", Component.options)
-  } else {
-    hotAPI.reload("data-v-0fc412d9", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 481 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            opened: false,
-            new_message: "",
-            quick_message: "",
-            display_messages: []
-        };
-    },
-
-    methods: {
-        sendMessage: function sendMessage(evt) {
-            var _this = this;
-
-            evt.preventDefault();
-            if (this.new_message || this.quick_message) {
-                var sendMessage = this.new_message ? { new_message: this.new_message } : { quick_message: this.quick_message };
-                axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage).then(function (response) {
-                    var chat_history = _this.$refs.chat_history;
-                    // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
-                    var should_scroll = false;
-                    if (chat_history.scrollTop === chat_history.scrollHeight - chat_history.offsetHeight) {
-                        should_scroll = true;
-                    }
-                    _this.new_message = "";
-                    _this.quick_message = "";
-                    _this.display_messages.push(response.data.data);
-                    _this.display_messages[_this.display_messages.length - 1].status = "sent";
-
-                    Vue.nextTick(function () {
-                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
-                    });
-                }).catch(function (err) {
-                    reject(new Errors(err.response.data));
-                });
-            } else {
-                this.new_message = "";
-                this.quick_message = "";
-                console.log("I AM EMPTY!");
-                // TODO handle empty message field
-            }
-        },
-        toggleBar: function toggleBar(set) {
-            if (typeof set != 'undefined') {
-                this.opened = set == true;
-            } else {
-                this.opened = !this.opened;
-            }
-        },
-
-        /**
-         * Fires the Chat Bar toggle event
-         *
-         * @fires /lib/EventBus#toggleSidebar
-         */
-        fireChatBar: function fireChatBar() {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
-        },
-
-        /**
-         * Listens for a chatToggle event firing
-         *
-         * @event /lib/EventBus#chatToggle
-         */
-        chatBarListener: function chatBarListener() {
-            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
-        },
-
-        /**
-         * Listens for a chatMessageReceived event firing
-         *
-         * @event /$root#chatMessageReceived
-         */
-        newChatMessageListener: function newChatMessageListener() {
-            this.$root.$on('chatMessageReceived', this.addNewMessage);
-        },
-        castToMoment: function castToMoment(date_string) {
-            return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
-        },
-        loadChatHistory: function loadChatHistory() {
-            var _this2 = this;
-
-            axios.get(axios.defaults.baseUrl + '/trade/organisation-chat').then(function (chatHistoryResponse) {
-                if (chatHistoryResponse.status == 200) {
-                    _this2.display_messages = chatHistoryResponse.data.data;
-                    Vue.nextTick(function () {
-                        _this2.$refs.chat_history.scrollTop = _this2.$refs.chat_history.scrollHeight;
-                    });
-                } else {
-                    console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            }).then(function () {});
-        },
-        addNewMessage: function addNewMessage(message) {
-            var message_index = void 0;
-            if (this.display_messages.length > 0) {
-                message_index = this.display_messages.findIndex(function (listed_message) {
-                    return listed_message.user_name == message.user_name && listed_message.message == message.message && listed_message.time_stamp == message.time_stamp;
-                });
-            }
-
-            if (message_index == -1) {
-                this.display_messages.push(message);
-                if (this.display_messages[this.display_messages.length - 1].user_name == this.$root.config('user_preferences.user_name')) {
-                    this.display_messages[this.display_messages.length - 1].status = "received";
-                }
-            } else {
-                this.display_messages[message_index].status = 'received';
-            }
-        },
-        messageUserName: function messageUserName(username) {
-            return username == this.$root.config('user_preferences.user_name') ? "You" : username;
-        }
-    },
-    mounted: function mounted() {
-        this.chatBarListener();
-        this.newChatMessageListener();
-        this.loadChatHistory();
-    }
-});
-
-/***/ }),
-/* 482 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* unused harmony export fas */
 /* unused harmony export prefix */
 /* unused harmony export faAddressBook */
@@ -105228,6 +94424,10810 @@ var _iconsCache = {
 
 
 
+
+/***/ }),
+/* 366 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['user_name', 'organisation', 'total_rebate'],
+    data: function data() {
+        return {
+            time: {
+                location: 'SA',
+                computed_time: '',
+                _interval: null
+            }
+        };
+    },
+
+    methods: {
+        /**
+         * Creates a running clock from the current date and time.
+         *
+         * @todo Change clock time to be sent an initialsed from the backend
+         */
+        showTime: function showTime() {
+            //Getting current time and setting our time object.
+            this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
+        }
+    },
+    mounted: function mounted() {
+        //Sets interval for running clock
+        this.time._interval = setInterval(this.showTime, 1000);
+    }
+});
+
+/***/ }),
+/* 367 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "user-header", attrs: { dusk: "user-header" } },
+    [
+      _c("div", { staticClass: "row sub-nav pt-3" }, [
+        _c("div", { staticClass: "col-6 user-details" }, [
+          _vm.organisation
+            ? _c("h1", { staticClass: "pt-1" }, [
+                _vm._v(
+                  "Welcome " +
+                    _vm._s(_vm.user_name) +
+                    " (" +
+                    _vm._s(_vm.organisation) +
+                    ")"
+                )
+              ])
+            : _c("h1", { staticClass: "pt-1" }, [
+                _vm._v("Welcome " + _vm._s(_vm.user_name))
+              ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-2 current-time" }, [
+          _c("p", { staticClass: "pt-1" }, [
+            _vm._v(_vm._s(_vm.time.computed_time))
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-4 total-rebate" }, [
+          _c("p", { staticClass: "float-right pt-1" }, [
+            _vm._v("Rebates: "),
+            _c("strong", [_vm._v(_vm._s(_vm.formatRandQty(_vm.total_rebate)))])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0a1acdbe", module.exports)
+  }
+}
+
+/***/ }),
+/* 368 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(369)
+/* template */
+var __vue_template__ = __webpack_require__(370)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketGroupComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e92bdb5e", Component.options)
+  } else {
+    hotAPI.reload("data-v-e92bdb5e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 369 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        'market': {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_Market__["a" /* default */]
+        },
+        'no_cares': {
+            type: Array
+        }
+    },
+    watch: {
+        'market.market_requests': function marketMarket_requests(nV, oV) {
+            this.market_date_groups = this.mapMarketRequestGroups(nV);
+            this.reorderMarketRequestStrike(this.market_date_groups);
+            this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
+        }
+    },
+    data: function data() {
+        return {
+            market_date_groups: {},
+            market_date_groups_order: []
+        };
+    },
+
+    methods: {
+        mapMarketRequestGroups: function mapMarketRequestGroups(markets) {
+            var _this = this;
+
+            // map markets to dates
+            return markets.reduce(function (x, y) {
+                var date = y.trade_items.default ? y.trade_items.default[_this.$root.config("trade_structure.outright.expiration_date")] : '';
+                if (!x[date]) {
+                    x[date] = [];
+                }
+                x[date].push(y);
+                return x;
+            }, {});
+        },
+        sortMarketRequestGroups: function sortMarketRequestGroups(unsorted_date_groups) {
+            var dates = [];
+            Object.keys(unsorted_date_groups).forEach(function (date) {
+                dates.push(date);
+            });
+
+            if (dates.length > 0) {
+                this.$root.dateStringArraySort(dates, 'MMMYY');
+            }
+            return dates;
+        },
+        reorderMarketRequestStrike: function reorderMarketRequestStrike(date_groups) {
+            Object.keys(date_groups).forEach(function (date) {
+                date_groups[date].sort(function (a, b) {
+                    return a.trade_items.default.Strike - b.trade_items.default.Strike;
+                });
+            });
+        }
+
+    },
+    mounted: function mounted() {
+        this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
+        console.log(this.market_date_groups);
+    }
+});
+
+/***/ }),
+/* 370 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "user-market", attrs: { dusk: "market-group" } },
+    [
+      _c("div", { staticClass: "container-fluid h-100" }, [
+        _c("div", { staticClass: "row h-100" }, [
+          _c("div", { staticClass: "col-12" }, [
+            _c("h2", { staticClass: "text-center market-group-title" }, [
+              _vm._v(_vm._s(_vm.market.title))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "user-market-group col-12" },
+            _vm._l(_vm.market_date_groups_order, function(date) {
+              return _c(
+                "div",
+                { staticClass: "row mt-3 pr-3 pl-3" },
+                [
+                  _c("div", { staticClass: "col-12" }, [
+                    _c("p", { staticClass: "mb-1" }, [_vm._v(_vm._s(date))])
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.market_date_groups[date], function(m_req) {
+                    return _c("market-tab", {
+                      attrs: { "market-request": m_req, no_cares: _vm.no_cares }
+                    })
+                  })
+                ],
+                2
+              )
+            })
+          ),
+          _vm._v(" "),
+          _c("div")
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e92bdb5e", module.exports)
+  }
+}
+
+/***/ }),
+/* 371 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(372)
+/* template */
+var __vue_template__ = __webpack_require__(397)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6f815fbb", Component.options)
+  } else {
+    hotAPI.reload("data-v-6f815fbb", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 372 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__ = __webpack_require__(373);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__ = __webpack_require__(376);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__ = __webpack_require__(379);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__ = __webpack_require__(382);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__ = __webpack_require__(385);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__ = __webpack_require__(388);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__ = __webpack_require__(391);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__ = __webpack_require__(394);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        MarketTabOutright: __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
+        MarketTabRisky: __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
+        MarketTabCalendar: __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
+        MarketTabFly: __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
+        OptionSwitch: __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
+        EFP: __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
+        Rolls: __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
+        EFPSwitch: __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
+    },
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        },
+        no_cares: {
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            tabs: {
+                'Outright': __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default.a,
+                'Risky': __WEBPACK_IMPORTED_MODULE_3__MarketTabs_Risky___default.a,
+                'Calendar': __WEBPACK_IMPORTED_MODULE_4__MarketTabs_Calendar___default.a,
+                'Fly': __WEBPACK_IMPORTED_MODULE_5__MarketTabs_Fly___default.a,
+                'Option Switch': __WEBPACK_IMPORTED_MODULE_6__MarketTabs_OptionSwitch___default.a,
+                'EFP': __WEBPACK_IMPORTED_MODULE_7__MarketTabs_EFP___default.a,
+                'Rolls': __WEBPACK_IMPORTED_MODULE_8__MarketTabs_Rolls___default.a,
+                'EFP Switch': __WEBPACK_IMPORTED_MODULE_9__MarketTabs_EFPSwitch___default.a
+            }
+        };
+    },
+
+    computed: {},
+    methods: {},
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 373 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(374)
+/* template */
+var __vue_template__ = __webpack_require__(375)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Outright.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6e1e795c", Component.options)
+  } else {
+    hotAPI.reload("data-v-6e1e795c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 374 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        },
+        no_cares: {
+            type: Array
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_market': function marketRequestUser_market(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': !this.marketRequest.is_interest && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
+                'market-request-vol': this.market_request_state == 'request-vol',
+                'market-alert': this.marketRequest.attributes.action_needed,
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest.id !== marketRequest.id) {
+                _this.isActive = false;
+            } else {
+                _this.isActive = true;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 375 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-outright" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n                " +
+              _vm._s(
+                _vm.splitValHelper(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.outright.strike")
+                  ],
+                  " ",
+                  3
+                )
+              ) +
+              "  \n        "
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c(
+                  "span",
+                  {
+                    class: {
+                      "user-action": _vm.market_request_state_label == "SENT"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.market_request_state_label))]
+                )
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6e1e795c", module.exports)
+  }
+}
+
+/***/ }),
+/* 376 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(377)
+/* template */
+var __vue_template__ = __webpack_require__(378)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Risky.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5df3c2a8", Component.options)
+  } else {
+    hotAPI.reload("data-v-5df3c2a8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 377 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 378 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-risky" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5df3c2a8", module.exports)
+  }
+}
+
+/***/ }),
+/* 379 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(380)
+/* template */
+var __vue_template__ = __webpack_require__(381)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Calendar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ba66ade8", Component.options)
+  } else {
+    hotAPI.reload("data-v-ba66ade8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 380 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 381 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-calendar" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ba66ade8", module.exports)
+  }
+}
+
+/***/ }),
+/* 382 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(383)
+/* template */
+var __vue_template__ = __webpack_require__(384)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Fly.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5ecff995", Component.options)
+  } else {
+    hotAPI.reload("data-v-5ecff995", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 383 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 384 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-fly" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5ecff995", module.exports)
+  }
+}
+
+/***/ }),
+/* 385 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(386)
+/* template */
+var __vue_template__ = __webpack_require__(387)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/OptionSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-153a8557", Component.options)
+  } else {
+    hotAPI.reload("data-v-153a8557", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 386 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 387 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-option_switch" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-153a8557", module.exports)
+  }
+}
+
+/***/ }),
+/* 388 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(389)
+/* template */
+var __vue_template__ = __webpack_require__(390)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/EFP.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-326059de", Component.options)
+  } else {
+    hotAPI.reload("data-v-326059de", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 389 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 390 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-efp" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-326059de", module.exports)
+  }
+}
+
+/***/ }),
+/* 391 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(392)
+/* template */
+var __vue_template__ = __webpack_require__(393)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/Rolls.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-613c4e90", Component.options)
+  } else {
+    hotAPI.reload("data-v-613c4e90", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 392 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 393 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-rolls" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-613c4e90", module.exports)
+  }
+}
+
+/***/ }),
+/* 394 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(395)
+/* template */
+var __vue_template__ = __webpack_require__(396)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/MarketTabs/EFPSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6240ada5", Component.options)
+  } else {
+    hotAPI.reload("data-v-6240ada5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 395 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    watch: {
+        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.user_markets': function marketRequestUser_markets(nV, oV) {
+            this.calcMarketState();
+        },
+        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
+            this.calcMarketState();
+        }
+    },
+    mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
+    data: function data() {
+        return {
+            user_market: null,
+            current_negotiation: null,
+
+            user_market_bid: null,
+            user_market_offer: null,
+
+            isActive: false
+        };
+    },
+
+    computed: {
+        marketState: function marketState() {
+            return {
+                'market-request-grey': this.market_request_state == 'request-grey',
+                'market-request': this.market_request_state == 'request',
+                'market-alert': this.market_request_state == 'alert',
+                'market-confirm': this.market_request_state == 'confirm',
+                'active': this.isActive
+            };
+        },
+        bidState: function bidState() {
+            return {
+                'user-action': this.marketRequest.attributes.bid_state == 'action'
+            };
+        },
+        offerState: function offerState() {
+            return {
+                'user-action': this.marketRequest.attributes.offer_state == 'action'
+            };
+        }
+    },
+    methods: {
+        loadInteractionBar: function loadInteractionBar() {
+            console.log("load Bar");
+            this.toggleActionTaken();
+            this.isActive = true;
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, this.marketRequest);
+        }
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        // initial setup of states
+        this.calcMarketState();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
+            _this.isActive = false;
+        });
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionChange', function (marketRequest) {
+            if (_this.marketRequest !== marketRequest) {
+                _this.isActive = false;
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 396 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "col market-tab p-3 mb-2 mt-2",
+      class: _vm.marketState,
+      attrs: { dusk: "market-tab-efp_switch" },
+      on: {
+        click: function($event) {
+          _vm.loadInteractionBar()
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "row justify-content-md-center" }, [
+        _c(
+          "div",
+          { staticClass: "col col-6 market-tab-name market-tab-name" },
+          [
+            _vm._v(
+              "\n            " +
+                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+                "    \n        "
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+          _vm.market_request_state_label != ""
+            ? _c("span", [
+                _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
+              ])
+            : _c("span", [
+                _c("span", { class: _vm.bidState }, [
+                  _vm._v(_vm._s(_vm.user_market_bid))
+                ]),
+                _vm._v(" / "),
+                _c("span", { class: _vm.offerState }, [
+                  _vm._v(_vm._s(_vm.user_market_offer))
+                ])
+              ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6240ada5", module.exports)
+  }
+}
+
+/***/ }),
+/* 397 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticStyle: { width: "100%" },
+      attrs: { dusk: "market-tab-" + _vm.marketRequest.id }
+    },
+    [
+      _c("div", { staticClass: "col col-12 text-center" }, [
+        _c(
+          "div",
+          { staticClass: "row" },
+          [
+            _c(_vm.tabs[_vm.marketRequest.trade_structure], {
+              tag: "component",
+              attrs: {
+                "market-request": _vm.marketRequest,
+                no_cares: _vm.no_cares
+              }
+            })
+          ],
+          1
+        )
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6f815fbb", module.exports)
+  }
+}
+
+/***/ }),
+/* 398 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(399)
+/* template */
+var __vue_template__ = __webpack_require__(427)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBarComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-19452975", Component.options)
+  } else {
+    hotAPI.reload("data-v-19452975", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 399 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__ = __webpack_require__(400);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'ibar-negotiation-bar': __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default.a
+    },
+    data: function data() {
+        return {
+            opened: false,
+            market_request: null
+        };
+    },
+
+    computed: {},
+    methods: {
+        toggleBar: function toggleBar(set, marketRequest) {
+            if (typeof set != 'undefined') {
+                this.opened = set == true;
+            } else {
+                this.opened = !this.opened;
+            }
+
+            // only populate if opened
+            if (this.opened) {
+                this.market_request = null;
+                this.market_request = marketRequest;
+                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.market_request);
+            } else {
+                this.market_request = null;
+                // fire close event if its closing
+                if (this.opened == false) {
+                    __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionClose');
+                }
+            }
+        }
+    },
+    mounted: function mounted() {
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionToggle', this.toggleBar);
+    }
+});
+
+/***/ }),
+/* 400 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(401)
+/* template */
+var __vue_template__ = __webpack_require__(426)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/NegotiationBar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-07934dce", Component.options)
+  } else {
+    hotAPI.reload("data-v-07934dce", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 401 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__ = __webpack_require__(402);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__ = __webpack_require__(405);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__ = __webpack_require__(408);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__ = __webpack_require__(411);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__ = __webpack_require__(414);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__ = __webpack_require__(417);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__ = __webpack_require__(420);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__ = __webpack_require__(423);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls__);
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        BarLayoutOutright: __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
+        BarLayoutRisky: __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
+        BarLayoutCalendar: __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
+        BarLayoutFly: __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
+        BarLayoutOptionSwitch: __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
+        BarLayoutEFP: __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
+        BarLayoutEFPSwitch: __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
+        BarLayoutRolls: __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
+    },
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            layouts: {
+                'Outright': __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright___default.a,
+                'Risky': __WEBPACK_IMPORTED_MODULE_4__BarLayouts_Risky___default.a,
+                'Calendar': __WEBPACK_IMPORTED_MODULE_5__BarLayouts_Calendar___default.a,
+                'Fly': __WEBPACK_IMPORTED_MODULE_6__BarLayouts_Fly___default.a,
+                'Option Switch': __WEBPACK_IMPORTED_MODULE_7__BarLayouts_OptionSwitch___default.a,
+                'EFP': __WEBPACK_IMPORTED_MODULE_8__BarLayouts_EFP___default.a,
+                'EFPSwitch': __WEBPACK_IMPORTED_MODULE_9__BarLayouts_EFPSwitch___default.a,
+                'Rolls': __WEBPACK_IMPORTED_MODULE_10__BarLayouts_Rolls___default.a
+            }
+        };
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 402 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(403)
+/* template */
+var __vue_template__ = __webpack_require__(404)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Outright.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-848aa7e0", Component.options)
+  } else {
+    hotAPI.reload("data-v-848aa7e0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 403 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+
+            proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
+            proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
+
+            default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
+            history_message: null,
+
+            removable_conditions: [],
+
+            server_loading: false,
+            check_invalid: false,
+            errors: []
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'marker_qoute': function marker_qoute() {
+
+            return this.marketRequest.quotes.find(function (quote) {
+                return quote.is_maker;
+            });
+        },
+        'last_qoute': function last_qoute() {
+            return this.marketRequest.quotes.length == 0 ? null : this.marketRequest.quotes[this.marketRequest.quotes.length - 1];
+        },
+        'is_on_hold': function is_on_hold() {
+            return this.marketRequest.quotes.find(function (quote) {
+                return quote.is_maker && quote.is_on_hold;
+            });
+        },
+        'market_title': function market_title() {
+            console.log(this.marketRequest, this.marketRequest.getMarket());
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
+        },
+        'market_time': function market_time() {
+            return this.marketRequest.updated_at.format("HH:mm");
+        }
+    },
+    methods: {
+        validateProposal: function validateProposal(check_invalid) {
+            this.check_invalid = check_invalid;
+        },
+        updateUserMessages: function updateUserMessages() {
+            //if the users market qoute is placed on hold notify the the current user if it is theres
+            if (this.marker_qoute && this.marker_qoute.is_on_hold) {
+                this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+            }
+        },
+        sendQuote: function sendQuote() {
+            var _this = this;
+
+            // link now that we are saving
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.server_loading = true;
+
+            // save
+            this.proposed_user_market.store().then(function (response) {
+
+                _this.history_message = response.data.message;
+                _this.server_loading = false;
+                _this.errors = [];
+                _this.setUpProposal();
+            }).catch(function (err) {
+                _this.server_loading = false;
+
+                _this.history_message = err.errors.message;
+                _this.errors = err.errors.errors;
+            });
+        },
+        amendQoute: function amendQoute() {
+            var _this2 = this;
+
+            // link now that we are saving
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.server_loading = true;
+
+            // save
+            this.proposed_user_market_negotiation.patch().then(function (response) {
+                _this2.server_loading = false;
+                _this2.history_message = response.data.message;
+                _this2.errors = [];
+            }).catch(function (err) {
+                _this2.server_loading = false;
+                _this2.history_message = err.errors.message;
+                _this2.errors = err.errors.errors;
+            });
+        },
+        repeatQuote: function repeatQuote() {
+            var _this3 = this;
+
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            //this.proposed_user_market_negotiation.is_repeat = true;
+
+            this.server_loading = true;
+
+            // save
+            this.proposed_user_market_negotiation.repeat().then(function (response) {
+                _this3.server_loading = false;
+                _this3.proposed_user_market_negotiation = response.data.data;
+
+                _this3.history_message = response.data.message;
+
+                _this3.proposed_user_market.setCurrentNegotiation(_this3.proposed_user_market_negotiation);
+                _this3.errors = [];
+                //EventBus.$emit('interactionToggle', false);
+            }).catch(function (err) {
+                _this3.server_loading = false;
+                _this3.history_message = err.errors.message;
+                _this3.errors = err.errors.errors;
+            });
+        },
+        pullQuote: function pullQuote() {
+            var _this4 = this;
+
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.server_loading = true;
+            // save
+            this.proposed_user_market.delete().then(function (response) {
+                _this4.server_loading = false;
+                _this4.history_message = response.data.message;
+                // EventBus.$emit('interactionToggle', false);
+                _this4.$refs.pullModal.hide();
+            }).catch(function (err) {
+                _this4.server_loading = false;
+                _this4.errors = err.errors;
+                _this4.$refs.pullModal.hide();
+            });
+        },
+        reset: function reset() {
+            var _this5 = this;
+
+            var defaults = {
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+
+                proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
+                proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
+
+                default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
+                history_message: null,
+
+                removable_conditions: [],
+
+                server_loading: false,
+                check_invalid: false,
+                errors: []
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this5[k] = defaults[k];
+            });
+        },
+        setUpProposal: function setUpProposal() {
+
+            // set up the new UserMarket as quote to be sent
+            if (this.marker_qoute) //already have my qoute
+                {
+                    this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
+                } else {
+                this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
+            }
+            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+        },
+        hideModal: function hideModal() {
+            this.$refs.pullModal.hide();
+        },
+        setDefaultQuantities: function setDefaultQuantities() {
+
+            if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
+                console.log("offer quote", this.marker_qoute.offer_qty);
+
+                this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
+                this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;
+            } else {
+                this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
+                this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+            }
+        },
+        init: function init() {
+            this.reset(); // clear current state
+
+            // set up up data
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setUpProposal();
+                this.setDefaultQuantities();
+                this.updateUserMessages();
+
+                // relate
+                __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
+                //set the quotes here if they already set
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 404 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-outright" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _vm.marketRequest.quotes
+        ? _c("ibar-negotiation-history-market", {
+            staticClass: "mb-3",
+            attrs: {
+              message: _vm.history_message,
+              history: _vm.marketRequest.quotes
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.marketRequest.chosen_user_market
+        ? _c("ibar-negotiation-history-contracts", {
+            staticClass: "mb-2",
+            attrs: {
+              history: _vm.marketRequest.chosen_user_market.negotiations
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: {
+          "check-invalid": _vm.check_invalid,
+          "marker-qoute": _vm.marker_qoute,
+          "market-negotiation": _vm.proposed_user_market_negotiation
+        },
+        on: { "validate-proposal": _vm.validateProposal }
+      }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        { staticClass: "mb-5" },
+        [
+          _c(
+            "b-col",
+            { attrs: { cols: "10" } },
+            [
+              _vm._l(_vm.errors, function(error, key) {
+                return _c(
+                  "b-col",
+                  { staticClass: "text-danger", attrs: { cols: "12" } },
+                  [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(key) +
+                        ":" +
+                        _vm._s(error[0]) +
+                        "\n                "
+                    )
+                  ]
+                )
+              }),
+              _vm._v(" "),
+              _vm.removable_conditions.length > 0
+                ? _c(
+                    "b-row",
+                    _vm._l(_vm.removable_conditions, function(cond) {
+                      return _c("b-col", { staticClass: "text-center" }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "ibar-condition-remove-label",
+                            on: { click: cond.callback }
+                          },
+                          [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(cond.title) +
+                                "  "
+                            ),
+                            _c("span", { staticClass: "remove" }, [_vm._v("X")])
+                          ]
+                        )
+                      ])
+                    })
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "b-row",
+                { staticClass: "justify-content-md-center mb-1" },
+                [
+                  _c(
+                    "b-col",
+                    { attrs: { cols: "6" } },
+                    [
+                      _vm.marker_qoute ||
+                      _vm.is_on_hold ||
+                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
+                        ? _c(
+                            "b-button",
+                            {
+                              staticClass: "w-100 mt-1",
+                              attrs: {
+                                disabled:
+                                  _vm.check_invalid || _vm.server_loading,
+                                size: "sm",
+                                dusk: "ibar-action-amend",
+                                variant: "primary"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.amendQoute()
+                                }
+                              }
+                            },
+                            [_vm._v("Amend")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.is_on_hold &&
+                      (_vm.marker_qoute && !_vm.marker_qoute.is_repeat)
+                        ? _c(
+                            "b-button",
+                            {
+                              staticClass: "w-100 mt-1",
+                              attrs: {
+                                disabled: _vm.server_loading,
+                                size: "sm",
+                                dusk: "ibar-action-repeat",
+                                variant: "primary"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.repeatQuote()
+                                }
+                              }
+                            },
+                            [_vm._v("Repeat")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.marker_qoute ||
+                      _vm.is_on_hold ||
+                      (_vm.marker_qoute && _vm.marker_qoute.is_repeat)
+                        ? _c(
+                            "b-button",
+                            {
+                              directives: [
+                                {
+                                  name: "b-modal",
+                                  rawName: "v-b-modal.pullQuote",
+                                  modifiers: { pullQuote: true }
+                                }
+                              ],
+                              staticClass: "w-100 mt-1",
+                              attrs: {
+                                disabled: _vm.server_loading,
+                                size: "sm",
+                                dusk: "ibar-action-pull",
+                                variant: "primary"
+                              }
+                            },
+                            [_vm._v("Pull")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "b-modal",
+                        {
+                          ref: "pullModal",
+                          staticClass: "mm-modal mx-auto",
+                          attrs: { id: "pullQuote", title: "Pull Market" }
+                        },
+                        [
+                          _c("p", [
+                            _vm._v("Are you sure you want to pull this quote?")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "w-100",
+                              attrs: { slot: "modal-footer" },
+                              slot: "modal-footer"
+                            },
+                            [
+                              _c(
+                                "b-row",
+                                { attrs: { "align-v": "center" } },
+                                [
+                                  _c(
+                                    "b-col",
+                                    { attrs: { cols: "12" } },
+                                    [
+                                      _c(
+                                        "b-button",
+                                        {
+                                          staticClass:
+                                            "mm-modal-button mr-2 w-25",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.pullQuote()
+                                            }
+                                          }
+                                        },
+                                        [_vm._v("Pull")]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "b-button",
+                                        {
+                                          staticClass:
+                                            "btn mm-modal-button ml-2 w-25 btn-secondary",
+                                          on: {
+                                            click: function($event) {
+                                              _vm.hideModal()
+                                            }
+                                          }
+                                        },
+                                        [_vm._v("Cancel")]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              !_vm.marker_qoute
+                ? _c(
+                    "b-row",
+                    { staticClass: "justify-content-md-center" },
+                    [
+                      _c(
+                        "b-col",
+                        { attrs: { cols: "6" } },
+                        [
+                          !_vm.marker_qoute
+                            ? _c(
+                                "b-button",
+                                {
+                                  staticClass: "w-100 mt-1",
+                                  attrs: {
+                                    disabled:
+                                      _vm.check_invalid || _vm.server_loading,
+                                    size: "sm",
+                                    dusk: "ibar-action-send",
+                                    variant: "primary"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.sendQuote()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Send")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "w-100 mt-1",
+                              attrs: {
+                                size: "sm",
+                                dusk: "ibar-action-nocares",
+                                variant: "secondary"
+                              }
+                            },
+                            [_vm._v("No Cares")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e()
+            ],
+            2
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("ibar-apply-conditions", {
+        staticClass: "mb-5",
+        attrs: {
+          "applied-conditions": _vm.proposed_user_market_negotiation.conditions,
+          "removable-conditions": _vm.removable_conditions
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-848aa7e0", module.exports)
+  }
+}
+
+/***/ }),
+/* 405 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(406)
+/* template */
+var __vue_template__ = __webpack_require__(407)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Risky.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-185bef10", Component.options)
+  } else {
+    hotAPI.reload("data-v-185bef10", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 406 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 407 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-risky" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-185bef10", module.exports)
+  }
+}
+
+/***/ }),
+/* 408 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(409)
+/* template */
+var __vue_template__ = __webpack_require__(410)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Calendar.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1b2e4880", Component.options)
+  } else {
+    hotAPI.reload("data-v-1b2e4880", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 409 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 410 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-calendar" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1b2e4880", module.exports)
+  }
+}
+
+/***/ }),
+/* 411 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(412)
+/* template */
+var __vue_template__ = __webpack_require__(413)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Fly.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-36e3e661", Component.options)
+  } else {
+    hotAPI.reload("data-v-36e3e661", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 412 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 413 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-fly" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-36e3e661", module.exports)
+  }
+}
+
+/***/ }),
+/* 414 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(415)
+/* template */
+var __vue_template__ = __webpack_require__(416)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/OptionSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-01563e0b", Component.options)
+  } else {
+    hotAPI.reload("data-v-01563e0b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 415 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 416 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-option_switch" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-01563e0b", module.exports)
+  }
+}
+
+/***/ }),
+/* 417 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(418)
+/* template */
+var __vue_template__ = __webpack_require__(419)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFP.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-82388046", Component.options)
+  } else {
+    hotAPI.reload("data-v-82388046", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 418 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 419 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-82388046", module.exports)
+  }
+}
+
+/***/ }),
+/* 420 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(421)
+/* template */
+var __vue_template__ = __webpack_require__(422)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/EFPSwitch.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-062ad171", Component.options)
+  } else {
+    hotAPI.reload("data-v-062ad171", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 421 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 422 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-efp_switch" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-062ad171", module.exports)
+  }
+}
+
+/***/ }),
+/* 423 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(424)
+/* template */
+var __vue_template__ = __webpack_require__(425)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/BarLayouts/Rolls.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1ba47af8", Component.options)
+  } else {
+    hotAPI.reload("data-v-1ba47af8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 424 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketRequest: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {
+            bid: null,
+            offer: null,
+            bid_qty: 0,
+            offer_qty: 0,
+
+            state_conditions: false,
+            state_premium_calc: false,
+
+            user_market: null,
+            market_history: [],
+            market_time: ""
+        };
+    },
+
+    watch: {
+        'marketRequest': function marketRequest() {
+            this.init();
+        }
+    },
+    computed: {
+        'market_title': function market_title() {
+            return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default["Expiration Date"] + " " + this.marketRequest.trade_items.default["Strike"];
+        }
+    },
+    methods: {
+        setMarketTitle: function setMarketTitle() {},
+        setMarketTime: function setMarketTime() {
+            this.market_time = "10:10";
+        },
+        reset: function reset() {
+            var _this = this;
+
+            var defaults = {
+                bid: null,
+                offer: null,
+                bid_qty: 0,
+                offer_qty: 0,
+
+                state_conditions: false,
+                state_premium_calc: false,
+
+                user_market: null,
+                market_history: [],
+                market_time: ""
+            };
+            Object.keys(defaults).forEach(function (k) {
+                _this[k] = defaults[k];
+            });
+        },
+        init: function init() {
+            console.log("Mounted BAR", this.marketRequest);
+            this.reset();
+            if (this.marketRequest) {
+                this.user_market = this.marketRequest.getChosenUserMarket();
+                this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                this.setMarketTitle();
+                this.setMarketTime();
+            }
+        }
+    },
+    mounted: function mounted() {
+        this.init();
+    }
+});
+
+/***/ }),
+/* 425 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    { attrs: { fluid: "", dusk: "ibar-negotiation-bar-rolls" } },
+    [
+      _c("ibar-user-market-title", {
+        staticClass: "mt-1 mb-3",
+        attrs: { title: _vm.market_title, time: _vm.market_time }
+      }),
+      _vm._v(" "),
+      _c("ibar-negotiation-history-contracts", {
+        staticClass: "mb-2",
+        attrs: { history: _vm.market_history }
+      }),
+      _vm._v(" "),
+      _c("ibar-market-negotiation-contracts", {
+        staticClass: "mb-5",
+        attrs: { "market-negotiation": _vm.proposed_user_market_negotiation }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1ba47af8", module.exports)
+  }
+}
+
+/***/ }),
+/* 426 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { attrs: { dusk: "ibar-negotiation-bar" } },
+    [
+      _vm.marketRequest != null
+        ? _c(_vm.layouts[_vm.marketRequest.trade_structure], {
+            tag: "component",
+            attrs: { "market-request": _vm.marketRequest }
+          })
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-07934dce", module.exports)
+  }
+}
+
+/***/ }),
+/* 427 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "interaction-bar",
+      class: { active: _vm.opened },
+      attrs: { dusk: "interaction-bar" }
+    },
+    [
+      _c(
+        "VuePerfectScrollbar",
+        { ref: "barContent", staticClass: "interaction-content" },
+        [
+          _c("ibar-negotiation-bar", {
+            attrs: { "market-request": _vm.market_request }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "interaction-bar-toggle",
+              on: {
+                click: function($event) {
+                  _vm.toggleBar(false)
+                }
+              }
+            },
+            [_c("span", { staticClass: "icon icon-arrows-left" })]
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-19452975", module.exports)
+  }
+}
+
+/***/ }),
+/* 428 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(429)
+/* template */
+var __vue_template__ = __webpack_require__(430)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/Components/UserMarketTitle.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0dcd9682", Component.options)
+  } else {
+    hotAPI.reload("data-v-0dcd9682", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 429 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        title: {
+            type: String,
+            default: ""
+        },
+        time: {
+            type: String,
+            default: ""
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 430 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-user-market-title" } },
+    [
+      _c("b-col", { attrs: { cols: "10" } }, [
+        _c("h5", [_vm._v(_vm._s(_vm.title))])
+      ]),
+      _vm._v(" "),
+      _c("b-col", { attrs: { cols: "2" } }, [
+        _c("p", { staticClass: "pull-right" }, [_vm._v(_vm._s(_vm.time))])
+      ])
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0dcd9682", module.exports)
+  }
+}
+
+/***/ }),
+/* 431 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(432)
+/* template */
+var __vue_template__ = __webpack_require__(433)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-08d739c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-08d739c2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 432 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        history: {
+            type: Array
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 433 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-negotiation-history-contracts" } },
+    [
+      _c(
+        "b-col",
+        _vm._l(_vm.history, function(item) {
+          return _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c(
+                    "b-row",
+                    [
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.bid))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(item.offer))]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-col",
+                        { staticClass: "text-center", attrs: { cols: "3" } },
+                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } }, [
+                _c("p", { staticClass: "text-center" }, [
+                  _vm._v(_vm._s(item.time))
+                ])
+              ])
+            ],
+            1
+          )
+        })
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-08d739c2", module.exports)
+  }
+}
+
+/***/ }),
+/* 434 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(435)
+/* template */
+var __vue_template__ = __webpack_require__(436)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-27412ed5", Component.options)
+  } else {
+    hotAPI.reload("data-v-27412ed5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 435 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        history: {
+            type: Array
+        },
+        message: {
+            type: String
+        }
+    },
+    computed: {
+        vm_message: function vm_message() {
+            return this.history_message == null ? this.message : this.history_message;
+        }
+    },
+    data: function data() {
+        return {
+            history_message: null
+        };
+    },
+
+    methods: {
+        getState: function getState(item) {
+            if (item.bid_only) {
+                return "BID ONLY";
+            }
+            if (item.offer_only) {
+                return "OFFER ONLY";
+            }
+            if (item.vol_spread != null) {
+                return item.vol_spread + " VOL SPREAD";
+            }
+            return "";
+        },
+        putQuoteOnHold: function putQuoteOnHold(quote) {
+            var _this = this;
+
+            if (!quote.is_on_hold) {
+
+                quote.putOnHold().then(function (response) {
+
+                    _this.history_message = response.data.message;
+                    //@TODO FIND out why this does not work.
+                    quote.is_on_hold = true;
+                }).catch(function (err) {
+                    _this.errors = err.errors;
+                });
+            }
+        },
+        acceptQuote: function acceptQuote(quote) {
+            var _this2 = this;
+
+            quote.accept().then(function (response) {
+                _this2.history_message = response.data.message;
+            }).catch(function (err) {
+                _this2.errors = err.errors;
+            });
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 436 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-negotiation-history-market" } },
+    [
+      _c(
+        "b-col",
+        [
+          _vm._l(_vm.history, function(item) {
+            return _c(
+              "b-row",
+              [
+                _c(
+                  "b-col",
+                  { attrs: { cols: "10" } },
+                  [
+                    item.is_interest
+                      ? _c(
+                          "b-row",
+                          { attrs: { "no-gutters": "" } },
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "6" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(_vm.getState(item)) +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "w-100 btn btn-sm",
+                                    class: {
+                                      "btn-primary": item.is_on_hold,
+                                      "btn-secondary": !item.is_on_hold
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.putQuoteOnHold(item)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                HOLD\n                        "
+                                    )
+                                  ]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _c(
+                                  "b-btn",
+                                  {
+                                    staticClass: "w-100",
+                                    attrs: { size: "sm", variant: "primary" },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.acceptQuote(item)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("ACCEPT")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      : item.is_maker
+                        ? _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.bid_qty ? item.bid_qty : "-"
+                                      ) +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.bid ? item.bid : "-") +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(item.offer ? item.offer : "-") +
+                                      "\n                    "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "3" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                         " +
+                                      _vm._s(
+                                        item.offer_qty ? item.offer_qty : "-"
+                                      ) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        : _c(
+                            "b-row",
+                            { attrs: { "no-gutters": "" } },
+                            [
+                              _c(
+                                "b-col",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { cols: "12" }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        " +
+                                      _vm._s(_vm.getState(item)) +
+                                      "\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("b-col", { attrs: { cols: "2" } }, [
+                  _c("p", { staticClass: "text-center" }, [
+                    _c("small", [_vm._v(_vm._s(item.time))])
+                  ])
+                ])
+              ],
+              1
+            )
+          }),
+          _vm._v(" "),
+          _vm.history.reduce(function(x, y) {
+            return (x = y.is_interest)
+          }, false)
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c("b-col", { staticClass: "mt-2" }, [
+                    _c("p", [
+                      _c("small", [
+                        _vm._v(
+                          "Note: Quotes will default to HOLD after 30 minutes."
+                        )
+                      ])
+                    ])
+                  ])
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.vm_message
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c("b-col", { staticClass: "mt-2" }, [
+                    _c("p", { staticClass: "text-center" }, [
+                      _c("small", [_vm._v(_vm._s(_vm.vm_message))])
+                    ])
+                  ])
+                ],
+                1
+              )
+            : _vm._e()
+        ],
+        2
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-27412ed5", module.exports)
+  }
+}
+
+/***/ }),
+/* 437 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(438)
+/* template */
+var __vue_template__ = __webpack_require__(439)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-51ca6a6a", Component.options)
+  } else {
+    hotAPI.reload("data-v-51ca6a6a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 438 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__ = __webpack_require__(351);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        },
+        markerQoute: {
+            type: __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketQuote__["a" /* default */]
+        }
+    },
+    watch: {
+        marketNegotiation: {
+            handler: function handler() {
+                this.$emit('validate-proposal', this.check_invalid);
+            },
+            deep: true
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    computed: {
+        'check_invalid': function check_invalid() {
+            var invalid_states = {
+                all_empty: false,
+                bid_pair: false,
+                offer_pair: false,
+                previous: false
+            };
+
+            //new
+            invalid_states.all_empty = this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) && this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty);
+
+            // Check that bid and bid_qty are present together
+            invalid_states.bid_pair = !this.is_empty(this.marketNegotiation.bid) && this.is_empty(this.marketNegotiation.bid_qty) || this.is_empty(this.marketNegotiation.bid) && !this.is_empty(this.marketNegotiation.bid_qty);
+
+            // Check bid offer and offer_qty are present together
+            invalid_states.offer_pair = !this.is_empty(this.marketNegotiation.offer) && this.is_empty(this.marketNegotiation.offer_qty) || this.is_empty(this.marketNegotiation.offer) && !this.is_empty(this.marketNegotiation.offer_qty);
+
+            // Check for previous quote
+            if (typeof this.markerQoute != 'undefined') {
+
+                // Check new markerQoute is equal to old markerQoute
+                invalid_states.previous = this.marketNegotiation.bid == this.markerQoute.bid && this.marketNegotiation.bid_qty == this.markerQoute.bid_qty && this.marketNegotiation.offer == this.markerQoute.offer && this.marketNegotiation.offer_qty == this.markerQoute.offer_qty;
+            }
+
+            return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
+        }
+    },
+    methods: {
+        'is_empty': function is_empty(value) {
+            return value === undefined || value === null || value === '';
+        }
+    },
+    mounted: function mounted() {
+        console.log(this.marketNegotiation);
+    }
+});
+
+/***/ }),
+/* 439 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    {
+      staticClass: "ibar market-negotiation",
+      attrs: { dusk: "ibar-market-negotiation-market" }
+    },
+    [
+      _c(
+        "b-col",
+        [
+          _c(
+            "b-row",
+            { staticClass: "mb-3" },
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "10" } },
+                [
+                  _c("b-form", { attrs: { inline: "" } }, [
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid-qty",
+                            placeholder: "Qty"
+                          },
+                          model: {
+                            value: _vm.marketNegotiation.bid_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid_qty", $$v)
+                            },
+                            expression: "marketNegotiation.bid_qty"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-bid",
+                            placeholder: "Bid"
+                          },
+                          model: {
+                            value: _vm.marketNegotiation.bid,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "bid", $$v)
+                            },
+                            expression: "marketNegotiation.bid"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer",
+                            placeholder: "Offer"
+                          },
+                          model: {
+                            value: _vm.marketNegotiation.offer,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer", $$v)
+                            },
+                            expression: "marketNegotiation.offer"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "w-25 p-1" },
+                      [
+                        _c("b-form-input", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "text",
+                            dusk: "market-negotiation-offer-qty",
+                            placeholder: "Qty"
+                          },
+                          model: {
+                            value: _vm.marketNegotiation.offer_qty,
+                            callback: function($$v) {
+                              _vm.$set(_vm.marketNegotiation, "offer_qty", $$v)
+                            },
+                            expression: "marketNegotiation.offer_qty"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("b-col", { attrs: { cols: "2" } })
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-51ca6a6a", module.exports)
+  }
+}
+
+/***/ }),
+/* 440 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(441)
+/* template */
+var __vue_template__ = __webpack_require__(443)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5a251bc6", Component.options)
+  } else {
+    hotAPI.reload("data-v-5a251bc6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 441 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__ = __webpack_require__(442);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        appliedConditions: {
+            type: Array,
+            default: []
+        },
+        removableConditions: {
+            type: Array,
+            default: []
+        }
+    },
+    data: function data() {
+        return {
+            show_options: false,
+            chosen_top_level_category: null,
+            conditions: [],
+            categories: []
+        };
+    },
+
+    watch: {
+        'show_options': function show_options(nV) {
+            this.appliedConditions.splice(0, this.appliedConditions.length);
+            this.removableConditions.splice(0, this.removableConditions.length);
+            this.resetCategorySelection(this.categories);
+        }
+    },
+    methods: {
+        getCategoryOptions: function getCategoryOptions(conditions) {
+            var options = [];
+            conditions.forEach(function (x) {
+                options.push({ text: x.title, value: x });
+            });
+            return options;
+        },
+        mutateCategories: function mutateCategories(cats) {
+            var _this = this;
+
+            return cats.map(function (cat) {
+                if (cat.market_conditions) {
+                    cat.market_conditions = cat.market_conditions.map(function (x) {
+                        return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
+                    });
+                }
+                if (cat.children) {
+                    cat.children = _this.mutateCategories(cat.children);
+                }
+                return cat;
+            });
+        },
+        loadConditions: function loadConditions() {
+            var _this2 = this;
+
+            var self = this;
+            return __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(__WEBPACK_IMPORTED_MODULE_0_axios___default.a.defaults.baseUrl + '/trade/market-condition').then(function (conditionsResponse) {
+                if (conditionsResponse.status == 200) {
+                    // set the available market types
+                    self.conditions = conditionsResponse.data.conditions.map(function (x) {
+                        return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
+                    }) || [];
+                    self.categories = _this2.mutateCategories(conditionsResponse.data.categories) || [];
+                    console.log(self.categories);
+                    _this2.resetCategorySelection(_this2.categories);
+                } else {
+                    console.error(err);
+                }
+                return conditionsResponse.data;
+            }, function (err) {
+                console.error(err);
+            });
+        },
+        resetCategorySelection: function resetCategorySelection(cats) {
+            var _this3 = this;
+
+            cats.forEach(function (cat) {
+                cat.selected = null;
+                if (cat.children) {
+                    _this3.resetCategorySelection(cat.children);
+                }
+            });
+        },
+        applyCondition: function applyCondition(condition) {
+            var _this4 = this;
+
+            console.log("got called");
+            var conExist = this.appliedConditions.indexOf(condition) != -1;
+
+            this.appliedConditions.splice(0, this.appliedConditions.length);
+            // add condition if not already exists
+
+            if (!conExist) {
+                this.appliedConditions.push(condition);
+
+                var removable = {
+                    title: condition.title
+                };
+
+                removable.callback = function () {
+                    _this4.appliedConditions.splice(0, _this4.appliedConditions.length);
+                    _this4.removableConditions.splice(_this4.removableConditions.indexOf(removable), 1);
+                    _this4.show_options = false;
+
+                    Vue.nextTick(function () {
+                        _this4.show_options = true;
+                    });
+                };
+
+                this.removableConditions.splice(0, this.removableConditions.length);
+                this.removableConditions.push(removable);
+            } else {
+                this.removableConditions.splice(0, this.removableConditions.length);
+            }
+        },
+        applyCategory: function applyCategory(category) {
+            var _this5 = this;
+
+            this.chosen_top_level_category = category;
+            this.resetCategorySelection(this.categories);
+            this.updateCategoryConditions();
+
+            var removable = {
+                title: category.title
+            };
+            removable.callback = function () {
+                _this5.chosen_top_level_category = null;
+                _this5.removableConditions.splice(_this5.removableConditions.indexOf(removable), 1);
+                _this5.resetCategorySelection(_this5.categories);
+                _this5.updateCategoryConditions();
+                _this5.show_options = false;
+                Vue.nextTick(function () {
+                    _this5.show_options = true;
+                });
+            };
+            this.removableConditions.splice(0, this.removableConditions.length);
+            this.removableConditions.push(removable);
+        },
+        recurseSelected: function recurseSelected(category) {
+            var _this6 = this;
+
+            if (category.children) {
+                category.children.forEach(function (child) {
+                    _this6.recurseSelected(child);
+                });
+            }
+            if (category.selected) {
+                this.appliedConditions.push(category.selected);
+            }
+        },
+        updateCategoryConditions: function updateCategoryConditions(changed) {
+            var _this7 = this;
+
+            Vue.nextTick(function () {
+                console.log("the update got called");
+                _this7.appliedConditions.splice(0, _this7.appliedConditions.length);
+                if (_this7.chosen_top_level_category) {
+                    _this7.recurseSelected(_this7.chosen_top_level_category);
+                }
+            });
+        }
+    },
+    created: function created() {
+        this.loadConditions();
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 442 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__BaseModel__ = __webpack_require__(42);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+
+
+var UserMarketNegotiationCondition = function (_BaseModel) {
+    _inherits(UserMarketNegotiationCondition, _BaseModel);
+
+    function UserMarketNegotiationCondition(options) {
+        _classCallCheck(this, UserMarketNegotiationCondition);
+
+        // default internal
+        var _this = _possibleConstructorReturn(this, (UserMarketNegotiationCondition.__proto__ || Object.getPrototypeOf(UserMarketNegotiationCondition)).call(this, {
+            _used_model_list: []
+        }));
+
+        _this._user_market_negotiation = null;
+        // default public
+        var defaults = {
+            id: "",
+            title: "",
+            alias: "",
+            created_at: moment()
+            // assign options with defaults
+        };Object.keys(defaults).forEach(function (key) {
+            if (options && typeof options[key] !== 'undefined') {
+                _this[key] = options[key];
+                if (defaults[key] instanceof moment) {
+                    _this[key] = moment(_this[key]);
+                }
+            } else {
+                _this[key] = defaults[key];
+            }
+        });
+        return _this;
+    }
+
+    /**
+    *   setUserMarketNegotiation - Sets the conditions UserMarketNegotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation for the condition
+    */
+
+
+    _createClass(UserMarketNegotiationCondition, [{
+        key: "setUserMarketNegotiation",
+        value: function setUserMarketNegotiation(user_market_negotiation) {
+            this._user_market_negotiation = user_market_negotiation;
+        }
+
+        /**
+        *   getUserMarketNegotiation - Gets the conditions  UserMarketNegotiation
+        *   @return {UserMarketNegotiation}
+        */
+
+    }, {
+        key: "getUserMarketNegotiation",
+        value: function getUserMarketNegotiation() {
+            return this._user_market_negotiation;
+        }
+    }, {
+        key: "prepareStore",
+        value: function prepareStore() {
+            return {
+                id: this.id,
+                title: this.title,
+                alias: this.alias
+            };
+        }
+    }]);
+
+    return UserMarketNegotiationCondition;
+}(__WEBPACK_IMPORTED_MODULE_0__BaseModel__["a" /* default */]);
+
+/* harmony default export */ __webpack_exports__["a"] = (UserMarketNegotiationCondition);
+
+/***/ }),
+/* 443 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    { attrs: { dusk: "ibar-apply-conditions" } },
+    [
+      _c(
+        "b-col",
+        [
+          _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-form-checkbox",
+                    {
+                      attrs: {
+                        dusk: "ibar-apply-a-condition",
+                        name: "apply-a-condition",
+                        value: true,
+                        "unchecked-value": false
+                      },
+                      model: {
+                        value: _vm.show_options,
+                        callback: function($$v) {
+                          _vm.show_options = $$v
+                        },
+                        expression: "show_options"
+                      }
+                    },
+                    [_vm._v(" Apply a condition")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.show_options
+            ? _c(
+                "b-row",
+                { staticClass: "text-center", attrs: { role: "tablist" } },
+                [
+                  _vm._l(_vm.conditions, function(condition) {
+                    return _c(
+                      "b-col",
+                      { attrs: { cols: "12" } },
+                      [
+                        _c(
+                          "b-btn",
+                          {
+                            directives: [
+                              {
+                                name: "b-toggle",
+                                rawName: "v-b-toggle",
+                                value: "condition_" + condition.id,
+                                expression: "'condition_'+condition.id"
+                              }
+                            ],
+                            staticClass: "w-75 mt-2 ibar-condition",
+                            attrs: {
+                              variant: "default",
+                              size: "sm",
+                              role: "tab"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.applyCondition(condition)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    " +
+                                _vm._s(condition.title) +
+                                "\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("b-collapse", {
+                          staticClass: "w-75 ibar-condition-panel",
+                          attrs: {
+                            id: "condition_" + condition.id,
+                            accordion: "conditions",
+                            role: "tabpanel"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm._l(_vm.categories, function(category) {
+                    return _c(
+                      "b-col",
+                      { attrs: { cols: "12" } },
+                      [
+                        _c(
+                          "b-btn",
+                          {
+                            directives: [
+                              {
+                                name: "b-toggle",
+                                rawName: "v-b-toggle",
+                                value: "category_" + category.id,
+                                expression: "'category_'+category.id"
+                              }
+                            ],
+                            staticClass: "w-75 mt-2 ibar-condition",
+                            attrs: {
+                              variant: "default",
+                              size: "sm",
+                              role: "tab"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.applyCategory(category)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    " +
+                                _vm._s(category.title) +
+                                "\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "b-collapse",
+                          {
+                            staticClass: "w-75 ibar-condition-panel",
+                            attrs: {
+                              id: "category_" + category.id,
+                              accordion: "conditions",
+                              role: "tabpanel"
+                            }
+                          },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "ibar-condition-panel-content text-left"
+                              },
+                              [
+                                _vm._l(category.children, function(child) {
+                                  return category.children.length > 0
+                                    ? _c("div", [
+                                        _c("label", { staticClass: "title" }, [
+                                          _vm._v(_vm._s(child.title))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "content" },
+                                          [
+                                            _c("b-form-radio-group", {
+                                              attrs: {
+                                                options: _vm.getCategoryOptions(
+                                                  child.market_conditions
+                                                ),
+                                                stacked: "",
+                                                name: ""
+                                              },
+                                              on: {
+                                                change:
+                                                  _vm.updateCategoryConditions
+                                              },
+                                              model: {
+                                                value: child.selected,
+                                                callback: function($$v) {
+                                                  _vm.$set(
+                                                    child,
+                                                    "selected",
+                                                    $$v
+                                                  )
+                                                },
+                                                expression: "child.selected"
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      ])
+                                    : _vm._e()
+                                }),
+                                _vm._v(" "),
+                                category.children.length == 0
+                                  ? _c("div", [
+                                      _c(
+                                        "div",
+                                        { staticClass: "content" },
+                                        [
+                                          _c("b-form-radio-group", {
+                                            attrs: {
+                                              options: _vm.getCategoryOptions(
+                                                category.market_conditions
+                                              ),
+                                              stacked: "",
+                                              name: ""
+                                            },
+                                            on: {
+                                              change:
+                                                _vm.updateCategoryConditions
+                                            },
+                                            model: {
+                                              value: category.selected,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  category,
+                                                  "selected",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "category.selected"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ])
+                                  : _vm._e()
+                              ],
+                              2
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  })
+                ],
+                2
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5a251bc6", module.exports)
+  }
+}
+
+/***/ }),
+/* 444 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(445)
+/* template */
+var __vue_template__ = __webpack_require__(446)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1ef017fc", Component.options)
+  } else {
+    hotAPI.reload("data-v-1ef017fc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 445 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        marketNegotiation: {
+            type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketNegotiation__["a" /* default */]
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    methods: {},
+    created: function created() {
+        console.log("ApplyPremium calculator stuff", this.UserMarketNegotiation);
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 446 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-row",
+    [
+      _c(
+        "b-col",
+        [_c("b-form-checkbox", [_vm._v(" Apply Premium Calculator")])],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1ef017fc", module.exports)
+  }
+}
+
+/***/ }),
+/* 447 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(448)
+/* template */
+var __vue_template__ = __webpack_require__(480)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBarComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-79b015f7", Component.options)
+  } else {
+    hotAPI.reload("data-v-79b015f7", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 448 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__ = __webpack_require__(449);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__ = __webpack_require__(452);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__ = __webpack_require__(455);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__ = __webpack_require__(458);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__ = __webpack_require__(461);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_Market__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarket__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+//component imports
+
+
+
+
+
+//lib imports
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        FilterMarketsMenu: __WEBPACK_IMPORTED_MODULE_0__ActionBar_Components_FilterMarketsMenuComponent_vue___default.a,
+        ImportantMenu: __WEBPACK_IMPORTED_MODULE_1__ActionBar_Components_ImportantMenuComponent_vue___default.a,
+        AlertsMenu: __WEBPACK_IMPORTED_MODULE_2__ActionBar_Components_AlertsMenuComponent_vue___default.a,
+        ConfirmationsMenu: __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default.a,
+        RequestMarketMenu: __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default.a
+    },
+    props: {
+        'markets': {
+            type: Array
+        },
+        'no_cares': {
+            type: Array
+        }
+    },
+    watch: {
+        'markets': {
+            handler: function handler() {
+                this.reloadNotifications();
+            },
+            deep: true
+        },
+        'no_cares': {
+            handler: function handler() {
+                this.reloadNotifications();
+            },
+            deep: true
+        }
+    },
+    data: function data() {
+        return {
+            market_notifications: {
+                important: [],
+                alert: [],
+                confirm: []
+            },
+            modals: {
+                select_market: false
+            },
+            chat_opened: false
+        };
+    },
+
+    methods: {
+        /**
+         * Resets the quantities counters and updates each of the market_notifications
+         *      counters according to the matching market requests
+         */
+        reloadNotifications: function reloadNotifications() {
+            var _this = this;
+
+            this.market_notifications.important = [];
+            this.market_notifications.alert = [];
+            this.market_notifications.confirm = [];
+
+            var important_states = ['REQUEST', 'REQUEST-VOL'];
+
+            //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
+            var alert_states = ['alert'];
+            var confirm_states = ['confirm'];
+
+            this.markets.forEach(function (market) {
+
+                market.market_requests.forEach(function (market_request) {
+
+                    if (market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
+                        {
+                            _this.market_notifications.alert.push(market_request);
+                        } else if (important_states.indexOf(market_request.attributes.state) > -1 && _this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
+                        {
+                            if (!market_request.quotes.find(function (quote) {
+                                return quote.is_maker;
+                            }) && !market_request.is_interest) {
+                                _this.market_notifications.important.push(market_request);
+                            }
+                        }
+
+                    if (confirm_states.indexOf(market_request.attributes.state) > -1) {
+                        _this.market_notifications.confirm.push(market_request);
+                    }
+                });
+            });
+        },
+        toggleBar: function toggleBar(set) {
+            if (typeof set != 'undefined') {
+                this.chat_opened = set == true;
+            } else {
+                this.chat_opened = !this.chat_opened;
+            }
+        },
+
+        /**
+         * Loads the Chat Sidebar
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        loadChatBar: function loadChatBar() {
+            __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+        },
+
+        /**
+         * Listens for a chatToggle event firing
+         *
+         * @event /lib/EventBus#chatToggle
+         */
+        chatBarListener: function chatBarListener() {
+            __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
+        }
+    },
+    mounted: function mounted() {
+        this.reloadNotifications();
+        this.chatBarListener();
+    }
+});
+
+/***/ }),
+/* 449 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(450)
+/* template */
+var __vue_template__ = __webpack_require__(451)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/FilterMarketsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6b6758c2", Component.options)
+  } else {
+    hotAPI.reload("data-v-6b6758c2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 450 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_Market__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarket__ = __webpack_require__(81);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketRequest__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarketNegotiation__ = __webpack_require__(17);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'FilterMarketsMenu',
+    props: {
+        'markets': {
+            type: Array
+        },
+        'popoverRef': {
+            type: String
+        },
+        'closeCallback': {
+            type: Function
+        }
+    },
+    data: function data() {
+        return {
+            availableSelectedMarketTypes: {
+                'INDEX': {
+                    state: false,
+                    marketType: null
+                },
+                'SINGLES': {
+                    state: false,
+                    marketType: null
+                },
+                'DELTA ONE': {
+                    state: false,
+                    marketType: null
+                }
+            },
+            popover_ref: 'add-market-ref'
+        };
+    },
+
+    methods: {
+        /**
+         * This is called just before the popover is shown
+         */
+        onShow: function onShow() {
+            this.checkSelected();
+        },
+
+        /**
+         * Creates a boolean list of availableSelectedMarkets from markets prop
+         */
+        checkSelected: function checkSelected() {
+            var _this = this;
+
+            this.$root.market_types.forEach(function (market_type) {
+                switch (market_type.title) {
+                    case "Index Option":
+                        _this.availableSelectedMarketTypes['INDEX'].marketType = market_type;
+                        break;
+                    case "Delta One(EFPs, Rolls and EFP Switches)":
+                        _this.availableSelectedMarketTypes['DELTA ONE'].marketType = market_type;
+                        break;
+
+                    case "Single Stock Options":
+                        _this.availableSelectedMarketTypes['SINGLES'].marketType = market_type;
+                        break;
+                }
+            });
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                _this.availableSelectedMarketTypes[key].state = false;
+            });
+
+            Object.keys(this.availableSelectedMarketTypes).forEach(function (key) {
+                _this.$root.config("user_preferences.prefered_market_types").forEach(function (prefered_market_type) {
+                    if (_this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
+                        _this.availableSelectedMarketTypes[key].state = true;
+                    }
+                });
+            });
+        },
+
+        /**
+         * Filters the user's Market Type preference 
+         */
+        filterMarketTypes: function filterMarketTypes(market_type, actionCheck) {
+            var _this2 = this;
+
+            if (actionCheck) {
+                this.addUserPreferenceMarketType(market_type).then(function (market_type) {
+                    _this2.addMarket(market_type);
+                });
+            } else {
+                this.removeUserPreferenceMarketType(market_type).then(function () {
+                    _this2.availableSelectedMarketTypes[market_type].marketType.markets.forEach(function (market) {
+                        _this2.removeMarket(market);
+                    });
+                });
+            }
+        },
+
+        /**
+         * Adds a selected Market to Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be added
+         */
+        addMarket: function addMarket(market_type) {
+            var _this3 = this;
+
+            this.$root.loadMarkets(market_type).then(function (markets) {
+                var promises = [];
+                markets.forEach(function (market) {
+                    promises.push(_this3.$root.loadMarketRequests(market));
+                });
+                return Promise.all(promises);
+            });
+            this.checkSelected();
+        },
+
+        /**
+         * Adds a selected Market Type to the users preferences and saves it to the server
+         * 
+         * @param {string} $market_type a string detailing a MarketType.title to be added
+         */
+        addUserPreferenceMarketType: function addUserPreferenceMarketType(market_type) {
+            var _this4 = this;
+
+            return axios.patch(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences")).then(function (response) {
+                if (response.status == 200) {
+                    _this4.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
+                    return _this4.$root.configs["user_preferences"].prefered_market_types[_this4.$root.configs["user_preferences"].prefered_market_types.length - 1];
+                } else {
+                    return null;
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
+        },
+
+        /**
+         * Removes a selected Market from Display Markets
+         * 
+         * @param {string} $market a string detailing a Market.title to be removed
+         */
+        removeMarket: function removeMarket(market) {
+            var index = this.markets.findIndex(function (element) {
+                return element.id == market.id;
+            });
+            if (index !== -1) {
+                this.markets.splice(index, 1);
+            }
+            // make api call to amend user pref for market types
+            this.checkSelected();
+        },
+
+        /**
+         * Removes a selected Market Type from the users preferences and saves it to the server
+         * 
+         * @param {string} $market_type a string detailing a MarketType.title to be removed
+         */
+        removeUserPreferenceMarketType: function removeUserPreferenceMarketType(market_type) {
+            var _this5 = this;
+
+            // write delete end to apply new pref
+            return axios.delete(axios.defaults.baseUrl + '/user-pref/' + this.availableSelectedMarketTypes[market_type].marketType.id).then(function (response) {
+                if (response.status == 200) {
+                    var index = _this5.$root.configs["user_preferences"].prefered_market_types.findIndex(function (element) {
+                        return element.id == response.data.data;
+                    });
+                    if (index !== -1) {
+                        return _this5.$root.configs["user_preferences"].prefered_market_types.splice(index, 1);
+                    }
+                    return null;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
+        },
+
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 451 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "filter-markets-menu",
+      attrs: { dusk: "filter-markets-menu" }
+    },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            triggers: "focus",
+            placement: "bottomleft",
+            target: "action-filter-market-button"
+          },
+          on: { show: _vm.onShow }
+        },
+        [
+          _c("div", { staticClass: "row text-center" }, [
+            _c(
+              "div",
+              { staticClass: "col-12" },
+              _vm._l(_vm.availableSelectedMarketTypes, function(obj, key) {
+                return _c("div", { staticClass: "row mt-1" }, [
+                  _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
+                    _c("h5", { staticClass: "w-100 m-0 popover-over-text" }, [
+                      _vm._v(_vm._s(key))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    obj.state
+                      ? _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: {
+                              id: "",
+                              "data-remove-market": key,
+                              type: "button"
+                            },
+                            on: {
+                              click: function($event) {
+                                _vm.filterMarketTypes(key, false)
+                              }
+                            }
+                          },
+                          [_vm._v("Remove\n                        ")]
+                        )
+                      : _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { "data-add-market": key, type: "button" },
+                            on: {
+                              click: function($event) {
+                                _vm.filterMarketTypes(key, true)
+                              }
+                            }
+                          },
+                          [_vm._v("Add\n                        ")]
+                        )
+                  ])
+                ])
+              })
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12" }, [
+              _c("p", { staticClass: "m-2" }, [
+                _vm._v(
+                  "DCap and Dtop: Only displayed when markets are requested"
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { type: "button" },
+                  on: { click: _vm.onDismiss }
+                },
+                [_vm._v("OK")]
+              )
+            ])
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "btn mm-transparent-button mr-2",
+        attrs: { id: "action-filter-market-button", type: "button" }
+      },
+      [_c("span", { staticClass: "icon icon-add" }), _vm._v(" Markets\n    ")]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6b6758c2", module.exports)
+  }
+}
+
+/***/ }),
+/* 452 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(453)
+/* template */
+var __vue_template__ = __webpack_require__(454)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/ImportantMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-97ac4208", Component.options)
+  } else {
+    hotAPI.reload("data-v-97ac4208", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 453 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ImportantMenu',
+    props: {
+        'notifications': {
+            type: Array
+        },
+        'no_cares': {
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            status: false,
+            popover_ref: 'important-market-ref'
+        };
+    },
+
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.status = false;
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+         * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
+         *
+         * @param {string} $id a string id detailing the UserMarketRequests to be removed
+         *
+         * @todo Change $market to be the Market.id not Market.title
+         */
+        addToNoCares: function addToNoCares(key, id) {
+
+            if (!this.no_cares.includes(id)) {
+                this.no_cares.push(id);
+                this.notifications.splice(key, 1);
+                this.saveNoCares();
+            }
+        },
+
+        /**
+         * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
+         *      closes the popover
+         *
+         * @todo Change market to be the Market.id not Market.title
+         */
+        applyBulkNoCares: function applyBulkNoCares() {
+            if (this.status) {
+
+                for (var i = 0; i < this.notifications.length; i++) {
+                    this.no_cares.push(this.notifications[i].id);
+                };
+                this.notifications.splice(0, this.notifications.length);
+                this.saveNoCares();
+            }
+            // this.onDismiss();
+        },
+        saveNoCares: function saveNoCares() {
+            var parsed = JSON.stringify(this.no_cares);
+            localStorage.setItem('no_cares_market_request', parsed);
+        },
+
+        /**
+         * Loads the Interaction Sidebar with the related UserMarketRequest
+         *
+         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+         *      to the Interaction Sidebar.
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        loadInteractionBar: function loadInteractionBar(market_request) {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 454 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "important-markets-menu",
+      attrs: { dusk: "important-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-important-button mr-2 p-1",
+          attrs: { id: "action-important-button", type: "button" }
+        },
+        [
+          _vm._v("Important "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "important-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "important-popover",
+            triggers: "click blur",
+            placement: "bottom",
+            target: "action-important-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            _vm._l(_vm.notifications, function(market_request, key) {
+              return _c("div", { staticClass: "col-12" }, [
+                _c("div", { staticClass: "row mt-1" }, [
+                  _c("div", { staticClass: "col-6 text-center  pt-2 pb-2" }, [
+                    _c(
+                      "h6",
+                      {
+                        staticClass:
+                          "w-100 m-0 popover-over-text market-request-link",
+                        on: {
+                          click: function($event) {
+                            _vm.loadInteractionBar(market_request)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          " \n                                " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default["Strike"]
+                                : ""
+                            ) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default[
+                                    "Expiration Date"
+                                  ]
+                                : ""
+                            ) +
+                            "\n                            "
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-6" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn mm-generic-trade-button w-100",
+                        class: { selected: _vm.status },
+                        attrs: {
+                          id: "important-nocare-" + market_request.id,
+                          type: "button"
+                        },
+                        on: {
+                          click: function($event) {
+                            _vm.addToNoCares(key, market_request.id)
+                          }
+                        }
+                      },
+                      [_vm._v("No Cares\n                          ")]
+                    )
+                  ])
+                ])
+              ])
+            })
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "row text-center" }, [
+            _c(
+              "div",
+              { staticClass: "col-12 mt-2" },
+              [
+                _c(
+                  "b-form-group",
+                  { staticClass: "bulk-no-cares" },
+                  [
+                    _c(
+                      "b-form-checkbox",
+                      {
+                        attrs: { id: "select-bulk-nocares", value: "true" },
+                        model: {
+                          value: _vm.status,
+                          callback: function($$v) {
+                            _vm.status = $$v
+                          },
+                          expression: "status"
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                        Apply No Cares to All\n                    "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { id: "apply-bulk-nocares-button", type: "button" },
+                  on: { click: _vm.applyBulkNoCares }
+                },
+                [_vm._v("OK")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-6 mt-1" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn mm-generic-trade-button w-100",
+                  attrs: { id: "dismiss-important-popover", type: "button" },
+                  on: {
+                    click: function($event) {
+                      _vm.onDismiss()
+                    }
+                  }
+                },
+                [_vm._v("Cancel")]
+              )
+            ])
+          ])
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-97ac4208", module.exports)
+  }
+}
+
+/***/ }),
+/* 455 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(456)
+/* template */
+var __vue_template__ = __webpack_require__(457)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/AlertsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0edeefd2", Component.options)
+  } else {
+    hotAPI.reload("data-v-0edeefd2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 456 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'AlertsMenu',
+    props: {
+        'notifications': {
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            popover_ref: 'alert-market-ref'
+        };
+    },
+
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+        * Loads the Interaction Sidebar with the related UserMarketRequest
+        *
+        * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+        *      to the Interaction Sidebar.
+        *
+        * @fires /lib/EventBus#toggleSidebar
+        */
+        loadInteractionBar: function loadInteractionBar(market_request) {
+            if (market_request.attributes.action_needed) {
+                market_request.actionTaken();
+            }
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'interaction', true, market_request);
+            this.$refs[this.popover_ref].$emit('close');
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 457 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "alerts-markets-menu",
+      attrs: { dusk: "alerts-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-alert-button mr-2 p-1",
+          attrs: { id: "action-alert-button", type: "button" }
+        },
+        [
+          _vm._v("Alerts "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "alerts-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "alerts-popover",
+            triggers: "focus",
+            placement: "bottom",
+            target: "action-alert-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            [
+              _vm._l(_vm.notifications, function(market_request, key) {
+                return _c("div", { staticClass: "col-12" }, [
+                  _c("div", { staticClass: "row mt-1" }, [
+                    _c("div", { staticClass: "col-6 text-center pt-2 pb-2" }, [
+                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
+                        _vm._v(
+                          "  " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default["Strike"]
+                                : ""
+                            ) +
+                            " " +
+                            _vm._s(
+                              market_request.trade_items.default
+                                ? market_request.trade_items.default[
+                                    "Expiration Date"
+                                  ]
+                                : ""
+                            ) +
+                            "\n                      "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mm-generic-trade-button w-100",
+                          attrs: {
+                            id: "alert-view-" + market_request.id,
+                            type: "button"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.loadInteractionBar(market_request)
+                            }
+                          }
+                        },
+                        [_vm._v("View\n                        ")]
+                      )
+                    ])
+                  ])
+                ])
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 offset-6 mt-3" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: { id: "dismiss-alert-popover", type: "button" },
+                    on: { click: _vm.onDismiss }
+                  },
+                  [_vm._v("OK")]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0edeefd2", module.exports)
+  }
+}
+
+/***/ }),
+/* 458 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(459)
+/* template */
+var __vue_template__ = __webpack_require__(460)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/ConfirmationsMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-351d97c0", Component.options)
+  } else {
+    hotAPI.reload("data-v-351d97c0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 459 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+var place_holder_data_options = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Strike': 'N/A', 'Put/Call': 'N/A', 'Nominal': 'N/A', 'Contracts': 'N/A', 'Expiry': 'N/A', 'Volatility': 'N/A', 'Gross Prem': 'N/A', 'Net Prem': 'N/A' }];
+var place_holder_data_futures = [{ 'Bank ABC': 'N/A', 'Underlying': 'N/A', 'Spot': 'N/A', 'Future': 'N/A', 'Contracts': 'N/A', 'Expriry': 'N/A' }];
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ConfirmationsMenu',
+    props: {
+        'notifications': {
+            type: Array
+        }
+    },
+    data: function data() {
+        return {
+            modals: {
+                show_modal: false,
+                market_request: {
+                    type: __WEBPACK_IMPORTED_MODULE_0__lib_UserMarketRequest__["a" /* default */]
+                },
+                table_data: {
+                    options: place_holder_data_options,
+                    futures: place_holder_data_futures
+                }
+            },
+            popover_ref: 'confirmation-market-ref'
+        };
+    },
+
+    methods: {
+        /**
+         * Closes popover
+         */
+        onDismiss: function onDismiss() {
+            this.$refs[this.popover_ref].$emit('close');
+        },
+
+        /**
+         * Loads the Confirmation Modal with the related UserMarketRequest 
+         *
+         * @param {/lib/UserMarketRequest} $market_request the UserMarketRequest that need to be passed
+         *      to the Interaction Sidebar.
+         */
+        loadModal: function loadModal(market_request) {
+            this.modals.market_request = market_request;
+            this.modals.show_modal = true;
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 460 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "confirmations-markets-menu",
+      attrs: { dusk: "confirmations-markets-menu" }
+    },
+    [
+      _c(
+        "button",
+        {
+          staticClass: "btn mm-confirmation-button mr-2 p-1",
+          attrs: { id: "action-confirmations-button", type: "button" }
+        },
+        [
+          _vm._v("Confirmations "),
+          _c("strong", [_vm._v(_vm._s(_vm.notifications.length))])
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { attrs: { id: "confirmations-popover" } }),
+      _vm._v(" "),
+      _c(
+        "b-popover",
+        {
+          ref: _vm.popover_ref,
+          attrs: {
+            container: "confirmations-popover",
+            triggers: "focus",
+            placement: "bottom",
+            target: "action-confirmations-button"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "row text-center" },
+            [
+              _vm._l(_vm.notifications, function(market_request) {
+                return _c("div", { staticClass: "col-12" }, [
+                  _c("div", { staticClass: "row mt-1" }, [
+                    _c("div", { staticClass: "col-6 text-center" }, [
+                      _c("h6", { staticClass: "w-100 m-0 popover-over-text" }, [
+                        _vm._v(
+                          " " +
+                            _vm._s(market_request.getMarket().title) +
+                            " " +
+                            _vm._s(market_request.attributes.strike) +
+                            " \n                        "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn mm-generic-trade-button w-100",
+                          attrs: {
+                            id: "confirmations-view-" + market_request.id,
+                            type: "button"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.loadModal(market_request)
+                            }
+                          }
+                        },
+                        [_vm._v("View\n                        ")]
+                      )
+                    ])
+                  ])
+                ])
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-6 offset-6 mt-1" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn mm-generic-trade-button w-100",
+                    attrs: {
+                      id: "dismiss-confirmations-popover",
+                      type: "button"
+                    },
+                    on: { click: _vm.onDismiss }
+                  },
+                  [_vm._v("OK")]
+                )
+              ])
+            ],
+            2
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _vm.modals.show_modal
+        ? _c(
+            "b-modal",
+            {
+              staticClass: "confirmations-modal",
+              attrs: { size: "lg" },
+              model: {
+                value: _vm.modals.show_modal,
+                callback: function($$v) {
+                  _vm.$set(_vm.modals, "show_modal", $$v)
+                },
+                expression: "modals.show_modal"
+              }
+            },
+            [
+              _c(
+                "div",
+                { attrs: { slot: "modal-title" }, slot: "modal-title" },
+                [
+                  _vm._v(
+                    "\n            " +
+                      _vm._s(_vm.modals.market_request.attributes.strike) +
+                      "\n        "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-container",
+                { attrs: { fluid: "" } },
+                [
+                  _c("p", [
+                    _vm._v(
+                      "Thank you for your trade! Please check before accepting."
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v("Date: ")]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v("Structure: ")]),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { Display: "inline" } }, [
+                    _c("h3", [_vm._v("Option")])
+                  ]),
+                  _vm._v(" "),
+                  _c("b-table", {
+                    attrs: {
+                      responsive: "",
+                      hover: "",
+                      items: _vm.modals.table_data.options
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticStyle: { Display: "inline" } }, [
+                    _c("h3", [_vm._v("Futures")])
+                  ]),
+                  _vm._v(" "),
+                  _c("b-table", {
+                    attrs: {
+                      responsive: "",
+                      hover: "",
+                      items: _vm.modals.table_data.futures
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "b-row",
+                    [
+                      _c("b-col", { attrs: { md: "5", "offset-md": "7" } }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn mm-generic-trade-button w-100 mb-1",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("I'm Happy, Trade Confirmed")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass:
+                              "btn mm-generic-trade-button w-100 mb-1",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Delta / Refs - Recalculate & Dispute")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn mm-generic-trade-button w-100",
+                            attrs: { type: "button" }
+                          },
+                          [_vm._v("Send")]
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", {
+                staticClass: "w-100",
+                attrs: { slot: "modal-footer" },
+                slot: "modal-footer"
+              })
+            ],
+            1
+          )
+        : _vm._e()
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-351d97c0", module.exports)
+  }
+}
+
+/***/ }),
+/* 461 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(462)
+/* template */
+var __vue_template__ = __webpack_require__(479)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/RequestMarketMenuComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-1fefbb97", Component.options)
+  } else {
+    hotAPI.reload("data-v-1fefbb97", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 462 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__ = __webpack_require__(463);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__ = __webpack_require__(476);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__ = __webpack_require__(353);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue__ = __webpack_require__(354);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue__ = __webpack_require__(356);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(357);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'RequestMarketMenu',
+    components: {
+        StepSelection: __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default.a,
+        IndexController: __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default.a,
+        MarketSelection: __WEBPACK_IMPORTED_MODULE_2__Components_MarketSelectionComponent_vue___default.a,
+        StructureSelection: __WEBPACK_IMPORTED_MODULE_3__Components_StructureSelectionComponent_vue___default.a,
+        ExpirySelection: __WEBPACK_IMPORTED_MODULE_4__Components_ExpirySelectionComponent_vue___default.a,
+        Details: __WEBPACK_IMPORTED_MODULE_5__Components_DetailsComponent_vue___default.a,
+        ConfirmMarketRequest: __WEBPACK_IMPORTED_MODULE_6__Components_ConfirmMarketRequestComponent_vue___default.a
+    },
+    props: {},
+    data: function data() {
+        return {
+            modal_data: {
+                title: ['Select A Market'],
+                step: 0,
+                show_modal: false,
+                modal_ref: 'request-market-ref',
+                selected_controller: null
+            },
+            controllers: {
+                Selections: __WEBPACK_IMPORTED_MODULE_1__Components_StepSelectionComponent_vue___default.a,
+                Index: __WEBPACK_IMPORTED_MODULE_0__Controllers_IndexControllerComponent_vue___default.a
+            }
+        };
+    },
+
+    computed: {
+        modalTitle: function modalTitle() {
+            return this.modal_data.title.join(' > ');
+        }
+    },
+    methods: {
+        /**
+         * Loads the Reqeust a Market Modal 
+         */
+        showModal: function showModal() {
+            this.modal_data.selected_controller = 'Selections';
+            this.modal_data.step = 0;
+            this.modal_data.show_modal = true;
+            console.log("RUNNING: ", this.modal_data.selected_controller, this.modal_data.show_modal, this.modal_data);
+            this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
+        },
+
+        /**
+         * Closes the Reqeust a Market Modal 
+         */
+        hideModal: function hideModal() {
+            this.modal_data.step = 0;
+            this.modal_data.show_modal = false;
+            this.modal_data.title = ['Select A Market'];
+            this.modal_data.selected_controller = null;
+            this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
+        },
+
+        /**
+         * Loads component contoller 
+         */
+        loadController: function loadController(name) {
+            this.nextStep();
+            this.modal_data.selected_controller = name;
+        },
+
+        /**
+         * Returns to previous modal step 
+         */
+        previousStep: function previousStep() {
+            this.modal_data.step--;
+            if (this.modal_data.step == 1) {
+                this.modal_data.title = ['Select A Market'];
+                this.modal_data.selected_controller = 'Selections';
+                this.modal_data.step = 0;
+            } else {
+                this.$refs['currentController'].$emit('modal_step', 'back');
+            }
+        },
+        nextStep: function nextStep() {
+            //receives name of next componenet to load
+            this.modal_data.step++;
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 463 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(464)
+/* template */
+var __vue_template__ = __webpack_require__(475)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/Controllers/IndexControllerComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5e15a78b", Component.options)
+  } else {
+    hotAPI.reload("data-v-5e15a78b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 464 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__ = __webpack_require__(353);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__ = __webpack_require__(354);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__ = __webpack_require__(355);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__ = __webpack_require__(356);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(357);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(80);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'IndexController',
+    props: {
+        'close_modal': {
+            type: Function
+        },
+        'callback': {
+            type: Function
+        },
+        'modal_data': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {
+            index_data: {
+                market_type_title: 'Index Option',
+                market_type: null,
+                index_market_object: {
+
+                    market: null,
+                    trade_structure: '',
+                    trade_structure_groups: [],
+                    expiry_dates: [],
+                    details: null
+
+                },
+                number_of_dates: 1
+            },
+            errors: {
+                message: null,
+                data: {
+                    Market: {
+                        messages: []
+                    },
+                    Structure: {
+                        messages: []
+                    },
+                    Expiry: {
+                        messages: []
+                    },
+                    Details: {
+                        messages: [],
+                        fields: []
+                    },
+                    Confirm: {
+                        messages: []
+                    }
+                }
+            },
+            selected_step_component: null,
+            components: {
+                Market: __WEBPACK_IMPORTED_MODULE_0__Components_MarketSelectionComponent_vue___default.a,
+                Structure: __WEBPACK_IMPORTED_MODULE_1__Components_StructureSelectionComponent_vue___default.a,
+                Expiry: __WEBPACK_IMPORTED_MODULE_2__Components_ExpirySelectionComponent_vue___default.a,
+                Confirm: __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default.a,
+                Details: __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default.a
+            },
+            temp_title: []
+        };
+    },
+
+    methods: {
+        /**
+         * Returns to previous modal step 
+         */
+        previousStep: function previousStep() {
+            this.modal_data.title.pop();
+            this.modal_data.step--;
+        },
+
+        /**
+         * Goes to next modal step 
+         */
+        nextStep: function nextStep() {
+            this.modal_data.step++;
+            console.log("STEP=========================: ", this.modal_data.step);
+        },
+
+        /**
+         * Loads step component 
+         */
+        loadStepComponent: function loadStepComponent(component_data) {
+            if (component_data != 'back') {
+                this.nextStep();
+                this.modal_data.title.push(component_data);
+            } else {
+                if (this.modal_data.title[0] == 'Confirm Market Request') {
+                    this.modal_data.title = this.temp_title;
+                }
+                this.modal_data.title.pop();
+            }
+            switch (this.modal_data.step) {
+                case 2:
+                    this.selected_step_component = 'Market';
+                    break;
+                case 3:
+                    this.selected_step_component = 'Structure';
+                    break;
+                case 4:
+                    this.index_data.number_of_dates = 1;
+                    if (this.index_data.index_market_object.trade_structure == 'Calendar') {
+                        this.index_data.number_of_dates = 2;
+                    }
+                    this.selected_step_component = 'Expiry';
+                    break;
+                case 5:
+                    this.selected_step_component = 'Details';
+                    break;
+                case 6:
+                    this.temp_title = this.modal_data.title;
+                    this.modal_data.title = ['Confirm Market Request'];
+                    this.selected_step_component = 'Confirm';
+                    break;
+                case 7:
+                    this.saveMarketRequest();
+                default:
+            }
+        },
+
+        /**
+         * Loads Index Markets 
+         */
+        loadIndexMarkets: function loadIndexMarkets() {
+            var _this = this;
+
+            if (Array.isArray(this.$root.market_types)) {
+                this.$root.market_types.forEach(function (element) {
+                    if (element.title == _this.index_data.market_type_title) {
+                        _this.index_data.market_type = element;
+                    }
+                });
+            }
+        },
+
+        /**
+         * Saves Market Request
+         */
+        saveMarketRequest: function saveMarketRequest() {
+            var _this2 = this;
+
+            var new_data = this.formatRequestData();
+            axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
+                if (newMarketRequestResponse.status == 200) {
+                    _this2.close_modal();
+                } else {
+                    console.error(err);
+                }
+            }).catch(function (err) {
+                _this2.previousStep();
+                if (err.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    _this2.errors.message = err.response.data.message;
+                    _this2.loadErrorStep(err.response.data.errors);
+                } else if (err.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(err.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', err.message);
+                }
+                console.log(err.config);
+            });
+        },
+        loadErrorStep: function loadErrorStep(errors) {
+            var _this3 = this;
+
+            for (var prop in errors) {
+                if (prop.indexOf('.') != -1) {
+                    var propArr = prop.split('.');
+                    switch (propArr[2]) {
+                        case "market_id":
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Market.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Market.messages.push(element);
+                                }
+                            });
+                            this.setLowestStep(1);
+                            break;
+                        case "is_selected":
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Details.messages.push(element);
+                                }
+                            });
+                            this.setLowestStep(4);
+                            break;
+                        case "fields":
+                            if (propArr[3] == 'Expiration Date') {
+                                errors[prop].forEach(function (element, key) {
+                                    if (_this3.errors.data.Expiry.messages.indexOf(element) == -1) {
+                                        _this3.errors.data.Expiry.messages.push(element);
+                                    }
+                                });
+                                this.setLowestStep(3);
+                            } else {
+                                errors[prop].forEach(function (element, key) {
+                                    if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                        _this3.errors.data.Details.messages.push(element);
+                                    }
+                                });
+                                if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                    this.errors.data.Details.fields.push(prop);
+                                }
+                                this.setLowestStep(4);
+                            }
+                            break;
+                        default:
+                            errors[prop].forEach(function (element, key) {
+                                if (_this3.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                    _this3.errors.data.Confirm.messages.push(element);
+                                }
+                            });
+                    }
+                } else {
+                    if (prop.indexOf('trade_structure_groups') != -1) {
+                        errors[prop].forEach(function (element, key) {
+                            if (_this3.errors.data.Details.messages.indexOf(element) == -1) {
+                                _this3.errors.data.Details.messages.push(element);
+                            }
+                        });
+                        this.setLowestStep(4);
+                    } else {
+                        errors[prop].forEach(function (element, key) {
+                            if (_this3.errors.data.Structure.messages.indexOf(element) == -1) {
+                                _this3.errors.data.Structure.messages.push(element);
+                            }
+                        });
+                        this.setLowestStep(2);
+                    }
+                }
+            }
+            this.loadStepComponent();
+        },
+        setLowestStep: function setLowestStep(new_step) {
+            if (new_step < this.modal_data.step) {
+                this.modal_data.step = new_step;
+            }
+        },
+        formatRequestData: function formatRequestData() {
+            var _this4 = this;
+
+            var formatted_data = {
+                trade_structure: this.index_data.index_market_object.trade_structure,
+                trade_structure_groups: []
+            };
+            this.index_data.index_market_object.details.fields.forEach(function (element, key) {
+                formatted_data.trade_structure_groups.push({
+                    is_selected: element.is_selected,
+                    market_id: _this4.index_data.index_market_object.market.id,
+                    fields: {
+                        "Expiration Date": _this4.castToMoment(formatted_data.trade_structure == 'Calendar' ? _this4.index_data.index_market_object.expiry_dates[key] : _this4.index_data.index_market_object.expiry_dates[0]),
+                        Strike: element.strike,
+                        Quantity: element.quantity
+                    }
+                });
+            });
+            return formatted_data;
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
+        }
+    },
+    mounted: function mounted() {
+        this.modal_data.title = ["Index"];
+        this.loadIndexMarkets();
+        console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
+        this.selected_step_component = 'Market';
+        this.$on('modal_step', this.loadStepComponent);
+    }
+});
+
+/***/ }),
+/* 465 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'MarketSelection',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'data': {
+            type: Object
+        },
+        'errors': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        selectMarket: function selectMarket(market) {
+            this.data.index_market_object.market = market;
+            this.callback(market.title);
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 466 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "step-selections", attrs: { dusk: "market-selection" } },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _c(
+            "b-row",
+            { staticClass: "text-center" },
+            _vm._l(_vm.data.market_type.markets, function(market) {
+              return _vm.data
+                ? _c(
+                    "b-col",
+                    { staticClass: "mt-2", attrs: { cols: "12" } },
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "mm-modal-market-button-alt w-50",
+                          attrs: { id: market.title + "-market-choice" },
+                          on: {
+                            click: function($event) {
+                              _vm.selectMarket(market)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(market.title) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                : _vm._e()
+            })
+          ),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-4" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0337fb9c", module.exports)
+  }
+}
+
+/***/ }),
+/* 467 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'StructureSelection',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'data': {
+            type: Object
+        },
+        'errors': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {
+            trade_structures: null
+        };
+    },
+
+    methods: {
+        selectStructure: function selectStructure(trade_structure) {
+            this.data.index_market_object.trade_structure = trade_structure;
+            console.log("SENDING THIS BACK: ", trade_structure);
+            this.callback(trade_structure);
+        },
+
+        /**
+         * Loads Market Structure
+         */
+        loadStructures: function loadStructures() {
+            var _this = this;
+
+            axios.get(axios.defaults.baseUrl + '/trade/market-type/' + this.data.market_type.id + '/trade-structure').then(function (tradeStructureResponse) {
+                if (tradeStructureResponse.status == 200) {
+                    _this.trade_structures = tradeStructureResponse.data;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.loadStructures();
+    }
+});
+
+/***/ }),
+/* 468 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "step-selections", attrs: { dusk: "structure-selection" } },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _vm.trade_structures
+            ? _c(
+                "b-row",
+                { staticClass: "text-center" },
+                _vm._l(_vm.trade_structures, function(trade_structure) {
+                  return trade_structure.is_selectable
+                    ? _c(
+                        "b-col",
+                        { staticClass: "mt-2", attrs: { cols: "12" } },
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mm-modal-market-button-alt w-50",
+                              attrs: {
+                                id: trade_structure.title + "-structure-choice"
+                              },
+                              on: {
+                                click: function($event) {
+                                  _vm.selectStructure(trade_structure.title)
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                    " +
+                                  _vm._s(trade_structure.title) +
+                                  "\n                "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    : _vm._e()
+                })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-4" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-37ab4d2f", module.exports)
+  }
+}
+
+/***/ }),
+/* 469 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ExpirySelection',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'data': {
+            type: Object
+        },
+        'errors': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {
+            expiry_dates: [],
+            current_page: 1,
+            per_page: 12,
+            total: null,
+            selected_dates: [],
+            duplicate_date: false
+        };
+    },
+
+    methods: {
+        selectExpiryDates: function selectExpiryDates(date) {
+            var _this = this;
+
+            this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
+            if (!this.duplicate_date) {
+                this.selected_dates.push(date);
+            }
+            if (this.selected_dates.length == this.data.number_of_dates) {
+                this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
+                this.data.index_market_object.expiry_dates = this.selected_dates;
+
+                this.callback(this.selected_dates.map(function (current) {
+                    return _this.castToMoment(current);
+                }).join(' / '));
+            }
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'); //return to 
+        },
+        checkPastDate: function checkPastDate(date_string) {
+            return moment(date_string).isBefore();
+        },
+        changePage: function changePage($event) {
+            this.current_page = $event;
+            this.loadExpiryDate();
+        },
+
+        /**
+         * Loads Expiry Dates
+         */
+        loadExpiryDate: function loadExpiryDate() {
+            var _this2 = this;
+
+            axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page=' + this.current_page).then(function (expiryDateResponse) {
+                if (expiryDateResponse.status == 200) {
+                    _this2.current_page = expiryDateResponse.data.current_page;
+                    _this2.per_page = expiryDateResponse.data.per_page;
+                    _this2.total = expiryDateResponse.data.total;
+                    _this2.expiry_dates = expiryDateResponse.data.data;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
+        }
+    },
+    mounted: function mounted() {
+        this.loadExpiryDate();
+    }
+});
+
+/***/ }),
+/* 470 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "step-selections", attrs: { dusk: "expiry-selection" } },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _vm.data.number_of_dates > 1
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c(
+                    "b-col",
+                    { staticClass: "mt-0 text-center", attrs: { cols: "12" } },
+                    [
+                      _c("p", { staticClass: "modal-info-text" }, [
+                        _vm._v("*Select two dates to continue")
+                      ])
+                    ]
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.expiry_dates.length > 0
+            ? _c(
+                "div",
+                { staticClass: "card-columns" },
+                _vm._l(_vm.expiry_dates, function(expiry_date) {
+                  return _c(
+                    "div",
+                    { staticClass: "card card-reset" },
+                    [
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "mm-modal-market-button w-100",
+                          attrs: {
+                            disabled: _vm.checkPastDate(
+                              expiry_date.expiration_date
+                            )
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.selectExpiryDates(expiry_date.expiration_date)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(
+                                _vm.castToMoment(expiry_date.expiration_date)
+                              ) +
+                              "\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.duplicate_date
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                [
+                  _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v("Cannot select duplicate dates.")
+                    ])
+                  ])
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.expiry_dates.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
+                [
+                  _c(
+                    "b-col",
+                    { staticClass: "mt-5", attrs: { cols: "12" } },
+                    [
+                      _c("b-pagination", {
+                        attrs: {
+                          align: "center",
+                          "total-rows": _vm.total,
+                          "hide-ellipsis": true,
+                          "per-page": _vm.per_page
+                        },
+                        on: {
+                          change: function($event) {
+                            _vm.changePage($event)
+                          }
+                        },
+                        model: {
+                          value: _vm.current_page,
+                          callback: function($$v) {
+                            _vm.current_page = $$v
+                          },
+                          expression: "current_page"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5dc5702e", module.exports)
+  }
+}
+
+/***/ }),
+/* 471 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'Details',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'data': {
+            type: Object
+        },
+        'errors': {
+            type: Object
+        }
+    },
+    watch: {
+        'chosen_option': function chosen_option(chosen_index) {
+            this.form_data.fields.forEach(function (element, index) {
+                element.is_selected = chosen_index == index ? true : false;
+            });
+        }
+    },
+    data: function data() {
+        return {
+            display: {
+                show_expiry: false,
+                disable_choice: false
+            },
+            chosen_option: null,
+            form_data: {
+                fields: []
+            }
+        };
+    },
+
+    methods: {
+        submitDetails: function submitDetails(evt) {
+            var _this = this;
+
+            evt.preventDefault();
+            Vue.nextTick(function () {
+                _this.data.index_market_object.details = _this.form_data;
+                _this.callback(_this.form_data);
+            });
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
+        },
+        inputState: function inputState(index, type) {
+            return this.errors.fields.indexOf('trade_structure_groups.' + index + '.fields.' + type) == -1 ? null : false;
+        }
+    },
+    mounted: function mounted() {
+
+        this.form_data.fields.push({ is_selected: true, strike: null, quantity: 500 });
+
+        switch (this.data.index_market_object.trade_structure) {
+            case 'Outright':
+                this.display.disable_choice = true, this.chosen_option = null;
+                break;
+            case 'Risky':
+                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
+                this.chosen_option = 0;
+                break;
+            case 'Fly':
+                this.display.disable_choice = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
+                this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
+                this.form_data.fields[2].is_selected = true;
+                break;
+            case 'Calendar':
+                this.display.show_expiry = true, this.form_data.fields.push({ is_selected: false, strike: null, quantity: 500 });
+                this.chosen_option = 0;
+                break;
+            default:
+
+        }
+    }
+});
+
+/***/ }),
+/* 472 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "step-selections", attrs: { dusk: "detail" } },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _c(
+            "b-row",
+            { staticClass: "justify-content-md-center" },
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "12" } },
+                [
+                  _c(
+                    "b-form",
+                    {
+                      attrs: { id: "index-details-form" },
+                      on: { submit: _vm.submitDetails }
+                    },
+                    [
+                      _vm.display.show_expiry
+                        ? _c(
+                            "b-row",
+                            { attrs: { "align-h": "center" } },
+                            _vm._l(
+                              _vm.data.index_market_object.expiry_dates,
+                              function(date, key) {
+                                return _c(
+                                  "b-col",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: {
+                                      cols: "3",
+                                      offset: key == 0 ? 3 : 0
+                                    }
+                                  },
+                                  [
+                                    _c("p", [
+                                      _c("strong", [
+                                        _vm._v(_vm._s(_vm.castToMoment(date)))
+                                      ])
+                                    ])
+                                  ]
+                                )
+                              }
+                            )
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.form_data.fields.length > 1
+                        ? _c(
+                            "b-row",
+                            { attrs: { "align-h": "center" } },
+                            [
+                              _vm.display.disable_choice
+                                ? _c(
+                                    "b-col",
+                                    { attrs: { cols: "12 mb-2" } },
+                                    [
+                                      _c(
+                                        "b-row",
+                                        [
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: { cols: "3", offset: "3" }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "b-col",
+                                            {
+                                              staticClass: "text-center",
+                                              attrs: {
+                                                cols: "3",
+                                                offset:
+                                                  _vm.form_data.fields.length ==
+                                                  3
+                                                    ? 3
+                                                    : 0
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "b-badge",
+                                                {
+                                                  attrs: {
+                                                    variant:
+                                                      "info details-choice-badge"
+                                                  }
+                                                },
+                                                [_vm._v("CHOICE")]
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                : _c(
+                                    "b-col",
+                                    { attrs: { cols: "12" } },
+                                    [
+                                      _c(
+                                        "b-form-radio-group",
+                                        {
+                                          staticClass: "mb-2",
+                                          attrs: {
+                                            id: "risky-choices",
+                                            name: "choice"
+                                          },
+                                          model: {
+                                            value: _vm.chosen_option,
+                                            callback: function($$v) {
+                                              _vm.chosen_option = $$v
+                                            },
+                                            expression: "chosen_option"
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "b-row",
+                                            { attrs: { "align-h": "center" } },
+                                            [
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset: "3"
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-0",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "0"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "b-col",
+                                                {
+                                                  staticClass: "text-center",
+                                                  attrs: {
+                                                    cols: "3",
+                                                    offset:
+                                                      _vm.form_data.fields
+                                                        .length == 3
+                                                        ? 3
+                                                        : 0
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "b-form-radio",
+                                                    {
+                                                      attrs: {
+                                                        id: "choice-1",
+                                                        disabled:
+                                                          _vm.display
+                                                            .disable_choice,
+                                                        value: "1"
+                                                      }
+                                                    },
+                                                    [_vm._v("CHOICE")]
+                                                  )
+                                                ],
+                                                1
+                                              )
+                                            ],
+                                            1
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                            ],
+                            1
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "b-row",
+                        { attrs: { "align-h": "center" } },
+                        [
+                          _c("b-col", { attrs: { cols: "3" } }, [
+                            _c("label", { attrs: { for: "strike-0" } }, [
+                              _vm._v("Strike")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.form_data.fields, function(field, index) {
+                            return _c(
+                              "b-col",
+                              { attrs: { cols: "3" } },
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id: "strike-" + index,
+                                    type: "number",
+                                    min: "0",
+                                    state: _vm.inputState(index, "Strike"),
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: field.strike,
+                                    callback: function($$v) {
+                                      _vm.$set(field, "strike", $$v)
+                                    },
+                                    expression: "field.strike"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          })
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "b-row",
+                        { attrs: { "align-h": "center" } },
+                        [
+                          _c("b-col", { attrs: { cols: "3" } }, [
+                            _c("label", { attrs: { for: "quantity-0" } }, [
+                              _vm._v("Quantity "),
+                              _vm.form_data.fields.length > 1
+                                ? _c("span", [_vm._v(" (Ratio)")])
+                                : _vm._e()
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _vm._l(_vm.form_data.fields, function(field, index) {
+                            return _c(
+                              "b-col",
+                              { attrs: { cols: "3" } },
+                              [
+                                _c("b-form-input", {
+                                  attrs: {
+                                    id: "quantity-" + index,
+                                    type: "number",
+                                    min: "0",
+                                    placeholder: "500",
+                                    state: _vm.inputState(index, "Quantity"),
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: field.quantity,
+                                    callback: function($$v) {
+                                      _vm.$set(field, "quantity", $$v)
+                                    },
+                                    expression: "field.quantity"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                field.quantity < 500
+                                  ? _c(
+                                      "p",
+                                      {
+                                        staticClass:
+                                          "modal-warning-text text-danger text-center"
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                    *Warning: The recommended minimum quantity is 500.\n                                "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ],
+                              1
+                            )
+                          })
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _vm.form_data.fields.length > 1
+                        ? _c(
+                            "b-row",
+                            [
+                              _c("b-col", { staticClass: "text-center mt-3" }, [
+                                _c("p", { staticClass: "modal-info-text" }, [
+                                  _vm._v(
+                                    "\n                                    All trades will maintain the above ratio.\n                                "
+                                  )
+                                ])
+                              ])
+                            ],
+                            1
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.errors.messages.length > 0
+                        ? _c(
+                            "b-row",
+                            { staticClass: "text-center mt-4" },
+                            _vm._l(_vm.errors.messages, function(error) {
+                              return _c("b-col", { attrs: { cols: "12" } }, [
+                                _c("p", { staticClass: "text-danger mb-0" }, [
+                                  _vm._v(_vm._s(error))
+                                ])
+                              ])
+                            })
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "b-form-group",
+                        { staticClass: "text-center mt-4 mb-0" },
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "mm-modal-market-button-alt w-50",
+                              attrs: {
+                                id: "submit-index-details",
+                                type: "submit"
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n\t                            Submit\n\t                        "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f3802a40", module.exports)
+  }
+}
+
+/***/ }),
+/* 473 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'ConfirmMarketRequest',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'data': {
+            type: Object
+        },
+        'errors': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        confirmDetails: function confirmDetails() {
+            this.callback();
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 474 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "step-selections",
+      attrs: { dusk: "confirm-market-request" }
+    },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _c(
+            "b-row",
+            { attrs: { "align-h": "start" } },
+            [
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [
+                  _vm._v(_vm._s(_vm.data.market_type.title.toUpperCase()) + ":")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [
+                  _vm._v(_vm._s(_vm.data.index_market_object.market.title))
+                ])
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { attrs: { "align-h": "start" } },
+            [
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [_vm._v("EXPIRY:")])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.data.index_market_object.expiry_dates, function(
+                expiry_date
+              ) {
+                return _c(
+                  "b-col",
+                  { staticClass: "mt-2", attrs: { cols: "3" } },
+                  [_c("p", [_vm._v(_vm._s(_vm.castToMoment(expiry_date)))])]
+                )
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { attrs: { "align-h": "start" } },
+            [
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [_vm._v("STRIKE:")])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.data.index_market_object.details.fields, function(
+                field
+              ) {
+                return _c(
+                  "b-col",
+                  { staticClass: "mt-2", attrs: { cols: "3" } },
+                  [
+                    _c("p", [
+                      _vm._v(_vm._s(field.strike)),
+                      field.is_selected &&
+                      _vm.data.index_market_object.details.fields.length > 1
+                        ? _c("span", [_vm._v(" (CH)")])
+                        : _vm._e()
+                    ])
+                  ]
+                )
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { attrs: { "align-h": "start" } },
+            [
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [_vm._v("QUANTITY:")])
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.data.index_market_object.details.fields, function(
+                field
+              ) {
+                return _c(
+                  "b-col",
+                  { staticClass: "mt-2", attrs: { cols: "3" } },
+                  [_c("p", [_vm._v(_vm._s(field.quantity))])]
+                )
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { attrs: { "align-h": "start" } },
+            [
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [_vm._v("STRUCTURE:")])
+              ]),
+              _vm._v(" "),
+              _c("b-col", { staticClass: "mt-2", attrs: { cols: "3" } }, [
+                _c("p", [
+                  _vm._v(_vm._s(_vm.data.index_market_object.trade_structure))
+                ])
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.errors.messages.length > 0
+            ? _c(
+                "b-row",
+                { staticClass: "text-center mt-3" },
+                _vm._l(_vm.errors.messages, function(error) {
+                  return _c("b-col", { attrs: { cols: "12" } }, [
+                    _c("p", { staticClass: "text-danger mb-0" }, [
+                      _vm._v(_vm._s(error))
+                    ])
+                  ])
+                })
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { attrs: { "align-h": "center" } },
+            [
+              _c(
+                "b-col",
+                { staticClass: "mt-2", attrs: { cols: "6" } },
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "confirm-request-market" },
+                      on: {
+                        click: function($event) {
+                          _vm.confirmDetails()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                    Send Request\n                "
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-020b6796", module.exports)
+  }
+}
+
+/***/ }),
+/* 475 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "index-controller", attrs: { dusk: "index-controller" } },
+    [
+      _vm.errors.message != null
+        ? _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { attrs: { cols: "12" } },
+                [
+                  _c(
+                    "b-alert",
+                    {
+                      attrs: {
+                        show: "",
+                        dismissible: "",
+                        fade: "",
+                        variant: "danger"
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.errors.message))]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c(_vm.components[_vm.selected_step_component], {
+        tag: "component",
+        attrs: {
+          errors: _vm.errors.data[_vm.selected_step_component],
+          data: _vm.index_data,
+          callback: _vm.loadStepComponent
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5e15a78b", module.exports)
+  }
+}
+
+/***/ }),
+/* 476 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(477)
+/* template */
+var __vue_template__ = __webpack_require__(478)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ActionBar/Components/RequestMarket/Components/StepSelectionComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-67137ffc", Component.options)
+  } else {
+    hotAPI.reload("data-v-67137ffc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 477 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'StepSelection',
+    props: {
+        'callback': {
+            type: Function
+        },
+        'modal_data': {
+            type: Object
+        }
+    },
+    data: function data() {
+        return {};
+    },
+
+    methods: {
+        nextStep: function nextStep(step) {
+            this.modal_data.step++;
+            console.log("Current Step===================: ", this.modal_data.step);
+            this.callback(step);
+        }
+    },
+    mounted: function mounted() {}
+});
+
+/***/ }),
+/* 478 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "step-selections", attrs: { dusk: "step-selection" } },
+    [
+      _c(
+        "b-container",
+        { attrs: { fluid: "" } },
+        [
+          _c(
+            "b-row",
+            { staticClass: "mt-2" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "index-step-choice" },
+                      on: {
+                        click: function($event) {
+                          _vm.nextStep("Index")
+                        }
+                      }
+                    },
+                    [_vm._v("Index Options")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "efp-step-choice" }
+                    },
+                    [_vm._v("EFP")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { staticClass: "mt-2" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "single-stock-step-choice" }
+                    },
+                    [_vm._v("Single Stock Options")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "rolls-step-choice" }
+                    },
+                    [_vm._v("Rolls")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            { staticClass: "mt-2" },
+            [
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "options-switch-step-choice" }
+                    },
+                    [_vm._v("Options Switch")]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "b-col",
+                [
+                  _c(
+                    "b-button",
+                    {
+                      staticClass: "mm-modal-market-button-alt w-100",
+                      attrs: { id: "efp-switch-step-choice" }
+                    },
+                    [_vm._v("EFP Switch")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-67137ffc", module.exports)
+  }
+}
+
+/***/ }),
+/* 479 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "request-market-menu",
+      attrs: { dusk: "request-market-menu" }
+    },
+    [
+      _c(
+        "b-button",
+        {
+          staticClass: "btn mm-request-button mr-2 p-1",
+          attrs: { disabled: !_vm.$root.market_types.length > 0 },
+          on: {
+            click: function($event) {
+              _vm.showModal()
+            }
+          }
+        },
+        [_vm._v("Request a Market")]
+      ),
+      _vm._v(" "),
+      _c(
+        "b-modal",
+        {
+          ref: _vm.modal_data.modal_ref,
+          staticClass: "mm-modal mx-auto",
+          attrs: { size: "lg" },
+          model: {
+            value: _vm.modal_data.show_modal,
+            callback: function($$v) {
+              _vm.$set(_vm.modal_data, "show_modal", $$v)
+            },
+            expression: "modal_data.show_modal"
+          }
+        },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "mm-modal-title",
+              attrs: { slot: "modal-title" },
+              slot: "modal-title"
+            },
+            [_vm._v("\n            " + _vm._s(_vm.modalTitle) + "\n        ")]
+          ),
+          _vm._v(" "),
+          _c(_vm.controllers[_vm.modal_data.selected_controller], {
+            ref: "currentController",
+            tag: "component",
+            attrs: {
+              close_modal: _vm.hideModal,
+              callback: _vm.loadController,
+              modal_data: _vm.modal_data
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "w-100",
+              attrs: { slot: "modal-footer" },
+              slot: "modal-footer"
+            },
+            [
+              _c(
+                "b-row",
+                { attrs: { "align-v": "center" } },
+                [
+                  _c(
+                    "b-col",
+                    { attrs: { cols: "12" } },
+                    [
+                      _vm.modal_data.step > 0
+                        ? _c(
+                            "b-button",
+                            {
+                              staticClass: "mm-modal-button mr-2 w-25",
+                              on: {
+                                click: function($event) {
+                                  _vm.previousStep()
+                                }
+                              }
+                            },
+                            [_vm._v("Back")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "b-button",
+                        {
+                          staticClass: "mm-modal-button ml-2 w-25",
+                          on: {
+                            click: function($event) {
+                              _vm.hideModal()
+                            }
+                          }
+                        },
+                        [_vm._v("Cancel")]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-1fefbb97", module.exports)
+  }
+}
+
+/***/ }),
+/* 480 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "action-bar", attrs: { dusk: "action-bar" } },
+    [
+      _c("div", { staticClass: "row mt-2 menu-actions" }, [
+        _c(
+          "div",
+          { staticClass: "col-9" },
+          [
+            _c("request-market-menu"),
+            _vm._v(" "),
+            _c("important-menu", {
+              attrs: {
+                notifications: _vm.market_notifications.important,
+                markets: _vm.markets,
+                no_cares: _vm.no_cares
+              }
+            }),
+            _vm._v(" "),
+            _vm.market_notifications.alert.length > 0
+              ? _c("alerts-menu", {
+                  attrs: {
+                    notifications: _vm.market_notifications.alert,
+                    markets: _vm.markets
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.market_notifications.confirm.length > 0
+              ? _c("confirmations-menu", {
+                  attrs: {
+                    notifications: _vm.market_notifications.confirm,
+                    markets: _vm.markets
+                  }
+                })
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-3" }, [
+          _c(
+            "div",
+            { staticClass: "float-right" },
+            [
+              _c("filter-markets-menu", { attrs: { markets: _vm.markets } }),
+              _vm._v(" "),
+              !_vm.chat_opened
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn mm-transparent-button mr-2",
+                      attrs: { id: "action-bar-open-chat", type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.loadChatBar()
+                        }
+                      }
+                    },
+                    [
+                      _c("span", { staticClass: "icon icon-chat" }),
+                      _vm._v(" Chat\n                ")
+                    ]
+                  )
+                : _vm._e()
+            ],
+            1
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-79b015f7", module.exports)
+  }
+}
+
+/***/ }),
+/* 481 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(482)
+/* template */
+var __vue_template__ = __webpack_require__(483)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/ChatBarComponent.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0fc412d9", Component.options)
+  } else {
+    hotAPI.reload("data-v-0fc412d9", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 482 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            opened: false,
+            new_message: "",
+            quick_message: "",
+            display_messages: []
+        };
+    },
+
+    methods: {
+        sendMessage: function sendMessage(evt) {
+            var _this = this;
+
+            evt.preventDefault();
+            if (this.new_message || this.quick_message) {
+                var sendMessage = this.new_message ? { new_message: this.new_message } : { quick_message: this.quick_message };
+                axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage).then(function (response) {
+                    var chat_history = _this.$refs.chat_history;
+                    // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
+                    var should_scroll = false;
+                    if (chat_history.scrollTop === chat_history.scrollHeight - chat_history.offsetHeight) {
+                        should_scroll = true;
+                    }
+                    _this.new_message = "";
+                    _this.quick_message = "";
+                    _this.display_messages.push(response.data.data);
+                    _this.display_messages[_this.display_messages.length - 1].status = "sent";
+
+                    Vue.nextTick(function () {
+                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                    });
+                }).catch(function (err) {
+                    reject(new Errors(err.response.data));
+                });
+            } else {
+                this.new_message = "";
+                this.quick_message = "";
+                console.log("I AM EMPTY!");
+                // TODO handle empty message field
+            }
+        },
+        toggleBar: function toggleBar(set) {
+            if (typeof set != 'undefined') {
+                this.opened = set == true;
+            } else {
+                this.opened = !this.opened;
+            }
+        },
+
+        /**
+         * Fires the Chat Bar toggle event
+         *
+         * @fires /lib/EventBus#toggleSidebar
+         */
+        fireChatBar: function fireChatBar() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('toggleSidebar', 'chat');
+        },
+
+        /**
+         * Listens for a chatToggle event firing
+         *
+         * @event /lib/EventBus#chatToggle
+         */
+        chatBarListener: function chatBarListener() {
+            __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('chatToggle', this.toggleBar);
+        },
+
+        /**
+         * Listens for a chatMessageReceived event firing
+         *
+         * @event /$root#chatMessageReceived
+         */
+        newChatMessageListener: function newChatMessageListener() {
+            this.$root.$on('chatMessageReceived', this.addNewMessage);
+        },
+        castToMoment: function castToMoment(date_string) {
+            return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
+        },
+        loadChatHistory: function loadChatHistory() {
+            var _this2 = this;
+
+            axios.get(axios.defaults.baseUrl + '/trade/organisation-chat').then(function (chatHistoryResponse) {
+                if (chatHistoryResponse.status == 200) {
+                    _this2.display_messages = chatHistoryResponse.data.data;
+                    Vue.nextTick(function () {
+                        _this2.$refs.chat_history.scrollTop = _this2.$refs.chat_history.scrollHeight;
+                    });
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            }).then(function () {});
+        },
+        addNewMessage: function addNewMessage(message) {
+            var message_index = void 0;
+            if (this.display_messages.length > 0) {
+                message_index = this.display_messages.findIndex(function (listed_message) {
+                    return listed_message.user_name == message.user_name && listed_message.message == message.message && listed_message.time_stamp == message.time_stamp;
+                });
+            }
+
+            if (message_index == -1) {
+                this.display_messages.push(message);
+                if (this.display_messages[this.display_messages.length - 1].user_name == this.$root.config('user_preferences.user_name')) {
+                    this.display_messages[this.display_messages.length - 1].status = "received";
+                }
+            } else {
+                this.display_messages[message_index].status = 'received';
+            }
+        },
+        messageUserName: function messageUserName(username) {
+            return username == this.$root.config('user_preferences.user_name') ? "You" : username;
+        }
+    },
+    mounted: function mounted() {
+        this.chatBarListener();
+        this.newChatMessageListener();
+        this.loadChatHistory();
+    }
+});
 
 /***/ }),
 /* 483 */
