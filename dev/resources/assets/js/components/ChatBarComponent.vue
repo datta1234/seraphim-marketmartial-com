@@ -170,7 +170,20 @@
                 });
             },
             addNewMessage(message) {
-                this.display_messages.push(message);
+                let message_found;
+                if (this.display_messages.length > 0) {
+                    message_found = this.display_messages.find( (listed_message) => {
+                        return listed_message.user_name == message.user_name
+                            && listed_message.message == message.message 
+                            && listed_message.time_stamp == message.time_stamp;
+                    });
+                }
+
+                if(typeof message_found == 'undefined') {
+                    this.display_messages.push(message);
+                } else {
+                    // @TODO add message state change logic for icon sent to icon received 
+                }
             },
             messageUserName(username) {
                 return username == this.$root.config('user_preferences.user_name')? "You": username;
