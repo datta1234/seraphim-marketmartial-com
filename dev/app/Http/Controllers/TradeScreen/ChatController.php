@@ -22,7 +22,7 @@ class ChatController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $message_history = $user->organisation->channelMessageHistory($user->organisation);
+        $message_history = $user->organisation->channelMessageHistory($user);
 
         if( $message_history === false ) {
             return ['success'=>false,'data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'];
@@ -54,7 +54,8 @@ class ChatController extends Controller
                     'data' => [
                         "user_name" => $response->message->username, 
                         "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 
-                        "time_stamp" => $response->message->ts 
+                        "time_stamp" => $response->message->ts,
+                        "status" => null
                     ],
                     'message' => 'Message sent.'
                 ];       

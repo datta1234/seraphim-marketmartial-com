@@ -90,7 +90,7 @@ trait OrganisationSlackChat {
         return json_decode($response->getBody());
     }
 
-    public function channelMessageHistory($organisation)
+    public function channelMessageHistory($user)
     {
         $header = [
             "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
@@ -101,7 +101,7 @@ trait OrganisationSlackChat {
 
         try {
             $client = new Client();
-            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$organisation->slack_channel->value, [
+            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$user->organisation->slack_channel->value, [
                     'headers' => $header,
             ])->getBody());
 
@@ -122,13 +122,15 @@ trait OrganisationSlackChat {
                     $formatted_messages[] = (object) array(
                         "user_name" => $message->username,
                         "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $message->text),
-                        "time_stamp" => $message->ts
+                        "time_stamp" => $message->ts,
+                        "status" => ($user->full_name == $message->username ? 'received' : null) 
                     );
                 } elseif(property_exists($message,'user') && $message->user === env('SLACK_ADMIN_ID') && !property_exists($message,'subtype')) {
                     $formatted_messages[] = (object) array(
                         "user_name" => "Market Martial",
                         "message" => $message->text,
-                        "time_stamp" => $message->ts
+                        "time_stamp" => $message->ts,
+                        "status" => null
                     );
                 }
             }
@@ -143,7 +145,8 @@ trait OrganisationSlackChat {
                 $formatted_message_bot = array(
                     "user_name" => $eventData["username"],
                     "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $eventData["text"]),
-                    "time_stamp" => $eventData["ts"]
+                    "time_stamp" => $eventData["ts"],
+                    "status" => null
                 );
                 
                 event(new ChatMessageReceived($organisation,$formatted_message_bot));
@@ -151,7 +154,8 @@ trait OrganisationSlackChat {
                 $formatted_message_admin = array(
                     "user_name" => "Market Martial",
                     "message" => $eventData["text"],
-                    "time_stamp" => $eventData["ts"]
+                    "time_stamp" => $eventData["ts"],
+                    "status" => null
                 );
                 
                 event(new ChatMessageReceived($organisation,$formatted_message_admin));

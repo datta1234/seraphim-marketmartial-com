@@ -11,7 +11,6 @@
                     <h3 class="pr-3">Messages</h3>
                     <h3 id="chat-bar-dismiss" class="float-right close" @click="fireChatBar()">x</h3>
                 </div>
-
                 <div class="chat-inner-wrapper pr-2">
                     <b-card ref="chat_history" class="chat-history">
                         <b-row  v-for="(message, index) in display_messages" 
@@ -32,7 +31,12 @@
                                     </b-col>
                                     <b-col cols="12" class="chat-time mt-0">
                                         <h6 v-bind:class="{'float-right': message.user_name != $root.config('user_preferences.user_name'), 
-                                        }">{{ castToMoment(message.time_stamp) }}</h6>
+                                        }">
+                                            {{ castToMoment(message.time_stamp) }}
+                                            <font-awesome-icon class="float-right" v-if="message.status == 'sent'" icon="check"></font-awesome-icon>
+                                            <font-awesome-icon class="float-right" v-if="message.status == 'received'" icon="check-double"></font-awesome-icon>
+                                        </h6>
+                                            
                                     </b-col>
                                 </b-row>
                             </b-col>    
@@ -88,11 +92,6 @@
                     let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
                     .then(response => {
-                        // TODO add message to list with sending icon
-                        // NOTE when we get response from pusher we will check against message and change icon to sent(check) icon
-                        // response.data.data.message
-                        // response.data.data.time_stamp
-                        // response.data.data.user_name
                         let chat_history = this.$refs.chat_history;
                         // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
                         let should_scroll = false;
@@ -102,6 +101,7 @@
                         this.new_message = "";
                         this.quick_message = "";
                         this.display_messages.push(response.data.data);
+                        this.display_messages[this.display_messages.length -1].status = "sent";
                         
                         Vue.nextTick( () => {
                             chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
@@ -114,7 +114,7 @@
                     this.new_message = "";
                     this.quick_message = "";
                     console.log("I AM EMPTY!");
-                    // handle empty message field
+                    // TODO handle empty message field
                 }
 
             },
@@ -170,19 +170,22 @@
                 });
             },
             addNewMessage(message) {
-                let message_found;
+                let message_index;
                 if (this.display_messages.length > 0) {
-                    message_found = this.display_messages.find( (listed_message) => {
+                    message_index = this.display_messages.findIndex( (listed_message) => {
                         return listed_message.user_name == message.user_name
                             && listed_message.message == message.message 
                             && listed_message.time_stamp == message.time_stamp;
                     });
                 }
 
-                if(typeof message_found == 'undefined') {
+                if(message_index == -1) {
                     this.display_messages.push(message);
+                    if( this.display_messages[this.display_messages.length -1].user_name == this.$root.config('user_preferences.user_name') ) {
+                        this.display_messages[this.display_messages.length -1].status = "received";
+                    }
                 } else {
-                    // @TODO add message state change logic for icon sent to icon received 
+                    this.display_messages[message_index].status = 'received';
                 }
             },
             messageUserName(username) {
