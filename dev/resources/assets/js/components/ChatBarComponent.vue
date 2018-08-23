@@ -82,7 +82,7 @@
                 opened: false,
                 new_message: "",
                 quick_message: "",
-                display_messages: []
+                display_messages: [],
             };
         },
         methods: {
@@ -124,6 +124,7 @@
                 } else {
                     this.opened = !this.opened;
                 }
+                this.$root.message_count = this.opened ? 0 : this.$root.message_count;
             },
             /**
              * Fires the Chat Bar toggle event
@@ -181,6 +182,7 @@
 
                 if(message_index == -1) {
                     this.display_messages.push(message);
+                    this.$root.message_count = this.opened ? 0 : this.$root.message_count + 1;
                     if( this.display_messages[this.display_messages.length -1].user_name == this.$root.config('user_preferences.user_name') ) {
                         this.display_messages[this.display_messages.length -1].status = "received";
                     }

@@ -307,6 +307,7 @@ const app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        message_count: 0,
         // internal properties
         configs: {}
     },

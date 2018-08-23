@@ -89018,6 +89018,7 @@ var app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        message_count: 0,
         // internal properties
         configs: {}
     },
@@ -104949,6 +104950,12 @@ var render = function() {
                       }
                     },
                     [
+                      _vm.$root.message_count > 0
+                        ? _c("strong", [
+                            _vm._v(_vm._s(_vm.$root.message_count))
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
                       _c("span", { staticClass: "icon icon-chat" }),
                       _vm._v(" Chat\n                ")
                     ]
@@ -105152,6 +105159,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.opened = !this.opened;
             }
+            this.$root.message_count = this.opened ? 0 : this.$root.message_count;
         },
 
         /**
@@ -105209,6 +105217,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (message_index == -1) {
                 this.display_messages.push(message);
+                this.$root.message_count = this.opened ? 0 : this.$root.message_count + 1;
                 if (this.display_messages[this.display_messages.length - 1].user_name == this.$root.config('user_preferences.user_name')) {
                     this.display_messages[this.display_messages.length - 1].status = "received";
                 }
