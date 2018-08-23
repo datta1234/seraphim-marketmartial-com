@@ -104951,7 +104951,7 @@ var render = function() {
                     },
                     [
                       _vm.$root.message_count > 0
-                        ? _c("strong", [
+                        ? _c("strong", { staticClass: "mm-alert-text" }, [
                             _vm._v(_vm._s(_vm.$root.message_count))
                           ])
                         : _vm._e(),

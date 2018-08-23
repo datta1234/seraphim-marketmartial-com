@@ -11282,6 +11282,10 @@ a.mm-login-button {
           box-shadow: none;
 }
 
+.mm-alert-text {
+  color: #BB1D1D;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");

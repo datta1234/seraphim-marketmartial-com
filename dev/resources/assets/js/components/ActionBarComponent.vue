@@ -11,7 +11,7 @@
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
                     <button id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened">
-                        <strong>{{ $root.message_count }}</strong> <span class="icon icon-chat"></span> Chat
+                        <strong class="mm-alert-text" v-if="$root.message_count > 0">{{ $root.message_count }}</strong> <span class="icon icon-chat"></span> Chat
                     </button>
                 </div>
             </div>
