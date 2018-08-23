@@ -89063,7 +89063,6 @@ var app = new Vue({
                 console.log("this is what pusher just gave you", UserMarketRequest);
                 _this2.updateUserMarketRequest(UserMarketRequest);
             }).listen('ChatMessageReceived', function (received_org_message) {
-                console.log("Pusher got a new message ", received_org_message);
                 _this2.$emit('chatMessageReceived', received_org_message);
             });
         }
@@ -100871,6 +100870,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 //component imports
 
@@ -104951,9 +104951,14 @@ var render = function() {
                     },
                     [
                       _vm.$root.message_count > 0
-                        ? _c("strong", { staticClass: "mm-alert-text" }, [
-                            _vm._v(_vm._s(_vm.$root.message_count))
-                          ])
+                        ? _c(
+                            "span",
+                            {
+                              staticClass:
+                                "badge badge-danger message-alert-count"
+                            },
+                            [_vm._v(_vm._s(_vm.$root.message_count))]
+                          )
                         : _vm._e(),
                       _vm._v(" "),
                       _c("span", { staticClass: "icon icon-chat" }),
@@ -105130,18 +105135,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var sendMessage = this.new_message ? { new_message: this.new_message } : { quick_message: this.quick_message };
                 axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage).then(function (response) {
                     var chat_history = _this.$refs.chat_history;
-                    // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
-                    var should_scroll = false;
-                    if (chat_history.scrollTop === chat_history.scrollHeight - chat_history.offsetHeight) {
-                        should_scroll = true;
-                    }
                     _this.new_message = "";
                     _this.quick_message = "";
                     _this.display_messages.push(response.data.data);
                     _this.display_messages[_this.display_messages.length - 1].status = "sent";
 
                     Vue.nextTick(function () {
-                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                        chat_history.scrollTop = chat_history.scrollHeight;
                     });
                 }).catch(function (err) {
                     reject(new Errors(err.response.data));
@@ -105159,6 +105159,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.opened = !this.opened;
             }
+            var chat_history = this.$refs.chat_history;
+            Vue.nextTick(function () {
+                chat_history.scrollTop = chat_history.scrollHeight;
+            });
             this.$root.message_count = this.opened ? 0 : this.$root.message_count;
         },
 
@@ -105209,6 +105213,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         addNewMessage: function addNewMessage(message) {
             var message_index = void 0;
+            var chat_history = this.$refs.chat_history;
+            var should_scroll = false;
+            if (chat_history.scrollTop === chat_history.scrollHeight - chat_history.offsetHeight) {
+                should_scroll = true;
+            }
             if (this.display_messages.length > 0) {
                 message_index = this.display_messages.findIndex(function (listed_message) {
                     return listed_message.user_name == message.user_name && listed_message.message == message.message && listed_message.time_stamp == message.time_stamp;
@@ -105221,6 +105230,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (this.display_messages[this.display_messages.length - 1].user_name == this.$root.config('user_preferences.user_name')) {
                     this.display_messages[this.display_messages.length - 1].status = "received";
                 }
+                Vue.nextTick(function () {
+                    chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                });
             } else {
                 this.display_messages[message_index].status = 'received';
             }

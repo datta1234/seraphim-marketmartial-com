@@ -93,18 +93,13 @@
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
                     .then(response => {
                         let chat_history = this.$refs.chat_history;
-                        // @TODO Fix this so it does the scrolling focus proper - currently buggy when you scroll up and back down 
-                        let should_scroll = false;
-                        if(chat_history.scrollTop === (chat_history.scrollHeight - chat_history.offsetHeight) ) {
-                            should_scroll = true;
-                        }
                         this.new_message = "";
                         this.quick_message = "";
                         this.display_messages.push(response.data.data);
                         this.display_messages[this.display_messages.length -1].status = "sent";
                         
                         Vue.nextTick( () => {
-                            chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                            chat_history.scrollTop = chat_history.scrollHeight;
                         });
                     })
                     .catch(err => {
@@ -124,6 +119,10 @@
                 } else {
                     this.opened = !this.opened;
                 }
+                let chat_history = this.$refs.chat_history;
+                Vue.nextTick( () => {
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                });
                 this.$root.message_count = this.opened ? 0 : this.$root.message_count;
             },
             /**
@@ -172,6 +171,11 @@
             },
             addNewMessage(message) {
                 let message_index;
+                let chat_history = this.$refs.chat_history;
+                let should_scroll = false;
+                if(chat_history.scrollTop === (chat_history.scrollHeight - chat_history.offsetHeight) ) {
+                    should_scroll = true;
+                }
                 if (this.display_messages.length > 0) {
                     message_index = this.display_messages.findIndex( (listed_message) => {
                         return listed_message.user_name == message.user_name
@@ -186,6 +190,9 @@
                     if( this.display_messages[this.display_messages.length -1].user_name == this.$root.config('user_preferences.user_name') ) {
                         this.display_messages[this.display_messages.length -1].status = "received";
                     }
+                    Vue.nextTick( () => {
+                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                    });
                 } else {
                     this.display_messages[message_index].status = 'received';
                 }

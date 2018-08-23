@@ -21,4 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 /*
  *   Slack chat route to receive slack notifications
  */
-Route::post('/chat-notification', 'TradeScreen\ChatController@receiveChat');
+Route::post('/chatnotification', 'TradeScreen\ChatController@receiveChat');

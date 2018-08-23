@@ -25,7 +25,7 @@ class CheckSlackToken implements Rule
      */
     public function passes($attribute, $value)
     {
-        return env('SLACK_AUTH_BEARER') === $value;
+        return env('SLACK_VERIFICATION_TOKEN') === $value;
     }
 
     /**

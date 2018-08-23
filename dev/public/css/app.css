@@ -11282,8 +11282,9 @@ a.mm-login-button {
           box-shadow: none;
 }
 
-.mm-alert-text {
-  color: #BB1D1D;
+.message-alert-count {
+  border-radius: 1em;
+  font-size: 0.8rem;
 }
 
 @font-face {
