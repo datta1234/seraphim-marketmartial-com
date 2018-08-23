@@ -105113,7 +105113,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -105127,10 +105126,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        sendMessage: function sendMessage(evt) {
+        doSomething: function doSomething(e) {
+            console.log("WORKING");
+        },
+        sendMessage: function sendMessage(e) {
             var _this = this;
 
-            evt.preventDefault();
             if (this.new_message || this.quick_message) {
                 var sendMessage = this.new_message ? { new_message: this.new_message } : { quick_message: this.quick_message };
                 axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage).then(function (response) {
@@ -105144,6 +105145,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         chat_history.scrollTop = chat_history.scrollHeight;
                     });
                 }).catch(function (err) {
+                    console.log("TEST ERRORS ", err.response.data);
                     reject(new Errors(err.response.data));
                 });
             } else {
@@ -105160,9 +105162,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.opened = !this.opened;
             }
             var chat_history = this.$refs.chat_history;
-            Vue.nextTick(function () {
-                chat_history.scrollTop = chat_history.scrollHeight;
-            });
+            chat_history.scrollTop = chat_history.scrollHeight;
             this.$root.message_count = this.opened ? 0 : this.$root.message_count;
         },
 
@@ -105426,7 +105426,11 @@ var render = function() {
                     "b-form",
                     {
                       attrs: { id: "chat-message-form" },
-                      on: { submit: _vm.sendMessage }
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                        }
+                      }
                     },
                     [
                       _c("b-form-group", { staticClass: "text-center mb-1" }, [
@@ -105477,20 +105481,44 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c("b-form-textarea", {
-                        staticClass: "mb-1 mt-1",
+                      _c("textarea", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.new_message,
+                            expression: "new_message"
+                          }
+                        ],
+                        staticClass: "mb-1 mt-1 w-100",
                         attrs: {
-                          placeholder: "Enter your message here...",
-                          rows: 6,
-                          "max-rows": 6,
-                          "no-resize": true
+                          rows: "6",
+                          placeholder: "Enter your message here..."
                         },
-                        model: {
-                          value: _vm.new_message,
-                          callback: function($$v) {
-                            _vm.new_message = $$v
+                        domProps: { value: _vm.new_message },
+                        on: {
+                          keydown: function($event) {
+                            if (
+                              !("button" in $event) &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
+                            ) {
+                              return null
+                            }
+                            $event.preventDefault()
+                            return _vm.sendMessage($event)
                           },
-                          expression: "new_message"
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.new_message = $event.target.value
+                          }
                         }
                       }),
                       _vm._v(" "),
@@ -105502,7 +105530,8 @@ var render = function() {
                             "button",
                             {
                               staticClass: "btn mm-generic-trade-button w-100",
-                              attrs: { type: "submit" }
+                              attrs: { type: "submit" },
+                              on: { click: _vm.sendMessage }
                             },
                             [_vm._v("Send message")]
                           )

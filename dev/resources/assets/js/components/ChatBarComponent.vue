@@ -44,7 +44,7 @@
                     </b-card>
                     
                     <div class="chat-actions">
-                        <b-form @submit="sendMessage" id="chat-message-form">
+                        <b-form v-on:submit.prevent="" id="chat-message-form">
                             <b-form-group class="text-center mb-1">
                                 <button @click="quick_message = 'No cares, thanks'" type="submit" class="btn mm-generic-trade-button w-100">No cares, thanks</button>
                             </b-form-group>
@@ -54,16 +54,15 @@
                             <b-form-group class="text-center mb-1">
                                 <button @click="quick_message = 'Please call me'" type="submit" class="btn mm-generic-trade-button w-100">Please call me</button>
                             </b-form-group>
-                            <b-form-textarea class="mb-1 mt-1"
-                                             v-model="new_message"
-                                             placeholder="Enter your message here..."
-                                             :rows="6"
-                                             :max-rows="6"
-                                             :no-resize="true">
-                            </b-form-textarea>
+                            <textarea @keydown.enter.prevent="sendMessage"
+                                      rows="6"
+                                      class="mb-1 mt-1 w-100"
+                                      v-model="new_message"
+                                      placeholder="Enter your message here...">
+                            </textarea>  
                             
                             <b-form-group class="text-center mb-0 pb-0">
-                                <button type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
+                                <button @click="sendMessage" type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
                             </b-form-group>
                         </b-form>
                     </div>
@@ -86,8 +85,10 @@
             };
         },
         methods: {
-            sendMessage(evt) {
-                evt.preventDefault();
+            doSomething(e) {
+                console.log("WORKING");
+            },
+            sendMessage(e) {
                 if(this.new_message || this.quick_message) {
                     let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
@@ -103,13 +104,12 @@
                         });
                     })
                     .catch(err => {
+                        console.log("TEST ERRORS ", err.response.data);
                         reject(new Errors(err.response.data));
                     });
                 } else {
                     this.new_message = "";
                     this.quick_message = "";
-                    console.log("I AM EMPTY!");
-                    // TODO handle empty message field
                 }
 
             },
@@ -120,9 +120,7 @@
                     this.opened = !this.opened;
                 }
                 let chat_history = this.$refs.chat_history;
-                Vue.nextTick( () => {
-                    chat_history.scrollTop = chat_history.scrollHeight;
-                });
+                chat_history.scrollTop = chat_history.scrollHeight;
                 this.$root.message_count = this.opened ? 0 : this.$root.message_count;
             },
             /**
