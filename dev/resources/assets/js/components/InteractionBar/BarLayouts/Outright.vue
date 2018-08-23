@@ -14,7 +14,7 @@
         <b-row class="mb-5">
             <b-col cols="10">
                     <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
-                        {{ key }}:{{ error[0] }}
+                        {{ error[0] }}
                     </b-col>
                 <b-row v-if="removable_conditions.length > 0">
                     <b-col v-for="cond in removable_conditions" class="text-center">
