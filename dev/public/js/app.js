@@ -95281,19 +95281,23 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(
+                _vm.splitValHelper(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.risky.strike")
+                  ],
+                  " ",
+                  3
+                )
+              ) +
+              "    \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -95498,19 +95502,23 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(
+                _vm.splitValHelper(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.calendar.strike")
+                  ],
+                  " ",
+                  3
+                )
+              ) +
+              " \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -95716,19 +95724,23 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(
+                _vm.splitValHelper(
+                  _vm.marketRequest.trade_items.default[
+                    this.$root.config("trade_structure.fly.strike")
+                  ],
+                  " ",
+                  3
+                )
+              ) +
+              "\n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -95934,19 +95946,15 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+              "    \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -96152,19 +96160,15 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+              "    \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -96370,19 +96374,15 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+              "    \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])
@@ -96588,19 +96588,15 @@ var render = function() {
     },
     [
       _c("div", { staticClass: "row justify-content-md-center" }, [
-        _c(
-          "div",
-          { staticClass: "col col-6 market-tab-name market-tab-name" },
-          [
-            _vm._v(
-              "\n            " +
-                _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
-                "    \n        "
-            )
-          ]
-        ),
+        _c("div", { staticClass: "col market-tab-name market-tab-name" }, [
+          _vm._v(
+            "\n            " +
+              _vm._s(_vm.marketRequest.trade_items.default["Strike"]) +
+              "    \n        "
+          )
+        ]),
         _vm._v(" "),
-        _c("div", { staticClass: "col col-6 market-tab-state" }, [
+        _c("div", { staticClass: "col market-tab-state" }, [
           _vm.market_request_state_label != ""
             ? _c("span", [
                 _c("span", {}, [_vm._v(_vm._s(_vm.market_request_state_label))])

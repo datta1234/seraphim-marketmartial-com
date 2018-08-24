@@ -1,10 +1,10 @@
 <template>
     <div dusk="market-tab-calendar" class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
         <div class="row justify-content-md-center">
-            <div class="col col-6 market-tab-name market-tab-name">
-                {{ marketRequest.trade_items.default["Strike"] }}    
+            <div class="col market-tab-name market-tab-name">
+                {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.calendar.strike")], '&nbsp;', 3) }} 
             </div>
-            <div class="col col-6 market-tab-state">
+            <div class="col market-tab-state">
                 
                 <span v-if="market_request_state_label != ''">
                     <span class="">{{ market_request_state_label }}</span>
