@@ -1,7 +1,8 @@
 <template>
     <div dusk="structure-selection" class="step-selections">
         <b-container fluid>
-            <b-row v-if="trade_structures" class="text-center">
+            <mm-loader theme="light" :default_state="true" event_name="requestStructureLoaded" width="200" height="200"></mm-loader>
+            <b-row v-if="structures_loaded" class="text-center">
                 <b-col v-for="trade_structure in trade_structures" v-if="trade_structure.is_selectable" cols="12" class="mt-2">
                     <b-button :id="trade_structure.title+'-structure-choice'" class="mm-modal-market-button-alt w-50" @click="selectStructure(trade_structure.title)">
                         {{ trade_structure.title }}
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
         name: 'StructureSelection',
         props:{
@@ -34,12 +36,12 @@
         data() {
             return {
                 trade_structures: null,
+                structures_loaded: false,
             };
         },
         methods: {
             selectStructure(trade_structure) {
                 this.data.index_market_object.trade_structure = trade_structure;
-                console.log("SENDING THIS BACK: ", trade_structure);
                 this.callback(trade_structure);
             },
             /**
@@ -50,6 +52,8 @@
                 .then(tradeStructureResponse => {
                     if(tradeStructureResponse.status == 200) {
                         this.trade_structures = tradeStructureResponse.data;
+                        EventBus.$emit('loading', 'requestStructure');
+                        this.structures_loaded = true;
                     } else {
                         console.error(err);    
                     }
@@ -59,6 +63,7 @@
             },
         },
         mounted() {
+            this.structures_loaded = false;
             this.loadStructures();
         }
     }

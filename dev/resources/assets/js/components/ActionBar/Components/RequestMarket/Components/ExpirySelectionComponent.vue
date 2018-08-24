@@ -1,12 +1,13 @@
 <template>
     <div dusk="expiry-selection" class="step-selections">
         <b-container fluid>
-            <b-row v-if="data.number_of_dates > 1" class="justify-content-md-center">
+            <mm-loader theme="light" :default_state="true" event_name="requestDatesLoaded" width="200" height="200"></mm-loader>
+            <b-row v-if="dates_loaded && data.number_of_dates > 1" class="justify-content-md-center">
                 <b-col class="mt-0 text-center" cols="12">
                     <p class="modal-info-text">*Select two dates to continue</p>
                 </b-col>
             </b-row>
-            <div v-if="expiry_dates.length > 0" class="card-columns">
+            <div v-if="dates_loaded && expiry_dates.length > 0" class="card-columns">
                 <div v-for="expiry_date in expiry_dates" class="card card-reset">
                     <b-button :disabled="checkPastDate(expiry_date.expiration_date)" class="mm-modal-market-button w-100" @click="selectExpiryDates(expiry_date.expiration_date)">
                         {{ castToMoment(expiry_date.expiration_date) }}
@@ -18,7 +19,7 @@
                     <p class="text-danger mb-0">Cannot select duplicate dates.</p>
                 </b-col>
             </b-row>
-            <b-row v-if="expiry_dates.length > 0" class="justify-content-md-center">
+            <b-row v-if="dates_loaded && expiry_dates.length > 0" class="justify-content-md-center">
                 <b-col cols="12" class="mt-5">
                     <b-pagination @change="changePage($event)" 
                                   align="center" 
@@ -39,6 +40,7 @@
 </template>
 
 <script>
+    import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
         name: 'ExpirySelection',
         props:{
@@ -60,6 +62,7 @@
                 total:null,
                 selected_dates:[],
                 duplicate_date: false,
+                dates_loaded: false,
             };
         },
         methods: {
@@ -98,6 +101,8 @@
                         this.per_page = expiryDateResponse.data.per_page;
                         this.total = expiryDateResponse.data.total;
                         this.expiry_dates = expiryDateResponse.data.data;
+                        EventBus.$emit('loading', 'requestDates');
+                        this.dates_loaded = true;
                     } else {
                         console.error(err);    
                     }
@@ -107,6 +112,7 @@
             },
         },
         mounted() {
+            this.dates_loaded = false;
             this.loadExpiryDate();
         }
     }

@@ -60,6 +60,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
+Vue.component('mm-loader', require('./components/LoaderComponent.vue'))
+
 // Market Tab Components
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
@@ -236,6 +238,8 @@ const app = new Vue({
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
                     market.addMarketRequests(marketResponse.data);
                     console.log("Market Requests", marketResponse.data);
+                    EventBus.$emit('loading', 'page');
+                    this.page_loaded = true;
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -308,6 +312,7 @@ const app = new Vue({
         hidden_markets: [],
         market_types: [],
         message_count: 0,
+        page_loaded: false,
         // internal properties
         configs: {}
     },
@@ -347,12 +352,7 @@ const app = new Vue({
                 
                 //load the no cares from storage
                 this.loadNoCares();
-
             });
-        }).then( () => {
-            // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
-           /* console.log("FIRE EVENT!!!!!");
-            EventBus.$emit('dataLoaded', 'mountData', true);*/
         });
         
         if(Laravel.organisationUuid)

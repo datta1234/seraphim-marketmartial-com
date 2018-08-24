@@ -13,13 +13,14 @@
 				@endif
 				total_rebate="{{ $total_rebate }}">
 			</user-header>
-
+			
 			<!-- Actions and Alerts -->
 			<action-bar :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
 			<!-- Markets sections -->
 			<div class="row user-markets mt-3">
-				<market-group v-for="market in display_markets" :market="market" :no_cares="no_cares" class="col"></market-group>
+				<mm-loader :default_state="true" event_name="pageLoaded" width="200" height="200"></mm-loader>
+				<market-group v-if="page_loaded" v-for="market in display_markets" :market="market" :no_cares="no_cares" class="col"></market-group>
 			</div>
 
 			<div class="row mt-5">
