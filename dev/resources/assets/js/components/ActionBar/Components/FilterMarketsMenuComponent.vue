@@ -4,7 +4,7 @@
             <span class="icon icon-add"></span> Markets
         </button>
         <!-- Filter market popover -->
-        <b-popover @show="onShow" triggers="focus" placement="bottomleft" :ref="popover_ref" target="action-filter-market-button">
+        <b-popover @show="onShow" triggers="click blur" placement="bottomleft" :ref="popover_ref" target="action-filter-market-button">
             <div class="row text-center">
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">

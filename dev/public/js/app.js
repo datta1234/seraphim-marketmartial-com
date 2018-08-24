@@ -5643,11 +5643,11 @@ var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
 EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
     switch (sidebar) {
         case "interaction":
-            EventBus.$emit('chatToggle', false);
+            //EventBus.$emit('chatToggle', false);
             EventBus.$emit('interactionToggle', state, payload);
             break;
         case "chat":
-            EventBus.$emit('interactionToggle', false);
+            //EventBus.$emit('interactionToggle', false);
             EventBus.$emit('chatToggle', state, payload);
             break;
     }
@@ -101308,7 +101308,7 @@ var render = function() {
         {
           ref: _vm.popover_ref,
           attrs: {
-            triggers: "focus",
+            triggers: "click blur",
             placement: "bottomleft",
             target: "action-filter-market-button"
           },
@@ -101950,7 +101950,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "alerts-popover",
-            triggers: "focus",
+            triggers: "click blur",
             placement: "bottom",
             target: "action-alert-button"
           }
@@ -102247,7 +102247,7 @@ var render = function() {
           ref: _vm.popover_ref,
           attrs: {
             container: "confirmations-popover",
-            triggers: "focus",
+            triggers: "click blur",
             placement: "bottom",
             target: "action-confirmations-button"
           }
@@ -105151,8 +105151,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             } else {
                 this.new_message = "";
                 this.quick_message = "";
-                console.log("I AM EMPTY!");
-                // TODO handle empty message field
             }
         },
         toggleBar: function toggleBar(set) {
