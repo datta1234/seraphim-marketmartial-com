@@ -5715,9 +5715,14 @@ var UserMarketRequest = function (_BaseModel) {
                         _this.addUserMarketQuote(quote);
                     }
                 },
-                user_market: {
+                sent_quote: {
+                    setMethod: function setMethod(sent_quote) {
+                        _this.setSentQuote(sent_quote);
+                    }
+                },
+                chosen_user_market: {
                     setMethod: function setMethod(user_market) {
-                        _this.setUserMarket(user_market);
+                        _this.setChosenUserMarket(user_market);
                     }
                 }
             }
@@ -5730,17 +5735,19 @@ var UserMarketRequest = function (_BaseModel) {
         // default public
         _this.trade_items = {}; //with group title as key
         _this.quotes = [];
-        _this.user_market = null;
+        _this.sent_quote = null;
         var defaults = {
             id: "",
             trade_structure: "",
             market_id: "",
             is_interest: false,
+            is_market_maker: false,
             attributes: {
                 state: "",
                 bid_state: "",
                 offer_state: "",
-                action_needed: false
+                action_needed: false,
+                is_interest: false
             },
             quote: null,
             chosen_user_market: null,
@@ -5766,6 +5773,16 @@ var UserMarketRequest = function (_BaseModel) {
         // register quotes
         if (options && options.quotes) {
             _this.addUserMarketQuotes(options.quotes);
+        }
+
+        // register sent_quote
+        if (options && options.sent_quote) {
+            _this.setSentQuote(options.sent_quote);
+        }
+
+        // register user_market
+        if (options && options.chosen_user_market) {
+            _this.setChosenUserMarket(options.chosen_user_market);
         }
 
         // register user_market
@@ -5814,6 +5831,10 @@ var UserMarketRequest = function (_BaseModel) {
     }, {
         key: 'setChosenUserMarket',
         value: function setChosenUserMarket(user_market) {
+
+            if (!(user_market instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */])) {
+                user_market = new __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */](user_market);
+            }
             user_market.setMarketRequest(this);
             this.chosen_user_market = user_market;
         }
@@ -5842,7 +5863,22 @@ var UserMarketRequest = function (_BaseModel) {
         }
 
         /**
-        *   setUserMarket - Set the UserMarketRequest UserMarker
+        *   setUserMarket - Set the UserMarketRequest setSentQuote
+        *   @param {UserMarket} user_market - UserMarket object
+        */
+
+    }, {
+        key: 'setSentQuote',
+        value: function setSentQuote(sent_quote) {
+            if (!(sent_quote instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */])) {
+                sent_quote = new __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */](sent_quote);
+            }
+            sent_quote.setMarketRequest(this);
+            this.sent_quote = sent_quote;
+        }
+
+        /**
+        *   setUserMarket - Set the UserMarketRequest setSentQuote
         *   @param {UserMarket} user_market - UserMarket object
         */
 
@@ -5852,9 +5888,20 @@ var UserMarketRequest = function (_BaseModel) {
             if (!(user_market instanceof __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */])) {
                 user_market = new __WEBPACK_IMPORTED_MODULE_1__UserMarket__["a" /* default */](user_market);
             }
-            console.log(user_market);
+
             user_market.setMarketRequest(this);
             this.user_market = user_market;
+        }
+
+        /**
+        *   getSentQuote - Set the UserMarketRequest UserMarker
+        *   @param {UserMarket} user_market - UserMarket object
+        */
+
+    }, {
+        key: 'getChosenUserMarket',
+        value: function getChosenUserMarket() {
+            return this.user_market;
         }
 
         /**
@@ -5863,9 +5910,9 @@ var UserMarketRequest = function (_BaseModel) {
         */
 
     }, {
-        key: 'getUserMarket',
-        value: function getUserMarket() {
-            return this.user_market;
+        key: 'getSentQuote',
+        value: function getSentQuote() {
+            return this.sent_quote;
         }
 
         /**
@@ -5945,6 +5992,23 @@ var UserMarketRequest = function (_BaseModel) {
                     reject(new __WEBPACK_IMPORTED_MODULE_3__Errors___default.a(err.response.data));
                 });
             });
+        }
+
+        /**
+        *   canNegotiate - Checks to see if the user can take any negotiation on the current ste of the request
+        *   @return response from the request or the error
+        */
+
+    }, {
+        key: 'canNegotiate',
+        value: function canNegotiate() {
+            if (this.chosen_user_market == null) {
+                return true;
+            } else {
+                return this.is_interest || this.chosen_user_market.market_negotiations.length > 0 && this.chosen_user_market.market_negotiations.findIndex(function (negotiation) {
+                    return negotiation.is_my_org;
+                }) > -1;
+            }
         }
     }]);
 
@@ -6358,6 +6422,19 @@ var UserMarketNegotiation = function (_BaseModel) {
             offer_premium: "",
             is_put: false,
             status: "",
+            cond_is_repeat_atw: null,
+            cond_fok_apply_bid: null,
+            cond_fok_spin: null,
+            cond_timeout: null,
+            cond_is_ocd: null,
+            cond_is_subject: null,
+            cond_buy_mid: null,
+            cond_buy_best: null,
+            is_interest: false,
+            is_maker: false,
+            is_my_org: false,
+            market_negotiation_id: null,
+            time: null,
             created_at: moment()
             // assign options with defaults
         };Object.keys(defaults).forEach(function (key) {
@@ -6451,8 +6528,8 @@ var UserMarketNegotiation = function (_BaseModel) {
         */
 
     }, {
-        key: 'patch',
-        value: function patch() {
+        key: 'storeNegotiation',
+        value: function storeNegotiation() {
             var _this3 = this;
 
             // catch not assigned to a market request yet!
@@ -6463,9 +6540,36 @@ var UserMarketNegotiation = function (_BaseModel) {
             }
 
             return new Promise(function (resolve, reject) {
-                var user_market_request_id = _this3.getUserMarket().getMarketRequest().id;
+                axios.post(axios.defaults.baseUrl + "/trade/user-market/" + _this3._user_market.id + "/market-negotiation", _this3.prepareStore()).then(function (response) {
+                    response.data.data = new UserMarketNegotiation(response.data.data);
+                    resolve(response);
+                }).catch(function (err) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
+                });
+            });
+        }
+    }, {
+        key: 'getDisplayCondition',
+        value: function getDisplayCondition() {}
 
-                axios.patch(axios.defaults.baseUrl + "/trade/user-market-request/" + user_market_request_id + "/user-market/" + _this3._user_market.id, _this3.prepareStore()).then(function (response) {
+        /**
+        *  spin
+        */
+
+    }, {
+        key: 'spinNegotiation',
+        value: function spinNegotiation() {
+            var _this4 = this;
+
+            // catch not assigned to a market request yet!
+            if (this._user_market.id == null) {
+                return new Promise(function (resolve, reject) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(["Invalid Market"]));
+                });
+            }
+
+            return new Promise(function (resolve, reject) {
+                axios.post(axios.defaults.baseUrl + "/trade/user-market/" + _this4._user_market.id + "/market-negotiation", { is_repeat: true }).then(function (response) {
                     response.data.data = new UserMarketNegotiation(response.data.data);
                     resolve(response);
                 }).catch(function (err) {
@@ -6479,9 +6583,9 @@ var UserMarketNegotiation = function (_BaseModel) {
         */
 
     }, {
-        key: 'repeat',
-        value: function repeat() {
-            var _this4 = this;
+        key: 'patchQuote',
+        value: function patchQuote() {
+            var _this5 = this;
 
             // catch not assigned to a market request yet!
             if (this._user_market.id == null) {
@@ -6491,9 +6595,37 @@ var UserMarketNegotiation = function (_BaseModel) {
             }
 
             return new Promise(function (resolve, reject) {
-                var user_market_request_id = _this4.getUserMarket().getMarketRequest().id;
+                var user_market_request_id = _this5.getUserMarket().getMarketRequest().id;
 
-                axios.patch(axios.defaults.baseUrl + "/trade/user-market-request/" + user_market_request_id + "/user-market/" + _this4._user_market.id, { 'is_repeat': true }).then(function (response) {
+                axios.patch(axios.defaults.baseUrl + "/trade/user-market-request/" + user_market_request_id + "/user-market/" + _this5._user_market.id, _this5.prepareStore()).then(function (response) {
+                    response.data.data = new UserMarketNegotiation(response.data.data);
+                    resolve(response);
+                }).catch(function (err) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(err.response.data));
+                });
+            });
+        }
+
+        /**
+        *  store
+        */
+
+    }, {
+        key: 'repeatQuote',
+        value: function repeatQuote() {
+            var _this6 = this;
+
+            // catch not assigned to a market request yet!
+            if (this._user_market.id == null) {
+                return new Promise(function (resolve, reject) {
+                    reject(new __WEBPACK_IMPORTED_MODULE_1__Errors___default.a(["Invalid Market"]));
+                });
+            }
+
+            return new Promise(function (resolve, reject) {
+                var user_market_request_id = _this6.getUserMarket().getMarketRequest().id;
+
+                axios.patch(axios.defaults.baseUrl + "/trade/user-market-request/" + user_market_request_id + "/user-market/" + _this6._user_market.id, { 'is_repeat': true }).then(function (response) {
                     response.data.data = new UserMarketNegotiation(response.data.data);
                     resolve(response);
                 }).catch(function (err) {
@@ -9797,31 +9929,38 @@ function copyProps(props) {
             user_market_offer: ''
         };
     },
+    computed: {
+        current_user_market_negotiation: function current_user_market_negotiation() {
+            var chosen_user_market = this.marketRequest.chosen_user_market;
+            if (chosen_user_market) {
+                return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length - 1];
+            }
+            return null;
+        }
+    },
     methods: {
         loadInteractionBar: function loadInteractionBar() {
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
-        hasNoCaresUnderCares: function hasNoCaresUnderCares(marketRequest) {},
         calcMarketState: function calcMarketState() {
             // set new refs
-            // this.user_market = this.marketRequest.getChosenUserMarket();
-            // this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            // this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            // this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
+            this.user_market_bid = null;
+            this.user_market_offer = null;
+            this.market_request_state = null;
+            this.market_request_state_label = null;
 
             // run tests
             // TODO: add logic for if current user then "SENT"
             switch (this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
-                    if (this.marketRequest.user_market) {
+                    if (this.marketRequest.sent_quote) {
                         this.market_request_state = 'request-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
-                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
+                        this.user_market_bid = this.marketRequest.sent_quote.current_market_negotiation.bid ? this.marketRequest.sent_quote.current_market_negotiation.bid : '-';
+                        this.user_market_offer = this.marketRequest.sent_quote.current_market_negotiation.offer ? this.marketRequest.sent_quote.current_market_negotiation.offer : '-';
                     } else {
 
                         this.market_request_state = 'request';
-
                         this.market_request_state_label = "REQUEST";
                     }
                     break;
@@ -9842,6 +9981,21 @@ function copyProps(props) {
                     // this.market_request_state = 'request';
                     this.market_request_state_label = "SENT";
                     break;
+                case "PENDING":
+                    this.market_request_state = 'negotiation-vol';
+                    this.market_request_state_label = "PENDING";
+                    break;
+                case "NEGOTIATION-VOL":
+                    this.market_request_state = 'negotiation-vol';
+                    this.market_request_state_label = "";
+                    this.user_market_bid = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.bid : '-';
+                    this.user_market_offer = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.offer : '-';
+                    break;
+                case "NEGOTIATION-VOL-PENDING":
+                    this.market_request_state = 'negotiation-vol-pending';
+                    this.market_request_state_label = "PENDING";
+
+                    break;
                 case "alert":
                     this.market_request_state = 'alert';
                     this.market_request_state_label = "";
@@ -9858,6 +10012,8 @@ function copyProps(props) {
                     this.market_request_state = '';
                     this.market_request_state_label = '';
             }
+
+            // console.log("data looking","label:",this.market_request_state_label,"state:",this.market_request_state,);
         },
 
         /**
@@ -9867,7 +10023,32 @@ function copyProps(props) {
         toggleActionTaken: function toggleActionTaken() {
             if (this.marketRequest.attributes.action_needed) {
                 var result = this.marketRequest.actionTaken();
-                console.log("Result from taking action: ", result);
+            }
+        },
+        getStateClass: function getStateClass(attr) {
+            var _this = this;
+
+            if (this.current_user_market_negotiation && this.marketRequest.chosen_user_market) {
+                var prevItem = this.marketRequest.chosen_user_market.market_negotiations.find(function (itItem) {
+                    return _this.current_user_market_negotiation.market_negotiation_id == itItem.id;
+                });
+
+                if (prevItem) {
+
+                    if (prevItem[attr] == this.current_user_market_negotiation[attr]) {
+                        return {
+                            "is-interest": prevItem.is_interest && !prevItem.is_my_org,
+                            "is-maker": prevItem.is_maker && !prevItem.is_my_org,
+                            "is-my-org": prevItem.is_my_org
+                        };
+                    }
+                }
+
+                return {
+                    "is-interest": this.current_user_market_negotiation.is_interest && !this.current_user_market_negotiation.is_my_org,
+                    "is-maker": this.current_user_market_negotiation.is_maker && !this.current_user_market_negotiation.is_my_org,
+                    "is-my-org": this.current_user_market_negotiation.is_my_org
+                };
             }
         }
     }
@@ -11826,24 +12007,15 @@ var BaseModel = function () {
             var _this2 = this;
 
             Object.keys(this).forEach(function (key) {
-                //console.log("Test Updating: ", key);
-                // console.log("############=====#######");
-                // console.log("the key is",key);
-                // console.log("is array test",Array.isArray(update_object[key], key));
-                // console.log("############=====#######");
 
                 if (key[0] != '_' && update_object[key] != null) {
-                    //console.log("Updating: ", key);
                     if (Array.isArray(update_object[key], key)) {
                         //call array rebind method
-                        //console.log("Updating as Array: ", key);
                         _this2._updateArray(update_object[key], key);
                     } else if (update_object[key] instanceof Object) {
                         //call object rebind method
-                        //console.log("Updating as Obj: ", key);
                         _this2._updateObject(update_object[key], key);
                     } else {
-                        //console.log("Updating as else: ", key);
                         if (_this2[key] instanceof moment) {
                             _this2[key] = moment(update_object[key]);
                         } else {
@@ -11899,6 +12071,15 @@ var BaseModel = function () {
                 // loop to remove old objects
 
                 var _loop2 = function _loop2(_i) {
+
+                    if (key == "quotes") {
+
+                        var countTemp = update_arr.findIndex(function (element) {
+                            return element.id == _this3[key][_i].id;
+                        });
+                        console.log('quote', _this3[key], countTemp);
+                    }
+
                     var index = update_arr.findIndex(function (element) {
                         return element.id == _this3[key][_i].id;
                     });
@@ -11912,6 +12093,7 @@ var BaseModel = function () {
                 for (var i = 0; i < this[key].length; i++) {
                     _loop2(i);
                 }
+
                 // update array (check if we can just assign or need to pop and push all new ones)
             } else {
                 this[key] = update_arr[key];
@@ -25655,7 +25837,6 @@ var Market = function (_BaseModel) {
         value: function updateMarketRequest(market_req, index) {
             // @TODO fix updating root property before we enable this again.
             this.market_requests[index].update(market_req);
-            console.log(this.market_requests[index], market_req);
         }
 
         /**
@@ -25794,7 +25975,10 @@ var UserMarket = function (_BaseModel) {
         });
 
         // register market_negotiations
+
         if (options && options.market_negotiations) {
+            console.log("options.market_negotiations", options.market_negotiations);
+
             _this.addNegotiations(options.market_negotiations);
         }
 
@@ -86932,7 +87116,6 @@ var app = new Vue({
                 if (marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
-                    console.log("Market Types: ", self.market_types);
                 } else {
                     console.error(err);
                 }
@@ -86963,14 +87146,12 @@ var app = new Vue({
         },
         loadMarketRequests: function loadMarketRequests(market) {
             var self = this;
-            console.log("Load Market Request", market);
             return axios.get(axios.defaults.baseUrl + '/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
                 if (marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(function (x) {
                         return new __WEBPACK_IMPORTED_MODULE_6__lib_UserMarketRequest__["a" /* default */](x);
                     });
                     market.addMarketRequests(marketResponse.data);
-                    console.log("Market Requests", marketResponse.data);
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -87022,8 +87203,6 @@ var app = new Vue({
                 return display_market.id == UserMarketRequestData.market_id;
             });
             if (index !== -1) {
-                /*console.log("the index",this.display_markets[index]);
-                console.log("the market",new UserMarketRequest(UserMarketRequestData));*/
                 var request_index = this.display_markets[index].market_requests.findIndex(function (market_request) {
                     return market_request.id == UserMarketRequestData.id;
                 });
@@ -87055,6 +87234,7 @@ var app = new Vue({
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         }).then(function () {
+            _this2.loadConfig('condition_titles', 'condition_titles.json');
             _this2.loadUserConfig();
         }).then(function (configs) {
             // load the trade data
@@ -87085,7 +87265,7 @@ var app = new Vue({
         if (Laravel.organisationUuid) {
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
-                console.log("this is what pusher just gave you", UserMarketRequest);
+                console.log("this is what websockets is", UserMarketRequest);
                 _this2.updateUserMarketRequest(UserMarketRequest);
             });
         }
@@ -90148,21 +90328,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     watch: {
-        'marketRequest.attributes.state': function marketRequestAttributesState(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.user_market': function marketRequestUser_market(nV, oV) {
-            this.calcMarketState();
-        },
-        'marketRequest.chosen_user_market': function marketRequestChosen_user_market(nV, oV) {
-            this.calcMarketState();
+        'marketRequest': {
+            handler: function handler(nV, oV) {
+                this.calcMarketState();
+            },
+            deep: true
         }
     },
     mixins: [__WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__["a" /* default */]],
     data: function data() {
         return {
             user_market: null,
-            current_negotiation: null,
             isActive: false
         };
     },
@@ -90170,6 +90346,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     computed: {
         marketState: function marketState() {
             return {
+                'negotiation-vol-pending': this.market_request_state == 'negotiation-vol-pending',
+                'negotiation-vol': this.market_request_state == 'negotiation-vol',
                 'market-request-grey': this.market_request_state == 'request-grey',
                 'market-request': !this.marketRequest.is_interest && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
                 'market-request-vol': this.market_request_state == 'request-vol',
@@ -90179,14 +90357,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             };
         },
         bidState: function bidState() {
-            return {
-                'user-action': this.marketRequest.attributes.bid_state == 'action'
-            };
+            if (this.marketRequest.chosen_user_market) {
+                return this.getStateClass('bid');
+            } else {
+                return {
+                    'user-action': this.marketRequest.attributes.bid_state == 'action'
+                };
+            }
         },
         offerState: function offerState() {
-            return {
-                'user-action': this.marketRequest.attributes.offer_state == 'action'
-            };
+            if (this.marketRequest.chosen_user_market) {
+                return this.getStateClass('offer');
+            } else {
+                return {
+                    'user-action': this.marketRequest.attributes.offer_state == 'action'
+                };
+            }
         }
     },
     methods: {
@@ -90201,6 +90387,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         // initial setup of states
         this.calcMarketState();
+
         __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('interactionClose', function (marketRequest) {
             _this.isActive = false;
         });
@@ -92232,6 +92419,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -92247,7 +92460,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             state_premium_calc: false,
-
+            market_request_subscribe: false,
             user_market: null,
             market_history: [],
 
@@ -92258,7 +92471,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             history_message: null,
 
             removable_conditions: [],
-
             server_loading: false,
             check_invalid: false,
             errors: []
@@ -92266,19 +92478,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     watch: {
-        'marketRequest': function marketRequest() {
-            this.init();
+        'marketRequest': {
+            handler: function handler(newVal, oldVal) {
+
+                if (newVal.id != oldVal.id) {
+                    this.init();
+                } else {
+                    this.reset();
+                    this.setUpData();
+                }
+            },
+            deep: true
         }
     },
     computed: {
         'marker_qoute': function marker_qoute() {
-
             return this.marketRequest.quotes.find(function (quote) {
                 return quote.is_maker;
             });
         },
-        'last_qoute': function last_qoute() {
-            return this.marketRequest.quotes.length == 0 ? null : this.marketRequest.quotes[this.marketRequest.quotes.length - 1];
+        'negotiation_updated': function negotiation_updated() {
+            if (this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null)) {
+
+                return this.proposed_user_market_negotiation.bid != this.last_negotiation.bid || this.proposed_user_market_negotiation.offer != this.last_negotiation.offer;
+            } else {
+                return false;
+            }
+        },
+        'last_negotiation': function last_negotiation() {
+            var chosen_market = this.marketRequest.chosen_user_market;
+            if (chosen_market && chosen_market.market_negotiations.length > 0) {
+                return chosen_market.market_negotiations[chosen_market.market_negotiations.length - 1];
+            }
+
+            return null;
         },
         'is_on_hold': function is_on_hold() {
             return this.marketRequest.quotes.find(function (quote) {
@@ -92286,11 +92519,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         'market_title': function market_title() {
-            console.log(this.marketRequest, this.marketRequest.getMarket());
             return this.marketRequest.getMarket().title + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] + " " + this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
         },
         'market_time': function market_time() {
             return this.marketRequest.updated_at.format("HH:mm");
+        },
+        'can_negotiate': function can_negotiate() {
+            return this.marketRequest.canNegotiate();
         }
     },
     methods: {
@@ -92302,21 +92537,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.marker_qoute && this.marker_qoute.is_on_hold) {
                 this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
             }
+
+            if (!this.can_negotiate) {
+                this.history_message = "Market is pending. As soon as the market clears, you will be able to participate.";
+            }
         },
-        sendQuote: function sendQuote() {
+        subscribeToMarketRequest: function subscribeToMarketRequest() {},
+        spinNegotiation: function spinNegotiation() {
             var _this = this;
 
             // link now that we are saving
             this.proposed_user_market.setMarketRequest(this.marketRequest);
-            this.server_loading = true;
+            this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
-            // save
-            this.proposed_user_market.store().then(function (response) {
+            this.server_loading = true;
+            this.proposed_user_market_negotiation.spinNegotiation().then(function (response) {
 
                 _this.history_message = response.data.message;
                 _this.server_loading = false;
                 _this.errors = [];
-                _this.setUpProposal();
             }).catch(function (err) {
                 _this.server_loading = false;
 
@@ -92324,67 +92563,110 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.errors = err.errors.errors;
             });
         },
-        amendQoute: function amendQoute() {
+        sendNegotiation: function sendNegotiation() {
             var _this2 = this;
 
             // link now that we are saving
             this.proposed_user_market.setMarketRequest(this.marketRequest);
-            this.server_loading = true;
+            this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
-            // save
-            this.proposed_user_market_negotiation.patch().then(function (response) {
-                _this2.server_loading = false;
+            this.server_loading = true;
+            this.proposed_user_market_negotiation.storeNegotiation().then(function (response) {
+
                 _this2.history_message = response.data.message;
+                _this2.server_loading = false;
                 _this2.errors = [];
             }).catch(function (err) {
                 _this2.server_loading = false;
+
                 _this2.history_message = err.errors.message;
                 _this2.errors = err.errors.errors;
             });
         },
-        repeatQuote: function repeatQuote() {
+        sendQuote: function sendQuote() {
             var _this3 = this;
 
+            // link now that we are saving
+
             this.proposed_user_market.setMarketRequest(this.marketRequest);
-            //this.proposed_user_market_negotiation.is_repeat = true;
+            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
             this.server_loading = true;
 
             // save
-            this.proposed_user_market_negotiation.repeat().then(function (response) {
-                _this3.server_loading = false;
-                _this3.proposed_user_market_negotiation = response.data.data;
+            this.proposed_user_market.store().then(function (response) {
 
                 _this3.history_message = response.data.message;
-
-                _this3.proposed_user_market.setCurrentNegotiation(_this3.proposed_user_market_negotiation);
+                _this3.server_loading = false;
                 _this3.errors = [];
-                //EventBus.$emit('interactionToggle', false);
             }).catch(function (err) {
                 _this3.server_loading = false;
+
                 _this3.history_message = err.errors.message;
                 _this3.errors = err.errors.errors;
             });
         },
-        pullQuote: function pullQuote() {
+        amendQoute: function amendQoute() {
             var _this4 = this;
 
+            // link now that we are saving
             this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
+            this.server_loading = true;
+
+            // save
+            this.proposed_user_market_negotiation.patchQuote().then(function (response) {
+                console.log("we just finished amending the quote");
+                _this4.server_loading = false;
+                _this4.history_message = response.data.message;
+                _this4.errors = [];
+            }).catch(function (err) {
+                _this4.server_loading = false;
+                _this4.history_message = err.errors.message;
+                _this4.errors = err.errors.errors;
+            });
+        },
+        repeatQuote: function repeatQuote() {
+            var _this5 = this;
+
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+            this.server_loading = true;
+
+            // save
+            this.proposed_user_market_negotiation.repeatQuote().then(function (response) {
+
+                _this5.server_loading = false;
+                _this5.history_message = response.data.message;
+                _this5.errors = [];
+            }).catch(function (err) {
+                _this5.server_loading = false;
+                _this5.history_message = err.errors.message;
+                _this5.errors = err.errors.errors;
+            });
+        },
+        pullQuote: function pullQuote() {
+            var _this6 = this;
+
+            this.proposed_user_market.setMarketRequest(this.marketRequest);
+            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
             this.server_loading = true;
             // save
             this.proposed_user_market.delete().then(function (response) {
-                _this4.server_loading = false;
-                _this4.history_message = response.data.message;
-                // EventBus.$emit('interactionToggle', false);
-                _this4.$refs.pullModal.hide();
+                _this6.server_loading = false;
+                _this6.history_message = response.data.message;
+
+                _this6.$refs.pullModal.hide();
             }).catch(function (err) {
-                _this4.server_loading = false;
-                _this4.errors = err.errors;
-                _this4.$refs.pullModal.hide();
+                _this6.server_loading = false;
+                _this6.errors = err.errors;
+                _this6.$refs.pullModal.hide();
             });
         },
         reset: function reset() {
-            var _this5 = this;
+            var _this7 = this;
 
             var defaults = {
                 state_premium_calc: false,
@@ -92394,38 +92676,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 proposed_user_market: new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */](),
                 proposed_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
-
                 default_user_market_negotiation: new __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__["a" /* default */](),
                 history_message: null,
-
                 removable_conditions: [],
-
                 server_loading: false,
                 check_invalid: false,
                 errors: []
             };
             Object.keys(defaults).forEach(function (k) {
-                _this5[k] = defaults[k];
+                _this7[k] = defaults[k];
             });
         },
         setUpProposal: function setUpProposal() {
 
             // set up the new UserMarket as quote to be sent
-            if (this.marker_qoute) //already have my qoute
-                {
-                    this.proposed_user_market = this.marker_qoute.getMarketRequest().getUserMarket();
-                } else {
-                this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
+
+            /*
+            *if there's no chosen user market then work with it under quote
+            *else post for the specific user market
+            */
+            var chosen_user_market = this.marketRequest.chosen_user_market;
+            console.log('the chosen user market', chosen_user_market);
+
+            if (chosen_user_market) {
+                this.user_market = this.marketRequest.chosen_user_market;
+            } else {
+                if (this.marketRequest.sent_quote != null) //already have my qoute
+                    {
+                        this.proposed_user_market = this.marketRequest.sent_quote;
+                    } else {
+                    this.proposed_user_market = new __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__["a" /* default */]();
+                }
             }
-            this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
         },
         hideModal: function hideModal() {
             this.$refs.pullModal.hide();
         },
         setDefaultQuantities: function setDefaultQuantities() {
+            //if we have a chosen negotiation use that else its still dealing with quotes
+            if (this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null)) {
+                this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
+                this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;
 
-            if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
-                console.log("offer quote", this.marker_qoute.offer_qty);
+                this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
+                this.proposed_user_market_negotiation.bid = this.last_negotiation.bid;
+            } else if (this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null)) {
+                console.log("makerQoute", this.marker_qoute);
+                //we are editing our old one
+                this.proposed_user_market_negotiation.id = this.marker_qoute.id;
 
                 this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
                 this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;
@@ -92434,21 +92732,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
             }
         },
-        init: function init() {
-            this.reset(); // clear current state
-
+        setUpData: function setUpData() {
             // set up up data
             if (this.marketRequest) {
-                this.user_market = this.marketRequest.getChosenUserMarket();
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+
                 this.setUpProposal();
                 this.setDefaultQuantities();
                 this.updateUserMessages();
 
-                // relate
+                // // relate
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
-                //set the quotes here if they already set
             }
+        },
+        init: function init() {
+            this.reset(); // clear current state
+            this.setUpData();
         }
     },
     mounted: function mounted() {
@@ -92473,12 +92772,16 @@ var render = function() {
         attrs: { title: _vm.market_title, time: _vm.market_time }
       }),
       _vm._v(" "),
-      _vm.marketRequest.quotes
+      _vm.marketRequest.quotes && !_vm.marketRequest.chosen_user_market
         ? _c("ibar-negotiation-history-market", {
             staticClass: "mb-3",
             attrs: {
               message: _vm.history_message,
               history: _vm.marketRequest.quotes
+            },
+            on: {
+              "update-on-hold": _vm.setUpProposal,
+              "update-on-accept": _vm.setUpProposal
             }
           })
         : _vm._e(),
@@ -92487,20 +92790,44 @@ var render = function() {
         ? _c("ibar-negotiation-history-contracts", {
             staticClass: "mb-2",
             attrs: {
-              history: _vm.marketRequest.chosen_user_market.negotiations
+              message: _vm.history_message,
+              history: _vm.marketRequest.chosen_user_market.market_negotiations
             }
           })
         : _vm._e(),
       _vm._v(" "),
-      _c("ibar-market-negotiation-contracts", {
-        staticClass: "mb-5",
-        attrs: {
-          "check-invalid": _vm.check_invalid,
-          "marker-qoute": _vm.marker_qoute,
-          "market-negotiation": _vm.proposed_user_market_negotiation
-        },
-        on: { "validate-proposal": _vm.validateProposal }
-      }),
+      _vm.can_negotiate
+        ? _c("ibar-market-negotiation-contracts", {
+            staticClass: "mb-5",
+            attrs: {
+              "check-invalid": _vm.check_invalid,
+              "marker-qoute": _vm.marker_qoute,
+              "market-negotiation": _vm.proposed_user_market_negotiation
+            },
+            on: { "validate-proposal": _vm.validateProposal }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.can_negotiate
+        ? _c(
+            "b-form-checkbox",
+            {
+              attrs: {
+                id: "market-request-subscribe",
+                value: "true",
+                "unchecked-value": "false"
+              },
+              model: {
+                value: _vm.market_request_subscribe,
+                callback: function($$v) {
+                  _vm.market_request_subscribe = $$v
+                },
+                expression: "market_request_subscribe"
+              }
+            },
+            [_vm._v("\n   Alert me when cleared\n   ")]
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "b-row",
@@ -92516,11 +92843,11 @@ var render = function() {
                   { staticClass: "text-danger", attrs: { cols: "12" } },
                   [
                     _vm._v(
-                      "\n                    " +
+                      "\n                       " +
                         _vm._s(key) +
                         ":" +
                         _vm._s(error[0]) +
-                        "\n                "
+                        "\n                   "
                     )
                   ]
                 )
@@ -92539,7 +92866,7 @@ var render = function() {
                           },
                           [
                             _vm._v(
-                              "\n                        " +
+                              "\n                           " +
                                 _vm._s(cond.title) +
                                 "  "
                             ),
@@ -92703,7 +93030,7 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              !_vm.marker_qoute
+              !_vm.marker_qoute && !_vm.marketRequest.chosen_user_market
                 ? _c(
                     "b-row",
                     { staticClass: "justify-content-md-center" },
@@ -92752,6 +93079,81 @@ var render = function() {
                     ],
                     1
                   )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.marketRequest.chosen_user_market && _vm.can_negotiate
+                ? _c(
+                    "b-row",
+                    { staticClass: "justify-content-md-center" },
+                    [
+                      _c(
+                        "b-col",
+                        { attrs: { cols: "6" } },
+                        [
+                          _vm.marketRequest.is_market_maker &&
+                          !_vm.negotiation_updated
+                            ? _c(
+                                "b-button",
+                                {
+                                  staticClass: "w-100 mt-1",
+                                  attrs: {
+                                    disabled: _vm.server_loading,
+                                    size: "sm",
+                                    dusk: "ibar-action-send",
+                                    variant: "primary"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.spinNegotiation()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Spin")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          !_vm.marketRequest.is_market_maker ||
+                          (_vm.marketRequest.is_market_maker &&
+                            _vm.negotiation_updated)
+                            ? _c(
+                                "b-button",
+                                {
+                                  staticClass: "w-100 mt-1",
+                                  attrs: {
+                                    disabled:
+                                      _vm.check_invalid || _vm.server_loading,
+                                    size: "sm",
+                                    dusk: "ibar-action-send",
+                                    variant: "primary"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.sendNegotiation()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Send")]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "b-button",
+                            {
+                              staticClass: "w-100 mt-1",
+                              attrs: {
+                                size: "sm",
+                                dusk: "ibar-action-nocares",
+                                variant: "secondary"
+                              }
+                            },
+                            [_vm._v("No Cares")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
                 : _vm._e()
             ],
             2
@@ -92760,17 +93162,22 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c("ibar-apply-conditions", {
-        staticClass: "mb-5",
-        attrs: {
-          "applied-conditions": _vm.proposed_user_market_negotiation.conditions,
-          "removable-conditions": _vm.removable_conditions
-        }
-      }),
+      _vm.can_negotiate
+        ? _c("ibar-apply-conditions", {
+            staticClass: "mb-5",
+            attrs: {
+              "applied-conditions":
+                _vm.proposed_user_market_negotiation.conditions,
+              "removable-conditions": _vm.removable_conditions
+            }
+          })
+        : _vm._e(),
       _vm._v(" "),
-      _c("ibar-apply-premium-calculator", {
-        attrs: { "market-negotiatio": _vm.proposed_user_market_negotiation }
-      })
+      _vm.can_negotiate
+        ? _c("ibar-apply-premium-calculator", {
+            attrs: { "market-negotiatio": _vm.proposed_user_market_negotiation }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -94595,14 +95002,87 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            conditionAttr: []
+        };
+    },
+
     props: {
         history: {
             type: Array
+        },
+        message: {
+            type: String
         }
     },
-    mounted: function mounted() {}
+    methods: {
+        getConditionState: function getConditionState(item) {
+
+            for (var k in item) {
+
+                if (this.conditionAttr.indexOf(k) > -1 && item[k] !== null) {
+                    if (typeof this.$root.config("condition_titles")[k] == "Object") {
+                        return item[k] ? this.$root.config("condition_titles")[k]["true"] : this.$root.config("condition_titles")[k]["false"];
+                    } else {
+                        return this.$root.config("condition_titles")[k];
+                    }
+                }
+            }
+
+            return null;
+        },
+        getStateClass: function getStateClass(attr, item) {
+            var prevItem = this.history.find(function (itItem) {
+                return item.market_negotiation_id == itItem.id;
+            });
+
+            if (prevItem) {
+                if (prevItem[attr] == item[attr]) {
+                    return {
+                        "is-interest": prevItem.is_interest && !prevItem.is_my_org,
+                        "is-maker": prevItem.is_maker && !prevItem.is_my_org,
+                        "is-my-org": prevItem.is_my_org
+                    };
+                }
+            }
+
+            return {
+                "is-interest": item.is_interest && !item.is_my_org,
+                "is-maker": item.is_maker && !item.is_my_org,
+                "is-my-org": item.is_my_org
+            };
+        }
+    },
+    mounted: function mounted() {
+        this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
+    }
 });
 
 /***/ }),
@@ -94615,60 +95095,159 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-row",
-    { attrs: { dusk: "ibar-negotiation-history-contracts" } },
+    {
+      staticClass: "ibar-negotiation-history-contracts",
+      attrs: { dusk: "ibar-negotiation-history-contracts" }
+    },
     [
       _c(
         "b-col",
-        _vm._l(_vm.history, function(item) {
-          return _c(
-            "b-row",
-            [
-              _c(
-                "b-col",
-                { attrs: { cols: "10" } },
+        [
+          _vm._l(_vm.history, function(item) {
+            return item.id != ""
+              ? _c(
+                  "b-row",
+                  [
+                    _c(
+                      "b-col",
+                      { attrs: { cols: "10" } },
+                      [
+                        _c(
+                          "b-row",
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                         " +
+                                    _vm._s(item.bid_qty ? item.bid_qty : "-") +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                class: _vm.getStateClass("bid", item),
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.bid ? item.bid : "-") +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                class: _vm.getStateClass("offer", item),
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                        " +
+                                    _vm._s(item.offer ? item.offer : "-") +
+                                    "\n                    "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "text-center",
+                                attrs: { cols: "3" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                         " +
+                                    _vm._s(
+                                      item.offer_qty ? item.offer_qty : "-"
+                                    ) +
+                                    "\n                    "
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "b-row",
+                          [
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "condition text-center",
+                                attrs: { cols: "6" }
+                              },
+                              [
+                                _c("small", [
+                                  _vm._v(
+                                    _vm._s(_vm.getConditionState(item)) + " "
+                                  )
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "b-col",
+                              {
+                                staticClass: "condition text-center",
+                                attrs: { cols: "6" }
+                              },
+                              [
+                                _c("small", [
+                                  _vm._v(
+                                    _vm._s(_vm.getConditionState(item)) + " "
+                                  )
+                                ])
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("b-col", { attrs: { cols: "2" } }, [
+                      _c("p", { staticClass: "text-center" }, [
+                        _c("small", [_vm._v(_vm._s(item.time))])
+                      ])
+                    ])
+                  ],
+                  1
+                )
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _vm.message
+            ? _c(
+                "b-row",
+                { staticClass: "justify-content-md-center" },
                 [
-                  _c(
-                    "b-row",
-                    [
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.bid_qty)))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.bid))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(item.offer))]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "b-col",
-                        { staticClass: "text-center", attrs: { cols: "3" } },
-                        [_vm._v(_vm._s(_vm.formatRandQty(item.offer_qty)))]
-                      )
-                    ],
-                    1
-                  )
+                  _c("b-col", { staticClass: "mt-2" }, [
+                    _c("p", { staticClass: "text-center" }, [
+                      _c("small", [_vm._v(_vm._s(_vm.message))])
+                    ])
+                  ])
                 ],
                 1
-              ),
-              _vm._v(" "),
-              _c("b-col", { attrs: { cols: "2" } }, [
-                _c("p", { staticClass: "text-center" }, [
-                  _vm._v(_vm._s(item.time))
-                ])
-              ])
-            ],
-            1
-          )
-        })
+              )
+            : _vm._e()
+        ],
+        2
       )
     ],
     1
@@ -94846,6 +95425,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     _this.history_message = response.data.message;
                     //@TODO FIND out why this does not work.
                     quote.is_on_hold = true;
+                    _this.$emit("update-on-hold");
                 }).catch(function (err) {
                     _this.errors = err.errors;
                 });
@@ -94856,6 +95436,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             quote.accept().then(function (response) {
                 _this2.history_message = response.data.message;
+                _this2.$emit("update-on-accept");
             }).catch(function (err) {
                 _this2.errors = err.errors;
             });
@@ -95251,8 +95832,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 invalid_states.previous = this.marketNegotiation.bid == markerQoute.bid && this.marketNegotiation.bid_qty == markerQoute.bid_qty && this.marketNegotiation.offer == markerQoute.offer && this.marketNegotiation.offer_qty == markerQoute.offer_qty;
             }
 
-            console.log("markery negoti", this.marketNegotiation.offer, this.marketNegotiation.offer_qty);
-
             return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
         }
     },
@@ -95261,9 +95840,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return value === undefined || value === null || value === '';
         }
     },
-    mounted: function mounted() {
-        console.log(this.marketNegotiation);
-    }
+    mounted: function mounted() {}
 });
 
 /***/ }),
@@ -95602,7 +96179,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         return new __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketNegotiationCondition__["a" /* default */](x);
                     }) || [];
                     self.categories = _this2.mutateCategories(conditionsResponse.data.categories) || [];
-                    console.log(self.categories);
                     _this2.resetCategorySelection(_this2.categories);
                 } else {
                     console.error(err);
@@ -95625,7 +96201,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         applyCondition: function applyCondition(condition) {
             var _this4 = this;
 
-            console.log("got called");
             var conExist = this.appliedConditions.indexOf(condition) != -1;
 
             this.appliedConditions.splice(0, this.appliedConditions.length);
@@ -95693,7 +96268,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this7 = this;
 
             Vue.nextTick(function () {
-                console.log("the update got called");
                 _this7.appliedConditions.splice(0, _this7.appliedConditions.length);
                 if (_this7.chosen_top_level_category) {
                     _this7.recurseSelected(_this7.chosen_top_level_category);
@@ -96132,9 +96706,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {},
-    created: function created() {
-        console.log("ApplyPremium calculator stuff", this.UserMarketNegotiation);
-    },
+    created: function created() {},
     mounted: function mounted() {}
 });
 
@@ -98169,7 +98741,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
          */
         nextStep: function nextStep() {
             this.modal_data.step++;
-            console.log("STEP=========================: ", this.modal_data.step);
+            // console.log("STEP=========================: ", this.modal_data.step);
         },
 
         /**
@@ -98185,7 +98757,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 case 3:
                     //this.modal_data.title += ' > ' + component_data.title;
-                    console.log("CASE 3: ", this.index_data.index_market_object);
+                    // console.log("CASE 3: ", this.index_data.index_market_object);
                     //this.index_data.index_market_object.market = component_data;
                     this.selected_step_component = 'Structure';
                     break;
@@ -98196,19 +98768,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                     //this.modal_data.title += ' > ' + component_data;
                     //this.index_data.index_market_object.trade_structure = component_data;
-                    console.log("CASE 4: ", this.index_data.index_market_object);
+                    // console.log("CASE 4: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Expiry';
                     break;
                 case 5:
                     //this.index_data.index_market_object.expiry_dates = component_data;
-                    console.log("CASE 5: ", this.index_data.index_market_object);
+                    // console.log("CASE 5: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Details';
-                    console.log("CASE 5 COMPONENT: ", this.selected_step_component);
+                    // console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                     break;
                 case 6:
                     this.modal_data.title = 'Confirm Market Request';
                     //this.index_data.index_market_object.details = component_data;
-                    console.log("CASE 6: ", this.index_data.index_market_object);
+                    // console.log("CASE 6: ", this.index_data.index_market_object);
                     this.selected_step_component = 'Confirm';
                     break;
                 case 7:
@@ -98258,12 +98830,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     // The request was made but no response was received
                     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                     // http.ClientRequest in node.js
-                    console.log(err.request);
-                } else {
+                    // console.log(err.request);
+                } else {}
                     // Something happened in setting up the request that triggered an Error
-                    console.log('Error', err.message);
-                }
-                console.log(err.config);
+                    // console.log('Error', err.message);
+
+                    // console.log(err.config);
             });
         },
         loadErrorStep: function loadErrorStep(errors) {
@@ -98368,7 +98940,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.modal_data.title = "Index";
         this.loadIndexMarkets();
-        console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
+        // console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
         this.selected_step_component = 'Market';
         this.$on('modal_step', this.loadStepComponent);
     }
@@ -99854,7 +100426,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         nextStep: function nextStep(step) {
             this.modal_data.step++;
-            console.log("Current Step===================: ", this.modal_data.step);
+            //console.log("Current Step===================: ", this.modal_data.step);
             this.callback(step);
         }
     },

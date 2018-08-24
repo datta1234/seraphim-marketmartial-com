@@ -7,33 +7,38 @@ export default {
             user_market_offer: '',
         }
     },
+     computed: {
+            current_user_market_negotiation: function() {
+                let chosen_user_market = this.marketRequest.chosen_user_market;
+                if(chosen_user_market){
+                   return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
+                }
+                return null;
+            }
+    },
     methods: {
         loadInteractionBar() {
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
-        hasNoCaresUnderCares(marketRequest){
-
-        },
         calcMarketState() {
             // set new refs
-            // this.user_market = this.marketRequest.getChosenUserMarket();
-            // this.current_negotiation = this.user_market ? this.user_market.getCurrentNegotiation() : null;
-            // this.user_market_bid = this.current_negotiation ? this.current_negotiation.bid : null;
-            // this.user_market_offer = this.current_negotiation ? this.current_negotiation.offer : null;
-            
+            this.user_market_bid = null;
+            this.user_market_offer = null;
+            this.market_request_state = null;
+            this.market_request_state_label = null;
+
             // run tests
             // TODO: add logic for if current user then "SENT"
             switch(this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
-                    if(this.marketRequest.user_market) {
+                    if(this.marketRequest.sent_quote) {
                         this.market_request_state = 'request-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.marketRequest.user_market.current_market_negotiation.bid ? this.marketRequest.user_market.current_market_negotiation.bid : '-';
-                        this.user_market_offer = this.marketRequest.user_market.current_market_negotiation.offer ? this.marketRequest.user_market.current_market_negotiation.offer : '-';
+                        this.user_market_bid = this.marketRequest.sent_quote.current_market_negotiation.bid ? this.marketRequest.sent_quote.current_market_negotiation.bid : '-';
+                        this.user_market_offer = this.marketRequest.sent_quote.current_market_negotiation.offer ? this.marketRequest.sent_quote.current_market_negotiation.offer : '-';
                     } else {
                         
                         this.market_request_state = 'request';
-
                         this.market_request_state_label = "REQUEST";
                     }
                 break;
@@ -54,6 +59,21 @@ export default {
                    // this.market_request_state = 'request';
                     this.market_request_state_label = "SENT";
                 break;
+                case "PENDING":
+                    this.market_request_state = 'negotiation-vol';
+                    this.market_request_state_label = "PENDING";
+                break;
+                case "NEGOTIATION-VOL":
+                        this.market_request_state = 'negotiation-vol';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.bid : '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.offer : '-';
+                break;
+                case "NEGOTIATION-VOL-PENDING":
+                        this.market_request_state = 'negotiation-vol-pending';
+                        this.market_request_state_label = "PENDING";
+
+                break;
                 case "alert":
                     this.market_request_state = 'alert';
                     this.market_request_state_label = "";
@@ -70,6 +90,8 @@ export default {
                     this.market_request_state = '';
                     this.market_request_state_label = '';
             }
+
+            // console.log("data looking","label:",this.market_request_state_label,"state:",this.market_request_state,);
         },
         /**
          *   toggleActionTaken - calls actionTaken() on this User Market Request
@@ -78,8 +100,35 @@ export default {
         toggleActionTaken() {
             if(this.marketRequest.attributes.action_needed) {
                 let result = this.marketRequest.actionTaken();
-                console.log("Result from taking action: ", result);
             }
+        },
+        getStateClass(attr)
+        {
+
+            if(this.current_user_market_negotiation && this.marketRequest.chosen_user_market)
+            {
+                let prevItem = this.marketRequest.chosen_user_market.market_negotiations.find((itItem) => this.current_user_market_negotiation.market_negotiation_id == itItem.id);
+                
+                if(prevItem)
+                {
+
+                    if(prevItem[attr] == this.current_user_market_negotiation[attr])
+                    {
+                        return {
+                            "is-interest":prevItem.is_interest && !prevItem.is_my_org,
+                            "is-maker":prevItem.is_maker && !prevItem.is_my_org,
+                            "is-my-org":prevItem.is_my_org
+                        };  
+                    }
+                }
+
+                return {
+                    "is-interest":this.current_user_market_negotiation.is_interest && !this.current_user_market_negotiation.is_my_org,
+                    "is-maker":this.current_user_market_negotiation.is_maker && !this.current_user_market_negotiation.is_my_org,
+                    "is-my-org":this.current_user_market_negotiation.is_my_org
+                };    
+            }
+
         }
     }
 }

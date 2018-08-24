@@ -11805,6 +11805,11 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
+.trade-section.light-theme .negotiation-vol-pending .market-tab-state,
+.trade-section.dark-theme .negotiation-vol-pending .market-tab-state {
+  border-left: 2px solid #BB1D1D;
+}
+
 .trade-section.light-theme .market-tab.market-request-grey,
 .trade-section.dark-theme .market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;
@@ -11826,6 +11831,18 @@ input:checked + .slider:before {
 
 .trade-section.light-theme .market-tab {
   background-color: #071a22;
+}
+
+.market-tab-state .is-interest {
+  color: #2358BD;
+}
+
+.market-tab-state .is-maker {
+  color: #37A53A;
+}
+
+.market-tab-state .is-my-org {
+  color: #EBC300;
 }
 
 #trade-footer {
@@ -12010,6 +12027,22 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .ibar-condition-remove-label > span.remove {
   color: red;
   font-weight: bold;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest {
+  color: #2358BD;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-maker {
+  color: #37A53A;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+  color: #EBC300;
+}
+
+.condition {
+  color: #EBC300;
 }
 
 .interaction-bar-wrapper .chat-bar,

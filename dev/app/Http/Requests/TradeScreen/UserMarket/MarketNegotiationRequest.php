@@ -1,0 +1,84 @@
+<?php
+namespace App\Http\Requests\TradeScreen\UserMarket;
+
+use Illuminate\Foundation\Http\FormRequest;
+use \Illuminate\Contracts\Validation\Validator;
+
+class MarketNegotiationRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        // @TODO: authorize for traders only
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $market_condition = (new \App\Models\Market\MarketCondition)->getTable();
+       
+        return [
+            // initial negotiation
+            'has_premium_calc'          =>  'boolean',
+            'is_repeat'                 =>  'boolean',
+            'bid_premium'               =>  'required_if:has_premium_calc,true|nullable|numeric',
+            'offer_premium'             =>  'required_if:has_premium_calc,true|nullable|numeric',
+            // conditions
+            'conditions'                => 'array',
+            'conditions.*.id'           => 'required_with:conditions|exists:'.$market_condition.',id',
+        ];
+    }
+
+    /**
+    *
+    * @return array
+    */
+    public function messages() {
+        return [
+            'user_market_request_id'    =>  "The requested market was invalid",
+            'bid'                       =>  "A negotiation bid/offer value required",
+            'offer'                     =>  "A negotiation bid/offer value required",
+            'bid_qty'                   =>  "A negotiation bid/offer quantity required",
+            'offer_qty'                 =>  "A negotiation bid/offer quantity required",
+            'has_premium_calc'          =>  "",
+            'bid_premium'               =>  "",
+            'offer_premium'             =>  "",
+            'conditions'                =>  "",
+            'conditions.*.id'           =>  "",
+        ];
+    }
+
+     /**
+    * 
+    *
+    * @param \Illuminate\Contracts\Validation\Validator $validator
+    * @return void
+    */
+    public function withValidator(Validator $validator)
+    {
+        $validator->sometimes(['bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
+            return !is_null($input->bid_qty) && !$input->is_repeat;
+        }); 
+
+        $validator->sometimes(['offer'], 'required_with:offer_qty|required_without_all:is_repeat,bid|nullable|numeric', function ($input) {
+            return !is_null($input->offer_qty) && !$input->is_repeat;
+        }); 
+
+        $validator->sometimes(['bid_qty'], 'required|numeric', function ($input) {
+            return !is_null($input->bid) && !$input->is_repeat;
+        }); 
+
+        $validator->sometimes(['offer_qty'], 'required_with:offer|numeric', function ($input) {
+            return !is_null($input->offer) && !$input->is_repeat;
+        }); 
+    }
+}

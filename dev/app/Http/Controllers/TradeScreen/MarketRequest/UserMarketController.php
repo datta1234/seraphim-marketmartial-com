@@ -113,7 +113,7 @@ class UserMarketController extends Controller
      */
     public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
-
+        $organisations = null;
 
         if($request->has('is_on_hold') && $request->input('is_on_hold'))
         {
@@ -128,8 +128,9 @@ class UserMarketController extends Controller
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
             $message = 'You have accepted the market. Response sent to counterparty.';
+            $organisations[] = $request->user()->organisation;
 
-            // Set action that needs to be taken for the org being put on hold
+            // Set action that needs to be taken for theaccepted
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
         }else
         {
@@ -137,10 +138,10 @@ class UserMarketController extends Controller
             //the market maker allowed responses
             if($request->has('is_repeat') && $request->input('is_repeat'))
             {
-                $success = $userMarket->repeatNegotiation($request->user());
+                $success = $userMarket->repeatQuote($request->user());
             }else
             {
-                $success = $userMarket->updateNegotiation($request->user(),$request->all());
+                $success = $userMarket->updateQuote($request->user(),$request->all());
             }
 
             // Set action that needs to be taken for the org related to this userMarketRequest
@@ -155,7 +156,7 @@ class UserMarketController extends Controller
         }
 
         // TODO add error handeling and error response
-        $userMarketRequest->notifyRequested();
+        $userMarketRequest->fresh()->notifyRequested($organisations);
 
         return response()->json(['data' => $success, 'message' => $message]);
     }

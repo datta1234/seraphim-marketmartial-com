@@ -11,4 +11,9 @@ return [
         'interest'  =>  "REQUEST-SENT-VOL",
         'other'     =>  "REQUEST-VOL",
     ],
+    'negotiation-pending' =>[
+        'interest'        =>  "NEGOTIATION-VOL",
+        'market_maker'    =>  "NEGOTIATION-VOL",
+        'other'           =>  "NEGOTIATION-VOL-PENDING"
+    ]
 ];

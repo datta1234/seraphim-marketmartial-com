@@ -106,6 +106,7 @@
                         this.history_message = response.data.message;
                         //@TODO FIND out why this does not work.
                         quote.is_on_hold = true;
+                        this.$emit("update-on-hold");
 
                     })
                     .catch(err => {
@@ -119,6 +120,7 @@
                  quote.accept()
                     .then(response => {
                         this.history_message = response.data.message;
+                        this.$emit("update-on-accept");
                     })
                     .catch(err => {
                         this.errors = err.errors;

@@ -41,7 +41,10 @@ export default class UserMarket extends BaseModel {
         });
 
         // register market_negotiations
+
         if(options && options.market_negotiations) {
+            console.log("options.market_negotiations",options.market_negotiations);
+
             this.addNegotiations(options.market_negotiations);
         }
 

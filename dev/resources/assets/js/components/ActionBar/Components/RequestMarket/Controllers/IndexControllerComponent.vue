@@ -90,7 +90,7 @@
              */
             nextStep() {
                 this.modal_data.step++;
-                console.log("STEP=========================: ", this.modal_data.step);
+                // console.log("STEP=========================: ", this.modal_data.step);
             },
             /**
              * Loads step component 
@@ -105,7 +105,7 @@
                         break;
                     case 3:
                         //this.modal_data.title += ' > ' + component_data.title;
-                        console.log("CASE 3: ", this.index_data.index_market_object);
+                        // console.log("CASE 3: ", this.index_data.index_market_object);
                         //this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
                         break;
@@ -116,19 +116,19 @@
                         }
                         //this.modal_data.title += ' > ' + component_data;
                         //this.index_data.index_market_object.trade_structure = component_data;
-                        console.log("CASE 4: ", this.index_data.index_market_object);
+                        // console.log("CASE 4: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
                         //this.index_data.index_market_object.expiry_dates = component_data;
-                        console.log("CASE 5: ", this.index_data.index_market_object);
+                        // console.log("CASE 5: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Details';
-                        console.log("CASE 5 COMPONENT: ", this.selected_step_component);
+                        // console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                         break;
                     case 6:
                         this.modal_data.title = 'Confirm Market Request'
                         //this.index_data.index_market_object.details = component_data;
-                        console.log("CASE 6: ", this.index_data.index_market_object);
+                        // console.log("CASE 6: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Confirm';
                         break;
                     case 7:
@@ -173,12 +173,12 @@
                       // The request was made but no response was received
                       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                       // http.ClientRequest in node.js
-                      console.log(err.request);
+                      // console.log(err.request);
                     } else {
                       // Something happened in setting up the request that triggered an Error
-                      console.log('Error', err.message);
+                      // console.log('Error', err.message);
                     }
-                    console.log(err.config);
+                    // console.log(err.config);
                 });
             },
             loadErrorStep(errors) {
@@ -279,7 +279,7 @@
         mounted() {
             this.modal_data.title = "Index";
             this.loadIndexMarkets();
-            console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
+            // console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);
         }

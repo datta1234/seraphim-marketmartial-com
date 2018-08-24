@@ -69,7 +69,6 @@ export default class Market extends BaseModel {
     updateMarketRequest(market_req, index) {
         // @TODO fix updating root property before we enable this again.
         this.market_requests[index].update(market_req);
-        console.log(this.market_requests[index], market_req);
     }
 
     /**
