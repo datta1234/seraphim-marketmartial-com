@@ -47,7 +47,7 @@
         methods: {
             nextStep(step) {
                 this.modal_data.step++;
-                console.log("Current Step===================: ", this.modal_data.step);
+                //console.log("Current Step===================: ", this.modal_data.step);
                 this.callback(step)
             },
         },

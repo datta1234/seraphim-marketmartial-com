@@ -98,7 +98,6 @@
             }
         },
         mounted() {
-            console.log(this.marketNegotiation);
         }
     }
 </script>

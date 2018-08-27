@@ -127,13 +127,15 @@ class UserMarketRequest extends Model
     */
     public function preFormatted()
     {
-
-        // dd($this->resolveOrganisationId());
+        $current_org_id =  $this->resolveOrganisationId();
+        $interest_org_id = $this->user->organisation->id;
 
         $data = [
             "id"                => $this->id,
             "market_id"         => $this->market_id,
             "is_interest"       => $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId(),
+            'is_interest'       => $interest_org_id == $current_org_id,
+            "is_market_maker"   => false,
             "trade_structure"   => $this->tradeStructure->title,
             "trade_items"       => $this->userMarketRequestGroups
              ->keyBy('tradeStructureGroup.title')
@@ -145,16 +147,28 @@ class UserMarketRequest extends Model
                     return $item->value;
                 });
             }),
-            "attributes" => $this->resolveRequestAttributes(),
-            "quotes"    => $this->userMarkets->map(function($item){ 
-                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
-            }),
-
-            "user_market"   =>  $this->authedUserMarket, //UserMarket
-
-            "created_at"    => $this->created_at->format("Y-m-d H:i:s"),
-            "updated_at"    => $this->updated_at->format("Y-m-d H:i:s"),
+            "attributes"        => $this->resolveRequestAttributes(),
+            "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
+            "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
         ];
+
+        $showLevels = $this->isAcceptedState($current_org_id, $interest_org_id);
+
+        if($showLevels)
+        {
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->org_context)->preFormattedMarket();
+            $data["quotes"]  = [];
+            //market has been chosen and this user is considerd the market maker
+            $market_maker_org_id = $this->chosenUserMarket->organisation->id;
+            $data['is_market_maker'] = $market_maker_org_id == $current_org_id;
+
+        }else
+        {
+            $data["sent_quote"]        = $this->authedUserMarket;
+            $data["quotes"]            = $this->userMarkets->map(function($item){ 
+                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+                                           });
+        }
 
         // if($this->currentUserUserMarket()) {
         //     $data["quote"]  =  $this->currentUserUserMarket()->preFormattedQuote(); //UserMarketQuote
@@ -175,13 +189,44 @@ class UserMarketRequest extends Model
             ->first();
     }
 
-    public function notifyRequested()
+    public function notifyRequested($organisations = [])
     {
-        $organisations = Organisation::verifiedCache();
-        foreach ($organisations  as $organisation) 
+        if(count($organisations) > 0)
         {
-            event(new UserMarketRequested($this,$organisation));
+                foreach ($organisations as $organisation) {
+
+                    event(new UserMarketRequested($this,$organisation));
+                }
+        }else
+        {
+            $organisations = Organisation::verifiedCache();
+            foreach ($organisations  as $organisation) 
+            {
+                event(new UserMarketRequested($this,$organisation));
+            } 
         }
+       
+    }
+
+
+    //for the interest show them the levels
+    public function isAcceptedState($current_org_id, $interest_org_id)
+    {
+        if($this->chosenUserMarket()->exists())
+        {
+            $is_interest = $interest_org_id == $current_org_id;
+
+            $marketCount = $this->chosenUserMarket->marketNegotiations()->count();
+            if($is_interest)
+            {
+              return  $marketCount > 0;
+            }else
+            {
+              return $marketCount > 1;
+            }
+
+        }
+        
     }
 
 
@@ -192,33 +237,65 @@ class UserMarketRequest extends Model
      */
     private function resolveRequestAttributes()
     {
+
+        $current_org_id =  $this->resolveOrganisationId();
+        $interest_org_id = $this->user->organisation->id;
+
         $attributes = [
             'state' => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state' => "",
             'offer_state'   => "",
             'action_needed' => ""
-        ];
+            ];
+
 
         // make sure to handle null organisations as false
-        $self_org = ( $this->resolveOrganisationId() == null ? false : $this->user->organisation_id == $this->resolveOrganisationId() );
-        
-        // if not quotes/user_markets preset => REQUEST
-        if($this->userMarkets->isEmpty()) {
-            if($self_org) {
-                $attributes['state'] = config('marketmartial.market_request_states.request.interest');
-            } else {
-                $attributes['state'] = config('marketmartial.market_request_states.request.other');
-            }
-        } 
-        // if quotes exist, show as vol spread
-        else {
-            if($self_org) {
-                $attributes['state'] = config('marketmartial.market_request_states.request-vol.interest');
-            } else {
-                $attributes['state'] = config('marketmartial.market_request_states.request-vol.other');
-            }
-        } 
+        $self_org = ( $current_org_id  == null ? false : $this->user->organisation_id == $current_org_id  );
 
+        if($this->isAcceptedState($current_org_id, $interest_org_id))
+        {
+            //market has been chosen and this user is considerd the market maker
+            $market_maker_org_id = $this->chosenUserMarket->organisation->id;
+
+            if($interest_org_id == $current_org_id)
+            {
+                $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.interest');
+
+            }elseif($market_maker_org_id == $current_org_id)
+            {
+                $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.market_maker');
+
+            }else
+            {
+                $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.other');               
+            }
+
+
+
+
+        }else //no market has been chosen as of yet
+        {
+            
+               // if not quotes/user_markets preset => REQUEST
+            if($this->userMarkets->isEmpty()) {
+                if($self_org) {
+                    $attributes['state'] = config('marketmartial.market_request_states.request.interest');
+                } else {
+                    $attributes['state'] = config('marketmartial.market_request_states.request.other');
+                }
+            } 
+            // if quotes exist, show as vol spread
+            else {
+                if($self_org) {
+                    $attributes['state'] = config('marketmartial.market_request_states.request-vol.interest');
+                } else {
+                    $attributes['state'] = config('marketmartial.market_request_states.request-vol.other');
+                }
+            } 
+  
+        }
+
+       
 
         /*
         *   BID / OFFER states

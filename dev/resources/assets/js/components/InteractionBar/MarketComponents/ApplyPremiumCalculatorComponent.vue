@@ -23,7 +23,6 @@
            
         },
         created() {
-        	console.log("ApplyPremium calculator stuff",this.UserMarketNegotiation);
         },
         mounted() {
 

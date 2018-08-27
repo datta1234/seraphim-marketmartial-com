@@ -197,7 +197,6 @@ const app = new Vue({
                 if(marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
-                    console.log("Market Types: ", self.market_types);
                 } else {
                     console.error(err);    
                 }
@@ -229,13 +228,11 @@ const app = new Vue({
         },
         loadMarketRequests(market) {
             let self = this;
-            console.log("Load Market Request", market);
             return axios.get(axios.defaults.baseUrl + '/trade/market/'+market.id+'/market-request')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
                     market.addMarketRequests(marketResponse.data);
-                    console.log("Market Requests", marketResponse.data);
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -286,8 +283,6 @@ const app = new Vue({
             let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
             if(index !== -1)
             {
-                /*console.log("the index",this.display_markets[index]);
-                console.log("the market",new UserMarketRequest(UserMarketRequestData));*/
                 let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
                 if(request_index !== -1) {
                     this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
@@ -319,6 +314,7 @@ const app = new Vue({
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
         .then( () => {
+            this.loadConfig('condition_titles','condition_titles.json');
             this.loadUserConfig();
         })
         .then(configs => {
@@ -360,7 +356,7 @@ const app = new Vue({
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {
                 //this should be the market thats created
-                console.log("this is what pusher just gave you", UserMarketRequest);
+                console.log("this is what websockets is",UserMarketRequest);
                 this.updateUserMarketRequest(UserMarketRequest);
             })
             .listen('ChatMessageReceived', (received_org_message) => {

@@ -126,7 +126,6 @@
                         // set the available market types
                         self.conditions = conditionsResponse.data.conditions.map(x => new UserMarketNegotiationCondition(x)) || [];
                         self.categories = this.mutateCategories(conditionsResponse.data.categories) || [];
-                        console.log(self.categories);
                         this.resetCategorySelection(this.categories);
                     } else {
                         console.error(err);    
@@ -145,7 +144,6 @@
                 });
             },
             applyCondition(condition) {
-                console.log("got called");
                 let conExist = this.appliedConditions.indexOf(condition) != -1;
 
                 this.appliedConditions.splice(0, this.appliedConditions.length);
@@ -212,7 +210,6 @@
             },
             updateCategoryConditions(changed) {
                 Vue.nextTick(() => {
-                    console.log("the update got called");
                     this.appliedConditions.splice(0, this.appliedConditions.length);
                     if(this.chosen_top_level_category) {
                         this.recurseSelected(this.chosen_top_level_category);

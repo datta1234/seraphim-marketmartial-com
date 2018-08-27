@@ -76,6 +76,9 @@
             margin-left:-10px;
             margin-right:-10px
         }
+
+
+
     }
     .interaction-bar-content-pane {
         @extend .col;
@@ -102,9 +105,6 @@
             font-size: 32px;
         }
     }
-
-
-
 
     /*
     *   Market Negotiation Blocks
@@ -147,4 +147,23 @@
             font-weight:bold;
         }
     }
+
+     // 
+    .ibar-negotiation-history-contracts
+    {
+        .is-interest{
+            color: $mm-blue;
+        }
+        .is-maker{
+            color: $mm-market-maker;
+        }
+        .is-my-org{
+            color: $mm-yellow;
+        }
+    }
+}
+
+.condition
+{
+  color: $mm-yellow;  
 }

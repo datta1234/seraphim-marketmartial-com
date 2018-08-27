@@ -36,6 +36,12 @@
 		}
 	}
 
+
+	.negotiation-vol-pending{
+		.market-tab-state{
+		 	border-left: 2px solid $mm-red;
+		}
+	}
 	// .market-tab.market-request-vol {
 	// 	border: 0.15em solid $mm-market-intrest;
 
@@ -67,4 +73,21 @@
 	.market-tab {
 		background-color: $mm-market-tab;
 	}
+}
+
+
+  
+.market-tab-state
+{
+    .is-interest{
+        color: $mm-blue;
+    }
+    .is-maker{
+        color: $mm-market-maker;
+    }
+    .is-my-org{
+        color: $mm-yellow;
+    }
+
+
 }
