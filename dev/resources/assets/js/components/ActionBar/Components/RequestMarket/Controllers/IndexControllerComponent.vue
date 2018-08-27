@@ -5,7 +5,8 @@
                 <b-alert show dismissible fade variant="danger">{{ errors.message }}</b-alert>
             </b-col>
         </b-row>
-        <component v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
+        <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
+        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
@@ -17,7 +18,7 @@
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
     import Market from '../../../../../lib/Market';
-
+    import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
         name: 'IndexController',
         props:{
@@ -77,6 +78,7 @@
                     Details: Details,
                 },
                 temp_title: [],
+                submitting_request: true,
             };
         },
         methods: {
@@ -150,6 +152,8 @@
              * Saves Market Request
              */
             saveMarketRequest() {
+                EventBus.$emit('loading', 'requestSubmission');
+                this.submitting_request = false;
                 let new_data = this.formatRequestData();
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
@@ -158,7 +162,11 @@
                     } else {
                         console.error(err);    
                     }
+                    EventBus.$emit('loading', 'requestSubmission');
+                    this.submitting_request = true;
                 }).catch( (err) => {
+                    EventBus.$emit('loading', 'requestSubmission');
+                    this.submitting_request = true;
                     this.previousStep();
                     if (err.response) {
                         // The request was made and the server responded with a status code
@@ -278,6 +286,7 @@
             console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);
+            this.submitting_request = true;
         }
     }
 </script>
