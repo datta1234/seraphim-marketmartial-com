@@ -40,5 +40,8 @@ EventBus.$on('loading', (type, state) => {
         case "requestDates":
             EventBus.$emit("requestDatesLoaded", state);
         break;
+        case "requestSubmission":
+            EventBus.$emit("requestSubmissionLoaded", state);
+        break;
     }
 });

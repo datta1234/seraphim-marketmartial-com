@@ -238,8 +238,6 @@ const app = new Vue({
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
                     market.addMarketRequests(marketResponse.data);
                     console.log("Market Requests", marketResponse.data);
-                    EventBus.$emit('loading', 'page');
-                    this.page_loaded = true;
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -349,7 +347,8 @@ const app = new Vue({
                 return Promise.all(promises);
             })
             .then(all_market_requests => {
-                
+                EventBus.$emit('loading', 'page');
+                this.page_loaded = true;
                 //load the no cares from storage
                 this.loadNoCares();
             });

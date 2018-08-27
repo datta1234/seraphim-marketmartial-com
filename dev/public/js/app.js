@@ -5307,6 +5307,62 @@ var eventOff = function eventOff(el, evtName, handler) {
 
 /***/ }),
 /* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(85);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+
+var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
+
+/**
+ * Listens to a global toggleSidebar event
+ *
+ * @event EventBus#toggleSidebar
+ * 
+ * @type {string} $sidebar An argument detailing which sidebar is being toggled.
+ * @type {boolean} $state An argument detailing what state the sidebar being
+ *		toggled is in.
+ * @type {*} $payload An argument detailing the payload being transmitted with the
+ *		event.
+ *  
+ * @fires EventBus#chatToggle
+ * @fires EventBus#interactionToggle
+ */
+EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
+    switch (sidebar) {
+        case "interaction":
+            //EventBus.$emit('chatToggle', false);
+            EventBus.$emit('interactionToggle', state, payload);
+            break;
+        case "chat":
+            //EventBus.$emit('interactionToggle', false);
+            EventBus.$emit('chatToggle', state, payload);
+            break;
+    }
+});
+
+// @TODO Add loaders to elements that need them
+EventBus.$on('loading', function (type, state) {
+    switch (type) {
+        case "page":
+            EventBus.$emit("pageLoaded", state);
+            break;
+        case "requestStructure":
+            EventBus.$emit("requestStructureLoaded", state);
+            break;
+        case "requestDates":
+            EventBus.$emit("requestDatesLoaded", state);
+            break;
+        case "requestSubmission":
+            EventBus.$emit("requestSubmissionLoaded", state);
+            break;
+    }
+});
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5614,59 +5670,6 @@ module.exports = {
   trim: trim
 };
 
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return EventBus; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(85);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-
-var EventBus = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a();
-
-/**
- * Listens to a global toggleSidebar event
- *
- * @event EventBus#toggleSidebar
- * 
- * @type {string} $sidebar An argument detailing which sidebar is being toggled.
- * @type {boolean} $state An argument detailing what state the sidebar being
- *		toggled is in.
- * @type {*} $payload An argument detailing the payload being transmitted with the
- *		event.
- *  
- * @fires EventBus#chatToggle
- * @fires EventBus#interactionToggle
- */
-EventBus.$on('toggleSidebar', function (sidebar, state, payload) {
-    switch (sidebar) {
-        case "interaction":
-            //EventBus.$emit('chatToggle', false);
-            EventBus.$emit('interactionToggle', state, payload);
-            break;
-        case "chat":
-            //EventBus.$emit('interactionToggle', false);
-            EventBus.$emit('chatToggle', state, payload);
-            break;
-    }
-});
-
-// @TODO Add loaders to elements that need them
-EventBus.$on('loading', function (type, state) {
-    switch (type) {
-        case "page":
-            EventBus.$emit("pageLoaded", state);
-            break;
-        case "requestStructure":
-            EventBus.$emit("requestStructureLoaded", state);
-            break;
-        case "requestDates":
-            EventBus.$emit("requestDatesLoaded", state);
-            break;
-    }
-});
 
 /***/ }),
 /* 10 */
@@ -9886,7 +9889,7 @@ function copyProps(props) {
 "use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 var normalizeHeaderName = __webpack_require__(92);
 
 var DEFAULT_CONTENT_TYPE = {
@@ -22612,7 +22615,7 @@ process.umask = function() { return 0; };
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 var settle = __webpack_require__(93);
 var buildURL = __webpack_require__(95);
 var parseHeaders = __webpack_require__(96);
@@ -58185,7 +58188,7 @@ window.Pusher = __webpack_require__(107);
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 var bind = __webpack_require__(44);
 var Axios = __webpack_require__(91);
 var defaults = __webpack_require__(30);
@@ -58272,7 +58275,7 @@ function isSlowBuffer (obj) {
 
 
 var defaults = __webpack_require__(30);
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 var InterceptorManager = __webpack_require__(100);
 var dispatchRequest = __webpack_require__(101);
 
@@ -58357,7 +58360,7 @@ module.exports = Axios;
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 module.exports = function normalizeHeaderName(headers, normalizedName) {
   utils.forEach(headers, function processHeader(value, name) {
@@ -58437,7 +58440,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 function encode(val) {
   return encodeURIComponent(val).
@@ -58512,7 +58515,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 // Headers whose duplicates are ignored by node
 // c.f. https://nodejs.org/api/http.html#http_message_headers
@@ -58572,7 +58575,7 @@ module.exports = function parseHeaders(headers) {
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -58690,7 +58693,7 @@ module.exports = btoa;
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 module.exports = (
   utils.isStandardBrowserEnv() ?
@@ -58750,7 +58753,7 @@ module.exports = (
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 function InterceptorManager() {
   this.handlers = [];
@@ -58809,7 +58812,7 @@ module.exports = InterceptorManager;
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 var transformData = __webpack_require__(102);
 var isCancel = __webpack_require__(48);
 var defaults = __webpack_require__(30);
@@ -58902,7 +58905,7 @@ module.exports = function dispatchRequest(config) {
 "use strict";
 
 
-var utils = __webpack_require__(8);
+var utils = __webpack_require__(9);
 
 /**
  * Transform the data for a request or a response
@@ -88715,7 +88718,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__lib_UserMarket__ = __webpack_require__(81);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__lib_UserMarketNegotiation__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__lib_EventBus_js__ = __webpack_require__(8);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -88944,8 +88947,6 @@ var app = new Vue({
             });
         },
         loadMarketRequests: function loadMarketRequests(market) {
-            var _this = this;
-
             var self = this;
             console.log("Load Market Request", market);
             return axios.get(axios.defaults.baseUrl + '/trade/market/' + market.id + '/market-request').then(function (marketResponse) {
@@ -88955,8 +88956,6 @@ var app = new Vue({
                     });
                     market.addMarketRequests(marketResponse.data);
                     console.log("Market Requests", marketResponse.data);
-                    __WEBPACK_IMPORTED_MODULE_12__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'page');
-                    _this.page_loaded = true;
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -88997,10 +88996,10 @@ var app = new Vue({
             }, this.configs);
         },
         reloadMarketRequests: function reloadMarketRequests() {
-            var _this2 = this;
+            var _this = this;
 
             this.display_markets.forEach(function (market) {
-                _this2.loadMarketRequests(market);
+                _this.loadMarketRequests(market);
             });
         },
         updateUserMarketRequest: function updateUserMarketRequest(UserMarketRequestData) {
@@ -89036,33 +89035,34 @@ var app = new Vue({
         configs: {}
     },
     mounted: function mounted() {
-        var _this3 = this;
+        var _this2 = this;
 
         // load config files
         this.loadConfig("trade_structure", "trade_structure.json").catch(function (err) {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         }).then(function () {
-            _this3.loadUserConfig();
+            _this2.loadUserConfig();
         }).then(function (configs) {
             // load the trade data
-            _this3.loadMarketTypes();
-            _this3.loadUserConfig().then(function (user_preferences) {
+            _this2.loadMarketTypes();
+            _this2.loadUserConfig().then(function (user_preferences) {
                 var promises = [];
                 if (user_preferences !== null) {
                     user_preferences.prefered_market_types.forEach(function (market_type) {
-                        promises.push(_this3.loadMarkets(market_type).then(function (markets) {
+                        promises.push(_this2.loadMarkets(market_type).then(function (markets) {
                             markets.forEach(function (market) {
-                                promises.push(_this3.loadMarketRequests(market));
+                                promises.push(_this2.loadMarketRequests(market));
                             });
                         }));
                     });
                 }
                 return Promise.all(promises);
             }).then(function (all_market_requests) {
-
+                __WEBPACK_IMPORTED_MODULE_12__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'page');
+                _this2.page_loaded = true;
                 //load the no cares from storage
-                _this3.loadNoCares();
+                _this2.loadNoCares();
             });
         });
 
@@ -89070,9 +89070,9 @@ var app = new Vue({
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
                 console.log("this is what pusher just gave you", UserMarketRequest);
-                _this3.updateUserMarketRequest(UserMarketRequest);
+                _this2.updateUserMarketRequest(UserMarketRequest);
             }).listen('ChatMessageReceived', function (received_org_message) {
-                _this3.$emit('chatMessageReceived', received_org_message);
+                _this2.$emit('chatMessageReceived', received_org_message);
             });
         }
     }
@@ -94595,7 +94595,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
@@ -94977,7 +94977,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__ = __webpack_require__(376);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__MarketTabs_Outright__);
@@ -95110,7 +95110,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -95341,7 +95341,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -95563,7 +95563,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -95784,7 +95784,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -96006,7 +96006,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -96220,7 +96220,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -96434,7 +96434,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -96648,7 +96648,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__MarketTabMixin__ = __webpack_require__(29);
 //
@@ -96906,7 +96906,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__ = __webpack_require__(403);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__InteractionBar_NegotiationBar_vue__);
 //
@@ -97018,7 +97018,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__BarLayouts_Outright__ = __webpack_require__(405);
@@ -97145,7 +97145,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(81);
@@ -97827,7 +97827,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98019,7 +98019,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98211,7 +98211,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98403,7 +98403,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98595,7 +98595,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98787,7 +98787,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -98979,7 +98979,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_UserMarketRequest__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_UserMarketNegotiation__ = __webpack_require__(17);
 //
@@ -101024,7 +101024,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__ActionBar_Components_ConfirmationsMenuComponent_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__ = __webpack_require__(464);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__ActionBar_Components_RequestMarket_RequestMarketMenuComponent_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_EventBus_js__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_Market__ = __webpack_require__(80);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_UserMarket__ = __webpack_require__(81);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__lib_UserMarketRequest__ = __webpack_require__(11);
@@ -101647,7 +101647,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
@@ -102021,7 +102021,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
@@ -102874,6 +102874,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__ = __webpack_require__(357);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_Market__ = __webpack_require__(80);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_EventBus_js__ = __webpack_require__(8);
+//
 //
 //
 //
@@ -102952,7 +102954,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 Confirm: __WEBPACK_IMPORTED_MODULE_4__Components_ConfirmMarketRequestComponent_vue___default.a,
                 Details: __WEBPACK_IMPORTED_MODULE_3__Components_DetailsComponent_vue___default.a
             },
-            temp_title: []
+            temp_title: [],
+            submitting_request: true
         };
     },
 
@@ -103035,6 +103038,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveMarketRequest: function saveMarketRequest() {
             var _this2 = this;
 
+            __WEBPACK_IMPORTED_MODULE_6__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'requestSubmission');
+            this.submitting_request = false;
             var new_data = this.formatRequestData();
             axios.post(axios.defaults.baseUrl + '/trade/market/' + this.index_data.index_market_object.market.id + '/market-request', new_data).then(function (newMarketRequestResponse) {
                 if (newMarketRequestResponse.status == 200) {
@@ -103042,7 +103047,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 } else {
                     console.error(err);
                 }
+                __WEBPACK_IMPORTED_MODULE_6__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'requestSubmission');
+                _this2.submitting_request = true;
             }).catch(function (err) {
+                __WEBPACK_IMPORTED_MODULE_6__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'requestSubmission');
+                _this2.submitting_request = true;
                 _this2.previousStep();
                 if (err.response) {
                     // The request was made and the server responded with a status code
@@ -103166,6 +103175,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         console.log("WHAT STEP IS THIS?==================", this.modal_data.step);
         this.selected_step_component = 'Market';
         this.$on('modal_step', this.loadStepComponent);
+        this.submitting_request = true;
     }
 });
 
@@ -103308,7 +103318,7 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
@@ -103483,7 +103493,7 @@ if (false) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
@@ -104683,14 +104693,26 @@ var render = function() {
           )
         : _vm._e(),
       _vm._v(" "),
-      _c(_vm.components[_vm.selected_step_component], {
-        tag: "component",
+      _c("mm-loader", {
         attrs: {
-          errors: _vm.errors.data[_vm.selected_step_component],
-          data: _vm.index_data,
-          callback: _vm.loadStepComponent
+          theme: "light",
+          default_state: false,
+          event_name: "requestSubmissionLoaded",
+          width: "200",
+          height: "200"
         }
-      })
+      }),
+      _vm._v(" "),
+      _vm.submitting_request
+        ? _c(_vm.components[_vm.selected_step_component], {
+            tag: "component",
+            attrs: {
+              errors: _vm.errors.data[_vm.selected_step_component],
+              data: _vm.index_data,
+              callback: _vm.loadStepComponent
+            }
+          })
+        : _vm._e()
     ],
     1
   )
@@ -105250,7 +105272,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__ = __webpack_require__(8);
 //
 //
 //
