@@ -31,7 +31,8 @@
             return {
                 light_theme_img:'/img/loader_black.gif',
                 dark_theme_img:'/img/loader_white.gif',
-                loading: false
+                loading: false,
+                theme_state: false
             };
         },
         computed: {
@@ -42,7 +43,7 @@
                     case "light":
                         return this.light_theme_img;
                     default:
-                        return this.dark_theme_img;
+                        return this.theme_state ? this.light_theme_img : this.dark_theme_img;
                 }
             }
         },
@@ -71,12 +72,25 @@
             loaderListener() {
                 EventBus.$on(this.event_name, this.toggleLoader);
             },
+
+            /**
+             * Listens for a toggleTheme event firing
+             *
+             * @event /lib/EventBus#toggleTheme
+             */
+            themeListener() {
+                EventBus.$on('toggleTheme', (state) => {
+                    this.theme_state = state;
+                    //this.theme_toggle = state;
+                })
+            },
         },
         mounted() {
             this.loading = this.default_state;
             this.light_theme_img = axios.defaults.baseUrl + this.light_theme_img;
             this.dark_theme_img = axios.defaults.baseUrl + this.dark_theme_img;
             this.loaderListener();
+            this.themeListener();
         }
     }
 

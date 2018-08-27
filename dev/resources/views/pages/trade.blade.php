@@ -5,7 +5,7 @@
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
 		<!-- Toggle dark-theme / light-theme classes -->
-		<div class="trade-section col-12 dark-theme pb-5 interaction-bar-content-pane" data-theme-wrapper>
+		<div v-bind:class="tradeTheme" class="trade-section col-12 pb-5 interaction-bar-content-pane">
 			<user-header 
 				user_name="{{ $user->full_name }}" 
 				@if( isset($organisation) ) 
@@ -29,13 +29,7 @@
 						<p id="active-markets-indicator">Active Market Makers Online: <strong>7</strong></p>
 
 		        		<!-- Rounded toggle switch -->
-		        		<div class="float-right">
-		        			<span class="toggle">Theme toggle</span>
-							<label class="switch mb-0 ml-1" id="theme-toggle">
-							  	<input type="checkbox" data-toggle-theme>
-							  	<span class="slider round"></span>
-							</label>
-						</div>
+		        		<theme-toggle></theme-toggle>
 					</div>
 				</div>
 			</div>

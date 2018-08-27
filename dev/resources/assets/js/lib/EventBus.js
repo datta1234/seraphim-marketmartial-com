@@ -45,3 +45,7 @@ EventBus.$on('loading', (type, state) => {
         break;
     }
 });
+
+EventBus.$on('theme', (state) => {
+    EventBus.$emit("toggleTheme", state);
+});
