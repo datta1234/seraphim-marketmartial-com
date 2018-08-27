@@ -26,7 +26,7 @@
         <b-row class="mb-5">
             <b-col cols="10">
                     <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
-                        {{ key }}:{{ error[0] }}
+                        {{ error[0] }}
                     </b-col>
                 <b-row v-if="removable_conditions.length > 0">
                     <b-col v-for="cond in removable_conditions" class="text-center">
@@ -78,10 +78,10 @@
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
-                         <b-button  class="w-100 mt-1" v-if="marketRequest.is_market_maker && !negotiation_updated" :disabled="server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
+                         <b-button  class="w-100 mt-1"  size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
 
 
-                         <b-button  class="w-100 mt-1" v-if="!marketRequest.is_market_maker || (marketRequest.is_market_maker && negotiation_updated)" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
+                         <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
 
                         <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
@@ -96,8 +96,10 @@
                 <b-form-checkbox v-model="state_premium_calc" value="true" unchecked-value="false"> Apply premium calculator</b-form-checkbox>
             </b-col>
         </b-row> -->
-        <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator>
-        
+
+      <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
+
+
     </b-container>
 </template>
 <script>

@@ -26,11 +26,19 @@ export default {
             this.user_market_offer = null;
             this.market_request_state = null;
             this.market_request_state_label = null;
+            
+            if(this.marketRequest.trade_items.default.Strike == "75619800")
+            {
+                console.log("this is the market request: in tab",this.marketRequest);
+            }
 
             // run tests
             // TODO: add logic for if current user then "SENT"
             switch(this.marketRequest.attributes.state) {
                 case "REQUEST-VOL":
+                    
+                 
+
                     if(this.marketRequest.sent_quote) {
                         this.market_request_state = 'request-vol';
                         this.market_request_state_label = "";
@@ -91,7 +99,10 @@ export default {
                     this.market_request_state_label = '';
             }
 
-            // console.log("data looking","label:",this.market_request_state_label,"state:",this.market_request_state,);
+            if(this.marketRequest.trade_items.default.Strike == "75619800")
+            {
+                    console.log("data looking","label:",this.marketRequest.trade_items.default.Strike,"label",this.market_request_state_label,"state:",this.market_request_state);
+            }
         },
         /**
          *   toggleActionTaken - calls actionTaken() on this User Market Request

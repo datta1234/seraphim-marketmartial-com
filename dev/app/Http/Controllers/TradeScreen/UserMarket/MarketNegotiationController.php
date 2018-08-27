@@ -41,7 +41,9 @@ class MarketNegotiationController extends Controller
     {
         if($request->has('is_repeat') && $request->input('is_repeat'))
         {
-            $oldNegotiation = $userMarket->marketNegotiations()->where('user_id',$request->user()->id)->orderBy('created_at', 'desc')->first();
+            $lastNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+            $oldNegotiation = $lastNegotiation->marketNegotiationParent()->first();
+
             $marketNegotiation = $oldNegotiation->replicate();
             $marketNegotiation->is_repeat = true;
             $marketNegotiation->save();

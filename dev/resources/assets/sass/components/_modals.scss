@@ -4,9 +4,15 @@
 	}
 }
 
-.mm-modal .modal-body
-{
-	color: $black;
+.trade-section.dark-theme, .trade-section.light-theme, .interaction-content {
+	.mm-modal .modal-body
+	{
+		color: $mm-market-important;
+
+		p {
+			color: $mm-market-important !important;
+		}
+	}
 }
 
 .mm-modal {
@@ -47,6 +53,9 @@
 		}
 		.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
 			background-color: $mm-modal-header;
+		}
+		.details-choice-badge {
+			font-size: 1em;
 		}
 	}
 	.modal-info-text {

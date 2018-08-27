@@ -25,9 +25,10 @@ export default class BaseModel {
     update(update_object) {
         Object.keys(this).forEach( key => {
 
+            //changed from null to undifined check
+            if(key[0] != '_' && typeof update_object[key] !== "undefined") {
+                if(Array.isArray(update_object[key])) {
 
-            if(key[0] != '_' && update_object[key] != null) {
-                if(Array.isArray(update_object[key], key)) {
                     //call array rebind method
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
@@ -165,7 +166,7 @@ export default class BaseModel {
         if(arr_to_validate.length == 0) {
             return true;
         }
-        //check if all array values are the same instance else trow exception
+        //check if all array values are the same instance else throw exception
         let is_valid = !!arr_to_validate.reduce( (acc, current) => { 
             let custom_check = this._isModelInstance(acc);
             if(custom_check.is_model) {

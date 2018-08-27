@@ -3,7 +3,7 @@
         <button id="action-alert-button" type="button" class="btn mm-alert-button mr-2 p-1">Alerts <strong>{{ notifications.length }}</strong></button>
         <div id="alerts-popover"></div>
         <!-- Alerts market popover -->
-        <b-popover container="alerts-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-alert-button">
+        <b-popover container="alerts-popover" triggers="click blur" placement="bottom" :ref="popover_ref" target="action-alert-button">
             <div class="row text-center">
                 <div v-for="(market_request,key) in notifications" class="col-12">
                     <div class="row mt-1">
@@ -59,7 +59,11 @@
              * @fires /lib/EventBus#toggleSidebar
              */
             loadInteractionBar(market_request) {
+                if(market_request.attributes.action_needed) {
+                    market_request.actionTaken();
+                }
                 EventBus.$emit('toggleSidebar', 'interaction', true, market_request);
+                this.$refs[this.popover_ref].$emit('close');
             },
         },
         mounted() {

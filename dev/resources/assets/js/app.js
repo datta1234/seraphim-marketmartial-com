@@ -28,6 +28,15 @@ Vue.use(BootstrapVue);
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+/**
+ * Load the Fontawesome vue component then the library and lastly import
+ * and register the icons you want to use.
+ */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheck,faCheckDouble);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -47,6 +56,7 @@ Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
 
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -130,6 +140,17 @@ Vue.mixin({
                 return x;
             //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
+        },
+        dateStringArraySort(date_string_array, format) {
+            for(let i = 0; i < date_string_array.length - 1; i++) {
+                for(let j = 0; j < date_string_array.length - i - 1; j++) {
+                    if( moment(date_string_array[j+1],format).isBefore(moment(date_string_array[j],format)) ) {
+                        let temp = date_string_array[j];
+                        date_string_array[j] = date_string_array[j+1];
+                        date_string_array[j+1] = temp;
+                    }
+                }
+            }
         },
     }
 });
@@ -281,6 +302,7 @@ const app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        message_count: 0,
         // internal properties
         configs: {}
     },
@@ -336,6 +358,9 @@ const app = new Vue({
                 //this should be the market thats created
                 console.log("this is what websockets is",UserMarketRequest);
                 this.updateUserMarketRequest(UserMarketRequest);
+            })
+            .listen('ChatMessageReceived', (received_org_message) => {
+                this.$emit('chatMessageReceived', received_org_message);
             }); 
         }
 

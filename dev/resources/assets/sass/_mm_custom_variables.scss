@@ -63,6 +63,12 @@ $mm-user-action:		#EBC300;
 $mm-footer-bg:			#303030;
 $mm-toggle-bg:			#1c7d74;
 
+$mm-chat-block:			#B1B1B1;
+$mm-chat-text:			#1D3641;
+$mm-chat-block-own:		#9fe29f;
+$mm-chat-own-text:		#1D3641;
+$mm-chat-block-admin:	#1c7c74;
+$mm-chat-admin-text:	#FFFFFF;
 
 /*
 *   Interaction Bar
@@ -88,3 +94,5 @@ $ibar-btn-condition-active: #007D74;
 */
 $chat-bar-width: 300px;
 $chat-toggle-width: 25px;
+
+$trade-footer-height: 65px;

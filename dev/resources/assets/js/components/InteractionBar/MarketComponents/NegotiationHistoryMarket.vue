@@ -48,7 +48,7 @@
             <b-row class="justify-content-md-center" v-if="history.reduce((x,y) => x = y.is_interest, false)">
                 <b-col class="mt-2">
                     <p>
-                        <small>Note: All quotes will default to HOLD after 30 minutes from the receipt of response has lapsed.</small>
+                        <small>Note: Quotes will default to HOLD after 30 minutes.</small>
                     </p>
                 </b-col>
             </b-row>

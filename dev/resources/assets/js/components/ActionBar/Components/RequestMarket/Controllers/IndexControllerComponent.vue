@@ -76,6 +76,7 @@
                     Confirm: ConfirmMarketRequest,
                     Details: Details,
                 },
+                temp_title: [],
             };
         },
         methods: {
@@ -83,6 +84,7 @@
              * Returns to previous modal step 
              */
             previousStep() {
+                this.modal_data.title.pop();
                 this.modal_data.step--;
             },
             /**
@@ -90,7 +92,7 @@
              */
             nextStep() {
                 this.modal_data.step++;
-                // console.log("STEP=========================: ", this.modal_data.step);
+                console.log("STEP=========================: ", this.modal_data.step);
             },
             /**
              * Loads step component 
@@ -98,15 +100,18 @@
             loadStepComponent(component_data) {
                 if( component_data != 'back' ) {
                     this.nextStep();
+                    this.modal_data.title.push(component_data);
+                } else {
+                    if (this.modal_data.title[0] =='Confirm Market Request') {
+                        this.modal_data.title = this.temp_title;
+                    }
+                    this.modal_data.title.pop();
                 }
                 switch (this.modal_data.step) {
                     case 2:
                         this.selected_step_component = 'Market';
                         break;
                     case 3:
-                        //this.modal_data.title += ' > ' + component_data.title;
-                        // console.log("CASE 3: ", this.index_data.index_market_object);
-                        //this.index_data.index_market_object.market = component_data;
                         this.selected_step_component = 'Structure';
                         break;
                     case 4:
@@ -114,21 +119,14 @@
                         if (this.index_data.index_market_object.trade_structure == 'Calendar') {
                             this.index_data.number_of_dates = 2;
                         }
-                        //this.modal_data.title += ' > ' + component_data;
-                        //this.index_data.index_market_object.trade_structure = component_data;
-                        // console.log("CASE 4: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
-                        //this.index_data.index_market_object.expiry_dates = component_data;
-                        // console.log("CASE 5: ", this.index_data.index_market_object);
                         this.selected_step_component = 'Details';
-                        // console.log("CASE 5 COMPONENT: ", this.selected_step_component);
                         break;
                     case 6:
-                        this.modal_data.title = 'Confirm Market Request'
-                        //this.index_data.index_market_object.details = component_data;
-                        // console.log("CASE 6: ", this.index_data.index_market_object);
+                        this.temp_title = this.modal_data.title;
+                        this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
                         break;
                     case 7:
@@ -156,9 +154,7 @@
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     if(newMarketRequestResponse.status == 200) {
-                        //console.log("Saving: ",newMarketRequestResponse);
                         this.close_modal();
-                        //this.$root.reloadMarketRequests(); //we using pusher now
                     } else {
                         console.error(err);    
                     }
@@ -173,12 +169,12 @@
                       // The request was made but no response was received
                       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                       // http.ClientRequest in node.js
-                      // console.log(err.request);
+                      console.log(err.request);
                     } else {
                       // Something happened in setting up the request that triggered an Error
-                      // console.log('Error', err.message);
+                      console.log('Error', err.message);
                     }
-                    // console.log(err.config);
+                    console.log(err.config);
                 });
             },
             loadErrorStep(errors) {
@@ -277,9 +273,9 @@
             },
         },
         mounted() {
-            this.modal_data.title = "Index";
+            this.modal_data.title = ["Index"];
             this.loadIndexMarkets();
-            // console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
+            console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);
         }
