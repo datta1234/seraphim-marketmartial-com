@@ -71,7 +71,7 @@
                          <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
                         
 
-                        <b-button v-if="!marketRequest.chosen_user_market " class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
+                        <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
 
@@ -83,7 +83,7 @@
 
                          <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
 
-                        <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
+                        <b-button v-if="!marketRequest.chosen_user_market" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>

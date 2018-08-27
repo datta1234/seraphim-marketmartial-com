@@ -98351,18 +98351,20 @@ var render = function() {
                             [_vm._v("Send")]
                           ),
                           _vm._v(" "),
-                          _c(
-                            "b-button",
-                            {
-                              staticClass: "w-100 mt-1",
-                              attrs: {
-                                size: "sm",
-                                dusk: "ibar-action-nocares",
-                                variant: "secondary"
-                              }
-                            },
-                            [_vm._v("No Cares")]
-                          )
+                          !_vm.marketRequest.chosen_user_market
+                            ? _c(
+                                "b-button",
+                                {
+                                  staticClass: "w-100 mt-1",
+                                  attrs: {
+                                    size: "sm",
+                                    dusk: "ibar-action-nocares",
+                                    variant: "secondary"
+                                  }
+                                },
+                                [_vm._v("No Cares")]
+                              )
+                            : _vm._e()
                         ],
                         1
                       )
