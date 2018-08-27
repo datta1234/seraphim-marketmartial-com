@@ -62,7 +62,9 @@
             bidState: function() {
                 if(this.marketRequest.chosen_user_market)
                 {
-                    return this.getStateClass('bid');
+                    
+
+                    return this.getStateClass(this.current_user_market_negotiation,'bid');
                 }else
                 {
                     return {
@@ -74,7 +76,7 @@
             offerState: function() {
                 if(this.marketRequest.chosen_user_market)
                 {
-                    return this.getStateClass('offer');
+                    return this.getStateClass(this.current_user_market_negotiation,'offer');
                 }else
                 {
                     return {

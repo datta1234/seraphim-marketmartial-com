@@ -99,10 +99,7 @@ export default {
                     this.market_request_state_label = '';
             }
 
-            if(this.marketRequest.trade_items.default.Strike == "75619800")
-            {
-                    console.log("data looking","label:",this.marketRequest.trade_items.default.Strike,"label",this.market_request_state_label,"state:",this.market_request_state);
-            }
+
         },
         /**
          *   toggleActionTaken - calls actionTaken() on this User Market Request
@@ -113,31 +110,30 @@ export default {
                 let result = this.marketRequest.actionTaken();
             }
         },
-        getStateClass(attr)
+        getStateClass(item,attr)
         {
 
             if(this.current_user_market_negotiation && this.marketRequest.chosen_user_market)
             {
-                let prevItem = this.marketRequest.chosen_user_market.market_negotiations.find((itItem) => this.current_user_market_negotiation.market_negotiation_id == itItem.id);
+                let prevItem = null;
                 
-                if(prevItem)
+                if(item.market_negotiation_id != null)
+                {
+                     prevItem = this.marketRequest.chosen_user_market.market_negotiations.find((itItem) => item.market_negotiation_id == itItem.id);
+                }
+                
+                if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
                 {
 
-                    if(prevItem[attr] == this.current_user_market_negotiation[attr])
-                    {
-                        return {
-                            "is-interest":prevItem.is_interest && !prevItem.is_my_org,
-                            "is-maker":prevItem.is_maker && !prevItem.is_my_org,
-                            "is-my-org":prevItem.is_my_org
-                        };  
-                    }
-                }
-
-                return {
-                    "is-interest":this.current_user_market_negotiation.is_interest && !this.current_user_market_negotiation.is_my_org,
-                    "is-maker":this.current_user_market_negotiation.is_maker && !this.current_user_market_negotiation.is_my_org,
-                    "is-my-org":this.current_user_market_negotiation.is_my_org
-                };    
+                 return this.getStateClass(prevItem,attr);   
+                }else
+                {
+                     return {
+                        "is-interest":item.is_interest && !item.is_my_org,
+                        "is-maker":item.is_maker && !item.is_my_org,
+                        "is-my-org":item.is_my_org
+                    };  
+                }   
             }
 
         }

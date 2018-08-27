@@ -293,7 +293,6 @@
                 // save
                 this.proposed_user_market_negotiation.patchQuote()
                 .then(response => {
-                    console.log("we just finished amending the quote");
                     this.server_loading = false;                    
                     this.history_message = response.data.message;
                     this.errors = [];
@@ -378,7 +377,6 @@
                 *else post for the specific user market
                 */
                 let chosen_user_market =  this.marketRequest.chosen_user_market;
-                console.log('the chosen user market',chosen_user_market);
 
                 if(chosen_user_market)
                 {
@@ -413,7 +411,6 @@
                 }
                 else if(this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null) )
                 {
-                    console.log("makerQoute",this.marker_qoute);
                     //we are editing our old one
                     this.proposed_user_market_negotiation.id  = this.marker_qoute.id;
 

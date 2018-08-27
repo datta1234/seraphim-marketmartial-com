@@ -77,25 +77,27 @@
                 return null;
             },
             getStateClass(attr,item){
-                let prevItem = this.history.find((itItem) => item.market_negotiation_id == itItem.id );
-                
-                if(prevItem)
+
+                // recursvley run the method to set the state color based on the prev response
+                let prevItem = null;
+                if(item.market_negotiation_id !== null)
                 {
-                    if(prevItem[attr] == item[attr])
-                    {
-                        return {
-                            "is-interest":prevItem.is_interest && !prevItem.is_my_org,
-                            "is-maker":prevItem.is_maker && !prevItem.is_my_org,
-                            "is-my-org":prevItem.is_my_org
-                        };  
-                    }
+                    prevItem = this.history.find((itItem) => item.market_negotiation_id == itItem.id );
                 }
 
-                return {
-                    "is-interest":item.is_interest && !item.is_my_org,
-                    "is-maker":item.is_maker && !item.is_my_org,
-                    "is-my-org":item.is_my_org
-                };            
+                if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
+                {
+                 return this.getStateClass(attr,prevItem);   
+                }else
+                {
+                     return {
+                        "is-interest":item.is_interest && !item.is_my_org,
+                        "is-maker":item.is_maker && !item.is_my_org,
+                        "is-my-org":item.is_my_org
+                    };  
+                }
+
+                         
             }
         },
         mounted() {       
