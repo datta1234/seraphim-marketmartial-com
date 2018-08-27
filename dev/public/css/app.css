@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* @import url('https://fonts.googleapis.com/css?family=Raleway:600');
 @import url('https://fonts.googleapis.com/css?family=Muli:700');
 @import url('https://fonts.googleapis.com/css?family=Roboto'); */
@@ -11280,6 +11282,11 @@ a.mm-login-button {
           box-shadow: none;
 }
 
+.message-alert-count {
+  border-radius: 1em;
+  font-size: 0.8rem;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
@@ -11805,6 +11812,11 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
+.trade-section.light-theme .negotiation-vol-pending .market-tab-state,
+.trade-section.dark-theme .negotiation-vol-pending .market-tab-state {
+  border-left: 2px solid #BB1D1D;
+}
+
 .trade-section.light-theme .market-tab.market-request-grey,
 .trade-section.dark-theme .market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;
@@ -11826,6 +11838,18 @@ input:checked + .slider:before {
 
 .trade-section.light-theme .market-tab {
   background-color: #071a22;
+}
+
+.market-tab-state .is-interest {
+  color: #2358BD;
+}
+
+.market-tab-state .is-maker {
+  color: #37A53A;
+}
+
+.market-tab-state .is-my-org {
+  color: #EBC300;
 }
 
 #trade-footer {
@@ -12012,24 +12036,44 @@ input:checked + .slider:before {
   font-weight: bold;
 }
 
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest {
+  color: #2358BD;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-maker {
+  color: #37A53A;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+  color: #EBC300;
+}
+
+.condition {
+  color: #EBC300;
+}
+
 .interaction-bar-wrapper .chat-bar,
 .interaction-bar-wrapper .chat-bar-content-pane,
 .interaction-bar-wrapper .chat-bar > .chat-content,
-.interaction-bar-wrapper .chat-bar > .chat-bar-toggle {
-  -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
-  transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+.interaction-bar-wrapper .chat-bar > .chat-content > .chat-bar-toggle,
+.interaction-bar-wrapper .chat-bar > .chat-content > .organisation-chat {
+  -webkit-transition: margin-right 0.25s linear;
+  /* Chrome 1-25, Safari 3.2+ */
+  /* Firefox 4-15 */
+  /* Opera 10.50–12.00 */
+  transition: margin-right 0.25s linear;
+  /* Chrome 26, Firefox 16+, IE 10+, Opera 12.10+ */
 }
 
 .interaction-bar-wrapper .chat-bar {
   padding: 0px;
-  width: auto;
   position: relative;
+  width: 325px;
+  margin-right: -325px;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-content {
   background-color: #090909;
-  width: 0px;
-  opacity: 0;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -12038,16 +12082,29 @@ input:checked + .slider:before {
   float: left;
   color: #fff;
   overflow: hidden;
+  position: fixed;
+  z-index: 1030;
+  width: 325px;
+  padding-bottom: 150px;
+  margin-bottom: 150px;
 }
 
-.interaction-bar-wrapper .chat-bar.active .chat-bar-toggle {
-  width: 25px;
-  opacity: 1;
-}
-
-.interaction-bar-wrapper .chat-bar.active .chat-content {
+.interaction-bar-wrapper .chat-bar .chat-content .organisation-chat {
   width: 300px;
-  opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.interaction-bar-wrapper .chat-bar .chat-content .chat-bar-toggle {
+  width: 25px;
+  position: absolute;
+  right: 300px;
+  top: 0;
+}
+
+.interaction-bar-wrapper .chat-bar.active {
+  margin-right: 0px;
 }
 
 .interaction-bar-wrapper .chat-bar .chat-header h3 {
@@ -12063,18 +12120,17 @@ input:checked + .slider:before {
   font-size: 2em;
 }
 
-.interaction-bar-wrapper .chat-bar .chats {
-  background-color: #FFFFFF;
+.interaction-bar-wrapper .chat-bar .chat-inner-wrapper {
+  height: 100%;
 }
 
-.interaction-bar-wrapper .chat-bar .chat-action-wrapper {
-  position: absolute;
-  bottom: 0;
+.interaction-bar-wrapper .chat-bar .chat-history {
+  height: calc(70% - 12rem);
+  overflow-y: scroll;
 }
 
 .interaction-bar-wrapper .chat-bar-toggle {
   background-color: #090909;
-  width: 0px;
   height: 100%;
   padding: 0px;
   display: inline-block;
@@ -12082,7 +12138,6 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   position: relative;
-  opacity: 0;
   color: #fff;
   cursor: pointer;
 }
@@ -12093,6 +12148,35 @@ input:checked + .slider:before {
   top: 50%;
   margin-top: -50%;
   font-size: 32px;
+}
+
+.interaction-bar-wrapper .organisation-chat {
+  background-color: #090909;
+  height: 100%;
+  padding: 0px;
+  display: inline-block;
+  margin: 0px;
+  padding: 0px;
+  float: right;
+  position: relative;
+  color: #fff;
+  padding-bottom: 120px;
+}
+
+.organisation-chat .chat-block {
+  color: #1D3641;
+  border-radius: 0.6rem;
+  background-color: #B1B1B1;
+}
+
+.organisation-chat .admin-chat .chat-block {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.organisation-chat .own-chat .chat-block {
+  color: #1D3641;
+  background-color: #9fe29f;
 }
 
 .popover .popover-body {
@@ -12288,6 +12372,22 @@ input:checked + .slider:before {
   display: block;
   overflow: hidden;
   position: fixed;
+}
+
+.trade-section.light-theme .mm-loader {
+  /* width:200px;
+		height:200px;
+		box-sizing:border-box;
+		padding-left: 200px;
+		background: url($base_url + '/img/loader_light_theme.gif') left top no-repeat; */
+}
+
+.trade-section.dark-theme .mm-loader {
+  /* width:200px;
+			height:200px;
+			box-sizing:border-box;
+			padding-left: 200px;
+			background-image: url($base_url + '/img/loader_dark_theme.gif') left top no-repeat; */
 }
 
 @font-face {

@@ -62,10 +62,10 @@ class UserMarketPolicy
     {
         return $userMarket->marketNegotiations()->where(function($query) use ($user)
         {
-            $query->whereHas('users',function($query) use ($user){
+            $query->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id', $user->organisation_id);
             });
-        })->exists();
+        })->exists() && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
 
     

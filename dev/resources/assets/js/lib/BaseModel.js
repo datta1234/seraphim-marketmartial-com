@@ -24,24 +24,17 @@ export default class BaseModel {
      */
     update(update_object) {
         Object.keys(this).forEach( key => {
-            //console.log("Test Updating: ", key);
-            // console.log("############=====#######");
-            // console.log("the key is",key);
-            // console.log("is array test",Array.isArray(update_object[key], key));
-            // console.log("############=====#######");
 
-            if(key[0] != '_' && update_object[key] != null) {
-                //console.log("Updating: ", key);
-                if(Array.isArray(update_object[key], key)) {
+            //changed from null to undifined check
+            if(key[0] != '_' && typeof update_object[key] !== "undefined") {
+                if(Array.isArray(update_object[key])) {
+
                     //call array rebind method
-                    //console.log("Updating as Array: ", key);
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
                     //call object rebind method
-                    //console.log("Updating as Obj: ", key);
                     this._updateObject(update_object[key],key);
                 } else {
-                    //console.log("Updating as else: ", key);
                     if(this[key] instanceof moment) {
                         this[key] = moment(update_object[key]);
                     } else {
@@ -91,8 +84,21 @@ export default class BaseModel {
                 }
             }
 
+
             // loop to remove old objects
             for (let i = 0; i < this[key].length; i++) {
+
+
+            if(key == "quotes")
+            {
+
+                let countTemp = update_arr.findIndex((element) => {
+                    return element.id == this[key][i].id;
+                });
+               console.log('quote',this[key],countTemp); 
+
+            }
+            
                 let index = update_arr.findIndex((element) => {
                     return element.id == this[key][i].id;
                 });
@@ -101,6 +107,7 @@ export default class BaseModel {
                     i--;
                 }
             }
+
         // update array (check if we can just assign or need to pop and push all new ones)
         } else {
             this[key] = update_arr[key];
@@ -159,7 +166,7 @@ export default class BaseModel {
         if(arr_to_validate.length == 0) {
             return true;
         }
-        //check if all array values are the same instance else trow exception
+        //check if all array values are the same instance else throw exception
         let is_valid = !!arr_to_validate.reduce( (acc, current) => { 
             let custom_check = this._isModelInstance(acc);
             if(custom_check.is_model) {

@@ -28,6 +28,15 @@ Vue.use(BootstrapVue);
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+/**
+ * Load the Fontawesome vue component then the library and lastly import
+ * and register the icons you want to use.
+ */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faCheck,faCheckDouble);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -47,8 +56,13 @@ Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
 
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+
+Vue.component('mm-loader', require('./components/LoaderComponent.vue'));
+
+Vue.component('theme-toggle', require('./components/ThemeToggleComponent.vue'));
 
 // Market Tab Components
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
@@ -147,6 +161,12 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#trade_app',
+    computed: {
+        tradeTheme: function() {
+            console.log("I NEVER GET CALLED",this.theme_toggle);
+            return this.theme_toggle ? 'light-theme' : 'dark-theme';
+        }
+    },
     watch: {
         'display_markets': function(nv, ov) {
             this.reorderDisplayMarkets(nv);
@@ -187,7 +207,6 @@ const app = new Vue({
                 if(marketTypeResponse.status == 200) {
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
-                    console.log("Market Types: ", self.market_types);
                 } else {
                     console.error(err);    
                 }
@@ -219,13 +238,11 @@ const app = new Vue({
         },
         loadMarketRequests(market) {
             let self = this;
-            console.log("Load Market Request", market);
             return axios.get(axios.defaults.baseUrl + '/trade/market/'+market.id+'/market-request')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
                     market.addMarketRequests(marketResponse.data);
-                    console.log("Market Requests", marketResponse.data);
                     return marketResponse.data;
                 } else {
                     console.error(err);
@@ -276,8 +293,6 @@ const app = new Vue({
             let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
             if(index !== -1)
             {
-                /*console.log("the index",this.display_markets[index]);
-                console.log("the market",new UserMarketRequest(UserMarketRequestData));*/
                 let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
                 if(request_index !== -1) {
                     this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
@@ -287,8 +302,32 @@ const app = new Vue({
             } else {
                 //@TODO: Add logic to display market if not already displaying
             }
+        },
+        loadThemeSetting() {
+            if (localStorage.getItem('themeState') != null) {
+                try {
+                    this.theme_toggle = localStorage.getItem('themeState') === 'true';
+                } catch(e) {
+                    this.theme_toggle = false;
+                    localStorage.removeItem('themeState');
+                }
+            } else {
+                this.theme_toggle = false;
+                try {
+                    localStorage.setItem('themeState', this.theme_toggle);
+                } catch(e) {
+                    localStorage.removeItem('themeState');
+                }
+            }
+        },
+        setThemeState(state) {
+            this.theme_toggle = state;
+            try {
+                localStorage.setItem('themeState', this.theme_toggle);
+            } catch(e) {
+                localStorage.removeItem('themeState');
+            }
         }
-
     },
     data: {
         // default data
@@ -297,10 +336,15 @@ const app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        message_count: 0,
+        page_loaded: false,
         // internal properties
-        configs: {}
+        configs: {},
+        theme_toggle: false,
     },
     mounted: function() {
+        // get Saved theme setting
+        this.loadThemeSetting();
         // load config files
         this.loadConfig("trade_structure", "trade_structure.json")
         .catch(err => {
@@ -308,6 +352,7 @@ const app = new Vue({
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
         .then( () => {
+            this.loadConfig('condition_titles','condition_titles.json');
             this.loadUserConfig();
         })
         .then(configs => {
@@ -333,15 +378,11 @@ const app = new Vue({
                 return Promise.all(promises);
             })
             .then(all_market_requests => {
-                
+                EventBus.$emit('loading', 'page');
+                this.page_loaded = true;
                 //load the no cares from storage
                 this.loadNoCares();
-
             });
-        }).then( () => {
-            // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
-           /* console.log("FIRE EVENT!!!!!");
-            EventBus.$emit('dataLoaded', 'mountData', true);*/
         });
         
         if(Laravel.organisationUuid)
@@ -349,13 +390,15 @@ const app = new Vue({
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {
                 //this should be the market thats created
-                console.log("this is what pusher just gave you", UserMarketRequest);
+                console.log("this is what websockets is",UserMarketRequest);
                 this.updateUserMarketRequest(UserMarketRequest);
+            })
+            .listen('ChatMessageReceived', (received_org_message) => {
+                this.$emit('chatMessageReceived', received_org_message);
             }); 
         }
 
-       
-
+        EventBus.$on('toggleTheme', this.setThemeState);
     }
 });
 

@@ -69,6 +69,11 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id');
     }
 
+    public function getLastNegotiationAttribute()
+    {
+        return $query->marketNegotiations()->orderBy('created_at',"DESC")->first();
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -132,6 +137,11 @@ class UserMarket extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    public function getOrganisationAttribute()
+    {
+       return $this->user->organisation;
+    }
+
     public function placeOnHold()
     {
         return $this->update(['is_on_hold'=>true]);
@@ -144,11 +154,11 @@ class UserMarket extends Model
         return $marketRequest->save();
     }
 
-    public function repeatNegotiation($user)
+    public function repeatQuote($user)
     {
         $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
         {
-            $query->whereHas('users',function($query) use ($user){
+            $query->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id', $user->organisation_id);
             });
         })->first();
@@ -157,11 +167,11 @@ class UserMarket extends Model
       return  $marketNegotiation->update(['is_repeat'=>true]);    
     }
 
-    public function updateNegotiation($user,$data)
+    public function updateQuote($user,$data)
     {
         $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
         {
-            $query->whereHas('users',function($query) use ($user){
+            $query->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id', $user->organisation_id);
             });
         })->first();
@@ -174,10 +184,32 @@ class UserMarket extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
+    public function preFormattedMarket()
+    {
+        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        
+        $data = [
+            "id"                    => $this->id,
+            "is_interest"           => $is_interest,
+            "is_maker"              => $is_maker,
+            "time"                  => $this->created_at->format("H:i"),
+            "market_negotiations"   => $this->marketNegotiations->map(function($item){ 
+                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+                                        })
+        ];
+
+        return $data;
+    }
+
+    /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
     public function preFormattedQuote()
     {
-       $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
+        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
 
 
         $data = [

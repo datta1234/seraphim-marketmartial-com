@@ -1,0 +1,22 @@
+{
+    "cond_is_repeat_atw": "Repeat all the way",
+    "cond_timeout": "",
+    "cond_is_ocd": "OCO",
+    "cond_is_subject": "Subject",
+    "cond_fok_spin": {
+        "false": "Prefer to kill",
+        "true": "Happy to spin"
+    },
+    "cond_fok_apply_bid": {
+        "false": "Fill or Kill",
+        "true": "Fill or Kill"
+    },
+    "cond_buy_mid": {
+        "false": "Sell in the middle",
+        "true": "Buy in the middle"
+    },
+    "cond_buy_best": {
+        "false": "Sell at best",
+        "true": "Buy at best"
+    }
+}

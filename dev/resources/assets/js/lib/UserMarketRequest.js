@@ -12,8 +12,11 @@ export default class UserMarketRequest extends BaseModel {
                 quotes:{
                     addMethod: (quote) => { this.addUserMarketQuote(quote) },
                 },
-                user_market: {
-                    setMethod: (user_market) => { this.setUserMarket(user_market) },
+                sent_quote: {
+                    setMethod: (sent_quote) => { this.setSentQuote(sent_quote) },
+                },
+                chosen_user_market: {
+                    setMethod: (user_market) => { this.setChosenUserMarket(user_market) },
                 }
             }
         });
@@ -25,17 +28,19 @@ export default class UserMarketRequest extends BaseModel {
         // default public
         this.trade_items = {};//with group title as key
         this.quotes = [];
-        this.user_market = null;
+        this.sent_quote = null;
         const defaults = {
             id: "",
             trade_structure: "",
             market_id:"",
             is_interest:false,
+            is_market_maker: false,
             attributes: {
                 state: "",
                 bid_state: "",
                 offer_state: "",
                 action_needed: false,
+                is_interest: false
             },
             quote: null,
             chosen_user_market: null,
@@ -64,7 +69,17 @@ export default class UserMarketRequest extends BaseModel {
             this.addUserMarketQuotes(options.quotes);
         }
 
-        // register user_market
+        // register sent_quote
+        if(options && options.sent_quote) {
+            this.setSentQuote(options.sent_quote);
+        }
+
+       // register user_market
+        if(options && options.chosen_user_market) {
+            this.setChosenUserMarket(options.chosen_user_market);
+        }
+
+         // register user_market
         if(options && options.user_market) {
             this.setUserMarket(options.user_market);
         }
@@ -96,7 +111,11 @@ export default class UserMarketRequest extends BaseModel {
     *   setUserMarket - Set the UserMarketRequest
     *   @param {UserMarket} user_market - UserMarket object
     */
-    setChosenUserMarket(user_market) {
+    setChosenUserMarket(user_market) {   
+     
+     if(!(user_market instanceof UserMarket)) {
+            user_market = new UserMarket(user_market);
+        }
         user_market.setMarketRequest(this);
         this.chosen_user_market = user_market;
     }
@@ -119,24 +138,45 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
-    *   setUserMarket - Set the UserMarketRequest UserMarker
+    *   setUserMarket - Set the UserMarketRequest setSentQuote
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setSentQuote(sent_quote) {
+        if(!(sent_quote instanceof UserMarket)) {
+            sent_quote = new UserMarket(sent_quote);
+        }
+        sent_quote.setMarketRequest(this);
+        this.sent_quote = sent_quote;
+    }
+
+    /**
+    *   setUserMarket - Set the UserMarketRequest setSentQuote
     *   @param {UserMarket} user_market - UserMarket object
     */
     setUserMarket(user_market) {
         if(!(user_market instanceof UserMarket)) {
             user_market = new UserMarket(user_market);
         }
-        console.log(user_market);
+
         user_market.setMarketRequest(this);
         this.user_market = user_market;
+    }
+
+
+    /**
+    *   getSentQuote - Set the UserMarketRequest UserMarker
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    getChosenUserMarket() {
+        return this.user_market;
     }
 
     /**
     *   getUserMarket - Set the UserMarketRequest UserMarker
     *   @param {UserMarket} user_market - UserMarket object
     */
-    getUserMarket() {
-        return this.user_market;
+    getSentQuote() {
+        return this.sent_quote;
     }
 
     /**
@@ -201,4 +241,20 @@ export default class UserMarketRequest extends BaseModel {
             }); 
         });
     }
+
+    /**
+    *   canNegotiate - Checks to see if the user can take any negotiation on the current ste of the request
+    *   @return response from the request or the error
+    */
+    canNegotiate()
+    {
+        if(this.chosen_user_market == null)
+        {
+            return true;
+        }else
+        {
+           return  this.is_interest || (this.chosen_user_market.market_negotiations.length > 0 && this.chosen_user_market.market_negotiations.findIndex((negotiation) => { return negotiation.is_my_org }) > -1);
+        }
+    }
+
 }

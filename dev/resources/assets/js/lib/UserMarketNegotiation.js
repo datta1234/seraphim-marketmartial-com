@@ -24,6 +24,19 @@ export default class UserMarketNegotiation extends BaseModel {
             offer_premium: "",
             is_put: false,
             status: "",
+            cond_is_repeat_atw: null,
+            cond_fok_apply_bid: null,
+            cond_fok_spin: null,
+            cond_timeout: null,
+            cond_is_ocd: null,
+            cond_is_subject: null,
+            cond_buy_mid: null,
+            cond_buy_best: null,
+            is_interest: false,
+            is_maker:false,
+            is_my_org:false,
+            market_negotiation_id: null,
+            time:null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -97,7 +110,61 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  store
     */
-    patch() {
+    storeNegotiation() {
+        // catch not assigned to a market request yet!
+        if(this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+     
+
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation", this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    getDisplayCondition()
+    {
+       
+    }
+
+    /**
+    *  spin
+    */
+    spinNegotiation() {
+
+        // catch not assigned to a market request yet!
+        if(this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+
+    /**
+    *  store
+    */
+    patchQuote() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -125,7 +192,7 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  store
     */
-    repeat() {
+    repeatQuote() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -148,4 +215,6 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         });
     }
+
+
 }

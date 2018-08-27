@@ -3,7 +3,7 @@
         <button id="action-confirmations-button" type="button" class="btn mm-confirmation-button mr-2 p-1">Confirmations <strong>{{ notifications.length }}</strong></button>
         <div id="confirmations-popover"></div>
         <!-- Confirmations market popover -->
-        <b-popover container="confirmations-popover" triggers="focus" placement="bottom" :ref="popover_ref" target="action-confirmations-button">
+        <b-popover container="confirmations-popover" triggers="click blur" placement="bottom" :ref="popover_ref" target="action-confirmations-button">
             <div class="row text-center">
                 <div v-for="market_request in notifications" class="col-12">
                     <div class="row mt-1">

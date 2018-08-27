@@ -32,27 +32,25 @@
             }
         },
         watch: {
-            'marketRequest.attributes.state': function(nV, oV) {
-                this.calcMarketState();
-            },
-            'marketRequest.user_market': function(nV, oV) {
-                this.calcMarketState();
-            },
-            'marketRequest.chosen_user_market': function(nV, oV) {
-                this.calcMarketState();
+            'marketRequest': {
+                handler: function(nV, oV) {
+                    this.calcMarketState();
+                },
+                deep: true
             }
         },
         mixins: [MarketTabMixin],
         data() {
             return {
                 user_market: null,
-                current_negotiation: null,
                 isActive: false,
             };
         },
         computed: {
             marketState: function() {
                 return {
+                    'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
+                    'negotiation-vol': this.market_request_state == 'negotiation-vol',
                     'market-request-grey': this.market_request_state == 'request-grey',
                     'market-request': !this.marketRequest.is_interest  && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
                     'market-request-vol': this.market_request_state == 'request-vol',
@@ -62,19 +60,34 @@
                 }
             },
             bidState: function() {
-                return {
-                    'user-action': this.marketRequest.attributes.bid_state == 'action',
+                if(this.marketRequest.chosen_user_market)
+                {
+                    
+
+                    return this.getStateClass(this.current_user_market_negotiation,'bid');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.bid_state == 'action',
+                    }   
                 }
+               
             },
             offerState: function() {
-                return {
-                    'user-action': this.marketRequest.attributes.offer_state == 'action',
+                if(this.marketRequest.chosen_user_market)
+                {
+                    return this.getStateClass(this.current_user_market_negotiation,'offer');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.offer_state == 'action',
+                    }   
                 }
             }
         },
         methods: {
             loadInteractionBar() {
-                this.toggleActionTaken();
+               this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }
@@ -82,6 +95,7 @@
         mounted() {
             // initial setup of states
             this.calcMarketState();
+
             EventBus.$on('interactionClose', (marketRequest) => {
                 this.isActive = false;
             });

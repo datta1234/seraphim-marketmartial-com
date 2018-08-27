@@ -18,21 +18,34 @@ export const EventBus = new Vue();
 EventBus.$on('toggleSidebar', (sidebar, state, payload) => {
 	switch(sidebar) {
         case "interaction":
-        	EventBus.$emit('chatToggle', false);
+        	//EventBus.$emit('chatToggle', false);
         	EventBus.$emit('interactionToggle', state, payload);
         break;
         case "chat":
-        	EventBus.$emit('interactionToggle', false);
+        	//EventBus.$emit('interactionToggle', false);
             EventBus.$emit('chatToggle', state, payload);
         break;
     }
 });
 
-// @TODO figure out if we need this and complete it or remove it
-EventBus.$on('dataLoaded', (type, state) => {
+// @TODO Add loaders to elements that need them
+EventBus.$on('loading', (type, state) => {
     switch(type) {
-        case "mountData":
-            EventBus.$emit("mountData", state);
+        case "page":
+            EventBus.$emit("pageLoaded", state);
+        break;
+        case "requestStructure":
+            EventBus.$emit("requestStructureLoaded", state);
+        break;
+        case "requestDates":
+            EventBus.$emit("requestDatesLoaded", state);
+        break;
+        case "requestSubmission":
+            EventBus.$emit("requestSubmissionLoaded", state);
         break;
     }
+});
+
+EventBus.$on('theme', (state) => {
+    EventBus.$emit("toggleTheme", state);
 });

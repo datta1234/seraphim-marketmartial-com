@@ -5,6 +5,7 @@ namespace App\Models\UserManagement;
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Misc\ResolveUuid;
 use App\Traits\ModelCache;
+use App\Traits\OrganisationSlackChat;
 use App\Observers\OrganisationObserver;
 use App\Helpers\Broadcast\Channel;
 
@@ -19,8 +20,10 @@ class Organisation extends Model
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
+    
     use ModelCache;//if you going to use this remember to write the observer for the mode
-
+    use OrganisationSlackChat;// used for slack chats between organisation members
+    
     /**
      * The table associated with the model.
      *
@@ -83,5 +86,8 @@ class Organisation extends Model
         return ResolveUuid::getOrganisationUuid($this->id);
     }
 
-   
+    public function getSlackChannelAttribute()
+    {
+        return $this->slackIntegrations()->where("field", '=', 'channel')->first();
+    }
 }

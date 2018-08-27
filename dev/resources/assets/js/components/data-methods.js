@@ -15,13 +15,6 @@ $( document ).ready(function() {
     });
 
     /**
-     * Toggle theme classes
-     */
-    $( "[data-toggle-theme]" ).on("change", function( event ) {
-        $( '#trade_app' ).find( "[data-theme-wrapper]" ).toggleClass( "light-theme" ).toggleClass( "dark-theme" );
-    });
-
-    /**
      * Toggle active Nav class
      */
     $(function() {

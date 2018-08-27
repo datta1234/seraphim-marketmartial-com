@@ -50,10 +50,16 @@ class UserMarketStoreRequest extends FormRequest
         return [
             'user_market_request_id'    =>  "The requested market was invalid",
             'current_market_negotiation'    =>  "Negotiation values are required",
-            'current_market_negotiation.bid'    =>  "A negotiation bid/offer value required",
-            'current_market_negotiation.offer'  =>  "A negotiation bid/offer value required",
-            'current_market_negotiation.bid_qty'    =>  "A negotiation bid/offer quantity required",
-            'current_market_negotiation.offer_qty'  =>  "A negotiation bid/offer quantity required",
+            'current_market_negotiation.bid.required'    =>  "A negotiation bid value is required",
+            'current_market_negotiation.offer.required'  =>  "A negotiation offer value is required",
+            'current_market_negotiation.bid_qty.required'    =>  "A negotiation bid quantity is required",
+            'current_market_negotiation.offer_qty.required'  =>  "A negotiation offer quantity is required",
+
+            'current_market_negotiation.bid.numeric'    =>  "The bid must be a number.",
+            'current_market_negotiation.offer.numeric'  =>  "The offer must be a number",
+            'current_market_negotiation.bid_qty.numeric'    =>  "The bid quantity must be a number",
+            'current_market_negotiation.offer_qty.numeric'  =>  "The offer quantity must be a number",
+
             'current_market_negotiation.has_premium_calc'   =>  "",
             'current_market_negotiation.bid_premium'    =>  "",
             'current_market_negotiation.offer_premium'  =>  "",
