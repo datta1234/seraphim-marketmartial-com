@@ -1,3 +1,4 @@
+const message_timeout = 5000;
 export default class Message {
 
     constructor(options) {
@@ -36,7 +37,12 @@ export default class Message {
             this.packets.push(chunk_data.packet);
             this.data.push(chunk_data.data);
         }
-        
+        // clear current timeouts
+        clearTimeout(this._timeout);
+        // creates new timeout
+        if(this.packets.length !== this.total) {
+            this._timeout = setTimeout(this.requestMissingChunks, message_timeout);
+        }
     }
 
     requestMissingChunks() {
