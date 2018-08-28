@@ -1,17 +1,20 @@
 <template>
     <b-row dusk="ibar-negotiation-history-contracts" class="ibar-negotiation-history-contracts">
         <b-col>
-            <b-row v-for="item in history" v-if="item.id != ''">            
+            <b-row v-for="item in history" v-if="item.id != ''">   
+
+        
                 <b-col cols="10" >
+                
                     <b-row>
                         <b-col cols="3" class="text-center">
                              {{ item.bid_qty ? item.bid_qty : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center" :class="getStateClass('bid',item)">
-                            {{ item.bid ? item.bid : "-"  }}
+                            {{ item.bid ?  getText("bid",item) : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center" :class="getStateClass('offer',item)">
-                            {{ item.offer ? item.offer : "-"  }}
+                            {{ item.offer ? getText("offer",item) : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
                              {{ item.offer_qty ? item.offer_qty : "-"  }}
@@ -76,9 +79,8 @@
 
                 return null;
             },
-            getStateClass(attr,item){
-
-                // recursvley run the method to set the state color based on the prev response
+            getSource(attr,item)
+            {
                 let prevItem = null;
                 if(item.market_negotiation_id !== null)
                 {
@@ -87,15 +89,41 @@
 
                 if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
                 {
-                 return this.getStateClass(attr,prevItem);   
+                 return this.getSource(attr,prevItem,item);   
                 }else
                 {
-                     return {
-                        "is-interest":item.is_interest && !item.is_my_org,
-                        "is-maker":item.is_maker && !item.is_my_org,
-                        "is-my-org":item.is_my_org
-                    };  
+                    return item;
                 }
+                
+            },
+            getText(attr,item)
+            {
+                let source = this.getSource(attr,item);
+                if(item.id == 55)
+                    {
+                      console.log(item.is_interest == source.is_interest && item.is_marker == source.is_maker)
+                    }
+
+                if(source.id != item.id && item.is_repeat)
+                {
+                    return item.is_interest == source.is_interest && item.is_marker == source.is_maker ? "SPIN" : item[attr];
+                }
+
+                return item[attr];
+
+            },
+            getStateClass(attr,item){
+
+               
+                let source = this.getSource(attr,item);
+
+                 return {
+                    "text": source[attr],
+                    "is-interest":source.is_interest && !source.is_my_org,
+                    "is-maker":source.is_maker && !source.is_my_org,
+                    "is-my-org":source.is_my_org
+                };  
+            
 
                          
             }

@@ -44,7 +44,6 @@ class MarketNegotiationController extends Controller
             $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
             $marketNegotiation = $oldNegotiation->replicate();
             $marketNegotiation->is_repeat = true;
-            $marketNegotiation->save();
 
         }else
         {

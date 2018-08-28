@@ -124,7 +124,7 @@ export default {
                 
                 if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
                 {
-
+                
                  return this.getStateClass(prevItem,attr);   
                 }else
                 {

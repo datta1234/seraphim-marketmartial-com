@@ -89281,9 +89281,10 @@ var app = new Vue({
 
         if (Laravel.organisationUuid) {
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
+                console.log("this is what got returned", UserMarketRequest);
                 //this should be the market thats created
-                console.log("this is what websockets is", UserMarketRequest);
-                _this2.updateUserMarketRequest(UserMarketRequest);
+                _this2.updateUserMarketRequest(UserMarketRequest.data);
+                __WEBPACK_IMPORTED_MODULE_12__lib_EventBus_js__["a" /* EventBus */].$emit('notifyUser', { "user_market_request_id": UserMarketRequest.data.id, "message": UserMarketRequest.message });
             }).listen('ChatMessageReceived', function (received_org_message) {
                 _this2.$emit('chatMessageReceived', received_org_message);
             });
@@ -97567,10 +97568,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_UserMarket__ = __webpack_require__(81);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
-//
-//
-//
-//
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 //
 //
 //
@@ -97676,6 +97675,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+
+var showMessagesIn = ["market_request_store", "market_request_update", "market_request_delete", "market_negotiation_store"];
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: {
@@ -97710,7 +97711,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (newVal.id != oldVal.id) {
                     this.init();
                 } else {
-                    this.reset();
+                    this.reset(['history_message']);
                     this.setUpData();
                 }
             },
@@ -97758,13 +97759,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         validateProposal: function validateProposal(check_invalid) {
             this.check_invalid = check_invalid;
         },
-        updateUserMessages: function updateUserMessages() {
+        updateMessage: function updateMessage(messageData) {
+            if (messageData.user_market_request_id == this.marketRequest.id) {
+                var message = messageData.message;
+                if (message !== null && (typeof message === 'undefined' ? 'undefined' : _typeof(message)) === "object" && showMessagesIn.indexOf(message.key) > -1) {
+                    this.history_message = message.data;
+                } else if (message === null) {
+                    this.history_message = null;
+                }
+            }
+        },
+        calcUserMessages: function calcUserMessages() {
             //if the users market qoute is placed on hold notify the the current user if it is theres
             if (this.marker_qoute && this.marker_qoute.is_on_hold) {
                 this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-            }
-
-            if (!this.can_negotiate) {
+            } else if (!this.can_negotiate) {
                 this.history_message = "Market is pending. As soon as the market clears, you will be able to participate.";
             }
         },
@@ -97778,8 +97787,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.server_loading = true;
             this.proposed_user_market_negotiation.spinNegotiation().then(function (response) {
-
-                _this.history_message = response.data.message;
                 _this.server_loading = false;
                 _this.errors = [];
             }).catch(function (err) {
@@ -97798,8 +97805,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.server_loading = true;
             this.proposed_user_market_negotiation.storeNegotiation().then(function (response) {
-
-                _this2.history_message = response.data.message;
                 _this2.server_loading = false;
                 _this2.errors = [];
             }).catch(function (err) {
@@ -97822,7 +97827,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market.store().then(function (response) {
 
-                _this3.history_message = response.data.message;
                 _this3.server_loading = false;
                 _this3.errors = [];
             }).catch(function (err) {
@@ -97844,7 +97848,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market_negotiation.patchQuote().then(function (response) {
                 _this4.server_loading = false;
-                _this4.history_message = response.data.message;
                 _this4.errors = [];
             }).catch(function (err) {
                 _this4.server_loading = false;
@@ -97861,9 +97864,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             // save
             this.proposed_user_market_negotiation.repeatQuote().then(function (response) {
-
                 _this5.server_loading = false;
-                _this5.history_message = response.data.message;
                 _this5.errors = [];
             }).catch(function (err) {
                 _this5.server_loading = false;
@@ -97881,8 +97882,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             // save
             this.proposed_user_market.delete().then(function (response) {
                 _this6.server_loading = false;
-                _this6.history_message = response.data.message;
-
                 _this6.$refs.pullModal.hide();
             }).catch(function (err) {
                 _this6.server_loading = false;
@@ -97892,6 +97891,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         reset: function reset() {
             var _this7 = this;
+
+            var ignore = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
             var defaults = {
                 state_premium_calc: false,
@@ -97908,8 +97909,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 check_invalid: false,
                 errors: []
             };
+
             Object.keys(defaults).forEach(function (k) {
-                _this7[k] = defaults[k];
+                if (ignore.indexOf(k) == -1) {
+                    _this7[k] = defaults[k];
+                }
             });
         },
         setUpProposal: function setUpProposal() {
@@ -97962,7 +97966,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 this.setUpProposal();
                 this.setDefaultQuantities();
-                this.updateUserMessages();
+                this.calcUserMessages();
 
                 // // relate
                 __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$emit('interactionChange', this.marketRequest);
@@ -97975,6 +97979,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         this.init();
+        __WEBPACK_IMPORTED_MODULE_0__lib_EventBus_js__["a" /* EventBus */].$on('notifyUser', this.updateMessage);
     }
 });
 
@@ -100041,6 +100046,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -100073,9 +100081,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return null;
         },
-        getStateClass: function getStateClass(attr, item) {
-
-            // recursvley run the method to set the state color based on the prev response
+        getSource: function getSource(attr, item) {
             var prevItem = null;
             if (item.market_negotiation_id !== null) {
                 prevItem = this.history.find(function (itItem) {
@@ -100084,14 +100090,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (typeof prevItem !== "undefined" && prevItem != null && prevItem.market_negotiation_id != prevItem.id && prevItem[attr] == item[attr]) {
-                return this.getStateClass(attr, prevItem);
+                return this.getSource(attr, prevItem, item);
             } else {
-                return {
-                    "is-interest": item.is_interest && !item.is_my_org,
-                    "is-maker": item.is_maker && !item.is_my_org,
-                    "is-my-org": item.is_my_org
-                };
+                return item;
             }
+        },
+        getText: function getText(attr, item) {
+            var source = this.getSource(attr, item);
+            if (item.id == 55) {
+                console.log(item.is_interest == source.is_interest && item.is_marker == source.is_maker);
+            }
+
+            if (source.id != item.id && item.is_repeat) {
+                return item.is_interest == source.is_interest && item.is_marker == source.is_maker ? "SPIN" : item[attr];
+            }
+
+            return item[attr];
+        },
+        getStateClass: function getStateClass(attr, item) {
+
+            var source = this.getSource(attr, item);
+
+            return {
+                "text": source[attr],
+                "is-interest": source.is_interest && !source.is_my_org,
+                "is-maker": source.is_maker && !source.is_my_org,
+                "is-my-org": source.is_my_org
+            };
         }
     },
     mounted: function mounted() {
@@ -100154,7 +100179,9 @@ var render = function() {
                               [
                                 _vm._v(
                                   "\n                        " +
-                                    _vm._s(item.bid ? item.bid : "-") +
+                                    _vm._s(
+                                      item.bid ? _vm.getText("bid", item) : "-"
+                                    ) +
                                     "\n                    "
                                 )
                               ]
@@ -100170,7 +100197,11 @@ var render = function() {
                               [
                                 _vm._v(
                                   "\n                        " +
-                                    _vm._s(item.offer ? item.offer : "-") +
+                                    _vm._s(
+                                      item.offer
+                                        ? _vm.getText("offer", item)
+                                        : "-"
+                                    ) +
                                     "\n                    "
                                 )
                               ]
