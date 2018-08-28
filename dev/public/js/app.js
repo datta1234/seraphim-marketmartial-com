@@ -89246,7 +89246,10 @@ var app = new Vue({
                 message.addChunkData(chunk_data);
                 this.pusher_messages.push(message);
             }
-            console.log(this.pusher_messages);
+            var unpacked_data = this.pusher_messages[2].getUnpackedData();
+            if (unpacked_data !== null) {
+                this.updateUserMarketRequest(unpacked_data);
+            }
         }
     },
     data: {
@@ -89334,7 +89337,7 @@ var app = new Vue({
             expires: '2018-08-16 00:00:00'
         };
         var test_data4 = {
-            checksum: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydWdsfs454535',
+            checksum: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW',
             packet: 4,
             total: 4,
             data: '25kX3RpbWVvdXQiOm51bGwsImNvbmRfaXNfb2NkIjpudWxsLCJjb25kX2lzX3N1YmplY3QiOm51bGwsImNvbmRfYnV5X21pZCI6bnVsbCwiY29uZF9idXlfYmVzdCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMTgtMDgtMjggMDk6MTE6MTgiLCJ1cGRhdGVkX2F0IjoiMjAxOC0wOC0yOCAwOToxMToxOCIsInRpbWUiOiIwOToxMSJ9fSwicXVvdGVzIjpbeyJpZCI6MTAsImlzX2ludGVyZXN0Ijp0cnVlLCJpc19tYWtlciI6dHJ1ZSwiYmlkX29ubHkiOmZhbHNlLCJvZmZlcl9vbmx5IjpmYWxzZSwidm9sX3NwcmVhZCI6MSwidGltZSI6IjA5OjExIiwiYmlkIjoxNSwib2ZmZXIiOjE2LCJiaWRfcXR5Ijo1MDAsIm9mZmVyX3F0eSI6NTAwLCJpc19yZXBlYXQiOjAsImlzX29uX2hvbGQiOmZhbHNlfV19',
@@ -94764,14 +94767,41 @@ var Message = function () {
     }, {
         key: 'getUnpackedData',
         value: function getUnpackedData() {
+            if (this.packets.length !== this.total) {
+                return null;
+            }
+            // Sort packets to their order
+            this.sortPackets();
             // Concat this.data into single string.
-            // Decode b64 string
-            // Parse to object and return object
+            var base64_string = this.data.reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+            }, '');
+            // Decode b64 string and Parse to object and return object
+            // @TODO - Add error handeling here
+            return JSON.parse(atob(base64_string));
         }
     }, {
         key: 'setTimeout',
         value: function setTimeout() {
             // set the timeout ref for this packet
+        }
+    }, {
+        key: 'sortPackets',
+        value: function sortPackets() {
+            for (var i = 0; i < this.total - 1; i++) {
+                for (var j = 0; j < this.total - i - 1; j++) {
+                    if (this.packets[j] > this.packets[j + 1]) {
+                        var temp_packet = this.packets[j];
+                        var temp_data = this.data[j];
+
+                        this.packets[j] = this.packets[j + 1];
+                        this.data[j] = this.data[j + 1];
+
+                        this.packets[j + 1] = temp_packet;
+                        this.data[j + 1] = temp_data;
+                    }
+                }
+            }
         }
     }]);
 

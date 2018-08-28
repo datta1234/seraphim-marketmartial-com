@@ -46,12 +46,38 @@ export default class Message {
     }
 
     getUnpackedData() {
+        if(this.packets.length !== this.total) {
+            return null;
+        }
+        // Sort packets to their order
+        this.sortPackets();
         // Concat this.data into single string.
-        // Decode b64 string
-        // Parse to object and return object
+        let base64_string = this.data.reduce( (accumulator, currentValue) => {
+            return accumulator + currentValue;
+        }, '');
+        // Decode b64 string and Parse to object and return object
+        // @TODO - Add error handeling here
+        return JSON.parse(atob(base64_string));
     }
 
     setTimeout() {
         // set the timeout ref for this packet
+    }
+
+    sortPackets() {
+        for(let i = 0; i < this.total - 1; i++) {
+            for(let j = 0; j < this.total - i - 1; j++) {
+                if( this.packets[j] > this.packets[j+1] ) {
+                    let temp_packet = this.packets[j];
+                    let temp_data = this.data[j];
+
+                    this.packets[j] = this.packets[j+1];
+                    this.data[j] = this.data[j+1];
+                    
+                    this.packets[j+1] = temp_packet;
+                    this.data[j+1] = temp_data;
+                }
+            }
+        }
     }
 }
