@@ -355,12 +355,13 @@ const app = new Vue({
         {
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('UserMarketRequested', (UserMarketRequest) => {
+                console.log("this is what got returned",UserMarketRequest);
                 //this should be the market thats created
-                console.log("this is what websockets is",UserMarketRequest);
-                this.updateUserMarketRequest(UserMarketRequest);
+                this.updateUserMarketRequest(UserMarketRequest.data);
+                EventBus.$emit('notifyUser',{"user_market_request_id":UserMarketRequest.data.id,"message":UserMarketRequest.message });
             })
             .listen('ChatMessageReceived', (received_org_message) => {
-                this.$emit('chatMessageReceived', received_org_message);
+                this.$emit('chatMessageReceived',received_org_message);
             }); 
         }
 

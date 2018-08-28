@@ -72,6 +72,7 @@ class UserMarketController extends Controller
             true
         );
         
+        $user->organisation->notify("market_request_store","Response sent to interest.",true);
         $userMarketRequest->notifyRequested();
 
         return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
@@ -120,18 +121,19 @@ class UserMarketController extends Controller
 
            $this->authorize('placeOnHold',$userMarket);
             $success = $userMarket->placeOnHold();
-            $message = 'You have placed a market on hold. Response sent to counterparty.';
+            $request->user()->organisation->notify("market_request_update","You have placed a market on hold. Response sent to counterparty.",true);
             // Set action that needs to be taken for the org being put on hold
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
+       
         }elseif($request->has('accept') && $request->input('accept'))
         {
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
-            $message = 'You have accepted the market. Response sent to counterparty.';
-            $organisations[] = $request->user()->organisation;
-
+            $organisations[] = $myOrganisation = $request->user()->organisation;
+            $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
             // Set action that needs to be taken for theaccepted
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
+       
         }else
         {
             $this->authorize('updateNegotiation',$userMarket);
@@ -144,21 +146,20 @@ class UserMarketController extends Controller
                 $success = $userMarket->updateQuote($request->user(),$request->all());
             }
 
+
+            $request->user()->organisation->notify("market_request_update","Response sent to interest.",true);
+
             // Set action that needs to be taken for the org related to this userMarketRequest
             $userMarket->userMarketRequest->setAction(
                 $userMarket->userMarketRequest->user->organisation->id,
                 $userMarket->userMarketRequest->id,
                 true
             );
-
-            $message = 'Response sent to Interest.';
-
         }
 
         // TODO add error handeling and error response
         $userMarketRequest->fresh()->notifyRequested($organisations);
-
-        return response()->json(['data' => $success, 'message' => $message]);
+        return response()->json(['data' => $success]);
     }
 
     /**
@@ -171,7 +172,8 @@ class UserMarketController extends Controller
     {
         $this->authorize('delete',$userMarket);
         $userMarket->delete();
+        $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
         $userMarketRequest->notifyRequested();
-        return response()->json(['data' => null, 'message' => 'Your quote has been pulled.']);
+        return response()->json(['data' => null]);
     }
 }

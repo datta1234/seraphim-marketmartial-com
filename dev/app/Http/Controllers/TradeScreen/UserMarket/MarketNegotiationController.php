@@ -64,10 +64,13 @@ class MarketNegotiationController extends Controller
         $userMarket->marketNegotiations()->save($marketNegotiation);
         $userMarket->current_market_negotiation_id = $marketNegotiation->id;
         $userMarket->save();
-        
+        $message = "Your levels have been sent.";
+        $request->user()->organisation->notify("market_negotiation_store",$message,true);
+
         //broadCast new market request;
         $userMarket->userMarketRequest->notifyRequested();
-        return ['success'=>true,'data'=>$marketNegotiation ,'message'=>"Your levels have been sent."];
+
+        return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
     }
 
     /**
