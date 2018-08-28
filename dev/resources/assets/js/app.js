@@ -60,6 +60,10 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
+Vue.component('mm-loader', require('./components/LoaderComponent.vue'));
+
+Vue.component('theme-toggle', require('./components/ThemeToggleComponent.vue'));
+
 // Market Tab Components
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
@@ -157,6 +161,12 @@ Vue.mixin({
 
 const app = new Vue({
     el: '#trade_app',
+    computed: {
+        tradeTheme: function() {
+            console.log("I NEVER GET CALLED",this.theme_toggle);
+            return this.theme_toggle ? 'light-theme' : 'dark-theme';
+        }
+    },
     watch: {
         'display_markets': function(nv, ov) {
             this.reorderDisplayMarkets(nv);
@@ -292,8 +302,32 @@ const app = new Vue({
             } else {
                 //@TODO: Add logic to display market if not already displaying
             }
+        },
+        loadThemeSetting() {
+            if (localStorage.getItem('themeState') != null) {
+                try {
+                    this.theme_toggle = localStorage.getItem('themeState') === 'true';
+                } catch(e) {
+                    this.theme_toggle = false;
+                    localStorage.removeItem('themeState');
+                }
+            } else {
+                this.theme_toggle = false;
+                try {
+                    localStorage.setItem('themeState', this.theme_toggle);
+                } catch(e) {
+                    localStorage.removeItem('themeState');
+                }
+            }
+        },
+        setThemeState(state) {
+            this.theme_toggle = state;
+            try {
+                localStorage.setItem('themeState', this.theme_toggle);
+            } catch(e) {
+                localStorage.removeItem('themeState');
+            }
         }
-
     },
     data: {
         // default data
@@ -303,10 +337,14 @@ const app = new Vue({
         hidden_markets: [],
         market_types: [],
         message_count: 0,
+        page_loaded: false,
         // internal properties
-        configs: {}
+        configs: {},
+        theme_toggle: false,
     },
     mounted: function() {
+        // get Saved theme setting
+        this.loadThemeSetting();
         // load config files
         this.loadConfig("trade_structure", "trade_structure.json")
         .catch(err => {
@@ -340,15 +378,11 @@ const app = new Vue({
                 return Promise.all(promises);
             })
             .then(all_market_requests => {
-                
+                EventBus.$emit('loading', 'page');
+                this.page_loaded = true;
                 //load the no cares from storage
                 this.loadNoCares();
-
             });
-        }).then( () => {
-            // @TODO - firing at the wrong time, get this to fire only after data is loaded use for disabling items
-           /* console.log("FIRE EVENT!!!!!");
-            EventBus.$emit('dataLoaded', 'mountData', true);*/
         });
         
         if(Laravel.organisationUuid)
@@ -365,8 +399,7 @@ const app = new Vue({
             }); 
         }
 
-       
-
+        EventBus.$on('toggleTheme', this.setThemeState);
     }
 });
 
