@@ -89232,41 +89232,60 @@ var app = new Vue({
             }
         },
         handlePacket: function handlePacket(chunk_data) {
-            // check if the message is already in this.pusher_messages
-            var index = this.pusher_messages.findIndex(function (message) {
-                return message.checksum == chunk_data.checksum && message.total == chunk_data.total && message.expires.isSame(chunk_data.expires);
+            // Clears expired completed messages
+            this.clearExpiredMessages(chunk_data);
+
+            var completed_index = this.completed_messages.findIndex(function (message) {
+                return message.checksum == chunk_data.checksum;
             });
 
-            if (index !== -1) {
-                // if so then just add new packet
-                this.pusher_messages[index].addChunk(chunk_data);
-            } else {
-                // if not create new message and then add chunk
-                var message = new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires });
-                message.addChunk(chunk_data);
-                this.pusher_messages.push(message);
-            }
+            if (completed_index === -1) {
+                // check if the message is already in this.pusher_messages
+                var index = this.pusher_messages.findIndex(function (message) {
+                    return message.checksum == chunk_data.checksum && message.total == chunk_data.total && message.expires.isSame(chunk_data.expires);
+                });
 
-            // unpack data if the message is complete
-            var unpacked_data = void 0;
-            if (index !== -1) {
-                unpacked_data = this.pusher_messages[index].getUnpackedData();
-            } else {
-                unpacked_data = this.pusher_messages[this.pusher_messages.length - 1].getUnpackedData();
-            }
-            if (unpacked_data !== null) {
-                // remove completed messages and add them to completed
-                var completed_message = void 0;
                 if (index !== -1) {
-                    completed_message = this.pusher_messages.splice(index, 1);
+                    // if so then just add new packet
+                    this.pusher_messages[index].addChunk(chunk_data);
                 } else {
-                    completed_message = this.pusher_messages.splice(this.pusher_messages.length - 1, 1);
+                    // if not create new message and then add chunk
+                    var message = new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires });
+                    message.addChunk(chunk_data);
+                    this.pusher_messages.push(message);
                 }
-                this.completed_messages.push(completed_message[0]);
-                this.updateUserMarketRequest(unpacked_data);
-                console.log("LOG ME THIS: ", this.pusher_messages);
-                console.log("LOG ME THIS2: ", this.completed_messages);
+
+                // unpack data if the message is complete
+                var unpacked_data = void 0;
+                if (index !== -1) {
+                    unpacked_data = this.pusher_messages[index].getUnpackedData();
+                } else {
+                    unpacked_data = this.pusher_messages[this.pusher_messages.length - 1].getUnpackedData();
+                }
+                if (unpacked_data !== null) {
+                    // remove completed messages and add them to completed
+                    var completed_message = void 0;
+                    if (index !== -1) {
+                        completed_message = this.pusher_messages.splice(index, 1);
+                    } else {
+                        completed_message = this.pusher_messages.splice(this.pusher_messages.length - 1, 1);
+                    }
+                    this.completed_messages.push({ checksum: completed_message[0].checksum, timestamp: completed_message[0].timestamp });
+                    this.updateUserMarketRequest(unpacked_data);
+
+                    console.log("LOG ME THIS: ", this.pusher_messages);
+                    console.log("LOG ME THIS2: ", this.completed_messages);
+                }
             }
+        },
+        clearExpiredMessages: function clearExpiredMessages(chunk_data) {
+            var _this2 = this;
+
+            this.completed_messages.forEach(function (message, index) {
+                if (message.timestamp.isBefore(chunk_data.timestamp)) {
+                    _this2.completed_messages.splice(index, 1);
+                }
+            });
         }
     },
     data: {
@@ -89285,7 +89304,7 @@ var app = new Vue({
         completed_messages: []
     },
     mounted: function mounted() {
-        var _this2 = this;
+        var _this3 = this;
 
         // get Saved theme setting
         this.loadThemeSetting();
@@ -89294,18 +89313,18 @@ var app = new Vue({
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         }).then(function () {
-            _this2.loadConfig('condition_titles', 'condition_titles.json');
-            _this2.loadUserConfig();
+            _this3.loadConfig('condition_titles', 'condition_titles.json');
+            _this3.loadUserConfig();
         }).then(function (configs) {
             // load the trade data
-            _this2.loadMarketTypes();
-            _this2.loadUserConfig().then(function (user_preferences) {
+            _this3.loadMarketTypes();
+            _this3.loadUserConfig().then(function (user_preferences) {
                 var promises = [];
                 if (user_preferences !== null) {
                     user_preferences.prefered_market_types.forEach(function (market_type) {
-                        promises.push(_this2.loadMarkets(market_type).then(function (markets) {
+                        promises.push(_this3.loadMarkets(market_type).then(function (markets) {
                             markets.forEach(function (market) {
-                                promises.push(_this2.loadMarketRequests(market));
+                                promises.push(_this3.loadMarketRequests(market));
                             });
                         }));
                     });
@@ -89313,9 +89332,9 @@ var app = new Vue({
                 return Promise.all(promises);
             }).then(function (all_market_requests) {
                 __WEBPACK_IMPORTED_MODULE_13__lib_EventBus_js__["a" /* EventBus */].$emit('loading', 'page');
-                _this2.page_loaded = true;
+                _this3.page_loaded = true;
                 //load the no cares from storage
-                _this2.loadNoCares();
+                _this3.loadNoCares();
             });
         });
 
@@ -89323,12 +89342,12 @@ var app = new Vue({
             window.Echo.private('organisation.' + Laravel.organisationUuid).listen('UserMarketRequested', function (UserMarketRequest) {
                 //this should be the market thats created
                 console.log("this is what websockets is", UserMarketRequest);
-                _this2.updateUserMarketRequest(UserMarketRequest);
+                _this3.updateUserMarketRequest(UserMarketRequest);
 
                 // @TODO - move above logic to decode section in handlepacket logic
                 // this.handlePacket(UserMarketRequest);
             }).listen('ChatMessageReceived', function (received_org_message) {
-                _this2.$emit('chatMessageReceived', received_org_message);
+                _this3.$emit('chatMessageReceived', received_org_message);
             });
         }
 
@@ -89338,28 +89357,32 @@ var app = new Vue({
             packet: 1,
             total: 4,
             data: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydWUsImlzX21hcmtldF9tYWtlciI6ZmFsc2UsInRyYWRlX3N0cnVjdHVyZSI6Ik91dHJpZ2h0IiwidHJhZGVfaXRlbXMiOnsiZGVmYXVsdCI6eyJFeHBpcmF0aW9uIERhdGUiOiJKdW4xOSIsIlN0cmlrZSI6IjMxNjU0NjQiLCJRdWFudGl0eSI6IjUwMCJ9fSwiYXR0cmlidXRlcyI6eyJzdGF0ZSI6IlJFUVVFU1QtU0VOVC1WT0wiLCJiaWRfc3RhdGUiOiJhY3Rpb24iLCJvZmZlcl9zdGF0ZSI6ImFjdGlvbiIsImFjdGlvbl9uZWVkZWQiOnRydWV9LCJjcmVhdGVkX2F0IjoiMjAxOC0wOC0yNyA',
-            expires: '2018-08-16 00:00:00'
+            expires: '2018-08-16 00:00:00',
+            timestamp: '2018-08-16 00:00:00'
         };
         var test_data2 = {
             checksum: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW',
             packet: 2,
             total: 4,
             data: 'wODo1MToxOCIsInVwZGF0ZWRfYXQiOiIyMDE4LTA4LTI3IDA4OjUxOjE4Iiwic2VudF9xdW90ZSI6eyJpZCI6MTAsInVzZXJfbWFya2V0X3JlcXVlc3RfaWQiOjEyLCJjdXJyZW50X21hcmtldF9uZWdvdGlhdGlvbl9pZCI6MTAsImlzX3RyYWRlX2F3YXkiOmZhbHNlLCJpc19tYXJrZXRfbWFrZXJfbm90aWZpZWQiOmZhbHNlLCJjcmVhdGVkX2F0IjoiMjAxOC0wOC0yOCAwOToxMToxOCIsInVwZGF0ZWRfYXQiOiIyMDE4LTA4LTI4IDA5OjExOjE4IiwiZGVsZXRlZF9hdCI6bnVsbCwiaXNfb25faG9sZCI6ZmFsc2UsImN1cnJlbnRfbWFya2V0X25lZ290aWF0aW',
-            expires: '2018-08-16 00:00:00'
+            expires: '2018-08-16 00:00:00',
+            timestamp: '2018-08-16 00:00:00'
         };
         var test_data3 = {
             checksum: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW',
             packet: 3,
             total: 4,
             data: '9uIjp7ImlkIjoxMCwibWFya2V0X25lZ290aWF0aW9uX2lkIjpudWxsLCJ1c2VyX21hcmtldF9pZCI6MTAsImJpZCI6MTUsIm9mZmVyIjoxNiwiYmlkX3F0eSI6NTAwLCJvZmZlcl9xdHkiOjUwMCwiYmlkX3ByZW1pdW0iOm51bGwsIm9mZmVyX3ByZW1pdW0iOm51bGwsImZ1dHVyZV9yZWZlcmVuY2UiOm51bGwsImhhc19wcmVtaXVtX2NhbGMiOjAsImlzX3JlcGVhdCI6MCwiaXNfYWNjZXB0ZWQiOjAsImlzX3ByaXZhdGUiOjEsImNvbmRfaXNfcmVwZWF0X2F0dyI6bnVsbCwiY29uZF9mb2tfYXBwbHlfYmlkIjpudWxsLCJjb25kX2Zva19zcGluIjpudWxsLCJjb',
-            expires: '2018-08-16 00:00:00'
+            expires: '2018-08-16 00:00:00',
+            timestamp: '2018-08-16 00:00:00'
         };
         var test_data4 = {
             checksum: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW',
             packet: 4,
             total: 4,
             data: '25kX3RpbWVvdXQiOm51bGwsImNvbmRfaXNfb2NkIjpudWxsLCJjb25kX2lzX3N1YmplY3QiOm51bGwsImNvbmRfYnV5X21pZCI6bnVsbCwiY29uZF9idXlfYmVzdCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMTgtMDgtMjggMDk6MTE6MTgiLCJ1cGRhdGVkX2F0IjoiMjAxOC0wOC0yOCAwOToxMToxOCIsInRpbWUiOiIwOToxMSJ9fSwicXVvdGVzIjpbeyJpZCI6MTAsImlzX2ludGVyZXN0Ijp0cnVlLCJpc19tYWtlciI6dHJ1ZSwiYmlkX29ubHkiOmZhbHNlLCJvZmZlcl9vbmx5IjpmYWxzZSwidm9sX3NwcmVhZCI6MSwidGltZSI6IjA5OjExIiwiYmlkIjoxNSwib2ZmZXIiOjE2LCJiaWRfcXR5Ijo1MDAsIm9mZmVyX3F0eSI6NTAwLCJpc19yZXBlYXQiOjAsImlzX29uX2hvbGQiOmZhbHNlfV19',
-            expires: '2018-08-16 00:00:00'
+            expires: '2018-08-16 00:00:00',
+            timestamp: '2018-08-16 00:00:00'
         };
         this.handlePacket(test_data1);
         this.handlePacket(test_data2);
@@ -94746,6 +94769,7 @@ var Message = function () {
         this.missing_packets = [];
         this.data = [];
         this.can_request_missing = true;
+        this.timestamp = null;
 
         var defaults = {
             checksum: '',
@@ -94787,6 +94811,7 @@ var Message = function () {
                 this.missing_packets.splice(missing_index, 1);
                 this.packets.push(chunk.packet);
                 this.data.push(chunk.data);
+                this.timestamp = moment(chunk.timestamp);
             }
             // clear current timeouts
             clearTimeout(this._timeout);

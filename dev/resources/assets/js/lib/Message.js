@@ -8,6 +8,7 @@ export default class Message {
         this.missing_packets = [];
         this.data = [];
         this.can_request_missing = true;
+        this.timestamp = null;
 
         const defaults = {
             checksum: '',
@@ -48,6 +49,7 @@ export default class Message {
             this.missing_packets.splice(missing_index, 1);
             this.packets.push(chunk.packet);
             this.data.push(chunk.data);
+            this.timestamp = moment(chunk.timestamp);
         }
         // clear current timeouts
         clearTimeout(this._timeout);
