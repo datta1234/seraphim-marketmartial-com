@@ -3,8 +3,8 @@ export default class Message {
     constructor(options) {
 
         this._timeout = null;
-        this.packets: [];
-        this.data:[];
+        this.packets = [];
+        this.data = [];
 
         const defaults = {
             checksum: '',
@@ -24,10 +24,19 @@ export default class Message {
         });   
     }
 
-    addChunkData(packet) {
+    addChunkData(chunk_data) {
         // Check if we already have the packet if not -
-        // Add packet number to this.packets in order
-        // Add b64 data to this.data in same place as packet number above
+        let index = this.packets.findIndex( (packet) => {
+            return packet == chunk_data.packet;
+        });
+
+        // Add packet number to this.packets
+        // Add b64 data to this.data
+        if(index === -1) {
+            this.packets.push(chunk_data.packet);
+            this.data.push(chunk_data.data);
+        }
+        
     }
 
     requestMissingChunks() {
