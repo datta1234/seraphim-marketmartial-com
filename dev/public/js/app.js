@@ -89246,9 +89246,26 @@ var app = new Vue({
                 message.addChunk(chunk_data);
                 this.pusher_messages.push(message);
             }
-            var unpacked_data = this.pusher_messages[2].getUnpackedData();
+
+            // unpack data if the message is complete
+            var unpacked_data = void 0;
+            if (index !== -1) {
+                unpacked_data = this.pusher_messages[index].getUnpackedData();
+            } else {
+                unpacked_data = this.pusher_messages[this.pusher_messages.length - 1].getUnpackedData();
+            }
             if (unpacked_data !== null) {
+                // remove completed messages and add them to completed
+                var completed_message = void 0;
+                if (index !== -1) {
+                    completed_message = this.pusher_messages.splice(index, 1);
+                } else {
+                    completed_message = this.pusher_messages.splice(this.pusher_messages.length - 1, 1);
+                }
+                this.completed_messages.push(completed_message[0]);
                 this.updateUserMarketRequest(unpacked_data);
+                console.log("LOG ME THIS: ", this.pusher_messages);
+                console.log("LOG ME THIS2: ", this.completed_messages);
             }
         }
     },
@@ -89264,7 +89281,8 @@ var app = new Vue({
         // internal properties
         configs: {},
         theme_toggle: false,
-        pusher_messages: [new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZR4363qRR', 'total': 8, 'expires': '2018-08-16 00:00:00' }), new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNf58Tr5ipL90', 'total': 8, 'expires': '2018-08-16 00:00:00' }), new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW', 'total': 4, 'expires': '2018-08-16 00:00:00' })]
+        pusher_messages: [new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZR4363qRR', 'total': 8, 'expires': '2018-08-16 00:00:00' }), new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNf58Tr5ipL90', 'total': 8, 'expires': '2018-08-16 00:00:00' }), new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW', 'total': 4, 'expires': '2018-08-16 00:00:00' })],
+        completed_messages: []
     },
     mounted: function mounted() {
         var _this2 = this;
@@ -94725,7 +94743,9 @@ var Message = function () {
 
         this._timeout = null;
         this.packets = [];
+        this.missing_packets = [];
         this.data = [];
+        this.can_request_missing = true;
 
         var defaults = {
             checksum: '',
@@ -94742,6 +94762,12 @@ var Message = function () {
                 _this[key] = defaults[key];
             }
         });
+
+        if (options && options.total) {
+            for (var i = 1; i <= this.total; i++) {
+                this.missing_packets.push(i);
+            }
+        }
     }
 
     _createClass(Message, [{
@@ -94755,6 +94781,10 @@ var Message = function () {
             // Add packet number to this.packets
             // Add b64 data to this.data
             if (index === -1) {
+                var missing_index = this.missing_packets.findIndex(function (missing_packet) {
+                    return missing_packet == chunk.packet;
+                });
+                this.missing_packets.splice(missing_index, 1);
                 this.packets.push(chunk.packet);
                 this.data.push(chunk.data);
             }
@@ -94779,30 +94809,36 @@ var Message = function () {
         value: function requestMissingChunks() {
             var _this3 = this;
 
-            // make axios call for a list of missing chunk data
-            // @TODO - add url for request
-            return axios.get(axios.defaults.baseUrl + '/trade/').then(function (missingChunkDataResponse) {
-                // success - add new chunk data
-                if (missingChunkDataResponse.status == 200) {
-                    _this3.addChunks(missingChunkDataResponse.data.data);
-                    // @TODO - Change status code to status sent as a result of expiry
-                    // fail - expire remove message instance
-                } else if (missingChunkDataResponse.status == 200) {
-                    // @TODO - add any other data we might want to send back
-                    return null;
-                } else {
+            if (this.can_request_missing) {
+                // make axios call for a list of missing chunk data
+                // @TODO - add url for request
+                axios.post(axios.defaults.baseUrl + '/trade/', { "checksum": this.checksum, 'missing_packets': this.missing_packets }).then(function (missingChunkDataResponse) {
+                    // success - add new chunk data
+                    if (missingChunkDataResponse.status == 200) {
+                        _this3.addChunks(missingChunkDataResponse.data.data);
+
+                        // @TODO - Change status code to status sent as a result of expiry
+                        // fail - expire remove message instance
+                    } else if (missingChunkDataResponse.status == 200) {
+                        _this3.can_request_missing = false;
+                    } else {
+                        console.error(err);
+                    }
+                }, function (err) {
                     console.error(err);
-                }
-            }, function (err) {
-                console.error(err);
-            });
+                });
+            }
         }
+
+        // @TODO - add check sum check to see if the data is all there else request all chunks
+
     }, {
         key: 'getUnpackedData',
         value: function getUnpackedData() {
             if (this.packets.length !== this.total) {
                 return null;
             }
+            this.can_request_missing = false;
             // Sort packets to their order
             this.sortPackets();
             // Concat this.data into single string.
@@ -94812,11 +94848,6 @@ var Message = function () {
             // Decode b64 string and Parse to object and return object
             // @TODO - Add error handeling here
             return JSON.parse(atob(base64_string));
-        }
-    }, {
-        key: 'setTimeout',
-        value: function setTimeout() {
-            // set the timeout ref for this packet
         }
     }, {
         key: 'sortPackets',

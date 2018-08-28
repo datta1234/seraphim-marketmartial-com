@@ -5,7 +5,9 @@ export default class Message {
 
         this._timeout = null;
         this.packets = [];
+        this.missing_packets = [];
         this.data = [];
+        this.can_request_missing = true;
 
         const defaults = {
             checksum: '',
@@ -22,7 +24,13 @@ export default class Message {
             } else {
                 this[key] = defaults[key];
             }
-        });   
+        });
+
+        if(options && options.total) {
+            for(let i = 1; i <= this.total; i++) {
+                this.missing_packets.push(i);
+            }
+        }
     }
 
     addChunk(chunk) {
@@ -34,6 +42,10 @@ export default class Message {
         // Add packet number to this.packets
         // Add b64 data to this.data
         if(index === -1) {
+            let missing_index = this.missing_packets.findIndex( (missing_packet) => {
+                return missing_packet == chunk.packet;
+            });
+            this.missing_packets.splice(missing_index, 1);
             this.packets.push(chunk.packet);
             this.data.push(chunk.data);
         }
@@ -52,30 +64,34 @@ export default class Message {
     }
 
     requestMissingChunks() {
-        // make axios call for a list of missing chunk data
-        // @TODO - add url for request
-        return axios.get(axios.defaults.baseUrl + '/trade/')
+        if(this.can_request_missing) {
+            // make axios call for a list of missing chunk data
+            // @TODO - add url for request
+            axios.post(axios.defaults.baseUrl + '/trade/', {"checksum": this.checksum,'missing_packets':this.missing_packets})
             .then(missingChunkDataResponse => {
                 // success - add new chunk data
                 if(missingChunkDataResponse.status == 200) {
                     this.addChunks(missingChunkDataResponse.data.data);               
+                
                 // @TODO - Change status code to status sent as a result of expiry
                 // fail - expire remove message instance
                 } else if(missingChunkDataResponse.status == 200) {
-                // @TODO - add any other data we might want to send back
-                    return null;
+                    this.can_request_missing = false;
                 } else {
                     console.error(err);    
                 }
             }, err => {
                 console.error(err);
             });
+        }
     }
 
+    // @TODO - add check sum check to see if the data is all there else request all chunks
     getUnpackedData() {
         if(this.packets.length !== this.total) {
             return null;
         }
+        this.can_request_missing = false;
         // Sort packets to their order
         this.sortPackets();
         // Concat this.data into single string.

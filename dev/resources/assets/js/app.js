@@ -343,9 +343,26 @@ const app = new Vue({
                 message.addChunk(chunk_data);
                 this.pusher_messages.push(message);
             }
-            let unpacked_data = this.pusher_messages[2].getUnpackedData();
+
+            // unpack data if the message is complete
+            let unpacked_data;
+            if(index !== -1) {
+                unpacked_data = this.pusher_messages[index].getUnpackedData(); 
+            } else {
+                unpacked_data = this.pusher_messages[this.pusher_messages.length -1].getUnpackedData();  
+            }
             if(unpacked_data !== null) {
-                this.updateUserMarketRequest(unpacked_data); 
+                // remove completed messages and add them to completed
+                let completed_message;
+                if (index !== -1) {
+                    completed_message = this.pusher_messages.splice(index, 1); 
+                } else {
+                    completed_message = this.pusher_messages.splice(this.pusher_messages.length -1, 1);
+                }   
+                this.completed_messages.push(completed_message[0]);
+                this.updateUserMarketRequest(unpacked_data);
+                console.log("LOG ME THIS: ", this.pusher_messages);
+                console.log("LOG ME THIS2: ", this.completed_messages);
             }
         },
     },
@@ -366,6 +383,7 @@ const app = new Vue({
             new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNf58Tr5ipL90', 'total': 8, 'expires': '2018-08-16 00:00:00'}),
             new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW', 'total': 4, 'expires': '2018-08-16 00:00:00'})
         ],
+        completed_messages: [],
     },
     mounted: function() {
         // get Saved theme setting
