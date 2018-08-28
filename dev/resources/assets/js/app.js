@@ -336,11 +336,11 @@ const app = new Vue({
             
             if(index !== -1) {
             // if so then just add new packet
-                this.pusher_messages[index].addChunkData(chunk_data);
+                this.pusher_messages[index].addChunk(chunk_data);
             } else {
             // if not create new message and then add chunk
                 let message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires});
-                message.addChunkData(chunk_data);
+                message.addChunk(chunk_data);
                 this.pusher_messages.push(message);
             }
             let unpacked_data = this.pusher_messages[2].getUnpackedData();

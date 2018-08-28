@@ -163,8 +163,6 @@
                     }
                 }, err => {
                     console.error(err);
-                }).then( () => {
-
                 });
             },
             addNewMessage(message) {

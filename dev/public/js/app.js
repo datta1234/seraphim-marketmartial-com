@@ -89239,11 +89239,11 @@ var app = new Vue({
 
             if (index !== -1) {
                 // if so then just add new packet
-                this.pusher_messages[index].addChunkData(chunk_data);
+                this.pusher_messages[index].addChunk(chunk_data);
             } else {
                 // if not create new message and then add chunk
                 var message = new __WEBPACK_IMPORTED_MODULE_12__lib_Message__["a" /* default */]({ 'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires });
-                message.addChunkData(chunk_data);
+                message.addChunk(chunk_data);
                 this.pusher_messages.push(message);
             }
             var unpacked_data = this.pusher_messages[2].getUnpackedData();
@@ -94715,6 +94715,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var message_timeout = 5000;
+
 var Message = function () {
     function Message(options) {
         var _this = this;
@@ -94743,26 +94745,57 @@ var Message = function () {
     }
 
     _createClass(Message, [{
-        key: 'addChunkData',
-        value: function addChunkData(chunk_data) {
+        key: 'addChunk',
+        value: function addChunk(chunk) {
             // Check if we already have the packet if not -
             var index = this.packets.findIndex(function (packet) {
-                return packet == chunk_data.packet;
+                return packet == chunk.packet;
             });
 
             // Add packet number to this.packets
             // Add b64 data to this.data
             if (index === -1) {
-                this.packets.push(chunk_data.packet);
-                this.data.push(chunk_data.data);
+                this.packets.push(chunk.packet);
+                this.data.push(chunk.data);
             }
+            // clear current timeouts
+            clearTimeout(this._timeout);
+            // creates new timeout
+            if (this.packets.length !== this.total) {
+                this._timeout = setTimeout(this.requestMissingChunks, message_timeout);
+            }
+        }
+    }, {
+        key: 'addChunks',
+        value: function addChunks(chunks) {
+            var _this2 = this;
+
+            chunks.forEach(function (chunk) {
+                _this2.addChunk(chunk);
+            });
         }
     }, {
         key: 'requestMissingChunks',
         value: function requestMissingChunks() {
+            var _this3 = this;
+
             // make axios call for a list of missing chunk data
-            // success - add new chunk data
-            // fail - expire remove message instance
+            // @TODO - add url for request
+            return axios.get(axios.defaults.baseUrl + '/trade/').then(function (missingChunkDataResponse) {
+                // success - add new chunk data
+                if (missingChunkDataResponse.status == 200) {
+                    _this3.addChunks(missingChunkDataResponse.data.data);
+                    // @TODO - Change status code to status sent as a result of expiry
+                    // fail - expire remove message instance
+                } else if (missingChunkDataResponse.status == 200) {
+                    // @TODO - add any other data we might want to send back
+                    return null;
+                } else {
+                    console.error(err);
+                }
+            }, function (err) {
+                console.error(err);
+            });
         }
     }, {
         key: 'getUnpackedData',
@@ -106398,7 +106431,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }, function (err) {
                 console.error(err);
-            }).then(function () {});
+            });
         },
         addNewMessage: function addNewMessage(message) {
             var message_index = void 0;

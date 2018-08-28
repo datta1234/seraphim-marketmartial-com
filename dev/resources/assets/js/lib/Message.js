@@ -25,17 +25,17 @@ export default class Message {
         });   
     }
 
-    addChunkData(chunk_data) {
+    addChunk(chunk) {
         // Check if we already have the packet if not -
         let index = this.packets.findIndex( (packet) => {
-            return packet == chunk_data.packet;
+            return packet == chunk.packet;
         });
 
         // Add packet number to this.packets
         // Add b64 data to this.data
         if(index === -1) {
-            this.packets.push(chunk_data.packet);
-            this.data.push(chunk_data.data);
+            this.packets.push(chunk.packet);
+            this.data.push(chunk.data);
         }
         // clear current timeouts
         clearTimeout(this._timeout);
@@ -45,10 +45,31 @@ export default class Message {
         }
     }
 
+    addChunks(chunks) {
+        chunks.forEach(chunk => {
+            this.addChunk(chunk);
+        });
+    }
+
     requestMissingChunks() {
         // make axios call for a list of missing chunk data
-        // success - add new chunk data
-        // fail - expire remove message instance
+        // @TODO - add url for request
+        return axios.get(axios.defaults.baseUrl + '/trade/')
+            .then(missingChunkDataResponse => {
+                // success - add new chunk data
+                if(missingChunkDataResponse.status == 200) {
+                    this.addChunks(missingChunkDataResponse.data.data);               
+                // @TODO - Change status code to status sent as a result of expiry
+                // fail - expire remove message instance
+                } else if(missingChunkDataResponse.status == 200) {
+                // @TODO - add any other data we might want to send back
+                    return null;
+                } else {
+                    console.error(err);    
+                }
+            }, err => {
+                console.error(err);
+            });
     }
 
     getUnpackedData() {
@@ -64,10 +85,6 @@ export default class Message {
         // Decode b64 string and Parse to object and return object
         // @TODO - Add error handeling here
         return JSON.parse(atob(base64_string));
-    }
-
-    setTimeout() {
-        // set the timeout ref for this packet
     }
 
     sortPackets() {
