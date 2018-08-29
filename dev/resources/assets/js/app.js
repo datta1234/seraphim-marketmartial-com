@@ -146,6 +146,12 @@ Vue.mixin({
             //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
         },
+        /*
+         * Basic bubble sort that sorts a date string array usesing Moment.
+         *
+         * @param {String[]} date_string_array - array of date string
+         * @param {String} format - the format to cast to a moment object
+         */
         dateStringArraySort(date_string_array, format) {
             for(let i = 0; i < date_string_array.length - 1; i++) {
                 for(let j = 0; j < date_string_array.length - i - 1; j++) {
@@ -262,6 +268,11 @@ const app = new Vue({
                 }
             });
         },
+        /**
+         * Makes an axios get request to get the user preferences         
+         *
+         * @return 
+         */
         loadUserConfig() {
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/user-pref')
@@ -393,9 +404,10 @@ const app = new Vue({
         configs: {},
         theme_toggle: false,
         pusher_messages: [
-            new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZR4363qRR', 'total': 8, 'expires': '2018-08-16 00:00:00'}),
+            // @TODO remove - Sample data for Pusher Message Packages
+            /*new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZR4363qRR', 'total': 8, 'expires': '2018-08-16 00:00:00'}),
             new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNf58Tr5ipL90', 'total': 8, 'expires': '2018-08-16 00:00:00'}),
-            new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW', 'total': 4, 'expires': '2018-08-16 00:00:00'})
+            new Message({'checksum': 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydW', 'total': 4, 'expires': '2018-08-16 00:00:00'})*/
         ],
         completed_messages: [],
     },
@@ -460,7 +472,7 @@ const app = new Vue({
 
         EventBus.$on('toggleTheme', this.setThemeState);
 
-        // Sample data for Pusher Message Packages
+        // @TODO remove - Sample data for Pusher Message Packages
         /*let test_data1 = {
             checksum: 'cLOfXrpHrLVzopi3qdWjKnSR9Dt6kvGNGKIzb7k5jHg=',
             packet: 1,

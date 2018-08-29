@@ -3,6 +3,9 @@ import Sha256 from './Char256Hash/sha256';
 import crypto from 'crypto';
 export default class Message {
 
+    /**
+     * Constructs a new Message instance using defaults as the params that can be passed
+     */
     constructor(options) {
 
         this._timeout = null;
@@ -34,12 +37,20 @@ export default class Message {
         }
     }
 
+    /**
+     * Generates a new list of missing packets using the total number of packets
+     */
     generateMissingPackets() {
         for(let i = 1; i <= this.total; i++) {
             this.missing_packets.push(i);
         }
     }
 
+    /**
+     * Adds a new chunk packet to the message
+     * 
+     * @param {Object} chunk - a new chunk packet.
+     */
     addChunk(chunk) {
         // Check if we already have the packet if not -
         let index = this.packets.findIndex( (packet) => {
@@ -65,12 +76,20 @@ export default class Message {
         }
     }
 
+    /**
+     * Adds an Array of chunk packets
+     * 
+     * @param {Object[]} chunks - an array of new chunk packets
+     */
     addChunks(chunks) {
         chunks.forEach(chunk => {
             this.addChunk(chunk);
         });
     }
 
+    /**
+     * Makes an axios post request to get missing chunks 
+     */
     requestMissingChunks() {
         if(this.can_request_missing) {
             // make axios call for a list of missing chunk data
@@ -93,6 +112,11 @@ export default class Message {
         }
     }
 
+    /**
+     * Unpacks completed base64 message data and converts in to a JS object
+     * 
+     * @return {Object} Object of the converted base 64 data string
+     */
     getUnpackedData() {
         if(this.packets.length !== this.total) {
             return null;
@@ -120,6 +144,10 @@ export default class Message {
         }
     }
 
+    /**
+     * Basic bubble sort that sorts this.packets and this.data into numerical order using the
+     *  packets index as reference for both the packets and the data.
+     */
     sortPackets() {
         for(let i = 0; i < this.total - 1; i++) {
             for(let j = 0; j < this.total - i - 1; j++) {
@@ -136,7 +164,15 @@ export default class Message {
             }
         }
     }
-    
+
+    /**
+     * a Validation method that calculates the base 64 checksum of the passed string
+     *  and evaluates it agains this.checksum
+     * 
+     * @param {String} base64_string - a base 64 string
+     *
+     * @return {Boolean}
+     */
     validateChecksum(base64_string) {
         let calculated_checksum = new Sha256().update(base64_string, 'ascii').digest('base64');
         return this.checksum == calculated_checksum;
