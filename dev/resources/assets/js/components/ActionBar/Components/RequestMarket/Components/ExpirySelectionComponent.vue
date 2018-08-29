@@ -66,6 +66,12 @@
             };
         },
         methods: {
+            /**
+             * Passes selected expiry date then sorts the dates and calls the component
+             *  callback when the number of selected dates reach the total number of dates.
+             *
+             * @param {string} date
+             */
             selectExpiryDates(date) {
                 this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
                 if(!this.duplicate_date) {
@@ -80,18 +86,28 @@
                     }).join(' / '));
                 }
             },
+            /**
+             * Casting a passed string to moment with a new format
+             *
+             * @param {string} date_string
+             */
             castToMoment(date_string) {
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'); //return to 
             },
             checkPastDate(date_string) {
                 return moment(date_string).isBefore();
             },
+            /**
+             * Handles dates pagination
+             *
+             * @param {Event} $event
+             */
             changePage($event) {
                 this.current_page = $event;
                 this.loadExpiryDate();    
             },
             /**
-             * Loads Expiry Dates
+             * Loads Expiry Dates from API and sets pagination variables
              */
             loadExpiryDate() {
                 axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page='+this.current_page)

@@ -76,9 +76,17 @@
             };
         },
         methods: {
+            /**
+             * Calls the component call back method
+             */
             confirmDetails() {
                 this.callback();
             },
+            /**
+             * Casting a passed string to moment with a new format
+             *
+             * @param {string} date_string
+             */
             castToMoment(date_string) {
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
             },

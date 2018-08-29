@@ -183,8 +183,6 @@ const app = new Vue({
          * Basic bubble sort that sorts Display Markets according to a set Market Order
          *
          * @param {Array} display_markets_arr - The display market array that need to be sorted
-         *
-         * @return void
          */
         reorderDisplayMarkets(display_markets_arr) {
             for(let i = 0; i < display_markets_arr.length - 1; i++) {
@@ -271,7 +269,7 @@ const app = new Vue({
         /**
          * Makes an axios get request to get the user preferences         
          *
-         * @return 
+         * @return {Object} - the config response data
          */
         loadUserConfig() {
             let self = this;
@@ -300,6 +298,14 @@ const app = new Vue({
                 this.loadMarketRequests(market);
             });
         },
+        /**
+         * Updates User Market Request based on the UserMarketRequestData object passed.
+         *  Finds the Market Request in display markets and updates or adds the Market Request          
+         *
+         * @param {Object} - User market request data object
+         * 
+         * @todo - Add logic to display market if not already displaying
+         */
         updateUserMarketRequest(UserMarketRequestData) {
             let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
             if(index !== -1)
@@ -314,6 +320,9 @@ const app = new Vue({
                 //@TODO: Add logic to display market if not already displaying
             }
         },
+        /**
+         * Loads user prefered theme setting base on local storage variable         
+         */
         loadThemeSetting() {
             if (localStorage.getItem('themeState') != null) {
                 try {
@@ -331,6 +340,11 @@ const app = new Vue({
                 }
             }
         },
+        /**
+         * Toggles theme state based on a passed state param and saves it to local storage
+         *
+         * @param {Boolean} state         
+         */
         setThemeState(state) {
             this.theme_toggle = state;
             try {
@@ -339,10 +353,16 @@ const app = new Vue({
                 localStorage.removeItem('themeState');
             }
         },
+        /**
+         * Handles incoming new message chunks and unpacks new data when a message has been completed
+         *
+         * @param {Object} chunk_data - new chunk packet data         
+         */
         handlePacket(chunk_data) {
             // Clears expired completed messages
             this.clearExpiredMessages(chunk_data);
 
+            // Check if the message has already been completed in this.completed_messages
             let completed_index = this.completed_messages.findIndex( (message) => {
                 return ( message.checksum == chunk_data.checksum);
             });
@@ -383,6 +403,11 @@ const app = new Vue({
                 }
             }
         },
+        /**
+         * Removes all completed messages that have expired
+         *
+         * @param {Object} chunk_data - new chunk packet data         
+         */
         clearExpiredMessages(chunk_data) {
             this.completed_messages.forEach( (message, index) => {
                 if(message.timestamp.isBefore(chunk_data.timestamp)) {
@@ -422,7 +447,6 @@ const app = new Vue({
         })
         .then( () => {
             this.loadConfig('condition_titles','condition_titles.json');
-            this.loadUserConfig();
         })
         .then(configs => {
             // load the trade data
@@ -467,7 +491,7 @@ const app = new Vue({
                 this.$emit('chatMessageReceived',received_org_message);
             }); 
         }
-
+        // Event listener that listens for theme toggle event to keep track of theme state
         EventBus.$on('toggleTheme', this.setThemeState);
 
         // @TODO remove - Sample data for Pusher Message Packages
