@@ -8,6 +8,7 @@ use App\Traits\ModelCache;
 use App\Traits\OrganisationSlackChat;
 use App\Observers\OrganisationObserver;
 use App\Helpers\Broadcast\Channel;
+use App\Helpers\Broadcast\Message;
 
 
 class Organisation extends Model
@@ -39,6 +40,8 @@ class Organisation extends Model
     protected $fillable = [
         'title', 'verified', 'description',
     ];
+
+    public $message;
 
     /**
      * Return relation based of _id_foreign index
@@ -89,5 +92,15 @@ class Organisation extends Model
     public function getSlackChannelAttribute()
     {
         return $this->slackIntegrations()->where("field", '=', 'channel')->first();
+    }
+
+    public function notify($key,$message,$status)
+    { 
+        $this->message = new Message($this->id,$key, $message, $status);
+    }
+
+    public function getNotification()
+    {
+        return Message::getNotification($this->id);
     }
 }

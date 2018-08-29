@@ -189,22 +189,15 @@ class UserMarketRequest extends Model
             ->first();
     }
 
-    public function notifyRequested($organisations = [])
+    public function notifyRequested($organisations = [],$messages = null)
     {
-        if(count($organisations) > 0)
-        {
-                foreach ($organisations as $organisation) {
+        $organisations = (count($organisations) > 0) ? $organisations : Organisation::verifiedCache();
 
-                    event(new UserMarketRequested($this,$organisation));
-                }
-        }else
+        foreach ($organisations  as $organisation) 
         {
-            $organisations = Organisation::verifiedCache();
-            foreach ($organisations  as $organisation) 
-            {
-                event(new UserMarketRequested($this,$organisation));
-            } 
-        }
+            event(new UserMarketRequested($this,$organisation));
+        } 
+        
        
     }
 
@@ -225,9 +218,10 @@ class UserMarketRequest extends Model
               return $marketCount > 1;
             }
 
-        }
-        
+        }   
     }
+
+    
 
 
     /**
@@ -260,14 +254,12 @@ class UserMarketRequest extends Model
             if($interest_org_id == $current_org_id)
             {
                 $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.interest');
-
             }elseif($market_maker_org_id == $current_org_id)
             {
                 $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.market_maker');
-
             }else
             {
-                $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.other');               
+                $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.other');
             }
 
 
