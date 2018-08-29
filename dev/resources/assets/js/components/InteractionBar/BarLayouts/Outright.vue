@@ -1,9 +1,5 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-outright">
-        
-   <!--      <pre style="background: white">
-            {{ marketRequest }}
-        </pre> -->
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         
@@ -108,6 +104,13 @@
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     import UserMarket from '../../../lib/UserMarket';
     import moment from 'moment';
+    const showMessagesIn = [
+        "market_request_store",
+        "market_request_update",
+        "market_request_delete",
+        "market_negotiation_store"
+    ];
+
     export default {
         props: {
             marketRequest: {
@@ -142,8 +145,8 @@
                         this.init();
                     }else
                     {
-                       this.reset();
-                       this.setUpData(); 
+                      this.reset(['history_message']);
+                      this.setUpData(); 
                     }
                 },
                 deep: true
@@ -195,15 +198,28 @@
             {
                 this.check_invalid = check_invalid;
             },
-            updateUserMessages:function()
+            updateMessage: function(messageData)
+            {
+                if(messageData.user_market_request_id == this.marketRequest.id)
+                {
+                    let message = messageData.message;
+                    if(message !== null && typeof message === "object" && showMessagesIn.indexOf(message.key) > -1)
+                    {
+                       this.history_message = message.data;
+                    }else if(message === null)
+                    {
+                        this.history_message = null;
+                    } 
+                }
+               
+            },
+            calcUserMessages:function()
             {
                 //if the users market qoute is placed on hold notify the the current user if it is theres
                 if(this.marker_qoute && this.marker_qoute.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }
-
-                if(!this.can_negotiate)
+                }else if(!this.can_negotiate)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
@@ -220,8 +236,6 @@
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.spinNegotiation()   
                 .then(response => {
-
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -242,8 +256,6 @@
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.storeNegotiation()
                 .then(response => {
-
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -269,7 +281,6 @@
                 this.proposed_user_market.store()
                 .then(response => {
 
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 
@@ -294,7 +305,6 @@
                 this.proposed_user_market_negotiation.patchQuote()
                 .then(response => {
                     this.server_loading = false;                    
-                    this.history_message = response.data.message;
                     this.errors = [];
                     
                 })
@@ -313,12 +323,8 @@
                 // save
                 this.proposed_user_market_negotiation.repeatQuote()
                 .then(response => {
-
                     this.server_loading = false;
-                    this.history_message = response.data.message;
                     this.errors = [];                   
-                    
-
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -335,9 +341,7 @@
                 // save
                 this.proposed_user_market.delete()
                 .then(response => {
-                    this.server_loading = false;
-                    this.history_message = response.data.message;
-                    
+                    this.server_loading = false;                    
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {
@@ -347,7 +351,7 @@
                 });
 
             },
-            reset() {
+            reset(ignore = []) {
                 let defaults = {
                     state_premium_calc: false,
 
@@ -362,9 +366,13 @@
                     server_loading: false,
                     check_invalid: false,
                     errors: [],
-                    };
+                };
+
                 Object.keys(defaults).forEach(k => {
-                    this[k] = defaults[k];
+                    if(ignore.indexOf(k) == -1)
+                    {
+                       this[k] = defaults[k]; 
+                    }
                 });
 
             },
@@ -431,7 +439,7 @@
                     
                     this.setUpProposal();
                     this.setDefaultQuantities();
-                    this.updateUserMessages();
+                    this.calcUserMessages();
 
                     // // relate
                     EventBus.$emit('interactionChange',this.marketRequest);
@@ -444,6 +452,8 @@
         },
         mounted() {
             this.init();
+            EventBus.$on('notifyUser',this.updateMessage);
+
         }
     }
 </script>
