@@ -44,15 +44,9 @@
                     </b-card>
                     
                     <div class="chat-actions">
-                        <b-form v-on:submit.prevent="" id="chat-message-form">
-                            <b-form-group class="text-center mb-1">
-                                <button @click="quick_message = 'No cares, thanks'" type="submit" class="btn mm-generic-trade-button w-100">No cares, thanks</button>
-                            </b-form-group>
-                            <b-form-group class="text-center mb-1">
-                                <button @click="quick_message = 'Looking'" type="submit" class="btn mm-generic-trade-button w-100">Looking</button>
-                            </b-form-group>
-                            <b-form-group class="text-center mb-1">
-                                <button @click="quick_message = 'Please call me'" type="submit" class="btn mm-generic-trade-button w-100">Please call me</button>
+                        <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
+                            <b-form-group v-for="(option, index) in quick_message_options" class="text-center mb-1">
+                                <button @click="quick_message = option.message" type="submit" class="btn mm-generic-trade-button w-100">{{ option.title }}</button>
                             </b-form-group>
                             <textarea @keydown.enter.prevent="sendMessage"
                                       rows="6"
@@ -62,7 +56,7 @@
                             </textarea>  
                             
                             <b-form-group class="text-center mb-0 pb-0">
-                                <button @click="sendMessage" type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
+                                <button type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
                             </b-form-group>
                         </b-form>
                     </div>
@@ -82,13 +76,27 @@
                 new_message: "",
                 quick_message: "",
                 display_messages: [],
+                quick_message_options: [
+                    {
+                        title: 'No cares, thanks',
+                        message: 'No cares, thanks',
+                    },
+                    {
+                        title: 'Looking',
+                        message: 'Looking',
+                    },
+                    {
+                        title: 'Please call me',
+                        message: 'Please call me',
+                    },
+                ],
             };
         },
         methods: {
             doSomething(e) {
                 console.log("WORKING");
             },
-            sendMessage(e) {
+            sendMessage() {
                 if(this.new_message || this.quick_message) {
                     let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
