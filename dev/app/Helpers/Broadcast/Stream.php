@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 class Stream
 {
-	public $id;
 	public $broadcastName;
 	public $channel;
 	public $data;
@@ -19,8 +18,7 @@ class Stream
     	$this->broadcastName = $event->broadcastAs();
     	$this->channel = $event->broadcastOn();
     	$this->data =   json_encode($event->broadcastWith());
-    	$this->expires_at = Carbon::now();
-    	
+    	$this->expires_at = Carbon::now()->addMinutes(10);
     	$this->setupChunks();
     	$this->storeData();
     }
@@ -65,7 +63,7 @@ class Stream
 
     public function storeData()
     {
-   		 Cache::put('streamData'.$this->id,$this->chunks,$this->expires_at);	
+   		 Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);	
     }
 
     public function run()
@@ -78,7 +76,7 @@ class Stream
 
     public function getChunks($indexes = [])
     {
-    	$chunks = Cache::get('streamData'.$this->id,[]);
+    	$chunks = Cache::get('streamData_'.$this->checkSum,[]);
     	$hasKeys = empty($indexes);	
     	$requestedChunks = [];
     	$time = Carbon::now();
