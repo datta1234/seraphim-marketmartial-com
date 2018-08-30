@@ -99,18 +99,11 @@
             getText(attr,item)
             {
                 let source = this.getSource(attr,item);
-                if(item.id == 55)
-                    {
-                      console.log(item.is_interest == source.is_interest && item.is_marker == source.is_maker)
-                    }
-
                 if(source.id != item.id && item.is_repeat)
                 {
-                    return item.is_interest == source.is_interest && item.is_marker == source.is_maker ? "SPIN" : item[attr];
+                    return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
                 }
-
                 return item[attr];
-
             },
             getStateClass(attr,item){
 
