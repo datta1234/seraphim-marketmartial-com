@@ -5,11 +5,11 @@ deploy_staging:
   only:
     - develop # Run only on develop branch
   variables:
-    - DEPLOYMENT_ROOT: '/var/www'
-    - DEPLOYENY_USER: 'deploy'
-    - DIR_CURRENT: 'html'
-    - DIR_OLD: 'html_previous'
-    - DIR_NEW: 'deployment'
+    DEPLOYMENT_ROOT: '/var/www'
+    DEPLOYENY_USER: 'deploy'
+    DIR_CURRENT: 'html'
+    DIR_OLD: 'html_previous'
+    DIR_NEW: 'deployment'
   before_script: # Setup the SSH agent etc
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
