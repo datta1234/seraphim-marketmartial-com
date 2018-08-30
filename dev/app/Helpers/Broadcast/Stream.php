@@ -25,12 +25,29 @@ class Stream
     	$this->storeData();
     }
 
+
+    public function parseStrToArr($string, $limit_in_bytes){
+        $ret = [];
+
+        $pointer = 0;
+        while(strlen($string) > (($pointer + 1) * $limit_in_bytes)){
+            $ret[] = substr($string, ($pointer * $limit_in_bytes ), $limit_in_bytes);
+            $pointer++;
+        }
+
+        $ret[] = substr($string, ($pointer * $limit_in_bytes), $limit_in_bytes);
+
+        return $ret;
+    }
+
+
     public function setupChunks()
     {
 
     	$encoded = base64_encode($this->data);
-    	$total = 200;
-    	$chunkedStrings = str_split($encoded,$total);
+    	$chunkedStrings = $this->parseStrToArr($encoded,7000);
+        $total = count($chunkedStrings);
+
     	$this->checkSum = hash("sha256",$encoded);
     	$this->chunks = [];
 
@@ -38,9 +55,9 @@ class Stream
     	{
     		$this->chunks[] = [
     			 "checksum" 	=> $this->checkSum,
-    			 "packet"		=> $index,
+    			 "packet"		=> $index + 1,
     			 "total"		=> $total,
-		         "expires"		=> $this->expires_at,
+		         "expires"		=> $this->expires_at->format("d-m-y H:i:s"),
 		         "data"			=> $data
     		];
     	}
@@ -56,7 +73,6 @@ class Stream
     	foreach ($this->chunks as $chunk) 
     	{
     		event(new SendStream($this->broadcastName,$this->channel,$chunk));
-            break;
     	}
     }
 
@@ -72,7 +88,7 @@ class Stream
     		if(!$hasKeys || ($hasKeys && array_key_exists($index, $indexes)))
     		{
     			$requestedChunk = [];
-    			$requestedChunk["timestamp"] = $time;
+    			$requestedChunk["timestamp"] = $time->format("d-m-y H:i:s");
     			$requestedChunk = array_merge($chunk,$requestedChunk);
     			$requestedChunks[] = $requestedChunk;
     		}

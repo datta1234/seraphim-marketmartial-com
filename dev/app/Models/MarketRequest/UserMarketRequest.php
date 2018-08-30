@@ -195,10 +195,9 @@ class UserMarketRequest extends Model
 
         foreach ($organisations  as $organisation) 
         {
-            event(new UserMarketRequested($this,$organisation));
-            //$stream = new Stream(new UserMarketRequested($this,$organisation));
-            //dd($stream);
-           //$stream->run();
+            //event(new UserMarketRequested($this,$organisation));
+            $stream = new Stream(new UserMarketRequested($this,$organisation));
+            $stream->run();
         } 
         
        
