@@ -481,11 +481,11 @@ const app = new Vue({
         if(Laravel.organisationUuid)
         {
             window.Echo.private('organisation.'+Laravel.organisationUuid)
-            .listen('UserMarketRequested', (UserMarketRequest) => {
-                console.log("this is what got returned",UserMarketRequest);
+            .listen('.UserMarketRequested', (userMarketRequest) => {
+                console.log("this is what got returned",userMarketRequest);
                 //this should be the market thats created
-                this.handlePacket(UserMarketRequest.data);
-                EventBus.$emit('notifyUser',{"user_market_request_id":UserMarketRequest.data.id,"message":UserMarketRequest.message });
+                this.handlePacket(userMarketRequest);
+              //  EventBus.$emit('notifyUser',{"user_market_request_id":UserMarketRequest.data.id,"message":UserMarketRequest.message });
             })
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived',received_org_message);

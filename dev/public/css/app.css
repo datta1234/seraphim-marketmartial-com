@@ -10523,7 +10523,7 @@ body .page-title h1 {
 }
 
 .canvas-body {
-  background-image: url("http://staging.assemble.co.za/marketmartial/public/img/background.png");
+  background-image: url("/img/background.png");
   background-size: cover;
 }
 
@@ -11289,8 +11289,8 @@ a.mm-login-button {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/vendor/icomoon/icomoon.eot?igbf0t");
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("http://staging.assemble.co.za/marketmartial/public/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("http://staging.assemble.co.za/marketmartial/public/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("http://staging.assemble.co.za/marketmartial/public/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?igbf0t") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?igbf0t") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?igbf0t#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -12392,21 +12392,21 @@ input:checked + .slider:before {
 
 @font-face {
   font-family: 'Muli-Bold';
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/Muli-Bold.ttf") format("truetype");
+  src: url("/fonts/Muli-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: 'Muli-Regular';
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/Muli-Regular.ttf") format("truetype");
+  src: url("/fonts/Muli-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: 'Raleway-SemiBold';
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/Raleway-SemiBold.ttf") format("truetype");
+  src: url("/fonts/Raleway-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: 'Roboto-Regular';
-  src: url("http://staging.assemble.co.za/marketmartial/public/fonts/Roboto-Regular.ttf") format("truetype");
+  src: url("/fonts/Roboto-Regular.ttf") format("truetype");
 }
 

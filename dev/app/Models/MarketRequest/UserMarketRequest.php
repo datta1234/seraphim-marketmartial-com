@@ -5,7 +5,7 @@ namespace App\Models\MarketRequest;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Events\UserMarketRequested;
-
+use App\Helpers\Broadcast\Stream;
 
 class UserMarketRequest extends Model
 {
@@ -195,7 +195,9 @@ class UserMarketRequest extends Model
 
         foreach ($organisations  as $organisation) 
         {
-            event(new UserMarketRequested($this,$organisation));
+            //event(new UserMarketRequested($this,$organisation));
+            $stream = new Stream(new UserMarketRequested($this,$organisation));
+            $stream->run();
         } 
         
        
