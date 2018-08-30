@@ -114,7 +114,7 @@ class UserMarketController extends Controller
      */
     public function update(UserMarketUpdateRequest $request, UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
-        $organisations = null;
+        $organisations = [];
 
         if($request->has('is_on_hold') && $request->input('is_on_hold'))
         {

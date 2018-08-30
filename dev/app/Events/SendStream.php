@@ -52,7 +52,7 @@ class SendStream implements ShouldBroadcast
     */
     public function broadcastWith()
     {
-        $this->data['time'] = now()->format("d-m-y H:i:s");
+        $this->data['timestamp'] = now()->format("d-m-y H:i:s");
         return $this->data;
     }
 }

@@ -189,7 +189,7 @@ class UserMarketRequest extends Model
             ->first();
     }
 
-    public function notifyRequested($organisations = [],$messages = null)
+    public function notifyRequested($organisations = [], $messages = null)
     {
         $organisations = (count($organisations) > 0) ? $organisations : Organisation::verifiedCache();
 

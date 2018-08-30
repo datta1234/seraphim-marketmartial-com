@@ -358,49 +358,43 @@ const app = new Vue({
          *
          * @param {Object} chunk_data - new chunk packet data         
          */
-        handlePacket(chunk_data) {
+        handlePacket(chunk_data, callback) {
             // Clears expired completed messages
             this.clearExpiredMessages(chunk_data);
 
             // Check if the message has already been completed in this.completed_messages
-            let completed_index = this.completed_messages.findIndex( (message) => {
-                return ( message.checksum == chunk_data.checksum);
+            let message = this.completed_messages.find( (msg_val) => {
+                return ( msg_val.checksum == chunk_data.checksum);
             });
+            if(typeof message !== 'undefined') {
+                // Break if there is already a completed message for this checksum
+                return;
+            }
 
-            if(completed_index === -1) {
-                // check if the message is already in this.pusher_messages
-                let index = this.pusher_messages.findIndex( (message) => {
-                    return ( message.checksum == chunk_data.checksum && message.total == chunk_data.total && message.expires.isSame(chunk_data.expires) );
+            // check if the message is already in this.pusher_messages
+            message = this.pusher_messages.find( (msg_val) => {
+                return ( msg_val.checksum == chunk_data.checksum && msg_val.total == chunk_data.total && msg_val.expires.isSame(chunk_data.expires) );
+            });
+            if(typeof message === 'undefined') {
+                // if its not being tracked, track a new one
+                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, callback);
+                this.pusher_messages.push(message);
+            }
+            
+            // add chunk data to message
+            message.addChunk(chunk_data);
+
+            if(message.isComplete()) {
+                message.doCompletion()
+                .then(data => {
+                    // pull the message out
+                    let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(message), 1);  
+                    this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
+                })
+                .catch(err => {
+                    // TODO: handle invalids here 
+                    console.error("FAILED TO callback", err);
                 });
-                
-                if(index !== -1) {
-                // if so then just add new packet
-                    this.pusher_messages[index].addChunk(chunk_data);
-                } else {
-                // if not create new message and then add chunk
-                    let message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires});
-                    message.addChunk(chunk_data);
-                    this.pusher_messages.push(message);
-                }
-
-                // unpack data if the message is complete
-                let unpacked_data;
-                if(index !== -1) {
-                    unpacked_data = this.pusher_messages[index].getUnpackedData(); 
-                } else {
-                    unpacked_data = this.pusher_messages[this.pusher_messages.length -1].getUnpackedData();  
-                }
-                if(unpacked_data !== null) {
-                    // remove completed messages and add them to completed
-                    let completed_message;
-                    if (index !== -1) {
-                        completed_message = this.pusher_messages.splice(index, 1); 
-                    } else {
-                        completed_message = this.pusher_messages.splice(this.pusher_messages.length -1, 1);
-                    }   
-                    this.completed_messages.push({checksum : completed_message[0].checksum,timestamp : completed_message[0].timestamp});
-                    this.updateUserMarketRequest(unpacked_data);
-                }
             }
         },
         /**
@@ -410,7 +404,7 @@ const app = new Vue({
          */
         clearExpiredMessages(chunk_data) {
             this.completed_messages.forEach( (message, index) => {
-                if(message.timestamp.isBefore(chunk_data.timestamp)) {
+                if(message.expires.isBefore(chunk_data.timestamp)) {
                     this.completed_messages.splice(index, 1);
                 }
             });  
@@ -484,8 +478,11 @@ const app = new Vue({
             .listen('.UserMarketRequested', (userMarketRequest) => {
                 console.log("this is what got returned",userMarketRequest);
                 //this should be the market thats created
-                this.handlePacket(userMarketRequest);
-              //  EventBus.$emit('notifyUser',{"user_market_request_id":UserMarketRequest.data.id,"message":UserMarketRequest.message });
+                this.handlePacket(userMarketRequest, (packet_data) => {
+                    console.log("publish Callback", packet_data);
+                    this.updateUserMarketRequest(packet_data.data);
+                    EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+                });
             })
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived',received_org_message);
