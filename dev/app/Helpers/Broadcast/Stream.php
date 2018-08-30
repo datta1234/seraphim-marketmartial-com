@@ -63,6 +63,7 @@ class Stream
 
     public function storeData()
     {
+         \Log::info('streamData_'.$this->checkSum);
    		 Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);	
     }
 
@@ -74,29 +75,28 @@ class Stream
     	}
     }
 
-    public function getChunks($indexes = [])
+    public static function getChunks($checkSum,$indexes = [])
     {
-    	$chunks = Cache::get('streamData_'.$this->checkSum,[]);
+        \Log::info('streamData_'.$checkSum);
+
+    	$chunks = Cache::get('streamData_'.$checkSum,[]);
     	$hasKeys = empty($indexes);	
     	$requestedChunks = [];
     	$time = Carbon::now();
-    	
-    	foreach ($chunks as $index => $chunk) 
-    	{
-    		if(!$hasKeys || ($hasKeys && array_key_exists($index, $indexes)))
-    		{
-    			$requestedChunk = [];
-    			$requestedChunk["timestamp"] = $time->format("d-m-y H:i:s");
-    			$requestedChunk = array_merge($chunk,$requestedChunk);
-    			$requestedChunks[] = $requestedChunk;
-    		}
-
-    		if($index === count(($indexes)))//stop the loop so we dont do unneccesary loops
-    		{
-    			break;
-    		}
-    	}
-    	return $requestedChunks;	
+        
+        if(!empty($chunks))
+        {
+           $chunks = array_where($chunks, function ($chunk, $key) use($indexes) {
+                return in_array($chunk['packet'], $indexes);
+            });  
+        }
+       
+		foreach ($chunks as $chunk) 
+        {
+            $chunk['timestamp'] = $time;
+        }
+    		
+    	return $chunks;	
     }
 
 
