@@ -74,11 +74,13 @@
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
+                        <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
+
+
                          <b-button  class="w-100 mt-1"  size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
 
 
-                         <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
-
+                       
                         <b-button v-if="!marketRequest.chosen_user_market" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
