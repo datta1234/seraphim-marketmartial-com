@@ -135,6 +135,12 @@
             };
         },
         methods: {
+            /**
+             * Sets the form data to the passed data object and calls the
+             *  component call back method.
+             *
+             * @param {Event} evt - form submit event
+             */
             submitDetails(evt) {
                 evt.preventDefault();
                 Vue.nextTick( () => {
@@ -142,9 +148,20 @@
                 	this.callback(this.form_data);
 				})
             },
+            /**
+             * Casting a passed string to moment with a new format
+             *
+             * @param {string} date_string
+             */
             castToMoment(date_string) {
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
             },
+            /**
+             * Toggles input states when there are errors for the input
+             *
+             * @param {number} index - the index of the input
+             * @param {string} type - the type of input
+             */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
             }
@@ -152,7 +169,7 @@
         mounted() {
     		
     		this.form_data.fields.push({is_selected:true,strike: null,quantity: 500});
-            
+            // Sets up the view and object data defaults dictated by the structure
             switch(this.data.index_market_object.trade_structure) {
             	case 'Outright':
             		this.display.disable_choice = true,

@@ -109,8 +109,10 @@
                     this.$refs['currentController'].$emit('modal_step', 'back');
                 }
             },
+            /**
+             * Set next modal step
+             */
             nextStep() {
-                //receives name of next componenet to load
                 this.modal_data.step++;
             },
         },

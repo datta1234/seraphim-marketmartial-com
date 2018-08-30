@@ -2,11 +2,11 @@
 
 namespace App\Traits;
 use App\Helpers\Misc\ResolveUuid;
-use App\Events\ModelSaved;
+// use App\Events\ModelSaved;
 use Illuminate\Support\Facades\Cache;
 
 
-trait Modelcache {
+trait ModelCache {
 
     public static function getCached($minutes = 60)
     {
