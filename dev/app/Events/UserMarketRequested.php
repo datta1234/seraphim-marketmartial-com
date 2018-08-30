@@ -41,6 +41,16 @@ class UserMarketRequested implements ShouldBroadcast
     }
 
     /**
+    * The event's broadcast name.
+    *
+    * @return string
+    */
+    public function broadcastAs()
+    {
+        return 'UserMarketRequested';
+    }
+
+    /**
      * Get the channels the event should broadcast on.
      *
      * @return \Illuminate\Broadcasting\Channel|array
