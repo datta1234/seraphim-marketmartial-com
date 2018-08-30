@@ -20,6 +20,6 @@ deploy_staging:
     - cd dev # go to package directory
     - tar czf $DIR_NEW.tar.gz ./* --exclude='./vendor' --exclude='./node_modules' # zip up the site
     - scp $DIR_NEW.tar.gz $DEPLOYENY_USER@$STAGING_IP:$DEPLOYMENT_ROOT/$DIR_NEW.tar.gz # send to server
-    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && mkdir $DIR_NEW -p && mv $DIR_NEW.tar.gz $DIR_NEW && cd $DIR_NEW && tar xzf $DIR_NEW.tar.gz" # setup new version
-    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && cp ../$DIR_CURRENT/.env ./.env && composer install --no-dev && npm install && npm run prod"
-    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && rm -rf $DIR_OLD && mv -f $DIR_CURRENT $DIR_OLD && mv -f $DIR_NEW $DIR_CURRENT && cd $DIR_CURRENT && composer dump-autoload && php artisan migrate && php artisan optimize" # move new to current & current to old
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT && mkdir $DIR_NEW -p && mv $DIR_NEW.tar.gz $DIR_NEW && cd $DIR_NEW && tar xzf $DIR_NEW.tar.gz" # setup new version
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT && cp ../$DIR_CURRENT/.env ./.env && composer install --no-dev && npm install && npm run prod"
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT && rm -rf $DIR_OLD && mv -f $DIR_CURRENT $DIR_OLD && mv -f $DIR_NEW $DIR_CURRENT && cd $DIR_CURRENT && composer dump-autoload && php artisan migrate && php artisan optimize" # move new to current & current to old
