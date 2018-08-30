@@ -1,0 +1,25 @@
+image: lorisleiva/laravel-docker:latest
+
+deploy_staging:
+  stage: staging
+  only:
+    - develop # Run only on develop branch
+  variables:
+    - DEPLOYMENT_ROOT: '/var/www'
+    - DEPLOYENY_USER: 'deploy'
+    - DIR_CURRENT: 'html'
+    - DIR_OLD: 'html_previous'
+    - DIR_NEW: 'deployment'
+  before_script: # Setup the SSH agent etc
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - 'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  script:
+    - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
+    - cd dev # go to package directory
+    - tar czf $DIR_NEW.tar.gz ./* --exclude='./vendor' --exclude='./node_modules' # zip up the site
+    - scp $DIR_NEW.tar.gz $DEPLOYENY_USER@$STAGING_IP:$DEPLOYMENT_ROOT/$DIR_NEW.tar.gz # send to server
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && mkdir $DIR_NEW -p && mv $DIR_NEW.tar.gz $DIR_NEW && cd $DIR_NEW && tar xzf $DIR_NEW.tar.gz" # setup new version
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && cp ../$DIR_CURRENT/.env ./.env && composer install --no-dev && npm install && npm run prod"
+    - ssh -p22 $DEPLOYENY_USER@$STAGING_IP "cd $DEPLOYMENT_ROOT/$DIR_NEW && rm -rf $DIR_OLD && mv -f $DIR_CURRENT $DIR_OLD && mv -f $DIR_NEW $DIR_CURRENT && cd $DIR_CURRENT && composer dump-autoload && php artisan migrate && php artisan optimize" # move new to current & current to old
