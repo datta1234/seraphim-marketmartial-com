@@ -6,22 +6,22 @@ use Carbon\Carbon;
 
 class Stream
 {
-	public $broadcastName;
-	public $channel;
-	public $data;
-	public $chunks = [];
-	public $experation;
-	public $checkSum;
+    public $broadcastName;
+    public $channel;
+    public $data;
+    public $chunks = [];
+    public $experation;
+    public $checkSum;
     private $overHead = [];
 
-	function __construct($event) 
+    function __construct($event) 
     {
-    	$this->broadcastName = $event->broadcastAs();
-    	$this->channel = $event->broadcastOn();
-    	$this->data =   json_encode($event->broadcastWith());
-    	$this->expires_at = Carbon::now()->addMinutes(10);
-    	$this->setupChunks();
-    	$this->storeData();
+        $this->broadcastName = $event->broadcastAs();
+        $this->channel = $event->broadcastOn();
+        $this->data =   json_encode($event->broadcastWith());
+        $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration',2));
+        $this->setupChunks();
+        $this->storeData();
     }
 
     public function getChunkAtPointer($str,$pointer,$prev_limit_bytes,$limit_in_bytes)
@@ -33,14 +33,14 @@ class Stream
     public function setupChunks()
     {
 
-    	$encoded = base64_encode($this->data);
-    	//$chunkedStrings = $this->parseStrToArr($encoded,7000);
-        $limit = config('marketmartial.stream.limit') * 1000;
+        $encoded = base64_encode($this->data);
+        //$chunkedStrings = $this->parseStrToArr($encoded,7000);
+        $limit = config('marketmartial.stream_settings.limit',9) * 1000;
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
-    	$this->checkSum = hash("sha256",$encoded);
-    	$this->chunks = [];
+        $this->checkSum = hash("sha256",$encoded);
+        $this->chunks = [];
 
         while($encoded != $compiledData)
         {
@@ -53,7 +53,8 @@ class Stream
 
             $usedBytes = $this->calcUsedOverHead($chunk);
             $limit_in_bytes = $limit - $usedBytes;
-            $compiledData .=  $chunk["data"] = $this->getChunkAtPointer($encoded,$pointer,$prev_limit_bytes, $limit_in_bytes);
+            $chunk["data"]  = $this->getChunkAtPointer($encoded,$pointer,$prev_limit_bytes, $limit_in_bytes);
+           $compiledData   = $compiledData .$chunk["data"];
             $this->chunks[] = $chunk; 
             $prev_limit_bytes = $limit_in_bytes;
             $pointer++;
@@ -71,15 +72,15 @@ class Stream
 
     public function storeData()
     {
-   		Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);	
+        Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);  
     }
 
     public function run()
     {
-    	foreach ($this->chunks as $chunk) 
-    	{
-    		event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
-    	}
+        foreach ($this->chunks as $chunk) 
+        {
+            event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
+        }
     }
 
     public static function hasChecksum($checkSum)
@@ -89,12 +90,12 @@ class Stream
 
     public static function getChunks($checkSum,$indexes = [])
     {
-    	$chunks = Cache::get('streamData_'.$checkSum,[]);
+        $chunks = Cache::get('streamData_'.$checkSum,[]);
         $total = count($chunks);
 
-    	$hasKeys = empty($indexes);	
-    	$requestedChunks = [];
-    	$time = Carbon::now();
+        $hasKeys = empty($indexes); 
+        $requestedChunks = [];
+        $time = Carbon::now();
         
         if(!empty($chunks))
         {
@@ -102,13 +103,13 @@ class Stream
                 return in_array($chunk['packet'], $indexes);
             });  
         }
-		foreach ($chunks as $chunk) 
+        foreach ($chunks as $chunk) 
         {
-            $chunk['time'] = $time;
+            $chunk['timestamp'] = $time;
             $chunk['total'] = $total;
         }
-    		
-    	return $chunks;	
+            
+        return arry_values($chunks); 
     }
 
 

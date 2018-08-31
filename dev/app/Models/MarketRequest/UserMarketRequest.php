@@ -189,13 +189,11 @@ class UserMarketRequest extends Model
             ->first();
     }
 
-    public function notifyRequested($organisations = [],$messages = null)
+    public function notifyRequested($organisations = [], $messages = null)
     {
         $organisations = (count($organisations) > 0) ? $organisations : Organisation::verifiedCache();
-
         foreach ($organisations  as $organisation) 
         {
-            //event(new UserMarketRequested($this,$organisation));
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
         } 
