@@ -16,16 +16,20 @@ class SendStream implements ShouldBroadcast
     public $broadcastName;
     public $channel;
     public $data;
+    public $total;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($broadcastName,$channel,$data)
+    public function __construct($broadcastName,$channel,$data,$total)
     {
         $this->broadcastName = $broadcastName;
         $this->channel = $channel;
         $this->data =   $data;
+        $this->total =   $total;
+
     }
 
      
@@ -52,6 +56,7 @@ class SendStream implements ShouldBroadcast
     */
     public function broadcastWith()
     {
+        $this->data['total'] = $this->total;
         $this->data['timestamp'] = now()->format("d-m-y H:i:s");
         return $this->data;
     }

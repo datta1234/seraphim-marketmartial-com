@@ -192,15 +192,13 @@ class UserMarketRequest extends Model
     public function notifyRequested($organisations = [], $messages = null)
     {
         $organisations = (count($organisations) > 0) ? $organisations : Organisation::verifiedCache();
-
         foreach ($organisations  as $organisation) 
         {
-            //event(new UserMarketRequested($this,$organisation));
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
         } 
         
-       
+    
     }
 
 
