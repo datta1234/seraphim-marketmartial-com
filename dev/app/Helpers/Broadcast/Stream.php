@@ -19,7 +19,7 @@ class Stream
         $this->broadcastName = $event->broadcastAs();
         $this->channel = $event->broadcastOn();
         $this->data =   json_encode($event->broadcastWith());
-        $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration',2));
+        $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration'));
         $this->setupChunks();
         $this->storeData();
     }
@@ -35,7 +35,7 @@ class Stream
 
         $encoded = base64_encode($this->data);
         //$chunkedStrings = $this->parseStrToArr($encoded,7000);
-        $limit = config('marketmartial.stream_settings.limit',9) * 1000;
+        $limit = config('marketmartial.stream_settings.limit') * 1000;
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
@@ -75,17 +75,20 @@ class Stream
         Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);  
     }
 
-    public function run()
-    {
-        foreach ($this->chunks as $chunk) 
-        {
-            event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
-        }
-    }
 
     public static function hasChecksum($checkSum)
     {
         return Cache::has('streamData_'.$checkSum);
+    }
+
+    public function run($idx = null)
+    {
+ 
+
+        foreach ($this->chunks as $k => $chunk) 
+        {
+            event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
+        }
     }
 
     public static function getChunks($checkSum,$indexes = [])
@@ -109,7 +112,7 @@ class Stream
             $chunk['total'] = $total;
         }
             
-        return arry_values($chunks); 
+        return array_values($chunks); 
     }
 
 

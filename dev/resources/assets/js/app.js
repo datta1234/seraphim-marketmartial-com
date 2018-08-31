@@ -378,26 +378,23 @@ const app = new Vue({
             });
             if(typeof message === 'undefined') {
                 // if its not being tracked, track a new one
-                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, callback);
+                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
+                    // if the message is complete, attempt completion callback
+                    if(!err) {                        
+                        // pull the message out of current and into completed
+                        let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(output_message), 1);  
+                        this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
+                        // run the message callback
+                        callback(output_message.output);
+                    } else {
+                        console.error("derp");
+                    }
+                });
                 this.pusher_messages.push(message);
             }
             
             // add chunk data to message
             message.addChunk(chunk_data);
-
-            // if the message is complete, attempt completion callback
-            if(message.isComplete()) {
-                message.doCompletion()
-                .then(data => {
-                    // pull the message out of current and into completed
-                    let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(message), 1);  
-                    this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
-                })
-                .catch(err => {
-                    // TODO: handle invalids here 
-                    console.error("FAILED TO callback", err);
-                });
-            }
         },
         /**
          * Removes all completed messages that have expired
