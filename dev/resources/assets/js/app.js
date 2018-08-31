@@ -373,7 +373,8 @@ const app = new Vue({
 
             // check if the message is already in this.pusher_messages
             message = this.pusher_messages.find( (msg_val) => {
-                return ( msg_val.checksum == chunk_data.checksum && msg_val.total == chunk_data.total && msg_val.expires.isSame(chunk_data.expires) );
+                // is valid if the checksum exists
+                return msg_val.checksum == chunk_data.checksum;
             });
             if(typeof message === 'undefined') {
                 // if its not being tracked, track a new one
@@ -384,10 +385,11 @@ const app = new Vue({
             // add chunk data to message
             message.addChunk(chunk_data);
 
+            // if the message is complete, attempt completion callback
             if(message.isComplete()) {
                 message.doCompletion()
                 .then(data => {
-                    // pull the message out
+                    // pull the message out of current and into completed
                     let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(message), 1);  
                     this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
                 })
@@ -476,7 +478,6 @@ const app = new Vue({
         {
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('.UserMarketRequested', (userMarketRequest) => {
-                console.log("this is what got returned",userMarketRequest);
                 //this should be the market thats created
                 this.handlePacket(userMarketRequest, (packet_data) => {
                     console.log("publish Callback", packet_data);
@@ -490,44 +491,6 @@ const app = new Vue({
         }
         // Event listener that listens for theme toggle event to keep track of theme state
         EventBus.$on('toggleTheme', this.setThemeState);
-
-        // @TODO remove - Sample data for Pusher Message Packages
-        /*let test_data1 = {
-            checksum: 'cLOfXrpHrLVzopi3qdWjKnSR9Dt6kvGNGKIzb7k5jHg=',
-            packet: 1,
-            total: 4,
-            data: 'eyJpZCI6MTIsIm1hcmtldF9pZCI6MSwiaXNfaW50ZXJlc3QiOnRydWUsImlzX21hcmtldF9tYWtlciI6ZmFsc2UsInRyYWRlX3N0cnVjdHVyZSI6Ik91dHJpZ2h0IiwidHJhZGVfaXRlbXMiOnsiZGVmYXVsdCI6eyJFeHBpcmF0aW9uIERhdGUiOiJKdW4xOSIsIlN0cmlrZSI6IjMxNjU0NjQiLCJRdWFudGl0eSI6IjUwMCJ9fSwiYXR0cmlidXRlcyI6eyJzdGF0ZSI6IlJFUVVFU1QtU0VOVC1WT0wiLCJiaWRfc3RhdGUiOiJhY3Rpb24iLCJvZmZlcl9zdGF0ZSI6ImFjdGlvbiIsImFjdGlvbl9uZWVkZWQiOnRydWV9LCJjcmVhdGVkX2F0IjoiMjAxOC0wOC0yNyA',
-            expires: '2018-08-16 00:00:00',
-            timestamp:'2018-08-16 00:00:00'
-        };
-        let test_data2 = {
-            checksum: 'cLOfXrpHrLVzopi3qdWjKnSR9Dt6kvGNGKIzb7k5jHg=',
-            packet: 2,
-            total: 4,
-            data: 'wODo1MToxOCIsInVwZGF0ZWRfYXQiOiIyMDE4LTA4LTI3IDA4OjUxOjE4Iiwic2VudF9xdW90ZSI6eyJpZCI6MTAsInVzZXJfbWFya2V0X3JlcXVlc3RfaWQiOjEyLCJjdXJyZW50X21hcmtldF9uZWdvdGlhdGlvbl9pZCI6MTAsImlzX3RyYWRlX2F3YXkiOmZhbHNlLCJpc19tYXJrZXRfbWFrZXJfbm90aWZpZWQiOmZhbHNlLCJjcmVhdGVkX2F0IjoiMjAxOC0wOC0yOCAwOToxMToxOCIsInVwZGF0ZWRfYXQiOiIyMDE4LTA4LTI4IDA5OjExOjE4IiwiZGVsZXRlZF9hdCI6bnVsbCwiaXNfb25faG9sZCI6ZmFsc2UsImN1cnJlbnRfbWFya2V0X25lZ290aWF0aW',
-            expires: '2018-08-16 00:00:00',
-            timestamp:'2018-08-16 00:00:00'
-        };
-        let test_data3 = {
-            checksum: 'cLOfXrpHrLVzopi3qdWjKnSR9Dt6kvGNGKIzb7k5jHg=',
-            packet: 3,
-            total: 4,
-            data: '9uIjp7ImlkIjoxMCwibWFya2V0X25lZ290aWF0aW9uX2lkIjpudWxsLCJ1c2VyX21hcmtldF9pZCI6MTAsImJpZCI6MTUsIm9mZmVyIjoxNiwiYmlkX3F0eSI6NTAwLCJvZmZlcl9xdHkiOjUwMCwiYmlkX3ByZW1pdW0iOm51bGwsIm9mZmVyX3ByZW1pdW0iOm51bGwsImZ1dHVyZV9yZWZlcmVuY2UiOm51bGwsImhhc19wcmVtaXVtX2NhbGMiOjAsImlzX3JlcGVhdCI6MCwiaXNfYWNjZXB0ZWQiOjAsImlzX3ByaXZhdGUiOjEsImNvbmRfaXNfcmVwZWF0X2F0dyI6bnVsbCwiY29uZF9mb2tfYXBwbHlfYmlkIjpudWxsLCJjb25kX2Zva19zcGluIjpudWxsLCJjb',
-            expires: '2018-08-16 00:00:00',
-            timestamp:'2018-08-16 00:00:00'
-        };
-        let test_data4 = {
-            checksum: 'cLOfXrpHrLVzopi3qdWjKnSR9Dt6kvGNGKIzb7k5jHg=',
-            packet: 4,
-            total: 4,
-            data: '25kX3RpbWVvdXQiOm51bGwsImNvbmRfaXNfb2NkIjpudWxsLCJjb25kX2lzX3N1YmplY3QiOm51bGwsImNvbmRfYnV5X21pZCI6bnVsbCwiY29uZF9idXlfYmVzdCI6bnVsbCwiY3JlYXRlZF9hdCI6IjIwMTgtMDgtMjggMDk6MTE6MTgiLCJ1cGRhdGVkX2F0IjoiMjAxOC0wOC0yOCAwOToxMToxOCIsInRpbWUiOiIwOToxMSJ9fSwicXVvdGVzIjpbeyJpZCI6MTAsImlzX2ludGVyZXN0Ijp0cnVlLCJpc19tYWtlciI6dHJ1ZSwiYmlkX29ubHkiOmZhbHNlLCJvZmZlcl9vbmx5IjpmYWxzZSwidm9sX3NwcmVhZCI6MSwidGltZSI6IjA5OjExIiwiYmlkIjoxNSwib2ZmZXIiOjE2LCJiaWRfcXR5Ijo1MDAsIm9mZmVyX3F0eSI6NTAwLCJpc19yZXBlYXQiOjAsImlzX29uX2hvbGQiOmZhbHNlfV19',
-            expires: '2018-08-16 00:00:00',
-            timestamp:'2018-08-16 00:00:00'
-        };
-        this.handlePacket(test_data1);
-        this.handlePacket(test_data2);
-        this.handlePacket(test_data3);
-        this.handlePacket(test_data4);*/
     }
 });
 

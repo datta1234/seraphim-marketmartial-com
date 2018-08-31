@@ -43,7 +43,7 @@ class Stream
     {
 
     	$encoded = base64_encode($this->data);
-    	$chunkedStrings = $this->parseStrToArr($encoded,7000);
+    	$chunkedStrings = $this->parseStrToArr($encoded,1000);
         $total = count($chunkedStrings);
 
     	$this->checkSum = hash("sha256",$encoded);
@@ -63,7 +63,6 @@ class Stream
 
     public function storeData()
     {
-         \Log::info('streamData_'.$this->checkSum);
    		 Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);	
     }
 
@@ -71,18 +70,14 @@ class Stream
     {
     	foreach ($this->chunks as $chunk) 
     	{
+            if($chunk['packet'] == 3) { continue; }
     		event(new SendStream($this->broadcastName,$this->channel,$chunk));
     	}
     }
 
     public static function getChunks($checkSum,$indexes = [])
     {
-        \Log::info('streamData_'.$checkSum);
-
     	$chunks = Cache::get('streamData_'.$checkSum,[]);
-    	$hasKeys = empty($indexes);	
-    	$requestedChunks = [];
-    	$time = Carbon::now();
         
         if(!empty($chunks))
         {
@@ -90,13 +85,14 @@ class Stream
                 return in_array($chunk['packet'], $indexes);
             });  
         }
-       
+
+    	$time = Carbon::now();
 		foreach ($chunks as $chunk) 
         {
             $chunk['timestamp'] = $time;
         }
-    		
-    	return $chunks;	
+
+    	return array_values($chunks);	
     }
 
 

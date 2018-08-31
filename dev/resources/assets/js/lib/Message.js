@@ -1,5 +1,5 @@
 const message_timeout = 5000;
-const missing_packet_path = '/trade/';
+const missing_packet_path = '/trade/stream';
 import Sha256 from './Char256Hash/sha256';
 import crypto from 'crypto';
 export default class Message {
@@ -11,8 +11,7 @@ export default class Message {
 
         this._timeout = null;
         this.packets = [];
-        this.missing_packets = [];
-        this.data = [];
+        // this.data = [];
         this.can_request_missing = true;
         this.timestamp = null;
         this.callback = callback;
@@ -33,28 +32,34 @@ export default class Message {
                 this[key] = defaults[key];
             }
         });
-
-        if(options && options.total) {
-            this.generateMissingPackets();
-        }
     }
 
+    /**
+     * Getter for full_message
+     * 
+     * @returns {String} full concatenated message string
+     */
     get full_message() {
         // Sort packets to their order
         this.sortPackets();
         // Concat this.data into single string.
-        return this.data.reduce( (accumulator, currentValue) => {
-            return accumulator + currentValue;
+        return this.packets.reduce( (accumulator, currentValue) => {
+            return accumulator + currentValue.data;
         }, '');
     }
 
     /**
-     * Generates a new list of missing packets using the total number of packets
+     * Getter for missing_packets
+     * 
+     * @returns {Array} missing packet keys
      */
-    generateMissingPackets() {
-        for(let i = 1; i <= this.total; i++) {
-            this.missing_packets.push(i);
-        }
+    get missing_packets() {
+        return this.packets.reduce((e, p) => {
+            if(e.indexOf(p.key) !== -1) {
+                e.splice(e.indexOf(p.key), 1);
+            }
+            return e;
+        }, Array.from({length: this.total}, (v, k) => k+1));
     }
 
     /**
@@ -65,25 +70,24 @@ export default class Message {
     addChunk(chunk) {
         // Check if we already have the packet if not -
         let index = this.packets.findIndex( (packet) => {
-            return packet == chunk.packet;
+            return packet.key === chunk.packet;
         });
 
         // Add packet number to this.packets
         // Add b64 data to this.data
         if(index === -1) {
-            let missing_index = this.missing_packets.findIndex( (missing_packet) => {
-                return missing_packet == chunk.packet;
-            });
-            this.missing_packets.splice(missing_index, 1);
-            this.packets.push(chunk.packet);
-            this.data.push(chunk.data);
+            this.packets.push({ key: chunk.packet, data: chunk.data });
             this.timestamp = moment(chunk.timestamp);
         }
+
         // clear current timeouts
         clearTimeout(this._timeout);
         // creates new timeout
         if(this.packets.length !== this.total) {
-            this._timeout = setTimeout(this.requestMissingChunks, message_timeout);
+            console.log("Setting Timeout");
+            this._timeout = setTimeout(() => {
+                this.requestMissingChunks();
+            }, message_timeout);
         }
     }
 
@@ -102,14 +106,16 @@ export default class Message {
      * Makes an axios post request to get missing chunks 
      */
     requestMissingChunks() {
+        console.log("Fetchig Missing CHunks: ", this.missing_packets)
         return axios.post(axios.defaults.baseUrl + missing_packet_path, {
             "checksum": this.checksum,
-            "missing_packets":this.missing_packets
+            "missing_packets": this.missing_packets
         })
         .then(missingChunkDataResponse => {
             // success - add new chunk data
             switch(missingChunkDataResponse.status) {
                 case 200:
+                    console.log(this);
                     this.addChunks(missingChunkDataResponse.data.data);
                 break;
                 case 404: // fail - expire remove message instance
@@ -147,10 +153,8 @@ export default class Message {
                 return null;
             }
         } else {
-            this.missing_packets.splice(0);
+            console.log("Empty Object And Fetch Missing");
             this.packets.splice(0);
-            this.data.splice(0);
-            this.generateMissingPackets();
             this.requestMissingChunks();
             return null;
         }
@@ -190,11 +194,7 @@ export default class Message {
                     return;
                 }
             } else {
-                this.missing_packets.splice(0);
                 this.packets.splice(0);
-                this.data.splice(0);
-                this.generateMissingPackets();
-
                 this.requestMissingChunks()
                 .then(data => {
                     try {
@@ -218,20 +218,15 @@ export default class Message {
      *  packets index as reference for both the packets and the data.
      */
     sortPackets() {
-        for(let i = 0; i < this.total - 1; i++) {
-            for(let j = 0; j < this.total - i - 1; j++) {
-                if( this.packets[j] > this.packets[j+1] ) {
-                    let temp_packet = this.packets[j];
-                    let temp_data = this.data[j];
-
-                    this.packets[j] = this.packets[j+1];
-                    this.data[j] = this.data[j+1];
-                    
-                    this.packets[j+1] = temp_packet;
-                    this.data[j+1] = temp_data;
-                }
+        this.packets = this.packets.sort((a, b) => {
+            if(a.key < b.key) {
+                return -1;
             }
-        }
+            if(a.key > b.key) {
+                return 1;
+            }
+            return 0;
+        });
     }
 
     /**
