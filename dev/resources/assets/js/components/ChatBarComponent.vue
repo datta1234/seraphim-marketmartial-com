@@ -101,15 +101,19 @@
                     let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
                     .then(response => {
-                        let chat_history = this.$refs.chat_history;
-                        this.new_message = "";
-                        this.quick_message = "";
-                        this.display_messages.push(response.data.data);
-                        this.display_messages[this.display_messages.length -1].status = "sent";
-                        
-                        Vue.nextTick( () => {
-                            chat_history.scrollTop = chat_history.scrollHeight;
-                        });
+                        if(response.data.success) {
+                            let chat_history = this.$refs.chat_history;
+                            this.new_message = "";
+                            this.quick_message = "";
+                            this.display_messages.push(response.data.data);
+                            this.display_messages[this.display_messages.length -1].status = "sent";
+                            
+                            Vue.nextTick( () => {
+                                chat_history.scrollTop = chat_history.scrollHeight;
+                            });
+                        } else {
+                            this.$toasted.error(response.data.message);
+                        }
                     })
                     .catch(err => {
                         console.log("TEST ERRORS ", err.response.data);
@@ -161,13 +165,13 @@
             loadChatHistory() {
                 axios.get(axios.defaults.baseUrl + '/trade/organisation-chat')
                 .then(chatHistoryResponse => {
-                    if(chatHistoryResponse.status == 200) {
+                    if(chatHistoryResponse.data.success) {
                         this.display_messages = chatHistoryResponse.data.data;
                         Vue.nextTick( () => {
                             this.$refs.chat_history.scrollTop = this.$refs.chat_history.scrollHeight;
                         });
                     } else {
-                        console.error(err);    
+                        this.$toasted.error(chatHistoryResponse.data.message); 
                     }
                 }, err => {
                     console.error(err);

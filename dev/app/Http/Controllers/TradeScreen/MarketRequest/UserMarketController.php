@@ -170,6 +170,7 @@ class UserMarketController extends Controller
      */
     public function destroy(Request $request, UserMarketRequest $userMarketRequest, UserMarket $userMarket)
     {
+        dd('ad');
         $this->authorize('delete',$userMarket);
         $userMarket->delete();
         $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);

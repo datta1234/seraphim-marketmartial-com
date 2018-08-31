@@ -229,15 +229,12 @@
             subscribeToMarketRequest(){
 
             },
-            spinNegotiation(){
-                
-                // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+            spinNegotiation() {
 
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.spinNegotiation()   
+                this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
                 .then(response => {
+                    this.proposed_user_market.setMarketRequest(this.marketRequest);
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -249,15 +246,12 @@
                 });
 
             },
-            sendNegotiation(){
-
-                // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+            sendNegotiation() {
 
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.storeNegotiation()
+                this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
                 .then(response => {
+                    this.proposed_user_market.setMarketRequest(this.marketRequest);
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -271,16 +265,9 @@
 
             },
             sendQuote() {
-
-                // link now that we are saving
-
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-
-                this.server_loading = true;
-
                 // save
-                this.proposed_user_market.store()
+                this.server_loading = true;
+                this.proposed_user_market.store(this.marketRequest, this.proposed_user_market_negotiation)
                 .then(response => {
 
                     this.server_loading = false;
@@ -297,11 +284,10 @@
 
             },
             amendQoute() {
-
                 this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.patchQuote(this.marketRequest, this.proposed_user_market)
+                this.proposed_user_market_negotiation.patchQuote(this.proposed_user_market, this.marketRequest)
                 .then(response => {
 
                     this.server_loading = false;                    
@@ -315,13 +301,11 @@
                 });
 
             },
-            repeatQuote() {
-               this.proposed_user_market.setMarketRequest(this.marketRequest);
-               this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);              
-               this.server_loading = true;
+            repeatQuote() {        
+                this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.repeatQuote()
+                this.proposed_user_market_negotiation.repeatQuote(this.proposed_user_market, this.marketRequest)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];                   

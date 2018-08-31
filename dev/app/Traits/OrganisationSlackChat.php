@@ -48,6 +48,9 @@ trait OrganisationSlackChat {
 
     public function sendMessage($message, $user_name, $organisation)
     {
+        if(!$organisation->slack_channel) {
+            return false;
+        }
         /*logic to send a message to slack channel url
         url - https://slack.com/api/chat.postMessage
         header - Authorization : Bearer $bearer_auth_key
@@ -92,6 +95,10 @@ trait OrganisationSlackChat {
 
     public function channelMessageHistory($user)
     {
+        if(!$user->organisation->slack_channel) {
+            return false;
+        }
+        
         $header = [
             "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
             'Content-Type' =>'application/json', 

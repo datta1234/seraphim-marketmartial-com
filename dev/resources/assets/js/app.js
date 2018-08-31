@@ -24,7 +24,19 @@ window.Echo = new Echo({
 
 import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue'
+import Toasted from 'vue-toasted';
 Vue.use(BootstrapVue);
+Vue.use(Toasted, {
+    position: 'top-center',
+    fullWidth: false,
+    action: {
+        text: 'Dismiss',
+        onClick(e, t) {
+            t.goAway(0);
+        }
+    },
+    theme: 'primary'
+})
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
