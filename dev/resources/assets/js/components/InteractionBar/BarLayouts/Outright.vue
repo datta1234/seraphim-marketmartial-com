@@ -297,15 +297,13 @@
 
             },
             amendQoute() {
-               // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
                 this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.patchQuote()
+                this.proposed_user_market_negotiation.patchQuote(this.marketRequest, this.proposed_user_market)
                 .then(response => {
+
                     this.server_loading = false;                    
                     this.errors = [];
                     

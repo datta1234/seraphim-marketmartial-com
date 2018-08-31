@@ -110,8 +110,8 @@ export default class Message {
         }
 
         // any time chunks are added check if it needs to complete the message
-        if(message.is_complete) {
-            message.doCompletion()
+        if(this.is_complete) {
+            this.doCompletion()
             .then((data) => {
                 this.callback(null, this);
             })

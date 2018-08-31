@@ -164,22 +164,28 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  store
     */
-    patchQuote() {
+    patchQuote(user_market_request, user_market) {
 
-        // catch not assigned to a market request yet!
-        if(this._user_market.id == null) {
-            return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
-            });
+
+        if(typeof user_market === 'undefined') {
+            // catch not assigned to a market request yet!
+            if(this._user_market.id == null) {
+                return new Promise((resolve, reject) => {
+                    reject(new Errors(["Invalid Market"]));
+                });
+            }
         }
-
+        user_market_request.id = typeof user_market_request.id !== 'undefined' ? user_market_request.id : this.getUserMarket().getMarketRequest().id;
+        
 
         return new Promise((resolve, reject) => {
-            let user_market_request_id = this.getUserMarket().getMarketRequest().id;
 
-             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/" + user_market_request_id+"/user-market/"+this._user_market.id, this.prepareStore())
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
+                // link now that we are saved
+                user_market.setMarketRequest(user_market_request);
+                user_market.setCurrentNegotiation(this);
                 resolve(response);
             })
             .catch(err => {
