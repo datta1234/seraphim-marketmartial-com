@@ -66,11 +66,10 @@ class Stream
    		 Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);	
     }
 
-    public function run()
+    public function run($idx = null)
     {
     	foreach ($this->chunks as $chunk) 
     	{
-            if($chunk['packet'] == 3) { continue; }
     		event(new SendStream($this->broadcastName,$this->channel,$chunk));
     	}
     }

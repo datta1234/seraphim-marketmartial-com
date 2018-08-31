@@ -35,6 +35,15 @@ export default class Message {
     }
 
     /**
+    * Getter for complete state
+    *
+    * @return {Boolean}
+    */
+    get is_complete() {
+        return this.packets.length === this.total;
+    }
+
+    /**
      * Getter for full_message
      * 
      * @returns {String} full concatenated message string
@@ -47,6 +56,16 @@ export default class Message {
             return accumulator + currentValue.data;
         }, '');
     }
+
+    /**
+     * Getter for output
+     * 
+     * @returns {Mixed} decoded output of message
+     */
+    get output() {
+        return JSON.parse(atob(this.full_message));
+    }
+
 
     /**
      * Getter for missing_packets
@@ -89,6 +108,17 @@ export default class Message {
                 this.requestMissingChunks();
             }, message_timeout);
         }
+
+        // any time chunks are added check if it needs to complete the message
+        if(message.is_complete) {
+            message.doCompletion()
+            .then((data) => {
+                this.callback(null, this);
+            })
+            .catch(err => {
+                this.callback(err, this);
+            });
+        }
     }
 
     /**
@@ -116,7 +146,7 @@ export default class Message {
             switch(missingChunkDataResponse.status) {
                 case 200:
                     console.log(this);
-                    this.addChunks(missingChunkDataResponse.data.data);
+                    this.addChunks(missingChunkDataResponse.data);
                 break;
                 case 404: // fail - expire remove message instance
                     this.can_request_missing = false;
@@ -129,44 +159,6 @@ export default class Message {
         .catch(err => {
             console.error(err);
         });
-    }
-
-    /**
-     * Unpacks completed base64 message data and converts in to a JS object
-     * 
-     * @return {Object} Object of the converted base 64 data string
-     */
-    getUnpackedData() {
-        if(this.packets.length !== this.total) {
-            return null;
-        }
-
-        let base64_string = this.full_message;
-
-        // Decode b64 string and Parse to object and return object
-        if( this.validateChecksum(base64_string) ) {
-            this.can_request_missing = false;
-            try {
-                return JSON.parse(atob(base64_string));
-            } catch(err) {
-                console.error(err);
-                return null;
-            }
-        } else {
-            console.log("Empty Object And Fetch Missing");
-            this.packets.splice(0);
-            this.requestMissingChunks();
-            return null;
-        }
-    }
-
-    /**
-    * Test if message is complete
-    *
-    * @return {Boolean}
-    */
-    isComplete() {
-        return this.packets.length === this.total;
     }
 
     /**
@@ -185,9 +177,6 @@ export default class Message {
             // handle corrupt message
             if( this.validateChecksum(this.full_message) ) {
                 try {
-                    if(typeof this.callback == 'function') {
-                        this.callback(JSON.parse(atob(this.full_message)));
-                    }
                     resolve(JSON.parse(atob(this.full_message)));
                 } catch(err) {
                     reject(err);
@@ -198,9 +187,6 @@ export default class Message {
                 this.requestMissingChunks()
                 .then(data => {
                     try {
-                        if(typeof this.callback == 'function') {
-                            this.callback(JSON.parse(atob(this.full_message)));
-                        }
                         resolve(JSON.parse(atob(this.full_message)));
                     } catch(err) {
                         reject(err);
