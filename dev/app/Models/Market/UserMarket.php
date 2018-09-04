@@ -4,7 +4,7 @@ namespace App\Models\Market;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Carbon\Carbon;
 
 class UserMarket extends Model
 {
@@ -140,6 +140,34 @@ class UserMarket extends Model
     public function getOrganisationAttribute()
     {
        return $this->user->organisation;
+    }
+
+    /**
+    * Return void
+    * @params void
+    */
+    public static function placeOldQuotesOnHold()
+    {
+        //get all the user market that have no chosen market on market request
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'))->toDateString();
+        $updatedMarketsId = self::where('created_at','<=',$date)
+        ->where('is_on_hold',false)
+        ->whereDoesntHave('marketNegotiations',function($q){
+            $q->where('is_accepted',true);
+        })
+        ->doesntHave('userMarketRequest.chosenUserMarket')
+        ->select('id')
+        ->get()
+        ->pluck('id');
+
+        if(count($updatedMarketsId) > 0)
+        {
+            self::whereIn('id',$updatedMarketsId)->update(['is_on_hold' => true]);
+            self::whereIn('id',$updatedMarketsId)->each(function ($userMarket, $key) {
+                $organisation = $userMarket->user->organisation;
+                $userMarket->userMarketRequest->notifyRequested([$organisation]);
+            });  
+        }
     }
 
     public function placeOnHold()

@@ -14,8 +14,8 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	$lol = App\Models\MarketRequest\UserMarketRequest::first();
-	$lol->notifyRequested();
+	 App\Models\Market\UserMarket::placeOldQuotesOnHold();
+	 echo "test";
 });
 
 /*
