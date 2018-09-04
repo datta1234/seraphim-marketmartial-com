@@ -17,6 +17,10 @@ use App\Models\StructureItems\Stock;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\TradeScreen\Market\UserMarketRequestRequest;
 use App\Events\UserMarketRequested;
+use Notification;
+use App\Events\UserMarkerRequestQuantityLow;
+use App\Models\UserManagement\User;
+use App\Notifications\MarketRequestQuantityLowNotification;
 
 class MarketUserMarketReqeustController extends Controller
 {
@@ -69,7 +73,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function store(UserMarketRequestRequest $request, Market $market)
     {
-
+        $input = $request->all();
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with('tradeStructureGroups.items')->firstOrFail();
 
         $inputTradeStructureGroups = $request->input('trade_structure_groups');
@@ -159,7 +163,18 @@ class MarketUserMarketReqeustController extends Controller
                         
                     }
                 }
+                if($input["trade_structure_groups"][0]["fields"]["Quantity"] < config('marketmartial.thresholds.quantity'))
+                {
+                    $recipients = User::whereHas('role', function ($query) {
+                        $query->where('title', 'Admin');
+                    })->get();
+                    \Notification::send($recipients, new MarketRequestQuantityLowNotification($userMarketRequest));
+                }
+
                 DB::commit();
+
+
+
             } catch (Exception $e) 
             {
                 DB::rollBack();
@@ -169,8 +184,6 @@ class MarketUserMarketReqeustController extends Controller
 
         //broadCast new market request;
         $userMarketRequest->notifyRequested();
-
-
         return ['success'=>true,'data'=> $responseData,'message'=>"Market Request created successfully."];
     }
 
