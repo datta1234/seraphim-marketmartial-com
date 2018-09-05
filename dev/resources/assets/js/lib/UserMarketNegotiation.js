@@ -194,6 +194,24 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+    // move through the bid and offer to figure out who set it up first
+    getAmountSource(attr)
+    {
+        let prevItem = null;
+        if(this.market_negotiation_id != null)
+        {
+            prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
+        }
+        
+        if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == this[attr])
+        {
+            return prevItem.getAmountSource(attr);   
+        }else
+        {
+            return this;  
+        }  
+    }
+
 
     /**
     *  store

@@ -80,7 +80,12 @@ export default {
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
                         this.market_request_state_label = "PENDING";
-
+                break;
+                case "NEGOTIATION-OPEN-VOL":
+                        this.market_request_state = 'negotiation-vol';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
                 break;
                 case "alert":
                     this.market_request_state = 'alert';
@@ -112,38 +117,16 @@ export default {
         },
         getText(item,attr)
         {
-            let source = this.getSource(item,attr);
+            let source = item.getAmountSource(attr);
             if(source.id != item.id && item.is_repeat)
             {
                 return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
             }
             return item[attr];
         },
-        getSource(item,attr)
-        {
-          if(this.current_user_market_negotiation && this.marketRequest.chosen_user_market)
-            {
-                let prevItem = null;
-                
-                if(item.market_negotiation_id != null)
-                {
-                     prevItem = this.marketRequest.chosen_user_market.market_negotiations.find((itItem) => item.market_negotiation_id == itItem.id);
-                }
-                
-                if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
-                {
-                 return this.getSource(prevItem,attr);   
-                }else
-                {
-                     return item;  
-                }   
-            }
-                
-        },
         getStateClass(item,attr)
         {
-            let source = this.getSource(item,attr);
-
+            let source = item.getAmountSource(attr);
              return {
                 "is-interest":source.is_interest && !source.is_my_org,
                 "is-maker":source.is_maker && !source.is_my_org,

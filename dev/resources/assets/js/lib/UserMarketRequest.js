@@ -248,13 +248,36 @@ export default class UserMarketRequest extends BaseModel {
     */
     canNegotiate()
     {
-        if(this.chosen_user_market == null)
-        {
-            return true;
-        }else
-        {
-           return  this.is_interest || (this.chosen_user_market.market_negotiations.length > 0 && this.chosen_user_market.market_negotiations.findIndex((negotiation) => { return negotiation.is_my_org }) > -1);
-        }
+        let tradebleStatuses = [
+                "REQUEST-SENT",
+                "REQUEST",
+                "REQUEST-SENT-VOL",
+                "REQUEST-VOL",
+                "NEGOTIATION-VOL",
+                "NEGOTIATION-OPEN-VOL"
+            ];
+
+        return  tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+
+    canApplyNoCares()
+    {
+    //all the markets you no      
+       let disregardStatuses = [
+                "REQUEST",
+                "NEGOTIATION-VOL",
+                "NEGOTIATION-OPEN-VOL"
+            ];
+        return disregardStatuses.indexOf(this.attributes.state) > -1;  
+    }
+
+    canSpin()
+    {
+        let spinStatuses = [
+            "NEGOTIATION-VOL"
+        ];
+        return spinStatuses.indexOf(this.attributes.state) > -1; 
     }
 
 }

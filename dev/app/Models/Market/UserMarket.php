@@ -267,6 +267,17 @@ class UserMarket extends Model
         return $data;
     }
 
+    public function scopeOpenToMarket($query)
+    {
+        return $query->whereHas('marketNegotiations',function($query){     
+            $query->where('is_repeat',true);
+            $query->whereHas('marketNegotiationParent',function($query){
+                $query->where('is_repeat',true);
+            });
+        });
+    }
+
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket

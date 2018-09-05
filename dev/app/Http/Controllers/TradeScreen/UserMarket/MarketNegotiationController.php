@@ -41,12 +41,15 @@ class MarketNegotiationController extends Controller
     {
         if($request->has('is_repeat') && $request->input('is_repeat'))
         {
-            $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+            $this->authorize('spinNegotiation',$userMarket);     
+            $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();       
+           // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
             $marketNegotiation = $oldNegotiation->replicate();
             $marketNegotiation->is_repeat = true;
 
         }else
         {
+            $this->authorize('addNegotiation',$userMarket);
             $marketNegotiation = new MarketNegotiation($request->all());     
         }
        

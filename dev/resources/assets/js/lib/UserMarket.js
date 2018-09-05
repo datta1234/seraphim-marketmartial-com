@@ -144,6 +144,7 @@ export default class UserMarket extends BaseModel {
         });
     }
 
+
     
     /**
     *  delete

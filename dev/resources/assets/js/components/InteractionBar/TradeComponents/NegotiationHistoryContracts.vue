@@ -79,26 +79,9 @@
 
                 return null;
             },
-            getSource(attr,item)
-            {
-                let prevItem = null;
-                if(item.market_negotiation_id !== null)
-                {
-                    prevItem = this.history.find((itItem) => item.market_negotiation_id == itItem.id );
-                }
-
-                if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
-                {
-                 return this.getSource(attr,prevItem,item);   
-                }else
-                {
-                    return item;
-                }
-                
-            },
             getText(attr,item)
             {
-                let source = this.getSource(attr,item);
+                let source = item.getAmountSource(attr);
                 if(source.id != item.id && item.is_repeat)
                 {
                     return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
@@ -107,18 +90,13 @@
             },
             getStateClass(attr,item){
 
-               
-                let source = this.getSource(attr,item);
-
+                let source = item.getAmountSource(attr);
                  return {
                     "text": source[attr],
                     "is-interest":source.is_interest && !source.is_my_org,
                     "is-maker":source.is_maker && !source.is_my_org,
                     "is-my-org":source.is_my_org
-                };  
-            
-
-                         
+                };        
             }
         },
         mounted() {       

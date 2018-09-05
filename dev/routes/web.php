@@ -14,8 +14,9 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	 App\Models\Market\UserMarket::placeOldQuotesOnHold();
-	 echo "test";
+	$marketRequest = App\Models\MarketRequest\UserMarketRequest::find(331);
+	dd($marketRequest->preFormatted());
+	echo "test";
 });
 
 /*
