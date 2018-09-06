@@ -90,4 +90,10 @@ class Organisation extends Model
     {
         return $this->slackIntegrations()->where("field", '=', 'channel')->first();
     }
+
+    public function channelName()
+    {
+        $channel = strtolower($this->title);
+        return substr(snake_case(preg_replace("/[^a-z0-9\_\-\s]/", '', $channel)), 0, 21);
+    }
 }

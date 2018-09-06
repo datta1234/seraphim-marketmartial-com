@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserManagement\User;
+use App\Models\ApiIntegration\SlackIntegration;
 use App\Http\Requests\Admin\UserStatusRequest;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -77,11 +79,11 @@ class UserController extends Controller
     {
         if( $request->has('active') ) {
             // deactivate and reactivate logic
-            $result = $user->update([
+            $user_update_result = $user->update([
                 'active' => $request->input('active'),
             ]);
 
-            if($result){
+            if($user_update_result){
                 return [
                     'success' => true,
                     'data' => $user,
@@ -94,18 +96,40 @@ class UserController extends Controller
                     'message' => $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .'
                 ];
         }
-        // verify and activate logic
-        $result = $user->update([
-            'verified' => $request->input('verified'),
-            'active' => true,
-        ]);
 
-        // @TODO ADD ORG VERIFY AND CREATE SLACK CHANNEL LOGIC
-        
-        if($result){
-            return ['success' => true, 'data' => $user, 'message' => 'User has been verified.'];
+
+        try {
+            DB::beginTransaction();
+            
+            // verify and activate logic
+            $user->update([
+                'verified' => $request->input('verified'),
+                'active' => true,
+            ]);
+
+            if($user->organisation->verified == false) {
+                // verify the organisation if it is not verified and create Slack channel
+                $organisation_update_result = $user->organisation->update([
+                    'verified' => $request->input('verified'),
+                ]);
+
+                $slack_channel_data = $user->organisation->createChannel($user->organisation->channelName());
+                $slack_integration = new SlackIntegration([
+                    "type"  => "string",
+                    "field" => "channel",
+                    "value" => $slack_channel_data->group->id,
+                ]);
+                $slack_integration->save();
+                $user->organisation->slackIntegrations()->attach($slack_integration->id);
+            }
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
         }
-        return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
+        
+        return ['success' => true, 'data' => $user, 'message' => 'User has been verified.'];
     }
 
     /**
