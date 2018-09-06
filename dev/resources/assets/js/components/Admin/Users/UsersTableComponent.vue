@@ -7,16 +7,18 @@
                         <b-form-select id="admin-filter-users"
                                        class="w-25"
                                        :options="filter_options"
-                                       required
-                                       v-model="sort_options.filter">
+                                       v-model="sort_options.filter"
+                                       @change="filterChanged">
                         </b-form-select>
                     </b-col>
                     <b-col cols="4">
                         <slot></slot>
-                        <button type="button" class="btn mm-generic-trade-button float-right ml-0 mr-2" @click="">
+                        <button type="submit" 
+                                class="btn mm-generic-trade-button float-right ml-0 mr-2" 
+                                @click="searchTerm">
                             <font-awesome-icon icon="search"></font-awesome-icon>
                         </button>
-                        <b-input class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
+                        <b-input v-model="sort_options.search" class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
                     </b-col>
                 </b-row>
             </b-form>
@@ -25,14 +27,18 @@
                  class="mt-2"
                  stacked="md"
                  :items="items"
-                 :fields="fields">
+                 :fields="fields"
+                 :sort-by.sync="sort_options.order_by"
+                 :sort-desc.sync="sort_options.order_ascending"
+                 :no-local-sorting="true"
+                 @sort-changed="sortingChanged">
             <template slot="organisation_title" slot-scope="row">
                 {{ row.item.organisation.title }}
             </template>
             <template slot="is_invited" slot-scope="row">
                 {{ row.item.is_invited ? 'Invited' : 'Signup'}}
             </template>
-            <template slot="role_title" slot-scope="row">
+            <template slot="role_id" slot-scope="row">
                 {{ row.item.role.title }}
             </template>
             <template slot="status" slot-scope="row">
@@ -115,13 +121,13 @@ export default {
         return {
             items:  null,
             fields: [
-                { key: 'full_name', label: 'Username' },
-                { key: 'organisation_title', label: 'Organisation' },
-                { key: 'email', label: 'Email' },
-                { key: 'work_phone', label: 'Work' },
-                { key: 'cell_phone', label: 'Mobile' },
-                { key: 'is_invited', label: 'Type' },
-                { key: 'role_title', label: 'Role' },
+                { key: 'full_name', label: 'Username', sortable: true, sortDirection: 'desc' },
+                { key: 'organisation_title', label: 'Organisation', sortable: true, sortDirection: 'desc' },
+                { key: 'email', label: 'Email', sortable: true, sortDirection: 'desc' },
+                { key: 'work_phone', label: 'Work', sortable: true, sortDirection: 'desc' },
+                { key: 'cell_phone', label: 'Mobile', sortable: true, sortDirection: 'desc' },
+                { key: 'is_invited', label: 'Type', sortable: true, sortDirection: 'desc' },
+                { key: 'role_id', label: 'Role', sortable: true, sortDirection: 'desc' },
                 { key: 'status', label: 'Status' },
                 { key: 'view', label: 'View' },
                 { key: 'action', label: 'Action' },
@@ -134,12 +140,15 @@ export default {
             initial_load: 0,
             filter_options: [
                 {text: "All", value: null},
-                {text: "Active", value: null},
-                {text: "Inactive", value: null},
-                {text: "Request", value: null},
+                {text: "Active", value: 'active'},
+                {text: "Inactive", value: 'inactive'},
+                {text: "Request", value: 'request'},
             ],
             sort_options: {
-                filter: null
+                search: '',
+                filter: null,
+                order_by: null,
+                order_ascending: true,
             },
             modal_data: {
                 user_action: null,
@@ -159,8 +168,16 @@ export default {
             this.current_page = $event;
             this.loadUsers();    
         },
+        searchTerm() {
+            this.current_page = 1;
+            this.loadUsers();
+        },
         loadUsers() {
-            axios.get(this.path + '?page='+this.current_page)
+            axios.get(this.path + '?page='+this.current_page 
+                + '&search=' + this.sort_options.search 
+                + '&_order_by=' + (this.sort_options.order_by !== null ? this.sort_options.order_by : '')
+                + '&_order=' + (this.sort_options.order_ascending ? 'ASC' : 'DESC') 
+                + '&filter=' + (this.sort_options.filter !== null ? this.sort_options.filter : '') )
             .then(usersResponse => {
                 if(usersResponse.status == 200) {
                     this.current_page = usersResponse.data.current_page;
@@ -224,6 +241,15 @@ export default {
             this.modal_data.show_modal = false;
             //this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
         },
+        sortingChanged(ctx) {
+            this.sort_options.order_by = ctx.sortBy;
+            this.sort_options.order_ascending = ctx.sortDesc;
+            this.loadUsers();
+        },
+        filterChanged(value) {
+            this.sort_options.filter = value;
+            this.loadUsers();
+        }
     },
     mounted() {
         let parsed_data = JSON.parse(this.user_data);

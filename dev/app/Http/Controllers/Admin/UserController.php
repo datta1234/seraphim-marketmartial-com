@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserManagement\User;
+use App\Models\UserManagement\Organisation;
 use App\Models\ApiIntegration\SlackIntegration;
 use App\Http\Requests\Admin\UserStatusRequest;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,17 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::where('role_id','<>', 1)->with('organisation','role')->paginate(10);
+        $users = User::basicSearch(
+                    $request->input('search'),
+                    $request->input('_order_by') == '' ? null : $request->input('_order_by'),
+                    $request->input('_order'),
+                    $request->input('filter') == '' ? null : $request->input('filter'))
+                ->where('role_id','<>', 1)
+                ->select(DB::raw((new User)->getTable().".*, ".(new Organisation)->getTable().".title as 'organisation_title'"))
+                ->join((new Organisation)->getTable(), (new Organisation)->getTable().'.id', '=', (new User)->getTable().'.organisation_id')
+                ->with('organisation','role')
+                ->paginate(10);
+
         if($request->ajax()) {
             return $users;
         }
