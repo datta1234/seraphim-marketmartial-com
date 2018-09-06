@@ -173,11 +173,15 @@ export default {
             this.loadUsers();
         },
         loadUsers() {
-            axios.get(this.path + '?page='+this.current_page 
-                + '&search=' + this.sort_options.search 
-                + '&_order_by=' + (this.sort_options.order_by !== null ? this.sort_options.order_by : '')
-                + '&_order=' + (this.sort_options.order_ascending ? 'ASC' : 'DESC') 
-                + '&filter=' + (this.sort_options.filter !== null ? this.sort_options.filter : '') )
+            axios.get(this.path, {
+                params:{
+                    'page': this.current_page,
+                    'search': this.sort_options.search,
+                    '_order_by': (this.sort_options.order_by !== null ? this.sort_options.order_by : ''),
+                    '_order': (this.sort_options.order_ascending ? 'ASC' : 'DESC'),
+                    'filter': (this.sort_options.filter !== null ? this.sort_options.filter : ''),
+                }
+            })
             .then(usersResponse => {
                 if(usersResponse.status == 200) {
                     this.current_page = usersResponse.data.current_page;
