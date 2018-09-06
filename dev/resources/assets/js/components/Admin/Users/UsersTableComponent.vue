@@ -45,19 +45,19 @@
                 <button v-if="data.item.active && data.item.verified" 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        @click="userAction(data.item, {'active': false}, data.index)">
+                        @click="showModal(data.item, {'active': false}, data.index, 'Deactivate')">
                     Deactivate
                 </button>
                 <button v-else-if="!data.item.active && data.item.verified" 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        @click="userAction(data.item, {'active': true}, data.index)">
+                        @click="showModal(data.item, {'active': true}, data.index, 'Reactivate')">
                     Reactivate
                 </button>
                 <button v-else 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        @click="userAction(data.item, {'verified': true}, data.index)">
+                        @click="showModal(data.item, {'verified': true}, data.index, 'Verify')">
                     Verify
                 </button>
             </template>
@@ -73,6 +73,36 @@
                           align="center"/>
           </b-col>
         </b-row>
+
+        <!-- Confirmations Modal -->
+        <b-modal class="mm-modal mx-auto" v-model="modal_data.show_modal" :ref="modal_data.modal_ref">
+            <!-- Modal title content --> 
+            <div class="mm-modal-title" slot="modal-title">
+                Confirmation
+            </div>
+
+            <b-row v-if="modal_data.user" class="justify-content-md-center">
+                <b-col class="text-center" cols="12">
+                    <p class="modal-info-text">Are you sure you want to {{ modal_data.confirm_message }} {{ modal_data.user.full_name }}?</p>
+                </b-col>
+            </b-row>
+            <b-row v-if="modal_data.user && modal_data.user_action.verified && modal_data.user.organisation.verified == 1" class="justify-content-md-center">
+                <b-col class="text-center" cols="12">
+                    <p class="modal-info-text">Note Verifying this user will verify the following organisation as well:<br>{{modal_data.user.organisation.title}}</p>
+                </b-col>
+            </b-row>
+
+            <!-- Modal footer content -->
+            <div slot="modal-footer" class="w-100">
+                <b-row align-v="center">
+                    <b-col cols="12">
+                        <b-button class="mm-modal-button ml-2 w-25" @click="userAction()">Ok</b-button>
+                        <b-button class="mm-modal-button ml-2 w-25" @click="hideModal()">Cancel</b-button>
+                    </b-col>
+                </b-row>
+           </div>
+        </b-modal>
+        <!-- END Confirmations Modal -->
     </div>
 </template>
 
@@ -110,7 +140,15 @@ export default {
             ],
             sort_options: {
                 filter: null
-            }
+            },
+            modal_data: {
+                user_action: null,
+                user: null,
+                user_index: null,
+                confirm_message: '',
+                show_modal: false,
+                modal_ref: 'confirm-action-modal',
+            },
         }
     },
     computed: {
@@ -148,21 +186,44 @@ export default {
             }
             return "Request";
         },
-        userAction(user, action, index) {
-            axios.put(axios.defaults.baseUrl + '/admin/user/'+user.id, action)
+        userAction() {
+            let index = this.modal_data.user_index;
+            axios.put(axios.defaults.baseUrl + '/admin/user/'+this.modal_data.user.id, this.modal_data.user_action)
             .then(usersResponse => {
                 if(usersResponse.status == 200) {
-                    console.log("EDIT from server: ",usersResponse);
-                    // @TODO SHOW TOAST USER MESSAGES
                     this.items[index].active = usersResponse.data.data.active;
                     this.items[index].verified = usersResponse.data.data.verified;
+                    this.hideModal();
+                    this.$toasted.success(usersResponse.data.message);
                 } else {
-                    console.error(err);    
+                    this.$toasted.error(usersResponse.data.message);  
                 }
             }, err => {
                 console.error(err);
             });
-        }
+        },
+        /**
+         * Loads the Reqeust a Market Modal 
+         */
+        showModal(user, action, index, message) {
+            this.modal_data.confirm_message = message;
+            this.modal_data.user = user;
+            this.modal_data.user_action = action;
+            this.modal_data.user_index = index;
+            this.modal_data.show_modal = true;
+            //this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
+        },
+        /**
+         * Closes the Reqeust a Market Modal 
+         */
+        hideModal() {
+            this.modal_data.user = null;
+            this.modal_data.user_action = null;
+            this.modal_data.user_index = null;
+            this.modal_data.confirm_message = '';
+            this.modal_data.show_modal = false;
+            //this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
+        },
     },
     mounted() {
         let parsed_data = JSON.parse(this.user_data);
