@@ -18,6 +18,8 @@ class User extends Authenticatable
      * @property string $password
      * @property string $remember_token
      * @property boolean $active
+     * @property boolean $verified
+     * @property boolean $is_invited
      * @property boolean $tc_accepted
      * @property boolean $is_married
      * @property boolean $has_children
@@ -56,6 +58,8 @@ class User extends Authenticatable
         'hobbies',
         'birthdate',
         'organisation_id',
+        'verified',
+        'is_invited',
     ];
 
     /**

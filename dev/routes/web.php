@@ -76,3 +76,12 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAct
 
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
 });
+
+/**
+ * Admin routes
+ */
+Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin']], function() {
+	Route::resource('user', 'Admin\UserController', [
+		'as' => 'admin'
+	]);
+});
