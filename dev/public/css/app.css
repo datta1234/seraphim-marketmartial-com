@@ -12390,6 +12390,10 @@ input:checked + .slider:before {
 			background-image: url($base_url + '/img/loader_dark_theme.gif') left top no-repeat; */
 }
 
+.users-table .admin-users-table a.mm-generic-trade-button {
+  color: #FFFFFF;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

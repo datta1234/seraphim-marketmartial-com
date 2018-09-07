@@ -24,7 +24,7 @@
             </b-form>
         <!-- Main table element -->
         <b-table v-if="users_loaded && items != null"
-                 class="mt-2"
+                 class="mt-2 admin-users-table"
                  stacked="md"
                  :items="items"
                  :fields="fields"
@@ -45,7 +45,7 @@
                 {{ userStatus(row.item) }}
             </template>
             <template slot="view" slot-scope="row">
-                <button type="button" class="btn mm-generic-trade-button w-100">View</button>
+                <a :href="base_url + '/admin/user/'+ row.item.id" class="btn mm-generic-trade-button w-100">View</a>
             </template>
             <template slot="action" slot-scope="data">
                 <button v-if="data.item.active && data.item.verified" 
@@ -117,6 +117,11 @@ export default {
     props: [
             'user_data',
         ],
+    computed: {
+        base_url() {
+            return axios.defaults.baseUrl;
+        }
+    },
     data () {
         return {
             items:  null,
@@ -159,9 +164,6 @@ export default {
                 modal_ref: 'confirm-action-modal',
             },
         }
-    },
-    computed: {
-
     },
     methods: {
         changePage($event) {
