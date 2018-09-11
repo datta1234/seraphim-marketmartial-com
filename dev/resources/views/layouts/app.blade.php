@@ -30,6 +30,8 @@
         </div>
     </div>
 
+    {{Session::get('error')}}
+
     <div id="app">
         <div class="wrapper">
             @include('layouts.elements.navigation')

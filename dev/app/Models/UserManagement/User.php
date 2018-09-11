@@ -359,4 +359,14 @@ class User extends Authenticatable
 
       return $UserQuery;
   }
+
+    /**
+     * Determines if a user has been verified and is active
+     *
+     * @return bool|null User's active state or null if not verified
+     */
+    public function verifiedActiveUser()
+    {
+        return (bool)$this->verified ? (bool)$this->active : null;
+    }
 }

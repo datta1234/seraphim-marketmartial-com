@@ -88,6 +88,8 @@ class UserController extends Controller
      */
     public function update(UserStatusRequest $request, User $user)
     {
+        //@TODO - send email to user when state changes
+
         if( $request->has('active') ) {
             // deactivate and reactivate logic
             $user_update_result = $user->update([

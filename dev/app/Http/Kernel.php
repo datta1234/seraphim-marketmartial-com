@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         'redirectOnFirstLogin' => \App\Http\Middleware\RedirectOnFirstLogin::class,
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
         'role' => \App\Http\Middleware\Role::class,
+        'active' =>\App\Http\Middleware\CheckActive::class,
     ];
 }

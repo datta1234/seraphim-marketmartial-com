@@ -61,18 +61,11 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 const app = new Vue({
     el: '#trade_app',
     methods: {
-        toastMessage(message, success) {
-            if(success) {
-                this.$toasted.success(message);
-            } else {
-                this.$toasted.error(message);
-            }
-        }
+        
     },
     data: {
-        test: 'YUP',    
+        
     },
     mounted: function() {
-
     }
 });
