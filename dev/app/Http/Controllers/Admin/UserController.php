@@ -95,17 +95,23 @@ class UserController extends Controller
             ]);
 
             if($user_update_result){
-                return [
-                    'success' => true,
-                    'data' => $user,
-                    'message' => $request->input('active') ? 'User Reactivated.': 'User Deactivated.'
-                ];
+                if($request->ajax()) {
+                    return [
+                        'success' => true,
+                        'data' => $user,
+                        'message' => $request->input('active') ? 'User Reactivated.': 'User Deactivated.'
+                    ];
+                }
+                return redirect()->back()->with('success', $request->input('active') ? 'User Reactivated.': 'User Deactivated.');
             }
-            return [
-                    'success' => false,
-                    'data' => null,
-                    'message' => $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .'
-                ];
+            if($request->ajax()) {
+                return [
+                        'success' => false,
+                        'data' => null,
+                        'message' => $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .'
+                    ];
+            }
+            return redirect()->back()->with('error', $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .');
         }
 
 
@@ -137,10 +143,16 @@ class UserController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             Log::error($e->getMessage());
-            return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
+            if($request->ajax()) {
+                return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
+            }
+            return redirect()->back()->with('error', 'Failed to verify the user.');
         }
-        
-        return ['success' => true, 'data' => $user, 'message' => 'User has been verified.'];
+        if($request->ajax()) {
+            return ['success' => true, 'data' => $user, 'message' => 'User has been verified.'];
+        }
+        return redirect()->back()->with('success', 'User has been verified.');
+
     }
 
     /**

@@ -1,8 +1,8 @@
 @extends('layouts.canvas_app')
 
 @section('content')
-	<div class="container-fluid">
-		<h1>Profile of {{ $user->full_name }}</h1>
+	<div class="container">
+		<h1 class="mt-3">Profile of {{ $user->full_name }}</h1>
 		<div class="row">
 			<div class="col-6">
 				{{-- Profile Details Card --}}
@@ -194,5 +194,39 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col col-lg-3 offset-md-9 mb-3">
+				<a href="{{ route('admin.user.index') }}" class="btn mm-generic-trade-button float-right ml-2">Back</a>
+	            <form id="user-verify" action="{{ route('admin.user.update', ['id'=>$user->id]) }}" method="post">
+	                 {{ csrf_field() }}
+	                 <input type="hidden" name="_method" value="PUT">
+		            @if($user->active == 1 && $user->verified == 1)
+	                 	<input type="hidden" class="form-control" value="0" id="user-active" name="active">
+		            	<button type="submit" class="btn mm-generic-trade-button float-right">Deactivate</button>
+		            @elseif($user->active == 0 && $user->verified == 1)
+		            	<input type="hidden" class="form-control" value="1" id="user-active" name="active">
+		            	<button type="submit" class="btn mm-generic-trade-button float-right">Reactivate</button>
+		            @else
+		            	<input type="hidden" class="form-control" value="1" id="user-verified" name="verified">
+		            	<button type="submit" class="btn mm-generic-trade-button float-right">Verify</button>
+		            @endif
+	            </form>
+			</div>
+		</div>
 	</div>
+
+@endsection
+
+@section('footer-scripts')
+	{{--Alerts--}}
+	@if(Session::has('success'))
+		<script type="text/javascript">
+			Vue.toasted.success({!!json_encode(Session::get('success'))!!});
+	    </script>
+	@endif
+	@if(Session::has('error'))
+		<script type="text/javascript">
+			Vue.toasted.success({!!json_encode(Session::get('error'))!!});
+	    </script>
+	@endif
 @endsection
