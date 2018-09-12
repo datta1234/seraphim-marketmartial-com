@@ -55,7 +55,10 @@ class MarketNegotiationController extends Controller
        
        
         $marketNegotiation->user_id = $request->user()->id;
-        $counterNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+        $counterNegotiation = $userMarket->marketNegotiations()->whereHas('user',function($q) use ($request){
+            $q->where('id','!=',$request->user()->id);
+        })->orderBy('created_at', 'desc')
+        ->first();
 
         if($counterNegotiation)
         {
