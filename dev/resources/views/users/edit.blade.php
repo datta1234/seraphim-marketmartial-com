@@ -127,7 +127,7 @@
 				<div class="form-group row">
 				        {{ Form::label('organisation_id','Organisation', ['class' => 'col-sm-4 col-form-label']) }}
 				    <div class="col-sm-8">
-				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['disabled'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
+				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['readonly'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
 				    </div>
 				</div>
               

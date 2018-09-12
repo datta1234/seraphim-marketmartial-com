@@ -21,6 +21,7 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $user = $request->user();
+        
         $organisations = Organisation::where('verified',true)
         ->orWhere(function($query) use ($user) {
             $query->whereHas('users',function($query) use ($user){

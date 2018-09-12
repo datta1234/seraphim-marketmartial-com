@@ -121,6 +121,7 @@ class UserMarketRequest extends Model
         return $this->hasMany('App\Models\Trade\Rebate','user_market_request_id');
     }
 
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\MarketRequest\UserMarketRequest
@@ -128,6 +129,7 @@ class UserMarketRequest extends Model
     public function preFormatted()
     {
         $current_org_id =  $this->resolveOrganisationId();
+
         $interest_org_id = $this->user->organisation->id;
 
         $data = [
@@ -246,10 +248,10 @@ class UserMarketRequest extends Model
             $marketRequestRoles = ["interest"];
         }else if ($market_maker_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id) 
         {
-            $marketRequestRoles = ["market_marker"];
+            $marketRequestRoles = ["market_maker"];
         }else if($market_maker_org_id == $current_org_id  && $interest_org_id == $current_org_id && $current_org_id  != null)
         {
-            $marketRequestRoles = ["market_marker","interest"];
+            $marketRequestRoles = ["market_maker","interest"];
         }
 
         return $marketRequestRoles;
@@ -327,7 +329,9 @@ class UserMarketRequest extends Model
         $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
         $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
         
+        //roles
         $attributes['calc_state'] = $state;        
+        $attributes['calc_roles'] = $marketRequestRoles;        
 
         return $attributes;
     }

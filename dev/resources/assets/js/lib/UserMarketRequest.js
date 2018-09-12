@@ -257,6 +257,9 @@ export default class UserMarketRequest extends BaseModel {
                 "NEGOTIATION-OPEN-VOL"
             ];
 
+        console.log(this.attributes.calc_state);
+        console.log(this.attributes.calc_roles);
+
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 
@@ -267,12 +270,15 @@ export default class UserMarketRequest extends BaseModel {
     canApplyNoCares()
     {
         //all the markets you no      
-       let disregardStatuses = [
+       let cantDisRegard = [
                 "REQUEST",
                 "NEGOTIATION-VOL",
-                "NEGOTIATION-OPEN-VOL"
+                "NEGOTIATION-OPEN-VOL",
+                "REQUEST-SENT-VOL",
+                "REQUEST-VOL"
             ];
-        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || disregardStatuses.indexOf(this.attributes.state) > -1  ;  
+
+        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || cantDisRegard.indexOf(this.attributes.state) == -1  ;  
     }
 
     canSpin()
