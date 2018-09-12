@@ -57,6 +57,7 @@ Vue.component('day-month-picker', require('./components/Profile/Components/DayMo
 
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
+//Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
 
 const app = new Vue({
     el: '#trade_app',

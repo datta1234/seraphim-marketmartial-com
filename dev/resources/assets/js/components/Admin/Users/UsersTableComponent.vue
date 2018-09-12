@@ -12,6 +12,7 @@
                         </b-form-select>
                     </b-col>
                     <b-col cols="4">
+                        <!-- <create-user></create-user> -->
                         <slot></slot>
                         <button type="submit" 
                                 class="btn mm-generic-trade-button float-right ml-0 mr-2" 
@@ -234,7 +235,6 @@ export default {
             this.modal_data.user_action = action;
             this.modal_data.user_index = index;
             this.modal_data.show_modal = true;
-            //this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
         },
         /**
          * Closes the Reqeust a Market Modal 
@@ -245,7 +245,6 @@ export default {
             this.modal_data.user_index = null;
             this.modal_data.confirm_message = '';
             this.modal_data.show_modal = false;
-            //this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
         },
         sortingChanged(ctx) {
             this.sort_options.order_by = ctx.sortBy;

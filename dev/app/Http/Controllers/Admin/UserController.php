@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
+use App\Models\UserManagement\Role;
 use App\Models\ApiIntegration\SlackIntegration;
 use App\Http\Requests\Admin\UserStatusRequest;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +44,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $organisations = Organisation::all()->pluck('title','id')->toArray();
+        $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
+        return response()->json(['data' => ['roles'=> $roles, 'organisations'=> $organisations], 'message' => "Create user data loaded"]);
     }
 
     /**

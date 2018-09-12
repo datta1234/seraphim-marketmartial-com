@@ -46,7 +46,7 @@ class Organisation extends Model
      */
     public function slackIntegrations()
     {
-        return $this->belongsToMany('App\Models\ApiIntegration\SlackIntegration', 'organisation_slack_intergration', 'slack_integration_id', 'organisation_id');
+        return $this->belongsToMany('App\Models\ApiIntegration\SlackIntegration', 'organisation_slack_intergration', 'organisation_id', 'slack_integration_id');
     }
 
     /**

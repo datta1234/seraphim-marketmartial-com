@@ -46,7 +46,9 @@ p {
 
 button.mm-login-button,
 a.mm-button,
-button.mm-button {
+button.mm-button,
+input[type="button"].mm-button,
+input[type="submit"].mm-button {
   font-family: Arial;
   font-size: 1.2rem;
 }
@@ -12392,6 +12394,10 @@ input:checked + .slider:before {
 
 .users-table .admin-users-table a.mm-generic-trade-button {
   color: #FFFFFF;
+}
+
+.create-user {
+  display: inline;
 }
 
 @font-face {
