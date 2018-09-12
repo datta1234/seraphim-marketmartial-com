@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
 	<div class="row">
 		<div class="col-3">
@@ -20,7 +19,11 @@
 
 	<div class="row">
 		<div class="col-md-8 offset-md-2">
-            {!! Form::model($user,['route' => 'user.update']) !!}
+			@if($is_admin_update)
+				{!! Form::model($user,['route' => ['admin.user.profile.update', $user->id]]) !!}
+			@else
+            	{!! Form::model($user,['route' => 'user.update']) !!}
+			@endif
 
 			         <div class="form-group row">
 			                    {{ Form::label('full_name','Full Name', ['class' => 'col-sm-4 col-form-label']) }}
@@ -127,7 +130,7 @@
 				<div class="form-group row">
 				        {{ Form::label('organisation_id','Organisation', ['class' => 'col-sm-4 col-form-label']) }}
 				    <div class="col-sm-8">
-				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['disabled'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
+				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['readonly'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
 				    </div>
 				</div>
               

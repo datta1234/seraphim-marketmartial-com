@@ -161,7 +161,11 @@
 			  					<p>Birthday:</p>
 			  				</div>
 			  				<div class="col col-lg-9">
-			  					@datetime($user->birthdate)
+			  					@if($user->birthdate)
+			  						@datetime($user->birthdate)
+			  					@else
+									N/A
+			  					@endif
 			  				</div>
 		  				</div>
 		  				<div class="row">
@@ -215,18 +219,4 @@
 		</div>
 	</div>
 
-@endsection
-
-@section('footer-scripts')
-	{{--Alerts--}}
-	@if(Session::has('success'))
-		<script type="text/javascript">
-			Vue.toasted.success({!!json_encode(Session::get('success'))!!});
-	    </script>
-	@endif
-	@if(Session::has('error'))
-		<script type="text/javascript">
-			Vue.toasted.success({!!json_encode(Session::get('error'))!!});
-	    </script>
-	@endif
 @endsection

@@ -147,9 +147,7 @@ class RegisterController extends Controller
                 $user->organisation->slackIntegrations()->attach($slack_integration->id);
             }
 
-            dd($data['market_types']);
-            $markets = Market::where('market_type_id',$data['market_types'])->pluck('id');
-            $user->marketInterests()->sync($markets);
+            $user->marketInterests()->attach($data['market_types']);
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -190,9 +188,9 @@ class RegisterController extends Controller
 
         if( Auth::check() ) {
             if( $request->has('btn_add') ) {
-                return redirect()->route('admin.user.index')->with('success', 'User Created');
+                return redirect()->route('admin.user.show', ["user" => $user->id])->with('success', 'User Created');
             }
-            return redirect()->route('user.edit');
+            return redirect()->route('admin.user.edit', ["user" => $user->id]);
         }
         
         $this->guard()->login($user);

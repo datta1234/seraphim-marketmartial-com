@@ -29,7 +29,10 @@ class UserController extends Controller
         })
         ->pluck('title','id')
         ->toArray();
-        return view('users.edit')->with(compact('user','organisations'));
+
+        // Used to determine admin profile update for the view
+        $is_admin_update = false;
+        return view('users.edit')->with(compact('user','organisations','is_admin_update'));
     }
 
     /**

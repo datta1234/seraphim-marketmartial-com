@@ -10,6 +10,7 @@ use App\Models\UserManagement\Role;
 use App\Models\ApiIntegration\SlackIntegration;
 use App\Http\Requests\Admin\UserStatusRequest;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
@@ -79,7 +80,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        // 
+        $organisations = $user->organisation->pluck('title','id')->toArray();
+
+        // Used to determine admin profile update for the view
+        $is_admin_update = true;
+        return view('users.edit')->with(compact('user','organisations','is_admin_update'));
     }
 
     /**
@@ -92,7 +97,7 @@ class UserController extends Controller
     public function update(UserStatusRequest $request, User $user)
     {
         //@TODO - send email to user when state changes
-
+        
         if( $request->has('active') ) {
             // deactivate and reactivate logic
             $user_update_result = $user->update([
@@ -169,5 +174,26 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfile(UserRequest $request, User $user)
+    {
+        $data = $request->all();
+
+        //dont allow organisation_id to be editable
+        if(array_key_exists('organisation_id',$data))
+        {
+            unset($data['organisation_id']);
+        }
+
+        $user->update($data);
+        return redirect()->back()->with('success', 'Profile updated!');
     }
 }

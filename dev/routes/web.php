@@ -84,4 +84,24 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	Route::resource('user', 'Admin\UserController', [
 		'as' => 'admin'
 	]);
+
+	Route::post('/user/profile/{user}','Admin\UserController@updateProfile')
+		->name('admin.user.profile.update');
+
+	Route::get('/user/email-settings/{user}/edit','Admin\EmailController@edit')
+		->name('admin.user.email.edit');
+	Route::post('/user/email-settings/{user}','Admin\EmailController@store')
+		->name('admin.user.email.store');
+	Route::put('/user/email-settings/{user}','Admin\EmailController@update')
+		->name('admin.user.email.update');
+
+	Route::get('/user/trade-settings/{user}/edit', 'Admin\TradingAccountController@edit')
+		->name('admin.user.trade_settings.edit');
+	Route::put('/user/trade-settings/{user}','Admin\TradingAccountController@update')
+		->name('admin.user.trade_settings.update');
+	
+	Route::get('/user/interest-settings/{user}/edit', 'Admin\InterestController@edit')
+		->name('admin.user.interest.edit');
+	Route::put('/user/interest-settings/{user}','Admin\InterestController@update')
+		->name('admin.user.interest.update');
 });

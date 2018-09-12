@@ -1,24 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\UserManagement\User;
 use App\Models\UserManagement\TradingAccount;
 use App\Models\StructureItems\Market;
 use App\Http\Requests\TradingAccountRequest;
 
 class TradingAccountController extends Controller
 {
-	/**
-	* load the email fields that can be completed
-	*
-	* @return Response
-	*/
-	public function edit(Request $request)
-	{
-		$user = $request->user();
-		$user_accounts = $user->tradingAccounts()->get(); 
-		$markets = Market::all();
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(User $user)
+    {
+        $user_accounts = $user->tradingAccounts()->get(); 
+        $markets = Market::all();
         $trading_accounts =  [];
 
         foreach ($markets as $market) 
@@ -38,20 +40,21 @@ class TradingAccountController extends Controller
 
         $emails = $user->emails()->with('defaultLabel')->get();//get ones that have already been stored
         // Used to determine admin interest update for the view
-        $is_admin_update = false;
-		return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails','is_admin_update'));
-	}
+        $is_admin_update = true;
+        return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails','is_admin_update'));
+    }
 
-	 /**
-     * Update the users email fields
+    /**
+     * Update the specified resource in storage.
      *
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update(TradingAccountRequest $request)
+    public function update(TradingAccountRequest $request, User $user)
     {
-
-        $user = $request->user();
-    	$tradingAccounts = $request->input('trading_accounts');
+        //TODO - change SIZWE logic to fit admin
+        $tradingAccounts = $request->input('trading_accounts');
         $emails = $request->has('email') ? $request->input('email') : [];
         $savedModels = $user->tradingAccounts()->with('market')->get();//get once that have alread been stored
         $savedEmailModels = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
@@ -68,7 +71,7 @@ class TradingAccountController extends Controller
                 $tradingAccountModel->fill($tradingAccount);
                 $tradingAccountModel->user_id = $user->id;
                 $tradingAccountModels[] = $tradingAccountModel;   
-            }	
+            }   
         }
 
         foreach ($emails as $key => $email) 
@@ -82,7 +85,6 @@ class TradingAccountController extends Controller
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
-        
+        return redirect()->back()->with('success', 'Trading account settings updated!');
     }
 }

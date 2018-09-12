@@ -31,6 +31,7 @@
     
      <!-- JavaScripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    @include('partials.toast_messsage')
     @yield('footer-scripts')
 </body>
 </html>

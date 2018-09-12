@@ -1,23 +1,24 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\UserManagement\User;
 use App\Models\UserManagement\Interest;
-use App\Models\UserManagement\Email;
 use App\Http\Requests\InterestRequest;
 
 class InterestController extends Controller
 {
     /**
-     * Load the interest fields that can be completed
+     * Show the form for editing the specified resource.
      *
-     * @return Response
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request)
+    public function edit(User $user)
     {
-        $user = $request->user();
-        $userInterests = $request->user()->interests()->get();
+        $userInterests = $user->interests()->get();
         $interests = Interest::all();
         //we dont want to loose the order the interest are displayed in
         for ($i=0; $i < $interests->count() ; $i++) 
@@ -30,17 +31,23 @@ class InterestController extends Controller
         }
 
         // Used to determine admin interest update for the view
-        $is_admin_update = false;
+        $is_admin_update = true;
         return view('interest.edit')->with(compact('user','interests','is_admin_update'));
     }
 
-    public function update(InterestRequest $request)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(InterestRequest $request, User $user)
     {
-        $user = $request->user();
         $user->update($request->all());
         // update the users interest
-        $request->user()->interests()->sync($request->input('interest'));
+        $user->interests()->sync($request->input('interest'));
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Interest have been updated!') : redirect()->route('tsandcs.edit')->with('success', 'Interest have been updated!');
+        return redirect()->back()->with('success', 'Interest have been updated!');
     }
 }
