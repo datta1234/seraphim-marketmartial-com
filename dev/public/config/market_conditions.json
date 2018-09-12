@@ -1,0 +1,96 @@
+[
+    {
+        "alias": "cond_is_repeat_atw",
+        "title": "Repeat all the way",
+        "default": null,
+        "value":true
+    },
+    {
+        "alias": "is_private",
+        "title": "Propose (Private)",
+        "default": null,
+        "value":true
+    },
+    {
+        "alias": "cond_is_oco",
+        "title": "OCO",
+        "default": null,
+        "value":true
+    },
+    {
+        "alias": "cond_is_subject",
+        "title": "Subject",
+        "default": null,
+        "value":true
+    },
+    {
+        "title": "FoK",
+        "children": [
+            {
+                "title": "Apply To",
+                "alias": "cond_fok_apply_bid",
+                "default": null,
+                "value": [
+                    {
+                        "value": true, 
+                        "text": "My Bid"
+                    },
+                    {
+                        "value": false, 
+                        "text": "My Offer"
+                    }
+                ]
+            },
+            {
+                "title": "Fill or kill",
+                "alias": "cond_fok_spin",
+                "default": null,
+                "value": [
+                    {
+                        "value": false, 
+                        "text": "Prefer to kill (20min FoK)"
+                    },
+                    {
+                        "value": true, 
+                        "text": "Happy to Spin"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "alias": "cond_timeout",
+        "default": null,
+        "hidden": true
+    },
+    {
+        "title": "Meet in the Middle",
+        "alias": "cond_buy_mid",
+        "default": null,
+        "value": [
+            {
+                "value": true,
+                "text": "Buy in the middle"
+            },
+            {
+                "value": false,
+                "text": "Sell in the middle"
+            }
+        ]
+    },
+    {
+        "title": "Buy/Sell at Best",
+        "alias": "cond_buy_best",
+        "default": null,
+        "value": [
+            {
+                "value": true,
+                "text": "Buy at best"
+            },
+            {
+                "value": false,
+                "text": "Sell at best"
+            }
+        ]
+    }
+]

@@ -86,7 +86,7 @@
             </b-col>
         </b-row>
             
-        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :applied-conditions="proposed_user_market_negotiation.conditions" :removable-conditions="removable_conditions"></ibar-apply-conditions>
+        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation" :removable-conditions="removable_conditions"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>

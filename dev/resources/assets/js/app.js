@@ -253,8 +253,17 @@ const app = new Vue({
                 }
             });
         },
+        loadConfigs(config_list) {
+            let promises = [];
+            config_list.forEach(config => {
+                console.log(config)
+                promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
+            });
+            return Promise.all(promises);
+        },
         loadConfig(config_name, config_file) {
             let self = this;
+            config_file = (typeof config_file !== 'undefined' ? config_file : config_name+".json");
             return axios.get(axios.defaults.baseUrl + '/config/'+config_file)
             .then(configResponse => {
                 if(configResponse.status == 200) {
@@ -464,15 +473,16 @@ const app = new Vue({
         // get Saved theme setting
         this.loadThemeSetting();
         // load config files
-        this.loadConfig("trade_structure", "trade_structure.json")
+        this.loadConfigs([
+            ["trade_structure","trade_structure.json"],     // [ <namespace> , <file_path> ]
+            ["condition_titles"],                           // [ <namespace> ] ( assumes fileanme == <namespace>.json )
+            "market_conditions",                            //   <namespace> ( same assumption as above )
+        ])
         .catch(err => {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then( () => {
-            this.loadConfig('condition_titles','condition_titles.json');
-        })
-        .then(configs => {
+        .then(() => {
             // load the trade data
             this.loadMarketTypes();
             this.loadUserConfig()
