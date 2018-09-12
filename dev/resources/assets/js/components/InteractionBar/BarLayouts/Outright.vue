@@ -80,12 +80,12 @@
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
                         <!-- !marker_qoute && !marketRequest.chosen_user_market -->
-                         <b-button  v-if="can_disregard" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
+                         <b-button  v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
-
+            
         <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :applied-conditions="proposed_user_market_negotiation.conditions" :removable-conditions="removable_conditions"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
@@ -197,6 +197,9 @@
             },
             'can_spin':function(){
                 return this.marketRequest.canSpin();
+            },
+            'in_no_cares':function(){
+                return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
             }
         },
         methods: {
@@ -447,7 +450,13 @@
 
                     // // relate
                     EventBus.$emit('interactionChange',this.marketRequest);
+                    EventBus.$emit('removefromNoCares',this.marketRequest.id);
+
                 }
+            },
+            addToNoCares()
+            {
+                EventBus.$emit('addToNoCares',this.marketRequest.id);
             },
             init() {
                 this.reset();// clear current state

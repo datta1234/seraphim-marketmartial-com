@@ -88,7 +88,6 @@
                 this.market_notifications.confirm = [];
 
                 let important_states = ['REQUEST','REQUEST-VOL'];
-
                 //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
                 let alert_states = ['alert'];
                 let confirm_states = ['confirm'];

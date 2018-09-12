@@ -260,16 +260,19 @@ export default class UserMarketRequest extends BaseModel {
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 
-
+    /**
+    *   canApplyNoCares - Checks to see if the user can apply no cares on the market request 
+    *   @return response from the request or the error
+    */
     canApplyNoCares()
     {
-    //all the markets you no      
+        //all the markets you no      
        let disregardStatuses = [
                 "REQUEST",
                 "NEGOTIATION-VOL",
                 "NEGOTIATION-OPEN-VOL"
             ];
-        return disregardStatuses.indexOf(this.attributes.state) > -1;  
+        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || disregardStatuses.indexOf(this.attributes.state) > -1  ;  
     }
 
     canSpin()
