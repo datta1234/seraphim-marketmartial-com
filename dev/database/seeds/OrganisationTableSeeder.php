@@ -15,7 +15,16 @@ class OrganisationTableSeeder extends Seeder
                // dd($organisation);
     	        factory(App\Models\UserManagement\User::class, 10)->create([
 					'organisation_id' =>  $organisation->id,
-    	        ]);
+    	        ])
+                ->each(function($user){
+                    $markets = App\Models\StructureItems\Market::all();
+                    foreach ($markets as $market) {
+                        factory(App\Models\UserManagement\TradingAccount::class)->create([
+                            'user_id' => $user->id,
+                            'market_id' => $market->id
+                        ]);
+                    }
+                });
         });
     }
 }

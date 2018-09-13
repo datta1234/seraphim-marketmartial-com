@@ -10,11 +10,12 @@ class TradeNegotiation extends Model
 	 * @property integer $id
 	 * @property integer $user_market_id
 	 * @property integer $trade_negotiation_id
+     * @property integer $market_negotiation_id
 	 * @property integer $initiate_user_id
 	 * @property integer $recieving_user_id
 	 * @property integer $trade_negotiation_status_id
-	 * @property double $contracts
-	 * @property double $nominals
+	 * @property double $quantity
+	 * @property double $traded
 	 * @property boolean $is_offer
 	 * @property boolean $is_distpute
 	 * @property \Carbon\Carbon $created_at
@@ -34,14 +35,14 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'contracts', 'nominals', 'is_offer', 'is_distpute',
+        'quantity', 'is_offer', 'is_distpute',
     ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeNegotiationStatuses()
+    public function tradeNegotiationStatus()
     {
         return $this->belongsTo('App\Models\Trade\TradeNegotiationStatus','trade_negotiation_status_id');
     }
@@ -68,7 +69,7 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarkets()
+    public function userMarket()
     {
         return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
     }
@@ -77,7 +78,7 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function initiateUsers()
+    public function initiateUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','initiate_user_id');
     }
@@ -86,7 +87,7 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function recievingUsers()
+    public function recievingUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','recieving_user_id');
     }
