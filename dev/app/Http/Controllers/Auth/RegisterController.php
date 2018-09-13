@@ -2,15 +2,22 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\UserManagement\User;
-use App\Models\UserManagement\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
+
+use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
+use App\Models\UserManagement\Role;
 use App\Models\StructureItems\Market;
 use App\Models\StructureItems\MarketType;
-use Illuminate\Validation\Rule;
+use App\Models\ApiIntegration\SlackIntegration;
+
 
 class RegisterController extends Controller
 {
@@ -87,33 +94,66 @@ class RegisterController extends Controller
     protected function create(array $data)
     {   
         $organisation = '';
+        $user_verified = false;
+        $is_invited = false;
+        $active = false;
+        $organisation_verified = false;
 
-        if( array_key_exists('organisation_id', $data) ) {
-            $organisation = $data['organisation_id'];
-        } elseif( array_key_exists('new_organisation', $data) ) {
-            $organisation = Organisation::create([
-                'title' => $data['new_organisation'],
-                'verified' => false,
-            ])->id;
-        } else {
-            return back()->with('error', 'a Problem occured with your organisation selection, please try again');
+        // Sets verified and invited to true if admin is creating the user
+        if( Auth::check() ) {
+            $user_verified = true;
+            $active = true;
+            $is_invited = true;
+            $organisation_verified = true;
         }
 
-        $user = new User([
-            'full_name' => $data['full_name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-            'role_id' => $data['role_id'],
-            'organisation_id' => $organisation,
-            'cell_phone' => $data['cell_phone'],
-            'active' => false,
-            'tc_accepted' => false,
-        ]);
-        $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
-        $user->save();
+        try {
+            DB::beginTransaction();
+            if( array_key_exists('organisation_id', $data) ) {
+                $organisation = $data['organisation_id'];
+            } elseif( array_key_exists('new_organisation', $data) ) {
+                $organisation = Organisation::create([
+                    'title' => $data['new_organisation'],
+                    'verified' => $organisation_verified,
+                ])->id;
+            } else {
+                return null;
+            }
 
-        $markets = Market::where('market_type_id',$data['market_types'])->pluck('id');
-        $user->marketInterests()->sync($markets);
+            $user = new User([
+                'full_name' => $data['full_name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'role_id' => $data['role_id'],
+                'organisation_id' => $organisation,
+                'cell_phone' => $data['cell_phone'],
+                'active' => $active,
+                'tc_accepted' => false,
+                'verified' => $user_verified,
+                'is_invited' => $is_invited,
+            ]);
+            $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
+            $user->save();
+
+            // Create slack channel if new organisation is made by the Admin
+            if(array_key_exists('new_organisation', $data) && $organisation_verified) {
+                $slack_channel_data = $user->organisation->createChannel($user->organisation->channelName());
+                $slack_integration = new SlackIntegration([
+                    "type"  => "string",
+                    "field" => "channel",
+                    "value" => $slack_channel_data->group->id,
+                ]);
+                $slack_integration->save();
+                $user->organisation->slackIntegrations()->attach($slack_integration->id);
+            }
+
+            $user->marketInterests()->attach($data['market_types']);
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error($e->getMessage());
+            return null;
+        }
         return $user;
     }
 
@@ -128,5 +168,34 @@ class RegisterController extends Controller
         $organisations = Organisation::all()->pluck('title','id')->toArray();
         $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
         return view('auth.register')->with(compact('organisations', 'market_types','roles'));
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        $user = $this->create($request->all());
+        if(!$user) {
+            return redirect()->back()->with('error', 'Failed to register new user.');
+        } 
+        event(new Registered($user));
+
+        if( Auth::check() ) {
+            if( $request->has('btn_add') ) {
+                return redirect()->route('admin.user.show', ["user" => $user->id])->with('success', 'User Created');
+            }
+            return redirect()->route('admin.user.edit', ["user" => $user->id]);
+        }
+        
+        $this->guard()->login($user);
+
+        return $this->registered($request, $user)
+                        ?: redirect($this->redirectPath());
     }
 }

@@ -68,7 +68,7 @@
                     <b-col cols="6">
                          
                         <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
-                         <b-button  class="w-100 mt-1"  v-if="canSpin" size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
+                         <b-button  class="w-100 mt-1"  v-if="can_spin" size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
                     </b-col>
                 </b-row>
                 <b-row class="justify-content-md-center">

@@ -37,41 +37,24 @@ class MarketNegotiationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+
     public function store(MarketNegotiationRequest $request, UserMarket $userMarket)
     {
         if($request->has('is_repeat') && $request->input('is_repeat'))
         {
-            $this->authorize('spinNegotiation',$userMarket);     
-            $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();       
-           // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
-            $marketNegotiation = $oldNegotiation->replicate();
-            $marketNegotiation->is_repeat = true;
-
+            $this->authorize('spinNegotiation',$userMarket); 
+            $marketNegotiation = $userMarket->spinNegotiation($request->user());  
         }else
         {
             $this->authorize('addNegotiation',$userMarket);
-            $marketNegotiation = new MarketNegotiation($request->all());     
+            $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
         }
        
-       
-        $marketNegotiation->user_id = $request->user()->id;
-        $counterNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
-
-        if($counterNegotiation)
-        {
-             $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
-             $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-        }
-
-        $userMarket->marketNegotiations()->save($marketNegotiation);
-        $userMarket->current_market_negotiation_id = $marketNegotiation->id;
-        $userMarket->save();
         $message = "Your levels have been sent.";
         $request->user()->organisation->notify("market_negotiation_store",$message,true);
-
         //broadCast new market request;
         $userMarket->userMarketRequest->notifyRequested();
-
         return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
     }
 

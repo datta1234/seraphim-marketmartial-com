@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-12">
         <b-button id="update-btn" class="mm-button mm-base float-right ml-2" @click="update">
-         {{ (profileCompleteData == false) ? "Next" : "Update"  }}
+         {{ (profileCompleteData == false && isAdmin == false) ? "Next" : "Update"  }}
       </b-button>
 
       <b-button  class="mm-button mm-base float-right" @click="showModal">
@@ -58,15 +58,21 @@
     const Form = require('../../../lib/Form.js');
     export default {
         props:{
-          'emailSettings': {
-            type: String
-          },
-          'defaultLabels':{
-            type: String
-          },
-          'profileCompleteData':{
-            type: Boolean
-          }
+            'emailSettings': {
+                type: String
+            },
+            'defaultLabels':{
+                type: String
+            },
+            'profileCompleteData':{
+                type: Boolean
+            },
+            'isAdmin':{
+                type: Boolean
+            },
+            'user':{
+                type: Object
+            },
         },
         data() { 
             return {          
@@ -81,17 +87,20 @@
         },
         methods: {
             update() {
-                this.emailSettingForm.put('/email-settings')
+                this.emailSettingForm.put(axios.defaults.baseUrl + (this.isAdmin ? '/admin/user/email-settings/' + this.user.id : '/email-settings') )
                 .then((response) => {
                     this.mutableEmailSettingsData = response.data.email;
                     this.fields = [];
                     // fields will be update from the server
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
-                   
-                    if(this.profileCompleteData == false)
+                    console.log(response.data);
+                    this.$toasted.success(response.message);
+                    
+                    if(this.isAdmin == false && this.profileCompleteData == false)
                     {
                         window.location.href = response.data.redirect;
                     }
+
                 });
                 
             },
@@ -99,11 +108,12 @@
                 this.$refs.myModalRef.show()
             },
             hideModal () {
-                this.email.post('/email-settings')
+                this.email.post(axios.defaults.baseUrl + (this.isAdmin ? '/admin/user/email-settings/' + this.user.id : '/email-settings'))
                 .then((response) => {
                     this.mutableEmailSettingsData.push(response.data);
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
                     this.$refs.myModalRef.hide();
+                    this.$toasted.success(response.message);
                 });
             }
         },
@@ -126,6 +136,7 @@
             console.log(this.mutableEmailSettingsData);
 
             this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
+            console.log("user: ",this.user.id);
         }
     }
 </script>

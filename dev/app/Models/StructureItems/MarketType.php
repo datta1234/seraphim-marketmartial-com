@@ -53,6 +53,6 @@ class MarketType extends Model
     */
     public function userInterests()
     {
-        return $this->belongsToMany('App\Models\UserManagement\User','user_market_interests','user_id','market_type_id');
+        return $this->belongsToMany('App\Models\UserManagement\User','user_market_interests','market_type_id','user_id');
     }
 }

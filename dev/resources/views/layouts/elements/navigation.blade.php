@@ -22,15 +22,21 @@
 				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="#">Previous day</a>
 				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="{{ route('user.edit') }}">My Profile</a>
-						<a class="dropdown-item" href="{{ route('user.edit_password') }}">Change Password</a>
-						<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
-						<a class="dropdown-item" href="{{ route('trade_settings.edit') }}">Account Setting</a>
-					</div>
-				</li>
+				@if(Auth::user()->role_id == 1)
+					<li class="nav-item">
+						<a class="nav-link active p-0 ml-4" href="{{ route('admin.user.index') }}">Users</a>
+					</li>
+				@else
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{ route('user.edit') }}">My Profile</a>
+							<a class="dropdown-item" href="{{ route('user.edit_password') }}">Change Password</a>
+							<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
+							<a class="dropdown-item" href="{{ route('trade_settings.edit') }}">Account Setting</a>
+						</div>
+					</li>
+				@endif
 				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="{{ route('logout') }}"
 					onclick="event.preventDefault();

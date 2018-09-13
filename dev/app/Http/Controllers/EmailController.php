@@ -30,7 +30,9 @@ class EmailController extends Controller
             $defaultLabels = DefaultLabel::whereNotIn('id',$used)->get(); 
         }
         
-        return view('emails.edit')->with(compact('user','defaultLabels','emails'));
+        // Used to determine admin interest update for the view
+        $is_admin_update = false;
+        return view('emails.edit')->with(compact('user','defaultLabels','emails','is_admin_update'));
     }
 
     public function store(EmailRequestStore $request)
@@ -39,7 +41,7 @@ class EmailController extends Controller
         $email->user_id = $request->user()->id;
         $email->notifiable = false;
         $email->save();
-       return ['success'=>'true','data'=>$email,'message'=>'email added'];
+       return ['success'=>'true','data'=>$email,'message'=>'Email added.'];
     }
 
     /**
@@ -71,7 +73,7 @@ class EmailController extends Controller
             'email' => $user->emails()->with('defaultLabel')->get(),
             'redirect' => route('trade_settings.edit')
         ],
-       'message'=>'email added'];
+       'message'=>'Emails updated.'];
 
     }
 }

@@ -16,7 +16,11 @@
 					
 		<div class="row">
 			<div class="col-md-8 offset-md-2">
-            {!! Form::model($user,['route' => 'interest.update','method'=>'PUT']) !!}
+			@if($is_admin_update)
+				{!! Form::model($user,['route' => ['admin.user.interest.update', $user->id],'method'=>'PUT']) !!}
+			@else
+            	{!! Form::model($user,['route' => 'interest.update','method'=>'PUT']) !!}
+			@endif
 
 				<div class="form-group row">
 
