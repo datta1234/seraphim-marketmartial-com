@@ -247,24 +247,6 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function initiateTrades()
-    {
-        return $this->hasMany('App\Models\Trade\Trade','initiate_user_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function recievingTrades()
-    {
-        return $this->hasMany('App\Models\Trade\Trade','recieving_user_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function rebates()
     {
         return $this->hasMany('App\Models\Trade\Rebate','user_id');
