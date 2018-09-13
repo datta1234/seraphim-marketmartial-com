@@ -21,16 +21,10 @@
         
         <b-row class="mb-5">
             <b-col cols="10">
-                    <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
-                        {{ error[0] }}
-                    </b-col>
-                <b-row v-if="removable_conditions.length > 0">
-                    <b-col v-for="cond in removable_conditions" class="text-center">
-                        <label class="ibar-condition-remove-label" @click="cond.callback">
-                            {{ cond.title }}&nbsp;&nbsp;<span class="remove">X</span>
-                        </label>
-                    </b-col>
-                </b-row>
+                <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                    {{ error[0] }}
+                </b-col>
+                <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
 
@@ -48,14 +42,14 @@
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
                             <p>Are you sure you want to pull this quote?</p>
-                         <div slot="modal-footer" class="w-100">
-                            <b-row align-v="center">
-                                <b-col cols="12">
-                                    <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
-                                    <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
-                                </b-col>
-                            </b-row>
-                       </div>
+                            <div slot="modal-footer" class="w-100">
+                                <b-row align-v="center">
+                                    <b-col cols="12">
+                                        <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                    </b-col>
+                                </b-row>
+                            </div>
                         </b-modal>
 
 
@@ -86,7 +80,7 @@
             </b-col>
         </b-row>
             
-        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation" :removable-conditions="removable_conditions"></ibar-apply-conditions>
+        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -100,11 +94,16 @@
     </b-container>
 </template>
 <script>
-    import { EventBus } from '../../../lib/EventBus.js';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
-    import UserMarket from '../../../lib/UserMarket';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import UserMarket from '~/lib/UserMarket';
+    
     import moment from 'moment';
+    
+    import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
+    import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+
     const showMessagesIn = [
         "market_request_store",
         "market_request_update",
@@ -112,7 +111,12 @@
         "market_negotiation_store"
     ];
 
+
     export default {
+        components: {
+            IbarApplyConditions,
+            IbarRemoveConditions,
+        },
         props: {
             marketRequest: {
                 type: UserMarketRequest

@@ -61,7 +61,7 @@
             }
         },
         methods: {
-            getConditionState(item){
+            getConditionState(item) {
                 
                 for(var k in item) {
 

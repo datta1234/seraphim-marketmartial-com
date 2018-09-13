@@ -3,25 +3,25 @@
         "alias": "cond_is_repeat_atw",
         "title": "Repeat all the way",
         "default": null,
-        "value":true
+        "value": true
     },
     {
         "alias": "is_private",
         "title": "Propose (Private)",
-        "default": null,
-        "value":true
+        "default": false,
+        "value": true
     },
     {
         "alias": "cond_is_oco",
         "title": "OCO",
         "default": null,
-        "value":true
+        "value": true
     },
     {
         "alias": "cond_is_subject",
         "title": "Subject",
         "default": null,
-        "value":true
+        "value": true
     },
     {
         "title": "FoK",
@@ -32,11 +32,21 @@
                 "default": null,
                 "value": [
                     {
-                        "value": true, 
+                        "value": { 
+                            "value": true, 
+                            "ignores": [
+                                "cond_timeout"
+                            ]
+                        }, 
                         "text": "My Bid"
                     },
                     {
-                        "value": false, 
+                        "value": { 
+                            "value": false, 
+                            "ignores": [
+                                "cond_timeout"
+                            ]
+                        }, 
                         "text": "My Offer"
                     }
                 ]
@@ -47,7 +57,15 @@
                 "default": null,
                 "value": [
                     {
-                        "value": false, 
+                        "value": { 
+                            "value": false, 
+                            "sets": [
+                                {
+                                    "alias": "cond_timeout", 
+                                    "value": true
+                                }
+                            ]
+                        }, 
                         "text": "Prefer to kill (20min FoK)"
                     },
                     {
