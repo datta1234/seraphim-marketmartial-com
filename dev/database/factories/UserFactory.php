@@ -22,7 +22,8 @@ $factory->define(App\Models\UserManagement\User::class, function (Faker $faker) 
 			'work_phone' => $faker->e164PhoneNumber,
 			'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
 			'remember_token' => str_random(10),
-			'active' => true,
+			'active' => false,
+			'verified' => false,
 			'tc_accepted' => true,
 			'role_id' =>  function(){
 				$role = App\Models\UserManagement\Role::where('title',config("marketmartial.default_role"))->first();

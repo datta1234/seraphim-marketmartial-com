@@ -9,8 +9,8 @@ use App\Http\Requests\InterestRequest;
 
 class InterestController extends Controller
 {
-        /**
-     * load the email fields that can be completed
+    /**
+     * Load the interest fields that can be completed
      *
      * @return Response
      */
@@ -28,7 +28,10 @@ class InterestController extends Controller
                 $interests[$i] = $userInterest;
             }
         }
-        return view('interest.edit')->with(compact('user','interests'));
+
+        // Used to determine admin interest update for the view
+        $is_admin_update = false;
+        return view('interest.edit')->with(compact('user','interests','is_admin_update'));
     }
 
     public function update(InterestRequest $request)

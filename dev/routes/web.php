@@ -28,7 +28,7 @@ Route::get('/contact', 'PageController@contact')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
-Route::group(['middleware' => ['auth','redirectOnFirstLogin','timeWindowPreventAction']], function () {
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
 	Route::get('/my-profile', 'UserController@edit')->name('user.edit');
@@ -55,7 +55,7 @@ Route::group(['middleware' => ['auth','redirectOnFirstLogin','timeWindowPreventA
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAction']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowPreventAction']], function() {
 
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
@@ -75,4 +75,33 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAct
 	]);
 
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
+});
+
+/**
+ * Admin routes
+ */
+Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
+	Route::resource('user', 'Admin\UserController', [
+		'as' => 'admin'
+	]);
+
+	Route::post('/user/profile/{user}','Admin\UserController@updateProfile')
+		->name('admin.user.profile.update');
+
+	Route::get('/user/email-settings/{user}/edit','Admin\EmailController@edit')
+		->name('admin.user.email.edit');
+	Route::post('/user/email-settings/{user}','Admin\EmailController@store')
+		->name('admin.user.email.store');
+	Route::put('/user/email-settings/{user}','Admin\EmailController@update')
+		->name('admin.user.email.update');
+
+	Route::get('/user/trade-settings/{user}/edit', 'Admin\TradingAccountController@edit')
+		->name('admin.user.trade_settings.edit');
+	Route::put('/user/trade-settings/{user}','Admin\TradingAccountController@update')
+		->name('admin.user.trade_settings.update');
+	
+	Route::get('/user/interest-settings/{user}/edit', 'Admin\InterestController@edit')
+		->name('admin.user.interest.edit');
+	Route::put('/user/interest-settings/{user}','Admin\InterestController@update')
+		->name('admin.user.interest.update');
 });

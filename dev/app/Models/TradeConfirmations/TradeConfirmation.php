@@ -10,7 +10,7 @@ class TradeConfirmation extends Model
 	 * @property integer $id
 	 * @property integer $send_user_id
 	 * @property integer $receiving_user_id
-	 * @property integer $trade_id
+	 * @property integer $trade_negotiation_id
 	 * @property integer $trade_confirmation_status_id
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
@@ -126,9 +126,9 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function trades()
+    public function tradeNegotiations()
     {
-        return $this->belongsTo('App\Models\Trade\Trade','trade_id');
+        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
     /**

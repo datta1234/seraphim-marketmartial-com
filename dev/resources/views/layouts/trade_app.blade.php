@@ -36,7 +36,7 @@
     @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/trade-screen.js') }}"></script>
     
 </body>
 </html>
