@@ -194,6 +194,9 @@ class UserMarketRequest extends Model
         
     }
 
+ 
+
+
     /*
     *for the interest show them the levels as son he accepts but for market maker and others only once levels have been sent by the interest
     */

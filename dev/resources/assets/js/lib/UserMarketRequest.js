@@ -269,11 +269,9 @@ export default class UserMarketRequest extends BaseModel {
     */
     canApplyNoCares()
     {
-        //all the markets you no      
+        //all the markets you cant disregard     
        let cantDisRegard = [
-                "REQUEST",
                 "NEGOTIATION-VOL",
-                "NEGOTIATION-OPEN-VOL",
                 "REQUEST-SENT-VOL",
                 "REQUEST-VOL"
             ];

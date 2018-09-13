@@ -132,6 +132,13 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
+    public function scopeCounterNegotiation($query,$user)
+    {
+        $query->whereHas('user',function($q) use ($user){
+            $q->where('id','!=',$user->id);
+        })->orderBy('created_at', 'DESC');
+    }
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
