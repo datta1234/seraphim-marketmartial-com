@@ -1,6 +1,6 @@
 {
-    "/js/app.js": "/js/app.js",
     "/js/trade-screen.js": "/js/trade-screen.js",
     "/css/app.css": "/css/app.css",
+    "/js/canvas.js": "/js/canvas.js",
     "/js/public.js": "/js/public.js"
 }
