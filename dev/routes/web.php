@@ -67,7 +67,6 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','timeWindowPreventAct
     Route::get('stock', 'TradeScreen\StockController@index');
 
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
-    Route::resource('market-condition', 'TradeScreen\MarketConditionsController');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
 
