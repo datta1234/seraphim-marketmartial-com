@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Rules\LoginWindow;
+use App\Rules\CheckActiveUser;
 
 class LoginController extends Controller
 {
@@ -48,7 +49,7 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         $this->validate($request, [
-            $this->username() => ['required','string',new LoginWindow],
+            $this->username() => ['required','string',new LoginWindow, new CheckActiveUser],
             'password' => 'required|string',
         ]);
     }

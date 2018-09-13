@@ -18,6 +18,8 @@ class User extends Authenticatable
      * @property string $password
      * @property string $remember_token
      * @property boolean $active
+     * @property boolean $verified
+     * @property boolean $is_invited
      * @property boolean $tc_accepted
      * @property boolean $is_married
      * @property boolean $has_children
@@ -56,6 +58,8 @@ class User extends Authenticatable
         'hobbies',
         'birthdate',
         'organisation_id',
+        'verified',
+        'is_invited',
     ];
 
     /**
@@ -74,6 +78,15 @@ class User extends Authenticatable
     */
     protected $casts = [
         'tc_accepted' => 'boolean',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'birthdate'
     ];
 
     /**
@@ -234,24 +247,6 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function initiateTrades()
-    {
-        return $this->hasMany('App\Models\Trade\Trade','initiate_user_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function recievingTrades()
-    {
-        return $this->hasMany('App\Models\Trade\Trade','recieving_user_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function rebates()
     {
         return $this->hasMany('App\Models\Trade\Rebate','user_id');
@@ -291,5 +286,69 @@ class User extends Authenticatable
     public function completeProfile()
     {
         return (bool)$this->tc_accepted;
+    }
+
+    /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = null,$orderBy="full_name",$order='ASC', $filter = null)
+    {
+        if($orderBy == null)
+        {
+            $orderBy = "full_name";
+        }
+
+        if($order == null)
+        {
+            $order = "ASC";
+        }
+
+        $UserQuery = User::where( function ($q) use ($term)
+        {
+            $q->where('users.full_name', 'like',"%$term%")
+            ->orWhere('users.email', 'like',"%$term%")
+            ->orWhere('users.cell_phone', 'like',"%$term%")
+            ->orWhere('users.work_phone', 'like',"%$term%")
+            ->orWhereHas('organisation',function($q) use ($term){
+                $q->where('title','like',"%$term%");
+            });
+        });
+
+        if($filter !== null) {
+            switch ($filter) {
+                case 'active':
+                    $UserQuery->where('users.verified', true)
+                    ->where('active', true);
+                    break;
+                case 'inactive':
+                    $UserQuery->where('users.verified', true)
+                    ->where('active', false);
+                    break;
+                case 'request':
+                    $UserQuery->where('users.verified', false)
+                    ->where('active', false);
+                    break;
+            }
+        }
+
+        $UserQuery->orderBy($orderBy,$order);
+
+      return $UserQuery;
+  }
+
+    /**
+     * Determines if a user has been verified and is active
+     *
+     * @return bool|null User's active state or null if not verified
+     */
+    public function verifiedActiveUser()
+    {
+        return (bool)$this->verified ? (bool)$this->active : null;
     }
 }
