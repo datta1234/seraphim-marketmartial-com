@@ -3,6 +3,7 @@ namespace App\Http\Requests\TradeScreen\UserMarket;
 
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
+use App\Rules\LevelsImprovement;
 
 class MarketNegotiationRequest extends FormRequest
 {
@@ -58,11 +59,11 @@ class MarketNegotiationRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-        $validator->sometimes(['bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
+        $validator->sometimes(['bid'], ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this)], function ($input) {
             return !is_null($input->bid_qty) && !$input->is_repeat;
         }); 
 
-        $validator->sometimes(['offer'], 'required_with:offer_qty|required_without_all:is_repeat,bid|nullable|numeric', function ($input) {
+        $validator->sometimes(['offer'], ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this)], function ($input) {
             return !is_null($input->offer_qty) && !$input->is_repeat;
         }); 
 

@@ -42,8 +42,6 @@ class MarketNegotiationController extends Controller
     public function store(MarketNegotiationRequest $request, UserMarket $userMarket)
     {
         
-
-
         if($request->has('is_repeat') && $request->input('is_repeat'))
         {
             $this->authorize('spinNegotiation',$userMarket); 

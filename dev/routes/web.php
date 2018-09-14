@@ -79,8 +79,6 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 	]);
 
     Route::post('stream','TradeScreen\StreamController@index');
-
-
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
 });
 
