@@ -79,7 +79,9 @@ export default {
                 break;
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
-                        this.market_request_state_label = "PENDING";
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.curre
                 break;
                 case "NEGOTIATION-OPEN-VOL":
                         this.market_request_state = 'negotiation-vol';
