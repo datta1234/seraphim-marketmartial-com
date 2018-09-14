@@ -27,10 +27,10 @@ export default {
             this.market_request_state = null;
             this.market_request_state_label = null;
             
-            if(this.marketRequest.trade_items.default.Strike == "75619800")
+          /*  if()
             {
-                console.log("this is the market request: in tab",this.marketRequest);
-            }
+            }*/
+            
 
             // run tests
             // TODO: add logic for if current user then "SENT"
@@ -122,7 +122,7 @@ export default {
             {
                 return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
             }
-            return item[attr];
+            return "100";//item[attr];
         },
         getStateClass(item,attr)
         {

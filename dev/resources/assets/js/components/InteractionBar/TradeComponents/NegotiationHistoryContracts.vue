@@ -5,7 +5,11 @@
 
         
                 <b-col cols="10" >
-                
+                    <b-row>
+                        <b-col>
+                             {{ item.id }}
+                        </b-col>
+                    </b-row>
                     <b-row>
                         <b-col cols="3" class="text-center">
                              {{ item.bid_qty ? item.bid_qty : "-"  }}

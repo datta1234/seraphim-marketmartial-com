@@ -72,7 +72,7 @@ class UserMarket extends Model
 
     public function getLastNegotiationAttribute()
     {
-        return $query->marketNegotiations()->orderBy('created_at',"DESC")->first();
+        return $this->marketNegotiations()->orderBy('created_at',"DESC")->first();
     }
 
     /**
@@ -239,7 +239,7 @@ class UserMarket extends Model
 
             $marketNegotiation->user_id = $user->id;
             $counterNegotiation = $this->marketNegotiations()
-                                            ->counterNegotiation($user)
+                                            ->findCounterNegotiation($user)
                                             ->first();
 
             if($counterNegotiation)
@@ -267,11 +267,21 @@ class UserMarket extends Model
 
     public function addNegotiation($user,$data)
     {
+           
+
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
+
             $counterNegotiation = $this->marketNegotiations()
-                                            ->counterNegotiation($user)
+                                            ->findcounterNegotiation($user)
                                             ->first();
+
+
+            if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+            {
+                $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+            }
+
 
             if($counterNegotiation)
             {
@@ -352,18 +362,6 @@ class UserMarket extends Model
         }
         return $data;
     }
-
-    public function scopeOpenToMarket($query)
-    {
-        return $query->whereHas('marketNegotiations',function($query){     
-            $query->where('is_repeat',true);
-            $query->whereHas('marketNegotiationParent',function($query){
-                $query->where('is_repeat',true);
-            });
-        });
-    }
-
-
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket

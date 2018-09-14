@@ -43,7 +43,7 @@ class MarketNegotiation extends Model
     protected $fillable = [
 
             "user_id",
-            "counter_user_id",
+            "counter_id",
             "market_negotiation_id",
             "user_market_id",
             "bid",
@@ -68,7 +68,7 @@ class MarketNegotiation extends Model
             "cond_buy_best",
     ];
 
-    protected $hidden = ["user_id","counter_user_id"];
+    protected $hidden = ["user_id"];
 
 
     protected $appends = ["time"];
@@ -132,11 +132,39 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
-    public function scopeCounterNegotiation($query,$user)
+    public function scopeFindCounterNegotiation($query,$user)
     {
-        $query->whereHas('user',function($q) use ($user){
+       return $query->whereHas('user',function($q) use ($user){
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
+    }
+
+    /*
+    For markets that have been SPUN: When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. If I improve the OFFER then it goes between me and the last party on the BID.
+    */
+    public function getImprovedNegotiation($market_negotiation)
+    {
+       if($this->bid != $market_negotiation->bid)
+       {
+            return $this;
+       }else
+       {
+            return $this->marketNegotiationParent; 
+       }
+
+    }
+
+
+    public function scopeOrganisationInvolved($query,$organisation_id)
+    {
+       return $query->whereHas('user',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        });   
+    }
+
+    public function scopeLastNegotiation($query)
+    {
+        return $query->latest()->limit(1);
     }
 
     /**
