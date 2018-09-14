@@ -59,12 +59,6 @@ class UserMarketController extends Controller
             ->associate($marketNegotiation)
             ->save();
 
-        // conditions
-        $marketNegotiationConditions = $marketNegotiation
-            ->marketConditions()
-            ->sync(collect($data['current_market_negotiation']['conditions'])->pluck('id'));
-        
-
         // Set action that needs to be taken for the org related to this userMarketRequest
         $userMarket->userMarketRequest->setAction(
             $userMarket->userMarketRequest->user->organisation->id,

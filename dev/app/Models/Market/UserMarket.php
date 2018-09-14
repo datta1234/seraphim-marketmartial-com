@@ -124,15 +124,6 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function trades()
-    {
-        return $this->hasMany('App\Models\Trade\Trade','user_market_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');

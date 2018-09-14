@@ -17,7 +17,12 @@
 				@slot('body')
 					<div class="row">
 						<div class="col-md-8 offset-md-2">
-								<email-settings dusk="email-settings-component" :profile-complete="{{ $profileIsComplete ? "true" : "false" }}" :default-labels="'{{ $defaultLabels }}'" :email-settings="'{{ $emails }}'" ></email-settings>
+								<email-settings dusk="email-settings-component" 
+									:is-admin="{{ $is_admin_update ? "true" : "false" }}" 
+									:user="{{ $user }}"
+									:profile-complete="{{ $profileIsComplete ? "true" : "false" }}" :default-labels="'{{ $defaultLabels }}'" 
+									:email-settings="'{{ $emails }}'" >
+								</email-settings>
 						</div>
 					</div>
 				@endslot

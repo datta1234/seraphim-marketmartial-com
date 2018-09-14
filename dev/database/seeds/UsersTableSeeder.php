@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
                 'password' => bcrypt('jM68b7LdRspcHhMv'),
                 'role_id' => 1,
                 'active' => true,
+                'verified' => true,
                 'remember_token' => null,
                 'last_login' => null,
                 'tc_accepted' => true,

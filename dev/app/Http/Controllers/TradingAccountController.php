@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\UserManagement\TradingAccount;
 use App\Models\StructureItems\Market;
 use App\Http\Requests\TradingAccountRequest;
-use App\Models\UserManagement\Email;
 
 class TradingAccountController extends Controller
 {
@@ -37,8 +36,10 @@ class TradingAccountController extends Controller
             }     
         }
 
-        $emails = $user->emails()->with('defaultLabel')->get();//get ones that have alread been stored
-		return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails'));
+        $emails = $user->emails()->with('defaultLabel')->get();//get ones that have already been stored
+        // Used to determine admin interest update for the view
+        $is_admin_update = false;
+		return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails','is_admin_update'));
 	}
 
 	 /**

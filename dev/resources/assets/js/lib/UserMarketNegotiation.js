@@ -10,8 +10,7 @@ export default class UserMarketNegotiation extends BaseModel {
 
         // default internal
         this._user_market = null;
-        // default public
-        this.conditions = [];
+
         const defaults = {
             id: "",
             bid: "",
@@ -24,11 +23,12 @@ export default class UserMarketNegotiation extends BaseModel {
             offer_premium: "",
             is_put: false,
             status: "",
+            is_private: false,
             cond_is_repeat_atw: null,
             cond_fok_apply_bid: null,
             cond_fok_spin: null,
             cond_timeout: null,
-            cond_is_ocd: null,
+            cond_is_oco: null,
             cond_is_subject: null,
             cond_buy_mid: null,
             cond_buy_best: null,
@@ -50,11 +50,6 @@ export default class UserMarketNegotiation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
-
-        // register conditions
-        if(options && options.user_market_negotiation_condition) {
-            this.addUserMarketNegotiationConditions(options.user_market_negotiation_condition);
-        }
     }
 
     /**
@@ -72,25 +67,6 @@ export default class UserMarketNegotiation extends BaseModel {
     getUserMarket() {
         return this._user_market;
     }
-
-    /**
-    *   addNegotiation - add user user_market_negotiation
-    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
-    */
-    addUserMarketNegotiationCondition(user_market_negotiation_condition) {
-        user_market_negotiation_condition.setUserMarketNegotiation(this);
-        this.conditions.push(user_market_negotiation_condition);
-    }
-
-    /**
-    *   addNegotiations - add array of user market_negotiations
-    *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
-    */
-    addUserMarketNegotiationConditions(user_market_negotiation_conditions) {
-        user_market_negotiation_conditions.forEach(user_market_negotiation_condition => {
-            this.addUserMarketNegotiationCondition(user_market_negotiation_condition);
-        });
-    }
   
     prepareStore() {
         return {
@@ -103,7 +79,15 @@ export default class UserMarketNegotiation extends BaseModel {
             has_premium_calc: !!this.has_premium_calc,
             bid_premium: this.bid_premium,
             offer_premium: this.offer_premium,
-            conditions: this.conditions.map(x => x.prepareStore()),
+            is_private: this.is_private,
+            cond_is_repeat_atw: this.cond_is_repeat_atw,
+            cond_fok_apply_bid: this.cond_fok_apply_bid,
+            cond_fok_spin: this.cond_fok_spin,
+            cond_timeout: this.cond_timeout,
+            cond_is_oco: this.cond_is_oco,
+            cond_is_subject: this.cond_is_subject,
+            cond_buy_mid: this.cond_buy_mid,
+            cond_buy_best: this.cond_buy_best,
         };
     }
 

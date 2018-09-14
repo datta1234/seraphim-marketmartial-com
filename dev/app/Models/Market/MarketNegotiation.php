@@ -77,15 +77,6 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketConditions()
-    {
-        return $this->belongsToMany('App\Models\Market\MarketCondition','market_negotiation_condition');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function marketNegotiationParent()
     {
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');

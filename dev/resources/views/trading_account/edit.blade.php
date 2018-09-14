@@ -18,7 +18,11 @@
 
 			<div class="row">
 				<div class="col-md-8 offset-md-2">
-					{!! Form::model($user,['route' => 'trade_settings.edit','method'=>'PUT']) !!}
+					@if($is_admin_update)
+						{!! Form::model($user,['route' => ['admin.user.trade_settings.update', $user->id],'method'=>'PUT']) !!}
+					@else
+						{!! Form::model($user,['route' => 'trade_settings.update','method'=>'PUT']) !!}
+					@endif
 
 
 							@foreach ($trading_accounts as $index => $trading_account)
