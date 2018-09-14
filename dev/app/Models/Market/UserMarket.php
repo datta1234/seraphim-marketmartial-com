@@ -4,7 +4,8 @@ namespace App\Models\Market;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserMarket extends Model
 {
@@ -133,11 +134,49 @@ class UserMarket extends Model
        return $this->user->organisation;
     }
 
+    /**
+    * Return void
+    * @params void
+    */
+    public static function placeOldQuotesOnHold()
+    {
+        //get all the user market that have no chosen market on market request
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'))->toDateString();
+        $updatedMarketsId = self::where('created_at','<=',$date)
+        ->where('is_on_hold',false)
+        ->whereDoesntHave('marketNegotiations',function($q){
+            $q->where('is_accepted',true);
+        })
+        ->doesntHave('userMarketRequest.chosenUserMarket')
+        ->select('id')
+        ->get()
+        ->pluck('id');
+
+        if(count($updatedMarketsId) > 0)
+        {
+            self::whereIn('id',$updatedMarketsId)->update(['is_on_hold' => true]);
+            self::whereIn('id',$updatedMarketsId)->each(function ($userMarket, $key) {
+                $organisation = $userMarket->user->organisation;
+                $userMarket->userMarketRequest->notifyRequested([$organisation]);
+            });  
+        }
+    }
+
+    /**
+    * Return Boolean
+    * set the usermarket on hold, this will happen if its a quote
+    * @params void
+    */
     public function placeOnHold()
     {
         return $this->update(['is_on_hold'=>true]);
     }
 
+    /**
+    * Return Boolean
+    * assocaite a marketrequest if its accepted by an interest
+    * @params void
+    */
     public function accept()
     {
         $marketRequest = $this->userMarketRequest;
@@ -145,6 +184,11 @@ class UserMarket extends Model
         return $marketRequest->save();
     }
 
+    /**
+    * Return Boolean
+    * if the person presented q qoute and was placed on hold the can repaet market negotaui
+    * @params void
+    */
     public function repeatQuote($user)
     {
         $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
@@ -158,6 +202,11 @@ class UserMarket extends Model
       return  $marketNegotiation->update(['is_repeat'=>true]);    
     }
 
+    /**
+    * Return Boolean
+    * if the person presented q qoute and was placed on hold the can repaet market negotaui
+    * @params void
+    */
     public function updateQuote($user,$data)
     {
         $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
@@ -169,6 +218,71 @@ class UserMarket extends Model
         $this->update(['is_on_hold'=>false]);
       
       return  $marketNegotiation->update($data);
+    }
+
+
+    public function spinNegotiation($user)
+    {
+            $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
+            // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+            $marketNegotiation = $oldNegotiation->replicate();
+            $marketNegotiation->is_repeat = true;
+
+            $marketNegotiation->user_id = $user->id;
+            $counterNegotiation = $this->marketNegotiations()
+                                            ->counterNegotiation($user)
+                                            ->first();
+
+            if($counterNegotiation)
+            {
+                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+            }
+
+            try {
+                 DB::beginTransaction();
+
+                $this->marketNegotiations()->save($marketNegotiation);
+                $this->current_market_negotiation_id = $marketNegotiation->id;
+                $this->save();
+                DB::commit();
+                return $marketNegotiation;
+            } catch (\Exception $e) {
+                \Log::error($e->getMessage());
+                DB::rollBack();
+                return false;
+            }
+       
+    }
+
+
+    public function addNegotiation($user,$data)
+    {
+            $marketNegotiation = new MarketNegotiation($data);
+            $marketNegotiation->user_id = $user->id;
+            $counterNegotiation = $this->marketNegotiations()
+                                            ->counterNegotiation($user)
+                                            ->first();
+
+            if($counterNegotiation)
+            {
+                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+            }
+
+            try {
+                 DB::beginTransaction();
+
+                $this->marketNegotiations()->save($marketNegotiation);
+                $this->current_market_negotiation_id = $marketNegotiation->id;
+                $this->save();
+                DB::commit();
+                return $marketNegotiation;
+            } catch (\Exception $e) {
+                \Log::error($e->getMessage());
+                DB::rollBack();
+                return false;
+            }
     }
 
     /**
@@ -229,6 +343,17 @@ class UserMarket extends Model
         }
         return $data;
     }
+
+    public function scopeOpenToMarket($query)
+    {
+        return $query->whereHas('marketNegotiations',function($query){     
+            $query->where('is_repeat',true);
+            $query->whereHas('marketNegotiationParent',function($query){
+                $query->where('is_repeat',true);
+            });
+        });
+    }
+
 
     /**
     * Return pre formatted request for frontend

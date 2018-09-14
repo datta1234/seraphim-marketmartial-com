@@ -26,7 +26,6 @@ class UserMarketStoreRequest extends FormRequest
     public function rules()
     {
         $request_table = (new \App\Models\MarketRequest\UserMarketRequest)->getTable();
-        $market_condition = (new \App\Models\Market\MarketCondition)->getTable();
         return [
             'user_market_request_id'    =>  'required|exists:'.$request_table.',id',
             'current_market_negotiation'    =>  'required',
@@ -35,10 +34,6 @@ class UserMarketStoreRequest extends FormRequest
             'current_market_negotiation.has_premium_calc'     =>  'boolean',
             'current_market_negotiation.bid_premium'     =>  'required_if:current_market_negotiation.has_premium_calc,true|nullable|numeric',
             'current_market_negotiation.offer_premium'   =>  'required_if:current_market_negotiation.has_premium_calc,true|nullable|numeric',
-
-            // conditions
-            'current_market_negotiation.conditions' => 'array',
-            'current_market_negotiation.conditions.*.id' => 'required_with:current_market_negotiation.conditions|exists:'.$market_condition.',id',
         ];
     }
 
@@ -63,8 +58,6 @@ class UserMarketStoreRequest extends FormRequest
             'current_market_negotiation.has_premium_calc'   =>  "",
             'current_market_negotiation.bid_premium'    =>  "",
             'current_market_negotiation.offer_premium'  =>  "",
-            'current_market_negotiation.conditions' =>  "",
-            'current_market_negotiation.conditions.*.id'    =>  "",
         ];
     }
 

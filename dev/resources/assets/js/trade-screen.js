@@ -74,7 +74,6 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue'));
     Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue'));
     Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
-    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
     Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
 
 // Action Bar Component
@@ -242,8 +241,17 @@ const app = new Vue({
                 }
             });
         },
+        loadConfigs(config_list) {
+            let promises = [];
+            config_list.forEach(config => {
+                console.log(config)
+                promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
+            });
+            return Promise.all(promises);
+        },
         loadConfig(config_name, config_file) {
             let self = this;
+            config_file = (typeof config_file !== 'undefined' ? config_file : config_name+".json");
             return axios.get(axios.defaults.baseUrl + '/config/'+config_file)
             .then(configResponse => {
                 if(configResponse.status == 200) {
@@ -339,15 +347,16 @@ const app = new Vue({
         // get Saved theme setting
         this.loadThemeSetting();
         // load config files
-        this.loadConfig("trade_structure", "trade_structure.json")
+        this.loadConfigs([
+            ["trade_structure","trade_structure.json"],     // [ <namespace> , <file_path> ]
+            ["condition_titles"],                           // [ <namespace> ] ( assumes fileanme == <namespace>.json )
+            "market_conditions",                            //   <namespace> ( same assumption as above )
+        ])
         .catch(err => {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then( () => {
-            this.loadConfig('condition_titles','condition_titles.json');
-            this.loadUserConfig();
-        })
+        .then(this.loadUserConfig)
         .then(configs => {
             // load the trade data
             this.loadMarketTypes();

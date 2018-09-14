@@ -1,9 +1,5 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-outright">
-        
-   <!--      <pre style="background: white">
-            {{ marketRequest }}
-        </pre> -->
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         
@@ -25,16 +21,10 @@
         
         <b-row class="mb-5">
             <b-col cols="10">
-                    <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
-                        {{ error[0] }}
-                    </b-col>
-                <b-row v-if="removable_conditions.length > 0">
-                    <b-col v-for="cond in removable_conditions" class="text-center">
-                        <label class="ibar-condition-remove-label" @click="cond.callback">
-                            {{ cond.title }}&nbsp;&nbsp;<span class="remove">X</span>
-                        </label>
-                    </b-col>
-                </b-row>
+                <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                    {{ error[0] }}
+                </b-col>
+                <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
 
@@ -52,14 +42,14 @@
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
                             <p>Are you sure you want to pull this quote?</p>
-                         <div slot="modal-footer" class="w-100">
-                            <b-row align-v="center">
-                                <b-col cols="12">
-                                    <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
-                                    <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
-                                </b-col>
-                            </b-row>
-                       </div>
+                            <div slot="modal-footer" class="w-100">
+                                <b-row align-v="center">
+                                    <b-col cols="12">
+                                        <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                    </b-col>
+                                </b-row>
+                            </div>
                         </b-modal>
 
 
@@ -71,25 +61,26 @@
                          <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
                         
 
-                        <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
                     </b-col>
                 </b-row>
 
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
-                         <b-button  class="w-100 mt-1"  size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
-
-
-                         <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
-
-                        <b-button class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary">No Cares</b-button>
+                        <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
+                         <b-button  class="w-100 mt-1"  v-if="can_spin" size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
+                    </b-col>
+                </b-row>
+                <b-row class="justify-content-md-center">
+                    <b-col cols="6">
+                        <!-- !marker_qoute && !marketRequest.chosen_user_market -->
+                         <b-button  v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
-
-        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :applied-conditions="proposed_user_market_negotiation.conditions" :removable-conditions="removable_conditions"></ibar-apply-conditions>
+            
+        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -103,12 +94,29 @@
     </b-container>
 </template>
 <script>
-    import { EventBus } from '../../../lib/EventBus.js';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
-    import UserMarket from '../../../lib/UserMarket';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import UserMarket from '~/lib/UserMarket';
+    
     import moment from 'moment';
+    
+    import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
+    import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+
+    const showMessagesIn = [
+        "market_request_store",
+        "market_request_update",
+        "market_request_delete",
+        "market_negotiation_store"
+    ];
+
+
     export default {
+        components: {
+            IbarApplyConditions,
+            IbarRemoveConditions,
+        },
         props: {
             marketRequest: {
                 type: UserMarketRequest
@@ -142,8 +150,8 @@
                         this.init();
                     }else
                     {
-                       this.reset();
-                       this.setUpData(); 
+                      this.reset(['history_message']);
+                      this.setUpData(); 
                     }
                 },
                 deep: true
@@ -176,7 +184,6 @@
             },
             'is_on_hold': function(){   
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
-
             },
             'market_title': function() {
                 return this.marketRequest.getMarket().title+" "
@@ -188,6 +195,15 @@
             },
             'can_negotiate':function(){
                 return this.marketRequest.canNegotiate();
+            },
+            'can_disregard':function(){
+                return this.marketRequest.canApplyNoCares();
+            },
+            'can_spin':function(){
+                return this.marketRequest.canSpin();
+            },
+            'in_no_cares':function(){
+                return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
             }
         },
         methods: {
@@ -195,15 +211,28 @@
             {
                 this.check_invalid = check_invalid;
             },
-            updateUserMessages:function()
+            updateMessage: function(messageData)
+            {
+                if(messageData.user_market_request_id == this.marketRequest.id)
+                {
+                    let message = messageData.message;
+                    if(message !== null && typeof message === "object" && showMessagesIn.indexOf(message.key) > -1)
+                    {
+                       this.history_message = message.data;
+                    }else if(message === null)
+                    {
+                        this.history_message = null;
+                    } 
+                }
+               
+            },
+            calcUserMessages:function()
             {
                 //if the users market qoute is placed on hold notify the the current user if it is theres
                 if(this.marker_qoute && this.marker_qoute.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }
-
-                if(!this.can_negotiate)
+                }else if(!this.can_negotiate)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
@@ -220,8 +249,6 @@
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.spinNegotiation()   
                 .then(response => {
-
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -242,8 +269,6 @@
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.storeNegotiation()
                 .then(response => {
-
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 })
@@ -269,7 +294,6 @@
                 this.proposed_user_market.store()
                 .then(response => {
 
-                    this.history_message = response.data.message;
                     this.server_loading = false;
                     this.errors = [];
                 
@@ -284,17 +308,14 @@
 
             },
             amendQoute() {
-               // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
                 this.server_loading = true;
 
                 // save
-                this.proposed_user_market_negotiation.patchQuote()
+                this.proposed_user_market_negotiation.patchQuote(this.marketRequest, this.proposed_user_market)
                 .then(response => {
+
                     this.server_loading = false;                    
-                    this.history_message = response.data.message;
                     this.errors = [];
                     
                 })
@@ -313,12 +334,8 @@
                 // save
                 this.proposed_user_market_negotiation.repeatQuote()
                 .then(response => {
-
                     this.server_loading = false;
-                    this.history_message = response.data.message;
                     this.errors = [];                   
-                    
-
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -335,9 +352,7 @@
                 // save
                 this.proposed_user_market.delete()
                 .then(response => {
-                    this.server_loading = false;
-                    this.history_message = response.data.message;
-                    
+                    this.server_loading = false;                    
                     this.$refs.pullModal.hide();
                 })
                 .catch(err => {
@@ -347,7 +362,7 @@
                 });
 
             },
-            reset() {
+            reset(ignore = []) {
                 let defaults = {
                     state_premium_calc: false,
 
@@ -362,9 +377,13 @@
                     server_loading: false,
                     check_invalid: false,
                     errors: [],
-                    };
+                };
+
                 Object.keys(defaults).forEach(k => {
-                    this[k] = defaults[k];
+                    if(ignore.indexOf(k) == -1)
+                    {
+                       this[k] = defaults[k]; 
+                    }
                 });
 
             },
@@ -431,11 +450,17 @@
                     
                     this.setUpProposal();
                     this.setDefaultQuantities();
-                    this.updateUserMessages();
+                    this.calcUserMessages();
 
                     // // relate
                     EventBus.$emit('interactionChange',this.marketRequest);
+                    EventBus.$emit('removefromNoCares',this.marketRequest.id);
+
                 }
+            },
+            addToNoCares()
+            {
+                EventBus.$emit('addToNoCares',this.marketRequest.id);
             },
             init() {
                 this.reset();// clear current state
@@ -444,6 +469,8 @@
         },
         mounted() {
             this.init();
+            EventBus.$on('notifyUser',this.updateMessage);
+
         }
     }
 </script>

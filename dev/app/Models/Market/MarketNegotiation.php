@@ -77,15 +77,6 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketConditions()
-    {
-        return $this->belongsToMany('App\Models\Market\MarketCondition','market_negotiation_condition');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function marketNegotiationParent()
     {
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
@@ -130,6 +121,13 @@ class MarketNegotiation extends Model
     public function getTimeAttribute()
     {
         return $this->created_at->format("H:i");
+    }
+
+    public function scopeCounterNegotiation($query,$user)
+    {
+        $query->whereHas('user',function($q) use ($user){
+            $q->where('id','!=',$user->id);
+        })->orderBy('created_at', 'DESC');
     }
 
     /**

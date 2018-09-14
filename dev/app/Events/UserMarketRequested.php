@@ -34,10 +34,20 @@ class UserMarketRequested implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(UserMarketRequest $userMarketRequest, $organisation)
+    public function __construct(UserMarketRequest $userMarketRequest, $organisation, $message = null)
     {
         $this->userMarketRequest = $userMarketRequest; 
         $this->organisation = $organisation;
+    }
+
+    /**
+    * The event's broadcast name.
+    *
+    * @return string
+    */
+    public function broadcastAs()
+    {
+        return 'UserMarketRequested';
     }
 
     /**
@@ -57,6 +67,6 @@ class UserMarketRequested implements ShouldBroadcast
     */
     public function broadcastWith()
     {
-        return $this->userMarketRequest->setOrgContext($this->organisation)->preFormatted();
+        return ["message"=>$this->organisation->getNotification(),'data'=>$this->userMarketRequest->setOrgContext($this->organisation)->preFormatted()];
     }
 }

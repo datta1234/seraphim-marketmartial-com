@@ -87,11 +87,10 @@
              */
             addToNoCares(key,id) {
 
-                if(!this.no_cares.includes(id)) {
-                    this.no_cares.push(id);
-                    this.notifications.splice(key,1);
-                    this.saveNoCares();
-                }
+               
+                console.log("fire no cares");
+                EventBus.$emit('addToNoCares',id);
+                //this.notifications.splice(key,1);
             },
             /**
              * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
@@ -100,20 +99,17 @@
              * @todo Change market to be the Market.id not Market.title
              */
             applyBulkNoCares() {
-                if(this.status) {
+                // if(this.status) {
 
-                  for (let i=0 ; i < this.notifications.length; i++) {
-                    this.no_cares.push(this.notifications[i].id);
-                  };
-                  this.notifications.splice(0,this.notifications.length);
-                  this.saveNoCares();
+                //   for (let i=0 ; i < this.notifications.length; i++) {
+                //     this.no_cares.push(this.notifications[i].id);
+                //     EventBus.$emit('addToNoCares',this.notifications[i].id);
+                //   };
+                //   this.notifications.splice(0,this.notifications.length);
+                //  this.saveNoCares();
 
-                }
+                // }
                 // this.onDismiss();
-            },
-            saveNoCares(){
-                const parsed = JSON.stringify(this.no_cares);
-                localStorage.setItem('no_cares_market_request', parsed);
             },
             /**
              * Loads the Interaction Sidebar with the related UserMarketRequest
@@ -128,6 +124,9 @@
             },
         },
         mounted() {
+
+            //EventBus.$on('addToNoCares', this.addToNoCares);
+
         }
     }
 </script>

@@ -94,7 +94,6 @@
              */
             nextStep() {
                 this.modal_data.step++;
-                console.log("STEP=========================: ", this.modal_data.step);
             },
             /**
              * Loads step component 
@@ -149,24 +148,33 @@
                 }
             },
             /**
-             * Saves Market Request
+             * Saves Market Request with the completed composed data and then closes the modal
              */
             saveMarketRequest() {
+                // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
+                
                 let new_data = this.formatRequestData();
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
+                    // success closes the modal
                     if(newMarketRequestResponse.status == 200) {
                         this.close_modal();
                     } else {
                         console.error(err);    
                     }
+                    // toggle loading
                     EventBus.$emit('loading', 'requestSubmission');
                     this.submitting_request = true;
+
+
                 }).catch( (err) => {
+                    // toggle loading
                     EventBus.$emit('loading', 'requestSubmission');
                     this.submitting_request = true;
+                    
+                    // server error loads the response errors and loads error step
                     this.previousStep();
                     if (err.response) {
                         // The request was made and the server responded with a status code
@@ -177,14 +185,20 @@
                       // The request was made but no response was received
                       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                       // http.ClientRequest in node.js
-                      console.log(err.request);
+                      console.error(err.request);
                     } else {
                       // Something happened in setting up the request that triggered an Error
-                      console.log('Error', err.message);
+                      console.error(err.message);
                     }
-                    console.log(err.config);
+                    console.error(err.config);
                 });
             },
+            /**
+             * Loads the earliest step correlating to the passed errors and adds the errors
+             *  to the correct component error in this.errors.data
+             *
+             * @params {Object} errors
+             */
             loadErrorStep(errors) {
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
@@ -253,12 +267,21 @@
                 }
                 this.loadStepComponent();
             },
+            /**
+             * Sets a new lowest step if the passed step is lower than the current lowest step
+             */
             setLowestStep(new_step) {
                 if(new_step < this.modal_data.step) {    
                     this.modal_data.step = new_step;
                 }
             },
+            /**
+             * Formats the component data to a format to submit to the api for a new Index Market
+             *
+             * @return {Object} - formatted data object
+             */
             formatRequestData() {
+                // sets initial object structure
                 let formatted_data = {
                     trade_structure: this.index_data.index_market_object.trade_structure,
                     trade_structure_groups:[]
@@ -276,6 +299,11 @@
                 });
                 return formatted_data;
             },
+            /**
+             * Casting a passed string to moment with a new format
+             *
+             * @param {string} date_string
+             */
             castToMoment(date_string) {
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD');
             },
@@ -283,7 +311,6 @@
         mounted() {
             this.modal_data.title = ["Index"];
             this.loadIndexMarkets();
-            console.log("WHAT STEP IS THIS?==================",this.modal_data.step);
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;

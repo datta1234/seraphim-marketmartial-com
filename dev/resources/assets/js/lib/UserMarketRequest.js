@@ -248,13 +248,43 @@ export default class UserMarketRequest extends BaseModel {
     */
     canNegotiate()
     {
-        if(this.chosen_user_market == null)
-        {
-            return true;
-        }else
-        {
-           return  this.is_interest || (this.chosen_user_market.market_negotiations.length > 0 && this.chosen_user_market.market_negotiations.findIndex((negotiation) => { return negotiation.is_my_org }) > -1);
-        }
+        let tradebleStatuses = [
+                "REQUEST-SENT",
+                "REQUEST",
+                "REQUEST-SENT-VOL",
+                "REQUEST-VOL",
+                "NEGOTIATION-VOL",
+                "NEGOTIATION-OPEN-VOL"
+            ];
+
+        console.log(this.attributes.calc_state);
+        console.log(this.attributes.calc_roles);
+
+        return  tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+    /**
+    *   canApplyNoCares - Checks to see if the user can apply no cares on the market request 
+    *   @return response from the request or the error
+    */
+    canApplyNoCares()
+    {
+        //all the markets you cant disregard     
+       let cantDisRegard = [
+                "NEGOTIATION-VOL",
+                "REQUEST-SENT-VOL",
+                "REQUEST-VOL"
+            ];
+
+        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || cantDisRegard.indexOf(this.attributes.state) == -1  ;  
+    }
+
+    canSpin()
+    {
+        let spinStatuses = [
+            "NEGOTIATION-VOL"
+        ];
+        return spinStatuses.indexOf(this.attributes.state) > -1; 
     }
 
 }

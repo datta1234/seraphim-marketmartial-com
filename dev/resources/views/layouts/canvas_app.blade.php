@@ -30,7 +30,7 @@
     @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/canvas.js') }}"></script>
     @include('partials.toast_messsage')
     @yield('footer-scripts')
 </body>

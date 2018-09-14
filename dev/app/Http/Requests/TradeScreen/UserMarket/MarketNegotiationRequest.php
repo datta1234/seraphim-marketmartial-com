@@ -23,18 +23,13 @@ class MarketNegotiationRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
-        $market_condition = (new \App\Models\Market\MarketCondition)->getTable();
-       
+    {  
         return [
             // initial negotiation
             'has_premium_calc'          =>  'boolean',
             'is_repeat'                 =>  'boolean',
             'bid_premium'               =>  'required_if:has_premium_calc,true|nullable|numeric',
             'offer_premium'             =>  'required_if:has_premium_calc,true|nullable|numeric',
-            // conditions
-            'conditions'                => 'array',
-            'conditions.*.id'           => 'required_with:conditions|exists:'.$market_condition.',id',
         ];
     }
 
@@ -52,8 +47,6 @@ class MarketNegotiationRequest extends FormRequest
             'has_premium_calc'          =>  "",
             'bid_premium'               =>  "",
             'offer_premium'             =>  "",
-            'conditions'                =>  "",
-            'conditions.*.id'           =>  "",
         ];
     }
 

@@ -8,220 +8,196 @@
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
             
-                <b-col cols="12" v-for="condition in conditions">
-                    <b-btn @click="applyCondition(condition)" 
-                            v-b-toggle="'condition_'+condition.id" 
+                <b-col v-for="(condition, c_group) in conditions" cols="12" v-if="condition.hidden !== true">
+                    <b-btn @click="onToggleClick(condition, c_group)"
                             variant="default" 
                             size="sm" 
                             class="w-75 mt-2 ibar-condition" 
-                            role="tab">
+                            role="tab"
+                            :class="shown_groups[c_group] ? 'collapsed' : null"
+                            :aria-expanded="shown_groups[c_group] ? 'true' : 'false'"
+                            >
                         {{ condition.title }}
                     </b-btn>
-                    <b-collapse :id="'condition_'+condition.id" 
+                    <b-collapse :id="'condition_'+c_group" 
+                                v-model="shown_groups[c_group]"
                                 class="w-75 ibar-condition-panel" 
                                 accordion="conditions" 
                                 role="tabpanel">
-                        <!--empty-->
-                    </b-collapse>
-                </b-col>
-                <b-col cols="12" v-for="category in categories">
-                    <b-btn @click="applyCategory(category)"
-                            v-b-toggle="'category_'+category.id" 
-                            variant="default" 
-                            size="sm" 
-                            class="w-75 mt-2 ibar-condition" 
-                            role="tab">
-                        {{ category.title }}
-                    </b-btn>
-                    <b-collapse :id="'category_'+category.id" 
-                                class="w-75 ibar-condition-panel" 
-                                accordion="conditions" 
-                                role="tabpanel">
-                        <div class="ibar-condition-panel-content text-left">
-                            
-                            <div v-for="child in category.children" v-if="category.children.length > 0">
+
+                        <div class="ibar-condition-panel-content text-left" v-if="condition.children && condition.children.length > 0">
+                            <div v-for="child in condition.children">
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
-                                    <b-form-radio-group v-model="child.selected"
-                                                        v-bind:options="getCategoryOptions(child.market_conditions)"
+                                    <b-form-radio-group v-if="child.value.constructor === Array"
+                                                        v-bind:options="child.value"
                                                         stacked
-                                                        v-on:change="updateCategoryConditions"
+                                                        v-on:change="e => setCondition(child.alias, e, c_group)"
                                                         name="">
                                     </b-form-radio-group>
                                 </div>
                             </div>
-                            <div v-if="category.children.length == 0">
-                                <div class="content">
-                                    <b-form-radio-group v-model="category.selected"
-                                                        v-bind:options="getCategoryOptions(category.market_conditions)"
-                                                        stacked
-                                                        v-on:change="updateCategoryConditions"
-                                                        name="">
-                                    </b-form-radio-group>
-                                </div>
-                            </div>
+                        </div>
 
+                        <div class="ibar-condition-panel-content text-left" v-else>
+                            <b-form-radio-group v-if="condition.value.constructor === Array"
+                                                v-bind:options="condition.value"
+                                                stacked
+                                                v-on:change="e => setCondition(condition.alias, e, c_group)"
+                                                name="">
+                            </b-form-radio-group>
                         </div>
                     </b-collapse>
                 </b-col>
+
             </b-row>
         </b-col>
     </b-row>
 </template>
 <script>
-    import axios from 'axios';
-
-    import UserMarketNegotiationCondition from '../../../lib/UserMarketNegotiationCondition';
-
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    /*
+        Sets the state of the following attributes on the 'marketNegotiation'
+            cond_is_repeat_atw
+            cond_fok_apply_bid
+            cond_fok_spin
+            cond_timeout
+            cond_is_ocd
+            cond_is_subject
+            cond_buy_mid
+            cond_buy_best
+    */
     export default {
+        name: 'ibar-apply-conditions',
         props: {
-            appliedConditions: {
-                type: Array,
-                default: []
-            },
-            removableConditions: {
-                type: Array,
-                default: []
+            marketNegotiation: {
+                type: UserMarketNegotiation,
+                default: null
             }
         },
         data() {
             return {
+                shown_groups: [],
                 show_options: false,
-                chosen_top_level_category: null,
-                conditions: [],
-                categories: [],
+                conditions: this.$root.config('market_conditions')
             };
         },
         watch: {
-            'show_options': function(nV) {
-                this.appliedConditions.splice(0, this.appliedConditions.length);
-                this.removableConditions.splice(0, this.removableConditions.length);
-                this.resetCategorySelection(this.categories);
+            show_options() {
+                this.resetConditions();
+                this.updateShownGroups();
+            }
+        },
+        computed: {
+            condition_aliases() {
+                let getAlias = (list, group) => {
+                    return list.reduce((a, v, i) => {
+                        if(v.alias) {
+                            a[v.alias] = {
+                                default: v.default,
+                                group: ( group ? group : i )
+                            };
+                        }
+                        if(v.children) {
+                            Object.assign(a, getAlias(v.children, ( group ? group : i )));
+                        }
+                        return a;
+                    }, {});
+                };
+
+                let aliases = getAlias(this.conditions);
+                return aliases;
             }
         },
         methods: {
-            getCategoryOptions(conditions) {
-                let options = [];
-                conditions.forEach(x => {
-                    options.push({ text: x.title, value: x });
-                });
-                return options;
-            },
-            mutateCategories(cats) {
-                return cats.map(cat => {
-                    if(cat.market_conditions) {
-                        cat.market_conditions = cat.market_conditions.map(x => new UserMarketNegotiationCondition(x));
+            onToggleClick(condition, group) {
+                if(condition.children) {
+                    condition.children.forEach(child => {
+                        if(typeof child.value !== 'undefined') {
+                            if(child.value.constructor == Boolean) {
+                                this.setCondition(child.alias, child.value, group);
+                            }
+                            if(child.value.constructor == Array) {
+                                this.setCondition(child.alias, child.value[0], group);
+                            }
+                        }
+                    });
+                } else {
+                    if(typeof condition.value !== 'undefined') {
+                        if(condition.value.constructor == Boolean) {
+                            this.setCondition(condition.alias, condition.value, group);
+                        }
+                        if(condition.value.constructor == Array) {
+                            this.setCondition(condition.alias, condition.value[0], group);
+                        }
                     }
-                    if(cat.children) {
-                        cat.children = this.mutateCategories(cat.children);
-                    }
-                    return cat;
-                });
+                }
             },
-            loadConditions() {
-                let self = this;
-                return axios.get(axios.defaults.baseUrl + '/trade/market-condition')
-                .then(conditionsResponse => {
-                    if(conditionsResponse.status == 200) {
-                        // set the available market types
-                        self.conditions = conditionsResponse.data.conditions.map(x => new UserMarketNegotiationCondition(x)) || [];
-                        self.categories = this.mutateCategories(conditionsResponse.data.categories) || [];
-                        this.resetCategorySelection(this.categories);
+            updateShownGroups() {
+                this.shown_groups = [];
+                for(let k in this.condition_aliases) {
+                    if(typeof this.shown_groups[this.condition_aliases[k].group] === 'undefined') {
+                        this.shown_groups[this.condition_aliases[k].group] = false;
+                    }
+                    if(this.marketNegotiation[k] != this.condition_aliases[k].default) {
+                        this.shown_groups[this.condition_aliases[k].group] = true;
+                    }
+                }
+            },
+            setCondition(alias, value, group) {
+                this.resetConditions(group, value.ignores);
+                switch(value.constructor) {
+                    case Object:
+                        this.marketNegotiation[alias] = value.value;
+                        if(value.sets) {
+                            value.sets.forEach(v => {
+                                this.marketNegotiation[v.alias] = v.value;
+                            });
+                        }
+                    break;
+                    case Boolean:
+                    default:
+                        this.marketNegotiation[alias] = value;
+                }
+                this.updateShownGroups();
+            },
+            resetConditions(group, ignores) {
+                for(let k in this.condition_aliases) {
+                    if(group) {
+                        if(group != this.condition_aliases[k].group) {
+                            if(ignores) {
+                                if(ignores.indexOf(k) == -1) {
+                                    this.marketNegotiation[k] = this.condition_aliases[k].default;
+                                }
+                            } else {
+                                this.marketNegotiation[k] = this.condition_aliases[k].default;
+                            }
+                        }    
                     } else {
-                        console.error(err);    
+                        if(ignores) {
+                            if(ignores.indexOf(k) == -1) {
+                                this.marketNegotiation[k] = this.condition_aliases[k].default;
+                            }
+                        } else {
+                            this.marketNegotiation[k] = this.condition_aliases[k].default;
+                        }
                     }
-                    return conditionsResponse.data;
-                }, err => {
-                    console.error(err);
-                });
-            },
-            resetCategorySelection(cats) {
-                cats.forEach(cat => {
-                    cat.selected = null;
-                    if(cat.children) {
-                        this.resetCategorySelection(cat.children);
-                    }
-                });
-            },
-            applyCondition(condition) {
-                let conExist = this.appliedConditions.indexOf(condition) != -1;
-
-                this.appliedConditions.splice(0, this.appliedConditions.length);
-                // add condition if not already exists
-                
-                if(!conExist) {
-                    this.appliedConditions.push(condition);
-                    
-                    let removable = {
-                        title: condition.title
-                    };
-
-                    removable.callback = () => {
-                        this.appliedConditions.splice(0, this.appliedConditions.length);
-                        this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
-                        this.show_options = false;
-
-                        Vue.nextTick(() => {
-                            this.show_options = true;
-                        });
-                    };
-
-
-                    this.removableConditions.splice(0, this.removableConditions.length);
-                    this.removableConditions.push(removable); 
-                }else
-                {
-                    this.removableConditions.splice(0, this.removableConditions.length);
                 }
-
-                  
-                
-            },
-            applyCategory(category) {
-                this.chosen_top_level_category = category;
-                this.resetCategorySelection(this.categories);
-                this.updateCategoryConditions();
-
-                let removable = {
-                    title: category.title
-                };
-                removable.callback = () => {
-                    this.chosen_top_level_category = null;
-                    this.removableConditions.splice(this.removableConditions.indexOf(removable), 1);
-                    this.resetCategorySelection(this.categories);
-                    this.updateCategoryConditions();
-                    this.show_options = false;
-                    Vue.nextTick(() => {
-                        this.show_options = true;
-                    });
-                };
-                this.removableConditions.splice(0, this.removableConditions.length);
-                this.removableConditions.push(removable);
-            },
-            recurseSelected(category) {
-                if(category.children) {
-                    category.children.forEach((child) => {
-                        this.recurseSelected(child);
-                    });
-                }
-                if(category.selected) {
-                    this.appliedConditions.push(category.selected);
-                }
-            },
-            updateCategoryConditions(changed) {
-                Vue.nextTick(() => {
-                    this.appliedConditions.splice(0, this.appliedConditions.length);
-                    if(this.chosen_top_level_category) {
-                        this.recurseSelected(this.chosen_top_level_category);
-                    }
-                });
             }
         },
-        created() {
-            this.loadConditions();
-        },
         mounted() {
-
+            this.$watch(() => {
+                let val = "";
+                for(let k in this.condition_aliases) {
+                    val += this.marketNegotiation[k];
+                }
+                return val;
+            }, () => {
+                Vue.nextTick(() => {
+                    this.updateShownGroups();
+                });
+            })
+            this.updateShownGroups();
         }
     }
 </script>

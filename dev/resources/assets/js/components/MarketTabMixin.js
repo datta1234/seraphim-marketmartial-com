@@ -43,7 +43,7 @@ export default {
                         this.market_request_state = 'request-vol';
                         this.market_request_state_label = "";
                         this.user_market_bid = this.marketRequest.sent_quote.current_market_negotiation.bid ? this.marketRequest.sent_quote.current_market_negotiation.bid : '-';
-                        this.user_market_offer = this.marketRequest.sent_quote.current_market_negotiation.offer ? this.marketRequest.sent_quote.current_market_negotiation.offer : '-';
+                        this.user_market_offer = this.marketRequest.sent_quote.current_market_negotiation.offer ? this.marketRequest.sent_quote.current_market_negotiation.offer: '-';
                     } else {
                         
                         this.market_request_state = 'request';
@@ -74,13 +74,18 @@ export default {
                 case "NEGOTIATION-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.bid : '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null ? this.current_user_market_negotiation.offer : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
                 break;
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
                         this.market_request_state_label = "PENDING";
-
+                break;
+                case "NEGOTIATION-OPEN-VOL":
+                        this.market_request_state = 'negotiation-vol';
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
                 break;
                 case "alert":
                     this.market_request_state = 'alert';
@@ -110,32 +115,23 @@ export default {
                 let result = this.marketRequest.actionTaken();
             }
         },
+        getText(item,attr)
+        {
+            let source = item.getAmountSource(attr);
+            if(source.id != item.id && item.is_repeat)
+            {
+                return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
+            }
+            return item[attr];
+        },
         getStateClass(item,attr)
         {
-
-            if(this.current_user_market_negotiation && this.marketRequest.chosen_user_market)
-            {
-                let prevItem = null;
-                
-                if(item.market_negotiation_id != null)
-                {
-                     prevItem = this.marketRequest.chosen_user_market.market_negotiations.find((itItem) => item.market_negotiation_id == itItem.id);
-                }
-                
-                if(typeof prevItem !== "undefined" &&  prevItem != null && prevItem.market_negotiation_id != prevItem.id  && prevItem[attr] == item[attr])
-                {
-
-                 return this.getStateClass(prevItem,attr);   
-                }else
-                {
-                     return {
-                        "is-interest":item.is_interest && !item.is_my_org,
-                        "is-maker":item.is_maker && !item.is_my_org,
-                        "is-my-org":item.is_my_org
-                    };  
-                }   
-            }
-
+            let source = item.getAmountSource(attr);
+             return {
+                "is-interest":source.is_interest && !source.is_my_org,
+                "is-maker":source.is_maker && !source.is_my_org,
+                "is-my-org":source.is_my_org
+            };  
         }
     }
 }

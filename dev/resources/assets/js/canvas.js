@@ -68,5 +68,6 @@ const app = new Vue({
         
     },
     mounted: function() {
+        
     }
 });
