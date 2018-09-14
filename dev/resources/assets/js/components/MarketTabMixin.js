@@ -74,8 +74,8 @@ export default {
                 case "NEGOTIATION-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
@@ -84,8 +84,8 @@ export default {
                 case "NEGOTIATION-OPEN-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
                 case "alert":
                     this.market_request_state = 'alert';

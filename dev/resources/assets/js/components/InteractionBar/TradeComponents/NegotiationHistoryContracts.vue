@@ -5,20 +5,20 @@
 
         
                 <b-col cols="10" >
-                    <b-row>
+                <!--     <b-row>
                         <b-col>
                              {{ item.id }}
                         </b-col>
-                    </b-row>
+                    </b-row> -->
                     <b-row>
                         <b-col cols="3" class="text-center">
                              {{ item.bid_qty ? item.bid_qty : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center" :class="getStateClass('bid',item)">
-                            {{ item.bid ?  getText("bid",item) : "-"  }}
+                            {{ item.bid ? item.bid_display : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center" :class="getStateClass('offer',item)">
-                            {{ item.offer ? getText("offer",item) : "-"  }}
+                            {{ item.offer ? item.offer_display : "-"  }}
                         </b-col>
                         <b-col cols="3" class="text-center">
                              {{ item.offer_qty ? item.offer_qty : "-"  }}
@@ -88,7 +88,8 @@
                 let source = item.getAmountSource(attr);
                 if(source.id != item.id && item.is_repeat)
                 {
-                    return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
+                    console.log(item,source);
+                    return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN " + item[attr]  : item[attr];
                 }
                 return item[attr];
             },

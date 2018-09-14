@@ -304,13 +304,17 @@ class UserMarket extends Model
         $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
         $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
         
+
+        $uneditedmarketNegotiations= $marketNegotiations = $this->marketNegotiations->load('user');
+
         $data = [
             "id"                    => $this->id,
             "is_interest"           => $is_interest,
             "is_maker"              => $is_maker,
             "time"                  => $this->created_at->format("H:i"),
-            "market_negotiations"   => $this->marketNegotiations->map(function($item){ 
-                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+            "market_negotiations"   => $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
+
+                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
                                         })
         ];
 

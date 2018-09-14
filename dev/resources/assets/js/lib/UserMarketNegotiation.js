@@ -17,6 +17,8 @@ export default class UserMarketNegotiation extends BaseModel {
             offer: "",
             bid_qty: 500,
             offer_qty: 500,
+            bid_display: "",
+            offer_display: "",
             is_repeat: false,
             has_premium_calc: false,
             bid_premium: "",
