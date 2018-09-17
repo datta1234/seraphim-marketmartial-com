@@ -52,6 +52,10 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 
 	Route::resource('user-pref', 'UserPrefController');
+
+	Route::group(['prefix' => 'stats'], function() {
+		Route::get('/my-activity', 'StatsController@show')->name('my_activity.show');
+	});
 });
 
 

@@ -18,6 +18,7 @@ class UserMarketRequest extends Model
      * @property integer $trade_structure_id
      * @property integer $user_market_request_statuses_id
      * @property integer $chosen_user_market_id
+     * @property integer $market_id
      * @property \Carbon\Carbon $created_at
      * @property \Carbon\Carbon $updated_at
      */
@@ -110,6 +111,15 @@ class UserMarketRequest extends Model
     public function userMarkets()
     {
         return $this->hasMany('App\Models\Market\UserMarket','user_market_request_id')->orderBy('updated_at', 'desc');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function markets()
+    {
+        return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
     /**

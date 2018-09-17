@@ -56,10 +56,29 @@ class TradeConfirmation extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
+    /**
+     * The virtual attributes that should appended to the model.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'month',
+    ];
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmationStatuses()
+    public function tradeConfirmationStatus()
     {
         return $this->belongsTo(
         	'App\Models\TradeConfirmations\TradeConfirmationStatus',
@@ -108,7 +127,7 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function stocks()
+    public function stock()
     {
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }
@@ -117,7 +136,7 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function markets()
+    public function market()
     {
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
@@ -126,7 +145,7 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeNegotiations()
+    public function tradeNegotiation()
     {
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
@@ -135,7 +154,7 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function sendUsers()
+    public function sendUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','send_user_id');
     }
@@ -144,7 +163,7 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function recievingUsers()
+    public function recievingUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','receiving_user_id');
     }
@@ -153,8 +172,45 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradingAccounts()
+    public function tradingAccount()
     {
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+    }
+
+    public function scopeOrganisationInvolved($query, $organistation_id)
+    {
+        $query->whereHas('sendUser', function ($query) use ($organistation_id) {
+            $query->where('organisation_id', $organistation_id);
+        })
+        ->orWhereHas('recievingUser', function ($query) use ($organistation_id) {
+            $query->where('organisation_id', $organistation_id);
+        });
+    }
+
+    public function scopeOrganisationNotInvolved($query, $organistation_id)
+    {
+        $query->whereHas('sendUser', function ($query) use ($organistation_id) {
+            $query->where('organisation_id', '!=' ,$organistation_id);
+        })
+        ->whereHas('recievingUser', function ($query) use ($organistation_id) {
+            $query->where('organisation_id', '!=', $organistation_id);
+        });
+    }    
+
+    public function scopeOrgnisationMarketMaker($query, $organistation_id)
+    {
+        // user_market_request->chosen_usermarket->user_id
+        $query->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
+            $query->whereHas('userMarket', function ($query) use ($organistation_id) {
+                $query->whereHas('user', function ($query) use ($organistation_id) {
+                    $query->where('organisation_id', $organistation_id);
+                });
+            });
+        });
+    }
+
+    public function getMonthAttribute()
+    {
+        return $this->updated_at->format('M Y');
     }
 }
