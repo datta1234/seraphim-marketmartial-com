@@ -34,7 +34,17 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'contracts', 'nominals', 'is_offer', 'is_distpute',
+        'quantity', 'traded', 'is_offer', 'is_distpute',
+    ];
+
+
+      /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'initiate_user_id','recieving_user_id'
     ];
 
     /**

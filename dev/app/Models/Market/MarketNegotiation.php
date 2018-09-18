@@ -3,6 +3,9 @@
 namespace App\Models\Market;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Trade\TradeNegotiation;
+use Illuminate\Support\Facades\DB;
+
 
 class MarketNegotiation extends Model
 {
@@ -109,6 +112,16 @@ class MarketNegotiation extends Model
         return $this->hasMany('App\Models\Market\UserMarket','current_market_negotiation_id');
     }
 
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','market_negotiation_id');
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -142,7 +155,6 @@ class MarketNegotiation extends Model
        {
             return $this->marketNegotiationParent; 
        }
-
     }
 
 
@@ -191,6 +203,39 @@ class MarketNegotiation extends Model
             return $this;  
         } 
     }
+
+
+    public function addTradeNegotiation($user,$data)
+    {
+           
+
+            $tradeNegotiation = new TradeNegotiation($data);
+            $tradeNegotiation->initiate_user_id = $user->id;
+            $tradeNegotiation->recieving_user_id = $this->user_id;
+            $tradeNegotiation->user_market_id = $this->user_market_id;
+
+            //set counter
+            $counterNegotiation = null;
+
+            if($counterNegotiation)
+            {
+                $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
+            }
+
+            try {
+                 DB::beginTransaction();
+               return $this->tradeNegotiations()->save($tradeNegotiation);
+                DB::commit();
+                return $tradeNegotiation;
+            } catch (\Exception $e) {
+                \Log::error($e);
+                DB::rollBack();
+                return false;
+            }
+    }
+
+
+
 
     /**
     * Return pre formatted request for frontend

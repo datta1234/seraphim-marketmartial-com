@@ -9,7 +9,7 @@
                         
                         <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                            <span v-if="selectable" @click="selectOption(true)" id="popover-hit">
+                            <span v-if="selectable" @click="selectOption(false)" id="popover-hit">
                             {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                             </span>
 
@@ -21,7 +21,7 @@
 
                         <b-col cols="3" class="text-center" :class="getStateClass('offer')">
                             
-                            <span v-if="selectable" @click="selectOption(false)" id="popover-lift">
+                            <span v-if="selectable" @click="selectOption(true)" id="popover-lift">
                             {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                             </span>
 
@@ -53,9 +53,9 @@
 
      
  
-        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-bid="true" @close="cancelOption(true)"></ibar-trade-desired-quantity>
+        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"></ibar-trade-desired-quantity>
 
-         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-bid="false" @close="cancelOption(true)"></ibar-trade-desired-quantity>
+         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"></ibar-trade-desired-quantity>
 
     </b-row>
 </template>
@@ -88,21 +88,21 @@
    
         },
         methods: {
-            selectOption(isBid)
+            selectOption(isOffer)
             {
-                if(isBid)
+                if(isOffer)
                 {
-                    this.liftOpen = false;
-                     this.hitOpen = true;  
+                     this.liftOpen = true; 
+                     this.hitOpen = false;
 
                 }else
                 {
-                     this.liftOpen = true; 
-                     this.hitOpen = false; 
+                     this.liftOpen = false;
+                     this.hitOpen = true;
                 }
           
             },
-            cancelOption(isBid)
+            cancelOption(isOffer)
             {
                  this.liftOpen = false
                  this.hitOpen = false;
