@@ -26,8 +26,7 @@
         },
         computed: {
             // a computed getter
-            lastItem: function () {
-              // `this` points to the vm instance
+            lastItem() {
               return this.history[this.history.length - 1];
             },
         },
