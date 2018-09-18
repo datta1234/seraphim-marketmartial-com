@@ -177,24 +177,20 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
     }
 
-    public function scopeOrganisationInvolved($query, $organistation_id)
+    public function scopeOrganisationInvolved($query, $organistation_id, $operator)
     {
-        $query->whereHas('sendUser', function ($query) use ($organistation_id) {
-            $query->where('organisation_id', $organistation_id);
+        $query->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
+            $query->where('organisation_id', $operator,$organistation_id);
         })
-        ->orWhereHas('recievingUser', function ($query) use ($organistation_id) {
-            $query->where('organisation_id', $organistation_id);
+        ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
+            $query->where('organisation_id', $operator,$organistation_id);
         });
     }
 
-    public function scopeOrganisationNotInvolved($query, $organistation_id)
+    public function scopeUserInvolved($query, $user_id, $operator)
     {
-        $query->whereHas('sendUser', function ($query) use ($organistation_id) {
-            $query->where('organisation_id', '!=' ,$organistation_id);
-        })
-        ->whereHas('recievingUser', function ($query) use ($organistation_id) {
-            $query->where('organisation_id', '!=', $organistation_id);
-        });
+            $query->where('send_user_id', $operator,$user_id)
+                ->orWhere('receiving_user_id', $operator,$user_id);
     }    
 
     public function scopeOrgnisationMarketMaker($query, $organistation_id)

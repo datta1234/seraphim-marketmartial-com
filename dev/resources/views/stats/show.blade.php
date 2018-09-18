@@ -35,7 +35,7 @@
 		    </div>
 		</div>
 
-		{{-- Liquidity Card --}}
+		{{-- Monthly Activity Card --}}
 		@component('partials.content_card')
 		    @slot('header')
 		        <h2 class="mt-1 mb-1">Monthly Activity</span></h2>
@@ -45,7 +45,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <monthly-activity :graph_data="{{ json_encode($graph_data) }}"></monthly-activity>
+		        <monthly-activity :market_data="{{ json_encode($graph_data) }}"></monthly-activity>
 		    @endslot
 		@endcomponent
 

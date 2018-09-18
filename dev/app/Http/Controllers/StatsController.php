@@ -17,8 +17,18 @@ class StatsController extends Controller
      */
     public function show(Request $request)
     {
-    	$user = $request->user();
-    	$organisation_trade_confirmations = TradeConfirmation::organisationInvolved($user->organisation_id);
+        $user = $request->user();
+        $my_org_trade_confirmations = null;
+        $other_org_trade_confirmations = null;
+
+        if($request->ajax() && $request->has('my_trades') && $request->input('my_trades') == '1') {
+            $my_org_trade_confirmations = TradeConfirmation::userInvolved($user->organisation_id,'=');
+            $other_org_trade_confirmations = TradeConfirmation::userInvolved($user->organisation_id,'!=');
+        } else {
+            $my_org_trade_confirmations = TradeConfirmation::organisationInvolved($user->organisation_id,'=');
+            $other_org_trade_confirmations = TradeConfirmation::organisationInvolved($user->organisation_id,'!=');
+            
+        }
     	$markets = Market::all();
     	$graph_data = array();
     	foreach ($markets as $market) {
@@ -26,7 +36,7 @@ class StatsController extends Controller
     	}
     	
     	// Number of trades	- trade_negotiations.traded == true || Trade confirmation
-    	$number_of_trades = $organisation_trade_confirmations->get()
+    	$number_of_trades = $my_org_trade_confirmations->get()
     		->groupBy(function ($item, $key) {
     			return $item->market->title;
     		});
@@ -40,7 +50,7 @@ class StatsController extends Controller
     	}
 
     	// Markets Made (Traded) - organisation was market maker and organisation traded
-    	$markets_made_traded = $organisation_trade_confirmations
+    	$markets_made_traded = $my_org_trade_confirmations
     		->orgnisationMarketMaker($user->organisation_id)
     		->get()
     		->groupBy(function ($item, $key) {
@@ -56,9 +66,10 @@ class StatsController extends Controller
     	}
 
     	// Markets Made (Traded Away) - organisation was market maker and someone else traded
-    	$markets_made_traded_away = TradeConfirmation::organisationNotInvolved($user->organisation_id)
+    	$markets_made_traded_away = $other_org_trade_confirmations
     		->orgnisationMarketMaker($user->organisation_id)
-    		->get()->groupBy(function ($item, $key) {
+    		->get()
+            ->groupBy(function ($item, $key) {
     			return $item->market->title;
     		});
     	foreach ($markets_made_traded_away as $market => $single) {
@@ -69,6 +80,10 @@ class StatsController extends Controller
                 $graph_data[$market]["traded_away"][$key] = $items->count();
             }
     	}
+
+        if($request->ajax()) {
+            return $graph_data;
+        }
 
         return view('stats.show')->with(['user' => $user, 'graph_data' => $graph_data]);
     }

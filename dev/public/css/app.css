@@ -10585,8 +10585,9 @@ body .page-title h1 {
 }
 
 .canvas-body {
-  background-image: url("/img/background.png");
-  background-size: cover;
+  background-color: #063332;
+  /* background-image: url($base_url + '/img/background.png');
+	background-size: cover; */
 }
 
 .card {

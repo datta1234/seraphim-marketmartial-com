@@ -20,8 +20,9 @@ body
 
 .canvas-body
 {
-	background-image: url($base_url + '/img/background.png');
-	background-size: cover;
+	background-color: $mm-trade-background-dark;
+	/* background-image: url($base_url + '/img/background.png');
+	background-size: cover; */
 }
 
 
