@@ -37,8 +37,6 @@ class MarketNegotiationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-
     public function store(MarketNegotiationRequest $request, UserMarket $userMarket)
     {
         
@@ -55,8 +53,9 @@ class MarketNegotiationController extends Controller
        
         $message = "Your levels have been sent.";
         $request->user()->organisation->notify("market_negotiation_store",$message,true);
+
         //broadCast new market request;
-        $userMarket->userMarketRequest->notifyRequested();
+        $userMarket->userMarketRequest->fresh()->notifyRequested();
         return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
     }
 
@@ -102,6 +101,6 @@ class MarketNegotiationController extends Controller
      */
     public function destroy(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        //
+        $marketNegotiation->kill();
     }
 }

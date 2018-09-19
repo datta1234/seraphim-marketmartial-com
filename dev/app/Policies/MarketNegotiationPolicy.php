@@ -32,13 +32,25 @@ class MarketNegotiationPolicy
         /**
          * Determine if the given usermarket accept the user.
          *
-         * @param  \App\User  $user
-         * @param  \App\UserMarket  $userMarket
+         * @param  \App\Models\UserManagement\User  $user
+         * @param  \App\Models\Market\MarketNegotiation $userMarket
          * @return bool
          */
         public function spin(User $user, MarketNegotiation $marketNegotiation)
         {
             return $marketNegotiation;
+        }
+
+        /**
+         * Determine whether the user can delete ( kill ) userMarketRequests.
+         *
+         * @param  \App\Models\UserManagement\User  $user
+         * @param  \App\Models\Market\MarketNegotiation $userMarket
+         * @return bool
+         */
+        public function delete(User $user, MarketNegotiation $marketNegotiation)
+        {
+            return $user->orgnisation_id === $marketNegotiation->marketNegotiationParent->user->orgnisation_id;
         }
 
     }

@@ -372,6 +372,33 @@ const app = new Vue({
             }
         },
         /**
+         * add no cares and saves it to local storage
+         *
+         * @param {Boolean} state         
+         */
+        addToNoCares(market_request_id)
+        {   
+          if(!this.no_cares.includes(market_request_id)) {
+                this.no_cares.push(market_request_id);
+                this.saveNoCares();
+            }
+        },
+        removefromNoCares(market_request_id)
+        {
+            let index = this.no_cares.indexOf(market_request_id);
+
+              if(index > -1) 
+              {
+                this.no_cares.splice(index,1);
+                this.saveNoCares();
+              }
+
+        },
+        saveNoCares(){
+           const parsed = JSON.stringify(this.no_cares);
+           localStorage.setItem('no_cares_market_request', parsed);
+        },
+        /**
          * Handles incoming new message chunks and unpacks new data when a message has been completed
          *
          * @param {Object} chunk_data - new chunk packet data         
@@ -501,6 +528,10 @@ const app = new Vue({
                 this.$emit('chatMessageReceived', received_org_message);
             }); 
         }
+        // Event listener for removing things from no cares
+        EventBus.$on('addToNoCares', this.addToNoCares);
+        EventBus.$on('removefromNoCares', this.removefromNoCares);
+
         // Event listener that listens for theme toggle event to keep track of theme state
         EventBus.$on('toggleTheme', this.setThemeState);
     }

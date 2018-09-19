@@ -141,7 +141,7 @@ class MarketNegotiation extends Model
 
     public function scopeFindCounterNegotiation($query,$user)
     {
-       return $query->whereHas('user',function($q) use ($user){
+        return $query->whereHas('user',function($q) use ($user) {
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
     }
@@ -152,6 +152,12 @@ class MarketNegotiation extends Model
     */
     public function isFoK() {
         return ($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null); 
+    }
+
+    public function kill() {
+        $this->is_killed = true; // && with_fire = true; ;)
+        $this->save();
+        $this->userMarket->resetCurrent();
     }
 
     /**
