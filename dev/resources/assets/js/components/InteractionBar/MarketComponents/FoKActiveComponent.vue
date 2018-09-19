@@ -9,11 +9,11 @@
             <div class="fok-bar">
                 <b-row>
                     <b-col>
-                        FoK: {{ fok_value }}
+                        FoK: {{ (marketNegotiation.cond_fok_apply_bid ? marketNegotiation.bid : marketNegotiation.offer ) }}
                     </b-col>
                     <b-col>
                         <a href="" v-if="marketNegotiation.cond_fok_apply_bid==true">Buy</a>
-                        <a href="" v-if="marketNegotiation.cond_fok_apply_bid==false">Sell</a>
+                        <a href="" v-else>Sell</a>
                         <a href="">Kill</a>
                     </b-col>
                 </b-row>
@@ -29,22 +29,6 @@
             marketNegotiation: {
                 type: UserMarketNegotiation
             },
-        },
-        computed: {
-            fok_value() {
-                let bid     = this.marketNegotiation.bid,
-                    offer   = this.marketNegotiation.offer;
-                switch(this.marketNegotiation.cond_fok_apply_bid) {
-                    case true:
-                        return bid;
-                    break;
-                    case false: 
-                        return offer;
-                    break;
-                    default:
-                        return "";
-                }
-            }
         },
         data() {
             return {

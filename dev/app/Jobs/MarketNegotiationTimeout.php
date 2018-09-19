@@ -39,8 +39,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                     && $this->marketNegotiationID === $marketNegotiation->userMarket->currentMarketNegotiation->id;
         if($stillActive) {
             // kill it
-            $marketNegotiation->is_killed = true; // && with_fire = true; ;)
-            $marketNegotiation->save();
+            $marketNegotiation->kill();
         }
         return true;
     }

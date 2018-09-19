@@ -70,9 +70,14 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id');
     }
 
-    public function getLastNegotiationAttribute()
+    public function firstNegotiation()
     {
-        return $this->marketNegotiations()->orderBy('created_at',"DESC")->first();
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"ASC")->orderBy('id',"ASC");
+    }
+
+    public function lastNegotiation()
+    {
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"DESC")->orderBy('id',"DESC");
     }
 
     /**
@@ -182,6 +187,11 @@ class UserMarket extends Model
         $marketRequest = $this->userMarketRequest;
         $marketRequest->chosenUserMarket()->associate($this);
         return $marketRequest->save();
+    }
+
+    public function resetCurrent() {
+        $this->current_market_negotiation_id = $this->firstNegotiation->id;
+        $this->save();
     }
 
     /**
@@ -339,7 +349,8 @@ class UserMarket extends Model
         // add Active FoK if exists
         if($this->currentMarketNegotiation->isFoK()) {
             // only if counter
-            $is_counter = true;//$this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+            $is_counter = $this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+            $is_counter = true;
             if($is_counter) {
                 $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
             }
