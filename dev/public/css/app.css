@@ -12040,6 +12040,15 @@ input:checked + .slider:before {
   margin-right: -10px;
 }
 
+.interaction-bar-wrapper .interaction-bar .active-fok-bar {
+  margin-bottom: 10px;
+}
+
+.interaction-bar-wrapper .interaction-bar .active-fok-bar .fok-bar {
+  padding: 10px 10px;
+  background: #BB1D1D;
+}
+
 .interaction-bar-wrapper .interaction-bar-toggle {
   width: 0px;
   height: 100%;

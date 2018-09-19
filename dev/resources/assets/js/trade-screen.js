@@ -22,9 +22,21 @@ window.Echo = new Echo({
 });
 
 
-import Datepicker from 'vuejs-datepicker';
+import Datepicker from 'vuejs-datepicker'
 import BootstrapVue from 'bootstrap-vue'
-Vue.use(BootstrapVue);
+import Toasted from 'vue-toasted'
+Vue.use(BootstrapVue)
+Vue.use(Toasted, {
+    position: 'top-center',
+    fullWidth: false,
+    action: {
+        text: 'Dismiss',
+        onClick(e, t) {
+            t.goAway(0);
+        }
+    },
+    theme: 'primary'
+})
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -48,6 +60,7 @@ import Market from './lib/Market';
 import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
 import UserMarketNegotiation from './lib/UserMarketNegotiation';
+import Message from './lib/Message'
 
 import { EventBus } from './lib/EventBus.js';
 
@@ -74,6 +87,7 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue'));
     Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue'));
     Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
+    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
     Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
     Vue.component('ibar-trade-request', require('./components/InteractionBar/TradeComponents/TradeRequestComponent.vue'));
 
@@ -138,6 +152,12 @@ Vue.mixin({
             //Concats the array to a string back in the correct order
             }, [""]).reverse().join(splitter) + floatVal;
         },
+        /*
+         * Basic bubble sort that sorts a date string array usesing Moment.
+         *
+         * @param {String[]} date_string_array - array of date string
+         * @param {String} format - the format to cast to a moment object
+         */
         dateStringArraySort(date_string_array, format) {
             for(let i = 0; i < date_string_array.length - 1; i++) {
                 for(let j = 0; j < date_string_array.length - i - 1; j++) {
@@ -250,6 +270,11 @@ const app = new Vue({
             });
             return Promise.all(promises);
         },
+        /**
+         * Makes an axios get request to get the user preferences         
+         *
+         * @return {Object} - the config response data
+         */
         loadConfig(config_name, config_file) {
             let self = this;
             config_file = (typeof config_file !== 'undefined' ? config_file : config_name+".json");
@@ -291,6 +316,14 @@ const app = new Vue({
                 this.loadMarketRequests(market);
             });
         },
+        /**
+         * Updates User Market Request based on the UserMarketRequestData object passed.
+         *  Finds the Market Request in display markets and updates or adds the Market Request          
+         *
+         * @param {Object} - User market request data object
+         * 
+         * @todo - Add logic to display market if not already displaying
+         */
         updateUserMarketRequest(UserMarketRequestData) {
             let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
             if(index !== -1)
@@ -305,6 +338,9 @@ const app = new Vue({
                 //@TODO: Add logic to display market if not already displaying
             }
         },
+        /**
+         * Loads user prefered theme setting base on local storage variable         
+         */
         loadThemeSetting() {
             if (localStorage.getItem('themeState') != null) {
                 try {
@@ -322,6 +358,11 @@ const app = new Vue({
                 }
             }
         },
+        /**
+         * Toggles theme state based on a passed state param and saves it to local storage
+         *
+         * @param {Boolean} state         
+         */
         setThemeState(state) {
             this.theme_toggle = state;
             try {
@@ -329,7 +370,62 @@ const app = new Vue({
             } catch(e) {
                 localStorage.removeItem('themeState');
             }
-        }
+        },
+        /**
+         * Handles incoming new message chunks and unpacks new data when a message has been completed
+         *
+         * @param {Object} chunk_data - new chunk packet data         
+         */
+        handlePacket(chunk_data, callback) {
+            // Clears expired completed messages
+            this.clearExpiredMessages(chunk_data);
+
+            // Check if the message has already been completed in this.completed_messages
+            let message = this.completed_messages.find( (msg_val) => {
+                return ( msg_val.checksum == chunk_data.checksum);
+            });
+            if(typeof message !== 'undefined') {
+                // Break if there is already a completed message for this checksum
+                return;
+            }
+
+            // check if the message is already in this.pusher_messages
+            message = this.pusher_messages.find( (msg_val) => {
+                // is valid if the checksum exists
+                return msg_val.checksum == chunk_data.checksum;
+            });
+            if(typeof message === 'undefined') {
+                // if its not being tracked, track a new one
+                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
+                    // if the message is complete, attempt completion callback
+                    if(!err) {                        
+                        // pull the message out of current and into completed
+                        let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(output_message), 1);  
+                        this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
+                        // run the message callback
+                        callback(output_message.output);
+                    } else {
+                        console.error("derp");
+                    }
+                });
+                this.pusher_messages.push(message);
+            }
+            
+            // add chunk data to message
+            message.addChunk(chunk_data);
+        },
+        /**
+         * Removes all completed messages that have expired
+         *
+         * @param {Object} chunk_data - new chunk packet data         
+         */
+        clearExpiredMessages(chunk_data) {
+            this.completed_messages.forEach( (message, index) => {
+                if(message.expires.isBefore(chunk_data.timestamp)) {
+                    this.completed_messages.splice(index, 1);
+                }
+            });  
+        },
     },
     data: {
         // default data
@@ -343,6 +439,8 @@ const app = new Vue({
         // internal properties
         configs: {},
         theme_toggle: false,
+        pusher_messages: [],
+        completed_messages: [],
     },
     mounted: function() {
         // get Saved theme setting
@@ -391,16 +489,19 @@ const app = new Vue({
         if(Laravel.organisationUuid)
         {
             window.Echo.private('organisation.'+Laravel.organisationUuid)
-            .listen('UserMarketRequested', (UserMarketRequest) => {
+            .listen('.UserMarketRequested', (userMarketRequest) => {
                 //this should be the market thats created
-                console.log("this is what websockets is",UserMarketRequest);
-                this.updateUserMarketRequest(UserMarketRequest);
+                this.handlePacket(userMarketRequest, (packet_data) => {
+                    console.log("publish Callback", packet_data);
+                    this.updateUserMarketRequest(packet_data.data);
+                    EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+                });
             })
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived', received_org_message);
             }); 
         }
-
+        // Event listener that listens for theme toggle event to keep track of theme state
         EventBus.$on('toggleTheme', this.setThemeState);
     }
 });

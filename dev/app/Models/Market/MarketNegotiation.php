@@ -56,6 +56,7 @@ class MarketNegotiation extends Model
             "has_premium_calc",
             "is_repeat",
             "is_accepted",
+            "is_killed",
 
             "is_private",
             "cond_is_repeat_atw",
@@ -143,6 +144,26 @@ class MarketNegotiation extends Model
        return $query->whereHas('user',function($q) use ($user){
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
+    }
+
+    /**
+    * test if is FoK
+    * @return Boolean
+    */
+    public function isFoK() {
+        return ($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null); 
+    }
+
+    /**
+    * Filter Scope on not FoKs
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeExcludingFoKs($query)
+    {
+        return $query->where(function($q) {
+            $q->where('cond_fok_apply_bid', null);
+            $q->where('cond_fok_spin', null);
+        });
     }
 
     /*
@@ -289,7 +310,7 @@ class MarketNegotiation extends Model
     */
     private static $fok_applied = false;
     public function applyFOKCondition() {
-        if (!$fok_applied) {
+        if (!self::$fok_applied) {
             // Prefer to kill
             if( $this->cond_fok_spin == true ) {
                 // cond_fok_apply_bid
@@ -299,7 +320,7 @@ class MarketNegotiation extends Model
             else {
                 // cond_fok_apply_bid
             }
-            $fok_applied = true;
+            self::$fok_applied = true;
         }
     }
 
@@ -307,7 +328,8 @@ class MarketNegotiation extends Model
     * Apply cond_timeout
     */
     public function applyCondTimeoutCondition() {
-        dispatch(new \App\Jobs\MarketNegotiationTimeout($this)->delay(config('marketmartial.thresholds.timeout', 1200)));
+        $job = new \App\Jobs\MarketNegotiationTimeout($this);
+        dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
     }
 
     /**

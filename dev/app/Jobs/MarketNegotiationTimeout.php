@@ -12,7 +12,7 @@ class MarketNegotiationTimeout implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $marketNegotiation;
+    private $marketNegotiationID;
 
     /**
      * Create a new job instance.
@@ -21,8 +21,9 @@ class MarketNegotiationTimeout implements ShouldQueue
      */
     public function __construct($negotiation)
     {
+        $this->connection = config('queue.timeout');
         $this->queue = 'timeout';
-        $this->marketNegotiation = $negotiation;
+        $this->marketNegotiationID = $negotiation->id;
     }
 
     /**
@@ -32,6 +33,15 @@ class MarketNegotiationTimeout implements ShouldQueue
      */
     public function handle()
     {
-        //
+        $marketNegotiation = \App\Models\Market\MarketNegotiation::find($this->marketNegotiationID);
+        // still active = hasn't been killed AND is still the current negotiation on the user market
+        $stillActive = !$marketNegotiation->is_killed 
+                    && $this->marketNegotiationID === $marketNegotiation->userMarket->currentMarketNegotiation->id;
+        if($stillActive) {
+            // kill it
+            $marketNegotiation->is_killed = true; // && with_fire = true; ;)
+            $marketNegotiation->save();
+        }
+        return true;
     }
 }

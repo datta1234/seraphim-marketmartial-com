@@ -304,8 +304,7 @@ class UserMarket extends Model
         $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
         $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
         
-
-        $uneditedmarketNegotiations= $marketNegotiations = $this->marketNegotiations->load('user');
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->excludingFoKs()->get();
 
         $data = [
             "id"                    => $this->id,
@@ -313,10 +312,18 @@ class UserMarket extends Model
             "is_maker"              => $is_maker,
             "time"                  => $this->created_at->format("H:i"),
             "market_negotiations"   => $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-
-                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+                                                return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
                                         })
         ];
+
+        // add Active FoK if exists
+        if($this->currentMarketNegotiation->isFoK()) {
+            // only if counter
+            $is_counter = true;//$this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+            if($is_counter) {
+                $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
+            }
+        }
 
         return $data;
     }
