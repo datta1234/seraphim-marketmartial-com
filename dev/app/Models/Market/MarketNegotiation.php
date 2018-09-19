@@ -71,7 +71,7 @@ class MarketNegotiation extends Model
             "cond_buy_best",
     ];
 
-    protected $hidden = ["user_id"];
+    protected $hidden = ["user_id","user"];
 
 
     protected $appends = ["time"];
@@ -204,6 +204,24 @@ class MarketNegotiation extends Model
         } 
     }
 
+    private function setCounterAction($counterNegotiation)
+    {
+         // Set action that needs to be taken for the org related to this marketNegotiation
+        $this->userMarket->userMarketRequest->setAction(
+            $counterNegotiation->recievingUser->organisation_id,
+            $counterNegotiation->userMarket->userMarketRequest->id,
+            true
+        );
+    }
+
+    private function setMarketNegotiationAction()
+    {
+       $this->userMarket->userMarketRequest->setAction(
+            $this->user->organisation_id,
+            $this->userMarket->userMarketRequest->id,
+            true
+        ); 
+    }
 
     public function addTradeNegotiation($user,$data)
     {
@@ -222,10 +240,19 @@ class MarketNegotiation extends Model
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
             }
 
+
             try {
-                 DB::beginTransaction();
-               return $this->tradeNegotiations()->save($tradeNegotiation);
+                DB::beginTransaction();
+                $this->tradeNegotiations()->save($tradeNegotiation);
+                if($counterNegotiation)
+                {
+                    $this->setCounterAction($counterNegotiation);
+                }else
+                {
+                    $this->setMarketNegotiationAction();
+                }
                 DB::commit();
+
                 return $tradeNegotiation;
             } catch (\Exception $e) {
                 \Log::error($e);
@@ -284,7 +311,10 @@ class MarketNegotiation extends Model
             "is_maker"              => $is_maker,
             "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
             "time"                  => $this->time,
-            "created_at"            => $this->created_at->format("d-m-Y H:i:s")
+            "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
+            "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
+                return $tradeNegotiation->preFormatted();
+            })
 
         ];
 

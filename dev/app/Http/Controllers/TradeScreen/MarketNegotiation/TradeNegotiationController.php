@@ -5,7 +5,7 @@ namespace App\Http\Controllers\TradeScreen\MarketNegotiation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Market\MarketNegotiation;
-use App\Events\marketNegotiationed;
+use App\Http\Requests\TradeScreen\MarketNegotiation\TradeNegotiationStoreRequest;
 
 class TradeNegotiationController extends Controller
 {
@@ -17,20 +17,12 @@ class TradeNegotiationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,MarketNegotiation $marketNegotiation)
+    public function store(TradeNegotiationStoreRequest $request,MarketNegotiation $marketNegotiation)
     {   
         $user = $request->user();
              
         //$this->authorize('addTradeNegotiation',$marketNegotiation);     
         $tradeNegotiation = $marketNegotiation->addTradeNegotiation($user,$request->all());
-
-
-        // // Set action that needs to be taken for the org related to this marketNegotiation
-        // $userMarketnegotiation->userMarket->marketNegotiation->setAction(
-        //     $userMarket->marketNegotiation->user->organisation->id,
-        //     $userMarket->marketNegotiation->id,
-        //     true
-        // );
         
        // $user->organisation->notify("market_request_store","Response sent to interest.",true);
         $marketNegotiation->userMarket->userMarketRequest->notifyRequested();
