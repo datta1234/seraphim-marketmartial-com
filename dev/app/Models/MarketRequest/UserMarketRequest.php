@@ -259,26 +259,47 @@ class UserMarketRequest extends Model
         }
     }
 
+
+    
+ 
+
+    public function lastTradeNegotiationunTraded()
+    {
+        if($this->chosenUserMarket()->exists())
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded;  
+        }
+    }
+
+
+
     public function getStatus($current_org_id)
     {
         //method also used inside policies so be aware when updating
-        $hasQuotes       = $this->userMarkets()->exists();
+        $hasQuotes       =  $this->userMarkets()->exists();
         $acceptedState   =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
-        $marketOpen      = $acceptedState ? $this->openToMarket() : false;
-        $canNegotiate    = $this->canNegotiate($current_org_id);
+        $marketOpen      =  $acceptedState ? $this->openToMarket() : false;
+        $lastUntraded    =  $this->lastTradeNegotiationUnTraded();
 
+        /*
+        * check if the current is true and next is false to create a cascading virtual state effect
+        */
         if(!$hasQuotes)
         {
             return "request";
         }else if($hasQuotes && !$acceptedState)
         {
             return "request-vol";
-        }else if($acceptedState && !$marketOpen)
+        }else if($acceptedState && !$marketOpen && !$lastUntraded)
         {
             return 'negotiation-pending';
-        }elseif ($marketOpen)
+        }elseif ($marketOpen && !$lastUntraded)
         {
             return 'negotiation-open';
+        }elseif($lastUntraded)
+        {
+            return 'trade-negotiation-pending';
         }
     }
 
@@ -333,13 +354,34 @@ class UserMarketRequest extends Model
                 {
                     $marketNegotiationRoles = ["counter"];
                 }
-            }
-
-           
+            }           
 
             return $marketNegotiationRoles;  
         }
-       
+    }
+
+    public function getCurrentUserRoleInTradeNegotiation($current_org_id)
+    {
+        if($this->chosenUserMarket()->exists())
+        {
+            $tradeNegotiationRoles = ["other"];
+
+
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded)
+            {
+                if($lastNegotiation->lastTradeNegotiation->initiateUser->organisation_id == $current_org_id)
+                {
+                    $tradeNegotiationRoles = ["negotiator"];
+                }
+
+                if($lastNegotiation->lastTradeNegotiation->recievingUser->organisation_id == $current_org_id)
+                {
+                    $tradeNegotiationRoles = ["counter"];
+                }
+            }  
+            return $tradeNegotiationRoles;
+        }
     }
 
     /**
@@ -356,6 +398,8 @@ class UserMarketRequest extends Model
         $state = $this->getStatus($current_org_id,$interest_org_id);
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
+        $tradeNegotiationRoles = $this->getCurrentUserRoleInTradeNegotiation($current_org_id);
+
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
@@ -402,10 +446,20 @@ class UserMarketRequest extends Model
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-open.other');
                 }
             break;
+            case "trade-negotiation-pending":
+                
+                if(in_array('negotiator',$tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.negotiator');
+                }else if(in_array('counter', $tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.counter');
+                }else{
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.other');
+                }
+            break;
         }
 
 
-       
+
         /*
         *   BID / OFFER states
         */

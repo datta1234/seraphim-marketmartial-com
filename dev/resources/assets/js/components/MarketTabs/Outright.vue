@@ -49,6 +49,7 @@
         computed: {
             marketState: function() {
                 return {
+                    'trade-negotiation-pending':  this.market_request_state == 'trade-negotiation-pending',
                     'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
                     'negotiation-vol': this.market_request_state == 'negotiation-vol',
                     'market-request-grey': this.market_request_state == 'request-grey',
@@ -62,8 +63,6 @@
             bidState: function() {
                 if(this.marketRequest.chosen_user_market)
                 {
-                    
-
                     return this.getStateClass(this.current_user_market_negotiation,'bid');
                 }else
                 {

@@ -22,6 +22,8 @@ export default class TradeNegotiation extends BaseModel {
 		    traded: false,
 		    is_offer: null,
 		    is_distpute: false,
+            sent_by_me: false,
+            sent_to_me: false,
 		    created_at: moment(),
             updated_at: moment()
 		}
@@ -86,6 +88,42 @@ export default class TradeNegotiation extends BaseModel {
 			is_distpute: this.is_distpute
         };
     }
+
+    getTradingText()
+    {
+        let text;
+        if(this.sent_by_me)
+        {
+            text =  this.is_offer ? "You bought @" : "You Sold @ ";
+            text += this.getUserMarketNegotiation().offer;
+
+        }else if(this.sent_to_me)
+        {
+            text = this.is_offer ? "You sold @ " : "You bought @ ";
+            text += this.getUserMarketNegotiation().bid;
+        }else
+        {
+            text = '';
+        }
+        return text;
+    }
+
+    getSizeText()
+    {
+        if(this.sent_by_me)
+        {
+            return  "Your desired size:";
+        }else if(this.sent_to_me)
+        {
+            return "Counterparty's requested size:";
+        }
+    }
+
+    getVolLevel()
+    {
+        return this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+    }
+
     
     /**
     *  store

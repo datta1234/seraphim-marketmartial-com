@@ -28,8 +28,6 @@
                             <span v-if="!selectable">
                             {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                             </span>
-
-
                         </b-col>
                         
                         <b-col cols="3" class="text-center">
@@ -50,6 +48,20 @@
                         <small>{{ marketNegotiation.time }}</small>
                     </p>
                 </b-col>
+
+                <b-col cols="12">
+                    <div v-for="tradeNegotiation in marketNegotiation.trade_negotiations ">
+                        <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
+                            {{ tradeNegotiation.getTradingText() }}
+                            
+                            <ul class="text-my-org">
+                                <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
+                            </ul>
+                            With counterpart. Awaiting response
+                        </template>
+                  
+                    </div>
+                </b-col> 
 
      
  

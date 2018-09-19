@@ -11874,8 +11874,18 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
-.trade-section.light-theme .negotiation-vol-pending .market-tab-state,
-.trade-section.dark-theme .negotiation-vol-pending .market-tab-state {
+.trade-section.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.negotiation-vol-pending .market-tab-state {
+  border-left: 2px solid #BB1D1D;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending {
+  background-color: #E17428;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
@@ -12107,6 +12117,10 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+  color: #EBC300;
+}
+
+.text-my-org {
   color: #EBC300;
 }
 

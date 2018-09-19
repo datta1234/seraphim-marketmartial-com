@@ -16,9 +16,14 @@ return [
         'counter'           =>  "NEGOTIATION-VOL",
         'other'             =>  "NEGOTIATION-VOL-PENDING"
     ],
-    'negotiation-open' =>[
+    'negotiation-open' => [
         'interest'        =>  "NEGOTIATION-OPEN-VOL",
         'market_maker'    =>  "NEGOTIATION-OPEN-VOL",
         'other'           =>  "NEGOTIATION-OPEN-VOL"
+    ],
+    'trade-negotiation-pending' => [
+        'negotiator'      =>  "TRADE-NEGOTIATION-OPEN",
+        'counter'         =>  "TRADE-NEGOTIATION-OPEN",
+        'other'           =>  "TRADE-NEGOTIATION-PENDING"
     ]
 ];

@@ -20,28 +20,42 @@
 		}
 	}
 
-	.market-tab.market-alert {
-		background-color: $mm-market-alert; 
-	}
 
-	.market-tab.market-confirm {
-		background-color: $mm-market-confirm;
-	}
+	.market-tab
+	{
+		&.market-alert {
+			background-color: $mm-market-alert; 
+		}
 
-	.market-tab.market-request {
-		border: 0.15em solid $mm-market-intrest;
+		&.market-confirm {
+			background-color: $mm-market-confirm;
+		}
 
-		.market-tab-state {
-			color: $mm-market-intrest;
+		&.market-request {
+			border: 0.15em solid $mm-market-intrest;
+
+			.market-tab-state {
+				color: $mm-market-intrest;
+			}
+		}
+
+
+		&.negotiation-vol-pending{
+			.market-tab-state{
+			 	border-left: 2px solid $mm-red;
+			}
+		}
+
+		&.trade-negotiation-pending{
+			background-color:  $mm-market-confirm;
+			.market-tab-state{
+			 	border-left: 2px solid $mm-red;
+			}
 		}
 	}
 
-
-	.negotiation-vol-pending{
-		.market-tab-state{
-		 	border-left: 2px solid $mm-red;
-		}
-	}
+	
+	
 	// .market-tab.market-request-vol {
 	// 	border: 0.15em solid $mm-market-intrest;
 
