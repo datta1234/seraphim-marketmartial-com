@@ -1,5 +1,5 @@
 <template>
-    <b-row dusk="ibar-trade-request">
+    <b-row dusk="ibar-trade-request" v-bind:id="dynamicId">
                    <b-col cols="10" >
         
                     <b-row>
@@ -9,7 +9,7 @@
                         
                         <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                            <span v-if="selectable" @click="selectOption(false)" id="popover-hit">
+                            <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
                             {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                             </span>
 
@@ -21,7 +21,7 @@
 
                         <b-col cols="3" class="text-center" :class="getStateClass('offer')">
                             
-                            <span v-if="selectable" @click="selectOption(true)" id="popover-lift">
+                            <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
                             {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                             </span>
 
@@ -65,9 +65,9 @@
 
      
  
-        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"></ibar-trade-desired-quantity>
+        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
-         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"></ibar-trade-desired-quantity>
+         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
     </b-row>
 </template>
@@ -97,7 +97,9 @@
            
         },
         computed: {
-   
+            dynamicId: function(){
+                return this.selectable ? "last-negotiation" : "userMarket-Negotiation-level-"+ this.marketNegotiation.id; 
+            }
         },
         methods: {
             selectOption(isOffer)

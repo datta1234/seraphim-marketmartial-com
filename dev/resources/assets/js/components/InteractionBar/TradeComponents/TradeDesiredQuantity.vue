@@ -1,10 +1,10 @@
 <template>
-       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open"  triggers="">
+       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
             <template slot="title">
                <div class="text-center"><strong>{{ title }}</strong>
-                   <b-btn @click="cancel" class="close" aria-label="Close">
-                  <span class="d-inline-block" aria-hidden="true">&times;</span>
-                </b-btn>
+                   <a @click="cancel" class="close" aria-label="Close">
+                    <span class="d-inline-block" aria-hidden="true">&times;</span>
+                    </a>
                </div>
             
             </template>
@@ -13,10 +13,10 @@
             </b-row>   
             <b-row v-if="!confirmed">
                <b-col cols="6">
-                    <b-btn variant="danger"  @click="cancel()">Cancel</b-btn>
+                    <b-btn variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
                </b-col>
                <b-col cols="6">
-                     <b-btn variant="success" @click="confirmed = true">{{ btnText }}</b-btn>
+                     <b-btn variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
                </b-col>
             </b-row>
             <template v-if="confirmed">
@@ -37,7 +37,7 @@
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       
-                        <b-btn variant="success" class="btn-block" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
+                        <b-btn variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
                     </b-col>
                 </b-row>
             </template>
@@ -65,6 +65,10 @@
             isOffer: {
                 type: Boolean,
                 default: false,
+            },
+            parent: {
+                type: String,
+                default: "",
             }
         },
         data() {

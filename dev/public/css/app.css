@@ -11349,6 +11349,10 @@ a.mm-login-button {
   font-size: 0.8rem;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
@@ -12481,6 +12485,15 @@ input:checked + .slider:before {
 
 .create-user {
   display: inline;
+}
+
+#last-negotiation .popover {
+  max-width: 330px;
+}
+
+#last-negotiation .popover .popover-header {
+  background: #1c7c74;
+  color: #FFFFFF;
 }
 
 @font-face {
