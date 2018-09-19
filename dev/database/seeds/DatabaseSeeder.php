@@ -18,8 +18,8 @@ class DatabaseSeeder extends Seeder
          */
         $this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        $this->call(MarketConditionCategoryTableSeeder::class);
-        $this->call(MarketConditionTableSeeder::class);
+        //$this->call(MarketConditionCategoryTableSeeder::class);
+        //$this->call(MarketConditionTableSeeder::class);
         $this->call(MarketTypeTableSeeder::class);
         $this->call(MarketTableSeeder::class);
         $this->call(StockTableSeeder::class);

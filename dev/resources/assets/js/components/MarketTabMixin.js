@@ -27,10 +27,10 @@ export default {
             this.market_request_state = null;
             this.market_request_state_label = null;
             
-            if(this.marketRequest.trade_items.default.Strike == "75619800")
+          /*  if()
             {
-                console.log("this is the market request: in tab",this.marketRequest);
-            }
+            }*/
+            
 
             // run tests
             // TODO: add logic for if current user then "SENT"
@@ -74,18 +74,20 @@ export default {
                 case "NEGOTIATION-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
-                        this.market_request_state_label = "PENDING";
+                        this.market_request_state_label = "";
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
                 case "NEGOTIATION-OPEN-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.getText(this.current_user_market_negotiation,"bid") : '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.getText(this.current_user_market_negotiation,"offer") : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
                 case "alert":
                     this.market_request_state = 'alert';
@@ -122,7 +124,7 @@ export default {
             {
                 return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
             }
-            return item[attr];
+            return "100";//item[attr];
         },
         getStateClass(item,attr)
         {

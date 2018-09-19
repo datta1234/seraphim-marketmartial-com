@@ -72,7 +72,7 @@ class UserMarket extends Model
 
     public function getLastNegotiationAttribute()
     {
-        return $query->marketNegotiations()->orderBy('created_at',"DESC")->first();
+        return $this->marketNegotiations()->orderBy('created_at',"DESC")->first();
     }
 
     /**
@@ -230,7 +230,7 @@ class UserMarket extends Model
 
             $marketNegotiation->user_id = $user->id;
             $counterNegotiation = $this->marketNegotiations()
-                                            ->counterNegotiation($user)
+                                            ->findCounterNegotiation($user)
                                             ->first();
 
             if($counterNegotiation)
@@ -258,11 +258,21 @@ class UserMarket extends Model
 
     public function addNegotiation($user,$data)
     {
+           
+
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
+
             $counterNegotiation = $this->marketNegotiations()
-                                            ->counterNegotiation($user)
+                                            ->findcounterNegotiation($user)
                                             ->first();
+
+
+            if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+            {
+                $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+            }
+
 
             if($counterNegotiation)
             {
@@ -294,13 +304,17 @@ class UserMarket extends Model
         $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
         $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
         
+
+        $uneditedmarketNegotiations= $marketNegotiations = $this->marketNegotiations->load('user');
+
         $data = [
             "id"                    => $this->id,
             "is_interest"           => $is_interest,
             "is_maker"              => $is_maker,
             "time"                  => $this->created_at->format("H:i"),
-            "market_negotiations"   => $this->marketNegotiations->map(function($item){ 
-                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+            "market_negotiations"   => $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
+
+                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
                                         })
         ];
 
@@ -343,18 +357,6 @@ class UserMarket extends Model
         }
         return $data;
     }
-
-    public function scopeOpenToMarket($query)
-    {
-        return $query->whereHas('marketNegotiations',function($query){     
-            $query->where('is_repeat',true);
-            $query->whereHas('marketNegotiationParent',function($query){
-                $query->where('is_repeat',true);
-            });
-        });
-    }
-
-
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket

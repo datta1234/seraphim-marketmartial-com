@@ -194,9 +194,6 @@ class UserMarketRequest extends Model
         
     }
 
- 
-
-
     /*
     *for the interest show them the levels as son he accepts but for market maker and others only once levels have been sent by the interest
     */
@@ -218,13 +215,58 @@ class UserMarketRequest extends Model
         }   
     }
 
-    public function getStatus( $current_org_id)
+
+
+    public function canNegotiate($current_org_id)
+    {
+
+        $interest_org_id = $this->user->organisation->id;
+        if($this->chosenUserMarket()->exists())
+        {
+            $marketCount = $this->chosenUserMarket->marketNegotiations()->count();
+
+            if($marketCount == 1)
+            {
+                return $interest_org_id == $current_org_id;
+            }else
+            {
+                 $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+                  return $this->chosenUserMarket->marketNegotiations()
+                                ->lastNegotiation()
+                                ->where(function($q) use ($current_org_id){
+                                        $q->organisationInvolved($current_org_id);
+                                        $q->orWhere(function($q) use ($current_org_id){
+                                            $q->whereHas('marketNegotiationParent',function($q) use ($current_org_id){
+                                                $q->organisationInvolved($current_org_id);  
+                                            });
+                                        });
+                    })->where('market_negotiations.id',$lastNegotiation->id)->exists();   
+            } 
+        } 
+    }
+
+    public function openToMarket()
+    {
+        if($this->chosenUserMarket()->exists())
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+           return $this->chosenUserMarket->marketNegotiations()->where(function($query){
+                    $query->where('is_repeat',true)
+                            ->whereHas('marketNegotiationParent',function($query){
+                                    $query->where('is_repeat',true);
+                            });
+            })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+        }
+    }
+
+    public function getStatus($current_org_id)
     {
         //method also used inside policies so be aware when updating
-        $hasQuotes  = $this->userMarkets()->exists();
+        $hasQuotes       = $this->userMarkets()->exists();
         $acceptedState   =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
-        $marketOpen = $acceptedState ? $this->chosenUserMarket()->openToMarket()->exists() : false;
-        
+        $marketOpen      = $acceptedState ? $this->openToMarket() : false;
+        $canNegotiate    = $this->canNegotiate($current_org_id);
+
         if(!$hasQuotes)
         {
             return "request";
@@ -260,6 +302,46 @@ class UserMarketRequest extends Model
         return $marketRequestRoles;
     }
 
+    public function getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id)
+    {
+        if($this->chosenUserMarket()->exists())
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            $marketNegotiationRoles = ["other"];
+
+            if($this->chosenUserMarket->marketNegotiations()->count() == 1 && in_array('interest', $marketRequestRoles))
+            {
+                $marketNegotiationRoles = ["counter"];
+            }else
+            {
+                 $negotiator =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
+                        $query->organisationInvolved($current_org_id);
+                })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+
+                $counter =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
+                        $query->whereHas('marketNegotiationParent',function($q) use ($current_org_id){
+                            $q->organisationInvolved($current_org_id);
+                        });
+                })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+
+                if( $negotiator )
+                {
+                    $marketNegotiationRoles = ["negotiator"];
+                }
+
+                if($counter)
+                {
+                    $marketNegotiationRoles = ["counter"];
+                }
+            }
+
+           
+
+            return $marketNegotiationRoles;  
+        }
+       
+    }
+
     /**
      * resolve the attributes in accordence to the current users organisation and relation to the market request
      *
@@ -273,7 +355,7 @@ class UserMarketRequest extends Model
         $market_maker_org_id = $this->chosenUserMarket()->exists() ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
-       
+        $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
@@ -299,13 +381,17 @@ class UserMarketRequest extends Model
                 }
             break;
             case "negotiation-pending":
-                if(in_array('interest',$marketRequestRoles)){
-                    $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.interest');
-                }else if(in_array('market_maker', $marketRequestRoles)){
-                    $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.market_maker');
+
+                if(in_array('negotiator',$marketNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.negotiator');
+               
+                }else if(in_array('counter', $marketNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.counter');
+               
                 }else{
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.other');
                 }
+
             break;
             case "negotiation-open":
                 if(in_array('interest',$marketRequestRoles)){
@@ -331,10 +417,7 @@ class UserMarketRequest extends Model
         */
         $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
         $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
-        
-        //roles
-        $attributes['calc_state'] = $state;        
-        $attributes['calc_roles'] = $marketRequestRoles;        
+    
 
         return $attributes;
     }

@@ -43,7 +43,7 @@ class MarketNegotiation extends Model
     protected $fillable = [
 
             "user_id",
-            "counter_user_id",
+            "counter_id",
             "market_negotiation_id",
             "user_market_id",
             "bid",
@@ -68,7 +68,7 @@ class MarketNegotiation extends Model
             "cond_buy_best",
     ];
 
-    protected $hidden = ["user_id","counter_user_id"];
+    protected $hidden = ["user_id"];
 
 
     protected $appends = ["time"];
@@ -138,18 +138,80 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
-    public function scopeCounterNegotiation($query,$user)
+    public function scopeFindCounterNegotiation($query,$user)
     {
-        $query->whereHas('user',function($q) use ($user){
+       return $query->whereHas('user',function($q) use ($user){
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
+    }
+
+    /*
+    For markets that have been SPUN: When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. If I improve the OFFER then it goes between me and the last party on the BID.
+    */
+    public function getImprovedNegotiation($market_negotiation)
+    {
+       if($this->bid != $market_negotiation->bid)
+       {
+            return $this;
+       }else
+       {
+            return $this->marketNegotiationParent; 
+       }
+
+    }
+
+
+    public function scopeOrganisationInvolved($query,$organisation_id)
+    {
+       return $query->whereHas('user',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        });   
+    }
+
+    public function scopeLastNegotiation($query)
+    {
+        return $query->latest()->limit(1);
+    }
+
+
+    public function setAmount($marketNegotiations,$attr)
+    {
+        $source = $this->findSource($marketNegotiations,$attr);
+        if($this->is_repeat && $this->id != $source->id)
+        {
+            return $this->user->organisation_id == $source->user->organisation_id ? "SPIN" : $this->getAttribute($attr);
+        }else
+        {
+            return $this->getAttribute($attr);
+       
+        }
+    }
+
+    /*
+    * find the source from the collection so that we save up on database quries
+    */
+    public function findSource($marketNegotiations,$attr)
+    {
+         $prevItem = null;
+        if($this->market_negotiation_id != null)
+        {
+             $prevItem = $marketNegotiations->firstWhere('id',$this->market_negotiation_id);
+        }
+        if(!is_null($prevItem) && $prevItem->market_negotiation_id != $prevItem->id  
+            && $prevItem->getAttribute($attr) == $this->getAttribute($attr))
+        {
+            return $prevItem->findSource($marketNegotiations,$attr);   
+        }else
+        {
+            return $this;  
+        } 
     }
 
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedQuote()
+    public function preFormattedQuote($uneditedmarketNegotiations)
     {
 
         $currentUserOrganisationId = $this->user->organisation_id;
@@ -169,6 +231,8 @@ class MarketNegotiation extends Model
             "user_market_id"        => $this->user_market_id,
             "bid"                   => $this->bid,
             "offer"                 => $this->offer,
+            "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
+            "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
             "offer_qty"             => $this->offer_qty,
             "bid_qty"               => $this->bid_qty,
             "bid_premium"           => $this->bid_premium,

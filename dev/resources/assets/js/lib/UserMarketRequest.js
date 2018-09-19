@@ -257,9 +257,6 @@ export default class UserMarketRequest extends BaseModel {
                 "NEGOTIATION-OPEN-VOL"
             ];
 
-        console.log(this.attributes.calc_state);
-        console.log(this.attributes.calc_roles);
-
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 
