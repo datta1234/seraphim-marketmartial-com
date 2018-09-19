@@ -17,6 +17,9 @@ return [
 
     'default' => env('QUEUE_DRIVER', 'sync'),
 
+
+    'timeout' => env('TIMEOUT_QUEUE_DRIVER', 'sync'),
+
     /*
     |--------------------------------------------------------------------------
     | Queue Connections

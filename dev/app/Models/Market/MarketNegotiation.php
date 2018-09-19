@@ -229,13 +229,12 @@ class MarketNegotiation extends Model
             // Prefer to kill
             if( $this->cond_fok_spin == true ) {
                 // cond_fok_apply_bid
-
+                
             }
             // Prefer To Fill
             else {
                 // cond_fok_apply_bid
             }
-
             $fok_applied = true;
         }
     }
@@ -244,7 +243,7 @@ class MarketNegotiation extends Model
     * Apply cond_timeout
     */
     public function applyCondTimeoutCondition() {
-
+        dispatch(new \App\Jobs\MarketNegotiationTimeout($this)->delay(config('marketmartial.thresholds.timeout', 1200)));
     }
 
     /**

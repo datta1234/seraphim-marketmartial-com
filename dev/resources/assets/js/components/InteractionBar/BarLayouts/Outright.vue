@@ -79,6 +79,8 @@
                 </b-row>
             </b-col>
         </b-row>
+
+        <ibar-fok-active></ibar-fok-active>
             
         <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
 
@@ -103,6 +105,7 @@
     
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+    import IbarFoKActive from '../MarketComponents/FoKActiveComponent';
 
     const showMessagesIn = [
         "market_request_store",
@@ -116,6 +119,7 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
+            'ibar-fok-active': IbarFoKActive,
         },
         props: {
             marketRequest: {
