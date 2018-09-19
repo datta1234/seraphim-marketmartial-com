@@ -61,7 +61,25 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 //Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
 
 // Stats Components
-Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
+Vue.component('monthly-activity', require('./components/Stats/Components/MonthlyActivityComponent.vue'));
+Vue.component('year-table', require('./components/Stats/Components/YearTableComponent.vue'));
+Vue.component('my-activity-controller', require('./components/Stats/Controllers/MyActivityController.vue'));
+
+Vue.mixin({
+    methods: {
+        dateStringArraySort(date_string_array, format, ) {
+            for(let i = 0; i < date_string_array.length - 1; i++) {
+                for(let j = 0; j < date_string_array.length - i - 1; j++) {
+                    if( moment(date_string_array[j+1],format).isBefore(moment(date_string_array[j],format)) ) {
+                        let temp = date_string_array[j];
+                        date_string_array[j] = date_string_array[j+1];
+                        date_string_array[j+1] = temp;
+                    }
+                }
+            }
+        },
+    }
+});
 
 const app = new Vue({
     el: '#trade_app',

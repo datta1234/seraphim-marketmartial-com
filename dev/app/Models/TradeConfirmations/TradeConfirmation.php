@@ -66,15 +66,6 @@ class TradeConfirmation extends Model
     ];
 
     /**
-     * The virtual attributes that should appended to the model.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'month',
-    ];
-
-    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -177,36 +168,52 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
     }
 
-    public function scopeOrganisationInvolved($query, $organistation_id, $operator)
+    public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
     {
-        $query->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
-            $query->where('organisation_id', $operator,$organistation_id);
-        })
-        ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
-            $query->where('organisation_id', $operator,$organistation_id);
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
+            $tlq->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
+                $query->where('organisation_id', $operator,$organistation_id);
+            })
+            ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
+                $query->where('organisation_id', $operator,$organistation_id);
+            });
         });
+
     }
 
-    public function scopeUserInvolved($query, $user_id, $operator)
+    public function scopeUserInvolved($query, $user_id, $operator, $or = false)
     {
-            $query->where('send_user_id', $operator,$user_id)
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($user_id,$operator) {
+            $tlq->where('send_user_id', $operator,$user_id)
                 ->orWhere('receiving_user_id', $operator,$user_id);
+        });
     }    
 
-    public function scopeOrgnisationMarketMaker($query, $organistation_id)
+    public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = false)
     {
-        // user_market_request->chosen_usermarket->user_id
-        $query->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
-            $query->whereHas('userMarket', function ($query) use ($organistation_id) {
-                $query->whereHas('user', function ($query) use ($organistation_id) {
-                    $query->where('organisation_id', $organistation_id);
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organistation_id) {
+            $tlq->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
+                $query->whereHas('userMarket', function ($query) use ($organistation_id) {
+                    $query->whereHas('user', function ($query) use ($organistation_id) {
+                        $query->where('organisation_id', $organistation_id);
+                    });
                 });
             });
         });
     }
 
-    public function getMonthAttribute()
+    public function preFormatStats()
     {
-        return $this->updated_at->format('M Y');
+        $data = [
+            "id" => ,
+            "updated_at" => ,
+            "volatility" => ,
+            "strike" => ,
+            "nominal" => ,
+            "strike_percentage" => ,
+            "expiration" => ,
+            "id" => ,
+        ];
+        dd($this);
     }
 }

@@ -55,6 +55,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 
 	Route::group(['prefix' => 'stats'], function() {
 		Route::get('/my-activity', 'StatsController@show')->name('my_activity.show');
+		Route::get('/my-activity/year', 'StatsController@myYearActivity')
+			->name('my_activity.year');
 	});
 });
 

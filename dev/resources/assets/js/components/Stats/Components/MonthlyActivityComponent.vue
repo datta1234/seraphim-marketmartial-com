@@ -86,13 +86,16 @@
             },
             setLabels(data) {
             	Object.keys(data).forEach(set => {
-            		Object.keys(data[set]).forEach(date => {
-            			if(this.active_data_set.labels.indexOf(date) === -1) {
-            				this.active_data_set.labels.push(date);
+            		data[set].forEach(date_details => {
+            			if(this.active_data_set.labels.indexOf(moment(date_details.month,'M-YYYY').format('MMM YY')) === -1) 
+                        {
+            				this.active_data_set.labels.push(
+                                moment(date_details.month,'M-YYYY').format('MMM YY')
+                            );
             			}
 		        	});
 		        });
-		    	this.dateStringArraySort(this.active_data_set.labels);  
+                this.$root.dateStringArraySort(this.active_data_set.labels, 'MMM YY');  
             },
             setDataSet(data) {
             	Object.keys(data).forEach(set => {
@@ -106,27 +109,18 @@
             setData(set, data) {
             	let count_array = [];
             	this.active_data_set.labels.forEach(date => {
-            		if(typeof data[set][date] != 'undefined') {
-            			count_array.push(data[set][date]);
+                    let found = data[set].find(element => {
+                        return moment(element.month,'M-YYYY').isSame(moment(date,'MMM YY'))
+                    });
+            		if(typeof found != 'undefined') {
+            			count_array.push(found.total);
             		} else {
             			count_array.push(null);
             		}
             	});
             	return count_array;
             },
-            dateStringArraySort(date_string_array) {
-	            for(let i = 0; i < date_string_array.length - 1; i++) {
-	                for(let j = 0; j < date_string_array.length - i - 1; j++) {
-	                    if( moment(date_string_array[j+1],'MMM YYYY').isBefore(moment(date_string_array[j],'MMM YYYY')) ) {
-	                        let temp = date_string_array[j];
-	                        date_string_array[j] = date_string_array[j+1];
-	                        date_string_array[j+1] = temp;
-	                    }
-	                }
-	            }
-	        },
 	        toggleMyTrades(checked) {
-	        	console.log(checked);
 	        	axios.get(axios.defaults.baseUrl + 'my-activity', {
 	        		params:{
 	        			'my_trades': checked ? "1" : "0"
