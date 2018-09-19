@@ -83,6 +83,9 @@
             };
         },
         watch: {
+            marketNegotiation() {
+                this.show_options = false;
+            },
             show_options() {
                 this.resetConditions();
                 this.updateShownGroups();

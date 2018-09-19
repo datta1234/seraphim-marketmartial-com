@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class MarketNegotiation extends Model
 {
-    use \App\Traits\ResolvesUser;
+    use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions;
     
 	/**
 	 * @property integer $id
@@ -59,6 +59,7 @@ class MarketNegotiation extends Model
             "has_premium_calc",
             "is_repeat",
             "is_accepted",
+            "is_killed",
 
             "is_private",
             "cond_is_repeat_atw",
@@ -75,6 +76,21 @@ class MarketNegotiation extends Model
 
 
     protected $appends = ["time"];
+
+    protected $applicableConditions = [
+        /*
+            'attribute_name' => 'default_value'
+        */
+        'is_private' => false,
+        "cond_is_repeat_atw" => null,
+        "cond_fok_apply_bid" => null,
+        "cond_fok_spin" => null,
+        "cond_timeout" => null,
+        "cond_is_ocd" => null,
+        "cond_is_subject" => null,
+        "cond_buy_mid" => null,
+        "cond_buy_best" => null,
+    ];
 
     /**
     * Return relation based of _id_foreign index
@@ -141,6 +157,26 @@ class MarketNegotiation extends Model
        return $query->whereHas('user',function($q) use ($user){
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
+    }
+
+    /**
+    * test if is FoK
+    * @return Boolean
+    */
+    public function isFoK() {
+        return ($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null); 
+    }
+
+    /**
+    * Filter Scope on not FoKs
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeExcludingFoKs($query)
+    {
+        return $query->where(function($q) {
+            $q->where('cond_fok_apply_bid', null);
+            $q->where('cond_fok_spin', null);
+        });
     }
 
     /*
@@ -320,4 +356,85 @@ class MarketNegotiation extends Model
 
         return $data;
     }
+
+
+    /* ============================== Conditions Start ============================== */
+
+    /**
+    * Apply is_provate condition
+    */
+    public function applyIsPrivateCondition() {
+        // ... do nothing?
+    }
+
+    /**
+    * Apply cond_is_repeat_atw condition
+    */
+    public function applyCondIsRepeatAtwCondition() {
+        // set the repeat state on this negotiation
+        $this->is_repeat = true;
+    }
+
+    /**
+    * Alias cond_fok_apply_bid & cond_fok_spin
+    */
+    public function applyCondFokApplyBidCondition() { $this->applyFOKCondition(); }
+    public function applyCondFokSpinCondition()     { $this->applyFOKCondition(); }
+    /**
+    * Apply cond_fok_apply_bid & cond_fok_spin
+    */
+    private static $fok_applied = false;
+    public function applyFOKCondition() {
+        if (!self::$fok_applied) {
+            // Prefer to kill
+            if( $this->cond_fok_spin == true ) {
+                // cond_fok_apply_bid
+                
+            }
+            // Prefer To Fill
+            else {
+                // cond_fok_apply_bid
+            }
+            self::$fok_applied = true;
+        }
+    }
+
+    /**
+    * Apply cond_timeout
+    */
+    public function applyCondTimeoutCondition() {
+        $job = new \App\Jobs\MarketNegotiationTimeout($this);
+        dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
+    }
+
+    /**
+    * Apply cond_is_ocd
+    */
+    public function applyCondIsOcdCondition() {
+
+    }
+
+    /**
+    * Apply cond_is_subject
+    */
+    public function applyCondIsSubjectCondition() {
+
+    }
+
+    /**
+    * Apply cond_buy_mid
+    */
+    public function applyCondBuyMidCondition() {
+
+    }
+
+    /**
+    * Apply cond_buy_best
+    */
+    public function applyCondBuyBestCondition() {
+
+    }
+
+    /* ============================== Conditions End ============================== */
+
 }

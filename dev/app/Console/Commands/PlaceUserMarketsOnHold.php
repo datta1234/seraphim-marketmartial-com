@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use  App\Jobs\HoldQuotes;
 
-class PlaceUserOnHold extends Command
+class PlaceUserMarketsOnHold extends Command
 {
     /**
      * The name and signature of the console command.
