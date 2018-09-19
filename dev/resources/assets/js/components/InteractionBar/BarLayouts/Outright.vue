@@ -80,7 +80,7 @@
             </b-col>
         </b-row>
 
-        <ibar-fok-active :market-negotiation="marketRequest.getChosenUserMarket().active_fok" v-if="marketRequest.getChosenUserMarket().active_fok"></ibar-fok-active>
+        <ibar-fok-active :market-negotiation="marketRequest.chosen_user_market.active_fok" v-if="marketRequest.chosen_user_market && marketRequest.chosen_user_market.active_fok"></ibar-fok-active>
             
         <ibar-apply-conditions v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
 

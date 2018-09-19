@@ -28,7 +28,10 @@
             padding-bottom: 150px;
             margin-bottom: 150px;
             // background: red;
-
+            
+            .ibar-negotiation-content {
+                padding-right: 25px;
+            }
         }
         &.active {
             width: $interaction-bar-width + $interaction-toggle-width;

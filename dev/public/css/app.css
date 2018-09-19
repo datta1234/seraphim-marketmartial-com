@@ -11986,6 +11986,10 @@ input:checked + .slider:before {
   margin-bottom: 150px;
 }
 
+.interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {
+  padding-right: 25px;
+}
+
 .interaction-bar-wrapper .interaction-bar.active {
   width: 375px;
 }

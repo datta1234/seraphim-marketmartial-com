@@ -1,5 +1,5 @@
 <template>
-    <div dusk="ibar-negotiation-bar">
+    <div dusk="ibar-negotiation-bar" class="ibar-negotiation-content">
         
         <component v-if="marketRequest != null" :is="layouts[marketRequest.trade_structure]" :market-request="marketRequest"></component>
 
