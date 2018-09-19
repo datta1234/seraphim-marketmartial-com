@@ -69,6 +69,8 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    
+    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
 
     Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']

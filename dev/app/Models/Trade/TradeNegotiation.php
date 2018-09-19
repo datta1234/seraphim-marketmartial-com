@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class TradeNegotiation extends Model
 {
-	/**
+    use \App\Traits\ResolvesUser;
+	
+    /**
 	 * @property integer $id
 	 * @property integer $user_market_id
 	 * @property integer $trade_negotiation_id
@@ -34,7 +36,17 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'contracts', 'nominals', 'is_offer', 'is_distpute',
+        'quantity', 'traded', 'is_offer', 'is_distpute',
+    ];
+
+
+      /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'initiate_user_id','recieving_user_id'
     ];
 
     /**
@@ -68,7 +80,7 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarkets()
+    public function userMarket()
     {
         return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
     }
@@ -77,7 +89,7 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function initiateUsers()
+    public function initiateUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','initiate_user_id');
     }
@@ -86,8 +98,24 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function recievingUsers()
+    public function recievingUser()
     {
         return $this->belongsTo('App\Models\UserManagement\User','recieving_user_id');
+    }
+
+
+    public function preFormatted()
+    {
+        $loggedInUserOrganisationId = $this->resolveOrganisationId();
+        
+        $data = [
+            "quantity"      => $this->quantity,
+            "traded"        => $this->traded,
+            "is_offer"      => $this->is_offer,
+            "is_distpute"   => $this->is_distpute,
+            "sent_by_me"    => $this->initiate_user_id == $loggedInUserOrganisationId,
+            'sent_to_me'    => $this->recieving_user_id == $loggedInUserOrganisationId,
+        ];
+        return $data;
     }
 }

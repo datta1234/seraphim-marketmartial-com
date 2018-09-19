@@ -231,6 +231,16 @@ class UserMarket extends Model
     }
 
 
+    private function setCounterAction($counterNegotiation)
+    {
+        $this->userMarket->userMarketRequest->setAction(
+            $counterNegotiation->user->organisation_id,
+            $this->userMarket->userMarketRequest->id,
+            true
+        );
+    }
+
+
     public function spinNegotiation($user)
     {
             $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
@@ -247,6 +257,7 @@ class UserMarket extends Model
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+                $this->setCounterAction($counterNegotiation);
             }
 
             try {
@@ -255,6 +266,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
+                if($counterNegotiation)
+                {
+                 $this->setCounterAction($counterNegotiation);
+                }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
@@ -264,6 +279,7 @@ class UserMarket extends Model
             }
        
     }
+
 
 
     public function addNegotiation($user,$data)
@@ -296,6 +312,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
+                if($counterNegotiation)
+                {
+                 $this->setCounterAction($counterNegotiation);
+                }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
