@@ -77,7 +77,15 @@
             margin-right:-10px
         }
 
+        .active-fok-bar {
+            margin-bottom: 10px;
+            
+            .fok-bar {
+                padding: 10px 10px;
+                background: $mm-red;
+            }
 
+        }
 
     }
     .interaction-bar-content-pane {

@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
             \App\Console\Commands\GenOrgAction::class,
-            \App\Console\Commands\PlaceUserOnHold::class,
+            // \App\Console\Commands\PlaceUserOnHold::class,
             \App\Console\Commands\UpdateUuid::class,
 
     ];
