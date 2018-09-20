@@ -329,7 +329,7 @@ class UserMarket extends Model
         // add Active FoK if exists
         if($this->currentMarketNegotiation->isFoK()) {
             // only if counter
-            $is_counter = $this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+            $is_counter = $this->currentMarketNegotiation->marketNegotiationParent && $this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
             $is_counter = true;
             if($is_counter) {
                 $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
