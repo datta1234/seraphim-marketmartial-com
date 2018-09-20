@@ -170,7 +170,6 @@ class MarketNegotiation extends Model
     public function kill() {
         $this->is_killed = true; // && with_fire = true; ;)
         $this->save();
-        $this->userMarket->resetCurrent();
     }
 
     /**

@@ -52,6 +52,9 @@ class MarketNegotiationPolicy
          */
         public function delete(User $user, MarketNegotiation $marketNegotiation)
         {
+            if($marketNegotiation->id !== $marketNegotiation->userMarket->current_market_negotiation_id) {
+                return false;
+            }
             return $user->orgnisation_id === $marketNegotiation->marketNegotiationParent->user->orgnisation_id;
         }
     }

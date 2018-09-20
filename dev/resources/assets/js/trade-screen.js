@@ -518,6 +518,7 @@ const app = new Vue({
         {
             window.Echo.private('organisation.'+Laravel.organisationUuid)
             .listen('.UserMarketRequested', (userMarketRequest) => {
+                console.log("Fired '.UserMarketRequested'", userMarketRequest);
                 //this should be the market thats created
                 this.handlePacket(userMarketRequest, (packet_data) => {
                     console.log("publish Callback", packet_data);

@@ -10,8 +10,10 @@ export default {
      computed: {
             current_user_market_negotiation: function() {
                 let chosen_user_market = this.marketRequest.chosen_user_market;
+                console.log('chosen_user_market', chosen_user_market);
                 if(chosen_user_market){
-                   return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
+                    console.log('negotiation', this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1]);
+                    return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
                 }
                 return null;
             }
@@ -128,6 +130,7 @@ export default {
         },
         getStateClass(item,attr)
         {
+            console.log(item, attr);
             let source = item.getAmountSource(attr);
              return {
                 "is-interest":source.is_interest && !source.is_my_org,

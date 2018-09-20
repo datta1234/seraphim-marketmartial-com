@@ -93,6 +93,18 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function makerMarketNegotiation()
+    {
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+                    ->where('is_killed', false)
+                    ->orderBy('created_at', 'ASC')
+                    ->orderBy('id', 'ASC');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function userMarketSubscriptions()
     {
         return $this->hasMany('App\Models\Market\UserMarketSubscription','user_market_id');
@@ -187,11 +199,6 @@ class UserMarket extends Model
         $marketRequest = $this->userMarketRequest;
         $marketRequest->chosenUserMarket()->associate($this);
         return $marketRequest->save();
-    }
-
-    public function resetCurrent() {
-        $this->current_market_negotiation_id = $this->firstNegotiation->id;
-        $this->save();
     }
 
     /**
@@ -312,10 +319,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
-                if($counterNegotiation)
-                {
-                 $this->setCounterAction($counterNegotiation);
-                }
+                // if($counterNegotiation)
+                // {
+                //  $this->setCounterAction($counterNegotiation);
+                // }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
@@ -325,16 +332,36 @@ class UserMarket extends Model
             }
     }
 
+    public function isMaker($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        if($this->makerMarketNegotiation == null) {
+            return $org == $this->firstNegotiation->user->organisation_id;
+        }
+        return $org == $this->makerMarketNegotiation->user->organisation_id;
+    }
+
+    public function isInterest($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        return $org == $this->userMarketRequest->user->organisation_id;
+    }
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
     public function preFormattedMarket()
     {
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
         
-        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->excludingFoKs()->get();
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->get();
+        // @TODO addd back excludeFoKs but filter to only killed ones
 
         $data = [
             "id"                    => $this->id,
@@ -365,8 +392,8 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
 
 
         $data = [
@@ -402,8 +429,8 @@ class UserMarket extends Model
     public function preFormatted()
     {
 
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
 
         $data = [
             "id"    => $this->id,

@@ -109,17 +109,28 @@
             },
             getConditionState(marketNegotiation) {
                 
-                for(var k in marketNegotiation) {
+                // for(var k in marketNegotiation) {
 
-                    if(this.conditionAttr.indexOf(k) > -1 && marketNegotiation[k] !== null)
-                    {
-                            if(typeof this.$root.config("condition_titles")[k] == "Object")
-                            {
-                                return marketNegotiation[k] ? this.$root.config("condition_titles")[k]["true"] : this.$root.config("condition_titles")[k]["false"];   
-                            }else
-                            {
-                                return  this.$root.config("condition_titles")[k];
-                            }
+                //     if(this.conditionAttr.indexOf(k) > -1 && marketNegotiation[k] !== null)
+                //     {
+                //             if(typeof this.$root.config("condition_titles")[k] == "Object")
+                //             {
+                //                 return marketNegotiation[k] ? this.$root.config("condition_titles")[k]["true"] : this.$root.config("condition_titles")[k]["false"];   
+                //             }else
+                //             {
+                //                 return  this.$root.config("condition_titles")[k];
+                //             }
+                //     }
+                // }
+
+                for(let k in this.$root.config("condition_titles")) {
+                    let cond = this.$root.config("condition_titles")[k];
+                    if(marketNegotiation[k] != null) {
+                        if(cond.constructor == String) {
+                            return cond;
+                        } else {
+                            return cond[new Boolean(marketNegotiation[k]).toString()];
+                        }
                     }
                 }
 
