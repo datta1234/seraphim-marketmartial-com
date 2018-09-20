@@ -29,16 +29,18 @@ class MarketNegotiationPolicy
             //
         }
 
-        /**
-         * Determine if the given usermarket accept the user.
+       /**
+         * Determine whether the user can create userMarketRequests.
          *
-         * @param  \App\Models\UserManagement\User  $user
+
          * @param  \App\Models\Market\MarketNegotiation $userMarket
          * @return bool
+         * @return mixed
          */
-        public function spin(User $user, MarketNegotiation $marketNegotiation)
+        public function addTradeNegotiation(User $user)
         {
-            return $marketNegotiation;
+            dd("here");
+            return false;
         }
 
         /**
@@ -52,7 +54,6 @@ class MarketNegotiationPolicy
         {
             return $user->orgnisation_id === $marketNegotiation->marketNegotiationParent->user->orgnisation_id;
         }
-
     }
 
 }

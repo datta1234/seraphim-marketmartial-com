@@ -3,6 +3,9 @@
 namespace App\Models\Market;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Trade\TradeNegotiation;
+use Illuminate\Support\Facades\DB;
+
 
 class MarketNegotiation extends Model
 {
@@ -69,7 +72,7 @@ class MarketNegotiation extends Model
             "cond_buy_best",
     ];
 
-    protected $hidden = ["user_id"];
+    protected $hidden = ["user_id","user"];
 
 
     protected $appends = ["time"];
@@ -123,6 +126,16 @@ class MarketNegotiation extends Model
     public function currentUserMarkets()
     {
         return $this->hasMany('App\Models\Market\UserMarket','current_market_negotiation_id');
+    }
+
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','market_negotiation_id');
     }
 
     /**
@@ -184,7 +197,6 @@ class MarketNegotiation extends Model
        {
             return $this->marketNegotiationParent; 
        }
-
     }
 
 
@@ -234,6 +246,66 @@ class MarketNegotiation extends Model
         } 
     }
 
+    private function setCounterAction($counterNegotiation)
+    {
+         // Set action that needs to be taken for the org related to this marketNegotiation
+        $this->userMarket->userMarketRequest->setAction(
+            $counterNegotiation->recievingUser->organisation_id,
+            $counterNegotiation->userMarket->userMarketRequest->id,
+            true
+        );
+    }
+
+    private function setMarketNegotiationAction()
+    {
+       $this->userMarket->userMarketRequest->setAction(
+            $this->user->organisation_id,
+            $this->userMarket->userMarketRequest->id,
+            true
+        ); 
+    }
+
+    public function addTradeNegotiation($user,$data)
+    {
+           
+
+            $tradeNegotiation = new TradeNegotiation($data);
+            $tradeNegotiation->initiate_user_id = $user->id;
+            $tradeNegotiation->recieving_user_id = $this->user_id;
+            $tradeNegotiation->user_market_id = $this->user_market_id;
+
+            //set counter
+            $counterNegotiation = null;
+
+            if($counterNegotiation)
+            {
+                $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
+            }
+
+
+            try {
+                DB::beginTransaction();
+                $this->tradeNegotiations()->save($tradeNegotiation);
+                if($counterNegotiation)
+                {
+                    $this->setCounterAction($counterNegotiation);
+                }else
+                {
+                    $this->setMarketNegotiationAction();
+                }
+                DB::commit();
+
+                return $tradeNegotiation;
+            } catch (\Exception $e) {
+                \Log::error($e);
+                DB::rollBack();
+                return false;
+            }
+    }
+
+
+
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
@@ -281,7 +353,10 @@ class MarketNegotiation extends Model
             "is_maker"              => $is_maker,
             "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
             "time"                  => $this->time,
-            "created_at"            => $this->created_at->format("d-m-Y H:i:s")
+            "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
+            "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
+                return $tradeNegotiation->preFormatted();
+            })
 
         ];
 
