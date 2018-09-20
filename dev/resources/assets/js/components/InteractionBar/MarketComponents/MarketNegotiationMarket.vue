@@ -102,6 +102,7 @@
             }
         },
         mounted() {
+            console.log(this.disabled);
         }
     }
 </script>

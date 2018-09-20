@@ -5,7 +5,7 @@ namespace App\Events\Models;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Market\MarketNegotiation;
 
-class MarketNegotiationApplyConditions
+class MarketNegotiationApplyFoK
 {
     use SerializesModels;
 

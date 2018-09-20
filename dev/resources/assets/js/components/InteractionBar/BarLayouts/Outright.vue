@@ -186,7 +186,7 @@
         },
         computed: {
             'fok_active': function() {
-                return this.marketRequest.chosen_user_market && this.marketRequest.chosen_user_market.active_fok;
+                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
             },
             'marker_qoute': function() {
                 return this.marketRequest.quotes.find(quote => quote.is_maker);
@@ -272,12 +272,8 @@
             },
             spinNegotiation(){
                 
-                // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.spinNegotiation()   
+                this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];

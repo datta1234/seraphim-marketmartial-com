@@ -264,7 +264,6 @@ class UserMarket extends Model
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-                $this->setCounterAction($counterNegotiation);
             }
 
             try {
@@ -273,10 +272,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
-                if($counterNegotiation)
-                {
-                 $this->setCounterAction($counterNegotiation);
-                }
+                // if($counterNegotiation)
+                // {
+                //  $this->setCounterAction($counterNegotiation);
+                // }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
@@ -351,6 +350,19 @@ class UserMarket extends Model
         return $org == $this->userMarketRequest->user->organisation_id;
     }
 
+    public function isCounter($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        if($this->currentMarketNegotiation->marketNegotiationParent == null) {
+            return null;
+        }
+        return $org == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+    }
+
+    
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
@@ -376,9 +388,11 @@ class UserMarket extends Model
         // add Active FoK if exists
         if($this->currentMarketNegotiation->isFoK()) {
             // only if counter
-            $is_counter = $this->currentMarketNegotiation->marketNegotiationParent && $this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
-            $is_counter = true;
-            if($is_counter) {
+            $active = $this->isCounter();
+            if($active === null) {
+                $active = $this->isInterest();
+            }
+            if($active) {
                 $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
             }
         }

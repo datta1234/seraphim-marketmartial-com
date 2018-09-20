@@ -125,7 +125,30 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  spin
     */
-    spinNegotiation() {
+    spinNegotiation(user_market) {
+
+        // catch not assigned to a market request yet!
+        if(user_market == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    /**
+    *  spin
+    */
+    killNegotiation() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -135,9 +158,8 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation",{is_repeat: true})
+             axios.delete(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id)
             .then(response => {
-                response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
             })
             .catch(err => {

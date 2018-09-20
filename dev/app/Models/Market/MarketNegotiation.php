@@ -77,6 +77,18 @@ class MarketNegotiation extends Model
 
     protected $appends = ["time"];
 
+    protected $casts = [
+        'is_private' => 'Boolean',
+        "cond_is_repeat_atw" => 'Boolean',
+        "cond_fok_apply_bid" => 'Boolean',
+        "cond_fok_spin" => 'Boolean',
+        "cond_timeout" => 'Boolean',
+        "cond_is_ocd" => 'Boolean',
+        "cond_is_subject" => 'Boolean',
+        "cond_buy_mid" => 'Boolean',
+        "cond_buy_best" => 'Boolean',
+    ];
+
     protected $applicableConditions = [
         /*
             'attribute_name' => 'default_value'
@@ -164,7 +176,7 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function isFoK() {
-        return ($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null); 
+        return ($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null); 
     }
 
     public function kill() {
@@ -214,7 +226,7 @@ class MarketNegotiation extends Model
 
     public function setAmount($marketNegotiations,$attr)
     {
-        $source = $this->findSource($marketNegotiations,$attr);
+        $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
         if($this->is_repeat && $this->id != $source->id)
         {
             return $this->user->organisation_id == $source->user->organisation_id ? "SPIN" : $this->getAttribute($attr);
@@ -223,26 +235,6 @@ class MarketNegotiation extends Model
             return $this->getAttribute($attr);
        
         }
-    }
-
-    /*
-    * find the source from the collection so that we save up on database quries
-    */
-    public function findSource($marketNegotiations,$attr)
-    {
-         $prevItem = null;
-        if($this->market_negotiation_id != null)
-        {
-             $prevItem = $marketNegotiations->firstWhere('id',$this->market_negotiation_id);
-        }
-        if(!is_null($prevItem) && $prevItem->market_negotiation_id != $prevItem->id  
-            && $prevItem->getAttribute($attr) == $this->getAttribute($attr))
-        {
-            return $prevItem->findSource($marketNegotiations,$attr);   
-        }else
-        {
-            return $this;  
-        } 
     }
 
     private function setCounterAction($counterNegotiation)
@@ -391,6 +383,8 @@ class MarketNegotiation extends Model
     private static $fok_applied = false;
     public function applyFOKCondition() {
         if (!self::$fok_applied) {
+            self::$fok_applied = true;
+
             // Prefer to kill
             if( $this->cond_fok_spin == true ) {
                 // cond_fok_apply_bid
@@ -399,8 +393,8 @@ class MarketNegotiation extends Model
             // Prefer To Fill
             else {
                 // cond_fok_apply_bid
+
             }
-            self::$fok_applied = true;
         }
     }
 
