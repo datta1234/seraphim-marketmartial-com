@@ -20,7 +20,6 @@ window.Echo = new Echo({
     encrypted: true,
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
-const organisationUuid = document.querySelector('meta[name="organisation-uuid"]').getAttribute('content');
 
 import Datepicker from 'vuejs-datepicker'
 import BootstrapVue from 'bootstrap-vue'
@@ -514,6 +513,7 @@ const app = new Vue({
             });
         });
 
+        let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]').content;
         if(organisationUuid)
         {
             window.Echo.private('organisation.'+organisationUuid)
