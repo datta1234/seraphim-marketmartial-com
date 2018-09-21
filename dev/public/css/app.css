@@ -11349,6 +11349,10 @@ a.mm-login-button {
   font-size: 0.8rem;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
@@ -11874,8 +11878,18 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
-.trade-section.light-theme .negotiation-vol-pending .market-tab-state,
-.trade-section.dark-theme .negotiation-vol-pending .market-tab-state {
+.trade-section.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.negotiation-vol-pending .market-tab-state {
+  border-left: 2px solid #BB1D1D;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending {
+  background-color: #E17428;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
@@ -12120,6 +12134,10 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+  color: #EBC300;
+}
+
+.text-my-org {
   color: #EBC300;
 }
 
@@ -12471,6 +12489,15 @@ input:checked + .slider:before {
 
 .create-user {
   display: inline;
+}
+
+#last-negotiation .popover {
+  max-width: 330px;
+}
+
+#last-negotiation .popover .popover-header {
+  background: #1c7c74;
+  color: #FFFFFF;
 }
 
 @font-face {

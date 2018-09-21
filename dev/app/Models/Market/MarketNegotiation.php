@@ -223,6 +223,11 @@ class MarketNegotiation extends Model
         return $query->latest()->limit(1);
     }
 
+    public function getLastTradeNegotiationAttribute()
+    {
+        return $this->tradeNegotiations()->latest()->first();
+    }
+
 
     public function setAmount($marketNegotiations,$attr)
     {

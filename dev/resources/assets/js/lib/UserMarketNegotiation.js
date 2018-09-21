@@ -1,15 +1,24 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
+import TradeNegotiation from './TradeNegotiation';
 
 export default class UserMarketNegotiation extends BaseModel {
 
     constructor(options) {
         super({
-            _used_model_list: []
+            _used_model_list: [TradeNegotiation],
+            _relations:{
+               trade_negotiations:{
+                    addMethod: (trade_negotiation) => { this.addTradeNegotiation(trade_negotiation) },
+               } 
+            }
         });
 
         // default internal
         this._user_market = null;
+
+           // default public
+        this.trade_negotiations = [];
 
         const defaults = {
             id: "",
@@ -52,6 +61,13 @@ export default class UserMarketNegotiation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
+
+        // register trade_negotiaions
+
+        if(options && options.trade_negotiations) {
+            this.addTradeNegotiations(options.trade_negotiations);
+        }
+
     }
 
     /**
@@ -218,6 +234,36 @@ export default class UserMarketNegotiation extends BaseModel {
         {
             return this;  
         }  
+    }
+
+    getLastTradeNegotiation()
+    {
+        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[this.trade_negotiations.length - 1] : null;
+    }
+
+   /**
+    *   addNegotiation - add user trade_negotiation
+    *   @param {UserMarketNegotiation} trade_negotiation - UserMarketNegotiation objects
+    */
+    addTradeNegotiation(trade_negotiation) {
+        
+        if(!(trade_negotiation instanceof TradeNegotiation)) {
+            trade_negotiation = new TradeNegotiation(trade_negotiation);
+        }
+
+        trade_negotiation.setUserMarketNegotiation(this);
+        this.trade_negotiations.push(trade_negotiation);
+    }
+
+
+    /**
+    *   addNegotiations - add array of user market_negotiations
+    *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
+    */
+    addTradeNegotiations(trade_negotiations) {
+        trade_negotiations.forEach(trade_negotiation => {
+            this.addTradeNegotiation(trade_negotiation);
+        });
     }
 
 

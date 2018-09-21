@@ -49,15 +49,16 @@ class TradeNegotiation extends Model
         'initiate_user_id','recieving_user_id'
     ];
 
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function tradeNegotiationStatuses()
-    {
-        return $this->belongsTo('App\Models\Trade\TradeNegotiationStatus','trade_negotiation_status_id');
-    }
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'traded' => 'boolean',
+        'is_offer' => 'boolean'
+    ];
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -108,13 +109,15 @@ class TradeNegotiation extends Model
     {
         $loggedInUserOrganisationId = $this->resolveOrganisationId();
         
+
         $data = [
+            "id"            => $this->id,
             "quantity"      => $this->quantity,
             "traded"        => $this->traded,
             "is_offer"      => $this->is_offer,
             "is_distpute"   => $this->is_distpute,
-            "sent_by_me"    => $this->initiate_user_id == $loggedInUserOrganisationId,
-            'sent_to_me'    => $this->recieving_user_id == $loggedInUserOrganisationId,
+            "sent_by_me"    => $this->initiateUser->organisation_id == $loggedInUserOrganisationId,
+            'sent_to_me'    => $this->recievingUser->organisation_id == $loggedInUserOrganisationId,
         ];
         return $data;
     }
