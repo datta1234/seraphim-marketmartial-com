@@ -376,17 +376,17 @@ class UserMarket extends Model
         // @TODO addd back excludeFoKs but filter to only killed ones
 
         $data = [
-            "id"                    => $this->id,
-            "is_interest"           => $is_interest,
-            "is_maker"              => $is_maker,
-            "time"                  => $this->created_at->format("H:i"),
-            "market_negotiations"   => $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                                return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+            "id"                    =>  $this->id,
+            "is_interest"           =>  $is_interest,
+            "is_maker"              =>  $is_maker,
+            "time"                  =>  $this->created_at->format("H:i"),
+            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
+                                        return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
                                         })
         ];
 
         // add Active FoK if exists
-        if($this->currentMarketNegotiation->isFoK()) {
+        if($this->currentMarketNegotiation->isFoK() && $this->currentMarketNegotiation->is_killed !== true) {
             // only if counter
             $active = $this->isCounter();
             if($active === null) {

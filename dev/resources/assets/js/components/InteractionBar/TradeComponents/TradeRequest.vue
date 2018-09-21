@@ -104,6 +104,9 @@
         methods: {
             selectOption(isOffer)
             {
+                if(this.marketNegotiation.is_killed) {
+                    return false;
+                }
                 if(isOffer)
                 {
                      this.liftOpen = true; 

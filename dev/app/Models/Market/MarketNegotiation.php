@@ -337,6 +337,7 @@ class MarketNegotiation extends Model
             "is_repeat"             => $this->is_repeat,
             "is_accepted"           => $this->is_accepted,
             "is_private"            => $this->is_private,
+            "is_killed"             => $this->is_killed,
             "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
             "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
             "cond_fok_spin"         => $this->cond_fok_spin,

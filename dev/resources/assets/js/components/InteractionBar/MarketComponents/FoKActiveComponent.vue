@@ -12,9 +12,9 @@
                         FoK: {{ fok_value }}
                     </b-col>
                     <b-col>
-                        <a href="" v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true">Buy</a>
-                        <a href="" v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false">Sell</a>
-                        <a href="">Kill</a>
+                        <a href="" @click.prevent.stop="doBuy" v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true">Buy</a>
+                        <a href="" @click.prevent.stop="doSell" v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false">Sell</a>
+                        <a href="" @click.prevent.stop="doKill">Kill</a>
                     </b-col>
                 </b-row>
             </div>
@@ -56,7 +56,22 @@
             }
         },
         methods: {
-            
+            doBuy() {
+                // this.marketNegotiation.fokBuy();
+            },
+            doSell() {
+                // this.marketNegotiation.sell();
+            },
+            doKill() {
+                this.marketNegotiation.killNegotiation()
+                .then(response => {
+                    console.log(response);
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.errors = err.errors.errors;
+                });
+            },
         },
         mounted() {
             
