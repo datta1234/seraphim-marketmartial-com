@@ -118,6 +118,15 @@ class MarketNegotiation extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeNegotiations()
+    {
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','market_negotiation_id');
+    }
+
     public function getTimeAttribute()
     {
         return $this->created_at->format("H:i");

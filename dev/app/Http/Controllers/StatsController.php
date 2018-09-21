@@ -95,20 +95,32 @@ class StatsController extends Controller
     public function myYearActivity(MyActivityYearRequest $request)
     {
         $user = $request->user();
-
-        $trade_confirmations = TradeConfirmation::whereYear('updated_at',$request->input('year'))
+        $trade_confirmations = TradeConfirmation::basicSearch(
+            null,
+            null,
+            null,
+            $request->input('filter_date')
+        )->whereYear('updated_at',$request->input('year'))
             ->where(function ($tlq) use ($user) {
                 $tlq->organisationInvolved($user->organisation_id,'=')
                     // ->orWhere(function ($query) use ($user) {
                     //     $query->orgnisationMarketMaker($user->organisation_id);
                     // });
                 ->orgnisationMarketMaker($user->organisation_id, true);
-            })->get();
+            })->paginate(10);
+        //dd($trade_confirmations);
 
-        $output = $trade_confirmations->map(function($trade_confirmation) {
-            return $trade_confirmation->preFormatStats();
+        $trade_confirmations->transform(function($trade_confirmation) use ($user) {
+            return $trade_confirmation->preFormatStats($user);
         });
 
-        return response()->json($output);
+        $markets = Market::all()->pluck("title","id");
+
+        dd($markets);
+
+        return response()->json([
+            "trade_confirmations" => $trade_confirmations, 
+            "markets" => $markets,
+        ]);
     }
 }

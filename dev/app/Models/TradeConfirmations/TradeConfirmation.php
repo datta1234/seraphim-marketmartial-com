@@ -202,18 +202,135 @@ class TradeConfirmation extends Model
         });
     }
 
-    public function preFormatStats()
+    public function preFormatStats($user)
     {
         $data = [
-            "id" => ,
-            "updated_at" => ,
-            "volatility" => ,
-            "strike" => ,
-            "nominal" => ,
-            "strike_percentage" => ,
-            "expiration" => ,
-            "id" => ,
+            "id" => $this->id,
+            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+            "market" => $this->market->title,
+            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
+            "trader" => null,
+            "nominal" => array(),
+            "strike" => array(),
+            "expiration" => array(),
+            "strike_percentage" => array(),
+            "volatility" => array(),
         ];
-        dd($this);
+
+        
+        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
+        switch (true) {
+            case ($this->send_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = 'Sell';
+                break;
+            case ($this->receiving_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = 'Buy';
+                break;
+            case ($this->sendUser->organisation->id == $user->organisation->id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $this->sendUser->full_name;
+                $data["direction"] = 'Sell';
+                break;
+            case ($this->recievingUser->organisation->id == $user->organisation->id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $this->recievingUser->full_name;
+                $data["direction"] = 'Buy';
+                break;
+            case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+                $data["status"] = 'Market Maker Traded Away';
+                $data["direction"] = null;
+                break;
+            default:
+                $data["status"] = null;
+                break;
+        }
+        
+        // Get the user market request items
+        $user_market_request_items = array();
+        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+        foreach ($user_market_request_groups as $key => $user_market_request_group) {
+            $user_market_request_items[] = $user_market_request_group->userMarketRequestItems->groupBy(function ($item, $key) {
+                return $item->user_market_request_group_id;
+            });
+        }
+
+        // Set Strike, Strike percentage, expiration dates and nominals
+        foreach ($user_market_request_items as $item_groups) {
+            foreach ($item_groups as $item_group) {
+                foreach ($item_group as $item) {
+                    switch ($item->title) {
+                        case 'Expiration Date':
+                        case 'Expiration Date 1':
+                        case 'Expiration Date 2':
+                                $data["expiration"][] = $item->value;
+                            break;
+                        case 'Strike':
+                            $data["strike"][] = $item->value;
+                            if($this->spot_price !== null) {
+                                $data["strike_percentage"][] = round($item->value/$this->spot_price, 2);
+                            } else {
+                                $data["strike_percentage"] = null;
+                            }
+                            break;
+                        case 'Quantity':
+                                $data["nominal"][] = $item->value;
+                            break;
+                    }
+                }    
+            }   
+        }
+        $market_negotiation = $this->tradeNegotiation->marketNegotiation;
+        // volatility
+        if($market_negotiation->bid_qty) {
+            $data["volatility"][] = $market_negotiation->bid_qty;
+        }
+
+        if($market_negotiation->offer_qty) {
+            $data["volatility"][] = $market_negotiation->offer_qty;
+        }        
+
+        return $data;
     }
+
+    /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = null,$orderBy="updated_at",$order='ASC', $filter = null)
+    {
+        if($orderBy == null)
+        {
+            $orderBy = "updated_at";
+        }
+
+        if($order == null)
+        {
+            $order = "ASC";
+        }
+
+        $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
+        {
+            $q->whereHas('market',function($q) use ($term){
+                $q->where('title','like',"%$term%");
+            });
+        });
+
+        if($filter !== null) {
+            //dd($filter);
+            $trade_confirmations_query->whereDate('updated_at', $filter);
+        }
+
+        $trade_confirmations_query->orderBy($orderBy,$order);
+
+      return $trade_confirmations_query;
+  }
 }

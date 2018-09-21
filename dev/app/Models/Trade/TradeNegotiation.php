@@ -100,4 +100,13 @@ class TradeNegotiation extends Model
     {
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_negotiation_id');
     }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiation()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
 }

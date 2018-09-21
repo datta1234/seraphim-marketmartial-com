@@ -49,6 +49,6 @@
 		    @endslot
 		@endcomponent
 		
-		<my-activity-controller :years="{{ json_encode($years) }}"></my-activity-controller>
+		<my-activity-year-tables :years="{{ json_encode($years) }}"></my-activity-year-tables>
 	</div>
 @endsection

@@ -61,9 +61,8 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 //Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
 
 // Stats Components
-Vue.component('monthly-activity', require('./components/Stats/Components/MonthlyActivityComponent.vue'));
-Vue.component('year-table', require('./components/Stats/Components/YearTableComponent.vue'));
-Vue.component('my-activity-controller', require('./components/Stats/Controllers/MyActivityController.vue'));
+Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
+Vue.component('my-activity-year-tables', require('./components/Stats/MyActivityYearTables.vue'));
 
 Vue.mixin({
     methods: {
