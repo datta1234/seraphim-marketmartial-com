@@ -514,6 +514,7 @@ const app = new Vue({
         });
 
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]').content;
+        console.log("Org UUID: ", organisationUuid);
         if(organisationUuid)
         {
             window.Echo.private('organisation.'+organisationUuid)
