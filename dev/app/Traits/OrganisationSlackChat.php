@@ -113,7 +113,14 @@ trait OrganisationSlackChat {
             }
             \Log::error(array( "Errors" => $error_data));
             return false;
+        } catch(ErrorException $e) {
+            \Log::error($e);
+            return false;
+        }  catch(\Exception $e) {
+            \Log::error($e);
+            return false;
         }
+
 
         $formatted_messages = array();
         foreach ($response->messages as $message) {
