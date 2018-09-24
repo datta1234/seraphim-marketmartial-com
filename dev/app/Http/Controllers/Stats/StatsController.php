@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Stats;
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\Market;
@@ -96,10 +97,14 @@ class StatsController extends Controller
     {
         $user = $request->user();
         $trade_confirmations = TradeConfirmation::basicSearch(
+            $request->input('search'),
             null,
             null,
-            null,
-            $request->input('filter_date')
+            [
+                "filter_date" => $request->input('filter_date'),
+                "filter_market" => $request->input('filter_market'),
+                "filter_expiration" => $request->input('filter_expiration')
+            ]
         )->whereYear('updated_at',$request->input('year'))
             ->where(function ($tlq) use ($user) {
                 $tlq->organisationInvolved($user->organisation_id,'=')
@@ -114,13 +119,6 @@ class StatsController extends Controller
             return $trade_confirmation->preFormatStats($user);
         });
 
-        $markets = Market::all()->pluck("title","id");
-
-        dd($markets);
-
-        return response()->json([
-            "trade_confirmations" => $trade_confirmations, 
-            "markets" => $markets,
-        ]);
+        return response()->json($trade_confirmations);
     }
 }

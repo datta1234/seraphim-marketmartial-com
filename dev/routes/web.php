@@ -54,9 +54,13 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::resource('user-pref', 'UserPrefController');
 
 	Route::group(['prefix' => 'stats'], function() {
-		Route::get('/my-activity', 'StatsController@show')->name('my_activity.show');
-		Route::get('/my-activity/year', 'StatsController@myYearActivity')
+		Route::get('/my-activity', 'Stats\StatsController@show')->name('my_activity.show');
+		Route::get('/my-activity/year', 'Stats\StatsController@myYearActivity')
 			->name('my_activity.year');
+		Route::get('/my-activity/markets', 'Stats\MarketController@index')
+			->name('my_activity.markets');
+		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
+			->name('my_activity.expirations');
 	});
 });
 

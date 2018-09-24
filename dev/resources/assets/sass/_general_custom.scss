@@ -37,11 +37,15 @@ body
 		background-color: $mm-panel;
 		border: none;
 		color:  $mm-white;
-
-		span.icon {
+		
+		a, span.icon {
 			color: $mm-white;
+		}
+		
+		span.icon {
 			font-size:4rem;
 		}
+
 	}
 
 	.card-body {

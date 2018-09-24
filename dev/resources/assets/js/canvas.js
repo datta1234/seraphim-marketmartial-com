@@ -35,9 +35,9 @@ import { Bar } from 'vue-chartjs';
  */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faSearch);
+library.add(faSearch, faCalendarAlt);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

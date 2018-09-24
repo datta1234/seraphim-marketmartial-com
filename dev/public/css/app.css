@@ -10602,8 +10602,12 @@ body .page-title h1 {
   color: #ffffff;
 }
 
+.card .card-header a,
 .card .card-header span.icon {
   color: #ffffff;
+}
+
+.card .card-header span.icon {
   font-size: 4rem;
 }
 
@@ -12459,6 +12463,10 @@ input:checked + .slider:before {
 
 .create-user {
   display: inline;
+}
+
+.canvas-body .mm-button {
+  font-size: 0.9rem;
 }
 
 @font-face {

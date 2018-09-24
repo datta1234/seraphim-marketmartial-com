@@ -1,7 +1,7 @@
 <template>
     <div dusk="monthly-activity" class="monthly-activity" >
     	<div v-for="(data,market) in graph_data" class="btn-group" role="group" aria-label="Basic example">
-		  	<button @click="setChartData(data,market)" type="button" class="btn btn-secondary mr-2">{{ market }}</button>
+		  	<button @click="setChartData(data,market)" type="button" class="btn mm-button mr-2">{{ market }}</button>
 		</div>
 		<div class="card graph-card">
 			<div v-if="has_data" class="card-body">

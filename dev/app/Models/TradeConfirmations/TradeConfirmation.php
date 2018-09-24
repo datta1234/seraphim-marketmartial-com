@@ -325,8 +325,17 @@ class TradeConfirmation extends Model
         });
 
         if($filter !== null) {
-            //dd($filter);
-            $trade_confirmations_query->whereDate('updated_at', $filter);
+            if($filter["filter_date"] !== null) {
+                $trade_confirmations_query->whereDate('updated_at', $filter["filter_date"]);
+            }
+
+            if($filter["filter_market"] !== null) {
+                $trade_confirmations_query->where('market_id', $filter["filter_market"]);
+            }
+
+            if($filter["filter_expiration"] !== null) {
+                //$trade_confirmations_query->whereDate('updated_at', $filter_date);
+            }
         }
 
         $trade_confirmations_query->orderBy($orderBy,$order);

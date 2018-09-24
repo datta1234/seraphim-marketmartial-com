@@ -2,17 +2,66 @@
     <div dusk="my-activity-year-tables" class="my-activity-year-tables">
         <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
             <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle="'accordion'+index" variant="info">{{ year }}</b-btn>
+                <b-btn block href="#" v-b-toggle="'accordion'+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
             </b-card-header>
             <b-collapse :id="'accordion'+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
-                    <datepicker @selected="applyDateFilter(index)" 
-                                v-model="table_data[index].filter_date" 
-                                :name="year+'-table-datepicker'">
-                                <span slot="afterDateInput" class="animated-placeholder">
-                                    Choose a Date
-                                </span>                        
-                    </datepicker>
+                    <b-row>
+                        <b-col cols="12">
+                            <b-form v-on:submit.prevent="" id="chat-message-form">
+                                <b-row class="mt-4">
+                                    <b-col cols="1">
+                                        <label class="mr-sm-2" :for="'stats-table-markets'+index">Markets:</label>
+                                    </b-col>
+                                    <b-col cols="3">
+                                        <b-form-select :id="'stats-table-markets'+index"
+                                                   class="w-100"
+                                                   :options="markets_filter"
+                                                   v-model="table_data[index].filter_market">
+                                        </b-form-select>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="mt-2">
+                                    <b-col cols="1">
+                                        <label class="mr-sm-2" :for="'stats-table-expiration'+index">Expiration:</label>
+                                    </b-col>
+                                    <b-col cols="3">
+                                        <b-form-select :id="'stats-table-expiration'+index"
+                                                       class="w-100"
+                                                       :options="expiration_filter"
+                                                       v-model="table_data[index].filter_expiration">
+                                        </b-form-select>
+                                    </b-col>
+                                </b-row>
+                                <b-row class="mt-2">
+                                    <b-col cols="1">
+                                        <label class="mr-sm-2" :for="'stats-table-search'+index">Underlying:</label>
+                                    </b-col>
+                                    <b-col cols="3">
+                                        <b-input v-model="table_data[index].search" class="w-100 mr-0" :id="'stats-table-search'+index" placeholder="e.g. NPN" />
+                                    </b-col>
+                                    <b-col cols="2">
+                                        <button type="submit" 
+                                                class="btn mm-button w-100 float-right ml-0 mr-2" 
+                                                @click="loadTableData(index, false)">
+                                            Filter
+                                        </button>
+                                    </b-col>
+                                    <b-col cols="3" offset="3">
+                                        <datepicker v-model="table_data[index].filter_date"
+                                                    class="float-right"
+                                                    :name="year+'-table-datepicker'">
+                                                    <span slot="afterDateInput" class="animated-placeholder">
+                                                        <button class="btn mm-button">
+                                                            <font-awesome-icon icon="calendar-alt"></font-awesome-icon>
+                                                        </button>
+                                                    </span>                        
+                                        </datepicker>
+                                    </b-col>
+                                </b-row>
+                            </b-form>
+                        </b-col>
+                    </b-row>
                     <!-- Main table element -->
                     <b-table v-if="table_data_loaded && table_data[index].data != null"
                              class="mt-2 stats-table"
@@ -74,11 +123,18 @@
                     { key: 'trader', label: 'Trader' },
                 ],
                 table_data:{},
-                    sort_options: {
+                markets_filter: [
+                    {text: "All Markets", value: null},
+                ],
+                expiration_filter: [
+                    {text: "All Expirations", value: null},
+                ],
+                sort_options: {
                     search: '',
                     filter: null,
                     order_by: null,
                     order_ascending: true,
+                    markets:null,
                 },
             };
         },
@@ -104,6 +160,9 @@
                             'page': this.table_data[index].current_page,
                             'year': this.table_years[index],
                             'filter_date': this.table_data[index].filter_date ? moment(this.table_data[index].filter_date).format('YYYY-MM-DD'): null,
+                            "filter_market": this.table_data[index].filter_market,
+                            "filter_expiration": this.table_data[index].filter_expiration,
+                            "search": this.table_data[index].search
                         }
                     })
                     .then(activityResponse => {
@@ -128,15 +187,56 @@
                     });
                 }
             },
+            loadMarkets() {
+                axios.get(axios.defaults.baseUrl + 'my-activity/markets')
+                .then(marketsResponse => {
+                    if(marketsResponse.status == 200) {
+                        console.log("FROM SERVER: ",marketsResponse.data);
+                        Object.keys(marketsResponse.data).forEach(key => {
+                            this.markets_filter.push({
+                                text: marketsResponse.data[key],
+                                value: key
+                            });
+                        });
+                        //this.markets_filter
+                    } else {
+                        console.error(err); 
+                    }
+                }, err => {
+                    console.error(err);
+                });
+            },
+            loadExpirations() {
+                axios.get(axios.defaults.baseUrl + 'my-activity/expirations')
+                .then(expirationsResponse => {
+                    if(expirationsResponse.status == 200) {
+                        console.log("FROM SERVER: ",expirationsResponse.data);
+                        Object.keys(expirationsResponse.data).forEach(key => {
+                            this.expiration_filter.push({
+                                text: moment(expirationsResponse.data[key].date).format('DD MMM YYYY'),
+                                value: key
+                            });
+                        });
+                        //
+                    } else {
+                        console.error(err); 
+                    }
+                }, err => {
+                    console.error(err);
+                });
+            },
             initTableData() {
                 this.table_years.forEach( (element, key) => {
                     this.table_data[key] = {
                         data: null,
                         date: element,
-                        filter_date: null,
                         current_page: 1,
                         per_page: 10,
                         total: 10,
+                        filter_date: null,
+                        filter_market: null,
+                        filter_expiration:null,
+                        search: null,
                     };
                 });
                 this.loadTableData(0, false)
@@ -170,11 +270,6 @@
                 this.table_data[index].current_page = $event;
                 this.loadTableData(index, false);
             },
-            applyDateFilter(index) {
-                Vue.nextTick( () => {
-                    this.loadTableData(index, false);
-                });
-            },
         },
         mounted() {
             let unordered_years = [];
@@ -184,6 +279,8 @@
             this.$root.dateStringArraySort(unordered_years, 'YYYY');
             this.table_years = unordered_years.reverse();
             this.$root.$on('bv::toggle::collapse',this.toggleState);
+            this.loadMarkets();
+            this.loadExpirations();
             this.initTableData();
         }
     }
