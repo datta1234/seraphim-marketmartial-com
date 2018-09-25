@@ -25,7 +25,7 @@ class TradeNegotiationController extends Controller
         $tradeNegotiation = $marketNegotiation->addTradeNegotiation($user,$request->all());
         
        // $user->organisation->notify("market_request_store","Response sent to interest.",true);
-        $marketNegotiation->userMarket->userMarketRequest->notifyRequested();
+        $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
         return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to interest."]);
 
     }

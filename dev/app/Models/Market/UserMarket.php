@@ -382,7 +382,7 @@ class UserMarket extends Model
             "is_maker"              =>  $is_maker,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                        return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+                                        return $item->setOrgContext($this->org_context)->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];
 

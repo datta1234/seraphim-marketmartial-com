@@ -11963,7 +11963,9 @@ input:checked + .slider:before {
 }
 
 .trade-section.light-theme .market-tab.trade-negotiation-pending,
-.trade-section.dark-theme .market-tab.trade-negotiation-pending {
+.trade-section.light-theme .market-tab.trade-negotiation-open,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending,
+.trade-section.dark-theme .market-tab.trade-negotiation-open {
   background-color: #E17428;
 }
 

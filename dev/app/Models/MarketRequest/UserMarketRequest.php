@@ -174,16 +174,16 @@ class UserMarketRequest extends Model
         return $data;
     }
 
-    private static $authedUserMarket = null;
+    private  $authedUserMarket = null;
     public function getAuthedUserMarketAttribute() {
-        if(!self::$authedUserMarket) {
-            self::$authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
+        if(!$this->authedUserMarket) {
+            $this->authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
                 $q->where('organisation_id',$this->resolveOrganisationId());
             })->orderBy('updated_at', 'DESC')
             ->with('currentMarketNegotiation')
             ->first();
         }
-        return self::$authedUserMarket;
+        return $this->authedUserMarket;
     }
 
     public function notifyRequested($organisations = [], $messages = null)
@@ -228,7 +228,6 @@ class UserMarketRequest extends Model
         if($this->chosenUserMarket != null)
         {
             $marketCount = $this->chosenUserMarket->marketNegotiations()->count();
-
             if($marketCount == 1)
             {
                 return $interest_org_id == $current_org_id;
@@ -254,29 +253,22 @@ class UserMarketRequest extends Model
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-           return $this->chosenUserMarket->marketNegotiations()->where(function($query){
-                    $query->where('is_repeat',true)
-                            ->whereHas('marketNegotiationParent',function($query){
-                                    $query->where('is_repeat',true);
-                            });
-            })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
+            {
+              return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat; 
+            }
         }
+        return false;
     }
 
-
-    
- 
-
-    public function lastTradeNegotiationunTraded()
+    public function lastTradeNegotiationUnTraded()
     {
-        if($this->chosenUserMarket()->exists())
+        if(!is_null($this->chosenUserMarket))
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded;  
         }
     }
-
-
 
     public function getStatus($current_org_id)
     {
@@ -366,7 +358,7 @@ class UserMarketRequest extends Model
 
     public function getCurrentUserRoleInTradeNegotiation($current_org_id)
     {
-        if($this->chosenUserMarket()->exists())
+        if(!is_null($this->chosenUserMarket))
         {
             $tradeNegotiationRoles = ["other"];
 
@@ -398,7 +390,7 @@ class UserMarketRequest extends Model
 
         $current_org_id =  $this->resolveOrganisationId();
         $interest_org_id = $this->user->organisation->id;
-        $market_maker_org_id = $this->chosenUserMarket()->exists() ? $this->chosenUserMarket->organisation->id : null;
+        $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
