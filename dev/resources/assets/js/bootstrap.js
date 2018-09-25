@@ -28,7 +28,7 @@ switch(process.env.NODE_ENV) {
         window.axios.defaults.baseUrl = "";
     break;
     case "staging":
-        window.axios.defaults.baseUrl = "http://staging.assemble.co.za/marketmartial/public/";
+        window.axios.defaults.baseUrl = "";
     break;
     case "production":
         window.axios.defaults.baseUrl = "";
