@@ -51,9 +51,9 @@ class UserMarket extends Model
      */
     protected $casts = [
         'user_id'                   => 'int',
-        'is_trade_away'             => 'boolean',
-        'is_on_hold'                => 'boolean',
-        'is_market_maker_notified'  => 'boolean',
+        'is_trade_away'             => 'Boolean',
+        'is_on_hold'                => 'Boolean',
+        'is_market_maker_notified'  => 'Boolean',
         'user_market_request_id'    => 'int',
     ];
 
@@ -250,40 +250,39 @@ class UserMarket extends Model
 
     public function spinNegotiation($user)
     {
-            $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
-            // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
-            $marketNegotiation = $oldNegotiation->replicate();
-            $marketNegotiation->is_repeat = true;
+        $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
+        // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+        $marketNegotiation = $oldNegotiation->replicate();
+        $marketNegotiation->is_repeat = true;
 
-            $marketNegotiation->user_id = $user->id;
-            $counterNegotiation = $this->marketNegotiations()
-                                            ->findCounterNegotiation($user)
-                                            ->first();
+        $marketNegotiation->user_id = $user->id;
+        $counterNegotiation = $this->marketNegotiations()
+                                        ->findCounterNegotiation($user)
+                                        ->first();
 
-            if($counterNegotiation)
-            {
-                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
-                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-            }
+        if($counterNegotiation)
+        {
+            $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+            $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+        }
 
-            try {
-                 DB::beginTransaction();
+        try {
+             DB::beginTransaction();
 
-                $this->marketNegotiations()->save($marketNegotiation);
-                $this->current_market_negotiation_id = $marketNegotiation->id;
-                $this->save();
-                // if($counterNegotiation)
-                // {
-                //  $this->setCounterAction($counterNegotiation);
-                // }
-                DB::commit();
-                return $marketNegotiation;
-            } catch (\Exception $e) {
-                \Log::error($e->getMessage());
-                DB::rollBack();
-                return false;
-            }
-       
+            $this->marketNegotiations()->save($marketNegotiation);
+            $this->current_market_negotiation_id = $marketNegotiation->id;
+            $this->save();
+            // if($counterNegotiation)
+            // {
+            //  $this->setCounterAction($counterNegotiation);
+            // }
+            DB::commit();
+            return $marketNegotiation;
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            DB::rollBack();
+            return false;
+        }
     }
 
 

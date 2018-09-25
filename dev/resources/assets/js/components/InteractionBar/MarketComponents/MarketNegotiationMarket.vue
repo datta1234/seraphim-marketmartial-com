@@ -35,7 +35,7 @@
             marketNegotiation: {
                 type: UserMarketNegotiation
             },
-            markerQoute: {
+            makerQuote: {
                 type: UserMarketQuote
             },
             disabled: {
@@ -46,7 +46,7 @@
         watch: {
             marketNegotiation: {
                 handler:function() {
-                    this.$emit('validate-proposal', this.check_invalid);
+                    this.$emit('validate-proposal', this.check_invalid());
                 },
                 deep: true
             }
@@ -55,8 +55,11 @@
             return {
             };
         },
-        computed: {
-            'check_invalid':function(){
+        methods: {
+            'is_empty': function(value){
+                return value === undefined || value === null || value === '';
+            },
+            'check_invalid':function() {
                 let invalid_states = {
                     all_empty: false,
                     bid_pair: false,
@@ -65,40 +68,45 @@
                 };
 
                 //new
-                invalid_states.all_empty = this.is_empty(this.marketNegotiation.bid)
-                    && this.is_empty(this.marketNegotiation.bid_qty)
-                    && this.is_empty(this.marketNegotiation.offer)
-                    && this.is_empty(this.marketNegotiation.offer_qty);
+                invalid_states.all_empty = 
+                        this.is_empty(this.marketNegotiation.bid)
+                    &&  this.is_empty(this.marketNegotiation.bid_qty)
+                    &&  this.is_empty(this.marketNegotiation.offer)
+                    &&  this.is_empty(this.marketNegotiation.offer_qty);
 
                 // Check that bid and bid_qty are present together
-                invalid_states.bid_pair = (!this.is_empty(this.marketNegotiation.bid)  
-                    && this.is_empty(this.marketNegotiation.bid_qty)) 
-                    || (this.is_empty(this.marketNegotiation.bid)  
-                    && !this.is_empty(this.marketNegotiation.bid_qty));
+                invalid_states.bid_pair = (
+                        !this.is_empty(this.marketNegotiation.bid)  
+                        &&  this.is_empty(this.marketNegotiation.bid_qty)) 
+                    || (
+                        this.is_empty(this.marketNegotiation.bid)  
+                        && !this.is_empty(this.marketNegotiation.bid_qty)
+                    );
              
                 // Check bid offer and offer_qty are present together
-                invalid_states.offer_pair = ( !this.is_empty(this.marketNegotiation.offer)  
-                    && this.is_empty(this.marketNegotiation.offer_qty)) 
-                    || (this.is_empty(this.marketNegotiation.offer)  
-                    && !this.is_empty(this.marketNegotiation.offer_qty));
+                invalid_states.offer_pair = ( 
+                        this.is_empty(this.marketNegotiation.offer)  
+                        && this.is_empty(this.marketNegotiation.offer_qty)) 
+                    || (
+                        this.is_empty(this.marketNegotiation.offer)  
+                        && !this.is_empty(this.marketNegotiation.offer_qty)
+                    );
                 
                 // Check for previous quote
-                if(typeof this.markerQoute != 'undefined') {
+                if(typeof this.makerQuote != 'undefined') {
 
-                    // Check new markerQoute is equal to old markerQoute
-                    invalid_states.previous = this.marketNegotiation.bid == this.markerQoute.bid
-                    && this.marketNegotiation.bid_qty == this.markerQoute.bid_qty
-                    && this.marketNegotiation.offer == this.markerQoute.offer
-                    && this.marketNegotiation.offer_qty == this.markerQoute.offer_qty;
+                    // Check new makerQuote is equal to old makerQuote
+                    invalid_states.previous = 
+                            this.marketNegotiation.bid > this.makerQuote.bid
+                        &&  this.marketNegotiation.bid_qty == this.makerQuote.bid_qty
+                        &&  this.marketNegotiation.offer < this.makerQuote.offer
+                        &&  this.marketNegotiation.offer_qty == this.makerQuote.offer_qty;
                 }
 
+
+                console.log(invalid_states, this.marketNegotiation, this.makerQuote);
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
-            }
-        },
-        methods: {
-            'is_empty': function(value){
-                return value === undefined || value === null || value === '';
             }
         },
         mounted() {

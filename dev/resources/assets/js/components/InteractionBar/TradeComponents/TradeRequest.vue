@@ -36,9 +36,9 @@
                     </b-row>
                     <b-row> 
                         
-                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation) }} </small></b-col>
+                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
                         
-                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation) }} </small></b-col>
+                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "offer") }} </small></b-col>
 
 
                     </b-row>
@@ -124,7 +124,7 @@
                  this.liftOpen = false
                  this.hitOpen = false;
             },
-            getConditionState(marketNegotiation) {
+            getConditionState(marketNegotiation, field) {
                 
                 // for(var k in marketNegotiation) {
 
@@ -140,29 +140,45 @@
                 //     }
                 // }
 
+                // for(let k in this.$root.config("condition_titles")) {
+                //     let cond = this.$root.config("condition_titles")[k];
+                //     if(marketNegotiation[k] != null) {
+                //         if(cond.constructor == String) {
+                //             return cond;
+                //         } else {
+                //             return cond[new Boolean(marketNegotiation[k]).toString()];
+                //         }
+                //     }
+                // }
+                let getConditionText = (cond, object, field) => {
+                    // ensure the value exists in both object and condition test
+                    if(typeof object[cond.condition] !== 'undefined' && typeof cond[String(object[cond.condition])] !== 'undefined') {
+                        if(cond[String(object[cond.condition])].constructor === Object && typeof cond[String(object[cond.condition])].condition !== 'undefined') {
+                            return getConditionText(cond[String(object[cond.condition])], object, field)
+                        }
+                        return cond[String(object[cond.condition])][field]
+                    }
+                    return ""
+                };
+
                 for(let k in this.$root.config("condition_titles")) {
                     let cond = this.$root.config("condition_titles")[k];
-                    if(marketNegotiation[k] != null) {
-                        if(cond.constructor == String) {
-                            return cond;
-                        } else {
-                            return cond[new Boolean(marketNegotiation[k]).toString()];
-                        }
+                    let text = getConditionText(cond, marketNegotiation, field);
+                    if(text != null && text !="") {
+                        return text;
                     }
                 }
-
                 return null;
             },
-            getText(attr,marketNegotiation)
-            {
+            getText(attr,marketNegotiation) {
                 let source = marketNegotiation.getAmountSource(attr);
                 if(source.id != marketNegotiation.id && marketNegotiation.is_repeat)
                 {
-                    return marketNegotiation.is_interest == source.is_interest || marketNegotiation.is_marker == source.is_maker ? "SPIN " + marketNegotiation[attr]  : marketNegotiation[attr];
+                    return marketNegotiation.is_interest == source.is_interest || marketNegotiation.is_maker == source.is_maker ? "SPIN " + marketNegotiation[attr]  : marketNegotiation[attr];
                 }
                 return marketNegotiation[attr];
             },
-            getStateClass(attr){
+            getStateClass(attr) {
 
                 let source = this.marketNegotiation.getAmountSource(attr);
                  return {

@@ -48,7 +48,7 @@ export default class UserMarket extends BaseModel {
 
         this.active_fok = null;
         if(options && options.active_fok) {
-            this.active_fok = new UserMarketNegotiation(options.active_fok);
+            this.setActiveFoK(options.active_fok);
         }
     }
 
@@ -81,6 +81,20 @@ export default class UserMarket extends BaseModel {
 
         user_market_negotiation.setUserMarket(this);
         this.market_negotiations.push(user_market_negotiation);
+    }
+
+    /**
+    *   addNegotiation - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActiveFoK(active_fok) {
+        
+        if(!(active_fok instanceof UserMarketNegotiation)) {
+            active_fok = new UserMarketNegotiation(active_fok);
+        }
+
+        active_fok.setUserMarket(this);
+        this.active_fok = active_fok;
     }
 
     /**

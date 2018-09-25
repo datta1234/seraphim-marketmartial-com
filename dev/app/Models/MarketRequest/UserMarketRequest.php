@@ -174,16 +174,16 @@ class UserMarketRequest extends Model
         return $data;
     }
 
-    private static $authedUserMarket = null;
+    private $authedUserMarket = null;
     public function getAuthedUserMarketAttribute() {
-        if(!self::$authedUserMarket) {
-            self::$authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
+        if(!$this->$authedUserMarket) {
+            $this->$authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
                 $q->where('organisation_id',$this->resolveOrganisationId());
             })->orderBy('updated_at', 'DESC')
             ->with('currentMarketNegotiation')
             ->first();
         }
-        return self::$authedUserMarket;
+        return $this->$authedUserMarket;
     }
 
     public function notifyRequested($organisations = [], $messages = null)
@@ -281,27 +281,35 @@ class UserMarketRequest extends Model
     public function getStatus($current_org_id)
     {
         //method also used inside policies so be aware when updating
-        $hasQuotes       = $this->userMarkets != null;
-        $acceptedState   =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
-        $marketOpen      =  $acceptedState ? $this->openToMarket() : false;
-        $lastUntraded    =  $this->lastTradeNegotiationUnTraded();
-
+        $hasQuotes          =  $this->userMarkets != null;
+        $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
+        $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
+        $is_killed          =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->is_killed === true : false;
+        $lastUntraded       =  $this->lastTradeNegotiationUnTraded();
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
         if(!$hasQuotes)
         {
             return "request";
-        }else if($hasQuotes && !$acceptedState)
+        }
+        elseif($hasQuotes && !$acceptedState)
         {
             return "request-vol";
-        }else if($acceptedState && !$marketOpen && !$lastUntraded)
-        {
-            return 'negotiation-pending';
-        }elseif ($marketOpen && !$lastUntraded)
+        }
+        elseif($acceptedState && !$marketOpen && !$lastUntraded && $is_killed)
         {
             return 'negotiation-open';
-        }elseif($lastUntraded)
+        }
+        elseif($acceptedState && !$marketOpen && !$lastUntraded)
+        {
+            return 'negotiation-pending';
+        }
+        elseif ($marketOpen && !$lastUntraded)
+        {
+            return 'negotiation-open';
+        }
+        elseif($lastUntraded)
         {
             return 'trade-negotiation-pending';
         }

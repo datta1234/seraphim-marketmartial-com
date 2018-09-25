@@ -92,6 +92,13 @@
             }
         },
         computed: {
+            negotiation_stage() {
+                let chosen_market = this.marketNegotiation.chosen_user_market;
+                if(chosen_market == null) {
+                    return 'quote';
+                }
+                return '';
+            },
             condition_aliases() {
                 let getAlias = (list, group) => {
                     return list.reduce((a, v, i) => {
@@ -113,6 +120,15 @@
             }
         },
         methods: {
+            conditionDisplayed(cond){
+                if(cond.only) {
+                    if(cond.only == this.negotiation_stage) {
+                        return true;
+                    }
+                    return false;
+                }
+                return true;
+            },
             onToggleClick(condition, group) {
                 if(condition.children) {
                     condition.children.forEach(child => {

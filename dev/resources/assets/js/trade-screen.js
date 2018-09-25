@@ -513,11 +513,11 @@ const app = new Vue({
             });
         });
 
-        let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]').content;
-        console.log("Org UUID: ", organisationUuid);
-        if(organisationUuid)
+        let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
+        if(organisationUuid && organisationUuid.content)
         {
-            window.Echo.private('organisation.'+organisationUuid)
+            console.log("Org UUID: ", organisationUuid.content);
+            window.Echo.private('organisation.'+organisationUuid.content)
             .listen('.UserMarketRequested', (userMarketRequest) => {
                 console.log("Fired '.UserMarketRequested'", userMarketRequest);
                 //this should be the market thats created
@@ -530,6 +530,12 @@ const app = new Vue({
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived', received_org_message);
             }); 
+        } else {
+            console.error("Missing Organisation UUID");
+            let re = confirm("Failed to load Organisation Credentials\nPlease reload your page\n\nIf problem persists, please contact an administrator\nReload Now?");
+            if(re) {
+                location.reload();
+            }
         }
         // Event listener for removing things from no cares
         EventBus.$on('addToNoCares', this.addToNoCares);

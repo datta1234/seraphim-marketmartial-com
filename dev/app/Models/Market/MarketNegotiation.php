@@ -78,15 +78,16 @@ class MarketNegotiation extends Model
     protected $appends = ["time"];
 
     protected $casts = [
-        'is_private' => 'Boolean',
-        "cond_is_repeat_atw" => 'Boolean',
-        "cond_fok_apply_bid" => 'Boolean',
-        "cond_fok_spin" => 'Boolean',
-        "cond_timeout" => 'Boolean',
-        "cond_is_ocd" => 'Boolean',
-        "cond_is_subject" => 'Boolean',
-        "cond_buy_mid" => 'Boolean',
-        "cond_buy_best" => 'Boolean',
+        'is_killed'             => 'Boolean',
+        'is_private'            => 'Boolean',
+        "cond_is_repeat_atw"    => 'Boolean',
+        "cond_fok_apply_bid"    => 'Boolean',
+        "cond_fok_spin"         => 'Boolean',
+        "cond_timeout"          => 'Boolean',
+        "cond_is_ocd"           => 'Boolean',
+        "cond_is_subject"       => 'Boolean',
+        "cond_buy_mid"          => 'Boolean',
+        "cond_buy_best"         => 'Boolean',
     ];
 
     protected $applicableConditions = [
@@ -180,8 +181,8 @@ class MarketNegotiation extends Model
     }
 
     public function kill() {
-        $this->is_killed = true; // && with_fire = true; ;)
-        $this->save();
+        $this->is_killed = true; // && with_fire = true ;)
+        return $this->save();
     }
 
     /**
@@ -232,14 +233,16 @@ class MarketNegotiation extends Model
     public function setAmount($marketNegotiations,$attr)
     {
         $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
+        if($this->is_killed && $this->getAttribute($attr) == null) {
+            return "";
+        }
         if($this->is_repeat && $this->id != $source->id)
         {
-            return $this->user->organisation_id == $source->user->organisation_id ? "SPIN" : $this->getAttribute($attr);
-        }else
-        {
-            return $this->getAttribute($attr);
-       
+            if($this->user->organisation_id == $source->user->organisation_id) {
+                return "SPIN";
+            }
         }
+        return $this->getAttribute($attr);
     }
 
     private function setCounterAction($counterNegotiation)
@@ -340,7 +343,8 @@ class MarketNegotiation extends Model
             "is_killed"             => $this->is_killed,
             "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
             "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
-            "cond_fok_spin"         => $this->cond_fok_spin,
+            // "cond_fok_spin"         => $this->cond_fok_spin,
+            "cond_fok"              => $this->isFoK(),
             "cond_timeout"          => $this->cond_timeout,
             "cond_is_ocd"           => $this->cond_is_ocd,
             "cond_is_subject"       => $this->cond_is_subject,
@@ -386,10 +390,10 @@ class MarketNegotiation extends Model
     /**
     * Apply cond_fok_apply_bid & cond_fok_spin
     */
-    private static $fok_applied = false;
+    private $fok_applied = false;
     public function applyFOKCondition() {
-        if (!self::$fok_applied) {
-            self::$fok_applied = true;
+        if (!$this->$fok_applied) {
+            $this->$fok_applied = true;
 
             // Prefer to kill
             if( $this->cond_fok_spin == true ) {

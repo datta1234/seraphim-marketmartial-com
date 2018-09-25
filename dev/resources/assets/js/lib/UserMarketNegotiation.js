@@ -36,6 +36,7 @@ export default class UserMarketNegotiation extends BaseModel {
             status: "",
             is_private: false,
             cond_is_repeat_atw: null,
+            cond_fok: null,
             cond_fok_apply_bid: null,
             cond_fok_spin: null,
             cond_timeout: null,

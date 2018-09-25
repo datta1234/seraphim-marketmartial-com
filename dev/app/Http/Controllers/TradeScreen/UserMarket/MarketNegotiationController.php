@@ -47,7 +47,6 @@ class MarketNegotiationController extends Controller
         }else
         {
             $this->authorize('addNegotiation',$userMarket);
-            
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
         }
        
@@ -94,7 +93,7 @@ class MarketNegotiationController extends Controller
      */
     public function update(MarketNegotiationRequest $request,UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        //
+        // $request->has('')
     }
 
     /**
@@ -105,6 +104,11 @@ class MarketNegotiationController extends Controller
      */
     public function destroy(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        $marketNegotiation->kill();
+        $success = $marketNegotiation->kill();
+        //broadCast Update;
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        return response()->json([
+            "data" => $success
+        ]);
     }
 }

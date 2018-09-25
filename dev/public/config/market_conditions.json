@@ -56,7 +56,8 @@
                                 "cond_timeout"
                             ]
                         }, 
-                        "text": "Both Bid & Offer"
+                        "text": "Both Bid & Offer",
+                        "only": "quote"
                     }
                 ]
             },
