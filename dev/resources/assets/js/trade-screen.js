@@ -530,6 +530,8 @@ const app = new Vue({
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived', received_org_message);
             }); 
+        } else {
+            console.error("Failed to get organisation UUID");
         }
         // Event listener for removing things from no cares
         EventBus.$on('addToNoCares', this.addToNoCares);

@@ -28,10 +28,10 @@ switch(process.env.NODE_ENV) {
         window.axios.defaults.baseUrl = "";
     break;
     case "staging":
-        window.axios.defaults.baseUrl = "http://staging.marketmartial.com";
+        window.axios.defaults.baseUrl = "";
     break;
     case "production":
-        window.axios.defaults.baseUrl = "http://staging.marketmartial.com";
+        window.axios.defaults.baseUrl = "";
     break;
     case "test":
         window.axios.defaults.baseUrl = "http://unit.marketmartial.test";
@@ -61,5 +61,4 @@ if (token) {
  */
 
 // import Echo from 'laravel-echo'
-
 window.Pusher = require('pusher-js');
