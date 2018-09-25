@@ -33,7 +33,7 @@
 
             </div>
                 <b-row>
-                    <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                    <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       

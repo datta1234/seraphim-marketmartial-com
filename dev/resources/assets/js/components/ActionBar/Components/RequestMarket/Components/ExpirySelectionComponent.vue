@@ -8,7 +8,7 @@
                 </b-col>
             </b-row>
             <div v-if="dates_loaded && expiry_dates.length > 0" class="card-columns">
-                <div v-for="expiry_date in expiry_dates" class="card card-reset">
+                <div :key="index" v-for="(expiry_date, index) in expiry_dates" class="card card-reset">
                     <b-button :disabled="checkPastDate(expiry_date.expiration_date)" class="mm-modal-market-button w-100" @click="selectExpiryDates(expiry_date.expiration_date)">
                         {{ castToMoment(expiry_date.expiration_date) }}
                     </b-button>
@@ -31,7 +31,7 @@
                 </b-col>
             </b-row>
             <b-row v-if="errors.messages.length > 0" class="text-center mt-3">
-                <b-col v-for="error in errors.messages" cols="12">
+                <b-col :key="index" v-for="(error, index) in errors.messages" cols="12">
                     <p class="text-danger mb-0">{{ error }}</p>
                 </b-col>
             </b-row>

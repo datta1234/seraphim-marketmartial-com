@@ -93,6 +93,18 @@ class UserMarket extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function makerMarketNegotiation()
+    {
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+                    ->where('is_killed', false)
+                    ->orderBy('created_at', 'ASC')
+                    ->orderBy('id', 'ASC');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function userMarketSubscriptions()
     {
         return $this->hasMany('App\Models\Market\UserMarketSubscription','user_market_id');
@@ -189,11 +201,6 @@ class UserMarket extends Model
         return $marketRequest->save();
     }
 
-    public function resetCurrent() {
-        $this->current_market_negotiation_id = $this->firstNegotiation->id;
-        $this->save();
-    }
-
     /**
     * Return Boolean
     * if the person presented q qoute and was placed on hold the can repaet market negotaui
@@ -257,7 +264,6 @@ class UserMarket extends Model
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-                $this->setCounterAction($counterNegotiation);
             }
 
             try {
@@ -266,6 +272,7 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
+
                 if($counterNegotiation)
                 {
                     $this->setCounterAction($counterNegotiation);
@@ -314,7 +321,7 @@ class UserMarket extends Model
                 $this->save();
                 if($counterNegotiation)
                 {
-                 $this->setCounterAction($counterNegotiation);
+                     $this->setCounterAction($counterNegotiation);
                 }
                 DB::commit();
                 return $marketNegotiation;
@@ -325,33 +332,68 @@ class UserMarket extends Model
             }
     }
 
+    public function isMaker($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        if($this->makerMarketNegotiation == null) {
+            return $org == $this->firstNegotiation->user->organisation_id;
+        }
+        return $org == $this->makerMarketNegotiation->user->organisation_id;
+    }
+
+    public function isInterest($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        return $org == $this->userMarketRequest->user->organisation_id;
+    }
+
+    public function isCounter($user = null) {
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+        if($this->currentMarketNegotiation->marketNegotiationParent == null) {
+            return null;
+        }
+        return $org == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+    }
+
+    
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
     public function preFormattedMarket()
     {
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
         
-        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->excludingFoKs()->get();
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->get();
+        // @TODO addd back excludeFoKs but filter to only killed ones
 
         $data = [
-            "id"                    => $this->id,
-            "is_interest"           => $is_interest,
-            "is_maker"              => $is_maker,
-            "time"                  => $this->created_at->format("H:i"),
-            "market_negotiations"   => $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                                return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+            "id"                    =>  $this->id,
+            "is_interest"           =>  $is_interest,
+            "is_maker"              =>  $is_maker,
+            "time"                  =>  $this->created_at->format("H:i"),
+            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
+                                        return $item->setOrgContext($this->org_context)->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];
 
         // add Active FoK if exists
-        if($this->currentMarketNegotiation->isFoK()) {
+        if($this->currentMarketNegotiation->isFoK() && $this->currentMarketNegotiation->is_killed !== true) {
             // only if counter
-            $is_counter = $this->resolveOrganisationId() == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
-            $is_counter = true;
-            if($is_counter) {
+            $active = $this->isCounter();
+            if($active === null) {
+                $active = $this->isInterest();
+            }
+            if($active) {
                 $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
             }
         }
@@ -365,8 +407,8 @@ class UserMarket extends Model
     */
     public function preFormattedQuote()
     {
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-        $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
 
 
         $data = [
@@ -402,8 +444,8 @@ class UserMarket extends Model
     public function preFormatted()
     {
 
-        $is_maker = is_null($this->user->organisation) ? false : $this->resolveOrganisationId() == $this->user->organisation->id;
-       $is_interest = is_null($this->userMarketRequest->user->organisation) ? false : $this->resolveOrganisationId() == $this->userMarketRequest->user->organisation->id;
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
 
         $data = [
             "id"    => $this->id,

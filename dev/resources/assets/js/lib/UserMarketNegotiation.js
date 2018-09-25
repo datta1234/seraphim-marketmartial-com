@@ -112,17 +112,17 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  store
     */
-    storeNegotiation() {
+    storeNegotiation(user_market) {
         // catch not assigned to a market request yet!
-        if(this._user_market.id == null) {
+        if(user_market.id == null) {
             return new Promise((resolve, reject) => {
                 reject(new Errors(["Invalid Market"]));
             });
         }
      
-
+        console.log("inside the store method",user_market.id);
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation", this.prepareStore())
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
@@ -141,7 +141,30 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  spin
     */
-    spinNegotiation() {
+    spinNegotiation(user_market) {
+
+        // catch not assigned to a market request yet!
+        if(user_market == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    /**
+    *  spin
+    */
+    killNegotiation() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -151,9 +174,8 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation",{is_repeat: true})
+             axios.delete(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id)
             .then(response => {
-                response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
             })
             .catch(err => {

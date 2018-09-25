@@ -2,7 +2,8 @@
 
 namespace App\Helpers\Misc;
 use Illuminate\Support\Facades\Cache;
-use App\Jobs\UuidGen;
+use App\Models\UserManagement\User;
+use App\Models\UserManagement\Organisation;
 use Carbon\Carbon;
 
 class ResolveUuid
@@ -12,7 +13,7 @@ class ResolveUuid
 		$users = Cache::get('usersMap');
 		if(!is_array($users) || (is_array($users) && !array_key_exists($id, $users)))
 		{
-          UuidGen::dispatch()->onQueue('sync');
+     		$users = self::generateUsersUuid();
 		}
 		return $users[$id];
 	}
@@ -22,20 +23,71 @@ class ResolveUuid
 		$organisations = Cache::get('organisationsMap');
 		if( !is_array($organisations) || (is_array($organisations) && !array_key_exists($id, $organisations)))
 		{
-          UuidGen::dispatch()->onQueue('sync');
+        	$organisations = self::generateOrganisationUuid(); 
 		}
+
 		return $organisations[$id];
 	}
 
-	public static function getOrganisationsUuid()
-	{
-		$organisations = Cache::get('organisationsMap');
-		if(!is_array($organisations))
-		{
-          UuidGen::dispatch()->onQueue('sync');
-		}
-		return $organisations;
-	}
+    public static function generateOrganisationUuid()
+    {
+        $organisations = Organisation::all();
+        $orgUuid = [];
 
+        foreach ($organisations as $organisation) 
+        {
+            $key = self::genUuid();
+            while(!in_array($key, $orgUuid))
+            {
+                 $orgUuid[$organisation->id] = $key; 
+            }
+        }
+
+		$expiresAt = now()->addHours(24);
+    	Cache::put('organisationsMap',$orgUuid,$expiresAt);
+        return $orgUuid;
+    }
+
+    public static function generateUsersUuid()
+    {
+        $users = User::all();
+        $userUuid = [];
+
+        foreach ($users as $user) 
+        {
+            $key = self::genUuid();
+            while(!in_array($key, $userUuid))
+            {
+                $userUuid[$user->id] = $key; 
+            }
+        }
+
+		$expiresAt = now()->addHours(24);
+    	Cache::put('usersMap',$userUuid,$expiresAt);
+        return $userUuid;
+    }
+
+	public static function genUuid() 
+    {
+        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            // 32 bits for "time_low"
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+            // 16 bits for "time_mid"
+            mt_rand( 0, 0xffff ),
+
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            mt_rand( 0, 0x0fff ) | 0x4000,
+
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            mt_rand( 0, 0x3fff ) | 0x8000,
+
+            // 48 bits for "node"
+            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+        );
+    }
 
 }
