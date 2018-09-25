@@ -233,9 +233,9 @@ class UserMarket extends Model
 
     private function setCounterAction($counterNegotiation)
     {
-        $this->userMarket->userMarketRequest->setAction(
+        $this->userMarketRequest->setAction(
             $counterNegotiation->user->organisation_id,
-            $this->userMarket->userMarketRequest->id,
+            $this->userMarketRequest->id,
             true
         );
     }
@@ -268,7 +268,7 @@ class UserMarket extends Model
                 $this->save();
                 if($counterNegotiation)
                 {
-                 $this->setCounterAction($counterNegotiation);
+                    $this->setCounterAction($counterNegotiation);
                 }
                 DB::commit();
                 return $marketNegotiation;

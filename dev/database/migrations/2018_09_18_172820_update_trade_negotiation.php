@@ -29,7 +29,7 @@ class UpdateTradeNegotiation extends Migration
     {
          Schema::table('trade_negotiations', function (Blueprint $table) {
                 //trade_negotiation_status_id
-                $table->integer('trade_negotiation_status_id')->unsigned();
+                $table->integer('trade_negotiation_status_id')->nullable()->unsigned();
                 $table->foreign('trade_negotiation_status_id')
                     ->references('id')->on('trade_negotiation_statuses');
             });
