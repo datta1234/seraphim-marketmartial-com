@@ -35,6 +35,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.2.0",
     "@fortawesome/vue-fontawesome": "^0.1.1",
     "bootstrap-vue": "^2.0.0-rc.11",
+    "chart.js": "^2.7.2",
     "laravel-echo": "^1.4.0",
     "moment": "^2.22.1",
     "pusher-js": "^4.2.2",

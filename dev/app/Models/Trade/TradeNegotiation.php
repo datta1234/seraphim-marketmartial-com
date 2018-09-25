@@ -12,11 +12,12 @@ class TradeNegotiation extends Model
 	 * @property integer $id
 	 * @property integer $user_market_id
 	 * @property integer $trade_negotiation_id
+     * @property integer $market_negotiation_id
 	 * @property integer $initiate_user_id
 	 * @property integer $recieving_user_id
 	 * @property integer $trade_negotiation_status_id
-	 * @property double $contracts
-	 * @property double $nominals
+	 * @property double $quantity
+	 * @property double $traded
 	 * @property boolean $is_offer
 	 * @property boolean $is_distpute
 	 * @property \Carbon\Carbon $created_at
@@ -39,8 +40,7 @@ class TradeNegotiation extends Model
         'quantity', 'traded', 'is_offer', 'is_distpute',
     ];
 
-
-      /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -48,7 +48,6 @@ class TradeNegotiation extends Model
     protected $hidden = [
         'initiate_user_id','recieving_user_id'
     ];
-
 
     /**
      * The attributes that should be cast to native types.
@@ -104,6 +103,23 @@ class TradeNegotiation extends Model
         return $this->belongsTo('App\Models\UserManagement\User','recieving_user_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_negotiation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiation()
+    {
+        return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
 
     public function preFormatted()
     {
