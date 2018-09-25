@@ -140,7 +140,7 @@ class UserMarketRequest extends Model
     {
         $current_org_id =  $this->resolveOrganisationId();
 
-        $interest_org_id = $this->user->organisation->id;
+        $interest_org_id = $this->user->organisation_id;
 
         $data = [
             "id"                => $this->id,
