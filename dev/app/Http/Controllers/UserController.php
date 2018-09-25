@@ -72,7 +72,8 @@ class UserController extends Controller
 
     public function editPassword(Request $request)
     {
-        return view('users.change_password');
+        $is_admin_update = false;
+        return view('users.change_password')->with(compact('is_admin_update'));
     }
 
 
