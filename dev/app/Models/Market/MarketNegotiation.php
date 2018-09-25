@@ -276,7 +276,7 @@ class MarketNegotiation extends Model
             //set counter
             $counterNegotiation = null;
 
-            if($counterNegotiation)
+            if(!is_null($counterNegotiation))
             {
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
             }
@@ -285,7 +285,8 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
-                if($counterNegotiation)
+                
+                if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
                 }else
@@ -309,7 +310,7 @@ class MarketNegotiation extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedQuote($uneditedmarketNegotiations)
+    public function preFormattedMarketNegotiation($uneditedmarketNegotiations)
     {
 
         $currentUserOrganisationId = $this->user->organisation_id;
@@ -345,6 +346,65 @@ class MarketNegotiation extends Model
             "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
             // "cond_fok_spin"         => $this->cond_fok_spin,
             "cond_fok"              => $this->isFoK() ? true : null,
+            "cond_timeout"          => $this->cond_timeout,
+            "cond_is_ocd"           => $this->cond_is_ocd,
+            "cond_is_subject"       => $this->cond_is_subject,
+            "cond_buy_mid"          => $this->cond_buy_mid,
+            "cond_buy_best"         => $this->cond_buy_best,
+            "is_interest"           => $is_interest,
+            "is_maker"              => $is_maker,
+            "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
+            "time"                  => $this->time,
+            "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
+            "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
+                return $tradeNegotiation->preFormatted();
+            })
+
+        ];
+
+        return $data;
+    }
+
+
+        /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
+    public function preFormattedQuote()
+    {
+
+        $currentUserOrganisationId = $this->user->organisation_id;
+        $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
+        $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
+        $loggedInUserOrganisationId = $this->resolveOrganisationId();
+
+
+        //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
+
+         $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
+         $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
+
+        $data = [
+            'id'                    => $this->id,
+            "market_negotiation_id" => $this->market_negotiation_id,
+            "user_market_id"        => $this->user_market_id,
+            "bid"                   => $this->bid,
+            "offer"                 => $this->offer,
+            "bid_display"           => $this->bid,
+            "offer_display"         => $this->offer,
+            "offer_qty"             => $this->offer_qty,
+            "bid_qty"               => $this->bid_qty,
+            "bid_premium"           => $this->bid_premium,
+            "offer_premium"         => $this->offer_premium,
+            "future_reference"      => $this->future_reference,
+            "has_premium_calc"      => $this->has_premium_calc,
+            "is_repeat"             => $this->is_repeat,
+            "is_accepted"           => $this->is_accepted,
+            "is_private"            => $this->is_private,
+            "is_killed"             => $this->is_killed,
+            "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
+            "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
+            "cond_fok_spin"         => $this->cond_fok_spin,
             "cond_timeout"          => $this->cond_timeout,
             "cond_is_ocd"           => $this->cond_is_ocd,
             "cond_is_subject"       => $this->cond_is_subject,

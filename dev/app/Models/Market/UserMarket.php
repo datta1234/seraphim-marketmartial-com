@@ -240,9 +240,9 @@ class UserMarket extends Model
 
     private function setCounterAction($counterNegotiation)
     {
-        $this->userMarket->userMarketRequest->setAction(
+        $this->userMarketRequest->setAction(
             $counterNegotiation->user->organisation_id,
-            $this->userMarket->userMarketRequest->id,
+            $this->userMarketRequest->id,
             true
         );
     }
@@ -267,15 +267,15 @@ class UserMarket extends Model
         }
 
         try {
-             DB::beginTransaction();
-
+            DB::beginTransaction();
             $this->marketNegotiations()->save($marketNegotiation);
             $this->current_market_negotiation_id = $marketNegotiation->id;
             $this->save();
-            // if($counterNegotiation)
-            // {
-            //  $this->setCounterAction($counterNegotiation);
-            // }
+
+            if($counterNegotiation)
+            {
+                $this->setCounterAction($counterNegotiation);
+            }
             DB::commit();
             return $marketNegotiation;
         } catch (\Exception $e) {
@@ -283,6 +283,7 @@ class UserMarket extends Model
             DB::rollBack();
             return false;
         }
+       
     }
 
 
@@ -317,10 +318,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
-                // if($counterNegotiation)
-                // {
-                //  $this->setCounterAction($counterNegotiation);
-                // }
+                if($counterNegotiation)
+                {
+                     $this->setCounterAction($counterNegotiation);
+                }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
@@ -380,7 +381,7 @@ class UserMarket extends Model
             "is_maker"              =>  $is_maker,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                        return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+                                        return $item->setOrgContext($this->org_context)->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];
 

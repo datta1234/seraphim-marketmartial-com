@@ -130,6 +130,7 @@ class UserMarketController extends Controller
        
         }else
         {
+           // dd("here it is");
             $this->authorize('updateNegotiation',$userMarket);
             //the market maker allowed responses
             if($request->has('is_repeat') && $request->input('is_repeat'))

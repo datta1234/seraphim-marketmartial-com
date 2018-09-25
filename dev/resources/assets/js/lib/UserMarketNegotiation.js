@@ -114,17 +114,17 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  store
     */
-    storeNegotiation() {
+    storeNegotiation(user_market) {
         // catch not assigned to a market request yet!
-        if(this._user_market.id == null) {
+        if(user_market.id == null) {
             return new Promise((resolve, reject) => {
                 reject(new Errors(["Invalid Market"]));
             });
         }
      
-
+        console.log("inside the store method",user_market.id);
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation", this.prepareStore())
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);

@@ -285,10 +285,10 @@
 
                 // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-
+                // this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                console.log("this is the proposed user market",this.user_market);
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.storeNegotiation()
+                this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
@@ -312,7 +312,7 @@
                 this.server_loading = true;
 
                 // save
-                this.proposed_user_market.store()
+                this.proposed_user_market.store(this.marketRequest)
                 .then(response => {
 
                     this.server_loading = false;
@@ -321,8 +321,9 @@
                
                 })
                 .catch(err => {
-                    this.server_loading = false;
+                    console.log("this is an error",err);
 
+                    this.server_loading = false;
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
                 });
