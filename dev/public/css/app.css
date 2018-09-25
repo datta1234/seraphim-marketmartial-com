@@ -24,6 +24,10 @@
 *   Chat Bar
 */
 
+/*
+*   Stats
+*/
+
 /* 
 * bootstrap overrides
 */
@@ -76,6 +80,10 @@ a.mm-base {
 
 /*
 *   Chat Bar
+*/
+
+/*
+*   Stats
 */
 
 /* 
@@ -12500,13 +12508,45 @@ input:checked + .slider:before {
   font-size: 0.9rem;
 }
 
-.canvas-body .filter-date-picker input {
+.filter-date-picker input {
   height: calc(2.19rem + 2px);
 }
 
-.canvas-body .date-picker-button-icon {
+.date-picker-button-icon {
   margin-left: -5px;
   margin-bottom: 2px;
+}
+
+.stats-nav-card .card-body {
+  background-color: #269a9b;
+  color: #ffffff;
+}
+
+.stats-nav-card.active .card-body {
+  background-color: #30c3c4;
+}
+
+.stats-nav-card a {
+  text-decoration: none;
+}
+
+.stats-nav-card a .icon {
+  font-size: 4rem;
+}
+
+.monthly-activity .card-tab-button {
+  width: 7rem;
+}
+
+.monthly-activity .mm-button {
+  color: #ffffff;
+  background-color: #939598;
+  border-color: #939598;
+}
+
+.monthly-activity .mm-button.active {
+  background-color: #269a9b;
+  border-color: #269a9b;
 }
 
 #last-negotiation .popover {

@@ -3,7 +3,7 @@
 @section('content')
 	<div class="container">
 		<div class="card-group mt-4">
-			<div class="card text-center">
+			<div class="card text-center stats-nav-card {{ Request::is('stats/my-activity') ? 'active' : '' }}">
 				<a class="" href="{{ route('my_activity.show') }}">
 					<div class="card-body">
 						<h2><span class="icon icon-screen"></span></h2>
@@ -13,7 +13,7 @@
 					</div>
 				</a>
 		    </div>
-		    <div class="card text-center">
+		    <div class="card text-center stats-nav-card">
 				<a class="" href="{{ route('my_activity.show') }}">
 					<div class="card-body">
 						<h2><span class="icon icon-screen"></span></h2>
@@ -23,7 +23,7 @@
 					</div>
 				</a>
 		    </div>
-		    <div class="card text-center">
+		    <div class="card text-center stats-nav-card">
 				<a class="" href="{{ route('my_activity.show') }}">
 					<div class="card-body">
 						<h2><span class="icon icon-screen"></span></h2>
