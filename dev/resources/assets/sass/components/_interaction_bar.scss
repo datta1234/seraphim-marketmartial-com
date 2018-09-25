@@ -28,7 +28,10 @@
             padding-bottom: 150px;
             margin-bottom: 150px;
             // background: red;
-
+            
+            .ibar-negotiation-content {
+                padding-right: 25px;
+            }
         }
         &.active {
             width: $interaction-bar-width + $interaction-toggle-width;
@@ -77,7 +80,15 @@
             margin-right:-10px
         }
 
+        .active-fok-bar {
+            margin-bottom: 10px;
+            
+            .fok-bar {
+                padding: 10px 10px;
+                background: $mm-red;
+            }
 
+        }
 
     }
     .interaction-bar-content-pane {
@@ -161,6 +172,10 @@
             color: $mm-yellow;
         }
     }
+}
+
+.text-my-org{
+    color: $mm-yellow; 
 }
 
 .condition

@@ -176,7 +176,7 @@
                     
                     // server error loads the response errors and loads error step
                     this.previousStep();
-                    if (err.response) {
+                    if (err.response && err.response.data.message) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
                         this.errors.message = err.response.data.message;

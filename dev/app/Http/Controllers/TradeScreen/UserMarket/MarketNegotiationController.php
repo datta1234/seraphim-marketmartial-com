@@ -37,10 +37,9 @@ class MarketNegotiationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-
-
     public function store(MarketNegotiationRequest $request, UserMarket $userMarket)
     {
+        
         if($request->has('is_repeat') && $request->input('is_repeat'))
         {
             $this->authorize('spinNegotiation',$userMarket); 
@@ -48,14 +47,20 @@ class MarketNegotiationController extends Controller
         }else
         {
             $this->authorize('addNegotiation',$userMarket);
+            
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
         }
        
         $message = "Your levels have been sent.";
         $request->user()->organisation->notify("market_negotiation_store",$message,true);
+
         //broadCast new market request;
-        $userMarket->userMarketRequest->notifyRequested();
-        return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        if($marketNegotiation) {
+            return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
+        } else {
+            return ['success'=>false,'data'=>$marketNegotiation ,'message'=>'There was a problem adding your levels'];
+        }
     }
 
     /**
@@ -100,6 +105,6 @@ class MarketNegotiationController extends Controller
      */
     public function destroy(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        //
+        $marketNegotiation->kill();
     }
 }

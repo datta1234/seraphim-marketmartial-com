@@ -8,7 +8,7 @@
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
             
-                <b-col v-for="(condition, c_group) in conditions" cols="12" v-if="condition.hidden !== true">
+                <b-col v-for="(condition, c_group) in conditions" :key="c_group" cols="12" v-if="condition.hidden !== true">
                     <b-btn @click="onToggleClick(condition, c_group)"
                             variant="default" 
                             size="sm" 
@@ -26,7 +26,7 @@
                                 role="tabpanel">
 
                         <div class="ibar-condition-panel-content text-left" v-if="condition.children && condition.children.length > 0">
-                            <div v-for="child in condition.children">
+                            <div v-for="(child, index) in condition.children" :key="index">
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
                                     <b-form-radio-group v-if="child.value.constructor === Array"
@@ -83,6 +83,9 @@
             };
         },
         watch: {
+            marketNegotiation() {
+                this.show_options = false;
+            },
             show_options() {
                 this.resetConditions();
                 this.updateShownGroups();

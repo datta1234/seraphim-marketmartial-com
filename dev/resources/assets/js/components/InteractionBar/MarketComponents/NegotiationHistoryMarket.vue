@@ -1,7 +1,7 @@
 <template>
     <b-row dusk="ibar-negotiation-history-market">
         <b-col>
-            <b-row v-for="item in history">            
+            <b-row v-for="(item, index) in history" :key="index">            
                 <b-col cols="10" >
                     <b-row no-gutters v-if="item.is_interest">
                         <b-col cols="6" class="text-center">

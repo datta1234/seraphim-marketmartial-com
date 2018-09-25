@@ -1,5 +1,5 @@
 <template>
-    <b-row dusk="ibar-trade-request">
+    <b-row dusk="ibar-trade-request" v-bind:id="dynamicId">
                    <b-col cols="10" >
         
                     <b-row>
@@ -9,7 +9,7 @@
                         
                         <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                            <span v-if="selectable" @click="selectOption(true)" id="popover-hit">
+                            <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
                             {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                             </span>
 
@@ -21,15 +21,13 @@
 
                         <b-col cols="3" class="text-center" :class="getStateClass('offer')">
                             
-                            <span v-if="selectable" @click="selectOption(false)" id="popover-lift">
+                            <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
                             {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                             </span>
 
                             <span v-if="!selectable">
                             {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                             </span>
-
-
                         </b-col>
                         
                         <b-col cols="3" class="text-center">
@@ -51,11 +49,25 @@
                     </p>
                 </b-col>
 
+                <b-col cols="12">
+                    <div v-for="tradeNegotiation in marketNegotiation.trade_negotiations ">
+                        <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
+                            {{ tradeNegotiation.getTradingText() }}
+                            
+                            <ul class="text-my-org">
+                                <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
+                            </ul>
+                            With counterpart. Awaiting response
+                        </template>
+                  
+                    </div>
+                </b-col> 
+
      
  
-        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-bid="true" @close="cancelOption(true)"></ibar-trade-desired-quantity>
+        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
-         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-bid="false" @close="cancelOption(true)"></ibar-trade-desired-quantity>
+         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
     </b-row>
 </template>
@@ -85,24 +97,26 @@
            
         },
         computed: {
-   
+            dynamicId: function(){
+                return this.selectable ? "last-negotiation" : "userMarket-Negotiation-level-"+ this.marketNegotiation.id; 
+            }
         },
         methods: {
-            selectOption(isBid)
+            selectOption(isOffer)
             {
-                if(isBid)
+                if(isOffer)
                 {
-                    this.liftOpen = false;
-                     this.hitOpen = true;  
+                     this.liftOpen = true; 
+                     this.hitOpen = false;
 
                 }else
                 {
-                     this.liftOpen = true; 
-                     this.hitOpen = false; 
+                     this.liftOpen = false;
+                     this.hitOpen = true;
                 }
           
             },
-            cancelOption(isBid)
+            cancelOption(isOffer)
             {
                  this.liftOpen = false
                  this.hitOpen = false;

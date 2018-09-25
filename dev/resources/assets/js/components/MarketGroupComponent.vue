@@ -12,7 +12,7 @@
                         <div class="col-12">
                             <p class="mb-1">{{ date }}</p>
                         </div>
-                        <market-tab :market-request="m_req" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
+                        <market-tab :market-request="m_req" :key="m_req_index" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
                     
                 </div>

@@ -46,6 +46,10 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
+        this.active_fok = null;
+        if(options && options.active_fok) {
+            this.active_fok = new UserMarketNegotiation(options.active_fok);
+        }
     }
 
     /**

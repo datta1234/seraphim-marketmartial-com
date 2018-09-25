@@ -1,15 +1,24 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
+import TradeNegotiation from './TradeNegotiation';
 
 export default class UserMarketNegotiation extends BaseModel {
 
     constructor(options) {
         super({
-            _used_model_list: []
+            _used_model_list: [TradeNegotiation],
+            _relations:{
+               trade_negotiations:{
+                    addMethod: (trade_negotiation) => { this.addTradeNegotiation(trade_negotiation) },
+               } 
+            }
         });
 
         // default internal
         this._user_market = null;
+
+           // default public
+        this.trade_negotiations = [];
 
         const defaults = {
             id: "",
@@ -17,6 +26,8 @@ export default class UserMarketNegotiation extends BaseModel {
             offer: "",
             bid_qty: 500,
             offer_qty: 500,
+            bid_display: "",
+            offer_display: "",
             is_repeat: false,
             has_premium_calc: false,
             bid_premium: "",
@@ -50,6 +61,13 @@ export default class UserMarketNegotiation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
+
+        // register trade_negotiaions
+
+        if(options && options.trade_negotiations) {
+            this.addTradeNegotiations(options.trade_negotiations);
+        }
+
     }
 
     /**
@@ -123,7 +141,30 @@ export default class UserMarketNegotiation extends BaseModel {
     /**
     *  spin
     */
-    spinNegotiation() {
+    spinNegotiation(user_market) {
+
+        // catch not assigned to a market request yet!
+        if(user_market == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    /**
+    *  spin
+    */
+    killNegotiation() {
 
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
@@ -133,9 +174,8 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation",{is_repeat: true})
+             axios.delete(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id)
             .then(response => {
-                response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
             })
             .catch(err => {
@@ -194,6 +234,36 @@ export default class UserMarketNegotiation extends BaseModel {
         {
             return this;  
         }  
+    }
+
+    getLastTradeNegotiation()
+    {
+        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[this.trade_negotiations.length - 1] : null;
+    }
+
+   /**
+    *   addNegotiation - add user trade_negotiation
+    *   @param {UserMarketNegotiation} trade_negotiation - UserMarketNegotiation objects
+    */
+    addTradeNegotiation(trade_negotiation) {
+        
+        if(!(trade_negotiation instanceof TradeNegotiation)) {
+            trade_negotiation = new TradeNegotiation(trade_negotiation);
+        }
+
+        trade_negotiation.setUserMarketNegotiation(this);
+        this.trade_negotiations.push(trade_negotiation);
+    }
+
+
+    /**
+    *   addNegotiations - add array of user market_negotiations
+    *   @param {Array} market_negotiations - array of UserMarketNegotiation objects
+    */
+    addTradeNegotiations(trade_negotiations) {
+        trade_negotiations.forEach(trade_negotiation => {
+            this.addTradeNegotiation(trade_negotiation);
+        });
     }
 
 

@@ -1,6 +1,6 @@
 <template>
     <b-row dusk="ibar-remove-conditions">
-        <b-col cols="12" v-for="(group, key) in condition_groups" class="text-center">
+        <b-col cols="12" v-for="(group, key) in condition_groups" :key="key" class="text-center">
             <label class="ibar-condition-remove-label" @click="removeConditionGroup(group)" v-if="group.title && groupIsSet(group)">
                 {{ group.title }}&nbsp;&nbsp;<span class="remove">X</span>
             </label>

@@ -12,7 +12,7 @@ class ResolveUuid
 		$users = Cache::get('usersMap');
 		if(!is_array($users) || (is_array($users) && !array_key_exists($id, $users)))
 		{
-          UuidGen::dispatch()->onQueue('sync');
+          UuidGen::dispatch()->onConnection('sync');
 		}
 		return $users[$id];
 	}
@@ -22,7 +22,7 @@ class ResolveUuid
 		$organisations = Cache::get('organisationsMap');
 		if( !is_array($organisations) || (is_array($organisations) && !array_key_exists($id, $organisations)))
 		{
-          UuidGen::dispatch()->onQueue('sync');
+          UuidGen::dispatch()->onConnection('sync');
 		}
 		return $organisations[$id];
 	}
@@ -32,7 +32,7 @@ class ResolveUuid
 		$organisations = Cache::get('organisationsMap');
 		if(!is_array($organisations))
 		{
-          UuidGen::dispatch()->onQueue('sync');
+          UuidGen::dispatch()->onConnection('sync');
 		}
 		return $organisations;
 	}
