@@ -21,7 +21,6 @@ window.Echo = new Echo({
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
 
-
 import Datepicker from 'vuejs-datepicker'
 import BootstrapVue from 'bootstrap-vue'
 import Toasted from 'vue-toasted'
@@ -513,10 +512,12 @@ const app = new Vue({
                 this.loadNoCares();
             });
         });
-        
-        if(Laravel.organisationUuid)
+
+        let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]').content;
+        console.log("Org UUID: ", organisationUuid);
+        if(organisationUuid)
         {
-            window.Echo.private('organisation.'+Laravel.organisationUuid)
+            window.Echo.private('organisation.'+organisationUuid)
             .listen('.UserMarketRequested', (userMarketRequest) => {
                 console.log("Fired '.UserMarketRequested'", userMarketRequest);
                 //this should be the market thats created
