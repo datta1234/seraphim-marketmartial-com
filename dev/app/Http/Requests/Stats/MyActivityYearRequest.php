@@ -23,6 +23,15 @@ class MyActivityYearRequest extends FormRequest
      */
     public function rules()
     {
+        /*
+        *add validation rule for the following fields, although sidenote 
+        *we typically never validate on search as the results also look at 
+        *would be empty, if wrong data is passed
+        *https://laravel.com/docs/5.7/validation#conditionally-adding-rules
+        *filter_date
+        *filter_market
+        *filter_expiration
+        */
         return [
             'year' => 'required|date_format:Y'
         ];
