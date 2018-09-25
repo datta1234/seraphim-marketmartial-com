@@ -2,7 +2,7 @@
     <div dusk="my-activity-year-tables" class="my-activity-year-tables">
         <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
             <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle="'accordion'+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
+                <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="'accordion'+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
             </b-card-header>
             <b-collapse :id="'accordion'+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
@@ -49,10 +49,10 @@
                                     </b-col>
                                     <b-col cols="3" offset="3">
                                         <datepicker v-model="table_data[index].filter_date"
-                                                    class="float-right"
+                                                    class="float-right filter-date-picker"
                                                     :name="year+'-table-datepicker'">
                                                     <span slot="afterDateInput" class="animated-placeholder">
-                                                        <button class="btn mm-button">
+                                                        <button class="btn mm-button date-picker-button-icon">
                                                             <font-awesome-icon icon="calendar-alt"></font-awesome-icon>
                                                         </button>
                                                     </span>                        
@@ -68,10 +68,10 @@
                              stacked="md"
                              :items="table_data[index].data"
                              :fields="table_fields"
-                             :sort-by.sync="sort_options.order_by"
-                             :sort-desc.sync="sort_options.order_ascending"
+                             :sort-by.sync="table_data[index].order_by"
+                             :sort-desc.sync="table_data[index].order_ascending"
                              :no-local-sorting="true"
-                             @sort-changed="sortingChanged">
+                             @sort-changed="(e) => sortingChanged(index, e)">
                         <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
                             {{ formatItem(row.item, field.key) }}
                         </template>
@@ -110,17 +110,17 @@
                     state: true,
                 },
                 table_fields: [
-                    { key: 'updated_at', label: 'Date' },
-                    { key: 'market', label: 'Instrument' },
-                    { key: 'structure', label: 'Structure' },
-                    { key: 'direction', label: 'Direction' },
+                    { key: 'updated_at', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'market', label: 'Instrument'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'structure', label: 'Structure'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'direction', label: 'Direction'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'nominal', label: 'Nominal' },
                     { key: 'strike_percentage', label: 'Strike %' },
                     { key: 'strike', label: 'Strike' },
                     { key: 'volatility', label: 'Volatility' },
                     { key: 'expiration', label: 'Expiration' },
-                    { key: 'status', label: 'Status' },
-                    { key: 'trader', label: 'Trader' },
+                    { key: 'status', label: 'Status'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'trader', label: 'Trader'/*, sortable: true, sortDirection: 'desc'*/ },
                 ],
                 table_data:{},
                 markets_filter: [
@@ -129,13 +129,6 @@
                 expiration_filter: [
                     {text: "All Expirations", value: null},
                 ],
-                sort_options: {
-                    search: '',
-                    filter: null,
-                    order_by: null,
-                    order_ascending: true,
-                    markets:null,
-                },
             };
         },
         methods: {
@@ -162,7 +155,9 @@
                             'filter_date': this.table_data[index].filter_date ? moment(this.table_data[index].filter_date).format('YYYY-MM-DD'): null,
                             "filter_market": this.table_data[index].filter_market,
                             "filter_expiration": this.table_data[index].filter_expiration,
-                            "search": this.table_data[index].search
+                            "search": this.table_data[index].search,
+                            '_order_by': (this.table_data[index].order_by !== null ? this.table_data[index].order_by : ''),
+                            '_order': (this.table_data[index].order_ascending ? 'ASC' : 'DESC'),
                         }
                     })
                     .then(activityResponse => {
@@ -212,10 +207,7 @@
                     if(expirationsResponse.status == 200) {
                         console.log("FROM SERVER: ",expirationsResponse.data);
                         Object.keys(expirationsResponse.data).forEach(key => {
-                            this.expiration_filter.push({
-                                text: moment(expirationsResponse.data[key].date).format('DD MMM YYYY'),
-                                value: key
-                            });
+                            this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
                         });
                         //
                     } else {
@@ -237,12 +229,17 @@
                         filter_market: null,
                         filter_expiration:null,
                         search: null,
+                        order_by: null,
+                        order_ascending: true
                     };
                 });
                 this.loadTableData(0, false)
             },
-            sortingChanged(ctx) {
-                console.log("I CHANGE!!!", ctx);
+            sortingChanged(index, ctx) {
+                console.log("I CHANGE!!!", index, ctx);
+                this.table_data[index].order_by = ctx.sortBy;
+                this.table_data[index].order_ascending = ctx.sortDesc;
+                this.loadTableData(index, false)
             },
             formatItem(item, key) {
                 if(item[key] == null){

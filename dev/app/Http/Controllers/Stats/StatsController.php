@@ -98,8 +98,8 @@ class StatsController extends Controller
         $user = $request->user();
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
-            null,
-            null,
+            $request->input('_order_by'),
+            $request->input('_order'),
             [
                 "filter_date" => $request->input('filter_date'),
                 "filter_market" => $request->input('filter_market'),
@@ -108,12 +108,8 @@ class StatsController extends Controller
         )->whereYear('updated_at',$request->input('year'))
             ->where(function ($tlq) use ($user) {
                 $tlq->organisationInvolved($user->organisation_id,'=')
-                    // ->orWhere(function ($query) use ($user) {
-                    //     $query->orgnisationMarketMaker($user->organisation_id);
-                    // });
-                ->orgnisationMarketMaker($user->organisation_id, true);
+                    ->orgnisationMarketMaker($user->organisation_id, true);
             })->paginate(10);
-        //dd($trade_confirmations);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user) {
             return $trade_confirmation->preFormatStats($user);

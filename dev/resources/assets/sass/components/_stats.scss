@@ -3,4 +3,14 @@
 	.mm-button {
 		font-size: 0.9rem;
 	}
+	
+	.filter-date-picker {
+		input {
+	    	height: calc(2.19rem + 2px);
+		}
+	}
+	.date-picker-button-icon {
+	    margin-left: -5px;
+    	margin-bottom: 2px;
+	}
 }

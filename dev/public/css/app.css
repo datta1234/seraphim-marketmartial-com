@@ -12469,6 +12469,15 @@ input:checked + .slider:before {
   font-size: 0.9rem;
 }
 
+.canvas-body .filter-date-picker input {
+  height: calc(2.19rem + 2px);
+}
+
+.canvas-body .date-picker-button-icon {
+  margin-left: -5px;
+  margin-bottom: 2px;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

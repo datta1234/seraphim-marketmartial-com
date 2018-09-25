@@ -38,7 +38,7 @@
 		{{-- Monthly Activity Card --}}
 		@component('partials.content_card')
 		    @slot('header')
-		        <h2 class="mt-1 mb-1">Monthly Activity</span></h2>
+		        <h2 class="mt-2 mb-2">Monthly Activity</span></h2>
 		    @endslot
 		    @slot('title')
 		    @endslot

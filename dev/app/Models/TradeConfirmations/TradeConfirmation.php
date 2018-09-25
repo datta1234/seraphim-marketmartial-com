@@ -307,16 +307,9 @@ class TradeConfirmation extends Model
      */
     public static function basicSearch($term = null,$orderBy="updated_at",$order='ASC', $filter = null)
     {
-        if($orderBy == null)
-        {
-            $orderBy = "updated_at";
-        }
 
-        if($order == null)
-        {
-            $order = "ASC";
-        }
-
+        // Search markets
+        // @TODO - Change to account for single stocks and match with stock name (instrument)
         $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
         {
             $q->whereHas('market',function($q) use ($term){
@@ -324,6 +317,7 @@ class TradeConfirmation extends Model
             });
         });
 
+        // Apply Filters
         if($filter !== null) {
             if($filter["filter_date"] !== null) {
                 $trade_confirmations_query->whereDate('updated_at', $filter["filter_date"]);
@@ -334,11 +328,50 @@ class TradeConfirmation extends Model
             }
 
             if($filter["filter_expiration"] !== null) {
-                //$trade_confirmations_query->whereDate('updated_at', $filter_date);
+                $trade_confirmations_query->whereHas('tradeNegotiation', function ($query) use ($filter) {
+                    $query->whereHas('userMarket', function ($query) use ($filter) {
+                        $query->whereHas('userMarketRequest', function ($query) use ($filter) {
+                            $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
+                                $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
+                                    $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                                          ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                                });
+                            });
+                        });
+                    });
+                });
             }
         }
 
-        $trade_confirmations_query->orderBy($orderBy,$order);
+        // Apply Ordering
+        // @TODO - move this to a separate function
+        /*switch ($orderBy) {
+            case 'updated_at':
+            //dd("hit");
+                $trade_confirmations_query->orderBy($orderBy,$order);
+                break;
+            case 'market':
+                $trade_confirmations_query->whereHas('market',function($q) use ($order){
+                    $q->orderBy('title',$order);
+                });
+                //$trade_confirmations_query->orderBy("market_id",$order)
+                break;
+            case 'structure':
+            
+                break;
+            case 'direction':
+            
+                break;
+            case 'status':
+            
+                break;
+            case 'trader':
+            
+                break;
+            default:
+                $trade_confirmations_query->orderBy("updated_at", "ASC");
+                break;
+        }*/
 
       return $trade_confirmations_query;
   }
