@@ -17,9 +17,9 @@ $factory->define(App\Models\Trade\TradeNegotiation::class, function (Faker $fake
 			"recieving_user_id" => function(){
                 return factory(App\Models\UserManagement\User::class)->create()->id;
             },
-			"trade_negotiation_status_id" => function(){
-                return factory(App\Models\Trade\TradeNegotiationStatus::class)->create()->id;
-            },
+			// "trade_negotiation_status_id" => function(){
+   //              return factory(App\Models\Trade\TradeNegotiationStatus::class)->create()->id;
+   //          },
 			"traded" => rand(0,1) == 1,
 			"quantity" => rand(0,300),
 			"is_offer" => rand(0,1) == 1,
