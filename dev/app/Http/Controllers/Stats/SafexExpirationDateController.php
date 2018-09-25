@@ -15,6 +15,11 @@ class SafexExpirationDateController extends Controller
      */
     public function index()
     {
+        
+    /**
+     * @todo 
+     *consider using the existing controller and passing a param not paginate
+     */
         return response()->json(SafexExpirationDate::all()->pluck("expiration_date","id"));
     }
 }

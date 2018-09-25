@@ -1,5 +1,6 @@
 <template>
     <div dusk="monthly-activity" class="monthly-activity" >
+        <!-- remove basic example-->
     	<div v-for="(data,market) in graph_data" class="btn-group" role="group" aria-label="Basic example">
 		  	<button v-bind:class="{ active: active_market == market }" 
                     @click="setChartData(data,market)" 
