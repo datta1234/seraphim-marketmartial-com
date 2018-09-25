@@ -63,3 +63,7 @@ if (token) {
 // import Echo from 'laravel-echo'
 
 window.Pusher = require('pusher-js');
+
+import { loadProgressBar } from 'axios-progress-bar';
+loadProgressBar();
+
