@@ -18,8 +18,7 @@ class DatabaseSeeder extends Seeder
          */
         $this->call(RolesTableSeeder::class);
         $this->call(UsersTableSeeder::class);
-        //$this->call(MarketConditionCategoryTableSeeder::class);
-        //$this->call(MarketConditionTableSeeder::class);
+
         $this->call(MarketTypeTableSeeder::class);
         $this->call(MarketTableSeeder::class);
         $this->call(StockTableSeeder::class);
@@ -37,13 +36,12 @@ class DatabaseSeeder extends Seeder
          * Start dummy data remove once going live
          *
          */
-        $this->call(OrganisationTableSeeder::class);
-        $this->call(UserMarketRequestSeeder::class);
-        $this->call(UserMarketRequestTradeablesSeeder::class);
-        $this->call(UserMarketRequestItemSeeder::class);
-    
-      
-
+        if(env('APP_ENV') !== 'production') {
+            $this->call(OrganisationTableSeeder::class);
+            $this->call(UserMarketRequestSeeder::class);
+            $this->call(UserMarketRequestTradeablesSeeder::class);
+            $this->call(UserMarketRequestItemSeeder::class);
+        }
 
     }
 }

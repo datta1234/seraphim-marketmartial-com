@@ -165,10 +165,10 @@ class UserMarketRequest extends Model
 
         }else
         {
-            $data["sent_quote"]        = $this->authedUserMarket;
-            $data["quotes"]            = $this->userMarkets->map(function($item){ 
-                                                    return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
-                                           });
+            $data["sent_quote"]        =    $this->authedUserMarket;
+            $data["quotes"]            =    $this->userMarkets->map(function($item) {
+                                                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+                                            });
         }
 
         return $data;
@@ -240,7 +240,7 @@ class UserMarketRequest extends Model
                                 ->where(function($q) use ($current_org_id){
                                         $q->organisationInvolved($current_org_id);
                                         $q->orWhere(function($q) use ($current_org_id){
-                                            $q->whereHas('marketNegotiationParent',function($q) use ($current_org_id){
+                                            $q->whereHas('marketNegotiationParent',function($q) use ($current_org_id) {
                                                 $q->organisationInvolved($current_org_id);  
                                             });
                                         });

@@ -12491,11 +12491,13 @@ input:checked + .slider:before {
   display: inline;
 }
 
-#last-negotiation .popover {
+#last-negotiation .popover,
+.trade-popover .popover {
   max-width: 330px;
 }
 
-#last-negotiation .popover .popover-header {
+#last-negotiation .popover .popover-header,
+.trade-popover .popover .popover-header {
   background: #1c7c74;
   color: #FFFFFF;
 }

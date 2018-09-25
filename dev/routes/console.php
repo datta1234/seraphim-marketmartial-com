@@ -16,3 +16,13 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('gen:fok', function () {
+    
+    $id = 1;
+    
+    $n = \App\Models\Market\MarketNegotiation::find($id);
+    $job = new \App\Jobs\MarketNegotiationTimeout($n);
+    dispatch($job);
+
+})->describe('Debug FOK');

@@ -344,7 +344,7 @@ class MarketNegotiation extends Model
             "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
             "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
             // "cond_fok_spin"         => $this->cond_fok_spin,
-            "cond_fok"              => $this->isFoK(),
+            "cond_fok"              => $this->isFoK() ? true : null,
             "cond_timeout"          => $this->cond_timeout,
             "cond_is_ocd"           => $this->cond_is_ocd,
             "cond_is_subject"       => $this->cond_is_subject,
@@ -392,8 +392,8 @@ class MarketNegotiation extends Model
     */
     private $fok_applied = false;
     public function applyFOKCondition() {
-        if (!$this->$fok_applied) {
-            $this->$fok_applied = true;
+        if (!$this->fok_applied) {
+            $this->fok_applied = true;
 
             // Prefer to kill
             if( $this->cond_fok_spin == true ) {

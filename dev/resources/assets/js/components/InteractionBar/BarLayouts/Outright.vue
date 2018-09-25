@@ -18,7 +18,7 @@
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
 
-        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :maker-quote="maker_quote" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
 
@@ -196,8 +196,7 @@
                 return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
             },
             'maker_quote': function() {
-                return this.marketRequest.chosen_user_market;
-                // return this.marketRequest.quotes.find(quote => quote.is_maker); // ??? why not chosen user market ???
+                return this.marketRequest.quotes.find(quote => quote.is_maker); // ??? why not chosen user market ???
             },
             'last_negotiation': function (){
                let chosen_market = this.marketRequest.chosen_user_market;
