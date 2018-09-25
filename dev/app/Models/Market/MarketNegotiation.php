@@ -273,7 +273,7 @@ class MarketNegotiation extends Model
             //set counter
             $counterNegotiation = null;
 
-            if($counterNegotiation)
+            if(!is_null($counterNegotiation))
             {
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
             }
@@ -282,7 +282,8 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
-                if($counterNegotiation)
+                
+                if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
                 }else
