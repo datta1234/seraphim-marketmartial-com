@@ -5,7 +5,7 @@
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
 						<b-row v-if="display.show_expiry" align-h="center">
-                            <b-col v-for="(date,key) in data.index_market_object.expiry_dates" 
+                            <b-col :key="key" v-for="(date,key) in data.index_market_object.expiry_dates" 
                                     cols="3" 
                                     :offset="(key == 0)? 3:0"
                                     class="text-center">
@@ -45,7 +45,7 @@
 							<b-col cols="3">
 								<label for="strike-0">Strike</label>
 							</b-col>
-		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
+		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
 		      					<b-form-input :id="'strike-'+index" 
 		      						type="number"
 		      						min="0"
@@ -60,7 +60,7 @@
 							<b-col cols="3">
 								<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
 							</b-col>
-		      				<b-col v-for="(field, index) in form_data.fields" cols="3">
+		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
 		      					<b-form-input :id="'quantity-'+index" 
 		      						type="number"
 									min="0"
@@ -84,7 +84,7 @@
                         </b-row>
 
                         <b-row v-if="errors.messages.length > 0" class="text-center mt-4">
-                            <b-col v-for="error in errors.messages" cols="12">
+                            <b-col :key="index" v-for="(error, index) in errors.messages" cols="12">
                                 <p class="text-danger mb-0">{{ error }}</p>
                             </b-col>
                         </b-row>

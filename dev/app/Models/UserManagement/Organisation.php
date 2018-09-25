@@ -89,6 +89,11 @@ class Organisation extends Model
         return ResolveUuid::getOrganisationUuid($this->id);
     }
 
+    public function getOneTimeUuidAttribute()
+    {
+        return ResolveUuid::getOrganisationUuid($this->id);
+    }
+
     public function getSlackChannelAttribute()
     {
         return $this->slackIntegrations()->where("field", '=', 'channel')->first();

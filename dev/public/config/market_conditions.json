@@ -32,7 +32,7 @@
                 "default": null,
                 "value": [
                     {
-                        "value": { 
+                        "value": {
                             "value": true, 
                             "ignores": [
                                 "cond_timeout"
@@ -41,13 +41,22 @@
                         "text": "My Bid"
                     },
                     {
-                        "value": { 
+                        "value": {
                             "value": false, 
                             "ignores": [
                                 "cond_timeout"
                             ]
                         }, 
                         "text": "My Offer"
+                    },
+                    {
+                        "value": {
+                            "value": null, 
+                            "ignores": [
+                                "cond_timeout"
+                            ]
+                        }, 
+                        "text": "Both Bid & Offer"
                     }
                 ]
             },

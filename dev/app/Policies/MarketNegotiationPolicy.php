@@ -29,18 +29,34 @@ class MarketNegotiationPolicy
             //
         }
 
-        /**
-         * Determine if the given usermarket accept the user.
+       /**
+         * Determine whether the user can create userMarketRequests.
          *
-         * @param  \App\User  $user
-         * @param  \App\UserMarket  $userMarket
+
+         * @param  \App\Models\Market\MarketNegotiation $userMarket
          * @return bool
+         * @return mixed
          */
-        public function spin(User $user, MarketNegotiation $marketNegotiation)
+        public function addTradeNegotiation(User $user)
         {
-            return $marketNegotiation;
+            dd("here");
+            return false;
         }
 
+        /**
+         * Determine whether the user can delete ( kill ) userMarketRequests.
+         *
+         * @param  \App\Models\UserManagement\User  $user
+         * @param  \App\Models\Market\MarketNegotiation $userMarket
+         * @return bool
+         */
+        public function delete(User $user, MarketNegotiation $marketNegotiation)
+        {
+            if($marketNegotiation->id !== $marketNegotiation->userMarket->current_market_negotiation_id) {
+                return false;
+            }
+            return $user->orgnisation_id === $marketNegotiation->marketNegotiationParent->user->orgnisation_id;
+        }
     }
 
 }

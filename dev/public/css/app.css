@@ -11354,6 +11354,10 @@ a.mm-login-button {
   font-size: 0.8rem;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?igbf0t");
@@ -11879,8 +11883,18 @@ input:checked + .slider:before {
   color: #2358BD;
 }
 
-.trade-section.light-theme .negotiation-vol-pending .market-tab-state,
-.trade-section.dark-theme .negotiation-vol-pending .market-tab-state {
+.trade-section.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.negotiation-vol-pending .market-tab-state {
+  border-left: 2px solid #BB1D1D;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending {
+  background-color: #E17428;
+}
+
+.trade-section.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section.dark-theme .market-tab.trade-negotiation-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
@@ -11991,6 +12005,10 @@ input:checked + .slider:before {
   margin-bottom: 150px;
 }
 
+.interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {
+  padding-right: 25px;
+}
+
 .interaction-bar-wrapper .interaction-bar.active {
   width: 375px;
 }
@@ -12043,6 +12061,15 @@ input:checked + .slider:before {
   background-color: #007D74;
   margin-left: -10px;
   margin-right: -10px;
+}
+
+.interaction-bar-wrapper .interaction-bar .active-fok-bar {
+  margin-bottom: 10px;
+}
+
+.interaction-bar-wrapper .interaction-bar .active-fok-bar .fok-bar {
+  padding: 10px 10px;
+  background: #BB1D1D;
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
@@ -12112,6 +12139,10 @@ input:checked + .slider:before {
 }
 
 .interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+  color: #EBC300;
+}
+
+.text-my-org {
   color: #EBC300;
 }
 
@@ -12476,6 +12507,15 @@ input:checked + .slider:before {
 .canvas-body .date-picker-button-icon {
   margin-left: -5px;
   margin-bottom: 2px;
+}
+
+#last-negotiation .popover {
+  max-width: 330px;
+}
+
+#last-negotiation .popover .popover-header {
+  background: #1c7c74;
+  color: #FFFFFF;
 }
 
 @font-face {

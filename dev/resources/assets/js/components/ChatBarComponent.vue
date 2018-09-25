@@ -14,6 +14,7 @@
                 <div class="chat-inner-wrapper pr-2">
                     <b-card ref="chat_history" class="chat-history">
                         <b-row  v-for="(message, index) in display_messages" 
+                                :key="index"
                                 v-bind:class="{
                                     'mt-4': index != 0, 
                                     'admin-chat': message.user_name == 'Market Martial',
@@ -45,7 +46,7 @@
                     
                     <div class="chat-actions">
                         <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
-                            <b-form-group v-for="(option, index) in quick_message_options" class="text-center mb-1">
+                            <b-form-group v-for="(option, index) in quick_message_options" :key="index" class="text-center mb-1">
                                 <button @click="quick_message = option.message" type="submit" class="btn mm-generic-trade-button w-100">{{ option.title }}</button>
                             </b-form-group>
                             <textarea @keydown.enter.prevent="sendMessage"

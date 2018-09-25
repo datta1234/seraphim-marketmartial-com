@@ -254,12 +254,11 @@ export default class UserMarketRequest extends BaseModel {
                 "REQUEST-SENT-VOL",
                 "REQUEST-VOL",
                 "NEGOTIATION-VOL",
-                "NEGOTIATION-OPEN-VOL"
+                "NEGOTIATION-OPEN-VOL",
+                "TRADE-NEGOTIATION-OPEN"
             ];
-
-        console.log(this.attributes.calc_state);
-        console.log(this.attributes.calc_roles);
-
+        
+        // console.log("this should be shown",this.attributes.state);
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 

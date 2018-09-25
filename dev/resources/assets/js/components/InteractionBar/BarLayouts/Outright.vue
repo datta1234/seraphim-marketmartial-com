@@ -11,7 +11,7 @@
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
 
-        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :check-invalid="check_invalid" :marker-qoute="marker_qoute" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :marker-qoute="marker_qoute" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
 
@@ -21,7 +21,7 @@
         
         <b-row class="mb-5">
             <b-col cols="10">
-                <b-col cols="12" v-for="(error,key) in errors" class="text-danger">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
                     {{ error[0] }}
                 </b-col>
                 <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
@@ -58,7 +58,15 @@
                 <b-row class="justify-content-md-center" v-if="!marker_qoute && !marketRequest.chosen_user_market">
                     <b-col cols="6">
 
-                         <b-button v-if="!marker_qoute" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendQuote()">Send</b-button>
+                        <b-button class="w-100 mt-1"
+                          v-if="!marker_qoute" 
+                          :disabled="check_invalid || server_loading || fok_active" 
+                          size="sm" 
+                          dusk="ibar-action-send" 
+                          variant="primary" 
+                          @click="sendQuote()">
+                            Send
+                        </b-button>
                         
 
                     </b-col>
@@ -67,8 +75,23 @@
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
-                        <b-button  class="w-100 mt-1"  :disabled="!negotiation_updated || check_invalid || server_loading" size="sm" dusk="ibar-action-send" variant="primary" @click="sendNegotiation()">Send</b-button>
-                         <b-button  class="w-100 mt-1"  v-if="can_spin" size="sm" dusk="ibar-action-send" variant="primary" @click="spinNegotiation()">Spin</b-button>
+                        <b-button  class="w-100 mt-1" 
+                         :disabled="!negotiation_updated || check_invalid || server_loading || fok_active" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="sendNegotiation()">
+                                Send
+                        </b-button>
+                        <b-button class="w-100 mt-1" 
+                         :disabled="fok_active" 
+                         v-if="can_spin" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="spinNegotiation()">
+                            Spin
+                        </b-button>
                     </b-col>
                 </b-row>
                 <b-row class="justify-content-md-center">
@@ -79,8 +102,10 @@
                 </b-row>
             </b-col>
         </b-row>
+
+        <ibar-fok-active :market-negotiation="marketRequest.chosen_user_market.active_fok" v-if="fok_active"></ibar-fok-active>
             
-        <ibar-apply-conditions  v-if="can_negotiate" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !fok_active" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -103,6 +128,7 @@
     
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+    import IbarFoKActive from '../MarketComponents/FoKActiveComponent';
 
     const showMessagesIn = [
         "market_request_store",
@@ -116,6 +142,7 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
+            'ibar-fok-active': IbarFoKActive,
         },
         props: {
             marketRequest: {
@@ -158,7 +185,10 @@
             }
         },
         computed: {
-            'marker_qoute': function(){
+            'fok_active': function() {
+                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
+            },
+            'marker_qoute': function() {
                 return this.marketRequest.quotes.find(quote => quote.is_maker);
             },
             'negotiation_updated': function(){
@@ -242,12 +272,8 @@
             },
             spinNegotiation(){
                 
-                // link now that we are saving
-                this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.spinNegotiation()   
+                this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
@@ -446,6 +472,7 @@
             {
                 // set up up data
                 if(this.marketRequest) {
+                    console.log(this.marketRequest);
                     this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
                     
                     this.setUpProposal();

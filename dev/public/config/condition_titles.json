@@ -1,6 +1,5 @@
 {
     "cond_is_repeat_atw": "Repeat all the way",
-    "cond_timeout": "",
     "cond_is_ocd": "OCO",
     "cond_is_subject": "Subject",
     "cond_fok_spin": {
@@ -18,5 +17,6 @@
     "cond_buy_best": {
         "false": "Sell at best",
         "true": "Buy at best"
-    }
+    },
+    "cond_timeout": ""
 }
