@@ -7,13 +7,26 @@
 }
 
 .filter-date-picker {
-	input {
-    	height: calc(2.19rem + 2px);
+	.input-group {
+		input {
+		    background-color: $mm-white;
+		}
 	}
-}
-.date-picker-button-icon {
-    margin-left: -5px;
-	margin-bottom: 2px;
+	
+	.vdp-datepicker__calendar-button.input-group-prepend {
+		.input-group-text {
+			    background-color: $mm-panel;
+			    color:  $mm-white;
+		}
+	}
+
+	.vdp-datepicker__clear-button.input-group-append {
+		.input-group-text {
+			background-color: $stats-warm-grey;
+		    color:  $mm-white;	
+		}
+	}
+
 }
 
 .stats-nav-card {

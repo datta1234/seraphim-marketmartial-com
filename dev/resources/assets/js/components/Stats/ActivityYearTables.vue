@@ -48,16 +48,15 @@
                                         </button>
                                     </b-col>
                                     <b-col cols="4" offset="2">
-                                        <i class="fas fa-check"></i>
                                         <datepicker v-model="table_data[index].filter_date"
                                                     class="float-right filter-date-picker"
                                                     :name="year+'-table-datepicker'"
                                                     placeholder="Select a date"
                                                     :bootstrap-styling="true"
                                                     :calendar-button="true"
-                                                    calendar-button-icon="icon-screen"
+                                                    calendar-button-icon="fas fa-calendar-alt"
                                                     :clear-button="true"
-                                                    clear-button-icon="icon-screen">                  
+                                                    clear-button-icon="fas fa-trash-alt">    
                                         </datepicker>
                                     </b-col>
                                 </b-row>

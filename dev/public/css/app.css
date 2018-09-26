@@ -17665,13 +17665,18 @@ input:checked + .slider:before {
   font-size: 0.9rem;
 }
 
-.filter-date-picker input {
-  height: calc(2.19rem + 2px);
+.filter-date-picker .input-group input {
+  background-color: #ffffff;
 }
 
-.date-picker-button-icon {
-  margin-left: -5px;
-  margin-bottom: 2px;
+.filter-date-picker .vdp-datepicker__calendar-button.input-group-prepend .input-group-text {
+  background-color: #269a9b;
+  color: #ffffff;
+}
+
+.filter-date-picker .vdp-datepicker__clear-button.input-group-append .input-group-text {
+  background-color: #939598;
+  color: #ffffff;
 }
 
 .stats-nav-card .card-body {
