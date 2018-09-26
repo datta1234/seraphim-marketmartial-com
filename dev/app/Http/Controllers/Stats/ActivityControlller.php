@@ -10,8 +10,23 @@ use App\Models\StructureItems\Market;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 
-class StatsController extends Controller
+class ActivityControlller extends Controller
 {
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $years = TradeConfirmation::select(
+            DB::raw("YEAR(trade_confirmations.updated_at) as year")
+        )->groupBy('year')->get();
+
+        return view('stats.market_activity')->with(compact('years'));
+    }
+
     /**
      * Display the specified resource.
      *
@@ -90,12 +105,12 @@ class StatsController extends Controller
             return $graph_data;
         }
 
-        return view('stats.show')->with(compact('user','graph_data','years'));
+        return view('stats.my_activity')->with(compact('user','graph_data','years'));
     }
 
-    public function myYearActivity(MyActivityYearRequest $request)
+    public function yearActivity(MyActivityYearRequest $request)
     {
-        $user = $request->user();
+        $user = $request->input('is_my_activity') ? $request->user() : null;
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
@@ -105,11 +120,17 @@ class StatsController extends Controller
                 "filter_market" => $request->input('filter_market'),
                 "filter_expiration" => $request->input('filter_expiration')
             ]
-        )->whereYear('updated_at',$request->input('year'))
-            ->where(function ($tlq) use ($user) {
+        )
+        ->whereYear('updated_at',$request->input('year'));
+
+        if($request->input('is_my_activity')) {
+            $trade_confirmations = $trade_confirmations->where(function ($tlq) use ($user) {
                 $tlq->organisationInvolved($user->organisation_id,'=')
                     ->orgnisationMarketMaker($user->organisation_id, true);
-            })->paginate(10);
+            });
+        }
+
+        $trade_confirmations = $trade_confirmations->paginate(10);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user) {
             return $trade_confirmation->preFormatStats($user);

@@ -202,52 +202,19 @@ class TradeConfirmation extends Model
         });
     }
 
-    public function preFormatStats($user)
+    public function preFormatStats($user = null)
     {
         $data = [
             "id" => $this->id,
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
             "market" => $this->market->title,
             "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
-            "trader" => null,
             "nominal" => array(),
             "strike" => array(),
             "expiration" => array(),
             "strike_percentage" => array(),
             "volatility" => array(),
         ];
-
-        
-        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
-        switch (true) {
-            case ($this->send_user_id == $user->id):
-                $data["status"] = 'My Trade';
-                $data["trader"] = $user->full_name;
-                $data["direction"] = 'Sell';
-                break;
-            case ($this->receiving_user_id == $user->id):
-                $data["status"] = 'My Trade';
-                $data["trader"] = $user->full_name;
-                $data["direction"] = 'Buy';
-                break;
-            case ($this->sendUser->organisation->id == $user->organisation->id):
-                $data["status"] = 'Trade';
-                $data["trader"] = $this->sendUser->full_name;
-                $data["direction"] = 'Sell';
-                break;
-            case ($this->recievingUser->organisation->id == $user->organisation->id):
-                $data["status"] = 'Trade';
-                $data["trader"] = $this->recievingUser->full_name;
-                $data["direction"] = 'Buy';
-                break;
-            case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
-                $data["status"] = 'Market Maker Traded Away';
-                $data["direction"] = null;
-                break;
-            default:
-                $data["status"] = null;
-                break;
-        }
         
         // Get the user market request items
         $user_market_request_items = array();
@@ -292,6 +259,45 @@ class TradeConfirmation extends Model
         if($market_negotiation->offer_qty) {
             $data["volatility"][] = $market_negotiation->offer_qty;
         }        
+
+        if($user === null) {
+            $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
+            return $data; 
+        }
+
+        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
+        switch (true) {
+            case ($this->send_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = 'Sell';
+                break;
+            case ($this->receiving_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = 'Buy';
+                break;
+            case ($this->sendUser->organisation->id == $user->organisation->id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $this->sendUser->full_name;
+                $data["direction"] = 'Sell';
+                break;
+            case ($this->recievingUser->organisation->id == $user->organisation->id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $this->recievingUser->full_name;
+                $data["direction"] = 'Buy';
+                break;
+            case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+                $data["status"] = 'Market Maker Traded Away';
+                $data["trader"] = null;
+                $data["direction"] = null;
+                break;
+            default:
+                $data["status"] = null;
+                $data["trader"] = null;
+                $data["direction"] = null;
+                break;
+        }
 
         return $data;
     }

@@ -31,6 +31,7 @@ class MyActivityYearRequest extends FormRequest
             'filter_date' => 'date_format:Y-m-d|nullable',
             'filter_market' => 'exists:markets,id|nullable',
             'filter_expiration' => 'date_format:d M Y|nullable',
+            'is_my_activity' => 'boolean',
         ];
     }
 }

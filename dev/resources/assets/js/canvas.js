@@ -35,9 +35,9 @@ import { Bar } from 'vue-chartjs';
  */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faCalendarAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faSearch, faCalendarAlt);
+library.add(faSearch, faCalendarAlt, faTrashAlt);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -62,7 +62,7 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
-Vue.component('my-activity-year-tables', require('./components/Stats/MyActivityYearTables.vue'));
+Vue.component('activity-year-tables', require('./components/Stats/ActivityYearTables.vue'));
 
 Vue.mixin({
     methods: {
