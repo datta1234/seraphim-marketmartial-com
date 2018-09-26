@@ -53,4 +53,13 @@ class LoginController extends Controller
             'password' => 'required|string',
         ]);
     }
+
+    protected function redirectTo()
+    {
+        if(\Auth::user()->role->title === 'Admin') {
+            return '/admin/user';
+        } else {
+            return $this->redirectTo;
+        }
+    }
 }
