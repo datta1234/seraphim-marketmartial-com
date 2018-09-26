@@ -65,3 +65,22 @@
 		}
 	}
 }
+
+.all-market-activity {
+	.selection-button {
+		    width: 12rem;
+	}
+}
+
+.all-market-activity, .monthly-activity {
+	.mm-button.mm-nav-button {
+		color: $mm-white;
+		background-color: $stats-warm-grey;
+		border-color: $stats-warm-grey;
+
+		&.active {
+			background-color: $mm-panel;
+			border-color: $mm-panel;
+		}
+	}	
+}

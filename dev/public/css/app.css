@@ -17711,6 +17711,23 @@ input:checked + .slider:before {
   border-color: #1c7172;
 }
 
+.all-market-activity .selection-button {
+  width: 12rem;
+}
+
+.all-market-activity .mm-button.mm-nav-button,
+.monthly-activity .mm-button.mm-nav-button {
+  color: #ffffff;
+  background-color: #939598;
+  border-color: #939598;
+}
+
+.all-market-activity .mm-button.mm-nav-button.active,
+.monthly-activity .mm-button.mm-nav-button.active {
+  background-color: #269a9b;
+  border-color: #269a9b;
+}
+
 #last-negotiation .popover,
 .trade-popover .popover {
   max-width: 330px;

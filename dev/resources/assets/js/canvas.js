@@ -50,7 +50,9 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
-Vue.component('activity-year-tables', require('./components/Stats/ActivityYearTables.vue'));
+Vue.component('activity-year-tables', require('./components/Stats/Components/ActivityYearTables.vue'));
+Vue.component('all-market-activity', require('./components/Stats/AllMarketActivity.vue'));
+Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue'));
 
 Vue.mixin({
     methods: {

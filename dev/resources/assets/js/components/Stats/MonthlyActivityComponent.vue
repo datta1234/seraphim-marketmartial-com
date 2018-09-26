@@ -1,11 +1,10 @@
 <template>
     <div dusk="monthly-activity" class="monthly-activity" >
-        <!-- remove basic example-->
-    	<div v-for="(data,market) in graph_data" class="btn-group" role="group" aria-label="Basic example">
+    	<div v-for="(data,market) in graph_data" class="btn-group" role="group">
 		  	<button v-bind:class="{ active: active_market == market }" 
                     @click="setChartData(data,market)" 
                     type="button" 
-                    class="btn mm-button mr-1 card-tab-button">
+                    class="btn mm-button mr-1 card-tab-button mm-nav-button">
                 {{ market }}
             </button>
 		</div>
@@ -24,7 +23,7 @@
 </template>
 
 <script>
-	import BarGraph from './BarGraph.js';
+	import BarGraph from './Components/BarGraph.js';
     export default {
     	components: {
 	      	BarGraph
