@@ -23,6 +23,10 @@
 // Icons
 @import"_icomoon.scss";
 
+//loader
+@import '~axios-progress-bar/dist/nprogress.css';
+
+
 //Components
 @import"components/_navbar.scss";
 @import"components/_footer.scss";

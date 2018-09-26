@@ -126,10 +126,11 @@ class UserMarketController extends Controller
             $organisations[] = $myOrganisation = $request->user()->organisation;
             $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
             // Set action that needs to be taken for theaccepted
-            $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
+            // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
        
         }else
         {
+           // dd("here it is");
             $this->authorize('updateNegotiation',$userMarket);
             //the market maker allowed responses
             if($request->has('is_repeat') && $request->input('is_repeat'))

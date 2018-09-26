@@ -4,20 +4,27 @@
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
         
         <!-- VOL SPREAD History - Market-->
-        <ibar-negotiation-history-market  :message="history_message" :history="marketRequest.quotes" v-if="marketRequest.quotes && !marketRequest.chosen_user_market" class="mb-3"   @update-on-hold="setUpProposal" @update-on-accept="setUpProposal"
- ></ibar-negotiation-history-market>
+        <ibar-negotiation-history-market 
+         :message="history_message"
+         :history="marketRequest.quotes" 
+         v-if="marketRequest.quotes && !marketRequest.chosen_user_market" 
+         class="mb-3"
+         @update-on-hold="setUpProposal" 
+         @update-on-accept="setUpProposal"
+        >
+        </ibar-negotiation-history-market>
    
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
 
-        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :marker-qoute="marker_qoute" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
 
-   <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
-    Alert me when cleared
-    </b-form-checkbox>
+        <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
+            Alert me when cleared
+        </b-form-checkbox>
         
         <b-row class="mb-5">
             <b-col cols="10">
@@ -28,16 +35,16 @@
                 <b-row class="justify-content-md-center mb-1">
                     <b-col cols="6">
 
-                        <!-- || (marker_qoute && !is_on_hold) && ( !marker_qoute|| (marker_qoute && !marker_qoute.is_repeat)) -->
+                        <!-- || (maker_quote && !is_on_hold) && ( !maker_quote|| (maker_quote && !maker_quote.is_repeat)) -->
                        
 
                         
-                         <b-button v-if="marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQoute()">Amend</b-button>
+                         <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
 
 
-                        <b-button v-if="is_on_hold && (marker_qoute && !marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="marker_qoute || is_on_hold || (marker_qoute && marker_qoute.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -55,11 +62,11 @@
 
                     </b-col>
                 </b-row>
-                <b-row class="justify-content-md-center" v-if="!marker_qoute && !marketRequest.chosen_user_market">
+                <b-row class="justify-content-md-center" v-if="!maker_quote && !marketRequest.chosen_user_market">
                     <b-col cols="6">
 
                         <b-button class="w-100 mt-1"
-                          v-if="!marker_qoute" 
+                          v-if="!maker_quote" 
                           :disabled="check_invalid || server_loading || fok_active" 
                           size="sm" 
                           dusk="ibar-action-send" 
@@ -76,7 +83,7 @@
                     <b-col cols="6">
                          
                         <b-button  class="w-100 mt-1" 
-                         :disabled="!negotiation_updated || check_invalid || server_loading || fok_active" 
+                         :disabled="check_invalid || server_loading || fok_active" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -96,7 +103,7 @@
                 </b-row>
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
-                        <!-- !marker_qoute && !marketRequest.chosen_user_market -->
+                        <!-- !maker_quote && !marketRequest.chosen_user_market -->
                          <b-button  v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
                     </b-col>
                 </b-row>
@@ -188,20 +195,8 @@
             'fok_active': function() {
                 return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
             },
-            'marker_qoute': function() {
-                return this.marketRequest.quotes.find(quote => quote.is_maker);
-            },
-            'negotiation_updated': function(){
-                    if(this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null) )
-                    {
-                      
-
-                        return this.proposed_user_market_negotiation.bid != this.last_negotiation.bid || this.proposed_user_market_negotiation.offer != this.last_negotiation.offer;
-                    }else
-                    {
-                        return false;
-                    }
-
+            'maker_quote': function() {
+                return this.marketRequest.quotes.find(quote => quote.is_maker); // ??? why not chosen user market ???
             },
             'last_negotiation': function (){
                let chosen_market = this.marketRequest.chosen_user_market;
@@ -258,8 +253,8 @@
             },
             calcUserMessages:function()
             {
-                //if the users market qoute is placed on hold notify the the current user if it is theres
-                if(this.marker_qoute && this.marker_qoute.is_on_hold)
+                //if the users market quote is placed on hold notify the the current user if it is theres
+                if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
                 }else if(!this.can_negotiate)
@@ -290,10 +285,10 @@
 
                 // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-
+                // this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                console.log("this is the proposed user market",this.user_market);
                 this.server_loading = true;
-                this.proposed_user_market_negotiation.storeNegotiation()
+                this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
@@ -317,7 +312,7 @@
                 this.server_loading = true;
 
                 // save
-                this.proposed_user_market.store()
+                this.proposed_user_market.store(this.marketRequest)
                 .then(response => {
 
                     this.server_loading = false;
@@ -326,14 +321,15 @@
                
                 })
                 .catch(err => {
-                    this.server_loading = false;
+                    console.log("this is an error",err);
 
+                    this.server_loading = false;
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
                 });
 
             },
-            amendQoute() {
+            amendQuote() {
 
                 this.server_loading = true;
 
@@ -428,7 +424,7 @@
                    this.user_market = this.marketRequest.chosen_user_market;
                 }else
                 {
-                    if(this.marketRequest.sent_quote != null)//already have my qoute
+                    if(this.marketRequest.sent_quote != null)//already have my quote
                     {
                         this.proposed_user_market = this.marketRequest.sent_quote;
                     }
@@ -454,22 +450,21 @@
                     this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
 
                 }
-                else if(this.marker_qoute != null && (this.marker_qoute.offer_qty != null || this.marker_qoute.bid_qty != null) )
+                else if(this.maker_quote != null && (this.maker_quote.offer_qty != null || this.maker_quote.bid_qty != null) )
                 {
                     //we are editing our old one
-                    this.proposed_user_market_negotiation.id  = this.marker_qoute.id;
+                    this.proposed_user_market_negotiation.id  = this.maker_quote.id;
 
-                    this.proposed_user_market_negotiation.offer_qty = this.marker_qoute.offer_qty;
-                    this.proposed_user_market_negotiation.bid_qty = this.marker_qoute.bid_qty;  
-                }else
+                    this.proposed_user_market_negotiation.offer_qty = this.maker_quote.offer_qty;
+                    this.proposed_user_market_negotiation.bid_qty = this.maker_quote.bid_qty;  
+                }
+                else
                 {                    
                     this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
                     this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
                 }
-
             },
-            setUpData()
-            {
+            setUpData() {
                 // set up up data
                 if(this.marketRequest) {
                     console.log(this.marketRequest);
@@ -485,8 +480,7 @@
 
                 }
             },
-            addToNoCares()
-            {
+            addToNoCares() {
                 EventBus.$emit('addToNoCares',this.marketRequest.id);
             },
             init() {

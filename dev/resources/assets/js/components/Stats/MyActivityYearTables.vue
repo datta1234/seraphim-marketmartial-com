@@ -148,7 +148,7 @@
                 if(is_toggle && this.table_data[index].data){
                     this.table_data_loaded = true;
                 } else {
-                    axios.get(axios.defaults.baseUrl + 'my-activity/year', {
+                    axios.get(axios.defaults.baseUrl + '/stats/my-activity/year', {
                         params:{
                             'page': this.table_data[index].current_page,
                             'year': this.table_years[index],
@@ -183,7 +183,7 @@
                 }
             },
             loadMarkets() {
-                axios.get(axios.defaults.baseUrl + 'my-activity/markets')
+                axios.get(axios.defaults.baseUrl + '/stats/my-activity/markets')
                 .then(marketsResponse => {
                     if(marketsResponse.status == 200) {
                         console.log("FROM SERVER: ",marketsResponse.data);
@@ -202,7 +202,7 @@
                 });
             },
             loadExpirations() {
-                axios.get(axios.defaults.baseUrl + 'my-activity/expirations')
+                axios.get(axios.defaults.baseUrl + '/stats/my-activity/expirations')
                 .then(expirationsResponse => {
                     if(expirationsResponse.status == 200) {
                         console.log("FROM SERVER: ",expirationsResponse.data);

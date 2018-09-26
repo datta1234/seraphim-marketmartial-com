@@ -547,3 +547,9 @@ a.mm-login-button {
 	//Hide thing by pushing it outside by default
 	transform: translateY(-130%);
 }
+
+
+#nprogress .spinner-icon
+{
+	display: none;
+}

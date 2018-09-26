@@ -33,13 +33,20 @@ class MarketNegotiationTimeout implements ShouldQueue
      */
     public function handle()
     {
+        echo "ID: ".$this->marketNegotiationID;
         $marketNegotiation = \App\Models\Market\MarketNegotiation::find($this->marketNegotiationID);
+        $userMarket = $marketNegotiation->userMarket;
         // still active = hasn't been killed AND is still the current negotiation on the user market
         $stillActive = !$marketNegotiation->is_killed 
-                    && $this->marketNegotiationID === $marketNegotiation->userMarket->currentMarketNegotiation->id;
+                    && $this->marketNegotiationID === $userMarket->currentMarketNegotiation->id;
         if($stillActive) {
             // kill it
             $marketNegotiation->kill();
+            if($marketNegotiation->cond_fok_spin == false) {
+                // @TODO: Notify Admin of No Activity
+            }
+            $userMarket->userMarketRequest->notifyRequested();
+            echo 'killed';
         }
         return true;
     }

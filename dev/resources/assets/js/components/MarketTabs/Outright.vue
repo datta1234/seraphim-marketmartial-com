@@ -49,6 +49,7 @@
         computed: {
             marketState: function() {
                 return {
+                    'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',
                     'trade-negotiation-pending':  this.market_request_state == 'trade-negotiation-pending',
                     'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
                     'negotiation-vol': this.market_request_state == 'negotiation-vol',

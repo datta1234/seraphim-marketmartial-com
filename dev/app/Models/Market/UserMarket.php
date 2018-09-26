@@ -51,9 +51,9 @@ class UserMarket extends Model
      */
     protected $casts = [
         'user_id'                   => 'int',
-        'is_trade_away'             => 'boolean',
-        'is_on_hold'                => 'boolean',
-        'is_market_maker_notified'  => 'boolean',
+        'is_trade_away'             => 'Boolean',
+        'is_on_hold'                => 'Boolean',
+        'is_market_maker_notified'  => 'Boolean',
         'user_market_request_id'    => 'int',
     ];
 
@@ -240,9 +240,9 @@ class UserMarket extends Model
 
     private function setCounterAction($counterNegotiation)
     {
-        $this->userMarket->userMarketRequest->setAction(
+        $this->userMarketRequest->setAction(
             $counterNegotiation->user->organisation_id,
-            $this->userMarket->userMarketRequest->id,
+            $this->userMarketRequest->id,
             true
         );
     }
@@ -250,39 +250,39 @@ class UserMarket extends Model
 
     public function spinNegotiation($user)
     {
-            $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
-            // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
-            $marketNegotiation = $oldNegotiation->replicate();
-            $marketNegotiation->is_repeat = true;
+        $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
+        // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
+        $marketNegotiation = $oldNegotiation->replicate();
+        $marketNegotiation->is_repeat = true;
 
-            $marketNegotiation->user_id = $user->id;
-            $counterNegotiation = $this->marketNegotiations()
-                                            ->findCounterNegotiation($user)
-                                            ->first();
+        $marketNegotiation->user_id = $user->id;
+        $counterNegotiation = $this->marketNegotiations()
+                                        ->findCounterNegotiation($user)
+                                        ->first();
+
+        if($counterNegotiation)
+        {
+            $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+            $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+        }
+
+        try {
+            DB::beginTransaction();
+            $this->marketNegotiations()->save($marketNegotiation);
+            $this->current_market_negotiation_id = $marketNegotiation->id;
+            $this->save();
 
             if($counterNegotiation)
             {
-                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
-                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+                $this->setCounterAction($counterNegotiation);
             }
-
-            try {
-                 DB::beginTransaction();
-
-                $this->marketNegotiations()->save($marketNegotiation);
-                $this->current_market_negotiation_id = $marketNegotiation->id;
-                $this->save();
-                // if($counterNegotiation)
-                // {
-                //  $this->setCounterAction($counterNegotiation);
-                // }
-                DB::commit();
-                return $marketNegotiation;
-            } catch (\Exception $e) {
-                \Log::error($e->getMessage());
-                DB::rollBack();
-                return false;
-            }
+            DB::commit();
+            return $marketNegotiation;
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+            DB::rollBack();
+            return false;
+        }
        
     }
 
@@ -318,10 +318,10 @@ class UserMarket extends Model
                 $this->marketNegotiations()->save($marketNegotiation);
                 $this->current_market_negotiation_id = $marketNegotiation->id;
                 $this->save();
-                // if($counterNegotiation)
-                // {
-                //  $this->setCounterAction($counterNegotiation);
-                // }
+                if($counterNegotiation)
+                {
+                     $this->setCounterAction($counterNegotiation);
+                }
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
@@ -381,7 +381,7 @@ class UserMarket extends Model
             "is_maker"              =>  $is_maker,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                        return $item->setOrgContext($this->org_context)->preFormattedQuote($uneditedmarketNegotiations); 
+                                        return $item->setOrgContext($this->org_context)->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];
 

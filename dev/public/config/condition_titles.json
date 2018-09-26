@@ -1,22 +1,101 @@
-{
-    "cond_is_repeat_atw": "Repeat all the way",
-    "cond_is_ocd": "OCO",
-    "cond_is_subject": "Subject",
-    "cond_fok_spin": {
-        "false": "Prefer to kill",
-        "true": "Happy to spin"
+[
+    {
+        "condition": "cond_is_repeat_atw",
+        "true": {
+            "bid": "Repeat all the way",
+            "offer": "Repeat all the way"
+        },
+        "false": {
+            "bid": "Repeat all the way",
+            "offer": "Repeat all the way"
+        }
     },
-    "cond_fok_apply_bid": {
-        "false": "Fill or Kill",
-        "true": "Fill or Kill"
+    {
+        "condition": "cond_is_ocd",
+        "true": {
+            "bid": "OCO",
+            "offer": "OCO"
+        },
+        "false": {
+            "bid": "OCO",
+            "offer": "OCO"  
+        }
     },
-    "cond_buy_mid": {
-        "false": "Sell in the middle",
-        "true": "Buy in the middle"
+    {
+        "condition": "cond_is_subject",
+        "true": {
+            "bid": "Subject",
+            "offer": "Subject"
+        },
+        "false": {
+            "bid": "Subject",
+            "offer": "Subject"  
+        }
     },
-    "cond_buy_best": {
-        "false": "Sell at best",
-        "true": "Buy at best"
+    {
+        "condition": "cond_fok",
+        "true": {
+            "condition": "cond_fok_apply_bid",
+            "true": {
+                "bid": "FoK",
+                "offer": ""
+            },
+            "false": {
+                "bid": "",
+                "offer": "FoK"
+            },
+            "null": {
+                "bid": "FoK",
+                "offer": "FoK"
+            }
+        },
+        "false": {
+            "condition": "cond_fok_apply_bid",
+            "true": {
+                "bid": "FoK",
+                "offer": ""
+            },
+            "false": {
+                "bid": "",
+                "offer": "FoK"
+            },
+            "null": {
+                "bid": "FoK",
+                "offer": "FoK"
+            }
+        }
     },
-    "cond_timeout": ""
-}
+    {
+        "condition": "cond_buy_mid",
+        "true": {
+            "bid": "Buy in the middle",
+            "offer": "Buy in the middle"  
+        },
+        "false": {
+            "bid": "Sell in the middle",
+            "offer": "Sell in the middle"  
+        }
+    },
+    {
+        "condition": "cond_buy_best",
+        "true": {
+            "bid": "Buy at best",
+            "offer": "Buy at best"  
+        },
+        "false": {
+            "bid": "Sell at best",
+            "offer": "Sell at best"  
+        }
+    },
+    {
+        "condition": "cond_timeout",
+        "true": {
+            "bid": "",
+            "offer": ""  
+        },
+        "false": {
+            "bid": "",
+            "offer": ""  
+        }
+    }
+]

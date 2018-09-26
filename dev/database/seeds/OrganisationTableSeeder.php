@@ -11,9 +11,10 @@ class OrganisationTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\UserManagement\Organisation::class,8)->create()->each(function($organisation){
+        $orgs = 1;
+        factory(App\Models\UserManagement\Organisation::class,8)->create()->each(function($organisation) use (&$orgs) {
                // dd($organisation);
-    	        factory(App\Models\UserManagement\User::class, 10)->create([
+    	        factory(App\Models\UserManagement\User::class, 4)->create([
 					'organisation_id' =>  $organisation->id,
     	        ])
                 ->each(function($user){
@@ -25,6 +26,12 @@ class OrganisationTableSeeder extends Seeder
                         ]);
                     }
                 });
+
+                factory(App\Models\UserManagement\User::class)->create([
+                    'email' =>  'org'.$orgs.'@example.net',
+                    'organisation_id' =>  $organisation->id,
+                ]);
+                $orgs++;
         });
     }
 }

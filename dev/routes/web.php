@@ -86,7 +86,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 		'only' => ['store','index']
 	]);
 
-	    Route::resource('organisation-chat', 'TradeScreen\ChatController', [
+	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']
 	]);
 

@@ -34,10 +34,16 @@ class LevelsImprovement implements Rule
         //check to see if the bid is improved or the offer
         if($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id) == "negotiation-open")
         {
-            if($this->request->input('bid') != $lastNegotiation->bid  && $this->request->input('offer') != $lastNegotiation->offer)
+            // if the last one was an FOK & killed
+            if($lastNegotiation->is_killed) {
+                return  true;
+            }
+            // Increase bid, decrease offer
+            if($this->request->input('bid') > $lastNegotiation->bid  && $this->request->input('offer') < $lastNegotiation->offer)
             {
                 return false;
-            }else
+            }
+            else
             {
                 return true;
             }

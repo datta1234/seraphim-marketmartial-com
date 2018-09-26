@@ -48,7 +48,7 @@ export default class UserMarket extends BaseModel {
 
         this.active_fok = null;
         if(options && options.active_fok) {
-            this.active_fok = new UserMarketNegotiation(options.active_fok);
+            this.setActiveFoK(options.active_fok);
         }
     }
 
@@ -81,6 +81,20 @@ export default class UserMarket extends BaseModel {
 
         user_market_negotiation.setUserMarket(this);
         this.market_negotiations.push(user_market_negotiation);
+    }
+
+    /**
+    *   addNegotiation - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActiveFoK(active_fok) {
+        
+        if(!(active_fok instanceof UserMarketNegotiation)) {
+            active_fok = new UserMarketNegotiation(active_fok);
+        }
+
+        active_fok.setUserMarket(this);
+        this.active_fok = active_fok;
     }
 
     /**
@@ -130,15 +144,18 @@ export default class UserMarket extends BaseModel {
     /**
     *  store
     */
-    store() {
+    store(market_request) {
+        console.log("we going to error",market_request);
         // catch not assigned to a market request yet!
-        if(this.user_market_request_id == null) {
+        if(market_request.id == null) {
             return new Promise((resolve, reject) => {
+                console.log("error man",market_request);
                 reject(new Errors(["Invalid Market Request"]));
             });
         }
+
         return new Promise((resolve, reject) => {
-            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market", this.prepareStore())
+            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+market_request.id+"/user-market", this.prepareStore())
             .then(response => {
                resolve(response);
             })
