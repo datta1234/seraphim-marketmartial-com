@@ -133,6 +133,55 @@ class UserMarketRequest extends Model
 
 
     /**
+    * Return relation based of _id_foreign index
+    * @return \App\Models\Market\UserMarket
+    */
+    public function createQuote($data)
+    {
+        $userMarket = $this->userMarkets()->create(
+            collect($data)->only([
+                'user_id',
+            ])->toArray()
+        );
+
+        // negotiation
+        $marketNegotiation = $userMarket
+            ->marketNegotiations()
+            ->create(
+                collect($data['current_market_negotiation'])->only([
+                    "user_id",
+                    "user_market_id",
+                    "bid",
+                    "offer",
+                    "offer_qty",
+                    "bid_qty",
+                    "bid_premium",
+                    "offer_premium",
+                    "future_reference",
+                    "has_premium_calc",
+
+                    // "is_private", // cant on quote
+                    "cond_is_repeat_atw",
+                    "cond_fok_apply_bid",
+                    "cond_fok_spin",
+                    "cond_timeout",
+                    "cond_is_oco",
+                    "cond_is_subject",
+                    // "cond_buy_mid", // cant on quote
+                    // "cond_buy_best", // cant on quote
+                ])->toArray()
+            );
+
+        $userMarket
+            ->currentMarketNegotiation()
+            ->associate($marketNegotiation)
+            ->save();
+
+        return $userMarket;
+    }    
+
+
+    /**
     * Return pre formatted request for frontend
     * @return \App\Models\MarketRequest\UserMarketRequest
     */
@@ -141,11 +190,12 @@ class UserMarketRequest extends Model
         $current_org_id =  $this->resolveOrganisationId();
 
         $interest_org_id = $this->user->organisation_id;
+        $is_interest = $interest_org_id == $current_org_id && $current_org_id != null;
 
         $data = [
             "id"                => $this->id,
             "market_id"         => $this->market_id,
-            'is_interest'       => $interest_org_id == $current_org_id && $current_org_id != null,
+            'is_interest'       => $is_interest,
             "is_market_maker"   => false,
             "trade_structure"   => $this->tradeStructure->title,
             "trade_items"       => $this->userMarketRequestGroups
@@ -176,7 +226,18 @@ class UserMarketRequest extends Model
         }else
         {
             $data["sent_quote"]        =    $this->authedUserMarket;
-            $data["quotes"]            =    $this->userMarkets->map(function($item) {
+            $data["quotes"]            =    $this->userMarkets()->when(!$is_interest, function($query) use ($current_org_id) {
+                                                $query->where(function($query) use ($current_org_id) {
+                                                    // Only publicly visible
+                                                    $query->whereHas('currentMarketNegotiation', function($q) {
+                                                        $q->where('is_private', false);
+                                                    });
+                                                    // Or this org is the interest
+                                                    $query->orWhereHas('user',function($q) use ($current_org_id) {
+                                                        $q->where('organisation_id',$current_org_id);
+                                                    });
+                                                });
+                                            })->get()->map(function($item) {
                                                 return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
                                             });
         }

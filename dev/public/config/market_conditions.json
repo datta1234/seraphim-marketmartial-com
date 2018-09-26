@@ -9,7 +9,9 @@
         "alias": "is_private",
         "title": "Propose (Private)",
         "default": false,
-        "value": true
+        "value": true,
+        "component": "condition-propose",
+        "only": "market"
     },
     {
         "alias": "cond_is_oco",
@@ -104,7 +106,8 @@
                 "value": false,
                 "text": "Sell in the middle"
             }
-        ]
+        ],
+        "only": "market"
     },
     {
         "title": "Buy/Sell at Best",
@@ -119,6 +122,7 @@
                 "value": false,
                 "text": "Sell at best"
             }
-        ]
+        ],
+        "only": "market"
     }
 ]

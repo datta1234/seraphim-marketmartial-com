@@ -15,14 +15,14 @@
                         <span id="fok-popover-hit">
                             <a  href="" 
                                 @click.prevent.stop="doBuy" 
-                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true">
+                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false">
                                     Buy
                             </a>
                         </span>
                         <span id="fok-popover-lift">
                             <a  href="" 
                                 @click.prevent.stop="doSell" 
-                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false">
+                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true">
                                     Sell
                             </a>
                         </span>
@@ -34,24 +34,24 @@
             </div>
 
             <ibar-trade-desired-quantity 
-                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true" 
+                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false" 
                 ref="fokPopoverHit" 
                 target="fok-popover-hit" 
                 :market-negotiation="marketNegotiation" 
-                :open="bid_buy" 
+                :open="bid_sell" 
                 :is-offer="false" 
-                @close="bid_buy = false" 
+                @close="bid_sell = false" 
                 parent="fok-container">
             </ibar-trade-desired-quantity>
 
             <ibar-trade-desired-quantity 
-                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false" 
+                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true" 
                 ref="fokPopoverLift" 
                 target="fok-popover-lift" 
                 :market-negotiation="marketNegotiation" 
-                :open="sell_offer" 
+                :open="offer_buy" 
                 :is-offer="true" 
-                @close="sell_offer = false" 
+                @close="offer_buy = false" 
                 parent="fok-container">
             </ibar-trade-desired-quantity>
 
@@ -59,7 +59,7 @@
     </b-row>
 </template>
 <script>
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
 
     export default {
         props: {
@@ -69,8 +69,8 @@
         },
         data() {
             return {
-                bid_buy: false,
-                sell_offer: false,
+                bid_sell: false,
+                offer_buy: false,
             }
         },
         computed: {
@@ -96,11 +96,11 @@
         methods: {
             doBuy() {
                 // this.marketNegotiation.fokBuy();
-                this.bid_buy = true;
+                this.bid_sell = true;
             },
             doSell() {
                 // this.marketNegotiation.sell();
-                this.sell_offer = true;
+                this.offer_buy = true;
             },
             doKill() {
                 this.marketNegotiation.killNegotiation()

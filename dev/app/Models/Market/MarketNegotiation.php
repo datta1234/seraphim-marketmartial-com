@@ -46,7 +46,7 @@ class MarketNegotiation extends Model
     protected $fillable = [
 
             "user_id",
-            "counter_id",
+            "counter_user_id",
             "market_negotiation_id",
             "user_market_id",
             "bid",
@@ -58,15 +58,15 @@ class MarketNegotiation extends Model
             "future_reference",
             "has_premium_calc",
             "is_repeat",
-            "is_accepted",
-            "is_killed",
+            // "is_accepted",
+            // "is_killed",
 
             "is_private",
             "cond_is_repeat_atw",
             "cond_fok_apply_bid",
             "cond_fok_spin",
             "cond_timeout",
-            "cond_is_ocd",
+            "cond_is_oco",
             "cond_is_subject",
             "cond_buy_mid",
             "cond_buy_best",
@@ -84,7 +84,7 @@ class MarketNegotiation extends Model
         "cond_fok_apply_bid"    => 'Boolean',
         "cond_fok_spin"         => 'Boolean',
         "cond_timeout"          => 'Boolean',
-        "cond_is_ocd"           => 'Boolean',
+        "cond_is_oco"           => 'Boolean',
         "cond_is_subject"       => 'Boolean',
         "cond_buy_mid"          => 'Boolean',
         "cond_buy_best"         => 'Boolean',
@@ -99,7 +99,7 @@ class MarketNegotiation extends Model
         "cond_fok_apply_bid" => null,
         "cond_fok_spin" => null,
         "cond_timeout" => null,
-        "cond_is_ocd" => null,
+        "cond_is_oco" => null,
         "cond_is_subject" => null,
         "cond_buy_mid" => null,
         "cond_buy_best" => null,
@@ -180,9 +180,53 @@ class MarketNegotiation extends Model
         return ($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null); 
     }
 
+    /**
+    * test if is Proposal
+    * @return Boolean
+    */
+    public function isProposal() {
+        return (
+            $this->is_private == true && 
+            $this->cond_fok_spin == null &&
+            $this->cond_buy_mid == null &&
+            $this->cond_buy_best == null
+        ); 
+    }
+
+    /**
+    * test if is MeetInMiddle
+    * @return Boolean
+    */
+    public function isMeetInMiddle() {
+        return (
+            $this->is_private == true && 
+            $this->cond_buy_mid !== null
+        ); 
+    }
+
     public function kill() {
         $this->is_killed = true; // && with_fire = true ;)
         return $this->save();
+    }
+
+    public function getLatestBid() {
+        if($this->bid != null) {
+            return $this->bid;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestBid();
+        }
+        return null;
+    }
+
+    public function getLatestOffer() {
+        if($this->offer != null) {
+            return $this->offer;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestOffer();
+        }
+        return null;
     }
 
     /**
@@ -347,7 +391,7 @@ class MarketNegotiation extends Model
             // "cond_fok_spin"         => $this->cond_fok_spin,
             "cond_fok"              => $this->isFoK() ? true : null,
             "cond_timeout"          => $this->cond_timeout,
-            "cond_is_ocd"           => $this->cond_is_ocd,
+            "cond_is_oco"           => $this->cond_is_oco,
             "cond_is_subject"       => $this->cond_is_subject,
             "cond_buy_mid"          => $this->cond_buy_mid,
             "cond_buy_best"         => $this->cond_buy_best,
@@ -366,63 +410,63 @@ class MarketNegotiation extends Model
     }
 
 
-        /**
-    * Return pre formatted request for frontend
-    * @return \App\Models\Market\UserMarket
-    */
-    public function preFormattedQuote()
-    {
+    //     /**
+    // * Return pre formatted request for frontend
+    // * @return \App\Models\Market\UserMarket
+    // */
+    // public function preFormattedQuote()
+    // {
 
-        $currentUserOrganisationId = $this->user->organisation_id;
-        $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
-        $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
-        $loggedInUserOrganisationId = $this->resolveOrganisationId();
+    //     $currentUserOrganisationId = $this->user->organisation_id;
+    //     $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
+    //     $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
+    //     $loggedInUserOrganisationId = $this->resolveOrganisationId();
 
 
-        //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
+    //     //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
 
-         $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
-         $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
+    //      $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
+    //      $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
 
-        $data = [
-            'id'                    => $this->id,
-            "market_negotiation_id" => $this->market_negotiation_id,
-            "user_market_id"        => $this->user_market_id,
-            "bid"                   => $this->bid,
-            "offer"                 => $this->offer,
-            "bid_display"           => $this->bid,
-            "offer_display"         => $this->offer,
-            "offer_qty"             => $this->offer_qty,
-            "bid_qty"               => $this->bid_qty,
-            "bid_premium"           => $this->bid_premium,
-            "offer_premium"         => $this->offer_premium,
-            "future_reference"      => $this->future_reference,
-            "has_premium_calc"      => $this->has_premium_calc,
-            "is_repeat"             => $this->is_repeat,
-            "is_accepted"           => $this->is_accepted,
-            "is_private"            => $this->is_private,
-            "is_killed"             => $this->is_killed,
-            "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
-            "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
-            "cond_fok_spin"         => $this->cond_fok_spin,
-            "cond_timeout"          => $this->cond_timeout,
-            "cond_is_ocd"           => $this->cond_is_ocd,
-            "cond_is_subject"       => $this->cond_is_subject,
-            "cond_buy_mid"          => $this->cond_buy_mid,
-            "cond_buy_best"         => $this->cond_buy_best,
-            "is_interest"           => $is_interest,
-            "is_maker"              => $is_maker,
-            "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
-            "time"                  => $this->time,
-            "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
-            "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
-                return $tradeNegotiation->preFormatted();
-            })
+    //     $data = [
+    //         'id'                    => $this->id,
+    //         "market_negotiation_id" => $this->market_negotiation_id,
+    //         "user_market_id"        => $this->user_market_id,
+    //         "bid"                   => $this->bid,
+    //         "offer"                 => $this->offer,
+    //         "bid_display"           => $this->bid,
+    //         "offer_display"         => $this->offer,
+    //         "offer_qty"             => $this->offer_qty,
+    //         "bid_qty"               => $this->bid_qty,
+    //         "bid_premium"           => $this->bid_premium,
+    //         "offer_premium"         => $this->offer_premium,
+    //         "future_reference"      => $this->future_reference,
+    //         "has_premium_calc"      => $this->has_premium_calc,
+    //         "is_repeat"             => $this->is_repeat,
+    //         "is_accepted"           => $this->is_accepted,
+    //         "is_private"            => $this->is_private,
+    //         "is_killed"             => $this->is_killed,
+    //         "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
+    //         "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
+    //         "cond_fok_spin"         => $this->cond_fok_spin,
+    //         "cond_timeout"          => $this->cond_timeout,
+    //         "cond_is_oco"           => $this->cond_is_oco,
+    //         "cond_is_subject"       => $this->cond_is_subject,
+    //         "cond_buy_mid"          => $this->cond_buy_mid,
+    //         "cond_buy_best"         => $this->cond_buy_best,
+    //         "is_interest"           => $is_interest,
+    //         "is_maker"              => $is_maker,
+    //         "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
+    //         "time"                  => $this->time,
+    //         "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
+    //         "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
+    //             return $tradeNegotiation->preFormatted();
+    //         })
 
-        ];
+    //     ];
 
-        return $data;
-    }
+    //     return $data;
+    // }
 
 
     /* ============================== Conditions Start ============================== */
@@ -455,15 +499,15 @@ class MarketNegotiation extends Model
         if (!$this->fok_applied) {
             $this->fok_applied = true;
 
-            // Prefer to kill
+            // Prefer to Spin (fill)
             if( $this->cond_fok_spin == true ) {
                 // cond_fok_apply_bid
                 
             }
-            // Prefer To Fill
+            // Prefer To Kill
             else {
                 // cond_fok_apply_bid
-
+                $this->is_private = true;
             }
         }
     }
@@ -477,7 +521,7 @@ class MarketNegotiation extends Model
     }
 
     /**
-    * Apply cond_is_ocd
+    * Apply cond_is_oco
     */
     public function applyCondIsOcdCondition() {
 
@@ -494,7 +538,27 @@ class MarketNegotiation extends Model
     * Apply cond_buy_mid
     */
     public function applyCondBuyMidCondition() {
+        // assumption it exists... it should since you cant apply this to a quote...
+        $parent = $this->marketNegotiationParent;
 
+        $bid = doubleval($parent->getLatestBid());
+        $offer = doubleval($parent->getLatestOffer());
+
+        // set to private
+        $this->is_private = true;
+
+        // if they are the same value.. weird right? but a thing
+        if($bid === $offer) {
+            $this->bid = $bid;
+            $this->offer = $offer;
+            return true;
+        }
+        
+        $value = ($bid+$offer)/2;
+
+        $this->bid = $value;
+        $this->offer = $value;
+        return true;
     }
 
     /**

@@ -360,7 +360,6 @@ class UserMarket extends Model
         }
         return $org == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
     }
-
     
 
     /**
@@ -381,7 +380,8 @@ class UserMarket extends Model
             "is_maker"              =>  $is_maker,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                        return $item->setOrgContext($this->org_context)->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
+                                            return $item->setOrgContext($this->org_context)
+                                                        ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];
 
@@ -393,7 +393,31 @@ class UserMarket extends Model
                 $active = $this->isInterest();
             }
             if($active) {
-                $data['active_fok'] = $this->currentMarketNegotiation->preFormattedQuote($uneditedmarketNegotiations);
+                $data['active_fok'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+            }
+        }
+
+        // add Active Proposal if exists
+        if($this->currentMarketNegotiation->isProposal()) {
+            // only if counter
+            $active = $this->isCounter();
+            if($active === null) {
+                $active = $this->isInterest();
+            }
+            if($active) {
+                $data['active_proposal'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+            }
+        }
+
+        // add Active Proposal if exists
+        if($this->currentMarketNegotiation->isMeetInMiddle()) {
+            // only if counter
+            $active = $this->isCounter();
+            if($active === null) {
+                $active = $this->isInterest();
+            }
+            if($active) {
+                $data['active_meet_in_middle'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
             }
         }
 
@@ -411,24 +435,24 @@ class UserMarket extends Model
 
 
         $data = [
-            "id"    => $this->id,
-            "is_interest"  =>  $is_interest,
-            "is_maker"   => $is_maker,
-            "bid_only" => $this->currentMarketNegotiation->offer == null,
-            "offer_only" => $this->currentMarketNegotiation->bid == null,
-            "vol_spread" => (
+            "id"            => $this->id,
+            "is_interest"   =>  $is_interest,
+            "is_maker"      => $is_maker,
+            "bid_only"      => $this->currentMarketNegotiation->offer == null,
+            "offer_only"    => $this->currentMarketNegotiation->bid == null,
+            "vol_spread"    => (
                 !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
                 $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
                 null 
             ),
-            "time" => $this->created_at->format("H:i"),
+            "time"          => $this->created_at->format("H:i"),
         ];
         if($data['is_maker']) {
-            $data['bid'] = $this->currentMarketNegotiation->bid;
-            $data['offer'] = $this->currentMarketNegotiation->offer;
-            $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
-            $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
-            $data['is_repeat'] = $this->currentMarketNegotiation->is_repeat;
+            $data['bid']        = $this->currentMarketNegotiation->bid;
+            $data['offer']      = $this->currentMarketNegotiation->offer;
+            $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
+            $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
+            $data['is_repeat']  = $this->currentMarketNegotiation->is_repeat;
             $data['is_on_hold'] = $this->is_on_hold;
         }
         if($data['is_interest']) {
@@ -436,6 +460,7 @@ class UserMarket extends Model
         }
         return $data;
     }
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
@@ -447,23 +472,23 @@ class UserMarket extends Model
         $is_interest = $this->isInterest();
 
         $data = [
-            "id"    => $this->id,
-            "is_interest"  =>  $is_interest,
-            "is_maker"   => $is_maker,
-            "bid_only" => $this->currentMarketNegotiation->offer == null,
-            "offer_only" => $this->currentMarketNegotiation->bid == null,
-            "vol_spread" => (
+            "id"            => $this->id,
+            "is_interest"   =>  $is_interest,
+            "is_maker"      => $is_maker,
+            "bid_only"      => $this->currentMarketNegotiation->offer == null,
+            "offer_only"    => $this->currentMarketNegotiation->bid == null,
+            "vol_spread"    => (
                 !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
                 $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
                 null 
             ),
-            "time" => $this->created_at->format("H:i"),
+            "time"          => $this->created_at->format("H:i"),
         ];
         if($data['is_maker']) {
-            $data['bid'] = $this->currentMarketNegotiation->bid;
-            $data['offer'] = $this->currentMarketNegotiation->offer;
-            $data['bid_qty'] = $this->currentMarketNegotiation->bid_qty;
-            $data['offer_qty'] = $this->currentMarketNegotiation->offer_qty;
+            $data['bid']        = $this->currentMarketNegotiation->bid;
+            $data['offer']      = $this->currentMarketNegotiation->offer;
+            $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
+            $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
         }
         return $data;
     }

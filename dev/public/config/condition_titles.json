@@ -11,7 +11,7 @@
         }
     },
     {
-        "condition": "cond_is_ocd",
+        "condition": "cond_is_oco",
         "true": {
             "bid": "OCO",
             "offer": "OCO"

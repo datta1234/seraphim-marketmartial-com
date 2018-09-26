@@ -553,3 +553,10 @@ a.mm-login-button {
 {
 	display: none;
 }
+
+input.input-small {
+	line-height:0.9em;
+	font-size:0.9em;
+	padding:1px;
+	height: calc(1.5rem + 2px);
+}

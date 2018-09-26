@@ -286,4 +286,11 @@ export default class UserMarketRequest extends BaseModel {
         return spinStatuses.indexOf(this.attributes.state) > -1; 
     }
 
+    state() {
+        if(this.chosen_user_market == null) {
+            return "quote";
+        }
+        return "market";
+    }
+
 }

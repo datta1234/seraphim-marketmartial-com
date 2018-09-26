@@ -47,9 +47,19 @@ export default class UserMarket extends BaseModel {
         }
 
         this.active_fok = null;
+        this.active_proposal = null;
+        this.active_meet_in_middle = null;
+        
         if(options && options.active_fok) {
             this.setActiveFoK(options.active_fok);
         }
+        if(options && options.active_proposal) {
+            this.setActiveProposal(options.active_proposal);
+        }
+        if(options && options.active_meet_in_middle) {
+            this.setActiveMeetInMiddle(options.active_meet_in_middle);
+        }
+
     }
 
     /**
@@ -84,7 +94,7 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
-    *   addNegotiation - add user user_market_negotiation
+    *   setActiveFoK - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
     setActiveFoK(active_fok) {
@@ -95,6 +105,34 @@ export default class UserMarket extends BaseModel {
 
         active_fok.setUserMarket(this);
         this.active_fok = active_fok;
+    }
+
+    /**
+    *   setActiveProposal - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActiveProposal(active_proposal) {
+        
+        if(!(active_proposal instanceof UserMarketNegotiation)) {
+            active_proposal = new UserMarketNegotiation(active_proposal);
+        }
+
+        active_proposal.setUserMarket(this);
+        this.active_proposal = active_proposal;
+    }
+    
+    /**
+    *   setActiveMeetInMiddle - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActiveMeetInMiddle(active_meet_in_middle) {
+        
+        if(!(active_meet_in_middle instanceof UserMarketNegotiation)) {
+            active_meet_in_middle = new UserMarketNegotiation(active_meet_in_middle);
+        }
+
+        active_meet_in_middle.setUserMarket(this);
+        this.active_meet_in_middle = active_meet_in_middle;
     }
 
     /**

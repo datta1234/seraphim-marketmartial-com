@@ -296,5 +296,6 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+    
 
 }
