@@ -202,7 +202,11 @@
                 });
             },
             loadExpirations() {
-                axios.get(axios.defaults.baseUrl + '/stats/my-activity/expirations')
+                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
+                    params:{
+                        'not_paginate': true,
+                    }
+                })
                 .then(expirationsResponse => {
                     if(expirationsResponse.status == 200) {
                         console.log("FROM SERVER: ",expirationsResponse.data);

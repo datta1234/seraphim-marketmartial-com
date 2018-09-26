@@ -59,8 +59,6 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 			->name('my_activity.year');
 		Route::get('/my-activity/markets', 'Stats\MarketController@index')
 			->name('my_activity.markets');
-		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
-			->name('my_activity.expirations');
 	});
 });
 
