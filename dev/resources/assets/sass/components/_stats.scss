@@ -47,8 +47,8 @@
 		border-color: $stats-warm-grey;
 
 		&.active {
-			background-color: $mm-panel;
-			border-color: $mm-panel;
+			background-color: darken($mm-panel, 10%);
+			border-color: darken($mm-panel, 10%);
 		}
 	}
 }
