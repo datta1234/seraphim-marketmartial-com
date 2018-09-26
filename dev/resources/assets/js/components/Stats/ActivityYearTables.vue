@@ -48,6 +48,7 @@
                                         </button>
                                     </b-col>
                                     <b-col cols="4" offset="2">
+                                        <i class="fas fa-check"></i>
                                         <datepicker v-model="table_data[index].filter_date"
                                                     class="float-right filter-date-picker"
                                                     :name="year+'-table-datepicker'"
@@ -56,15 +57,7 @@
                                                     :calendar-button="true"
                                                     calendar-button-icon="icon-screen"
                                                     :clear-button="true"
-                                                    clear-button-icon="icon-screen">
-                                                    <!-- <span slot="afterDateInput" class="animated-placeholder">
-                                                                            <button class="btn mm-button date-picker-button-icon">
-                                                                                <font-awesome-icon icon="calendar-alt"></font-awesome-icon>
-                                                                            </button>
-                                                                            <button @click="clearFilterDate(index)" class="btn mm-button date-picker-button-icon">
-                                                                                <font-awesome-icon icon="trash-alt"></font-awesome-icon>
-                                                                            </button>
-                                                                        </span> -->                    
+                                                    clear-button-icon="icon-screen">                  
                                         </datepicker>
                                     </b-col>
                                 </b-row>

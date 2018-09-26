@@ -17,7 +17,7 @@
                         <button type="submit" 
                                 class="btn mm-generic-trade-button float-right ml-0 mr-2" 
                                 @click="searchTerm">
-                            <font-awesome-icon icon="search"></font-awesome-icon>
+                            <i class="fas fa-search"></i>
                         </button>
                         <b-input v-model="sort_options.search" class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
                     </b-col>

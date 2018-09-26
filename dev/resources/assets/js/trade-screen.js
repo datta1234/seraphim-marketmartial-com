@@ -40,16 +40,6 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 /**
- * Load the Fontawesome vue component then the library and lastly import
- * and register the icons you want to use.
- */
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
-
-library.add(faCheck,faCheckDouble);
-
-/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
@@ -67,8 +57,6 @@ import { EventBus } from './lib/EventBus.js';
 Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
-
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 

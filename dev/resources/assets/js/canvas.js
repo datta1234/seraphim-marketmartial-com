@@ -30,15 +30,6 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { Bar } from 'vue-chartjs';
 
 /**
- * Load the Fontawesome vue component then the library and lastly import
- * and register the icons you want to use.
- */
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faSearch, faCalendarAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-
-library.add(faSearch, faCalendarAlt, faTrashAlt);
-/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
@@ -46,9 +37,6 @@ library.add(faSearch, faCalendarAlt, faTrashAlt);
 
 // datepicker
 Vue.component('Datepicker', Datepicker);
-
-// Font Awesome component
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 // Profile Components
 Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
