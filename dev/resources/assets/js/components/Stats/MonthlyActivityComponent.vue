@@ -76,7 +76,6 @@
         },
         methods: {
             setChartData(data, market) {
-            	console.log("Market: ",market,'    ',"Setting this data: ",data);
             	this.active_market = market;
             	if(data == null) {
             		this.has_data = false;
@@ -87,7 +86,6 @@
             	this.active_data_set.datasets = [];
             	this.setLabels(data);
             	this.setDataSet(data);
-            	console.log("Chart Data",this.active_data_set);
             },
             setLabels(data) {
             	Object.keys(data).forEach(set => {

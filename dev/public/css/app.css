@@ -17581,6 +17581,12 @@ input:checked + .slider:before {
   background-color: #13524d;
 }
 
+.mm-modal-button:hover,
+.mm-modal-button:disabled {
+  color: #FFFFFF;
+  background-color: #6D6E70;
+}
+
 .mm-modal-market-button {
   color: #FFFFFF;
   background-color: #1D3641;

@@ -148,7 +148,6 @@
             },
             loadTableData(index, is_toggle) {
                 this.table_data_loaded = false;
-                console.log("Loading table data",this.table_data);
                 if(is_toggle && this.table_data[index].data){
                     this.table_data_loaded = true;
                 } else {
@@ -167,13 +166,11 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
-                            console.log("FROM SERVER: ",activityResponse.data);
                             this.table_data[index].current_page = activityResponse.data.current_page;
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;
                             this.table_data[index].data = activityResponse.data.data;
                             this.table_data_loaded = true;
-                            console.log("Data: ",this.table_data[index].data);
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+this.table_years[index]+" year data.")
@@ -190,7 +187,6 @@
                 axios.get(axios.defaults.baseUrl + '/stats/my-activity/markets')
                 .then(marketsResponse => {
                     if(marketsResponse.status == 200) {
-                        console.log("FROM SERVER: ",marketsResponse.data);
                         Object.keys(marketsResponse.data).forEach(key => {
                             this.markets_filter.push({
                                 text: marketsResponse.data[key],
@@ -213,7 +209,6 @@
                 })
                 .then(expirationsResponse => {
                     if(expirationsResponse.status == 200) {
-                        console.log("FROM SERVER: ",expirationsResponse.data);
                         Object.keys(expirationsResponse.data).forEach(key => {
                             this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
                         });
@@ -244,10 +239,9 @@
                 this.loadTableData(0, false)
             },
             sortingChanged(index, ctx) {
-                console.log("I CHANGE!!!", index, ctx);
                 this.table_data[index].order_by = ctx.sortBy;
                 this.table_data[index].order_ascending = ctx.sortDesc;
-                this.loadTableData(index, false)
+                this.loadTableData(index, false);
             },
             formatItem(item, key) {
                 if(item[key] == null){
@@ -275,10 +269,6 @@
                 this.table_data[index].current_page = $event;
                 this.loadTableData(index, false);
             },
-            clearFilterDate(index) {
-                console.log("CLEAR!!!!!");
-                this.table_data[index].filter_date = null;
-            }
         },
         mounted() {
             let unordered_years = [];

@@ -227,7 +227,7 @@ export default {
             });
         },
         /**
-         * Loads the Reqeust a Market Modal 
+         * Loads the Confirmation Modal 
          */
         showModal(user, action, index, message) {
             this.modal_data.confirm_message = message;
@@ -237,7 +237,7 @@ export default {
             this.modal_data.show_modal = true;
         },
         /**
-         * Closes the Reqeust a Market Modal 
+         * Closes the Confirmation Modal 
          */
         hideModal() {
             this.modal_data.user = null;

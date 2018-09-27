@@ -55,11 +55,13 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 
 	Route::group(['prefix' => 'stats'], function() {
 		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
-		Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
 		Route::get('/my-activity/year', 'Stats\ActivityControlller@yearActivity')
 			->name('my_activity.year');
 		Route::get('/my-activity/markets', 'Stats\MarketController@index')
 			->name('my_activity.markets');
+		
+		Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
+		
 		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
 	});
 });
@@ -121,4 +123,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		->name('admin.user.interest.edit');
 	Route::put('/user/interest-settings/{user}','Admin\InterestController@update')
 		->name('admin.user.interest.update');
+
+	Route::group(['prefix' => 'stats'], function() {
+		Route::post('/market-activity','Stats\ActivityControlller@store')
+			->name('activity.upload_safex_data');
+	});
 });

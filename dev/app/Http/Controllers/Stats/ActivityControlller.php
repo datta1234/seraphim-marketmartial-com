@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\Market;
+use App\Models\TradeConfirmations\SafexTradeConfirmation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
+use App\Http\Requests\Stats\UploadSafexDataRequest;
 
 class ActivityControlller extends Controller
 {
@@ -137,5 +139,49 @@ class ActivityControlller extends Controller
         });
 
         return response()->json($trade_confirmations);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(UploadSafexDataRequest $request)
+    {
+        $path = $request->file('safex_csv_file')->getRealPath();
+        $csv = array_map('str_getcsv', file($path));
+
+        array_walk($csv, function(&$row) {
+            array_walk($row, function(&$col) {
+                $col = trim($col);
+            });
+        });
+
+        foreach ($csv[0] as $index => $field) {
+            $csv[0][$index] = config('marketmartial.import_csv_field_mapping.safex_fields.'.$field);
+        }
+
+        array_walk($csv, function(&$a) use ($csv) {
+            $a = array_combine($csv[0], $a);
+        });
+        array_shift($csv);
+        
+        try {
+            DB::beginTransaction();
+            $created = array_map('App\Models\TradeConfirmations\SafexTradeConfirmation::createFromCSV', $csv);
+            DB::commit();
+        } catch (\Exception $e) {
+            \Log::error($e);
+            DB::rollBack();
+            return ['success' => false,'data' => null, 'message' => 'Failed to upload Safex data.'];
+        }
+
+        return ['success' => true,'data' => null,'message' => 'Safex data successfully uploaded.'];
+    }
+
+    public function safexRollingData(Request $request)
+    {
+        
     }
 }
