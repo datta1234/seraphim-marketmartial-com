@@ -149,6 +149,7 @@ class ActivityControlller extends Controller
      */
     public function store(UploadSafexDataRequest $request)
     {
+        // @TODO - remove safex data that are over one month - check with Aimee for exact time period
         $path = $request->file('safex_csv_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
@@ -182,6 +183,6 @@ class ActivityControlller extends Controller
 
     public function safexRollingData(Request $request)
     {
-        
+        return SafexTradeConfirmation::paginate(10);
     }
 }

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 			->name('my_activity.markets');
 		
 		Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
+		Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
 		
 		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
 	});

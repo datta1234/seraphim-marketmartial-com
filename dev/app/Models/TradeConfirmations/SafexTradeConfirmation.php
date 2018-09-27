@@ -71,7 +71,9 @@ class SafexTradeConfirmation extends Model
             'expiry' 			=> \Carbon\Carbon::parse($data['expiry']),
             'strike' 			=> self::parseDouble($data['strike']),
             'trade_id' 			=> self::parseDouble($data['trade_id']),
-            'strike_percentage'	=> self::parseDouble($data['strike_percentage']),
+            'strike_percentage'	=> ( str_replace(" ", "",$data['strike_percentage']) == '-' ? 
+                                        null : self::parseDouble($data['strike_percentage'])
+                                    ),
             'nominal' 			=> self::parseDouble($data['nominal']),
 			'underlying' 		=> $data['underlying'],
 			'trade_date' 		=> \Carbon\Carbon::parse($data['trade_date']),

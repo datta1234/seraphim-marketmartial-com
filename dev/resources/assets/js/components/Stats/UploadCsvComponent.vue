@@ -58,8 +58,9 @@
              */
             hideModal() {
                 this.modal_data.show_modal = false;
+                this.clearFiles();
             },
-            clearFiles () {
+            clearFiles() {
               this.$refs.csvfileinput.reset();
             },
             uploadFile() {

@@ -124,12 +124,15 @@
                 
                 table_data: {
                     table_fields: [
-                        { key: 'updated_at', label: 'Date' },
-                        { key: 'market', label: 'Instrument' },
-                        { key: 'nominal', label: 'Nominal' },
+                        { key: 'trade_date', label: 'Trade Date' },
+                        { key: 'structure', label: 'Strucure' },
+                        { key: 'underlying_alt', label: 'Underlying' },
                         { key: 'strike', label: 'Strike' },
-                        { key: 'volatility', label: 'Volatility' },
-                        { key: 'expiration', label: 'Expiration' },
+                        { key: 'strike_percentage', label: 'Strike%' },
+                        { key: 'is_put', label: 'Put/Call' },
+                        { key: 'volspread', label: 'Vol' },
+                        { key: 'expiry', label: 'Expiry' },
+                        { key: 'nominal', label: 'Nominal' },
                     ],
                     data: null,
                     param_options: {
@@ -151,9 +154,9 @@
             };
         },
         methods: {
-            loadTableData(index, is_toggle) {
+            loadTableData() {
                 this.table_data.loaded = false;
-                axios.get(axios.defaults.baseUrl + '/stats/my-activity/year', {
+                axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex'/*, {
                     params:{
                         'page': this.table_data[index].current_page,
                         'year': this.table_years[index],
@@ -164,16 +167,15 @@
                         '_order_by': (this.table_data[index].order_by !== null ? this.table_data[index].order_by : ''),
                         '_order': (this.table_data[index].order_ascending ? 'ASC' : 'DESC'),
                     }
-                })
-                .then(activityResponse => {
-                    if(activityResponse.status == 200) {
-                        console.log("FROM SERVER: ",activityResponse.data);
-                        this.table_data.pagination.current_page = activityResponse.data.current_page;
-                        this.table_data.pagination.per_page = activityResponse.data.per_page;
-                        this.table_data.pagination.total = activityResponse.data.total;
-                        this.table_data.data = activityResponse.data.data;
+                }*/)
+                .then(safexDataResponse => {
+                    if(safexDataResponse.status == 200) {
+                        console.log("FROM SERVER: ",safexDataResponse.data);
+                        this.table_data.pagination.current_page = safexDataResponse.data.current_page;
+                        this.table_data.pagination.per_page = safexDataResponse.data.per_page;
+                        this.table_data.pagination.total = safexDataResponse.data.total;
+                        this.table_data.data = safexDataResponse.data.data;
                         this.table_data.loaded = true;
-                        console.log("Data: ",this.table_data[index].data);
                     } else {
                         console.error(err); 
                     }
@@ -190,26 +192,26 @@
                 this.table_data.param_options.order_ascending = ctx.sortDesc;
                 this.loadTableData();
             },
-            /**
-             * Casting a passed string to moment with a new format
-             *
-             * @param {string} date_string
-             */
-            castToMoment(date_string) {
-                return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('DD MMM YYYY');
-            },
             formatItem(item, key) {
                 if(item[key] == null){
                     return '-';
                 }
-
-                return key == 'updated_at' ? this.castToMoment(item[key]) : item[key];
+                switch (key) {
+                    case 'nominal':
+                    case 'strike':
+                        return this.$root.splitValHelper(item[key], ' ', 3);
+                        break;
+                    case 'trade_date':
+                    case 'expiry':
+                        return moment(item[key], 'YYYY-MM-DD').format('DD MMM YYYY');
+                        break;
+                    default:
+                        return item[key];
+                }
             },
         },
         mounted() {
-        	this.table_data.data = [
-                {'updated_at': "2018-03-10 09:05:02", 'market': "TOP40", 'nominal': "some nominal", 'strike': "somestrike", 'volatility': "VOL VOL", 'expiration': "15 Dec 2018"}
-            ];
+        	this.loadTableData();
             this.table_data.loaded = true;
         }
     }
