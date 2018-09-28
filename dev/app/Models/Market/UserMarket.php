@@ -371,7 +371,10 @@ class UserMarket extends Model
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
         
-        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()->with('user')->get();
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()
+            ->notPrivate($this->resolveOrganisationId())
+            ->with('user')
+            ->get();
         // @TODO addd back excludeFoKs but filter to only killed ones
 
         $data = [
@@ -380,7 +383,7 @@ class UserMarket extends Model
             "is_maker"              =>  $is_maker,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                            return $item->setOrgContext($this->org_context)
+                                            return $item->setOrgContext($this->resolveOrganisation())
                                                         ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         })
         ];

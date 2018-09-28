@@ -97,12 +97,12 @@
                     // Check new currentNegotiation is valid
                     invalid_states.previous = 
                             (
-                                !this.is_empty(this.marketNegotiation.bid)
+                                !this.is_empty(this.currentNegotiation.bid)
                                 && this.marketNegotiation.bid < this.currentNegotiation.bid
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
-                                !this.is_empty(this.marketNegotiation.offer)
+                                !this.is_empty(this.currentNegotiation.offer)
                                 && this.marketNegotiation.offer > this.currentNegotiation.offer
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
