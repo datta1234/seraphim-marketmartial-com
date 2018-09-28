@@ -46,8 +46,8 @@ export default {
                     if(this.marketRequest.sent_quote) {
                         this.market_request_state = 'request-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.marketRequest.sent_quote.current_market_negotiation.bid ? this.marketRequest.sent_quote.current_market_negotiation.bid : '-';
-                        this.user_market_offer = this.marketRequest.sent_quote.current_market_negotiation.offer ? this.marketRequest.sent_quote.current_market_negotiation.offer: '-';
+                        this.user_market_bid = this.marketRequest.sent_quote.bid ? this.marketRequest.sent_quote.bid : '-';
+                        this.user_market_offer = this.marketRequest.sent_quote.offer ? this.marketRequest.sent_quote.offer: '-';
                     } else {
                         
                         this.market_request_state = 'request';

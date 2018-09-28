@@ -393,7 +393,8 @@ class UserMarket extends Model
                 $active = $this->isInterest();
             }
             if($active) {
-                $data['active_fok'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition_type'] = 'fok';
             }
         }
 
@@ -405,7 +406,8 @@ class UserMarket extends Model
                 $active = $this->isInterest();
             }
             if($active) {
-                $data['active_proposal'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition_type'] = 'proposal';
             }
         }
 
@@ -417,7 +419,8 @@ class UserMarket extends Model
                 $active = $this->isInterest();
             }
             if($active) {
-                $data['active_meet_in_middle'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition_type'] = 'meet_in_middle';
             }
         }
 

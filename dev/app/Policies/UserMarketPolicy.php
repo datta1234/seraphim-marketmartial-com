@@ -30,7 +30,7 @@ class UserMarketPolicy
     public function update(User $user, UserMarket $userMarket)
     {
         return $user->orgnisation_id === $userMarket->user->orgnisation_id;
-    }    
+    }
 
      /**
      * Determine if the given usermarket can be placed on hold the user.
@@ -83,7 +83,6 @@ class UserMarketPolicy
 
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
-
         $current_org_id = $user->organisation_id;
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) || $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open";
     }
@@ -93,5 +92,5 @@ class UserMarketPolicy
         $current_org_id = $user->organisation_id;
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id);
     }
-
+    
 }

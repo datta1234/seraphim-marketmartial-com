@@ -225,7 +225,6 @@ class UserMarketRequest extends Model
 
         }else
         {
-            $data["sent_quote"]        =    $this->authedUserMarket;
             $data["quotes"]            =    $this->userMarkets()->when(!$is_interest, function($query) use ($current_org_id) {
                                                 $query->where(function($query) use ($current_org_id) {
                                                     // Only publicly visible
@@ -246,16 +245,16 @@ class UserMarketRequest extends Model
     }
 
 
-    private  $authedUserMarket = null;
+    private $authedUserMarketData = null;
     public function getAuthedUserMarketAttribute() {
-        if(!$this->authedUserMarket) {
-            $this->authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
+        if($this->authedUserMarketData == null) {
+            $this->authedUserMarketData = $this->userMarkets()->whereHas('user', function($q) {
                 $q->where('organisation_id',$this->resolveOrganisationId());
             })->orderBy('updated_at', 'DESC')
             ->with('currentMarketNegotiation')
             ->first();
         }
-        return $this->authedUserMarket;
+        return $this->authedUserMarketData;
     }
 
     public function notifyRequested($organisations = [], $messages = null)

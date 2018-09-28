@@ -18,7 +18,7 @@
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
 
-        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
 
@@ -67,7 +67,7 @@
 
                         <b-button class="w-100 mt-1"
                           v-if="!maker_quote" 
-                          :disabled="check_invalid || server_loading || fok_active" 
+                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
                           size="sm" 
                           dusk="ibar-action-send" 
                           variant="primary" 
@@ -83,7 +83,7 @@
                     <b-col cols="6">
                          
                         <b-button  class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || fok_active" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -91,7 +91,7 @@
                                 Send
                         </b-button>
                         <b-button class="w-100 mt-1" 
-                         :disabled="fok_active" 
+                         :disabled="conditionActive('fok')" 
                          v-if="can_spin" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -111,19 +111,19 @@
         </b-row>
 
         <condition-fok-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_fok" 
-            v-if="fok_active">
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('fok')">
         </condition-fok-active>
         <condition-proposal-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_proposal" 
-            v-if="proposal_active">
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('proposal')">
         </condition-proposal-active>
         <condition-meet-in-middle-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_meet_in_middle" 
-            v-if="meet_in_middle_active">
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('meet_in_middle')">
         </condition-meet-in-middle-active>
             
-        <ibar-apply-conditions v-if="can_negotiate && !fok_active" class="mb-5 mt-1" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-5 mt-1" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -208,15 +208,6 @@
             }
         },
         computed: {
-            'fok_active': function() {
-                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
-            },
-            'proposal_active': function() {
-                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_proposal !== null );
-            },
-            'meet_in_middle_active': function() {
-                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_meet_in_middle !== null );
-            },
             'meet_in_the_middle_proposed': function(){
                 return this.proposed_user_market_negotiation.cond_buy_mid != null;
             },
@@ -257,6 +248,16 @@
             }
         },
         methods: {
+            conditionActive(type) {
+                if( this.marketRequest.chosen_user_market !== null && 
+                    this.marketRequest.chosen_user_market.active_condition !== null && 
+                    this.marketRequest.chosen_user_market.active_condition_type !== null &&
+                    this.marketRequest.chosen_user_market.active_condition_type == type
+                ) {
+                    return true;
+                }
+                return false;
+            },
             validateProposal:function(check_invalid)
             {
                 this.check_invalid = check_invalid;
@@ -443,7 +444,6 @@
                 *else post for the specific user market
                 */
                 let chosen_user_market =  this.marketRequest.chosen_user_market;
-
                 if(chosen_user_market)
                 {
                    this.user_market = this.marketRequest.chosen_user_market;
