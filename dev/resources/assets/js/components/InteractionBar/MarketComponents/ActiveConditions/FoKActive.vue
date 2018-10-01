@@ -1,13 +1,13 @@
 <template>
-    <b-row dusk="ibar-fok-active" class="active-fok-bar">
+    <b-row dusk="ibar-fok-active" class="active-cond-bar">
         <b-col cols="11" offset="1">
             <div class="text-right condition">
                 <strong>20:00</strong>
             </div>
         </b-col>
         <b-col cols="12">
-            <div class="fok-bar">
-                <b-row id="fok-container" class="trade-popover">
+            <div class="cond-bar">
+                <b-row id="cond-container" class="trade-popover">
                     <b-col>
                         FoK: {{ fok_value }}
                     </b-col>

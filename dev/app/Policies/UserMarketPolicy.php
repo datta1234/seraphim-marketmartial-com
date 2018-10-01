@@ -84,6 +84,10 @@ class UserMarketPolicy
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
         $current_org_id = $user->organisation_id;
+        // Cant respond to negotiation if FoK
+        if($userMarket->currentMarketNegotiation->isFoK()) {
+            return false;
+        }
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) || $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open";
     }
 

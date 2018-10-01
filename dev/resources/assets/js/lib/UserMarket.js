@@ -9,9 +9,12 @@ export default class UserMarket extends BaseModel {
        super({
             _used_model_list: [UserMarketNegotiation],
             _relations:{
-               market_negotiations:{
+                market_negotiations:{
                     addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
-               } 
+                },
+                active_condition: {
+                    setMethod: (active_condition) => { this.setActiveCondition(active_condition) },
+                }
             }
         });
 

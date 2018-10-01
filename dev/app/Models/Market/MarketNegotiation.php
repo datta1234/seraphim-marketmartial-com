@@ -5,12 +5,12 @@ namespace App\Models\Market;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Trade\TradeNegotiation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class MarketNegotiation extends Model
 {
-    use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions;
-    
+    use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -106,6 +106,18 @@ class MarketNegotiation extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at', 
+        'updated_at', 
+        'deleted_at'
+    ];
+
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -181,6 +193,14 @@ class MarketNegotiation extends Model
         })->orderBy('created_at', 'DESC');
     }
 
+    public function scopeConditions($query) {
+        return $query->where(function($q){
+            foreach($this->applicableConditions as $key => $default) {
+                $q->orWhere($key, '!=', $default);
+            }
+        });
+    }
+
     /**
     * test if is FoK
     * @return Boolean
@@ -195,10 +215,11 @@ class MarketNegotiation extends Model
     */
     public function isProposal() {
         return (
-            $this->is_private == true && 
-            $this->cond_fok_spin == null &&
-            $this->cond_buy_mid == null &&
-            $this->cond_buy_best == null
+            $this->is_private === true && 
+            $this->cond_fok_spin === null &&
+            $this->cond_fok_apply_bid === null &&
+            $this->cond_buy_mid === null &&
+            $this->cond_buy_best === null
         ); 
     }
 
@@ -216,6 +237,27 @@ class MarketNegotiation extends Model
     public function kill() {
         $this->is_killed = true; // && with_fire = true ;)
         return $this->save();
+    }
+
+    public function counter($user, $data) {
+        return $this->marketNegotiationChildren()->create([
+            'user_id'       =>  $user->id,
+            'counter_user_id'   =>  $this->user_id,
+            'user_market_id'    =>  $this->user_market_id,
+            'offer_qty'     =>  $this->offer_qty,
+            'bid_qty'       =>  $this->bid_qty,
+
+            'bid'           =>  $data['bid'],
+            'offer'         =>  $data['offer'],
+            'is_private'    =>  true,
+        ]);
+    }
+
+    public function reject() {
+        $userMarket = $this->userMarket;
+        $success = $this->delete();
+        $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
+        return true;
     }
 
     public function getLatestBid() {
@@ -251,17 +293,27 @@ class MarketNegotiation extends Model
     }
 
     /**
-    * Filter Scope on not public
+    * Filter Scope on not private
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function scopeNotPrivate($query, $organisation_id)
     {
         return $query->where(function($q) use ($organisation_id) {
+            // show only the non private ones by default
             $q->where('is_private', false);
+
+            // also show the private ones for certain situations (owned / traded)
             $q->orWhere(function($qq) use ($organisation_id) {
                 $qq->where('is_private', true);
-                $qq->whereHas('user', function($qqq) use ($organisation_id) {
-                    $qqq->where('organisation_id', $organisation_id);
+                $qq->where(function($qqq) use ($organisation_id) {
+                    // if it was created by the organisaiton viewing, we show it
+                    $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
+                        $qqqq->where('organisation_id', $organisation_id);
+                    });
+                    // OR If this has been traded, we show it
+                    $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
+                        $qqqq->where('traded', true);
+                    }*/);
                 });
             });
         });
