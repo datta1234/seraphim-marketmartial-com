@@ -183,6 +183,16 @@ class ActivityControlller extends Controller
 
     public function safexRollingData(Request $request)
     {
-        return SafexTradeConfirmation::paginate(10);
+        return SafexTradeConfirmation::basicSearch(
+            $request->input('search'),
+            $request->input('_order_by'),
+            $request->input('_order'),
+            [
+                "filter_date" => $request->input('filter_date'),
+                "filter_market" => $request->input('filter_market'),
+                "filter_expiration" => $request->input('filter_expiration'),
+                "filter_nominal" => $request->input('filter_nominal'),
+            ]
+        )->paginate(10);
     }
 }

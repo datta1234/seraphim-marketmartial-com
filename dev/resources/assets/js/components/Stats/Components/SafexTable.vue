@@ -46,10 +46,10 @@
                             </b-row>
                             <b-row class="mt-2">
                                 <b-col cols="1">
-                                    <label class="mr-sm-2" for="stats-safex-search">Underlying:</label>
+                                    <label class="mr-sm-2" for="stats-safex-underlying">Underlying:</label>
                                 </b-col>
                                 <b-col cols="3">
-                                    <b-input v-model="table_data.param_options.search" class="w-100 mr-0" id="stats-safex-search" placeholder="e.g. NPN" />
+                                    <b-input v-model="table_data.param_options.underlying" class="w-100 mr-0" id="stats-safex-underlying" placeholder="e.g. NPN" />
                                 </b-col>
                                 <b-col cols="2">
                                     <button type="submit" 
@@ -113,12 +113,18 @@
             return {
                 markets_filter: [
                     {text: "All Markets", value: null},
+                    {text: "ALSI", value: "ALSI"},
+                    {text: "DTOP", value: "DTOP"},
+                    {text: "DCAP", value: "DCAP"},
+                    {text: "SINGLES", value: "SINGLES"},
                 ],
                 expiration_filter: [
                     {text: "All Expirations", value: null},
                 ],
                 nominal_filter: [
                     {text: "All Nominals", value: null},
+                    {text: "R10m to R40m", value: "10-40"},
+                    {text: "Greater than R40m", value: ">40"},
                 ],
                 
                 
@@ -138,7 +144,7 @@
                     param_options: {
                         market: null,
                         expiration: null,
-                        search: null,
+                        underlying: null,
                         nominal: null,
                         date: null,
                         order_by: null,
@@ -156,18 +162,18 @@
         methods: {
             loadTableData() {
                 this.table_data.loaded = false;
-                axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex'/*, {
+                axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex', {
                     params:{
-                        'page': this.table_data[index].current_page,
-                        'year': this.table_years[index],
-                        'filter_date': this.table_data[index].filter_date ? moment(this.table_data[index].filter_date).format('YYYY-MM-DD'): null,
-                        "filter_market": this.table_data[index].filter_market,
-                        "filter_expiration": this.table_data[index].filter_expiration,
-                        "search": this.table_data[index].search,
-                        '_order_by': (this.table_data[index].order_by !== null ? this.table_data[index].order_by : ''),
-                        '_order': (this.table_data[index].order_ascending ? 'ASC' : 'DESC'),
+                        'page': this.table_data.pagination.current_page,
+                        'filter_date': this.table_data.param_options.date ? moment(this.table_data.param_options.date).format('YYYY-MM-DD'): null,
+                        "filter_market": this.table_data.param_options.market,
+                        "filter_expiration": this.table_data.param_options.expiration ? moment(this.table_data.param_options.expiration).format('YYYY-MM-DD'): null,
+                        "filter_nominal": this.table_data.param_options.nominal,
+                        "search": this.table_data.param_options.underlying,
+                        '_order_by': (this.table_data.param_options.order_by !== null ? this.table_data.param_options.order_by : ''),
+                        '_order': (this.table_data.param_options.order_ascending ? 'ASC' : 'DESC'),
                     }
-                }*/)
+                })
                 .then(safexDataResponse => {
                     if(safexDataResponse.status == 200) {
                         console.log("FROM SERVER: ",safexDataResponse.data);
@@ -184,7 +190,7 @@
                 });
             },
             changePage($event) {
-                this.pagination.current_page = $event;
+                this.table_data.pagination.current_page = $event;
                 this.loadTableData();
             },
             sortingChanged(ctx) {
@@ -205,14 +211,36 @@
                     case 'expiry':
                         return moment(item[key], 'YYYY-MM-DD').format('DD MMM YYYY');
                         break;
+                    case 'is_put':
+                        return item[key] == 1 ? "Put" : "Call";
+                        break;
                     default:
                         return item[key];
                 }
             },
+            loadExpirations() {
+                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
+                    params:{
+                        'not_paginate': true,
+                    }
+                })
+                .then(expirationsResponse => {
+                    if(expirationsResponse.status == 200) {
+                        Object.keys(expirationsResponse.data).forEach(key => {
+                            this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
+                        });
+                        //
+                    } else {
+                        console.error(err); 
+                    }
+                }, err => {
+                    console.error(err);
+                });
+            },
         },
         mounted() {
+            this.loadExpirations();
         	this.loadTableData();
-            this.table_data.loaded = true;
         }
     }
 </script>

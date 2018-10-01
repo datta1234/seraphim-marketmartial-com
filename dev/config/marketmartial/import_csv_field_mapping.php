@@ -2,10 +2,10 @@
 return [
     "safex_fields" => [
         'Trade ID'          => 'trade_id',
-        'Underlying'        => 'underlying',
+        'Name'              => 'underlying',
         'Trade Date'        => 'trade_date',
         'Structure'         => 'structure',
-        'Underlying Alt'    => 'underlying_alt',
+        'Underlying'        => 'underlying_alt',
         'Strike'            => 'strike',
         'Strike%'           => 'strike_percentage',
         'Put/Call'          => 'is_put',

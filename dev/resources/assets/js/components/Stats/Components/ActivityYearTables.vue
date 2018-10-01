@@ -193,7 +193,6 @@
                                 value: key
                             });
                         });
-                        //this.markets_filter
                     } else {
                         console.error(err); 
                     }

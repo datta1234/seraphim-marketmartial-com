@@ -64,7 +64,6 @@
               this.$refs.csvfileinput.reset();
             },
             uploadFile() {
-                console.log("Uploading file: ", this.modal_data.file);
                 let formData = new FormData();
                 formData.append("safex_csv_file", this.modal_data.file);
                 

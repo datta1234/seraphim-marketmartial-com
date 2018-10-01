@@ -308,6 +308,7 @@ class TradeConfirmation extends Model
      * @param string $term
      * @param string $orderBy
      * @param string $order
+     * @param array  $filter
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
