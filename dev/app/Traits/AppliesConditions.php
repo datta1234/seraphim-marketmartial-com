@@ -25,7 +25,11 @@ trait AppliesConditions {
             if($item->applicableConditions) {
                 // go through all registered condition attributes
                 foreach($item->applicableConditions as $attr => $default) {
-                    \Log::info([$attr, $item->$attr, $default, $item->isDirty($attr)]);
+                    /* 
+                    *   Only apply if:
+                    *       1) The attribute is not the default value
+                    *       2) The attribute has been changed (ie: dirty)
+                    */
                     if($item->$attr !== $default && $item->isDirty($attr)) {
                         if(method_exists($item, camel_case('apply_'.$attr.'_condition'))) {
                             // method exists, lets apply the condition

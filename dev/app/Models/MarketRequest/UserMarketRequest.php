@@ -217,7 +217,7 @@ class UserMarketRequest extends Model
 
         if($showLevels)
         {
-            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->org_context)->preFormattedMarket();
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedMarket();
             $data["quotes"]  = [];
             //market has been chosen and this user is considerd the market maker
             $market_maker_org_id = $this->chosenUserMarket->organisation->id;
@@ -237,7 +237,7 @@ class UserMarketRequest extends Model
                                                     });
                                                 });
                                             })->get()->map(function($item) {
-                                                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+                                                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
                                             });
         }
 

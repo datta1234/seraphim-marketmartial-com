@@ -73,7 +73,7 @@
                 this.trade_open = true;
             },
             doCounter() {
-
+                
             },
             doReject() {
                 this.marketNegotiation.killNegotiation()

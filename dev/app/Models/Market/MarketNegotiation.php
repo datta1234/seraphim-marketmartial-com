@@ -160,6 +160,15 @@ class MarketNegotiation extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function counterUser()
+    {
+        return $this->belongsTo('App\Models\UserManagement\User','counter_user_id');
+    }
+
     public function getTimeAttribute()
     {
         return $this->created_at->format("H:i");
@@ -238,6 +247,23 @@ class MarketNegotiation extends Model
         return $query->where(function($q) {
             $q->where('cond_fok_apply_bid', null);
             $q->where('cond_fok_spin', null);
+        });
+    }
+
+    /**
+    * Filter Scope on not public
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeNotPrivate($query, $organisation_id)
+    {
+        return $query->where(function($q) use ($organisation_id) {
+            $q->where('is_private', false);
+            $q->orWhere(function($qq) use ($organisation_id) {
+                $qq->where('is_private', true);
+                $qq->whereHas('user', function($qqq) use ($organisation_id) {
+                    $qqq->where('organisation_id', $organisation_id);
+                });
+            });
         });
     }
 

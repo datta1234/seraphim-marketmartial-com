@@ -26,3 +26,34 @@ Artisan::command('gen:fok', function () {
     dispatch($job);
 
 })->describe('Debug FOK');
+
+
+Artisan::command('mm:reset', function() {
+    // fail if 
+        if(env('APP_ENV') !== 'local') {
+            echo "Can only run this command in 'local' Environments";
+            return false;
+        }
+        //disable foreign key check for this connection before running seeders
+        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
+        // Clear Trading
+        \App\Models\TradeConfirmations\Distpute::truncate();
+        \App\Models\TradeConfirmations\BookedTrade::truncate();
+        \App\Models\TradeConfirmations\TradeConfirmation::truncate();
+        \App\Models\Trade\TradeNegotiation::truncate();
+
+        // Clear Market Negoting
+        \App\Models\Market\MarketNegotiation::truncate();
+        \App\Models\Market\UserMarket::truncate();
+        \App\Models\Market\UserMarketSubscription::truncate();
+
+        // Clear Market Requesting
+        \App\Models\MarketRequest\UserMarketRequest::truncate();
+        \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
+        \App\Models\MarketRequest\UserMarketRequestItem::truncate();
+        
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        \Artisan::call('cache:clear');
+});
