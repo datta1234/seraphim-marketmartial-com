@@ -1,7 +1,7 @@
 <template>
        <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
             <template slot="title">
-               <div class="text-center"><strong>{{ title }}</strong>
+               <div class="text-center">{{ title }}
                    <a @click="cancel" class="close" aria-label="Close">
                     <span class="d-inline-block" aria-hidden="true">&times;</span>
                     </a>
@@ -80,6 +80,17 @@
 
             };
         },
+        watch: {
+            marketNegotiation: function () {
+                if(this.isOffer)
+                {
+                  this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;
+                }else
+                {
+                  this.tradeNegotiation.quantity = this.marketNegotiation.bid_qty;
+                }
+            }
+        },
         computed: {
            title(){
 
@@ -119,10 +130,12 @@
            storeTradeNegotiation(){
                 this.server_loading = true;
                 this.tradeNegotiation.is_offer = this.isOffer;
+
                 this.tradeNegotiation.store(this.marketNegotiation)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
+                    this.$emit('close');
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -132,7 +145,15 @@
                 });
            }
         },
-        mounted() {
+        created() {
+
+            if(this.isOffer)
+            {
+              this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;
+            }else
+            {
+              this.tradeNegotiation.quantity = this.marketNegotiation.bid_qty;
+            }
 
         }
     }

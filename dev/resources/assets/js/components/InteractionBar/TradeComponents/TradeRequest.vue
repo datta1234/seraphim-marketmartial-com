@@ -57,7 +57,9 @@
                             <ul class="text-my-org">
                                 <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
                             </ul>
-                            With counterpart. Awaiting response
+                            <template v-if="tradeNegotiation.sent_by_me">
+                                With counterparty. Awaiting response
+                            </template>
                         </template>
                         <div v-else class="text-my-org text-center">
                             {{ tradeNegotiation.getTradingText() }}

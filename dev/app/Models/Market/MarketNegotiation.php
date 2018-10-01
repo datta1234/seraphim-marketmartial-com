@@ -339,10 +339,15 @@ class MarketNegotiation extends Model
            
 
             $tradeNegotiation = new TradeNegotiation($data);
-            $tradeNegotiation->initiate_user_id = $user->id;
-            $tradeNegotiation->recieving_user_id = $this->user_id;
+            $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
 
+            $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
+            $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
+            ->where($attr, $this->getAttribute($attr))
+            ->orderBy("id","ASC")
+            ->first();
+            $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
             //set counter
             $counterNegotiation = null;
 
@@ -428,7 +433,7 @@ class MarketNegotiation extends Model
             "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
                 
-                return $tradeNegotiation->setOrgContext($this->org_context)->preFormatted();
+                return $tradeNegotiation->setOrgContext($this->resolveOrganisation())->preFormatted();
             })
 
         ];
