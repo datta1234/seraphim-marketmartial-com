@@ -237,6 +237,10 @@
             'can_negotiate':function(){
                 return this.marketRequest.canNegotiate();
             },
+            is_trading: function(){
+                return this.marketRequest.isTrading();
+
+            },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();
             },
@@ -283,7 +287,7 @@
                 if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }else if(!this.can_negotiate)
+                }else if(!this.can_negotiate && !this.is_trading)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }

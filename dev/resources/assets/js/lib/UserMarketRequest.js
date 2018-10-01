@@ -278,6 +278,15 @@ export default class UserMarketRequest extends BaseModel {
         return spinStatuses.indexOf(this.attributes.state) > -1; 
     }
 
+    isTrading()
+    {
+        let isTrading = [
+            "TRADE-NEGOTIATION-OPEN",
+            "TRADE-NEGOTIATION-PENDING"
+        ];
+        return isTrading.indexOf(this.attributes.state) > -1; 
+    }
+
     state() {
         if(this.chosen_user_market == null) {
             return "quote";
