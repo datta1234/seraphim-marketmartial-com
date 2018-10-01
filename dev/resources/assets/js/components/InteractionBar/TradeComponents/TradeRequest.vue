@@ -59,7 +59,10 @@
                             </ul>
                             With counterpart. Awaiting response
                         </template>
-                  
+                        <div v-else class="text-my-org text-center">
+                            {{ tradeNegotiation.getTradingText() }}
+                        </div>
+
                     </div>
                 </b-col> 
 

@@ -94,7 +94,7 @@ export default class TradeNegotiation extends BaseModel {
         let text;
         if(this.sent_by_me)
         {
-            text =  this.is_offer ? "You bought @" : "You Sold @ ";
+            text =  this.is_offer ? "You bought @ " : "You Sold @ ";
             text += this.getUserMarketNegotiation().offer;
 
         }else if(this.sent_to_me)
@@ -103,7 +103,8 @@ export default class TradeNegotiation extends BaseModel {
             text += this.getUserMarketNegotiation().bid;
         }else
         {
-            text = '';
+            text = "Trading at "; 
+            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
         }
         return text;
     }

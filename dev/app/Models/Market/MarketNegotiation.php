@@ -401,7 +401,8 @@ class MarketNegotiation extends Model
             "time"                  => $this->time,
             "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
-                return $tradeNegotiation->preFormatted();
+                
+                return $tradeNegotiation->setOrgContext($this->org_context)->preFormatted();
             })
 
         ];
