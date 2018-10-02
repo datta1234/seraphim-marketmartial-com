@@ -15,7 +15,6 @@ export default class UserMarket extends BaseModel {
                 },
                 active_conditions: {
                     setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
-                    addMethod: (active_condition) => { this.addActiveConditions(active_condition) },
                 }
             }
         });
@@ -96,10 +95,10 @@ export default class UserMarket extends BaseModel {
     */
     setActiveConditions(active_conditions) {
         this.active_conditions.splice(0, this.active_conditions.length);
+        console.log("HERE 123: ", active_conditions);
         active_conditions.forEach(cond => {
             this.addActiveCondition(cond);
         });
-
     }
 
     /**

@@ -321,12 +321,15 @@ class UserMarket extends Model
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
             }
+            // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
             try {
                  DB::beginTransaction();
 
                 $this->marketNegotiations()->save($marketNegotiation);
-                $this->current_market_negotiation_id = $marketNegotiation->id;
+                if($marketNegotiation->is_private) {
+                    $this->current_market_negotiation_id = $marketNegotiation->id;
+                }
                 $this->save();
                 if($counterNegotiation)
                 {
@@ -412,7 +415,7 @@ class UserMarket extends Model
                                                 })->values(),
                                                 'type'      => $cond->activeConditionType
                                             ];
-                                        }),
+                                        })->values(),
         ];
 
         return $data;

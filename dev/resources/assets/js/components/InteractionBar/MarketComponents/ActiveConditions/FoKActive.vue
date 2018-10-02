@@ -70,12 +70,14 @@
         },
         data() {
             return {
-                negotiation: null,
                 bid_sell: false,
                 offer_buy: false,
             }
         },
         computed: {
+            negotiation() {
+                return this.condition.condition;
+            },
             fok_value: function() {
                 let bid     = this.negotiation.bid,
                     offer   = this.negotiation.offer,
@@ -116,7 +118,6 @@
             },
         },
         mounted() {
-            this.negotiation = this.condition.condition;
         }
     }
 </script>

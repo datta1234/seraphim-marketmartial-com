@@ -69,7 +69,6 @@
         },
         data() {
             return {
-                negotiation: null,
                 trade_open: false,
                 counter_open: false,
             }
@@ -80,6 +79,9 @@
             },
             'value': function() {
                 return this.negotiation.cond_buy_mid ? this.negotiation.bid : this.negotiation.offer;
+            },
+            negotiation() {
+                return this.condition.condition;
             }
         },
         methods: {
@@ -101,7 +103,6 @@
             },
         },
         mounted() {
-            this.negotiation = this.condition.condition;
         }
     }
 </script>

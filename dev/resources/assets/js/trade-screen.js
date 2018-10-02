@@ -414,14 +414,14 @@ const app = new Vue({
                 // if its not being tracked, track a new one
                 message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
                     // if the message is complete, attempt completion callback
-                    if(!err) {                        
+                    if(!err) {
                         // pull the message out of current and into completed
                         let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(output_message), 1);  
                         this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
                         // run the message callback
                         callback(output_message.output);
                     } else {
-                        console.error("derp");
+                        console.error(err);
                     }
                 });
                 this.pusher_messages.push(message);

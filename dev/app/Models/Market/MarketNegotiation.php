@@ -212,45 +212,48 @@ class MarketNegotiation extends Model
     public function getActiveConditionTypeAttribute()
     {
         // FoK (can also be private... needs to be first)
-        if($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null) {
+        if($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null) {
             return 'fok';
         }
         // all private instances
         if($this->is_private == true) {
             // Meet In middle
-            if($this->cond_buy_mid != null) {
+            if($this->cond_buy_mid !== null) {
                 return 'meet-in-middle';
             }
             // Meet At Best
-            if($this->cond_buy_best != null) {
+            if($this->cond_buy_best !== null) {
                 return 'meet-at-best';
             }
             // Proposal
             return 'proposal';
         }
         // Repeat ATW
-        if($this->cond_is_repeat_atw != null) {
+        if($this->cond_is_repeat_atw !== null) {
             return 'repeat-atw';
         }
         // OCO
-        if($this->cond_is_oco != null) {
+        if($this->cond_is_oco !== null) {
             return 'oco';
         }
         // Subject
-        if($this->cond_is_subject != null) {
+        if($this->cond_is_subject !== null) {
             return 'subject';
         }
         return null;
     }
 
-    public function scopeFindCounterNegotiation($query,$user)
+    public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
-        return $query->whereHas('user',function($q) use ($user) {
+        return $query->when(!$private, function($q){
+            $q->where('is_private', false);
+        })->whereHas('user',function($q) use ($user) {
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
     }
 
-    public function scopeConditions($query) {
+    public function scopeConditions($query)
+    {
         return $query->where(function($q){
             foreach($this->applicableConditions as $key => $default) {
                 $q->orWhere($key, '!=', $default);
@@ -262,7 +265,8 @@ class MarketNegotiation extends Model
     * test if is FoK
     * @return Boolean
     */
-    public function isFoK() {
+    public function isFoK()
+    {
         return ($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null); 
     }
 
@@ -270,7 +274,8 @@ class MarketNegotiation extends Model
     * test if is Proposal
     * @return Boolean
     */
-    public function isProposal() {
+    public function isProposal()
+    {
         return (
             $this->is_private === true && 
             $this->cond_fok_spin === null &&
@@ -284,19 +289,22 @@ class MarketNegotiation extends Model
     * test if is MeetInMiddle
     * @return Boolean
     */
-    public function isMeetInMiddle() {
+    public function isMeetInMiddle()
+    {
         return (
             $this->is_private == true && 
             $this->cond_buy_mid !== null
         ); 
     }
 
-    public function kill() {
+    public function kill()
+    {
         $this->is_killed = true; // && with_fire = true ;)
         return $this->save();
     }
 
-    public function counter($user, $data) {
+    public function counter($user, $data)
+    {
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -310,14 +318,40 @@ class MarketNegotiation extends Model
         ]);
     }
 
-    public function reject() {
+    public function reject()
+    {
         $userMarket = $this->userMarket;
+        
+        // delete history
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->delete();
+        });
+        
+        // delete self
         $success = $this->delete();
-        $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
-        return true;
+
+        // reasign current if valid
+        $current_market_negotiation_id = $userMarket->current_market_negotiation_id;
+        if($success && ($current_market_negotiation_id == $this->id || $history->contains('id', $current_market_negotiation_id)) ) {
+            $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
+        }
+        return $success ? true : false;
     }
 
-    public function getLatestBid() {
+    public function resolvePrivateHistory()
+    {
+        // update history tree
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->update([
+                'is_private' => false
+            ]);
+        });
+    }
+
+    public function getLatestBid()
+    {
         if($this->bid != null) {
             return $this->bid;
         }
@@ -327,7 +361,8 @@ class MarketNegotiation extends Model
         return null;
     }
 
-    public function getLatestOffer() {
+    public function getLatestOffer()
+    {
         if($this->offer != null) {
             return $this->offer;
         }
@@ -469,7 +504,7 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
-                
+
                 if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
@@ -477,6 +512,12 @@ class MarketNegotiation extends Model
                 {
                     $this->setMarketNegotiationAction();
                 }
+
+                // if this was a private proposal, cascade public update to history 
+                if($this->is_private == true) {
+                    $this->resolvePrivateHistory();
+                }
+
                 DB::commit();
 
                 return $tradeNegotiation;
@@ -681,7 +722,6 @@ class MarketNegotiation extends Model
     public function applyCondBuyMidCondition() {
         // assumption it exists... it should since you cant apply this to a quote...
         $parent = $this->marketNegotiationParent;
-
         $bid = doubleval($parent->getLatestBid());
         $offer = doubleval($parent->getLatestOffer());
 
