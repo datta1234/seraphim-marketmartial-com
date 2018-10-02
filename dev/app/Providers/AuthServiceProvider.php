@@ -15,10 +15,8 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         'App\Model' => 'App\Policies\ModelPolicy',
         'App\Models\Market\UserMarket' => 'App\Policies\UserMarketPolicy',
-        'App\Models\Market\UserMarketNegotiation' => 'App\Policies\UserMarketNegotiationPolicy',
+        'App\Models\Market\MarketNegotiation' => 'App\Policies\MarketNegotiationPolicy',
         'App\Models\MarketRequest\UserMarketRequest' => 'App\Policies\UserMarketRequestPolicy'
-
-
     ];
 
     /**

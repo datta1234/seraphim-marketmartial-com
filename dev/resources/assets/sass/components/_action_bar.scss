@@ -19,6 +19,9 @@
 	.arrow {
 		visibility: hidden;
 	}
+	.popover-header::before {
+		visibility: hidden;
+	}
 }
 
 .important-markets-menu, .alerts-markets-menu, .confirmations-markets-menu, .filter-markets-menu, .request-market-menu {

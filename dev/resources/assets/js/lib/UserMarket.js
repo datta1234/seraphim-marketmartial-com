@@ -9,9 +9,12 @@ export default class UserMarket extends BaseModel {
        super({
             _used_model_list: [UserMarketNegotiation],
             _relations:{
-               market_negotiations:{
+                market_negotiations:{
                     addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
-               } 
+                },
+                active_condition: {
+                    setMethod: (active_condition) => { this.setActiveCondition(active_condition) },
+                }
             }
         });
 
@@ -46,18 +49,14 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
-        this.active_fok = null;
-        this.active_proposal = null;
-        this.active_meet_in_middle = null;
+        this.active_condition = null;
+        this.active_condition_type = null;
         
-        if(options && options.active_fok) {
-            this.setActiveFoK(options.active_fok);
+        if(options && options.active_condition) {
+            this.setActiveCondition(options.active_condition);
         }
-        if(options && options.active_proposal) {
-            this.setActiveProposal(options.active_proposal);
-        }
-        if(options && options.active_meet_in_middle) {
-            this.setActiveMeetInMiddle(options.active_meet_in_middle);
+        if(options && options.active_condition_type) {
+            this.setActiveConditionType(options.active_condition_type);
         }
 
     }
@@ -97,42 +96,22 @@ export default class UserMarket extends BaseModel {
     *   setActiveFoK - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveFoK(active_fok) {
+    setActiveCondition(active_condition) {
         
-        if(!(active_fok instanceof UserMarketNegotiation)) {
-            active_fok = new UserMarketNegotiation(active_fok);
+        if(!(active_condition instanceof UserMarketNegotiation)) {
+            active_condition = new UserMarketNegotiation(active_condition);
         }
 
-        active_fok.setUserMarket(this);
-        this.active_fok = active_fok;
+        active_condition.setUserMarket(this);
+        this.active_condition = active_condition;
     }
 
     /**
     *   setActiveProposal - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveProposal(active_proposal) {
-        
-        if(!(active_proposal instanceof UserMarketNegotiation)) {
-            active_proposal = new UserMarketNegotiation(active_proposal);
-        }
-
-        active_proposal.setUserMarket(this);
-        this.active_proposal = active_proposal;
-    }
-    
-    /**
-    *   setActiveMeetInMiddle - add user user_market_negotiation
-    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
-    */
-    setActiveMeetInMiddle(active_meet_in_middle) {
-        
-        if(!(active_meet_in_middle instanceof UserMarketNegotiation)) {
-            active_meet_in_middle = new UserMarketNegotiation(active_meet_in_middle);
-        }
-
-        active_meet_in_middle.setUserMarket(this);
-        this.active_meet_in_middle = active_meet_in_middle;
+    setActiveConditionType(active_condition_type) {
+        this.active_condition_type = active_condition_type;
     }
 
     /**

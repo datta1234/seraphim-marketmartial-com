@@ -217,7 +217,7 @@ class UserMarketRequest extends Model
 
         if($showLevels)
         {
-            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->org_context)->preFormattedMarket();
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedMarket();
             $data["quotes"]  = [];
             //market has been chosen and this user is considerd the market maker
             $market_maker_org_id = $this->chosenUserMarket->organisation->id;
@@ -225,7 +225,6 @@ class UserMarketRequest extends Model
 
         }else
         {
-            $data["sent_quote"]        =    $this->authedUserMarket;
             $data["quotes"]            =    $this->userMarkets()->when(!$is_interest, function($query) use ($current_org_id) {
                                                 $query->where(function($query) use ($current_org_id) {
                                                     // Only publicly visible
@@ -238,7 +237,7 @@ class UserMarketRequest extends Model
                                                     });
                                                 });
                                             })->get()->map(function($item) {
-                                                return $item->setOrgContext($this->org_context)->preFormattedQuote(); 
+                                                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
                                             });
         }
 
@@ -246,16 +245,16 @@ class UserMarketRequest extends Model
     }
 
 
-    private  $authedUserMarket = null;
+    private $authedUserMarketData = null;
     public function getAuthedUserMarketAttribute() {
-        if(!$this->authedUserMarket) {
-            $this->authedUserMarket = $this->userMarkets()->whereHas('user', function($q) {
+        if($this->authedUserMarketData == null) {
+            $this->authedUserMarketData = $this->userMarkets()->whereHas('user', function($q) {
                 $q->where('organisation_id',$this->resolveOrganisationId());
             })->orderBy('updated_at', 'DESC')
             ->with('currentMarketNegotiation')
             ->first();
         }
-        return $this->authedUserMarket;
+        return $this->authedUserMarketData;
     }
 
     public function notifyRequested($organisations = [], $messages = null)
@@ -280,7 +279,7 @@ class UserMarketRequest extends Model
         {
 
             $is_interest = $interest_org_id == $current_org_id;
-            $marketCount = $this->chosenUserMarket->marketNegotiations()->count();
+            $marketCount = $this->chosenUserMarket->marketNegotiations()->withTrashed()->count();
 
             if($is_interest){
               return  $marketCount > 0;

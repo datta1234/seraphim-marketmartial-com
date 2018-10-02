@@ -22,13 +22,25 @@
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
-                        <span>
+                        <span id="proposal-counter">
                             <a href="" @click.prevent.stop="doCounter">Counter</a>
                         </span>
                     </b-col>
                 </b-row>
             </div>
         </b-col>
+
+        <ibar-counter-negotiation 
+            ref="proposalCounterPopover" 
+            target="proposal-counter" 
+            :market-negotiation="marketNegotiation" 
+            :open="counter_open"
+            @close="counter_open = false" 
+            parent="trade_app"
+            placement="bottom"
+            popover-class="popover-meet-in-middle">
+        </ibar-counter-negotiation>
+
     </b-row>
 </template>
 <script>
@@ -42,7 +54,7 @@
         },
         data() {
             return {
-
+                counter_open: false
             }
         },
         methods: {
@@ -50,7 +62,7 @@
                 
             },
             doCounter() {
-
+                this.counter_open = true;
             },
             doReject() {
                 this.marketNegotiation.killNegotiation()

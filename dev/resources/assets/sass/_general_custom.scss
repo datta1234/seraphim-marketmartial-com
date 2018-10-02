@@ -560,3 +560,21 @@ input.input-small {
 	padding:1px;
 	height: calc(1.5rem + 2px);
 }
+
+
+
+#trade_app .popover.popover-meet-in-middle {
+
+	.popover-header
+	{
+		background: $mm-modal-header;
+		color: $mm-text-white;
+	}
+
+	.popover-body {
+		.btn-primary {
+            background-color: $ibar-btn-background-primary;
+            color: $ibar-btn-color-primary;
+        }
+	}
+}

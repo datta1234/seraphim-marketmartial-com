@@ -124,17 +124,22 @@ class TradeNegotiation extends Model
     public function preFormatted()
     {
         $loggedInUserOrganisationId = $this->resolveOrganisationId();
-        
+        $sentByMe =  $this->initiateUser->organisation_id == $loggedInUserOrganisationId;
+        $sentToMe = $this->recievingUser->organisation_id == $loggedInUserOrganisationId;
 
         $data = [
             "id"            => $this->id,
-            "quantity"      => $this->quantity,
             "traded"        => $this->traded,
             "is_offer"      => $this->is_offer,
             "is_distpute"   => $this->is_distpute,
-            "sent_by_me"    => $this->initiateUser->organisation_id == $loggedInUserOrganisationId,
-            'sent_to_me'    => $this->recievingUser->organisation_id == $loggedInUserOrganisationId,
+            "sent_by_me"    => $sentByMe,
+            'sent_to_me'    => $sentToMe,
         ];
+
+        if($sentByMe || $sentToMe)
+        {
+            $data['quantity'] = $this->quantity;
+        }
         return $data;
     }
 }

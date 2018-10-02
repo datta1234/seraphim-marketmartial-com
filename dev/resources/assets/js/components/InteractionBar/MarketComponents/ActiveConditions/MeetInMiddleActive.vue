@@ -1,5 +1,5 @@
 <template>
-    <b-row dusk="ibar-proposal-active" class="active-cond-bar">
+    <b-row dusk="ibar-mim-active" class="active-cond-bar">
         <b-col cols="12">
             <div class="text-center">
                 <strong>Meet in the Middle: {{ type }}</strong>
@@ -22,7 +22,7 @@
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
-                        <span>
+                        <span id="meet-in-middle-counter">
                             <a href="" @click.prevent.stop="doCounter">Counter</a>
                         </span>
                     </b-col>
@@ -31,14 +31,25 @@
         </b-col>
 
         <ibar-trade-desired-quantity 
-            ref="fokPopoverLift" 
+            ref="mimTradePopover" 
             target="meet-in-middle-do-trade" 
             :market-negotiation="marketNegotiation" 
             :open="trade_open" 
-            :is-offer="marketNegotiation.cond_buy_mid" 
+            :is-offer="!marketNegotiation.cond_buy_mid" 
             @close="trade_open = false" 
             parent="cond-container">
         </ibar-trade-desired-quantity>
+
+        <ibar-counter-negotiation 
+            ref="mimCounterPopover" 
+            target="meet-in-middle-counter" 
+            :market-negotiation="marketNegotiation" 
+            :open="counter_open"
+            @close="counter_open = false" 
+            parent="trade_app"
+            placement="bottom"
+            popover-class="popover-meet-in-middle">
+        </ibar-counter-negotiation>
 
     </b-row>
 </template>
@@ -57,15 +68,16 @@
         },
         data() {
             return {
-                trade_open: false
+                trade_open: false,
+                counter_open: false,
             }
         },
         computed: {
             'type': function() {
-                return this.marketNegotiation.cond_buy_mid ? "Buy" : "Sell";
+                return this.marketNegotiation.cond_buy_mid ? "Sell" : "Buy";
             },
             'value': function() {
-                return this.marketNegotiation.cond_buy_mid ? this.marketNegotiation.offer : this.marketNegotiation.bid;
+                return this.marketNegotiation.cond_buy_mid ? this.marketNegotiation.bid : this.marketNegotiation.offer;
             }
         },
         methods: {
@@ -73,7 +85,7 @@
                 this.trade_open = true;
             },
             doCounter() {
-
+                this.counter_open = true;
             },
             doReject() {
                 this.marketNegotiation.killNegotiation()
