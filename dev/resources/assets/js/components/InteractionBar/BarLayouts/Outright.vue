@@ -109,21 +109,9 @@
                 </b-row>
             </b-col>
         </b-row>
-
-        <condition-fok-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
-            v-if="conditionActive('fok')">
-        </condition-fok-active>
-        <condition-proposal-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
-            v-if="conditionActive('proposal')">
-        </condition-proposal-active>
-        <condition-meet-in-middle-active 
-            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
-            v-if="conditionActive('meet_in_middle')">
-        </condition-meet-in-middle-active>
+    
             
-        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-5 mt-1" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -132,7 +120,8 @@
         </b-row> -->
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
-
+        
+        <ibar-active-conditions v-if="marketRequest.chosen_user_market != null" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
 
     </b-container>
 </template>
@@ -146,10 +135,9 @@
     
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+    import IbarActiveConditions from '../MarketComponents/ActiveConditions';
     
-    import ConditionFoKActive from '../MarketComponents/ActiveConditions/FoKActive';
-    import ConditionProposalActive from '../MarketComponents/ActiveConditions/ProposalActive';
-    import ConditionMeetInMiddleActive from '../MarketComponents/ActiveConditions/MeetInMiddleActive';
+    
 
     const showMessagesIn = [
         "market_request_store",
@@ -163,9 +151,7 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
-            'condition-fok-active': ConditionFoKActive,
-            'condition-proposal-active': ConditionProposalActive,
-            'condition-meet-in-middle-active': ConditionMeetInMiddleActive,
+            IbarActiveConditions
         },
         props: {
             marketRequest: {

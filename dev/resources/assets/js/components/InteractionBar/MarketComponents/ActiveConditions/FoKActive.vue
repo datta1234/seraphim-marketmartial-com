@@ -1,7 +1,7 @@
 <template>
     <b-row dusk="ibar-fok-active" class="active-cond-bar">
         <b-col cols="11" offset="1">
-            <div class="text-right condition">
+            <div class="text-right negotiation">
                 <strong>20:00</strong>
             </div>
         </b-col>
@@ -15,14 +15,14 @@
                         <span id="fok-popover-hit">
                             <a  href="" 
                                 @click.prevent.stop="doBuy" 
-                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false">
+                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false">
                                     Buy
                             </a>
                         </span>
                         <span id="fok-popover-lift">
                             <a  href="" 
                                 @click.prevent.stop="doSell" 
-                                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true">
+                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true">
                                     Sell
                             </a>
                         </span>
@@ -34,10 +34,10 @@
             </div>
 
             <ibar-trade-desired-quantity 
-                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===false" 
+                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false" 
                 ref="fokPopoverHit" 
                 target="fok-popover-hit" 
-                :market-negotiation="marketNegotiation" 
+                :market-negotiation="negotiation" 
                 :open="bid_sell" 
                 :is-offer="false" 
                 @close="bid_sell = false" 
@@ -45,10 +45,10 @@
             </ibar-trade-desired-quantity>
 
             <ibar-trade-desired-quantity 
-                v-if="marketNegotiation.cond_fok_apply_bid===null || marketNegotiation.cond_fok_apply_bid===true" 
+                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true" 
                 ref="fokPopoverLift" 
                 target="fok-popover-lift" 
-                :market-negotiation="marketNegotiation" 
+                :market-negotiation="negotiation" 
                 :open="offer_buy" 
                 :is-offer="true" 
                 @close="offer_buy = false" 
@@ -60,11 +60,12 @@
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import ActiveCondition from '~/lib/ActiveCondition';
 
     export default {
         props: {
-            marketNegotiation: {
-                type: UserMarketNegotiation
+            condition: {
+                type: ActiveCondition
             },
         },
         data() {
@@ -74,10 +75,13 @@
             }
         },
         computed: {
+            negotiation() {
+                return this.condition.condition;
+            },
             fok_value: function() {
-                let bid     = this.marketNegotiation.bid,
-                    offer   = this.marketNegotiation.offer,
-                    cond    = this.marketNegotiation.cond_fok_apply_bid;
+                let bid     = this.negotiation.bid,
+                    offer   = this.negotiation.offer,
+                    cond    = this.negotiation.cond_fok_apply_bid;
                 console.log('fok_value', bid, offer, cond);
                 switch(cond) {
                     case true:
@@ -95,15 +99,15 @@
         },
         methods: {
             doBuy() {
-                // this.marketNegotiation.fokBuy();
+                // this.negotiation.fokBuy();
                 this.bid_sell = true;
             },
             doSell() {
-                // this.marketNegotiation.sell();
+                // this.negotiation.sell();
                 this.offer_buy = true;
             },
             doKill() {
-                this.marketNegotiation.killNegotiation()
+                this.negotiation.killNegotiation()
                 .then(response => {
                     console.log(response);
                     this.errors = [];
@@ -114,7 +118,6 @@
             },
         },
         mounted() {
-            
         }
     }
 </script>

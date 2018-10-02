@@ -1,80 +1,80 @@
 <template>
     <b-row dusk="ibar-trade-request" v-bind:id="dynamicId">
-                   <b-col cols="10" >
-        
-                    <b-row>
-                        <b-col cols="3" class="text-center">
-                             {{ marketNegotiation.bid_qty ? marketNegotiation.bid_qty : "-"  }}
-                        </b-col>
-                        
-                        <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
+    <b-col cols="10" >
 
-                            <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
-                            {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
-                            </span>
+        <b-row>
+            <b-col cols="3" class="text-center">
+                {{ marketNegotiation.bid_qty ? marketNegotiation.bid_qty : "-"  }}
+            </b-col>
 
-                            <span v-if="!selectable">
-                            {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
-                            </span>
+            <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                        </b-col>
+                <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
+                    {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                </span>
 
-                        <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                            
-                            <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
-                            {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
-                            </span>
+                <span v-if="!selectable">
+                    {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                </span>
 
-                            <span v-if="!selectable">
-                            {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
-                            </span>
-                        </b-col>
-                        
-                        <b-col cols="3" class="text-center">
-                             {{ marketNegotiation.offer_qty ? marketNegotiation.offer_qty : "-"  }}
-                        </b-col>
-                    </b-row>
-                    <b-row> 
-                        
-                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
-                        
-                        <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "offer") }} </small></b-col>
+            </b-col>
+
+            <b-col cols="3" class="text-center" :class="getStateClass('offer')">
+
+                <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
+                    {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                </span>
+
+                <span v-if="!selectable">
+                    {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                </span>
+            </b-col>
+
+            <b-col cols="3" class="text-center">
+                {{ marketNegotiation.offer_qty ? marketNegotiation.offer_qty : "-"  }}
+            </b-col>
+        </b-row>
+        <b-row> 
+
+            <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
+
+            <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "offer") }} </small></b-col>
 
 
-                    </b-row>
-                </b-col>
-                <b-col cols="2">
-                    <p class="text-center">
-                        <small>{{ marketNegotiation.time }}</small>
-                    </p>
-                </b-col>
+        </b-row>
+    </b-col>
+    <b-col cols="2">
+        <p class="text-center">
+            <small>{{ marketNegotiation.time }}</small>
+        </p>
+    </b-col>
 
-                <b-col cols="12">
-                    <div v-for="tradeNegotiation in marketNegotiation.trade_negotiations ">
-                        <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
-                            {{ tradeNegotiation.getTradingText() }}
-                            
-                            <ul class="text-my-org">
-                                <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
-                            </ul>
-                            <template v-if="tradeNegotiation.sent_by_me">
-                                With counterparty. Awaiting response
-                            </template>
-                        </template>
-                        <div v-else class="text-my-org text-center">
-                            {{ tradeNegotiation.getTradingText() }}
-                        </div>
+    <b-col cols="12">
+        <div v-for="tradeNegotiation in marketNegotiation.trade_negotiations ">
+            <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
+                {{ tradeNegotiation.getTradingText() }}
 
-                    </div>
-                </b-col> 
+                <ul class="text-my-org">
+                    <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
+                </ul>
+                <template v-if="tradeNegotiation.sent_by_me">
+                    With counterparty. Awaiting response
+                </template>
+            </template>
+            <div v-else class="text-my-org text-center">
+                {{ tradeNegotiation.getTradingText() }}
+            </div>
 
-     
- 
-        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" parent="last-negotiation"></ibar-trade-desired-quantity>
+        </div>
+    </b-col> 
 
-         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    </b-row>
+
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" parent="last-negotiation"></ibar-trade-desired-quantity>
+
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" parent="last-negotiation"></ibar-trade-desired-quantity>
+
+</b-row>
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
@@ -91,44 +91,44 @@
             }
         },
         data() {
-             return {
-                 conditionAttr:[],
-                 dialogText: '',
-                 liftOpen: false,
-                 hitOpen: false,
-            };
-        },
-        watch: {
-           
-        },
-        computed: {
-            dynamicId: function(){
-                return this.selectable ? "last-negotiation" : "userMarket-Negotiation-level-"+ this.marketNegotiation.id; 
-            }
-        },
-        methods: {
-            selectOption(isOffer)
-            {
-                if(isOffer)
-                {
-                     this.liftOpen = true; 
-                     this.hitOpen = false;
+           return {
+               conditionAttr:[],
+               dialogText: '',
+               liftOpen: false,
+               hitOpen: false,
+           };
+       },
+       watch: {
 
-                }else
-                {
-                     this.liftOpen = false;
-                     this.hitOpen = true;
-                }
-          
-            },
-            cancelOption(isOffer)
+       },
+       computed: {
+        dynamicId: function(){
+            return this.selectable ? "last-negotiation" : "userMarket-Negotiation-level-"+ this.marketNegotiation.id; 
+        }
+    },
+    methods: {
+        selectOption(isOffer)
+        {
+            if(isOffer)
             {
-                 this.liftOpen = false
-                 this.hitOpen = false;
-            },
-            getConditionState(marketNegotiation, field) {
-                
-                let getConditionText = (cond, object, field) => {
+               this.liftOpen = true; 
+               this.hitOpen = false;
+
+           }else
+           {
+               this.liftOpen = false;
+               this.hitOpen = true;
+           }
+
+       },
+       cancelOption(isOffer)
+       {
+           this.liftOpen = false
+           this.hitOpen = false;
+       },
+       getConditionState(marketNegotiation, field) {
+
+        let getConditionText = (cond, object, field) => {
                     // ensure the value exists in both object and condition test
                     if(typeof object[cond.condition] !== 'undefined' && typeof cond[String(object[cond.condition])] !== 'undefined') {
                         if(cond[String(object[cond.condition])].constructor === Object && typeof cond[String(object[cond.condition])].condition !== 'undefined') {
@@ -159,7 +159,7 @@
             getStateClass(attr) {
 
                 let source = this.marketNegotiation.getAmountSource(attr);
-                 return {
+                return {
                     "text": source[attr],
                     "is-interest":source.is_interest && !source.is_my_org,
                     "is-maker":source.is_maker && !source.is_my_org,
@@ -168,7 +168,7 @@
             }
         },
         mounted() {
-           this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
-        }
-    }
+         this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
+     }
+ }
 </script>

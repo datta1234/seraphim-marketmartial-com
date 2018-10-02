@@ -105,24 +105,22 @@ class MarketNegotiationController extends Controller
     public function destroy(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
         $success = false;
+        $message = 'Invalid Action';
 
         // Handle FOK kill
         if($marketNegotiation->isFoK()) {
             $success = $marketNegotiation->kill();
-
-            $userMarket->fresh()->userMarketRequest->notifyRequested();
-            return ['success'=>$success ,'message'=>'FoK Killed'];
         }
 
         // Handle Meet In Middle
         if($marketNegotiation->isProposal() || $marketNegotiation->isMeetInMiddle()) {
             $success = $marketNegotiation->reject();
-
-            $userMarket->fresh()->userMarketRequest->notifyRequested();
-            return ['success'=>$success ,'message'=>'Proposal Rejected'];
+            $marketNegotiation->user->organisation->notify("condition_action","Proposal rejected by counter",true);
+            $marketNegotiation->counterUser->organisation->notify("condition_action","Proposal rejected",true);
         }
 
-        return ['success'=>$success ,'message'=>'Invalid Action'];
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        return ['success'=>$success ,'message'=>$message];
     }
 
 
