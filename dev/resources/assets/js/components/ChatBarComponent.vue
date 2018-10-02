@@ -34,8 +34,8 @@
                                         <h6 v-bind:class="{'float-right': message.user_name != $root.config('user_preferences.user_name'), 
                                         }">
                                             {{ castToMoment(message.time_stamp) }}
-                                            <font-awesome-icon class="float-right" v-if="message.status == 'sent'" icon="check"></font-awesome-icon>
-                                            <font-awesome-icon class="float-right" v-if="message.status == 'received'" icon="check-double"></font-awesome-icon>
+                                            <i v-if="message.status == 'sent'" class="fas fa-check float-right"></i>
+                                            <i v-if="message.status == 'received'" class="fas fa-check-double float-right"></i>
                                         </h6>
                                             
                                     </b-col>

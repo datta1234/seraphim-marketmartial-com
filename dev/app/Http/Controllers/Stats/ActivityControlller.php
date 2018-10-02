@@ -7,11 +7,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\Market;
+use App\Models\StatsUploads\SafexTradeConfirmation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
+use App\Http\Requests\Stats\CsvUploadDataRequest;
 
-class StatsController extends Controller
+class ActivityControlller extends Controller
 {
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $years = TradeConfirmation::select(
+            DB::raw("YEAR(trade_confirmations.updated_at) as year")
+        )->groupBy('year')->get();
+
+        return view('stats.market_activity')->with(compact('years'));
+    }
+
     /**
      * Display the specified resource.
      *
@@ -90,12 +107,12 @@ class StatsController extends Controller
             return $graph_data;
         }
 
-        return view('stats.show')->with(compact('user','graph_data','years'));
+        return view('stats.my_activity')->with(compact('user','graph_data','years'));
     }
 
-    public function myYearActivity(MyActivityYearRequest $request)
+    public function yearActivity(MyActivityYearRequest $request)
     {
-        $user = $request->user();
+        $user = $request->input('is_my_activity') ? $request->user() : null;
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
@@ -105,16 +122,77 @@ class StatsController extends Controller
                 "filter_market" => $request->input('filter_market'),
                 "filter_expiration" => $request->input('filter_expiration')
             ]
-        )->whereYear('updated_at',$request->input('year'))
-            ->where(function ($tlq) use ($user) {
+        )
+        ->whereYear('updated_at',$request->input('year'));
+
+        if($request->input('is_my_activity')) {
+            $trade_confirmations = $trade_confirmations->where(function ($tlq) use ($user) {
                 $tlq->organisationInvolved($user->organisation_id,'=')
                     ->orgnisationMarketMaker($user->organisation_id, true);
-            })->paginate(10);
+            });
+        }
+
+        $trade_confirmations = $trade_confirmations->paginate(10);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user) {
             return $trade_confirmation->preFormatStats($user);
         });
 
         return response()->json($trade_confirmations);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CsvUploadDataRequest $request)
+    {
+        // @TODO - truncate table before new import and validation for CSV
+        $path = $request->file('csv_upload_file')->getRealPath();
+        $csv = array_map('str_getcsv', file($path));
+
+        array_walk($csv, function(&$row) {
+            array_walk($row, function(&$col) {
+                $col = trim($col);
+            });
+        });
+
+        foreach ($csv[0] as $index => $field) {
+            $csv[0][$index] = config('marketmartial.import_csv_field_mapping.safex_fields.'.$field);
+        }
+
+        array_walk($csv, function(&$a) use ($csv) {
+            $a = array_combine($csv[0], $a);
+        });
+        array_shift($csv);
+        
+        try {
+            DB::beginTransaction();
+            $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
+            DB::commit();
+        } catch (\Exception $e) {
+            \Log::error($e);
+            DB::rollBack();
+            return ['success' => false,'data' => null, 'message' => 'Failed to upload Safex data.'];
+        }
+
+        return ['success' => true,'data' => null,'message' => 'Safex data successfully uploaded.'];
+    }
+
+    public function safexRollingData(Request $request)
+    {
+        return SafexTradeConfirmation::basicSearch(
+            $request->input('search'),
+            $request->input('_order_by'),
+            $request->input('_order'),
+            [
+                "filter_date" => $request->input('filter_date'),
+                "filter_market" => $request->input('filter_market'),
+                "filter_expiration" => $request->input('filter_expiration'),
+                "filter_nominal" => $request->input('filter_nominal'),
+            ]
+        )->paginate(10);
     }
 }

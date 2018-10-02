@@ -17,7 +17,7 @@
 					<a class="nav-link active p-0 ml-4" href="{{ route('trade') }}">Trade</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active p-0 ml-4" href="{{ route('my_activity.show') }}">Stats</a>
+					<a class="nav-link active p-0 ml-4" href="{{ route('activity.show') }}">Stats</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="#">Previous day</a>

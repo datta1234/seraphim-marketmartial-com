@@ -151,7 +151,7 @@ class RegisterController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
             return null;
         }
         return $user;

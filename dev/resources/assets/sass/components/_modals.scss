@@ -83,6 +83,11 @@
 		color: $mm-text-white;
 		background-color: darken($mm-modal-header, 10%);
 	}
+	&:hover,
+	&:disabled {
+		color: $mm-text-white;
+		background-color: $mm-light-grey;	
+	}
 }
 
 .mm-modal-market-button {

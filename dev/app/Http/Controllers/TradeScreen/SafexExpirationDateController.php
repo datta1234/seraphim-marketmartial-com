@@ -15,8 +15,12 @@ class  SafexExpirationDateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {	
+    	if( $request->has('not_paginate') && $request->input('not_paginate')) {
+    		return response()->json(SafexExpirationDate::all()->pluck("expiration_date","id"));
+    	}
+
         return SafexExpirationDate::paginate(12);
     }
 }
