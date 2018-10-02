@@ -81,7 +81,7 @@ class UserMarket extends Model
     }
 
     // conditions
-    public function lastCondition()
+    public function lastConditionNegotiation()
     {
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
                     ->conditions()
@@ -400,10 +400,10 @@ class UserMarket extends Model
             "active_condition_type" => null,
         ];
 
-        $cond = $this->lastCondition;
-        if($cond != null) {
+        $condNegotiation = $this->lastConditionNegotiation;
+        if($condNegotiation != null) {
             // only if counter
-            $active = $this->isCounter(null, $cond);
+            $active = $this->isCounter(null, $condNegotiation);
             \Log::info("COunter: ".(String)$active);
             if($active === null) {
                 $active = $this->isInterest();
@@ -411,18 +411,18 @@ class UserMarket extends Model
             }
             \Log::info("Active: ".(String)$active);
             if($active) {
-                $data['active_condition'] = $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                $data['active_condition'] = $condNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
 
                 // add Active FoK if exists
-                if($cond->isFoK() && $cond->is_killed !== true) {
+                if($condNegotiation->isFoK() && $condNegotiation->is_killed !== true) {
                     $data['active_condition_type'] = 'fok';
                 }
                 // add Active Proposal if exists
-                if($cond->isProposal()) {
+                if($condNegotiation->isProposal()) {
                     $data['active_condition_type'] = 'proposal';
                 }
                 // add Active Proposal if exists
-                if($cond->isMeetInMiddle()) {
+                if($condNegotiation->isMeetInMiddle()) {
                     $data['active_condition_type'] = 'meet_in_middle';
                 }
             }
