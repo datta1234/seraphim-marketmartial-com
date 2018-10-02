@@ -20,8 +20,7 @@ mix.webpackConfig({
     }
 });
 
-mix.setResourceRoot('/marketmartial/public/')
-   .js('resources/assets/js/trade-screen.js', 'public/js') 
+mix.js('resources/assets/js/trade-screen.js', 'public/js') 
    .js('resources/assets/js/canvas.js', 'public/js')
    .js('resources/assets/js/public.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');

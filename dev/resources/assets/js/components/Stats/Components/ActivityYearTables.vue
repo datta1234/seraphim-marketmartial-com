@@ -1,5 +1,5 @@
 <template>
-    <div dusk="my-activity-year-tables" class="my-activity-year-tables">
+    <div dusk="activity-year-tables" class="activity-year-tables">
         <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
             <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="'accordion'+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
@@ -47,15 +47,16 @@
                                             Filter
                                         </button>
                                     </b-col>
-                                    <b-col cols="3" offset="3">
+                                    <b-col cols="4" offset="2">
                                         <datepicker v-model="table_data[index].filter_date"
                                                     class="float-right filter-date-picker"
-                                                    :name="year+'-table-datepicker'">
-                                                    <span slot="afterDateInput" class="animated-placeholder">
-                                                        <button class="btn mm-button date-picker-button-icon">
-                                                            <font-awesome-icon icon="calendar-alt"></font-awesome-icon>
-                                                        </button>
-                                                    </span>                        
+                                                    :name="year+'-table-datepicker'"
+                                                    placeholder="Select a date"
+                                                    :bootstrap-styling="true"
+                                                    :calendar-button="true"
+                                                    calendar-button-icon="fas fa-calendar-alt"
+                                                    :clear-button="true"
+                                                    clear-button-icon="fas fa-trash-alt">    
                                         </datepicker>
                                     </b-col>
                                 </b-row>
@@ -100,6 +101,9 @@
             'years': {
                 type: Array
             },
+            'is_my_activity': {
+                type: Boolean
+            },
         },
         data() {
             return {
@@ -113,14 +117,14 @@
                     { key: 'updated_at', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'market', label: 'Instrument'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'structure', label: 'Structure'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'direction', label: 'Direction'/*, sortable: true, sortDirection: 'desc'*/ },
+                    (this.is_my_activity ? { key: 'direction', label: 'Direction'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
                     { key: 'nominal', label: 'Nominal' },
                     { key: 'strike_percentage', label: 'Strike %' },
                     { key: 'strike', label: 'Strike' },
                     { key: 'volatility', label: 'Volatility' },
                     { key: 'expiration', label: 'Expiration' },
                     { key: 'status', label: 'Status'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'trader', label: 'Trader'/*, sortable: true, sortDirection: 'desc'*/ },
+                    (this.is_my_activity ? { key: 'trader', label: 'Trader'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
                 ],
                 table_data:{},
                 markets_filter: [
@@ -144,12 +148,12 @@
             },
             loadTableData(index, is_toggle) {
                 this.table_data_loaded = false;
-                console.log("Loading table data",this.table_data);
                 if(is_toggle && this.table_data[index].data){
                     this.table_data_loaded = true;
                 } else {
-                    axios.get(axios.defaults.baseUrl + 'my-activity/year', {
+                    axios.get(axios.defaults.baseUrl + '/stats/my-activity/year', {
                         params:{
+                            'is_my_activity': (this.is_my_activity ? 1 : 0),
                             'page': this.table_data[index].current_page,
                             'year': this.table_years[index],
                             'filter_date': this.table_data[index].filter_date ? moment(this.table_data[index].filter_date).format('YYYY-MM-DD'): null,
@@ -162,14 +166,11 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
-                            console.log("FROM SERVER: ",activityResponse.data);
                             this.table_data[index].current_page = activityResponse.data.current_page;
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;
                             this.table_data[index].data = activityResponse.data.data;
-                            this.table_data[index].filter_date = null;
                             this.table_data_loaded = true;
-                            console.log("Data: ",this.table_data[index].data);
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+this.table_years[index]+" year data.")
@@ -183,17 +184,15 @@
                 }
             },
             loadMarkets() {
-                axios.get(axios.defaults.baseUrl + 'my-activity/markets')
+                axios.get(axios.defaults.baseUrl + '/stats/my-activity/markets')
                 .then(marketsResponse => {
                     if(marketsResponse.status == 200) {
-                        console.log("FROM SERVER: ",marketsResponse.data);
                         Object.keys(marketsResponse.data).forEach(key => {
                             this.markets_filter.push({
                                 text: marketsResponse.data[key],
                                 value: key
                             });
                         });
-                        //this.markets_filter
                     } else {
                         console.error(err); 
                     }
@@ -202,10 +201,13 @@
                 });
             },
             loadExpirations() {
-                axios.get(axios.defaults.baseUrl + 'my-activity/expirations')
+                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
+                    params:{
+                        'not_paginate': true,
+                    }
+                })
                 .then(expirationsResponse => {
                     if(expirationsResponse.status == 200) {
-                        console.log("FROM SERVER: ",expirationsResponse.data);
                         Object.keys(expirationsResponse.data).forEach(key => {
                             this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
                         });
@@ -236,10 +238,9 @@
                 this.loadTableData(0, false)
             },
             sortingChanged(index, ctx) {
-                console.log("I CHANGE!!!", index, ctx);
                 this.table_data[index].order_by = ctx.sortBy;
                 this.table_data[index].order_ascending = ctx.sortDesc;
-                this.loadTableData(index, false)
+                this.loadTableData(index, false);
             },
             formatItem(item, key) {
                 if(item[key] == null){

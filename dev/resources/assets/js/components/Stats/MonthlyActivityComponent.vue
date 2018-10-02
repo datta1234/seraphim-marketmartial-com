@@ -1,8 +1,12 @@
 <template>
     <div dusk="monthly-activity" class="monthly-activity" >
-        <!-- remove basic example-->
-    	<div v-for="(data,market) in graph_data" class="btn-group" role="group" aria-label="Basic example">
-		  	<button @click="setChartData(data,market)" type="button" class="btn mm-button mr-2">{{ market }}</button>
+    	<div v-for="(data,market) in graph_data" class="btn-group" role="group">
+		  	<button v-bind:class="{ active: active_market == market }" 
+                    @click="setChartData(data,market)" 
+                    type="button" 
+                    class="btn mm-button mr-1 card-tab-button mm-nav-button">
+                {{ market }}
+            </button>
 		</div>
 		<div class="card graph-card">
 			<div v-if="has_data" class="card-body">
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-	import BarGraph from './BarGraph.js';
+	import BarGraph from './Components/BarGraph.js';
     export default {
     	components: {
 	      	BarGraph
@@ -72,7 +76,6 @@
         },
         methods: {
             setChartData(data, market) {
-            	console.log("Market: ",market,'    ',"Setting this data: ",data);
             	this.active_market = market;
             	if(data == null) {
             		this.has_data = false;
@@ -83,7 +86,6 @@
             	this.active_data_set.datasets = [];
             	this.setLabels(data);
             	this.setDataSet(data);
-            	console.log("Chart Data",this.active_data_set);
             },
             setLabels(data) {
             	Object.keys(data).forEach(set => {
@@ -106,6 +108,7 @@
 				      	data: this.setData(set, data),
             		});
 		        });
+                console.log(this.active_data_set);
             },
             setData(set, data) {
             	let count_array = [];
