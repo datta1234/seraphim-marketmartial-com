@@ -14,7 +14,19 @@
             </div>
             
             <!-- Modal body content -->
-            <b-row>
+            <b-row class="mt-2">
+                <b-col cols="4">
+                    <label class="mr-sm-2" for="stats-safex-nominal">CSV to upload:</label>
+                </b-col>
+                <b-col cols="8">
+                    <b-form-select id="stats-safex-table"
+                               class="w-100"
+                               :options="csv_choice"
+                               v-model="modal_data.csv_choice">
+                    </b-form-select>
+                </b-col>
+            </b-row>
+            <b-row class="mt-2">
                 <b-col cols="12">
                     <b-form-file v-model="modal_data.file" ref="csvfileinput"></b-form-file>
                 </b-col>
@@ -40,10 +52,15 @@
         data() {
             return {
                 modal_data: {
+                    csv_choice: "market-activity",
                     file: null,
                     show_modal: false,
                     modal_ref: 'upload-csv-modal',
                 },
+                csv_choice: [
+                    {text: "Safex Data", value: "market-activity"},
+                    {text: "Open Interest Data", value: "open-interest"},
+                ],
             };
         },
         methods: {
@@ -65,14 +82,17 @@
             },
             uploadFile() {
                 let formData = new FormData();
-                formData.append("safex_csv_file", this.modal_data.file);
-                
-                axios.post(axios.defaults.baseUrl + '/admin/stats/market-activity', formData)
+                formData.append("csv_upload_file", this.modal_data.file);
+
+                axios.post(axios.defaults.baseUrl + '/admin/stats/' + this.modal_data.csv_choice, formData)
                 .then(csvUploadResponse => {
                     if(csvUploadResponse.status == 200) {
-                        console.log("Upload response: ", csvUploadResponse);
-                        this.hideModal();
-                        this.$toasted.success(csvUploadResponse.data.message);
+                        if(csvUploadResponse.data.success) {
+                            this.hideModal();
+                            this.$toasted.success(csvUploadResponse.data.message);
+                        } else {
+                            this.$toasted.error(csvUploadResponse.data.message);      
+                        }
                     } else {
                         this.$toasted.error(csvUploadResponse.data.message);  
                     }

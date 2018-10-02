@@ -13,14 +13,14 @@ return [
         'Expiry'            => 'expiry',
         'Nominal'           => 'nominal',
     ],
-    "open_interest_fields" => [
-        ''              => '',
-        'Contract'      => '',
-        'ExpiryDate'    => '',
-        'Strike'        => '',
-        'Price'         => '',
-        'Open Interest' => '',
-        'Delta'         => '',
-        'Spot Price'    => '',
+    "open_interest_fields"  => [
+        'Market Name'       => 'market_name',
+        'Contract'          => 'contract',
+        'ExpiryDate'        => 'expiry_date',
+        'Put/Call'          => 'is_put',
+        'Strike Price'      => 'strike_price',
+        'Open Interest'     => 'open_interest',
+        'Delta'             => 'delta',
+        'Spot Price'        => 'spot_price',
     ],
 ];

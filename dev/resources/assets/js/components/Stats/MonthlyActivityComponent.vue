@@ -108,6 +108,7 @@
 				      	data: this.setData(set, data),
             		});
 		        });
+                console.log(this.active_data_set);
             },
             setData(set, data) {
             	let count_array = [];

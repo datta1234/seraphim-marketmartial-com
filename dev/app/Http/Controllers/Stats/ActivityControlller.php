@@ -7,10 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\Market;
-use App\Models\TradeConfirmations\SafexTradeConfirmation;
+use App\Models\StatsUploads\SafexTradeConfirmation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
-use App\Http\Requests\Stats\UploadSafexDataRequest;
+use App\Http\Requests\Stats\CsvUploadDataRequest;
 
 class ActivityControlller extends Controller
 {
@@ -147,10 +147,10 @@ class ActivityControlller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UploadSafexDataRequest $request)
+    public function store(CsvUploadDataRequest $request)
     {
-        // @TODO - remove safex data that are over one month - check with Aimee for exact time period
-        $path = $request->file('safex_csv_file')->getRealPath();
+        // @TODO - truncate table before new import and validation for CSV
+        $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
         array_walk($csv, function(&$row) {
@@ -170,7 +170,7 @@ class ActivityControlller extends Controller
         
         try {
             DB::beginTransaction();
-            $created = array_map('App\Models\TradeConfirmations\SafexTradeConfirmation::createFromCSV', $csv);
+            $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
             DB::commit();
         } catch (\Exception $e) {
             \Log::error($e);

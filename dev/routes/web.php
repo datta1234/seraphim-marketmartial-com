@@ -128,5 +128,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	Route::group(['prefix' => 'stats'], function() {
 		Route::post('/market-activity','Stats\ActivityControlller@store')
 			->name('activity.upload_safex_data');
+		Route::post('/open-interest','Stats\OpenInterestControlller@store')
+			->name('open-interest.upload_data');
 	});
 });

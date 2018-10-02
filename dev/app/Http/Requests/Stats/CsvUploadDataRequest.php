@@ -4,7 +4,7 @@ namespace App\Http\Requests\Stats;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UploadSafexDataRequest extends FormRequest
+class CsvUploadDataRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UploadSafexDataRequest extends FormRequest
     public function rules()
     {
         return [
-            'safex_csv_file' => 'required|file',
+            'csv_upload_file' => 'required|file',
         ];
     }
 }

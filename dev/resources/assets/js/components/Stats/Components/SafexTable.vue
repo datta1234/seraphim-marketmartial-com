@@ -126,8 +126,6 @@
                     {text: "R10m to R40m", value: "10-40"},
                     {text: "Greater than R40m", value: ">40"},
                 ],
-                
-                
                 table_data: {
                     table_fields: [
                         { key: 'trade_date', label: 'Trade Date' },

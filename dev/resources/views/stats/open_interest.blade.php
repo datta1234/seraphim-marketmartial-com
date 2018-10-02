@@ -13,9 +13,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        GRAPH HERE
-				<br>
-		        TABLE HERE
+		        <open-interests :data="{{ json_encode($grouped_open_interests) }}"></open-interests>
 		    @endslot
 		@endcomponent
 	</div>

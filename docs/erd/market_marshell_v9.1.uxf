@@ -1,0 +1,2224 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
+  <zoom_level>11</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>990</x>
+      <y>1375</y>
+      <w>231</w>
+      <h>242</h>
+    </coordinates>
+    <panel_attributes>markets
+--
+id: int(10)
+title: varchar(255)
+is_seldom: tinyint(1)
+market_type_id: int(11)
+description: text
+has_deadline:tiny_int(1) 
+has_negotiation: tiny_int(1)
+has_rebate: tiny_int(1)
+parent_id: int(11)
+is_displayed: boolean
+created_at: timestamp
+updated_at: timestamp
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>990</x>
+      <y>1826</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>trade_structures
+--
+id: int(10)
+title: varchar(255)
+is_selectable: boolean
+created_at:timestamp
+updated_at:timestamp
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1705</x>
+      <y>1342</y>
+      <w>363</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>user_market_requests
+--
+id: int(11)
+user_id: int(11)
+trade_structure_id:int(11)
+user_market_request_statuses_id: int(11)
+chosen_user_market_id: int(11) nullable
+market_id: int(11)
+created_at:timestamp
+updated_at:timestamp
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>2332</y>
+      <w>286</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>items
+--
+id: int(10)
+item_type_id: int(11)
+title: varchar(255)
+trade_structure_group_id: int(11)
+created_at:timestamp
+updated_at:timestamp
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>550</x>
+      <y>2332</y>
+      <w>231</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>item_types
+--
+id: int(11)
+title: varchar(255)
+validation_rule:varchar(255)
+created_at:timestamp
+updated_at:timestamp
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>2387</y>
+      <w>220</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=n
+</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>440</x>
+      <y>1287</y>
+      <w>1001</w>
+      <h>1320</h>
+    </coordinates>
+    <panel_attributes>Structure Items
+--
+bg=gray
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1078</x>
+      <y>1969</y>
+      <w>55</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>1408</y>
+      <w>484</w>
+      <h>363</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;280.0;10.0;280.0;300.0;420.0;300.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>957</x>
+      <y>1628</y>
+      <w>253</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>stocks
+--
+id: int(10)
+code: varchar(3)
+name: varchar(255) nullable
+verified: boolean
+created_at:timestamp
+updated_at:timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>550</x>
+      <y>1496</y>
+      <w>231</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>market_types
+--
+id: int(10)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>1540</y>
+      <w>242</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;200.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1199</x>
+      <y>1683</y>
+      <w>495</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;230.0;10.0;230.0;120.0;430.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1650</x>
+      <y>1925</y>
+      <w>297</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>user_market_request_groups
+--
+id: int(11)
+is_selected: tinyint(1) -- "choice field"
+user_market_request_id: int(11)
+trade_structure_group_id: int(11)
+created_at:timestamp
+updated_at:timestamp
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2112</x>
+      <y>1892</y>
+      <w>308</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>user_market_request_items
+--
+id: int(11)
+item_id:int(11)
+user_market_request_group_id: int(11)
+value: varchar(255)
+title: varchar(255)
+type: varchar(255)
+has_future_ref: tinyint
+has_put_and_call: tinyint
+created_at: timestamp
+updated_at: timestamp
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1243</x>
+      <y>2079</y>
+      <w>979</w>
+      <h>374</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>850.0;10.0;850.0;310.0;10.0;310.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>1496</y>
+      <w>517</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;330.0;140.0;330.0;140.0;10.0;450.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1771</x>
+      <y>1518</y>
+      <w>363</w>
+      <h>429</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;370.0;10.0;300.0;310.0;300.0;310.0;70.0;120.0;70.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1936</x>
+      <y>2013</y>
+      <w>198</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1067</x>
+      <y>2233</y>
+      <w>55</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>979</x>
+      <y>2090</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>trade_structure_groups
+--
+id: int(10)
+trade_structure_id: int(11)
+title: varchar(255)
+created_at:timestamp
+updated_at:timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1199</x>
+      <y>2068</y>
+      <w>583</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1
+</panel_attributes>
+    <additional_attributes>490.0;10.0;490.0;130.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>1584</x>
+      <y>1298</y>
+      <w>1199</w>
+      <h>1331</h>
+    </coordinates>
+    <panel_attributes>Market Request
+--
+bg=blue
+layer=-1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2475</x>
+      <y>1705</y>
+      <w>253</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>user_market_request_statuses
+--
+id: int(11)
+title:varchar(255)
+created_at: timestamp
+updated_at:timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2057</x>
+      <y>1474</y>
+      <w>561</w>
+      <h>253</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>470.0;210.0;470.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3036</x>
+      <y>1408</y>
+      <w>374</w>
+      <h>231</h>
+    </coordinates>
+    <panel_attributes>user_markets
+--
+id: int(11)
+user_id:int(11)
+user_market_request_id: int(11)
+is_trade_away: tinyint(1)
+is_market_maker_notified: tinyint(1)
+is_on_hold: boolean (default: false)
+current_market_negotiation_id: int(11) nullable
+created_at: timestamp
+updated_at: timestamp
+deleted_at: timestamp nullable
+
+
+
+
+
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2057</x>
+      <y>1441</y>
+      <w>1001</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>890.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>4400</x>
+      <y>1331</y>
+      <w>1144</w>
+      <h>1375</h>
+    </coordinates>
+    <panel_attributes>Trade
+--
+bg=green</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4433</x>
+      <y>1364</y>
+      <w>352</w>
+      <h>275</h>
+    </coordinates>
+    <panel_attributes>trade_negotiations
+--
+id: int(11)
+user_market_id: int(11)
+is_offer: tinyint(1)
+contracts: double(11,2)
+trade_negotiation_id: int(11) nullable
+market_negotiation_id: int(11)
+quantity: double(11,2)
+initiate_user_id: int(11)
+recieving_user_id: int(11)
+is_distpute: tinint(1)
+trade_negotiation_status_id: int(11)
+traded: boolean
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4433</x>
+      <y>1716</y>
+      <w>352</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>trade_negotiation_statuses
+--
+id: int(11)
+name: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+
+
+
+
+
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4576</x>
+      <y>1628</y>
+      <w>55</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3399</x>
+      <y>1441</y>
+      <w>1056</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;940.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4774</x>
+      <y>1485</y>
+      <w>979</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>870.0;10.0;330.0;10.0;330.0;60.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>6072</x>
+      <y>1540</y>
+      <w>110</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0;80.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4774</x>
+      <y>1441</y>
+      <w>77</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0;50.0;70.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>6875</x>
+      <y>1375</y>
+      <w>1034</w>
+      <h>1331</h>
+    </coordinates>
+    <panel_attributes>Stats Uploads
+--
+bg=red</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>1441</w>
+      <h>1155</h>
+    </coordinates>
+    <panel_attributes>User Management
+--
+bg=green
+layer=0</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>704</y>
+      <w>275</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>users
+--
+id: int(11)
+email: varchar(255)
+full_name: varchar(255)
+cell_phone: varchar(255)
+work_phone: varchar(255)
+role_id: int(11)
+organisation_id: int(11)
+active: tinyint(1)
+verified: tinyint(1)
+tc_accepted: tinyint(1)
+password: varchar(255)
+remember_token: varchar(255)
+birthdate: date nullable
+is_married: tinyint(1) nullable
+has_children: tinyint(1) nullable
+last_login: datetime nullable
+hobbies: text nullable
+invite_token: varchar(255) nullable
+invited_at: timestamp nullable
+created_at: timestamp
+updated_at: timestamp
+deleted_at: timestamp nullable
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>462</x>
+      <y>638</y>
+      <w>231</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>user_market_interests
+--
+id: int(11)
+user_id: varchar(255)
+market_type_id: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>451</x>
+      <y>781</y>
+      <w>264</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>user_market_watched
+--
+id: int(11)
+user_id: varchar(255)
+market_id: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>704</x>
+      <y>825</y>
+      <w>286</w>
+      <h>253</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>240.0;200.0;80.0;200.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>682</x>
+      <y>671</y>
+      <w>308</w>
+      <h>385</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>260.0;320.0;110.0;320.0;110.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>33</x>
+      <y>649</y>
+      <w>539</w>
+      <h>957</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>390.0;10.0;10.0;10.0;10.0;500.0;320.0;500.0;320.0;840.0;470.0;840.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>66</x>
+      <y>814</y>
+      <w>1067</w>
+      <h>583</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>350.0;10.0;10.0;10.0;10.0;320.0;930.0;320.0;930.0;510.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>385</y>
+      <w>275</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>organisations
+--
+id: int(11)
+title: varchar(255)
+verified: tinyint(1)
+description: text
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>506</y>
+      <w>110</w>
+      <h>429</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;360.0;80.0;360.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1474</x>
+      <y>396</y>
+      <w>231</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>slack_integrations
+--
+id: int(11)
+type: varchar(255)
+field: varchar(255)
+value: text
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>165</y>
+      <w>264</w>
+      <h>297</h>
+    </coordinates>
+    <panel_attributes>m1=n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0;160.0;240.0;220.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1067</y>
+      <w>561</w>
+      <h>297</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;10.0;120.0;190.0;470.0;190.0;470.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1001</y>
+      <w>1826</w>
+      <h>902</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;200.0;10.0;200.0;220.0;1500.0;220.0;1500.0;790.0;1640.0;790.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>979</y>
+      <w>1826</w>
+      <h>616</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;220.0;10.0;220.0;230.0;1520.0;230.0;1520.0;530.0;1640.0;530.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>957</y>
+      <w>3377</w>
+      <h>429</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;230.0;10.0;230.0;240.0;3030.0;240.0;3030.0;370.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>913</y>
+      <w>4620</w>
+      <h>528</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;250.0;10.0;250.0;260.0;4160.0;260.0;4160.0;460.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>462</x>
+      <y>451</y>
+      <w>231</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>emails
+--
+id: int(11)
+user_id: int(11)
+title: varchar(255)
+email: varchar(255)
+default_id: int(11) nullable
+notifiable: tinyint(1)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>462</x>
+      <y>275</y>
+      <w>231</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>trading_accounts
+--
+id: int(11)
+user_id: int(11)
+market_id: int(11)
+safex_number: varchar(255)
+sub_account: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>682</x>
+      <y>528</y>
+      <w>308</w>
+      <h>506</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>260.0;430.0;130.0;430.0;130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>682</x>
+      <y>352</y>
+      <w>308</w>
+      <h>660</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>260.0;570.0;150.0;570.0;150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>11</x>
+      <y>363</y>
+      <w>1034</w>
+      <h>1034</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>410.0;10.0;10.0;10.0;10.0;790.0;900.0;790.0;900.0;920.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>462</x>
+      <y>110</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>interest_user
+--
+id: int(11)
+value: varchar(255)
+interest_id: int(11)
+user_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>682</x>
+      <y>187</y>
+      <w>308</w>
+      <h>803</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>260.0;700.0;170.0;700.0;170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>550</y>
+      <w>275</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>user_otps
+--
+id: int(11)
+otp: int(6)
+user_id: int(11)
+expires_at: timestamp
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>649</y>
+      <w>88</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;210.0;60.0;210.0;60.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>143</x>
+      <y>1639</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>jse_intergrations
+--
+id: int(10)
+type: varchar(255)
+field: varchar(255)
+value: text
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>1705</y>
+      <w>209</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>110</x>
+      <y>143</y>
+      <w>231</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>interests
+--
+id: int(11)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>330</x>
+      <y>165</y>
+      <w>154</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=1
+</panel_attributes>
+    <additional_attributes>120.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>165</x>
+      <y>946</y>
+      <w>275</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>notifications
+--
+id: int(11)
+type: varchar(255)
+notifiable_type: varchar
+notifiable_id: int(11)
+data: text
+read_at: timestamp
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>5731</x>
+      <y>1419</y>
+      <w>352</w>
+      <h>396</h>
+    </coordinates>
+    <panel_attributes>trade_confirmations
+--
+id: int(11)
+send_user_id: int(11)
+receiving_user_id: int(11)
+trade_negotiation_id: int(11)
+spot_price: double(11,2) nullable
+future_reference: double(11,2) nullable
+near_expiery_reference: double(11,2) nullable
+trade_confirmation_id: int(11) nullable
+trade_confirmation_status_id: int(11)
+market_id: int(11) nullable
+stock_id: int(11) nullable
+contracts: double(11,2)
+puts: double(11,2) nullable
+calls: double(11,2) nullable
+delta: double(11,2) nullable
+gross_premiums: double(11,2)
+net_premiums: double(11,2)
+is_confirmed: tinyint(1)
+traiding_account_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6985</x>
+      <y>1089</y>
+      <w>352</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>jse_trade_intergrations
+--
+id: int(10)
+type: varchar(255)
+title: varchar(255)
+value: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+layer=1
+bg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>6534</x>
+      <y>1133</y>
+      <w>132</w>
+      <h>330</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;280.0;10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>5731</x>
+      <y>1826</y>
+      <w>352</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>trade_confirmation_statuses
+--
+id: int(11)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>77</x>
+      <y>88</y>
+      <w>5841</w>
+      <h>1353</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..1
+</panel_attributes>
+    <additional_attributes>5270.0;1210.0;5270.0;990.0;1530.0;990.0;1520.0;10.0;10.0;10.0;10.0;220.0;350.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6237</x>
+      <y>1441</y>
+      <w>352</w>
+      <h>275</h>
+    </coordinates>
+    <panel_attributes>booked_trades
+--
+id: int(11)
+user_id: int(11)
+trade_confirmation_id: int(11) nullable
+trading_account_id: int(11)
+is_sale: tinyint(1)
+is_rebate: tinyint(1)
+market_id: int(11) nullable
+stock_id: int(11) nullable
+amount: double(11,2)
+booked_trade_status_id: int(11)
+is_confirmed: tinyint(1)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>6072</x>
+      <y>1474</y>
+      <w>187</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3036</x>
+      <y>1727</y>
+      <w>319</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>user_market_subscription
+--
+id: int(11)
+user_id:int(11)
+user_market_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+deleted_at: timestamp nullable
+
+
+
+
+
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3168</x>
+      <y>1628</y>
+      <w>55</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1045</y>
+      <w>1804</w>
+      <h>1166</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0;130.0;200.0;1480.0;200.0;1480.0;1030.0;1620.0;1030.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3377</x>
+      <y>1562</y>
+      <w>121</w>
+      <h>616</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>30.0;10.0;90.0;10.0;90.0;530.0;10.0;530.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4422</x>
+      <y>1914</y>
+      <w>319</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>trade_subscriptions
+--
+id: int(11)
+user_id:int(11)
+trade_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+deleted_at: timestamp nullable
+
+
+
+
+
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1023</y>
+      <w>3212</w>
+      <h>1012</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>2900.0;890.0;2850.0;890.0;2850.0;210.0;150.0;210.0;150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3377</x>
+      <y>2200</y>
+      <w>99</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..1
+</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0;70.0;80.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4455</x>
+      <y>2167</y>
+      <w>352</w>
+      <h>253</h>
+    </coordinates>
+    <panel_attributes>rebates
+--
+id: int(11)
+user_id: int(11)
+user_market_request_id: int(11)
+user_market_id: int(11)
+organisation_id: int(11)
+is_paid:tinyint(1)
+booked_trade_id:int(11) nullable
+trade_date: datetime
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3399</x>
+      <y>1540</y>
+      <w>1078</w>
+      <h>770</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0;100.0;170.0;820.0;170.0;820.0;670.0;960.0;670.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3014</x>
+      <y>2013</y>
+      <w>374</w>
+      <h>561</h>
+    </coordinates>
+    <panel_attributes>market_negotiations
+--
+id: int(11)
+user_id:int(11)
+counter_user_id: int(11)
+market_negotiation_id: int(11) nullable
+user_market_id: int(11)
+bid: double(11,2) nullable
+offer: double(11,2) nullable
+bid_qty: double(11,2)
+offer_qty: double(11,2)
+bid_premium: double(11,2) nullable
+offer_premium: double(11,2) nullable
+has_premium_calc: tinyint(1) 
+spot_price: double(11,2) nullable
+is_repeat: tinyint(1)
+is_accepted: tinyint(1) nullable
+is_private: boolean
+
+cond_is_repeat_atw: boolean nullable
+cond_fok_apply_bid: boolean nullable
+cond_fok_spin: boolean nullable
+cond_timeout: boolean nullable
+cond_is_oco: boolean nullable
+cond_is_subject: boolean nullable
+cond_buy_mid: boolean nullable
+cond_buy_best: boolean nullable
+
+created_at: timestamp
+updated_at: timestamp
+
+
+
+
+
+
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1089</y>
+      <w>3245</w>
+      <h>1177</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>2930.0;1040.0;2830.0;1040.0;2830.0;170.0;100.0;180.0;100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>5742</x>
+      <y>1958</y>
+      <w>352</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>distputes
+--
+id: int(11)
+title: varchar(255)
+send_user_id: int(11)
+receiving_user_id:int(11)
+distpute_status_id:int(11)
+trade_confirmation_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>5720</x>
+      <y>2178</y>
+      <w>352</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>distpute_status
+--
+id: int(11)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>5654</x>
+      <y>2112</y>
+      <w>110</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;130.0;60.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>5654</x>
+      <y>1540</y>
+      <w>110</w>
+      <h>528</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0;10.0;450.0;80.0;450.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>1111</y>
+      <w>4532</w>
+      <h>1001</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0;170.0;120.0;3990.0;110.0;3990.0;880.0;4100.0;880.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>836</y>
+      <w>5148</w>
+      <h>627</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;260.0;10.0;260.0;300.0;4640.0;290.0;4640.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4796</x>
+      <y>1155</y>
+      <w>1540</w>
+      <h>1188</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;1050.0;210.0;1050.0;210.0;620.0;700.0;620.0;700.0;10.0;1360.0;10.0;1360.0;260.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>462</y>
+      <w>3245</w>
+      <h>1903</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0;90.0;760.0;2810.0;760.0;2810.0;1700.0;2930.0;1700.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6237</x>
+      <y>1815</y>
+      <w>352</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>booked_trade_status
+--
+id: int(11)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>6171</x>
+      <y>1628</y>
+      <w>88</w>
+      <h>275</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0;10.0;220.0;60.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1199</x>
+      <y>1133</y>
+      <w>4565</w>
+      <h>1001</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;10.0;220.0;10.0;220.0;120.0;4010.0;130.0;4010.0;880.0;4130.0;880.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>275</y>
+      <w>275</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>roles
+--
+id: int(11)
+title: varchar(255)
+is_selectable: boolean
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>319</y>
+      <w>132</w>
+      <h>539</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=n</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0;100.0;460.0;10.0;460.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>968</x>
+      <y>110</y>
+      <w>275</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>organisation_slack_intergration
+--
+id: int(11)
+slack_integration_id: int(11)
+organisation_id:int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>891</x>
+      <y>165</y>
+      <w>99</w>
+      <h>385</h>
+    </coordinates>
+    <panel_attributes>m1=n
+m2=0..1</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0;10.0;320.0;70.0;320.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>550</x>
+      <y>1639</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>jse_intergration_stock
+--
+id: int(10)
+jse_intergration_id: int(11)
+stock_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>363</x>
+      <y>1705</y>
+      <w>209</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>121</x>
+      <y>451</y>
+      <w>231</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>default_label
+--
+id: int(11)
+title: varchar(255)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>341</x>
+      <y>528</y>
+      <w>143</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..1
+</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>550</x>
+      <y>1320</y>
+      <w>231</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>market_jse_intergration
+--
+id: int(10)
+jse_intergration_id: int(11)
+market_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>253</x>
+      <y>1375</y>
+      <w>319</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;240.0;10.0;10.0;270.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>1419</y>
+      <w>242</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;200.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4455</x>
+      <y>2497</y>
+      <w>352</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>rebate_slack_integration
+--
+id: int(11)
+slack_integration_id: int(11)
+rebate_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1694</x>
+      <y>473</y>
+      <w>2783</w>
+      <h>2178</h>
+    </coordinates>
+    <panel_attributes>m1=n
+m2=0..1</panel_attributes>
+    <additional_attributes>2510.0;1950.0;2420.0;1950.0;2420.0;610.0;130.0;620.0;130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4609</x>
+      <y>2409</y>
+      <w>33</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1672</x>
+      <y>1650</y>
+      <w>385</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>user_market_request_tradables
+--
+id: int(11)
+user_market_request_id: int(11)
+market_id: int(11) nullable
+stock_id: int(11) nullable
+user_market_request_group_id: int(11)
+created_at:timestamp
+updated_at:timestamp
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1793</x>
+      <y>1518</y>
+      <w>55</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2057</x>
+      <y>1419</y>
+      <w>1001</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>890.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3377</x>
+      <y>1595</y>
+      <w>110</w>
+      <h>561</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..1
+</panel_attributes>
+    <additional_attributes>30.0;10.0;80.0;10.0;80.0;480.0;10.0;480.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1155</x>
+      <y>1133</y>
+      <w>3410</w>
+      <h>253</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0;320.0;40.0;320.0;100.0;3060.0;100.0;3060.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6644</x>
+      <y>1089</y>
+      <w>253</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>booked_trade_jse_intergration
+--
+id: int(10)
+jse_intergration_id: int(11)
+booked_trade_id: int(11)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>6886</x>
+      <y>1144</y>
+      <w>121</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>4587</x>
+      <y>2057</y>
+      <w>154</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Note..
+DO THIS ONE LAST
+bg=red
+layer=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2057</x>
+      <y>1298</y>
+      <w>2420</w>
+      <h>1133</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>2180.0;1000.0;2120.0;1000.0;2120.0;10.0;120.0;10.0;120.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>4818</x>
+      <y>1980</y>
+      <w>154</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Note..
+ISSUE HERE
+bg=red
+layer=7</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1232</x>
+      <y>759</y>
+      <w>4576</w>
+      <h>682</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>4120.0;600.0;4120.0;310.0;440.0;310.0;440.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1199</x>
+      <y>1518</y>
+      <w>4554</w>
+      <h>1232</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>4120.0;10.0;3990.0;10.0;3990.0;1100.0;260.0;1100.0;260.0;190.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>1463</y>
+      <w>4543</w>
+      <h>1276</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>4110.0;10.0;3970.0;10.0;3970.0;1140.0;300.0;1140.0;300.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>682</x>
+      <y>55</y>
+      <w>5797</w>
+      <h>1408</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>5230.0;1260.0;5230.0;930.0;1100.0;930.0;1100.0;10.0;100.0;10.0;100.0;240.0;10.0;240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1199</x>
+      <y>1661</y>
+      <w>5654</w>
+      <h>1133</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;90.0;280.0;90.0;280.0;1010.0;5120.0;1010.0;5120.0;10.0;4900.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>1529</y>
+      <w>5599</w>
+      <h>1243</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;230.0;10.0;230.0;1110.0;5070.0;1110.0;5070.0;90.0;4890.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>5676</x>
+      <y>1562</y>
+      <w>77</w>
+      <h>352</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>50.0;10.0;20.0;10.0;20.0;290.0;50.0;290.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3377</x>
+      <y>1507</y>
+      <w>1078</w>
+      <h>847</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;740.0;800.0;740.0;800.0;10.0;960.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>770</x>
+      <y>1573</y>
+      <w>110</w>
+      <h>264</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0;60.0;220.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>594</x>
+      <y>1815</y>
+      <w>264</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>market_types_trade_structures
+--
+id: int(10)
+market_type_id: int(11)
+trade_structure_id: int(11)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>847</x>
+      <y>1848</y>
+      <w>165</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1210</x>
+      <y>1375</y>
+      <w>517</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;450.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1683</x>
+      <y>1815</y>
+      <w>33</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>2959</x>
+      <y>1320</y>
+      <w>1254</w>
+      <h>1364</h>
+    </coordinates>
+    <panel_attributes>Market
+--
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>440</x>
+      <y>1001</y>
+      <w>209</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>
+Notification Class per Type
+
+Important, Alert Etc
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2409</x>
+      <y>2123</y>
+      <w>308</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>premium_options
+--
+id: int(11)
+trade_structure_id: int(11)
+trade_structure_group_id: int(11)
+market_negotiation: int(11)
+type:varchar(255)
+value:float
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2277</x>
+      <y>2079</y>
+      <w>154</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0;120.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2585</x>
+      <y>2266</y>
+      <w>451</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>m1=0..1
+m2=0..n</panel_attributes>
+    <additional_attributes>390.0;10.0;260.0;10.0;260.0;150.0;10.0;150.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6963</x>
+      <y>1474</y>
+      <w>352</w>
+      <h>297</h>
+    </coordinates>
+    <panel_attributes>safex_trade_confirmations
+--
+id: int(11)
+trade_id: double(11,3)
+underlying: varchar(255)
+trade_date: timestamp
+structure: varchar(255)
+underlying_alt: varchar(255)
+strike: double(11,2)
+strike_percentage: double(11,2) nullable
+is_put: tinyint(1)
+volspread: varchar(255)
+expiry: timestamp
+nominal: double(11,2)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>6963</x>
+      <y>1837</y>
+      <w>352</w>
+      <h>242</h>
+    </coordinates>
+    <panel_attributes>open_interests
+--
+id: int(11)
+market_name: varchar(255)
+contract: varchar(255)
+expiry_date: timestamp
+is_put: tinyint(1)
+strike_price: double(11,2)
+open_interest: double(11,2)
+delta: double(11,4)
+spot_price: double(11,2)
+created_at: timestamp
+updated_at: timestamp
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>5654</x>
+      <y>1353</y>
+      <w>1034</w>
+      <h>1331</h>
+    </coordinates>
+    <panel_attributes>Trade Confirmations
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

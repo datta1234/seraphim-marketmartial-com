@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\TradeConfirmations;
+namespace App\Models\StatsUploads;
 
 use Illuminate\Database\Eloquent\Model;
 

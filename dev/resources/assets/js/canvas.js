@@ -54,6 +54,7 @@ Vue.component('activity-year-tables', require('./components/Stats/Components/Act
 Vue.component('all-market-activity', require('./components/Stats/AllMarketActivity.vue'));
 Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue'));
 Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue'));
+Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue'));
 
 Vue.mixin({
     methods: {
