@@ -8,7 +8,7 @@
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
             
-                <b-col v-for="(condition, c_group) in conditions" :key="c_group" cols="12" v-if="condition.hidden !== true">
+                <b-col v-for="(condition, c_group) in conditions" :key="c_group" cols="12" v-if="condition.hidden !== true && conditionDisplayed(condition)">
                     <b-btn @click="onToggleClick(condition, c_group)"
                             variant="default" 
                             size="sm" 
@@ -24,9 +24,12 @@
                                 class="w-75 ibar-condition-panel" 
                                 accordion="conditions" 
                                 role="tabpanel">
-
-                        <div class="ibar-condition-panel-content text-left" v-if="condition.children && condition.children.length > 0">
-                            <div v-for="(child, index) in condition.children" :key="index">
+                        
+                        <div class="ibar-condition-panel-content text-left" v-if="condition.component">
+                            <component  :is="components[condition.component]" :market-negotiation="marketNegotiation"></component>
+                        </div>
+                        <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
+                            <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
                                     <b-form-radio-group v-if="child.value.constructor === Array"
@@ -49,13 +52,14 @@
                         </div>
                     </b-collapse>
                 </b-col>
-
             </b-row>
         </b-col>
     </b-row>
 </template>
 <script>
+    import UserMarketRequest from '~/lib/UserMarketRequest';
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import conditionPropose from './Conditions/Propose';
     /*
         Sets the state of the following attributes on the 'marketNegotiation'
             cond_is_repeat_atw
@@ -73,13 +77,22 @@
             marketNegotiation: {
                 type: UserMarketNegotiation,
                 default: null
+            },
+            marketRequest: {
+                type: UserMarketRequest
             }
+        },
+        components: {
+            'condition-propose': conditionPropose
         },
         data() {
             return {
                 shown_groups: [],
                 show_options: false,
-                conditions: this.$root.config('market_conditions')
+                conditions: this.$root.config('market_conditions'),
+                components: {
+                    'condition-propose': conditionPropose
+                }
             };
         },
         watch: {
@@ -93,11 +106,7 @@
         },
         computed: {
             negotiation_stage() {
-                let chosen_market = this.marketNegotiation.chosen_user_market;
-                if(chosen_market == null) {
-                    return 'quote';
-                }
-                return '';
+                return this.marketRequest.state();
             },
             condition_aliases() {
                 let getAlias = (list, group) => {
@@ -121,7 +130,8 @@
         },
         methods: {
             conditionDisplayed(cond){
-                if(cond.only) {
+                console.log(cond, this.negotiation_stage);
+                if(typeof cond.only !== 'undefined') {
                     if(cond.only == this.negotiation_stage) {
                         return true;
                     }

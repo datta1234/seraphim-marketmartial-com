@@ -18,7 +18,7 @@
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
 
-        <ibar-market-negotiation-contracts class="mb-5" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="fok_active" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
 
@@ -26,7 +26,7 @@
             Alert me when cleared
         </b-form-checkbox>
         
-        <b-row class="mb-5">
+        <b-row class="mb-1">
             <b-col cols="10">
                 <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
                     {{ error[0] }}
@@ -67,7 +67,7 @@
 
                         <b-button class="w-100 mt-1"
                           v-if="!maker_quote" 
-                          :disabled="check_invalid || server_loading || fok_active" 
+                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
                           size="sm" 
                           dusk="ibar-action-send" 
                           variant="primary" 
@@ -83,7 +83,7 @@
                     <b-col cols="6">
                          
                         <b-button  class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || fok_active" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -91,7 +91,7 @@
                                 Send
                         </b-button>
                         <b-button class="w-100 mt-1" 
-                         :disabled="fok_active" 
+                         :disabled="conditionActive('fok')" 
                          v-if="can_spin" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -110,9 +110,20 @@
             </b-col>
         </b-row>
 
-        <ibar-fok-active :market-negotiation="marketRequest.chosen_user_market.active_fok" v-if="fok_active"></ibar-fok-active>
+        <condition-fok-active 
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('fok')">
+        </condition-fok-active>
+        <condition-proposal-active 
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('proposal')">
+        </condition-proposal-active>
+        <condition-meet-in-middle-active 
+            :market-negotiation="marketRequest.chosen_user_market.active_condition" 
+            v-if="conditionActive('meet_in_middle')">
+        </condition-meet-in-middle-active>
             
-        <ibar-apply-conditions v-if="can_negotiate && !fok_active" class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-5 mt-1" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -135,7 +146,10 @@
     
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
-    import IbarFoKActive from '../MarketComponents/FoKActiveComponent';
+    
+    import ConditionFoKActive from '../MarketComponents/ActiveConditions/FoKActive';
+    import ConditionProposalActive from '../MarketComponents/ActiveConditions/ProposalActive';
+    import ConditionMeetInMiddleActive from '../MarketComponents/ActiveConditions/MeetInMiddleActive';
 
     const showMessagesIn = [
         "market_request_store",
@@ -149,7 +163,9 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
-            'ibar-fok-active': IbarFoKActive,
+            'condition-fok-active': ConditionFoKActive,
+            'condition-proposal-active': ConditionProposalActive,
+            'condition-meet-in-middle-active': ConditionMeetInMiddleActive,
         },
         props: {
             marketRequest: {
@@ -192,8 +208,8 @@
             }
         },
         computed: {
-            'fok_active': function() {
-                return (this.marketRequest.chosen_user_market !== null && this.marketRequest.chosen_user_market.active_fok !== null );
+            'meet_in_the_middle_proposed': function(){
+                return this.proposed_user_market_negotiation.cond_buy_mid != null;
             },
             'maker_quote': function() {
                 return this.marketRequest.quotes.find(quote => quote.is_maker); // ??? why not chosen user market ???
@@ -221,6 +237,10 @@
             'can_negotiate':function(){
                 return this.marketRequest.canNegotiate();
             },
+            is_trading: function(){
+                return this.marketRequest.isTrading();
+
+            },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();
             },
@@ -232,6 +252,16 @@
             }
         },
         methods: {
+            conditionActive(type) {
+                if( this.marketRequest.chosen_user_market !== null && 
+                    this.marketRequest.chosen_user_market.active_condition !== null && 
+                    this.marketRequest.chosen_user_market.active_condition_type !== null &&
+                    this.marketRequest.chosen_user_market.active_condition_type == type
+                ) {
+                    return true;
+                }
+                return false;
+            },
             validateProposal:function(check_invalid)
             {
                 this.check_invalid = check_invalid;
@@ -257,7 +287,7 @@
                 if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }else if(!this.can_negotiate)
+                }else if(!this.can_negotiate && !this.is_trading)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
@@ -418,7 +448,6 @@
                 *else post for the specific user market
                 */
                 let chosen_user_market =  this.marketRequest.chosen_user_market;
-
                 if(chosen_user_market)
                 {
                    this.user_market = this.marketRequest.chosen_user_market;

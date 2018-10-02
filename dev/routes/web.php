@@ -52,6 +52,15 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 
 	Route::resource('user-pref', 'UserPrefController');
+		
+		//remove
+		Route::get('/my-activity', 'Stats\StatsController@show')->name('my_activity.show');
+		Route::get('/my-activity/year', 'Stats\StatsController@myYearActivity')
+			->name('my_activity.year');
+		Route::get('/my-activity/markets', 'Stats\MarketController@index')
+			->name('my_activity.markets');
+		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
+			->name('my_activity.expirations');
 
 	Route::group(['prefix' => 'stats'], function() {
 		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
@@ -82,6 +91,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
 

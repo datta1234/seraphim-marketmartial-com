@@ -9,9 +9,12 @@ export default class UserMarket extends BaseModel {
        super({
             _used_model_list: [UserMarketNegotiation],
             _relations:{
-               market_negotiations:{
+                market_negotiations:{
                     addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
-               } 
+                },
+                active_condition: {
+                    setMethod: (active_condition) => { this.setActiveCondition(active_condition) },
+                }
             }
         });
 
@@ -46,10 +49,16 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
-        this.active_fok = null;
-        if(options && options.active_fok) {
-            this.setActiveFoK(options.active_fok);
+        this.active_condition = null;
+        this.active_condition_type = null;
+        
+        if(options && options.active_condition) {
+            this.setActiveCondition(options.active_condition);
         }
+        if(options && options.active_condition_type) {
+            this.setActiveConditionType(options.active_condition_type);
+        }
+
     }
 
     /**
@@ -84,17 +93,25 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
-    *   addNegotiation - add user user_market_negotiation
+    *   setActiveFoK - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveFoK(active_fok) {
+    setActiveCondition(active_condition) {
         
-        if(!(active_fok instanceof UserMarketNegotiation)) {
-            active_fok = new UserMarketNegotiation(active_fok);
+        if(!(active_condition instanceof UserMarketNegotiation)) {
+            active_condition = new UserMarketNegotiation(active_condition);
         }
 
-        active_fok.setUserMarket(this);
-        this.active_fok = active_fok;
+        active_condition.setUserMarket(this);
+        this.active_condition = active_condition;
+    }
+
+    /**
+    *   setActiveProposal - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActiveConditionType(active_condition_type) {
+        this.active_condition_type = active_condition_type;
     }
 
     /**

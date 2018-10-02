@@ -96,9 +96,15 @@
                 if(typeof this.currentNegotiation !== 'undefined' && this.currentNegotiation != null && this.currentNegotiation.is_killed != true) {
                     // Check new currentNegotiation is valid
                     invalid_states.previous = 
-                            this.marketNegotiation.bid < this.currentNegotiation.bid
+                            (
+                                !this.is_empty(this.currentNegotiation.bid)
+                                && this.marketNegotiation.bid < this.currentNegotiation.bid
+                            )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
-                        ||  this.marketNegotiation.offer > this.currentNegotiation.offer
+                        ||  (
+                                !this.is_empty(this.currentNegotiation.offer)
+                                && this.marketNegotiation.offer > this.currentNegotiation.offer
+                            )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
                 }
                 console.log(invalid_states);

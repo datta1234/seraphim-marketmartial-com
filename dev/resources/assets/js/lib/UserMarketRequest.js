@@ -28,7 +28,6 @@ export default class UserMarketRequest extends BaseModel {
         // default public
         this.trade_items = {};//with group title as key
         this.quotes = [];
-        this.sent_quote = null;
         const defaults = {
             id: "",
             trade_structure: "",
@@ -67,11 +66,6 @@ export default class UserMarketRequest extends BaseModel {
         // register quotes
         if(options && options.quotes) {
             this.addUserMarketQuotes(options.quotes);
-        }
-
-        // register sent_quote
-        if(options && options.sent_quote) {
-            this.setSentQuote(options.sent_quote);
         }
 
        // register user_market
@@ -138,15 +132,13 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
-    *   setUserMarket - Set the UserMarketRequest setSentQuote
+    *   getter for sent_quote - Set the UserMarketRequest setSentQuote
     *   @param {UserMarket} user_market - UserMarket object
     */
-    setSentQuote(sent_quote) {
-        if(!(sent_quote instanceof UserMarket)) {
-            sent_quote = new UserMarket(sent_quote);
-        }
-        sent_quote.setMarketRequest(this);
-        this.sent_quote = sent_quote;
+    get sent_quote() {
+        return this.quotes.find(q => {
+            return q.is_maker;
+        });
     }
 
     /**
@@ -284,6 +276,22 @@ export default class UserMarketRequest extends BaseModel {
             "NEGOTIATION-VOL"
         ];
         return spinStatuses.indexOf(this.attributes.state) > -1; 
+    }
+
+    isTrading()
+    {
+        let isTrading = [
+            "TRADE-NEGOTIATION-OPEN",
+            "TRADE-NEGOTIATION-PENDING"
+        ];
+        return isTrading.indexOf(this.attributes.state) > -1; 
+    }
+
+    state() {
+        if(this.chosen_user_market == null) {
+            return "quote";
+        }
+        return "market";
     }
 
 }

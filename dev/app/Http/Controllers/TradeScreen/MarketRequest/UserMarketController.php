@@ -38,7 +38,7 @@ class UserMarketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserMarketStoreRequest $request,UserMarketRequest $userMarketRequest)
+    public function store(UserMarketStoreRequest $request, UserMarketRequest $userMarketRequest)
     {   
         $user = $request->user();
              
@@ -46,18 +46,8 @@ class UserMarketController extends Controller
         $data = $request->all();
         // user market
         $data['user_id'] = $request->user()->id;
-        $userMarket = UserMarket::create($data);
-
-        // negotiation
         $data['current_market_negotiation']['user_id'] = $request->user()->id;
-        $marketNegotiation = $userMarket
-            ->marketNegotiations()
-            ->create($data['current_market_negotiation']);
-
-        $userMarket
-            ->currentMarketNegotiation()
-            ->associate($marketNegotiation)
-            ->save();
+        $userMarket = $userMarketRequest->createQuote($data);
 
         // Set action that needs to be taken for the org related to this userMarketRequest
         $userMarket->userMarketRequest->setAction(

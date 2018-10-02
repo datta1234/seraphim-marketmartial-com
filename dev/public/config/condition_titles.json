@@ -11,7 +11,7 @@
         }
     },
     {
-        "condition": "cond_is_ocd",
+        "condition": "cond_is_oco",
         "true": {
             "bid": "OCO",
             "offer": "OCO"
@@ -96,6 +96,13 @@
         "false": {
             "bid": "",
             "offer": ""  
+        }
+    },
+    {
+        "condition": "is_private",
+        "true": {
+            "bid": "Proposal",
+            "offer": "Proposal"
         }
     }
 ]
