@@ -80,6 +80,15 @@ class UserMarket extends Model
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"DESC")->orderBy('id',"DESC");
     }
 
+    // conditions
+    public function lastConditionNegotiation()
+    {
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+                    ->conditions()
+                    ->orderBy('created_at',"DESC")
+                    ->orderBy('id',"DESC");
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -350,15 +359,16 @@ class UserMarket extends Model
         return $org == $this->userMarketRequest->user->organisation_id;
     }
 
-    public function isCounter($user = null) {
+    public function isCounter($user = null, $negotiation = null) {
+        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
         }
-        if($this->currentMarketNegotiation->marketNegotiationParent == null) {
+        if($negotiation->marketNegotiationParent == null) {
             return null;
         }
-        return $org == $this->currentMarketNegotiation->marketNegotiationParent->user->organisation_id;
+        return $org == $negotiation->marketNegotiationParent->user->organisation_id;
     }
     
 
@@ -385,45 +395,36 @@ class UserMarket extends Model
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
                                             return $item->setOrgContext($this->resolveOrganisation())
                                                         ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
-                                        })
+                                        }),
+            "active_condition"      => null,
+            "active_condition_type" => null,
         ];
 
-        // add Active FoK if exists
-        if($this->currentMarketNegotiation->isFoK() && $this->currentMarketNegotiation->is_killed !== true) {
+        $condNegotiation = $this->lastConditionNegotiation;
+        if($condNegotiation != null) {
             // only if counter
-            $active = $this->isCounter();
+            $active = $this->isCounter(null, $condNegotiation);
+            \Log::info("COunter: ".(String)$active);
             if($active === null) {
                 $active = $this->isInterest();
+                \Log::info("Interest: ".(String)$active);
             }
+            \Log::info("Active: ".(String)$active);
             if($active) {
-                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
-                $data['active_condition_type'] = 'fok';
-            }
-        }
+                $data['active_condition'] = $condNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
 
-        // add Active Proposal if exists
-        if($this->currentMarketNegotiation->isProposal()) {
-            // only if counter
-            $active = $this->isCounter();
-            if($active === null) {
-                $active = $this->isInterest();
-            }
-            if($active) {
-                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
-                $data['active_condition_type'] = 'proposal';
-            }
-        }
-
-        // add Active Proposal if exists
-        if($this->currentMarketNegotiation->isMeetInMiddle()) {
-            // only if counter
-            $active = $this->isCounter();
-            if($active === null) {
-                $active = $this->isInterest();
-            }
-            if($active) {
-                $data['active_condition'] = $this->currentMarketNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
-                $data['active_condition_type'] = 'meet_in_middle';
+                // add Active FoK if exists
+                if($condNegotiation->isFoK() && $condNegotiation->is_killed !== true) {
+                    $data['active_condition_type'] = 'fok';
+                }
+                // add Active Proposal if exists
+                if($condNegotiation->isProposal()) {
+                    $data['active_condition_type'] = 'proposal';
+                }
+                // add Active Proposal if exists
+                if($condNegotiation->isMeetInMiddle()) {
+                    $data['active_condition_type'] = 'meet_in_middle';
+                }
             }
         }
 
