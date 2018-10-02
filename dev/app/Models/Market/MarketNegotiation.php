@@ -126,6 +126,29 @@ class MarketNegotiation extends Model
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
     }
 
+    public function getConditionHistory()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $history = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @private as _private, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @private := is_private FROM $table WHERE id = _id
+                    ) as parent_private
+                    FROM (
+                        SELECT @id := $id, @private := 1
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @private = 1
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+        ");
+        return self::hydrate($history)->sortBy('id');
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -184,6 +207,40 @@ class MarketNegotiation extends Model
     public function getTimeAttribute()
     {
         return $this->created_at->format("H:i");
+    }
+
+    public function getActiveConditionTypeAttribute()
+    {
+        // FoK (can also be private... needs to be first)
+        if($this->cond_fok_apply_bid != null || $this->cond_fok_spin != null) {
+            return 'fok';
+        }
+        // all private instances
+        if($this->is_private == true) {
+            // Meet In middle
+            if($this->cond_buy_mid != null) {
+                return 'meet-in-middle';
+            }
+            // Meet At Best
+            if($this->cond_buy_best != null) {
+                return 'meet-at-best';
+            }
+            // Proposal
+            return 'proposal';
+        }
+        // Repeat ATW
+        if($this->cond_is_repeat_atw != null) {
+            return 'repeat-atw';
+        }
+        // OCO
+        if($this->cond_is_oco != null) {
+            return 'oco';
+        }
+        // Subject
+        if($this->cond_is_subject != null) {
+            return 'subject';
+        }
+        return null;
     }
 
     public function scopeFindCounterNegotiation($query,$user)
@@ -307,9 +364,9 @@ class MarketNegotiation extends Model
                 $qq->where('is_private', true);
                 $qq->where(function($qqq) use ($organisation_id) {
                     // if it was created by the organisaiton viewing, we show it
-                    $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
-                        $qqqq->where('organisation_id', $organisation_id);
-                    });
+                    // $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
+                    //     $qqqq->where('organisation_id', $organisation_id);
+                    // });
                     // OR If this has been traded, we show it
                     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
                         $qqqq->where('traded', true);
