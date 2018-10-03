@@ -1,0 +1,108 @@
+[
+    {
+        "condition": "cond_is_repeat_atw",
+        "true": {
+            "bid": "Repeat all the way",
+            "offer": "Repeat all the way"
+        },
+        "false": {
+            "bid": "Repeat all the way",
+            "offer": "Repeat all the way"
+        }
+    },
+    {
+        "condition": "cond_is_oco",
+        "true": {
+            "bid": "OCO",
+            "offer": "OCO"
+        },
+        "false": {
+            "bid": "OCO",
+            "offer": "OCO"  
+        }
+    },
+    {
+        "condition": "cond_is_subject",
+        "true": {
+            "bid": "Subject",
+            "offer": "Subject"
+        },
+        "false": {
+            "bid": "Subject",
+            "offer": "Subject"  
+        }
+    },
+    {
+        "condition": "cond_fok",
+        "true": {
+            "condition": "cond_fok_apply_bid",
+            "true": {
+                "bid": "FoK",
+                "offer": ""
+            },
+            "false": {
+                "bid": "",
+                "offer": "FoK"
+            },
+            "null": {
+                "bid": "FoK",
+                "offer": "FoK"
+            }
+        },
+        "false": {
+            "condition": "cond_fok_apply_bid",
+            "true": {
+                "bid": "FoK",
+                "offer": ""
+            },
+            "false": {
+                "bid": "",
+                "offer": "FoK"
+            },
+            "null": {
+                "bid": "FoK",
+                "offer": "FoK"
+            }
+        }
+    },
+    {
+        "condition": "cond_buy_mid",
+        "true": {
+            "bid": "Buy in the middle",
+            "offer": "Buy in the middle"  
+        },
+        "false": {
+            "bid": "Sell in the middle",
+            "offer": "Sell in the middle"  
+        }
+    },
+    {
+        "condition": "cond_buy_best",
+        "true": {
+            "bid": "Buy at best",
+            "offer": "Buy at best"  
+        },
+        "false": {
+            "bid": "Sell at best",
+            "offer": "Sell at best"  
+        }
+    },
+    {
+        "condition": "cond_timeout",
+        "true": {
+            "bid": "",
+            "offer": ""  
+        },
+        "false": {
+            "bid": "",
+            "offer": ""  
+        }
+    },
+    {
+        "condition": "is_private",
+        "true": {
+            "bid": "Proposal",
+            "offer": "Proposal"
+        }
+    }
+]

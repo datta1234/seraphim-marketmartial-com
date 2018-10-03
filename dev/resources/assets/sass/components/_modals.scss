@@ -1,0 +1,131 @@
+.confirmations-modal {
+	.modal-dialog {
+  		max-width: 1000px;
+	}
+}
+
+.trade-section.dark-theme, .trade-section.light-theme, .interaction-content {
+	.mm-modal .modal-body
+	{
+		color: $mm-market-important;
+
+		p {
+			color: $mm-market-important !important;
+		}
+	}
+}
+
+.mm-modal {
+	
+	display: inline-block; 
+	
+	.modal-content {
+		background-color: $mm-background;
+	}
+	.modal-header {
+		background-color: $mm-modal-header;
+		
+		.modal-title {
+			.mm-modal-title {
+				color: $mm-text-white;
+
+				/* @media (min-width: 992px) {
+							    	margin-left: 19.6rem;
+				}
+				 */
+			}
+		}
+	}
+	.modal-body {
+		.pagination {
+			span, a {
+		    	border: none;
+    			background-color: transparent;
+    			color: $mm-modal-header;
+			}
+			.active > a {
+				color: $mm-text-white;
+				background-color: $mm-modal-header;
+			}
+		}
+		.custom-radio > label::before {
+			background-color: $mm-text-white;
+		}
+		.custom-radio .custom-control-input:checked ~ .custom-control-label::before {
+			background-color: $mm-modal-header;
+		}
+		.details-choice-badge {
+			font-size: 1em;
+		}
+	}
+	.modal-info-text {
+		font-size: 0.9em;
+	}
+	.modal-warning-text {
+		font-size: 0.7em;
+	}
+	.modal-footer {
+		border-top: none;
+		text-align: center;
+	}
+}
+
+.mm-modal-button {
+	color: $mm-text-white;
+	background-color: $mm-modal-header;
+
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: darken($mm-modal-header, 10%);
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: darken($mm-modal-header, 10%);
+	}
+	&:hover,
+	&:disabled {
+		color: $mm-text-white;
+		background-color: $mm-light-grey;	
+	}
+}
+
+.mm-modal-market-button {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	border-radius: 2rem;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}
+
+.mm-modal-market-button:disabled {
+	background-color:$mm-light-grey;
+	
+	&:hover {
+		background-color:$mm-light-grey;	
+	}
+}
+
+
+.mm-modal-market-button-alt {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}

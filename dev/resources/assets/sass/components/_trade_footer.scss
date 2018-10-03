@@ -1,0 +1,35 @@
+#trade-footer {
+	background-color: $mm-footer-bg;
+	z-index: 10000;
+	
+	width:100%;
+	
+	position: absolute;
+    bottom: 0;
+    height: $trade-footer-height;
+
+	.footer-links-block {
+		float: right;
+		
+		.footer-link {
+			color: $mm-white;
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;
+		}
+	}
+
+	a {
+		text-decoration: none;
+	}
+
+	.footer-title-image {
+		.icon {
+			vertical-align: middle;
+		}
+		.footer-logo-text {
+			color: $mm-white;
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;
+		}
+	}
+}

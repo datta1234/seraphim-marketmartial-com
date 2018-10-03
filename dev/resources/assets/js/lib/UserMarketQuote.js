@@ -1,0 +1,94 @@
+import BaseModel from './BaseModel';
+import Errors from './Errors';
+
+export default class UserMarketQuote extends BaseModel {
+
+    constructor(options) {
+        super({
+            _used_model_list: []
+        });
+
+        // default internal
+        this._user_market_request = null;
+        // default public
+        const defaults = {
+            id: "",
+            is_maker: false,
+            is_interest: false,
+		    bid_only: false,
+		    offer_only: false,
+		    vol_spread: null,
+		    time: "",
+
+            bid_qty: null,
+            bid: null,
+            offer: null,
+            offer_qty: null,
+            is_on_hold: false,
+            is_repeat: false
+
+        }
+        // assign options with defaults
+        Object.keys(defaults).forEach(key => {
+            if(options && typeof options[key] !== 'undefined') {
+                this[key] = options[key];
+            } else {
+                this[key] = defaults[key];
+            }
+        });
+    }
+
+    /**
+    *   setParent - Set the parent UserMarketRequest
+    *   @param {UserMarketRequest} user_market_request - UserMarketRequest object
+    */
+    setMarketRequest(user_market_request) {
+        this._user_market_request = user_market_request;
+    }
+
+    /**
+    *   getParent - Get the parent UserMarketRequest
+    *   @return {UserMarketRequest}
+    */
+    getMarketRequest() {
+        return this._user_market_request;
+    }
+
+    putOnHold() {
+        // catch not assigned to a user market request yet!
+        if(this._user_market_request == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+        return new Promise((resolve, reject) => {
+
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
+            .then(response => {
+               resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            }); 
+        });
+    }
+
+    accept() {
+        // catch not assigned to a user market request yet!
+        if(this._user_market_request == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+        return new Promise((resolve, reject) => {
+
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'accept': true})
+            .then(response => {
+               resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            }); 
+        });
+    }
+}

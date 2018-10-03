@@ -1,0 +1,9 @@
+{
+	"id": 2,
+    "status": "test 1 status",
+    "user_market_request_id": 2,
+    "current_market_negotiation": null,
+    "created_at": "1969-07-20 00:20:18",
+    "updated_at": "1969-07-20 00:20:18",
+    "market_negotiations": []
+}

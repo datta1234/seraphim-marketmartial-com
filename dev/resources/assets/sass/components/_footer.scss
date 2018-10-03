@@ -1,0 +1,41 @@
+#main-footer {
+
+	position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+	background-color: $mm-footer-black;
+	
+	.footer-links-block {
+		float: right;
+		
+		.footer-link {
+			color: $mm-white;
+			font-family: $mm-font-sub-head;
+			font-size: 0.74rem;
+		}
+	}
+
+	a {
+		text-decoration: none;
+		
+		&:hover, .icon:hover {
+	    	color: $mm-panel-green;
+	  	}
+	}
+}
+
+.footer-title-image {
+	span {
+		font-size: 3rem;
+		color: $mm-white;
+	}	
+}
+
+.push-down {
+	margin-bottom: 12rem;
+
+	@media (min-width: 768px) {
+		font-size: 9rem;
+	}
+}

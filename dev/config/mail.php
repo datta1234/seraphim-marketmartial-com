@@ -120,4 +120,6 @@ return [
         ],
     ],
 
+    'admin_email' => env('MAIL_TO_ADDRESS' , 'example@example.com'),
+
 ];

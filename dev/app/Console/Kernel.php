@@ -13,7 +13,10 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+            \App\Console\Commands\GenOrgAction::class,
+            // \App\Console\Commands\PlaceUserOnHold::class,
+            \App\Console\Commands\UpdateUuid::class,
+
     ];
 
     /**
@@ -26,6 +29,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        $schedule->command('gen:actions')->daily();
+        $schedule->command('usermarket:placeOnhold')->everyMinute();
     }
 
     /**

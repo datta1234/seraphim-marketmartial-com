@@ -1,0 +1,26 @@
+@import './_mm_custom_variables';
+@import './_variables';
+
+h1 {
+	font-family: $mm-font-head;
+}
+
+h2, h3, h4, h5, h6 {
+	font-family: $mm-font-sub-head;
+}
+
+p {
+	font-family: $mm-font-body;
+}
+
+button.mm-login-button, a.mm-button, button.mm-button, input[type="button"].mm-button, input[type="submit"].mm-button {
+	font-family: $mm-font-body-alt;
+	font-size: 1.2rem;
+}
+
+button.mm-base, a.mm-base
+{
+	font-size: $font-size-base;
+}
+
+

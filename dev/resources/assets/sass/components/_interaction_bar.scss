@@ -1,0 +1,214 @@
+.interaction-bar-wrapper {
+    font-family: $mm-font-int-bar;
+    height:100%;
+    .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-content > .interaction-bar-toggle {
+        -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+        transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
+    }
+    .interaction-bar {
+        @extend .col-auto;
+        padding:0px;
+        position:relative;
+        width: 0px;
+
+        .interaction-content {
+            width:0px;
+            opacity: 0;
+            height:100%;
+            padding:0px;
+            margin:0px;
+            padding:0px;
+            float:left;
+            color:#fff;
+
+            // overflow-y: auto;
+            position: relative;
+
+            padding-bottom: 150px;
+            margin-bottom: 150px;
+            // background: red;
+            
+            .ibar-negotiation-content {
+                padding-right: 25px;
+            }
+        }
+        &.active {
+            width: $interaction-bar-width + $interaction-toggle-width;
+
+            .interaction-content {
+                opacity: 1;
+                position: fixed;
+                z-index: 1030; //also houses a modal and its hidden if the position is fixed
+                width: $interaction-bar-width + $interaction-toggle-width;
+
+                .interaction-bar-toggle {
+                    width: $interaction-toggle-width;
+                    opacity: 1;
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                }
+
+            }
+        }
+        input[type="number"],input[type="text"] {
+            padding:2px;
+        }
+        .btn {
+            border:none;
+            border-radius:0px;
+        }
+        .btn-primary {
+            background-color: $ibar-btn-background-primary;
+            color: $ibar-btn-color-primary;
+        }
+        .btn-secondary {
+            background-color: $ibar-btn-background-secondary;
+            color: $ibar-btn-color-secondary;
+        }
+        .btn-default {
+            background-color: $ibar-btn-background-default;
+            color: $ibar-btn-color-default;
+        }
+        .btn[disabled] {
+            background-color: $ibar-btn-inactive;
+        }
+        .btn-active {
+            background-color: $ibar-btn-active;
+            margin-left:-10px;
+            margin-right:-10px
+        }
+
+        .active-cond-bar {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            .cond-bar {
+                padding: 10px 10px;
+                background: $mm-red;
+            }
+
+        }
+
+    }
+    .interaction-bar-content-pane {
+        @extend .col;
+    }
+    .interaction-bar-toggle {
+        width:0px;
+        height:100%;
+        padding:0px;
+        display:inline-block;
+        margin:0px;
+        padding:0px;
+        float:left;
+        position: relative;
+        opacity: 0;
+        color: #fff;
+
+        cursor:pointer;
+        
+        > .icon {
+            display: block;
+            position: absolute;
+            top: 50%;
+            margin-top: -50%;
+            font-size: 32px;
+        }
+    }
+
+    /*
+    *   Market Negotiation Blocks
+    */
+    .ibar.market-negotiation {
+
+    }
+
+    /*
+    * conditions
+    */
+    .ibar-condition-panel {
+        background-color: $ibar-condition-panel-background;
+        margin:auto;
+        .ibar-condition-panel-content {
+            .title {
+                padding: 5px 7px;
+                background-color: $ibar-condition-panel-title-background;
+                margin:0px;
+                width: 100%;
+                font-size: bold;
+            }
+            .content {
+                padding: 5px 10px;
+                margin:0px;
+                width: 100%;
+                font-size: normal;
+            }
+        }
+    }
+    .ibar-condition:active, .ibar-condition[aria-expanded="true"] {
+        background-color: $ibar-btn-condition-active;
+        width: 85% !important;
+    }
+    .ibar-condition-remove-label {
+        color: yellow;
+        cursor: pointer;
+        > span.remove {
+            color: red;
+            font-weight:bold;
+        }
+    }
+
+     // 
+    .ibar-negotiation-history-contracts, .negotiation-history
+    {
+        .is-interest{
+            color: $mm-blue;
+        }
+        .is-maker{
+            color: $mm-market-maker;
+        }
+        .is-my-org{
+            color: $mm-yellow;
+        }
+    }
+}
+
+.text-my-org{
+    color: $mm-yellow; 
+}
+
+.condition
+{
+  color: $mm-yellow;  
+}
+
+.condition-toggle {
+    cursor: pointer;
+    &:after {
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-bottom: 0;
+        border-left: 0.3em solid transparent;
+    }
+    &.collapsed {
+        &:after {
+            display: inline-block;
+            width: 0;
+            height: 0;
+            margin-left: 0.255em;
+            vertical-align: 0.255em;
+            content: "";
+            border-top: 0;
+            border-right: 0.3em solid transparent;
+            border-bottom: 0.3em solid;
+            border-left: 0.3em solid transparent;
+        }
+    }
+}

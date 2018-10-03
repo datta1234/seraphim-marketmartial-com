@@ -10,6 +10,17 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+mix;
 
-mix.js('resources/assets/js/app.js', 'public/js')
+mix.webpackConfig({
+    resolve: {
+      alias: {
+        '~': path.resolve(__dirname, 'resources/assets/js')
+      }
+    }
+});
+
+mix.js('resources/assets/js/trade-screen.js', 'public/js') 
+   .js('resources/assets/js/canvas.js', 'public/js')
+   .js('resources/assets/js/public.js', 'public/js')
    .sass('resources/assets/sass/app.scss', 'public/css');

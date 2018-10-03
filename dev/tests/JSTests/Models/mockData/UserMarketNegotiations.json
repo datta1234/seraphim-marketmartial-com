@@ -1,0 +1,47 @@
+[
+    {
+    	"id": 1,
+    	"bid": "Test 1 bid",
+        "offer": "Test 1 offer",
+        "bid_qty": 2,
+        "offer_qty": 3,
+        "is_repeat": true,
+        "has_premium_calc": true,
+        "bid_premium": "Test 1 bid premium",
+        "offer_premium": "Test 1 offer premium",
+        "is_put": true,
+        "status": "Test 1 status",
+        "created_at": "1969-07-20 00:20:18",
+        "user_market_negotiation_condition": []
+    },
+    {
+        "id": 2,
+        "bid": "Test 2 bid",
+        "offer": "Test 2 offer",
+        "bid_qty": 2,
+        "offer_qty": 3,
+        "is_repeat": true,
+        "has_premium_calc": true,
+        "bid_premium": "Test 2 bid premium",
+        "offer_premium": "Test 2 offer premium",
+        "is_put": true,
+        "status": "Test 2 status",
+        "created_at": "1969-07-20 00:20:18",
+        "user_market_negotiation_condition": []
+    },
+    {
+        "id": 3,
+        "bid": "Test 3 bid",
+        "offer": "Test 3 offer",
+        "bid_qty": 2,
+        "offer_qty": 3,
+        "is_repeat": true,
+        "has_premium_calc": true,
+        "bid_premium": "Test 3 bid premium",
+        "offer_premium": "Test 3 offer premium",
+        "is_put": true,
+        "status": "Test 3 status",
+        "created_at": "1969-07-20 00:20:18",
+        "user_market_negotiation_condition": []
+    }
+]

@@ -1,0 +1,73 @@
+[
+	{
+		"id": 1,
+        "trade_structure": "Test 1 structure",
+        "attributes": {
+	        "state": "test 1 state",
+	        "bid_state": "test 1 bid state",
+	        "offer_state": " test 1 offer state",
+        },
+        "created_at": "1969-07-20 00:20:18",
+        "updated_at": "1969-07-20 00:20:18",
+        "trade_items":{
+        	"default": {
+				"Expiration Date": "Feb16",
+				"Strike": "36308428",
+				"Quantity": "92690854"
+			},
+			"Fly Second option": {
+				"Strike": "18350168",
+				"Quantity": "83145595"
+			},
+			"Fly third option": {
+				"Strike": "84097170",
+				"Quantity": "74162463"
+			}
+        },
+        "quotes": [],
+        "quote": null,
+        "chosen_user_market": null,
+	},
+	{
+		"id": 2,
+        "trade_structure": "Test 2 structure",
+        "attributes": {
+	        "state": "test 2 state",
+	        "bid_state": "test 2 bid state",
+	        "offer_state": " test 2 offer state",
+        },
+        "created_at": "1969-07-20 00:20:18",
+        "updated_at": "1969-07-20 00:20:18",
+        "trade_items":{
+        	"default": {
+				"Expiration Date": "Feb18",
+				"Strike": "36308428",
+				"Quantity": "92690854"
+			}
+        },
+        "quotes": [],
+        "quote": null,
+        "chosen_user_market": null,
+	},
+	{
+		"id": 3,
+        "trade_structure": "Test 3 structure",
+        "attributes": {
+	        "state": "test 3 state",
+	        "bid_state": "test 3 bid state",
+	        "offer_state": " test 3 offer state",
+        },
+        "created_at": "1969-07-20 00:20:18",
+        "updated_at": "1969-07-20 00:20:18",
+        "trade_items":{
+        	"default": {
+				"Expiration Date": "Feb20",
+				"Strike": "36308428",
+				"Quantity": "92690854"
+			}
+        },
+        "quotes": [],
+        "quote": null,
+        "chosen_user_market": null,
+	}
+]

@@ -2,7 +2,14 @@
 // Body
 $body-bg: #f5f8fa;
 
-// Typography
+ // Typography
 $font-family-sans-serif: "Raleway", sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
+
+/* 
+* bootstrap overrides
+*/
+$radius: 				0px;
+$border-radius:			0px;
+

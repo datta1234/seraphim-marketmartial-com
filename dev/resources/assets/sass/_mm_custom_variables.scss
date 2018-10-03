@@ -1,0 +1,104 @@
+// $base_url:              'http://staging.assemble.co.za/marketmartial/public';
+$base_url:              '';
+
+/* 
+* Public View Variables
+*/
+$mm-background-light:	#e9ecef;
+$mm-background-dark:	#000705;
+$mm-nav-blue: 			#1a333f;
+$mm-white: 				#ffffff;
+$mm-info-blue:			#77c7c5;
+
+$mm-yellow:				#EBC300;
+$mm-green:				#3cbdb9;
+$mm-blue:				#2358BD;
+$mm-red:				#BB1D1D;
+
+
+$mm-panel: 				#269a9b;
+$mm-panel-light: 		#97d5d7;
+$mm-panel-green: 		#3cbdb9;
+$mm-panel-dark-green: 	#1c7c74;
+$mm-text-dark: 			#57585a;
+$mm-heading-dark: 		#1a333f;
+
+$mm-footer-grey: 		#303030;
+$mm-footer-black: 		#000000;
+
+$mm-shadow:				#0c4545;
+
+/* 
+* Fonts
+*/
+$mm-font-head: 		"Raleway-SemiBold";
+$mm-font-sub-head: 	"Muli-Bold";
+$mm-font-sub-head-alt: 	"Muli-Regular";
+$mm-font-int-bar:   "Muli-Regular";
+$mm-font-body: 		"Roboto-Regular";
+$mm-font-body-alt: 	Arial;
+
+
+/* 
+* Trade View Variables
+*/
+$mm-market-important:	#1D3641;
+$mm-modal-header:		#1c7c74;
+$mm-text-white:			#FFFFFF;
+$mm-main-header:		#EDEDEE;
+$mm-background:			#D3D8DC;
+$mm-main-header-alt:	#282828;
+$mm-background-alt:		#191919;
+$mm-market-tab:			#071a22;
+$mm-market-tab-alt:		#073238;
+
+$mm-interaction-bar-bg:	#090909;
+$mm-light-grey:			#6D6E70;
+$mm-market-intrest:		#2358BD;
+$mm-market-intrest-greyed:     #6D6E70;
+$mm-market-maker:		#37A53A;
+$mm-market-confirm:		#E17428;
+$mm-market-alert:		#BB1D1D;
+$mm-user-action:		#EBC300;
+$mm-footer-bg:			#303030;
+$mm-toggle-bg:			#1c7d74;
+
+$mm-chat-block:			#B1B1B1;
+$mm-chat-text:			#1D3641;
+$mm-chat-block-own:		#9fe29f;
+$mm-chat-own-text:		#1D3641;
+$mm-chat-block-admin:	#1c7c74;
+$mm-chat-admin-text:	#FFFFFF;
+
+$mm-trade-background-dark:	#063332;
+/*
+*   Interaction Bar
+*/
+$interaction-bar-width: 350px;
+$interaction-toggle-width: 25px;
+$ibar-btn-background-primary: #1D3641;
+$ibar-btn-background-secondary: #282828;
+$ibar-btn-background-default: #1D3641;
+$ibar-btn-color-primary: #FFFFFF;
+$ibar-btn-color-secondary: #FFFFFF;
+$ibar-btn-color-default: #FFFFFF;
+$ibar-btn-active: #007D74;
+$ibar-btn-inactive: #6D6E70;
+
+// conditions
+$ibar-condition-panel-background: #282828;
+$ibar-condition-panel-title-background: #6D6E70;
+$ibar-btn-condition-active: #007D74;
+
+/*
+*   Chat Bar
+*/
+$chat-bar-width: 300px;
+$chat-toggle-width: 25px;
+
+$trade-footer-height: 65px;
+
+/*
+*   Stats
+*/
+$stats-warm-grey: #939598;
