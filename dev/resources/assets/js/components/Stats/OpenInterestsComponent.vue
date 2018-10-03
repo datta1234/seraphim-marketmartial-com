@@ -1,16 +1,31 @@
 <template>
     <div dusk="open-interests" class="open-interests" >
-        <div v-for="(market,index) in graph_markets" class="btn-group" role="group">
-            <button v-bind:class="{ active: active_market == market }" 
-                    @click="setChartData(graph_data[market],market)" 
-                    type="button" 
-                    class="btn mm-button mr-1 card-tab-button mm-nav-button">
-                {{ market }}
-            </button>
-        </div>
+        <b-row>
+            <b-col cols="6">
+                <div v-for="(market,index) in graph_markets" class="btn-group" role="group">
+                    <button v-bind:class="{ active: active_market == market }" 
+                            @click="setChartData(graph_data[market],market)" 
+                            type="button" 
+                            class="btn mm-button mr-1 card-tab-button mm-nav-button">
+                        {{ market }}
+                    </button>
+                </div>
+            </b-col>
+            <b-col cols="1" offset="2">
+                <label class="mr-sm-2" for="open-interest-expiry">Expiration:</label>
+            </b-col>
+            <b-col cols="3">
+                <b-form-select id="open-interest-expiry"
+                               class="w-100"
+                               :options="expirationDates"
+                               v-model="active_date"
+                               @change="setActiveDate">
+                </b-form-select>
+            </b-col>
+        </b-row>
         <div class="card graph-card">
             <div v-if="has_data" class="card-body">
-                <bar-graph :data="active_data_set" :options="options"></bar-graph>
+                <bar-graph :chart-data="active_data_set" :options="options"></bar-graph>
             </div>
             <div v-else class="card-body">
                 <p class="text-center">No Data for this market to display</p>
@@ -30,67 +45,93 @@
                 type: Object
             },
         },
+        computed: {
+            expirationDates: function() {
+                return this.active_data_set.filter_dates;
+            }
+        },
         data() {
             return {
-                graph_markets: ['ALL','ALSI','DTOP','DCAP','SINGLES'],
+                graph_markets: ['ALSI','DTOP','DCAP','SINGLES'],
             	graph_data:null,
-                data_details:{
-                    putt:{
-                        backgroundColor:'#96e3d7',
-                        label: 'Putt'
-                    },
-                    call:{
-                        backgroundColor:'#269a9b',
-                        label: 'Call'
-                    },
-                    delta:{
-                        backgroundColor:'#1a333f',
-                        label: 'Delta',
+                data_details:[
+                    {
+                        label: 'Call Delta',
+                        backgroundColor:'rgba(243, 147, 28, 1)',
+                        data: [],
+                        fill: false,
                         type: 'line',
-                    }
-                },
+                        showLine: false,
+                        yAxisID: 'Delta'
+                    },
+                    {
+                        label: 'Put Delta',
+                        backgroundColor:'rgba(243, 147, 28, 1)',
+                        data: [],
+                        fill: false,
+                        type: 'line',
+                        showLine: false,
+                        yAxisID: 'Delta'
+                    },
+                    {
+                        label: 'Put',
+                        backgroundColor:'rgba(26, 51, 63, 1)',
+                        data: [],
+                        yAxisID: 'OpenInterests'
+                    },
+                    {
+                        label: 'Call',
+                        backgroundColor:'rgba(26, 51, 63, 1)',
+                        data: [],
+                        yAxisID: 'OpenInterests'
+                    },
+                ],
                 has_data: true,
                 active_data_set: {
-                    labels: ['11','12','15'],
-                    datasets:[
-                        {
-                            label: 'Putt',
-                            backgroundColor:'rgba(157, 228, 216, 0.8)'/*#96e3d7*/,
-                            data: [5, 50, 35],
-                        },
-                        {
-                            label: 'Call',
-                            backgroundColor:'rgba(51, 155, 156, 0.8)'/*#269a9b*/,
-                            data: [-10, 42, 25],
-                        },
-                        {
-                            label: 'Delta',
-                            backgroundColor:'rgba(27, 47, 61, 1)'/*#1a333f*/,
-                            data: [50, 14, 32],
-                            type: 'line',
-                            options: {
-                                fill: false
-                            }
-                        },
-                    ]
+                    filter_dates: [],
+                    labels: [],
+                    datasets:[]
                 },
                 active_market: '',
+                active_date: '',
                 options: {
                     scales: {
-                        yAxes: [{
-                            display: true,
-                            ticks: {
-                                beginAtZero: true   // minimum value will be 0.
+                        yAxes: [
+                            {
+                                id: 'OpenInterests',
+                                display: true,
+                                ticks: {
+                                    scaleVal: 1000,
+                                    min: -15000,
+                                    max: 15000,
+                                    stepSize: 3000,
+                                    beginAtZero: true   // minimum value will be 0.
+                                }
+                            },
+                            {
+                                id: 'Delta',
+                                display: true,
+                                position: 'right',
+                                ticks: {
+                                    min: -100,
+                                    max: 100,
+                                    stepSize: 20,
+                                    beginAtZero: true   // minimum value will be 0.
+                                },
+                            },
+                        ],
+                        xAxes: [
+                            {
+                                display: true,
+                                gridLines: {
+                                    display:false
+                                },
+                                stacked: true
                             }
-                        }]
+                        ]
                     },
                     responsive: true, 
                     maintainAspectRatio: false,
-                    plugins: {
-                        filler: {
-                            propagate: true
-                        }
-                    }
                 }
             };
         },
@@ -102,14 +143,23 @@
                     return;
                 }
                 this.has_data = true;
-                this.active_data_set.labels = [];
-                this.active_data_set.datasets = [];
+                this.active_data_set.filter_dates = [];
+                this.setDates(data, null);
+            },
+            setDates(data) {
+                this.active_data_set.filter_dates = Object.keys(data).map(x => x);
+                this.$root.dateStringArraySort(this.active_data_set.filter_dates, 'YYYY-MM-DD');
+                this.setActiveDate(this.active_data_set.filter_dates[0]);
+            },
+            setActiveDate(date) {
+                this.active_date = date;
+                let data = this.graph_data[this.active_market][this.active_date];
                 this.setLabels(data);
-                this.setDataSet(data);
+                // this.setDataSet(data);
+                this.setDataOnce(data);
             },
             setLabels(data) {
-                console.log("=====================setLabels=====================");
-
+                this.active_data_set.labels = [];
                 this.active_data_set.labels = Object.keys(data).map(x => parseFloat(x)).sort( (a,b) => {
                     if (a < b) {
                         return -1;
@@ -120,43 +170,100 @@
                     // a must be equal to b
                     return 0;
                 });
-                console.log(this.active_data_set);
-                console.log("===================END setLabels===================");  
             },
             setDataSet(data) {
-                for (let i = this.active_data_set.labels.length - 1; i >= 0; i--) {
-                    let item = data[this.active_data_set.labels[i]];
-                    for (var j = item.length - 1; j >= 0; j--) {
-                        item[j]
-                    }
-                }
-                /*Object.keys(data).forEach(set => {
-                    this.active_data_set.datasets.push({
-                        label: this.data_details[set].label,
-                        backgroundColor: this.data_details[set].backgroundColor,
-                        data: this.setData(set, data),
-                    });
-                });*/
-            },
-            setData(set, data) {
-                /*let count_array = [];
-                this.active_data_set.labels.forEach(date => {
-                    let found = data[set].find(element => {
-                        return moment(element.month,'M-YYYY').isSame(moment(date,'MMM YY'))
-                    });
-                    if(typeof found != 'undefined') {
-                        count_array.push(found.total);
-                    } else {
-                        count_array.push(null);
+                let temp_data_set = [];
+                this.data_details.forEach((data_set,key) => {
+                    data_set.data = this.setData(data_set.label, data);
+                    temp_data_set.push(data_set);
+
+                    let scale = this.options.scales.yAxes.find(x => x.id == data_set.yAxisID).ticks;
+                    if(scale.scaleVal) {
+                        let max = Math.ceil(
+                            Math.max(
+                                Math.abs(Math.min(...data_set.data)),
+                                Math.abs(Math.max(...data_set.data))
+                            ) / scale.scaleVal
+                        ) * scale.scaleVal;
+                        max = max < scale.scaleVal ? scale.scaleVal : max;
+                        scale.min = -1 * max;
+                        scale.max = max;
+                        scale.stepSize = max / 5;
                     }
                 });
-                return count_array;*/
+                this.active_data_set.datasets = temp_data_set;
+            },
+            setData(set, data) {
+                let data_arr = [];
+                console.log("I Am This Big: ", Object.keys(data).length, Object.keys(data));
+                Object.keys(data).forEach(strike => {
+                    data[strike].forEach(single => {
+                        switch(set) {
+                            case "Put":
+                                data_arr.push(single.is_put == 1 ? single.open_interest : null);
+                                break;
+                            case "Call":
+                                data_arr.push(single.is_put == 0 ? single.open_interest : null);
+                                break;
+                            case "Put Delta":
+                                data_arr.push(single.is_put == 1 ? (single.delta * 100) : null);
+                                break;
+                            case "Call Delta":
+                                data_arr.push(single.is_put == 0 ? (single.delta * 100) : null);
+                                break;
+                        }
+                    });
+                });
+                return data_arr;
+            },
+            setDataOnce(data) {
+                let temp_data_set = [];
+                this.data_details.forEach(dataset => {
+                    dataset.data = []; 
+                })
+                console.log("I Am This Big: ", Object.keys(data).length, Object.keys(data));
+                Object.keys(data).forEach(strike => {
+                    let obj = {
+                        'Put': null,
+                        'Put Delta': null,
+                        'Call': null,
+                        'Call Delta': null,
+                    };
+                    data[strike].forEach(single => {
+                        if(single.is_put) {
+                            obj['Put'] = single.open_interest;
+                            obj['Put Delta'] = (single.delta * 100);
+                        } else {
+                            obj['Call'] = single.open_interest;
+                            obj['Call Delta'] = (single.delta * 100);
+                        }
+                    });
+                    this.data_details.forEach(dataset => {
+                        dataset.data.push(obj[dataset.label]); 
+                    });
+                });
+                this.data_details.forEach(data_set => {
+                    let scale = this.options.scales.yAxes.find(x => x.id == data_set.yAxisID).ticks;
+                    if(scale.scaleVal) {
+                        let max = Math.ceil(
+                            Math.max(
+                                Math.abs(Math.min(...data_set.data)),
+                                Math.abs(Math.max(...data_set.data))
+                            ) / scale.scaleVal
+                        ) * scale.scaleVal;
+                        max = max < scale.scaleVal ? scale.scaleVal : max;
+                        scale.min = -1 * max;
+                        scale.max = max;
+                        scale.stepSize = max / 5;
+                    }
+                    temp_data_set.push(data_set);
+                });
+                this.active_data_set.datasets = temp_data_set;
             },
         },
         mounted() {
-        	console.log(this.data);
-            //this.graph_data = this.data;
-            //this.setChartData(this.graph_data['ALL'],'ALL');
+            this.graph_data = this.data;
+            this.setChartData(this.graph_data['ALSI'],'ALSI');
         }
     }
 </script>

@@ -1,17 +1,26 @@
-import { Bar } from 'vue-chartjs'
- 
+import { Bar, mixins } from 'vue-chartjs'
+const { reactiveProp } = mixins
 export default {
 	extends: Bar,
-	props: ['data', 'options'],
+	props: ['chartData', 'options'],
+    mixins: [reactiveProp],
 	watch: {
-        'data': {
-            handler: function(nV, oV) {
-                this.renderChart(this.data, this.options);
-            },
-            deep: true
+        'chartData.labels': function(nV, oV) {
+            this.fireRender();
+        },
+        'chartData.datasets': function(nV, oV) {
+            this.fireRender();
+        }
+    },
+    methods: {
+        fireRender(){
+            Vue.nextTick(() => {
+                console.log("RENDER",this.chartData, this.options)
+                this.renderChart(this.chartData, this.options)
+            })
         }
     },
 	mounted () {
-		this.renderChart(this.data, this.options)
+		this.fireRender(this.chartData, this.options)
 	}
 }

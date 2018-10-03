@@ -11209,6 +11209,23 @@ a.mm-login-button {
   display: none;
 }
 
+input.input-small {
+  line-height: 0.9em;
+  font-size: 0.9em;
+  padding: 1px;
+  height: calc(1.5rem + 2px);
+}
+
+#trade_app .popover.popover-meet-in-middle .popover-header {
+  background: #1c7c74;
+  color: #FFFFFF;
+}
+
+#trade_app .popover.popover-meet-in-middle .popover-body .btn-primary {
+  background-color: #1D3641;
+  color: #FFFFFF;
+}
+
 #trade_app {
   position: relative;
 }
@@ -17228,11 +17245,12 @@ input:checked + .slider:before {
   margin-right: -10px;
 }
 
-.interaction-bar-wrapper .interaction-bar .active-fok-bar {
+.interaction-bar-wrapper .interaction-bar .active-cond-bar {
   margin-bottom: 10px;
+  font-size: 0.9em;
 }
 
-.interaction-bar-wrapper .interaction-bar .active-fok-bar .fok-bar {
+.interaction-bar-wrapper .interaction-bar .active-cond-bar .cond-bar {
   padding: 10px 10px;
   background: #BB1D1D;
 }
@@ -17463,6 +17481,10 @@ input:checked + .slider:before {
 }
 
 .popover .arrow {
+  visibility: hidden;
+}
+
+.popover .popover-header::before {
   visibility: hidden;
 }
 
