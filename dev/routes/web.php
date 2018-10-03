@@ -88,9 +88,16 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::get('stock', 'TradeScreen\StockController@index');
 
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
+    
+    Route::post('user-market-request/{user_market_request}/user-market/{user_market}/no-further-cares', 'TradeScreen\MarketRequest\UserMarketController@noFurtherCares');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    
+
+
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
+
+
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
 

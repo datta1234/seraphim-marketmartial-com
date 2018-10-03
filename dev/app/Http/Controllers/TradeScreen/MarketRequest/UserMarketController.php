@@ -63,6 +63,8 @@ class UserMarketController extends Controller
 
     }
 
+
+
     /**
      * Display the specified resource.
      *
@@ -85,6 +87,14 @@ class UserMarketController extends Controller
         //
     }
 
+
+  public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
+    {
+        $user = $request->user();
+        $userMarket->noFurtherCares($user);
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        return response()->json(['data' => $tradeNegotiation, 'message' => ""]);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -146,6 +156,8 @@ class UserMarketController extends Controller
         $userMarketRequest->fresh()->notifyRequested($organisations);
         return response()->json(['data' => $success]);
     }
+
+    
 
     /**
      * Remove the specified resource from storage.

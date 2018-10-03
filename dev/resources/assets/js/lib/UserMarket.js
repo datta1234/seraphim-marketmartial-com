@@ -167,7 +167,6 @@ export default class UserMarket extends BaseModel {
     *  store
     */
     store(market_request) {
-        console.log("we going to error",market_request);
         // catch not assigned to a market request yet!
         if(market_request.id == null) {
             return new Promise((resolve, reject) => {
@@ -185,6 +184,29 @@ export default class UserMarket extends BaseModel {
                 reject(new Errors(err.response.data));
             });
         });
+    }
+
+
+    noFutherCares()
+    {
+        console.log(this.user_market_request_id,this.id);
+        // catch not assigned to a market request yet!
+        if(this.user_market_request_id == null) {
+            return new Promise((resolve, reject) => {
+                console.log("error man",this.user_market_request_id);
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+
+         return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id+"/no-further-cares")
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        }); 
     }
 
 

@@ -510,9 +510,9 @@ class MarketNegotiation extends Model
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
                     $newMarketNegotiation = $this->replicate();
-                    $requestedNegotiation = $this->tradeNegotiation->first();
+                    $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
                     $newMarketNegotiation->counter_user_id = null;
-                    $newMarketNegotiation->user_market_id = null;
+                    $newMarketNegotiation->market_negotiation_id = null;
 
                     if($requestedNegotiation->is_offer)
                     {   

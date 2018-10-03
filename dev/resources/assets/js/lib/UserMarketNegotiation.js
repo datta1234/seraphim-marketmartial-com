@@ -111,6 +111,8 @@ export default class UserMarketNegotiation extends BaseModel {
         };
     }
 
+
+
     storeWorkBalance(user_market,quantity) {
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
@@ -118,20 +120,22 @@ export default class UserMarketNegotiation extends BaseModel {
                 reject(new Errors(["Invalid Market"]));
             });
         }
-        //calculate weather you setting the bid or the offer
-
-        if(user_market.getLastNegotiation().getLastTradeNegotiation().isOffer)
+        //calculate weather you setting the bid or the offer, alwys the opposite of what the last person di, if its a bid make an offer
+        if(!user_market.getLastNegotiation().getLastTradeNegotiation().isOffer)
         {
             this.offer_qty = quantity;
             this.offer = user_market.getLastNegotiation().offer;
 
-            this.offer_qty = null;
-            this.offer = null;
+            this.bid_qty = null;
+            this.bid = null;
+            console.log("the offer",user_market.getLastNegotiation().bid);
+
 
         }else
         {
             this.bid_qty = quantity;
             this.bid = user_market.getLastNegotiation().bid;
+            console.log("the bid",user_market.getLastNegotiation().bid);
 
             this.offer_qty = null;
             this.offer = null;
@@ -308,6 +312,7 @@ export default class UserMarketNegotiation extends BaseModel {
     {
         return  this.trade_negotiations.length > 0 ? this.trade_negotiations[this.trade_negotiations.length - 1] : null;
     }
+
 
     getFirstTradeNegotiation()
     {

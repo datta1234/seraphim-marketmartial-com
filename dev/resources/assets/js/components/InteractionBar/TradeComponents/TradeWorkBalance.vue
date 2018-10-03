@@ -23,7 +23,7 @@
                                    size="sm" 
                                    dusk="ibar-no-further-balance" 
                                    variant="danger" 
-                                   @click="noFuthercares()">
+                                   @click="noFutherCares()">
                                       No Further cares
                       </b-button>
               </b-col>
@@ -80,10 +80,21 @@
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
                 });
-           }
-        },
-        noFuthercares(){
+           },
+          noFutherCares(){
+                this.server_loading = true;
+                this.marketRequest.chosen_user_market.noFutherCares()
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
 
+                    this.history_message = err.errors.message;
+                    this.errors = err.errors.errors;
+                });
+          }
         },
         created() {
           this.calcQuantity();
