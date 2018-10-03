@@ -104,11 +104,38 @@ class MarketNegotiationController extends Controller
      */
     public function destroy(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
-        $success = $marketNegotiation->kill();
-        //broadCast Update;
+        $success = false;
+        $message = 'Invalid Action';
+
+        // Handle FOK kill
+        if($marketNegotiation->isFoK()) {
+            $success = $marketNegotiation->kill();
+        }
+
+        // Handle Meet In Middle
+        if($marketNegotiation->isProposal() || $marketNegotiation->isMeetInMiddle()) {
+            $success = $marketNegotiation->reject();
+            $marketNegotiation->user->organisation->notify("condition_action","Proposal rejected by counter",true);
+            $marketNegotiation->counterUser->organisation->notify("condition_action","Proposal rejected",true);
+        }
+
         $userMarket->fresh()->userMarketRequest->notifyRequested();
-        return response()->json([
-            "data" => $success
-        ]);
+        return ['success'=>$success ,'message'=>$message];
+    }
+
+
+    /**
+     * Counter the proposal
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function counterProposal(Request $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    {
+        $this->authorize('counter',$marketNegotiation);
+        $market = $marketNegotiation->counter($request->user(), $request->only(['bid', 'offer']));
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        
+        return ['success'=>true, 'message'=>'Counter Sent'];
     }
 }

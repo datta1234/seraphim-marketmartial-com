@@ -97,5 +97,12 @@
             "bid": "",
             "offer": ""  
         }
+    },
+    {
+        "condition": "is_private",
+        "true": {
+            "bid": "Proposal",
+            "offer": "Proposal"
+        }
     }
 ]

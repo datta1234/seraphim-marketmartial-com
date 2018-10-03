@@ -1,5 +1,5 @@
 <template>
-    <b-row dusk="ibar-proposal-active" class="active-cond-bar">
+    <b-row dusk="ibar-mim-active" class="active-cond-bar">
         <b-col cols="12">
             <div class="text-center">
                 <strong>Meet in the Middle: {{ type }}</strong>
@@ -22,7 +22,7 @@
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
-                        <span>
+                        <span id="meet-in-middle-counter">
                             <a href="" @click.prevent.stop="doCounter">Counter</a>
                         </span>
                     </b-col>
@@ -31,19 +31,31 @@
         </b-col>
 
         <ibar-trade-desired-quantity 
-            ref="fokPopoverLift" 
+            ref="mimTradePopover" 
             target="meet-in-middle-do-trade" 
-            :market-negotiation="marketNegotiation" 
+            :market-negotiation="negotiation" 
             :open="trade_open" 
-            :is-offer="marketNegotiation.cond_buy_mid" 
+            :is-offer="!negotiation.cond_buy_mid" 
             @close="trade_open = false" 
             parent="cond-container">
         </ibar-trade-desired-quantity>
+
+        <ibar-counter-negotiation 
+            ref="mimCounterPopover" 
+            target="meet-in-middle-counter" 
+            :market-negotiation="negotiation" 
+            :open="counter_open"
+            @close="counter_open = false" 
+            parent="trade_app"
+            placement="bottom"
+            popover-class="popover-meet-in-middle">
+        </ibar-counter-negotiation>
 
     </b-row>
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import ActiveCondition from '~/lib/ActiveCondition';
     /*
         cond_buy_mid:
          true  = buy
@@ -51,21 +63,25 @@
     */
     export default {
         props: {
-            marketNegotiation: {
-                type: UserMarketNegotiation
+            condition: {
+                type: ActiveCondition
             },
         },
         data() {
             return {
-                trade_open: false
+                trade_open: false,
+                counter_open: false,
             }
         },
         computed: {
             'type': function() {
-                return this.marketNegotiation.cond_buy_mid ? "Buy" : "Sell";
+                return this.negotiation.cond_buy_mid ? "Sell" : "Buy";
             },
             'value': function() {
-                return this.marketNegotiation.cond_buy_mid ? this.marketNegotiation.offer : this.marketNegotiation.bid;
+                return this.negotiation.cond_buy_mid ? this.negotiation.bid : this.negotiation.offer;
+            },
+            negotiation() {
+                return this.condition.condition;
             }
         },
         methods: {
@@ -73,10 +89,10 @@
                 this.trade_open = true;
             },
             doCounter() {
-                
+                this.counter_open = true;
             },
             doReject() {
-                this.marketNegotiation.killNegotiation()
+                this.negotiation.killNegotiation()
                 .then(response => {
                     console.log(response);
                     this.errors = [];

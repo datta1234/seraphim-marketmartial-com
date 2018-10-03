@@ -62,13 +62,16 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 			->name('my_activity.expirations');
 
 	Route::group(['prefix' => 'stats'], function() {
-		Route::get('/my-activity', 'Stats\StatsController@show')->name('my_activity.show');
-		Route::get('/my-activity/year', 'Stats\StatsController@myYearActivity')
+		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
+		Route::get('/my-activity/year', 'Stats\ActivityControlller@yearActivity')
 			->name('my_activity.year');
 		Route::get('/my-activity/markets', 'Stats\MarketController@index')
 			->name('my_activity.markets');
-		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
-			->name('my_activity.expirations');
+		
+		Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
+		Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
+		
+		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
 	});
 });
 
@@ -87,6 +90,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
 
@@ -129,4 +133,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		->name('admin.user.interest.edit');
 	Route::put('/user/interest-settings/{user}','Admin\InterestController@update')
 		->name('admin.user.interest.update');
+
+	Route::group(['prefix' => 'stats'], function() {
+		Route::post('/market-activity','Stats\ActivityControlller@store')
+			->name('activity.upload_safex_data');
+		Route::post('/open-interest','Stats\OpenInterestControlller@store')
+			->name('open-interest.upload_data');
+	});
 });

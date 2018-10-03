@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
 import UserMarketNegotiation from './UserMarketNegotiation';
+import ActiveCondition from './ActiveCondition';
 
 export default class UserMarket extends BaseModel {
 
@@ -9,9 +10,12 @@ export default class UserMarket extends BaseModel {
        super({
             _used_model_list: [UserMarketNegotiation],
             _relations:{
-               market_negotiations:{
+                market_negotiations:{
                     addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
-               } 
+                },
+                active_conditions: {
+                    setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
+                }
             }
         });
 
@@ -46,14 +50,10 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
-        this.active_condition = null;
-        this.active_condition_type = null;
+        this.active_conditions = [];
         
-        if(options && options.active_condition) {
-            this.setActiveCondition(options.active_condition);
-        }
-        if(options && options.active_condition_type) {
-            this.setActiveConditionType(options.active_condition_type);
+        if(options && options.active_conditions) {
+            this.setActiveConditions(options.active_conditions);
         }
 
     }
@@ -90,25 +90,28 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
-    *   setActiveFoK - add user user_market_negotiation
+    *   setActiveConditions - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveCondition(active_condition) {
-        
-        if(!(active_condition instanceof UserMarketNegotiation)) {
-            active_condition = new UserMarketNegotiation(active_condition);
-        }
-
-        active_condition.setUserMarket(this);
-        this.active_condition = active_condition;
+    setActiveConditions(active_conditions) {
+        this.active_conditions.splice(0, this.active_conditions.length);
+        console.log("HERE 123: ", active_conditions);
+        active_conditions.forEach(cond => {
+            this.addActiveCondition(cond);
+        });
     }
 
     /**
-    *   setActiveProposal - add user user_market_negotiation
+    *   addActiveCondition - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveConditionType(active_condition_type) {
-        this.active_condition_type = active_condition_type;
+    addActiveCondition(active_condition) {
+        
+        if(!(active_condition instanceof ActiveCondition)) {
+            active_condition = new ActiveCondition(this, active_condition);
+        }
+
+        this.active_conditions.push(active_condition);
     }
 
     /**

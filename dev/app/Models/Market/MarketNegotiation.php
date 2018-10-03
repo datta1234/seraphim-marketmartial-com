@@ -5,12 +5,12 @@ namespace App\Models\Market;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Trade\TradeNegotiation;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class MarketNegotiation extends Model
 {
-    use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions;
-    
+    use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -106,12 +106,47 @@ class MarketNegotiation extends Model
     ];
 
     /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at', 
+        'updated_at', 
+        'deleted_at'
+    ];
+
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function marketNegotiationParent()
     {
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
+    }
+
+    public function getConditionHistory()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $history = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @private as _private, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @private := is_private FROM $table WHERE id = _id
+                    ) as parent_private
+                    FROM (
+                        SELECT @id := $id, @private := 1
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @private = 1
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+        ");
+        return self::hydrate($history)->sortBy('id');
     }
 
     /**
@@ -174,18 +209,64 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
-    public function scopeFindCounterNegotiation($query,$user)
+    public function getActiveConditionTypeAttribute()
     {
-        return $query->whereHas('user',function($q) use ($user) {
+        // FoK (can also be private... needs to be first)
+        if($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null) {
+            return 'fok';
+        }
+        // all private instances
+        if($this->is_private == true) {
+            // Meet In middle
+            if($this->cond_buy_mid !== null) {
+                return 'meet-in-middle';
+            }
+            // Meet At Best
+            if($this->cond_buy_best !== null) {
+                return 'meet-at-best';
+            }
+            // Proposal
+            return 'proposal';
+        }
+        // Repeat ATW
+        if($this->cond_is_repeat_atw !== null) {
+            return 'repeat-atw';
+        }
+        // OCO
+        if($this->cond_is_oco !== null) {
+            return 'oco';
+        }
+        // Subject
+        if($this->cond_is_subject !== null) {
+            return 'subject';
+        }
+        return null;
+    }
+
+    public function scopeFindCounterNegotiation($query,$user, $private = false)
+    {
+        return $query->when(!$private, function($q){
+            $q->where('is_private', false);
+        })->whereHas('user',function($q) use ($user) {
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
+    }
+
+    public function scopeConditions($query)
+    {
+        return $query->where(function($q){
+            foreach($this->applicableConditions as $key => $default) {
+                $q->orWhere($key, '!=', $default);
+            }
+        });
     }
 
     /**
     * test if is FoK
     * @return Boolean
     */
-    public function isFoK() {
+    public function isFoK()
+    {
         return ($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null); 
     }
 
@@ -193,12 +274,14 @@ class MarketNegotiation extends Model
     * test if is Proposal
     * @return Boolean
     */
-    public function isProposal() {
+    public function isProposal()
+    {
         return (
-            $this->is_private == true && 
-            $this->cond_fok_spin == null &&
-            $this->cond_buy_mid == null &&
-            $this->cond_buy_best == null
+            $this->is_private === true && 
+            $this->cond_fok_spin === null &&
+            $this->cond_fok_apply_bid === null &&
+            $this->cond_buy_mid === null &&
+            $this->cond_buy_best === null
         ); 
     }
 
@@ -206,19 +289,69 @@ class MarketNegotiation extends Model
     * test if is MeetInMiddle
     * @return Boolean
     */
-    public function isMeetInMiddle() {
+    public function isMeetInMiddle()
+    {
         return (
             $this->is_private == true && 
             $this->cond_buy_mid !== null
         ); 
     }
 
-    public function kill() {
+    public function kill()
+    {
         $this->is_killed = true; // && with_fire = true ;)
         return $this->save();
     }
 
-    public function getLatestBid() {
+    public function counter($user, $data)
+    {
+        return $this->marketNegotiationChildren()->create([
+            'user_id'       =>  $user->id,
+            'counter_user_id'   =>  $this->user_id,
+            'user_market_id'    =>  $this->user_market_id,
+            'offer_qty'     =>  $this->offer_qty,
+            'bid_qty'       =>  $this->bid_qty,
+
+            'bid'           =>  $data['bid'],
+            'offer'         =>  $data['offer'],
+            'is_private'    =>  true,
+        ]);
+    }
+
+    public function reject()
+    {
+        $userMarket = $this->userMarket;
+        
+        // delete history
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->delete();
+        });
+        
+        // delete self
+        $success = $this->delete();
+
+        // reasign current if valid
+        $current_market_negotiation_id = $userMarket->current_market_negotiation_id;
+        if($success && ($current_market_negotiation_id == $this->id || $history->contains('id', $current_market_negotiation_id)) ) {
+            $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
+        }
+        return $success ? true : false;
+    }
+
+    public function resolvePrivateHistory()
+    {
+        // update history tree
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->update([
+                'is_private' => false
+            ]);
+        });
+    }
+
+    public function getLatestBid()
+    {
         if($this->bid != null) {
             return $this->bid;
         }
@@ -228,7 +361,8 @@ class MarketNegotiation extends Model
         return null;
     }
 
-    public function getLatestOffer() {
+    public function getLatestOffer()
+    {
         if($this->offer != null) {
             return $this->offer;
         }
@@ -251,17 +385,27 @@ class MarketNegotiation extends Model
     }
 
     /**
-    * Filter Scope on not public
+    * Filter Scope on not private
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function scopeNotPrivate($query, $organisation_id)
     {
         return $query->where(function($q) use ($organisation_id) {
+            // show only the non private ones by default
             $q->where('is_private', false);
+
+            // also show the private ones for certain situations (owned / traded)
             $q->orWhere(function($qq) use ($organisation_id) {
                 $qq->where('is_private', true);
-                $qq->whereHas('user', function($qqq) use ($organisation_id) {
-                    $qqq->where('organisation_id', $organisation_id);
+                $qq->where(function($qqq) use ($organisation_id) {
+                    // if it was created by the organisaiton viewing, we show it
+                    // $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
+                    //     $qqqq->where('organisation_id', $organisation_id);
+                    // });
+                    // OR If this has been traded, we show it
+                    $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
+                        $qqqq->where('traded', true);
+                    }*/);
                 });
             });
         });
@@ -400,8 +544,12 @@ class MarketNegotiation extends Model
                     $newMarketNegotiation->save();
                 }
 
+                // if this was a private proposal, cascade public update to history 
+                if($this->is_private == true) {
+                    $this->resolvePrivateHistory();
+                }
                 DB::commit();
-                
+
                 if(!is_null($counterNegotiation))
                 {
                     //alert the admin if trade size is less then the previous one
@@ -418,6 +566,7 @@ class MarketNegotiation extends Model
                 {
                     $this->setMarketNegotiationAction();
                 }
+
 
                 return $tradeNegotiation;
             } catch (\Exception $e) {
@@ -621,7 +770,6 @@ class MarketNegotiation extends Model
     public function applyCondBuyMidCondition() {
         // assumption it exists... it should since you cant apply this to a quote...
         $parent = $this->marketNegotiationParent;
-
         $bid = doubleval($parent->getLatestBid());
         $offer = doubleval($parent->getLatestOffer());
 

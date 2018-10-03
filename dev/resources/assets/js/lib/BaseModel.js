@@ -110,7 +110,11 @@ export default class BaseModel {
 
         // update array (check if we can just assign or need to pop and push all new ones)
         } else {
-            this[key] = update_arr[key];
+            if(typeof this._relations[key] != 'undefined' && typeof this._relations[key].setMethod != 'undefined') {
+                this._relations[key].setMethod(update_arr);
+            } else {
+                this[key] = update_arr;
+            }
         }
     }
 

@@ -40,16 +40,6 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 /**
- * Load the Fontawesome vue component then the library and lastly import
- * and register the icons you want to use.
- */
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck, faCheckDouble } from '@fortawesome/free-solid-svg-icons';
-
-library.add(faCheck,faCheckDouble);
-
-/**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
@@ -67,8 +57,6 @@ import { EventBus } from './lib/EventBus.js';
 Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
-
-Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 
@@ -93,6 +81,7 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-trade-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeDesiredQuantity.vue'));
     Vue.component('ibar-trade-counter-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeCounterDesiredQuantity.vue'));
     Vue.component('ibar-trade-work-balance', require('./components/InteractionBar/TradeComponents/TradeWorkBalance.vue'));
+    Vue.component('ibar-counter-negotiation', require('./components/InteractionBar/MarketComponents/CounterNegotiation.vue'));
 
 // Action Bar Component
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
@@ -428,14 +417,14 @@ const app = new Vue({
                 // if its not being tracked, track a new one
                 message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
                     // if the message is complete, attempt completion callback
-                    if(!err) {                        
+                    if(!err) {
                         // pull the message out of current and into completed
                         let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(output_message), 1);  
                         this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
                         // run the message callback
                         callback(output_message.output);
                     } else {
-                        console.error("derp");
+                        console.error(err);
                     }
                 });
                 this.pusher_messages.push(message);

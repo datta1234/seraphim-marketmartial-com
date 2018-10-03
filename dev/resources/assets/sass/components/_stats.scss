@@ -4,13 +4,83 @@
 		font-size: 0.9rem;
 	}
 	
-	.filter-date-picker {
+}
+
+.filter-date-picker {
+	.input-group {
 		input {
-	    	height: calc(2.19rem + 2px);
+		    background-color: $mm-white;
 		}
 	}
-	.date-picker-button-icon {
-	    margin-left: -5px;
-    	margin-bottom: 2px;
+	
+	.vdp-datepicker__calendar-button.input-group-prepend {
+		.input-group-text {
+			    background-color: $mm-panel;
+			    color:  $mm-white;
+		}
 	}
+
+	.vdp-datepicker__clear-button.input-group-append {
+		.input-group-text {
+			background-color: $stats-warm-grey;
+		    color:  $mm-white;	
+		}
+	}
+
+}
+
+.stats-nav-card {
+	.card-body {
+		background-color: $mm-panel;
+		color:  $mm-white;
+	}
+
+	&.active {
+		.card-body {
+			background-color: lighten($mm-panel, 10%);
+		}
+	}
+
+	a {
+		text-decoration: none;
+		.icon {
+    		font-size: 4rem;
+		}
+	}
+}
+
+.monthly-activity {
+	.card-tab-button {
+		width: 7rem;
+	}
+
+	.mm-button {
+		color: $mm-white;
+		background-color: $stats-warm-grey;
+		border-color: $stats-warm-grey;
+
+		&.active {
+			background-color: darken($mm-panel, 10%);
+			border-color: darken($mm-panel, 10%);
+		}
+	}
+}
+
+.all-market-activity {
+	.selection-button {
+		    width: 12rem;
+	}
+}
+
+.all-market-activity, .monthly-activity {
+	.mm-button.mm-nav-button {
+		color: $mm-white;
+		background-color: $stats-warm-grey;
+		border-color: $stats-warm-grey;
+
+		&.active {
+			background-color: $mm-panel;
+			border-color: $mm-panel;
+		}
+	}	
 }

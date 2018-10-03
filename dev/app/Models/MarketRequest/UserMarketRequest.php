@@ -279,7 +279,7 @@ class UserMarketRequest extends Model
         {
 
             $is_interest = $interest_org_id == $current_org_id;
-            $marketCount = $this->chosenUserMarket->marketNegotiations()->count();
+            $marketCount = $this->chosenUserMarket->marketNegotiations()->withTrashed()->count();
 
             if($is_interest){
               return  $marketCount > 0;
