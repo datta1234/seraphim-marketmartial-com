@@ -136,7 +136,7 @@ class TradeNegotiation extends Model
             'sent_to_me'            => $sentToMe,
         ];
 
-        if($sentByMe || $sentToMe)
+        if($sentByMe || $sentToMe || $this->traded)
         {
             $data['quantity'] = $this->quantity;
         }

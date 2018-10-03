@@ -128,14 +128,11 @@ export default class UserMarketNegotiation extends BaseModel {
 
             this.bid_qty = null;
             this.bid = null;
-            console.log("the offer",user_market.getLastNegotiation().bid);
-
 
         }else
         {
             this.bid_qty = quantity;
             this.bid = user_market.getLastNegotiation().bid;
-            console.log("the bid",user_market.getLastNegotiation().bid);
 
             this.offer_qty = null;
             this.offer = null;

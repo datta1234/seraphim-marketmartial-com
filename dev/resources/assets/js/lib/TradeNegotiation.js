@@ -96,7 +96,7 @@ export default class TradeNegotiation extends BaseModel {
         
         if(this.traded)
         {
-            text =  this.is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid  ;
+            text =   this.getUserMarketNegotiation().getFirstTradeNegotiation().is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid;
             return text + " (" + this.quantity + ") ";
         }
 
