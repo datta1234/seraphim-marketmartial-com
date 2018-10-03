@@ -45,6 +45,10 @@
 			 	border-left: 2px solid $mm-red;
 			}
 		}
+		
+		&.trade-negotiation-open.market-alert {
+			background-color: $mm-market-alert; 
+		}
 
 		&.trade-negotiation-pending, &.trade-negotiation-open{
 			background-color:  $mm-market-confirm;

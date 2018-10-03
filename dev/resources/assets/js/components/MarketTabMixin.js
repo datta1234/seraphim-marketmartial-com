@@ -10,9 +10,9 @@ export default {
      computed: {
             current_user_market_negotiation: function() {
                 let chosen_user_market = this.marketRequest.chosen_user_market;
-                console.log('chosen_user_market', chosen_user_market);
+                // console.log('chosen_user_market', chosen_user_market);
                 if(chosen_user_market){
-                    console.log('negotiation', this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1]);
+                    // console.log('negotiation', this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1]);
                     return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
                 }
                 return null;
@@ -93,8 +93,10 @@ export default {
                         this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
                         this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
                 break;
-                  case "TRADE-NEGOTIATION-OPEN":
-                       this.market_request_state = 'trade-negotiation-open';
+                case "TRADE-NEGOTIATION-SENDER":
+                case "TRADE-NEGOTIATION-COUNTER":
+                case "TRADE-NEGOTIATION-BALANCER":
+                    this.market_request_state = 'trade-negotiation-open';
                        
                        if(this.current_user_market_negotiation)
                        {
@@ -158,7 +160,6 @@ export default {
         },
         getStateClass(item,attr)
         {
-            console.log(item, attr);
             let source = item.getAmountSource(attr);
              return {
                 "is-interest":source.is_interest && !source.is_my_org,

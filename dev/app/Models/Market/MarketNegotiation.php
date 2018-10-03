@@ -485,25 +485,79 @@ class MarketNegotiation extends Model
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
-
-            $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
-            $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
-            ->where($attr, $this->getAttribute($attr))
-            ->orderBy("id","ASC")
-            ->first();
-            $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
-            //set counter
-            $counterNegotiation = null;
-
-            if(!is_null($counterNegotiation))
+            $counterNegotiation = null;   
+            $newMarketNegotiation = null;
+            if(count($this->tradeNegotiations) == 0)
             {
+                 // find out who the the negotiation is sent to based of who set the level last
+                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid'; 
+                $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
+                ->where($attr, $this->getAttribute($attr))
+                ->orderBy("id","ASC")
+                ->first();
+                $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
+                $tradeNegotiation->traded = false;
+            }else
+            {
+                $counterNegotiation = $this->tradeNegotiations->last();
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
-            }
+                $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
+                $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
+
+                //if it is greater it is an amend but if it is less or eqaul it is traded
+                if($tradeNegotiation->quantity == $counterNegotiation->quantity)
+                {
+                    //create a new market negotiation if the quantity is 
+                    $tradeNegotiation->traded = true;
+                    $newMarketNegotiation = $this->replicate();
+                    $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
+                    $newMarketNegotiation->counter_user_id = null;
+                    $newMarketNegotiation->market_negotiation_id = null;
+
+                    if(!$requestedNegotiation->is_offer)
+                    {   
+                        $newMarketNegotiation->bid = null;
+                        $newMarketNegotiation->bid_qty = null;
+                        $newMarketNegotiation->offer_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
+
+                    }else
+                    {
+                        $newMarketNegotiation->offer = null;
+                        $newMarketNegotiation->offer_qty = null;
+                        $newMarketNegotiation->bid_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
+                    }
 
 
+                }elseif ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
+                {
+                    $tradeNegotiation->traded = true;
+                }
+            }            
+ 
             try {
                 DB::beginTransaction();
+
                 $this->tradeNegotiations()->save($tradeNegotiation);
+               
+                if($newMarketNegotiation )
+                {
+                    $newMarketNegotiation->save();
+                }
+
+                // if this was a private proposal, cascade public update to history 
+                if($this->is_private == true) {
+                    $this->resolvePrivateHistory();
+                }
+                DB::commit();
+
+                if(!is_null($counterNegotiation))
+                {
+                    //alert the admin if trade size is less then the previous one
+                    if($tradeNegotiation->quantity < $counterNegotiation->quantity)
+                    {
+                        //@TODO alert admin
+                    }
+                }
 
                 if(!is_null($counterNegotiation))
                 {
@@ -513,12 +567,6 @@ class MarketNegotiation extends Model
                     $this->setMarketNegotiationAction();
                 }
 
-                // if this was a private proposal, cascade public update to history 
-                if($this->is_private == true) {
-                    $this->resolvePrivateHistory();
-                }
-
-                DB::commit();
 
                 return $tradeNegotiation;
             } catch (\Exception $e) {

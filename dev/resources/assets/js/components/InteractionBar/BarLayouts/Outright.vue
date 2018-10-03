@@ -17,11 +17,10 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-
+    <template v-if="!is_trading">
         <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
    
-
         <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
             Alert me when cleared
         </b-form-checkbox>
@@ -109,9 +108,13 @@
                 </b-row>
             </b-col>
         </b-row>
+    </template>
     
             
-        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+
+    <ibar-trade-counter-desired-quantity v-if="is_trading" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+    <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
+    <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -132,7 +135,7 @@
     import UserMarket from '~/lib/UserMarket';
     
     import moment from 'moment';
-    
+
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
@@ -235,6 +238,9 @@
             },
             'in_no_cares':function(){
                 return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
+            },
+            'mustWorkBalance':function(){
+                return this.marketRequest.mustWorkBalance();
             }
         },
         methods: {

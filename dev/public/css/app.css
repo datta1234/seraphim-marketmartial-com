@@ -17068,6 +17068,11 @@ input:checked + .slider:before {
   border-left: 2px solid #BB1D1D;
 }
 
+.trade-section.light-theme .market-tab.trade-negotiation-open.market-alert,
+.trade-section.dark-theme .market-tab.trade-negotiation-open.market-alert {
+  background-color: #BB1D1D;
+}
+
 .trade-section.light-theme .market-tab.trade-negotiation-pending,
 .trade-section.light-theme .market-tab.trade-negotiation-open,
 .trade-section.dark-theme .market-tab.trade-negotiation-pending,
