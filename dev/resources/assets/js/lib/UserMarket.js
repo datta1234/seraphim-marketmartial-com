@@ -147,6 +147,11 @@ export default class UserMarket extends BaseModel {
         return this.current_market_negotiation;
     }
 
+
+    getLastNegotiation() {
+        return this.market_negotiations.length > 0 ? this.market_negotiations[this.market_negotiations.length - 1] : null;
+    }
+
     prepareStore() {
         return {
             user_market_request_id: this.user_market_request_id,

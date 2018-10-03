@@ -14,9 +14,8 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	$marketRequest = App\Models\MarketRequest\UserMarketRequest::find(331);
-	dd($marketRequest->preFormatted());
-	echo "test";
+	$marketRequest = App\Models\MarketRequest\UserMarketRequest::find(1);
+	dd($marketRequest->getDynamicItem("Quantity"));
 });
 
 /*

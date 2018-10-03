@@ -19,6 +19,7 @@ export default class TradeNegotiation extends BaseModel {
 		const defaults = {
 		    id: "",
 		    quantity: "",
+            trade_negotiation_id: "",
 		    traded: false,
 		    is_offer: null,
 		    is_distpute: false,
@@ -83,7 +84,7 @@ export default class TradeNegotiation extends BaseModel {
         return {
 			id: this.id,
 			quantity: this.quantity,
-			traded: this.traded,
+			traded: !!this.traded,
 			is_offer: !!this.is_offer,
 			is_distpute: this.is_distpute
         };
@@ -123,7 +124,30 @@ export default class TradeNegotiation extends BaseModel {
         return this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
     }
 
-    
+    getNegotiationQuantity()
+    {
+        return this.is_offer ? this.getUserMarketNegotiation().offer_qty : this.getUserMarketNegotiation().bid_qty;
+    }
+
+    getQuantityOver()
+    {
+        if(this.trade_negotiation_id)
+        {
+            let relatedTradeNehotiation = this.getUserMarketNegotiation().trade_negotiations.find((trade_negotiation)=>{
+               return trade_negotiation.id == this.trade_negotiation_id;
+            });
+            return  relatedTradeNehotiation.quantity - this.quantity;
+        }else
+        {
+            return null;
+        }
+    }
+
+    getTextOver()
+    {
+        return this.is_offer ? "You have been offerd over " : "You have been bid over "; 
+    }
+
     /**
     *  store
     */
@@ -143,6 +167,26 @@ export default class TradeNegotiation extends BaseModel {
         return new Promise((resolve, reject) => {
 
              axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+user_market_negotiation.id+"/trade-negotiation", this.prepareStore())
+            .then(response => {
+                //response.data.data = new UserMarketNegotiation(response.data.data);
+                // link now that we are saved
+                // user_market.setMarketRequest(user_market_request);
+                // user_market.setCurrentNegotiation(this);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+
+
+    counter(tradeNegotiation)
+    {
+        return new Promise((resolve, reject) => {
+             tradeNegotiation.is_offer = this.is_offer;
+             axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+this.user_market_negotiation.id+"/trade-negotiation", tradeNegotiation.prepareStore())
             .then(response => {
                 //response.data.data = new UserMarketNegotiation(response.data.data);
                 // link now that we are saved

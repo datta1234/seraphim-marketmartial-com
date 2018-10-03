@@ -88,8 +88,11 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
     Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
     Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
+    
     Vue.component('ibar-trade-request', require('./components/InteractionBar/TradeComponents/TradeRequest.vue'));
     Vue.component('ibar-trade-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeDesiredQuantity.vue'));
+    Vue.component('ibar-trade-counter-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeCounterDesiredQuantity.vue'));
+    Vue.component('ibar-trade-work-balance', require('./components/InteractionBar/TradeComponents/TradeWorkBalance.vue'));
 
 // Action Bar Component
 Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
@@ -176,7 +179,7 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
-            console.log("I NEVER GET CALLED",this.theme_toggle);
+            // console.log("I NEVER GET CALLED",this.theme_toggle);
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },
@@ -265,7 +268,7 @@ const app = new Vue({
         loadConfigs(config_list) {
             let promises = [];
             config_list.forEach(config => {
-                console.log(config)
+                // console.log(config)
                 promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
             });
             return Promise.all(promises);

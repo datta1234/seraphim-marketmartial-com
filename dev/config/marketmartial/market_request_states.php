@@ -22,8 +22,13 @@ return [
         'other'           =>  "NEGOTIATION-OPEN-VOL"
     ],
     'trade-negotiation-pending' => [
-        'negotiator'      =>  "TRADE-NEGOTIATION-OPEN",
-        'counter'         =>  "TRADE-NEGOTIATION-OPEN",
+        'negotiator'      =>  "TRADE-NEGOTIATION-SENDER",
+        'counter'         =>  "TRADE-NEGOTIATION-COUNTER",
+        'other'           =>  "TRADE-NEGOTIATION-PENDING"
+    ],
+    'trade-negotiation-balance' => [
+        'negotiator'      =>  "TRADE-NEGOTIATION-SENDER",
+        'counter'         =>  "TRADE-NEGOTIATION-BALANCER",
         'other'           =>  "TRADE-NEGOTIATION-PENDING"
     ]
 ];

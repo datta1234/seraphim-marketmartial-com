@@ -50,14 +50,17 @@
                 </b-col>
 
                 <b-col cols="12">
-                    <div v-for="tradeNegotiation in marketNegotiation.trade_negotiations ">
+                    <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
                         <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
-                            {{ tradeNegotiation.getTradingText() }}
+                            
+                            <template v-if="index == 0">
+                                {{ tradeNegotiation.getTradingText() }}
+                            </template>
                             
                             <ul class="text-my-org">
                                 <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
                             </ul>
-                            <template v-if="tradeNegotiation.sent_by_me">
+                            <template v-if="tradeNegotiation.sent_by_me && lastTradeNegotiation.id == tradeNegotiation.id">
                                 With counterparty. Awaiting response
                             </template>
                         </template>
@@ -104,6 +107,9 @@
         computed: {
             dynamicId: function(){
                 return this.selectable ? "last-negotiation" : "userMarket-Negotiation-level-"+ this.marketNegotiation.id; 
+            },
+            lastTradeNegotiation: function(){
+                return this.marketNegotiation.getLastTradeNegotiation();
             }
         },
         methods: {

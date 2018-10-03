@@ -15,7 +15,6 @@ class TradeNegotiation extends Model
      * @property integer $market_negotiation_id
 	 * @property integer $initiate_user_id
 	 * @property integer $recieving_user_id
-	 * @property integer $trade_negotiation_status_id
 	 * @property double $quantity
 	 * @property double $traded
 	 * @property boolean $is_offer
@@ -37,7 +36,7 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity', 'traded', 'is_offer', 'is_distpute',
+        'quantity','is_offer', 'is_distpute',
     ];
 
     /**
@@ -128,12 +127,13 @@ class TradeNegotiation extends Model
         $sentToMe = $this->recievingUser->organisation_id == $loggedInUserOrganisationId;
 
         $data = [
-            "id"            => $this->id,
-            "traded"        => $this->traded,
-            "is_offer"      => $this->is_offer,
-            "is_distpute"   => $this->is_distpute,
-            "sent_by_me"    => $sentByMe,
-            'sent_to_me'    => $sentToMe,
+            "id"                    => $this->id,
+            "traded"                => $this->traded,
+            "trade_negotiation_id"  => $this->trade_negotiation_id,
+            "is_offer"              => $this->is_offer,
+            "is_distpute"           => $this->is_distpute,
+            "sent_by_me"            => $sentByMe,
+            'sent_to_me'            => $sentToMe,
         ];
 
         if($sentByMe || $sentToMe)
