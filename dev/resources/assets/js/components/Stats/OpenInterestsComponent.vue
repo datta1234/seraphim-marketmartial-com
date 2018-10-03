@@ -155,8 +155,7 @@
                 this.active_date = date;
                 let data = this.graph_data[this.active_market][this.active_date];
                 this.setLabels(data);
-                // this.setDataSet(data);
-                this.setDataOnce(data);
+                this.setDataSet(data);
             },
             setLabels(data) {
                 this.active_data_set.labels = [];
@@ -172,51 +171,6 @@
                 });
             },
             setDataSet(data) {
-                let temp_data_set = [];
-                this.data_details.forEach((data_set,key) => {
-                    data_set.data = this.setData(data_set.label, data);
-                    temp_data_set.push(data_set);
-
-                    let scale = this.options.scales.yAxes.find(x => x.id == data_set.yAxisID).ticks;
-                    if(scale.scaleVal) {
-                        let max = Math.ceil(
-                            Math.max(
-                                Math.abs(Math.min(...data_set.data)),
-                                Math.abs(Math.max(...data_set.data))
-                            ) / scale.scaleVal
-                        ) * scale.scaleVal;
-                        max = max < scale.scaleVal ? scale.scaleVal : max;
-                        scale.min = -1 * max;
-                        scale.max = max;
-                        scale.stepSize = max / 5;
-                    }
-                });
-                this.active_data_set.datasets = temp_data_set;
-            },
-            setData(set, data) {
-                let data_arr = [];
-                console.log("I Am This Big: ", Object.keys(data).length, Object.keys(data));
-                Object.keys(data).forEach(strike => {
-                    data[strike].forEach(single => {
-                        switch(set) {
-                            case "Put":
-                                data_arr.push(single.is_put == 1 ? single.open_interest : null);
-                                break;
-                            case "Call":
-                                data_arr.push(single.is_put == 0 ? single.open_interest : null);
-                                break;
-                            case "Put Delta":
-                                data_arr.push(single.is_put == 1 ? (single.delta * 100) : null);
-                                break;
-                            case "Call Delta":
-                                data_arr.push(single.is_put == 0 ? (single.delta * 100) : null);
-                                break;
-                        }
-                    });
-                });
-                return data_arr;
-            },
-            setDataOnce(data) {
                 let temp_data_set = [];
                 this.data_details.forEach(dataset => {
                     dataset.data = []; 
