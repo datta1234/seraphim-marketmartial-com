@@ -514,7 +514,7 @@ class MarketNegotiation extends Model
                     $newMarketNegotiation->counter_user_id = null;
                     $newMarketNegotiation->market_negotiation_id = null;
 
-                    if($requestedNegotiation->is_offer)
+                    if(!$requestedNegotiation->is_offer)
                     {   
                         $newMarketNegotiation->bid = null;
                         $newMarketNegotiation->bid_qty = null;
