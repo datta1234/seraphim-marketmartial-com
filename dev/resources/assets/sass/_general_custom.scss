@@ -156,6 +156,24 @@ body
 	  }
 }
 
+.mm-error-button {
+	color: $mm-white;
+	background-color: $mm-red;
+	border-color: $mm-red;
+
+	&:focus,
+	&.focus {
+		color: $mm-white;
+		background-color: darken($mm-red, 10%);
+		border-color: darken($mm-red, 10%);
+	}
+	&:hover {
+		color: $mm-white;
+		background-color: darken($mm-red, 10%);
+		border-color: darken($mm-red, 10%);
+	}
+}
+
 .mm-login-button {
 	  color: $mm-panel;
 	  background-color: $mm-white;

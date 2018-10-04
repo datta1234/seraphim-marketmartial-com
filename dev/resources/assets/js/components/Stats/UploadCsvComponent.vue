@@ -34,11 +34,12 @@
             
             <!-- Errors -->
             <div class="upload-errors" v-if="upload_errors.length > 0">
-                <b-button v-b-toggle.errorCollapse class="mm-modal-button w-100 mt-4">
+                <b-button v-b-toggle.errorCollapse class="mm-error-button w-100 mt-4">
                     Errors ({{ upload_errors.length }})
+                    <span class="icon icon-solid-arrow-down float-right"></span>
                 </b-button>
                 <b-collapse id="errorCollapse">
-                    <b-card>
+                    <b-card class="error-card">
                         <div v-for="(line_error, index) in upload_errors" class="error-block">
                             <p class="mb-0">
                                 Line: {{parseInt(line_error.line) + 1}}, field: {{line_error.field}}

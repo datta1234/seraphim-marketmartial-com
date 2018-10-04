@@ -10801,6 +10801,25 @@ body .page-title h1 {
   border-color: #1c7172;
 }
 
+.mm-error-button {
+  color: #ffffff;
+  background-color: #BB1D1D;
+  border-color: #BB1D1D;
+}
+
+.mm-error-button:focus,
+.mm-error-button.focus {
+  color: #ffffff;
+  background-color: #8f1616;
+  border-color: #8f1616;
+}
+
+.mm-error-button:hover {
+  color: #ffffff;
+  background-color: #8f1616;
+  border-color: #8f1616;
+}
+
 .mm-login-button {
   color: #269a9b;
   background-color: #ffffff;
@@ -17585,6 +17604,10 @@ input:checked + .slider:before {
 .mm-modal .modal-footer {
   border-top: none;
   text-align: center;
+}
+
+.mm-modal .upload-errors .icon-solid-arrow-down {
+  font-size: 1.5rem;
 }
 
 .mm-modal-button {
