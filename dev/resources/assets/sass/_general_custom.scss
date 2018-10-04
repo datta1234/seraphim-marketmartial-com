@@ -578,3 +578,72 @@ input.input-small {
         }
 	}
 }
+
+
+/* MEL */
+
+//General
+a, a:hover {
+	color: $mm-panel;
+}
+
+//Table
+table.table {
+	box-shadow: 3px 4px 10px 0.2px $mm-shadow;
+	color: $mm-black;
+	border: none;
+}
+
+.table thead th {
+    background-color: $mm-panel !important;
+    border: none;
+    font-size: 1.2em;
+}
+
+
+//Progress Bar
+.progress {
+	font-size: 1em;
+	height: 30px;
+}
+
+//Nav Tabs
+.nav-link, .nav-link:hover {
+	color: $mm-white;
+}
+
+.nav-tabs .nav-link.active {
+	color: $mm-white;
+}
+
+.nav-tabs {
+    border: none;
+}
+
+//Wells
+.well {
+    box-shadow: none;
+    border: 2px solid #b1b1b3;
+    border-radius: 90px;
+    background-image: linear-gradient(#d2d2d2, white);
+    padding: 15px;
+}
+
+//Container
+.mm-card {
+	border-radius: 5px;
+}
+
+.mm-card.card .card-header{
+	border-radius: 5px;
+}
+
+.mm-card.card .card-body {
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	padding: 50px;
+}
+
+.mm-card.card .card-body .card-text {
+	color: $mm-black;
+}

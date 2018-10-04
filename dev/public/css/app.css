@@ -11226,6 +11226,72 @@ input.input-small {
   color: #FFFFFF;
 }
 
+/* MEL */
+
+a,
+a:hover {
+  color: #269a9b;
+}
+
+table.table {
+  -webkit-box-shadow: 3px 4px 10px 0.2px #0c4545;
+          box-shadow: 3px 4px 10px 0.2px #0c4545;
+  color: #000000;
+  border: none;
+}
+
+.table thead th {
+  background-color: #269a9b !important;
+  border: none;
+  font-size: 1.2em;
+}
+
+.progress {
+  font-size: 1em;
+  height: 30px;
+}
+
+.nav-link,
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-tabs .nav-link.active {
+  color: #ffffff;
+}
+
+.nav-tabs {
+  border: none;
+}
+
+.well {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 2px solid #b1b1b3;
+  border-radius: 90px;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#d2d2d2), to(white));
+  background-image: linear-gradient(#d2d2d2, white);
+  padding: 15px;
+}
+
+.mm-card {
+  border-radius: 5px;
+}
+
+.mm-card.card .card-header {
+  border-radius: 5px;
+}
+
+.mm-card.card .card-body {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 50px;
+}
+
+.mm-card.card .card-body .card-text {
+  color: #000000;
+}
+
 #trade_app {
   position: relative;
 }

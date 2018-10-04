@@ -146,5 +146,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 			->name('activity.upload_safex_data');
 		Route::post('/open-interest','Stats\OpenInterestControlller@store')
 			->name('open-interest.upload_data');
-	});
+    }); 
+});
+
+Route::group(['middleware' => ['auth']], function() {
+		Route::get('assemble/oldstyle', function () {
+        return view('assemble.oldstyle')->with(['is_admin_update'=>false]);
+    }); 
 });
