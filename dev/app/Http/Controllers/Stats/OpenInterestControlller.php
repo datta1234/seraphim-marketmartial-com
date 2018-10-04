@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
 use App\Models\StatsUploads\OpenInterest;
 use Illuminate\Support\Facades\DB;
+use Validator;
+use Illuminate\Validation\Rule;
 
 class OpenInterestControlller extends Controller
 {
@@ -67,7 +69,6 @@ class OpenInterestControlller extends Controller
      */
     public function store(CsvUploadDataRequest $request)
     {
-        // @TODO - truncate table before new import and validation for CSV
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
@@ -83,9 +84,28 @@ class OpenInterestControlller extends Controller
 
         array_walk($csv, function(&$a) use ($csv) {
             $a = array_combine($csv[0], $a);
+            // removing white space before validation
+            $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
+            $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
+            $a['delta'] = str_replace(" ", "", $a['delta']);
+            $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
         });
         array_shift($csv);
-        
+
+        // Validate the uploaded Csv fields
+        $validator = Validator::make($csv,
+            config('marketmartial.import_csv_field_mapping.open_interest_validation.rules'),
+            config('marketmartial.import_csv_field_mapping.open_interest_validation.messages')
+        );
+        if ($validator->fails()) {
+            return [
+                'success' => false,
+                'data' => ['messages' => $validator->messages()],
+                'message' => 'Failed to upload Open Interest data.'
+            ];
+        }
+
+        OpenInterest::truncate(); // removes all previous open interest records
         try {
             DB::beginTransaction();
             $created = array_map('App\Models\StatsUploads\OpenInterest::createFromCSV', $csv);
@@ -93,7 +113,7 @@ class OpenInterestControlller extends Controller
         } catch (\Exception $e) {
             \Log::error($e);
             DB::rollBack();
-            return ['success' => false,'data' => null, 'message' => 'Failed to upload Safex data.'];
+            return ['success' => false,'data' => null, 'message' => 'Failed to upload Open Interest data.'];
         }
 
         return ['success' => true,'data' => null,'message' => 'Open Interest data successfully uploaded.'];

@@ -56,7 +56,7 @@ class OpenInterest extends Model
     ];
 
     public static function parseDouble($value) {
-        return doubleval(str_replace(" ", "", $value));
+        return doubleval($value);
     }
 
     public static function createFromCSV($data) {
