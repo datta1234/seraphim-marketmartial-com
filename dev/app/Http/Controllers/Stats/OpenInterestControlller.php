@@ -36,22 +36,25 @@ class OpenInterestControlller extends Controller
                     break;
             }
         });
-        
-        foreach ($grouped_open_interests as $key => $open_interests) {
-            $grouped_open_interests[$key] = $open_interests->groupBy(function ($item, $key) {
-                return (string) $item['expiry_date'];
-            })->sortBy(function ($item, $key) {
-                return $key;
+        foreach ($grouped_open_interests as $market => $open_interests) {
+            $grouped_open_interests[$market] = $open_interests->groupBy(function ($item, $key) {
+                return (string) $item['contract'];
             });
 
-            foreach ($grouped_open_interests[$key] as $date => $date_group) {
-                $grouped_open_interests[$key][$date] = $date_group->groupBy(function ($item, $key) {
-                    return (string) $item['strike_price'];
+            foreach ($grouped_open_interests[$market] as $contract => $contract_group) {
+                $grouped_open_interests[$market][$contract] = $contract_group->groupBy(function ($item, $key) {
+                    return (string) $item['expiry_date'];
+                })->sortBy(function ($item, $key) {
+                    return $key;
                 });
+
+                foreach ($grouped_open_interests[$market][$contract] as $date => $date_group) {
+                    $grouped_open_interests[$market][$contract][$date] = $date_group->groupBy(function ($item, $key) {
+                        return (string) $item['strike_price'];
+                    });
+                }
             }
         }
-
-        //dd($grouped_open_interests->toArray()["ALSI"]["2018-09-20"]);
 
         return view('stats.open_interest')->with(compact('grouped_open_interests'));
     }

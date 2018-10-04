@@ -15,8 +15,7 @@ export default {
     methods: {
         fireRender(){
             Vue.nextTick(() => {
-                console.log("RENDER",this.chartData, this.options)
-                this.renderChart(this.chartData, this.options)
+                this.renderChart(this.chartData, this.options);
             })
         }
     },

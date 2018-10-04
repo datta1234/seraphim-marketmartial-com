@@ -17728,13 +17728,19 @@ input:checked + .slider:before {
   width: 7rem;
 }
 
-.monthly-activity .mm-button {
+.open-interests .card-tab-button {
+  width: 6rem;
+}
+
+.monthly-activity .mm-button,
+.open-interests .mm-button {
   color: #ffffff;
   background-color: #939598;
   border-color: #939598;
 }
 
-.monthly-activity .mm-button.active {
+.monthly-activity .mm-button.active,
+.open-interests .mm-button.active {
   background-color: #1c7172;
   border-color: #1c7172;
 }

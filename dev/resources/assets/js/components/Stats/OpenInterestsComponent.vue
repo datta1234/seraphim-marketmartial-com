@@ -11,12 +11,21 @@
                     </button>
                 </div>
             </b-col>
-            <b-col cols="1" offset="2">
-                <label class="mr-sm-2" for="open-interest-expiry">Expiration:</label>
-            </b-col>
-            <b-col cols="3">
+            <b-col cols="3" class="text-right" v-if="active_data_set.filter_contracts.length > 1">
+                <label class="mr-sm-2" for="open-interest-expiry">Contract:</label>
                 <b-form-select id="open-interest-expiry"
-                               class="w-100"
+                               class="w-50"
+                               :options="contractList"
+                               v-model="active_contract"
+                               @change="setActiveContact">
+                </b-form-select>
+            </b-col>
+            <b-col cols="3" 
+                   :offset="active_data_set.filter_contracts.length > 1 ? 0 : 3" 
+                   class="text-right">
+                <label class="mr-sm-2" for="open-interest-expiry">Expiration:</label>
+                <b-form-select id="open-interest-expiry"
+                               class="w-50"
                                :options="expirationDates"
                                v-model="active_date"
                                @change="setActiveDate">
@@ -48,6 +57,9 @@
         computed: {
             expirationDates: function() {
                 return this.active_data_set.filter_dates;
+            },
+            contractList: function() {
+                return this.active_data_set.filter_contracts;
             }
         },
         data() {
@@ -88,11 +100,13 @@
                 ],
                 has_data: true,
                 active_data_set: {
+                    filter_contracts: [],
                     filter_dates: [],
                     labels: [],
                     datasets:[]
                 },
                 active_market: '',
+                active_contract: '',
                 active_date: '',
                 options: {
                     scales: {
@@ -144,22 +158,31 @@
                 }
                 this.has_data = true;
                 this.active_data_set.filter_dates = [];
-                this.setDates(data, null);
+                this.setContract(data);
             },
-            setDates(data) {
-                this.active_data_set.filter_dates = Object.keys(data).map(x => x);
+            setContract(market_data) {
+                this.active_data_set.filter_contracts = Object.keys(market_data).map(x => x).sort();
+                this.setActiveContact(this.active_data_set.filter_contracts[0]);
+            },
+            setActiveContact(contract) {
+                this.active_contract = contract;
+                let data = this.graph_data[this.active_market][contract];
+                this.setDates(data);
+            },
+            setDates(contact_data) {
+                this.active_data_set.filter_dates = Object.keys(contact_data).map(x => x);
                 this.$root.dateStringArraySort(this.active_data_set.filter_dates, 'YYYY-MM-DD');
                 this.setActiveDate(this.active_data_set.filter_dates[0]);
             },
             setActiveDate(date) {
                 this.active_date = date;
-                let data = this.graph_data[this.active_market][this.active_date];
+                let data = this.graph_data[this.active_market][this.active_contract][date];
                 this.setLabels(data);
                 this.setDataSet(data);
             },
-            setLabels(data) {
+            setLabels(date_data) {
                 this.active_data_set.labels = [];
-                this.active_data_set.labels = Object.keys(data).map(x => parseFloat(x)).sort( (a,b) => {
+                this.active_data_set.labels = Object.keys(date_data).map(x => parseFloat(x)).sort( (a,b) => {
                     if (a < b) {
                         return -1;
                     }
@@ -170,20 +193,19 @@
                     return 0;
                 });
             },
-            setDataSet(data) {
+            setDataSet(date_data) {
                 let temp_data_set = [];
                 this.data_details.forEach(dataset => {
                     dataset.data = []; 
                 })
-                console.log("I Am This Big: ", Object.keys(data).length, Object.keys(data));
-                Object.keys(data).forEach(strike => {
+                Object.keys(date_data).forEach(strike => {
                     let obj = {
                         'Put': null,
                         'Put Delta': null,
                         'Call': null,
                         'Call Delta': null,
                     };
-                    data[strike].forEach(single => {
+                    date_data[strike].forEach(single => {
                         if(single.is_put) {
                             obj['Put'] = single.open_interest;
                             obj['Put Delta'] = (single.delta * 100);
