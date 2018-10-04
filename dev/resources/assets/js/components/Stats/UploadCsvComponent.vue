@@ -41,7 +41,7 @@
                     <b-card>
                         <div v-for="(line_error, index) in upload_errors" class="error-block">
                             <p class="mb-0">
-                                Line: {{line_error.line}}, field: {{line_error.field}}
+                                Line: {{parseInt(line_error.line) + 1}}, field: {{line_error.field}}
                             </p>
                             <ul>
                                 <li v-for="(error, index) in line_error.errors">{{error}}</li>
