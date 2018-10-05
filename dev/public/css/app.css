@@ -11245,6 +11245,18 @@ input.input-small {
   color: #FFFFFF;
 }
 
+.pagination .page-item > span.page-link,
+.pagination .page-item > a.page-link {
+  border: none;
+  background-color: transparent;
+  color: #1c7c74;
+}
+
+.pagination .page-item.active > a.page-link {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
 /* MEL */
 
 a,
@@ -17672,18 +17684,6 @@ input:checked + .slider:before {
 							    	margin-left: 19.6rem;
 				}
 				 */
-}
-
-.mm-modal .modal-body .pagination span,
-.mm-modal .modal-body .pagination a {
-  border: none;
-  background-color: transparent;
-  color: #1c7c74;
-}
-
-.mm-modal .modal-body .pagination .active > a {
-  color: #FFFFFF;
-  background-color: #1c7c74;
 }
 
 .mm-modal .modal-body .custom-radio > label::before {

@@ -597,6 +597,17 @@ input.input-small {
 	}
 }
 
+.pagination {
+	.page-item > span.page-link, .page-item > a.page-link {
+    	border: none;
+		background-color: transparent;
+		color: $mm-modal-header;
+	}
+	.page-item.active > a.page-link {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}
 
 /* MEL */
 

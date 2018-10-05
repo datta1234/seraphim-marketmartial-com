@@ -37,17 +37,6 @@
 		}
 	}
 	.modal-body {
-		.pagination {
-			span, a {
-		    	border: none;
-    			background-color: transparent;
-    			color: $mm-modal-header;
-			}
-			.active > a {
-				color: $mm-text-white;
-				background-color: $mm-modal-header;
-			}
-		}
 		.custom-radio > label::before {
 			background-color: $mm-text-white;
 		}
