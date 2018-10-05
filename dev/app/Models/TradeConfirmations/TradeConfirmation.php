@@ -312,7 +312,7 @@ class TradeConfirmation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function basicSearch($term = null,$orderBy="updated_at",$order='ASC', $filter = null)
+    public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
 
         // Search markets
@@ -326,15 +326,15 @@ class TradeConfirmation extends Model
 
         // Apply Filters
         if($filter !== null) {
-            if($filter["filter_date"] !== null) {
+            if(!empty($filter["filter_date"])) {
                 $trade_confirmations_query->whereDate('updated_at', $filter["filter_date"]);
             }
 
-            if($filter["filter_market"] !== null) {
+            if(!empty($filter["filter_market"])) {
                 $trade_confirmations_query->where('market_id', $filter["filter_market"]);
             }
 
-            if($filter["filter_expiration"] !== null) {
+            if(!empty($filter["filter_expiration"])) {
                 $trade_confirmations_query->whereHas('tradeNegotiation', function ($query) use ($filter) {
                     $query->whereHas('userMarket', function ($query) use ($filter) {
                         $query->whereHas('userMarketRequest', function ($query) use ($filter) {

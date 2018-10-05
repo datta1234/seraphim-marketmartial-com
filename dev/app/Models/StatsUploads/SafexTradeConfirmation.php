@@ -99,7 +99,7 @@ class SafexTradeConfirmation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function basicSearch($term = null,$orderBy="trade_id",$order='ASC', $filter = null)
+    public static function basicSearch($term = "",$orderBy="trade_id",$order='ASC', $filter = null)
     {
         if($orderBy == null)
         {
@@ -120,12 +120,12 @@ class SafexTradeConfirmation extends Model
         if($filter !== null) {
 
             // Applies Date filter
-            if($filter["filter_date"] !== null) {
+            if(!empty($filter["filter_date"])) {
                 $safex_trad_confirmation_query->whereDate('trade_date', $filter["filter_date"]);
             }
 
             // Applies Market filter
-            if($filter["filter_market"] !== null) {
+            if(!empty($filter["filter_market"])) {
                 $market = $filter['filter_market'];
                 switch ($market) {
                     case 'ALSI':
@@ -147,12 +147,12 @@ class SafexTradeConfirmation extends Model
             }
 
             // Applies Expiration filter
-            if($filter["filter_expiration"] !== null) {
+            if(!empty($filter["filter_expiration"])) {
                 $safex_trad_confirmation_query->whereDate('expiry', $filter["filter_expiration"]);
             }
 
             // Applies nominal filter
-            if($filter["filter_nominal"] !== null) {
+            if(!empty($filter["filter_nominal"])) {
                 switch ($filter["filter_nominal"]) {
                     case '10-40':
                         $safex_trad_confirmation_query->whereBetween('nominal', [10000000,40000000]);
