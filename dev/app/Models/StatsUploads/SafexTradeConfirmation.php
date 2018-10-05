@@ -61,21 +61,24 @@ class SafexTradeConfirmation extends Model
         'updated_at',
     ];
 
-    public static function parseDouble($value) {
-        return doubleval(str_replace(" ", "", $value));
-    }
-
+    /**
+     * Creates a new OpenInterest record from the passed array
+     *
+     * @param array $data
+     *
+     * @return App\Models\StatsUploads\SafexTradeConfirmation
+     */
     public static function createFromCSV($data) {
     	
     	return self::create([
             'is_put' 			=> ($data['is_put'] == 'P'),
             'expiry' 			=> \Carbon\Carbon::parse($data['expiry']),
-            'strike' 			=> self::parseDouble($data['strike']),
-            'trade_id' 			=> self::parseDouble($data['trade_id']),
+            'strike' 			=> doubleval($data['strike']),
+            'trade_id' 			=> doubleval($data['trade_id']),
             'strike_percentage'	=> ( str_replace(" ", "",$data['strike_percentage']) == '-' ? 
-                                        null : self::parseDouble($data['strike_percentage'])
+                                        null : doubleval($data['strike_percentage'])
                                     ),
-            'nominal' 			=> self::parseDouble($data['nominal']),
+            'nominal' 			=> doubleval($data['nominal']),
 			'underlying' 		=> $data['underlying'],
 			'trade_date' 		=> \Carbon\Carbon::parse($data['trade_date']),
 			'structure' 		=> $data['structure'],
@@ -89,13 +92,14 @@ class SafexTradeConfirmation extends Model
     /**
      * Return a simple or query object based on the search term
      *
+     * @param string $term
      * @param string $orderBy
      * @param string $order
      * @param array  $filter
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function basicSearch($term = null,$orderBy="trade_id",$order='ASC', $filter = null)
+    public static function basicSearch($term = "",$orderBy="trade_id",$order='ASC', $filter = null)
     {
         if($orderBy == null)
         {
@@ -114,11 +118,14 @@ class SafexTradeConfirmation extends Model
 
         // Apply Filters
         if($filter !== null) {
-            if($filter["filter_date"] !== null) {
+
+            // Applies Date filter
+            if(!empty($filter["filter_date"])) {
                 $safex_trad_confirmation_query->whereDate('trade_date', $filter["filter_date"]);
             }
 
-            if($filter["filter_market"] !== null) {
+            // Applies Market filter
+            if(!empty($filter["filter_market"])) {
                 $market = $filter['filter_market'];
                 switch ($market) {
                     case 'ALSI':
@@ -139,11 +146,13 @@ class SafexTradeConfirmation extends Model
                 }
             }
 
-            if($filter["filter_expiration"] !== null) {
+            // Applies Expiration filter
+            if(!empty($filter["filter_expiration"])) {
                 $safex_trad_confirmation_query->whereDate('expiry', $filter["filter_expiration"]);
             }
 
-            if($filter["filter_nominal"] !== null) {
+            // Applies nominal filter
+            if(!empty($filter["filter_nominal"])) {
                 switch ($filter["filter_nominal"]) {
                     case '10-40':
                         $safex_trad_confirmation_query->whereBetween('nominal', [10000000,40000000]);

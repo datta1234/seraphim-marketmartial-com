@@ -294,6 +294,7 @@ class User extends Authenticatable
      * @param string $term
      * @param string $orderBy
      * @param string $order
+     * @param string  $filter
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */

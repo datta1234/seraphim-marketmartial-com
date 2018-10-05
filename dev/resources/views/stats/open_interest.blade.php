@@ -6,7 +6,7 @@
 		{{-- Open Interest Card --}}
 		@component('partials.content_card')
 		    @slot('header')
-		        <h2 class="mt-2 mb-2">GRAPH CARD TITLE</span></h2>
+		        <h2 class="mt-2 mb-2">Open Interests</span></h2>
 		    @endslot
 		    @slot('title')
 		    @endslot

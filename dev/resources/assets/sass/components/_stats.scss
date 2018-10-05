@@ -53,7 +53,15 @@
 	.card-tab-button {
 		width: 7rem;
 	}
+}
 
+.open-interests {
+	.card-tab-button {
+		width: 6rem;
+	}
+}
+
+.monthly-activity, .open-interests {
 	.mm-button {
 		color: $mm-white;
 		background-color: $stats-warm-grey;
