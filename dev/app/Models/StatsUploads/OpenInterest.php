@@ -69,10 +69,10 @@ class OpenInterest extends Model
 			'contract'		=> $data['contract'],
 			'expiry_date'	=> \Carbon\Carbon::parse($data['expiry_date']),
 			'is_put'		=> ($data['is_put'] == 'P'),
-			'open_interest'	=> self::doubleval($data['open_interest']),
-			'strike_price'	=> self::doubleval($data['strike_price']),
-			'delta'			=> self::doubleval($data['delta']),
-			'spot_price'	=> self::doubleval($data['spot_price']),
+			'open_interest'	=> doubleval($data['open_interest']),
+			'strike_price'	=> doubleval($data['strike_price']),
+			'delta'			=> doubleval($data['delta']),
+			'spot_price'	=> doubleval($data['spot_price']),
     	]);
     }
 }
