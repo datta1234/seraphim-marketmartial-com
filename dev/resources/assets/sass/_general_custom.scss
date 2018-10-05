@@ -613,6 +613,7 @@ table.table {
 }
 
 .table thead th {
+	color: $mm-text-white;
     background-color: $mm-panel !important;
     border: none;
     font-size: 1.2em;

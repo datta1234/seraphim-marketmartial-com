@@ -11260,6 +11260,7 @@ table.table {
 }
 
 .table thead th {
+  color: #FFFFFF;
   background-color: #269a9b !important;
   border: none;
   font-size: 1.2em;
