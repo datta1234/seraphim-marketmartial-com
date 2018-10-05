@@ -165,7 +165,6 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
-            console.log("I NEVER GET CALLED",this.theme_toggle);
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },

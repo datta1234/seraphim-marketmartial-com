@@ -61,21 +61,24 @@ class SafexTradeConfirmation extends Model
         'updated_at',
     ];
 
-    public static function parseDouble($value) {
-        return doubleval($value);
-    }
-
+    /**
+     * Creates a new OpenInterest record from the passed array
+     *
+     * @param array $data
+     *
+     * @return App\Models\StatsUploads\SafexTradeConfirmation
+     */
     public static function createFromCSV($data) {
     	
     	return self::create([
             'is_put' 			=> ($data['is_put'] == 'P'),
             'expiry' 			=> \Carbon\Carbon::parse($data['expiry']),
-            'strike' 			=> self::parseDouble($data['strike']),
-            'trade_id' 			=> self::parseDouble($data['trade_id']),
+            'strike' 			=> self::doubleval($data['strike']),
+            'trade_id' 			=> self::doubleval($data['trade_id']),
             'strike_percentage'	=> ( str_replace(" ", "",$data['strike_percentage']) == '-' ? 
-                                        null : self::parseDouble($data['strike_percentage'])
+                                        null : self::doubleval($data['strike_percentage'])
                                     ),
-            'nominal' 			=> self::parseDouble($data['nominal']),
+            'nominal' 			=> self::doubleval($data['nominal']),
 			'underlying' 		=> $data['underlying'],
 			'trade_date' 		=> \Carbon\Carbon::parse($data['trade_date']),
 			'structure' 		=> $data['structure'],
@@ -89,6 +92,7 @@ class SafexTradeConfirmation extends Model
     /**
      * Return a simple or query object based on the search term
      *
+     * @param string $term
      * @param string $orderBy
      * @param string $order
      * @param array  $filter
@@ -114,10 +118,13 @@ class SafexTradeConfirmation extends Model
 
         // Apply Filters
         if($filter !== null) {
+
+            // Applies Date filter
             if($filter["filter_date"] !== null) {
                 $safex_trad_confirmation_query->whereDate('trade_date', $filter["filter_date"]);
             }
 
+            // Applies Market filter
             if($filter["filter_market"] !== null) {
                 $market = $filter['filter_market'];
                 switch ($market) {
@@ -139,10 +146,12 @@ class SafexTradeConfirmation extends Model
                 }
             }
 
+            // Applies Expiration filter
             if($filter["filter_expiration"] !== null) {
                 $safex_trad_confirmation_query->whereDate('expiry', $filter["filter_expiration"]);
             }
 
+            // Applies nominal filter
             if($filter["filter_nominal"] !== null) {
                 switch ($filter["filter_nominal"]) {
                     case '10-40':

@@ -154,16 +154,19 @@ class ActivityControlller extends Controller
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
+        // Create a new array of csv file lines
         array_walk($csv, function(&$row) {
             array_walk($row, function(&$col) {
                 $col = trim($col);
             });
         });
 
+        // Replace the imported fields with the data base fields
         foreach ($csv[0] as $index => $field) {
             $csv[0][$index] = config('marketmartial.import_csv_field_mapping.safex_fields.'.$field);
         }
 
+        // remove headings field and map each value to the heading as key value pair
         array_walk($csv, function(&$a) use ($csv) {
             $a = array_combine($csv[0], $a);
             // removing white space before validation
@@ -186,9 +189,11 @@ class ActivityControlller extends Controller
             ];
         }
 
-        SafexTradeConfirmation::truncate(); // removes all previous safex trade confirmation records
+        // removes all previous safex trade confirmation records
+        SafexTradeConfirmation::truncate();
         try {
             DB::beginTransaction();
+            // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
             DB::commit();
         } catch (\Exception $e) {

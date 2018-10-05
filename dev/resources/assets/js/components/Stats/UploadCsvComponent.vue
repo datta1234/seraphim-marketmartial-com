@@ -101,9 +101,15 @@
                 this.clearFiles();
                 this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
+            /**
+             * Clears the csv file input
+             */
             clearFiles() {
               this.$refs.csvfileinput.reset();
             },
+            /**
+             * Makes an axios post request to upload a selected CSV         
+             */
             uploadFile() {
                 let formData = new FormData();
                 formData.append("csv_upload_file", this.modal_data.file);
@@ -115,11 +121,10 @@
                             this.hideModal();
                             this.$toasted.success(csvUploadResponse.data.message);
                         } else {
-                            console.log(csvUploadResponse.data.data.messages);
                             this.upload_errors = [];
+                            // pushes csv validation errors to error object for display
                             Object.keys(csvUploadResponse.data.data.messages).forEach(error => {
                                 let section_array = error.split('.');
-                                console.log("What",error);
                                 this.upload_errors.push({
                                         line: section_array[0],
                                         field: section_array[1], 

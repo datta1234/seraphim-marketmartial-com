@@ -38,6 +38,9 @@
             };
         },
         methods: {
+            /**
+             * Sets active component tab
+             */
             setActive(mm_active) {
                 this.is_mm_table = mm_active;
             },

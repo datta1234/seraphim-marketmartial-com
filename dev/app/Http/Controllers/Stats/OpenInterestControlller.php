@@ -39,11 +39,13 @@ class OpenInterestControlller extends Controller
             }
         });
         foreach ($grouped_open_interests as $market => $open_interests) {
+            // group by contract
             $grouped_open_interests[$market] = $open_interests->groupBy(function ($item, $key) {
                 return (string) $item['contract'];
             });
 
             foreach ($grouped_open_interests[$market] as $contract => $contract_group) {
+                // group contracts by expiry date
                 $grouped_open_interests[$market][$contract] = $contract_group->groupBy(function ($item, $key) {
                     return (string) $item['expiry_date'];
                 })->sortBy(function ($item, $key) {
@@ -51,6 +53,7 @@ class OpenInterestControlller extends Controller
                 });
 
                 foreach ($grouped_open_interests[$market][$contract] as $date => $date_group) {
+                    // group expiry date by strike price
                     $grouped_open_interests[$market][$contract][$date] = $date_group->groupBy(function ($item, $key) {
                         return (string) $item['strike_price'];
                     });
@@ -72,16 +75,19 @@ class OpenInterestControlller extends Controller
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
+        // Create a new array of csv file lines
         array_walk($csv, function(&$row) {
             array_walk($row, function(&$col) {
                 $col = trim($col);
             });
         });
 
+        // Replace the imported fields with the data base fields
         foreach ($csv[0] as $index => $field) {
             $csv[0][$index] = config('marketmartial.import_csv_field_mapping.open_interest_fields.'.$field);
         }
 
+        // remove headings field and map each value to the heading as key value pair
         array_walk($csv, function(&$a) use ($csv) {
             $a = array_combine($csv[0], $a);
             // removing white space before validation
@@ -105,9 +111,11 @@ class OpenInterestControlller extends Controller
             ];
         }
 
-        OpenInterest::truncate(); // removes all previous open interest records
+        // removes all previous open interest records
+        OpenInterest::truncate();
         try {
             DB::beginTransaction();
+            // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\OpenInterest::createFromCSV', $csv);
             DB::commit();
         } catch (\Exception $e) {
