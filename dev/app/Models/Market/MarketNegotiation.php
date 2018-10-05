@@ -126,6 +126,29 @@ class MarketNegotiation extends Model
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
     }
 
+    public function getConditionHistory()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $history = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @private as _private, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @private := is_private FROM $table WHERE id = _id
+                    ) as parent_private
+                    FROM (
+                        SELECT @id := $id, @private := 1
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @private = 1
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+        ");
+        return self::hydrate($history)->sortBy('id');
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -186,14 +209,51 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
-    public function scopeFindCounterNegotiation($query,$user)
+    public function getActiveConditionTypeAttribute()
     {
-        return $query->whereHas('user',function($q) use ($user) {
+        // FoK (can also be private... needs to be first)
+        if($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null) {
+            return 'fok';
+        }
+        // all private instances
+        if($this->is_private == true) {
+            // Meet In middle
+            if($this->cond_buy_mid !== null) {
+                return 'meet-in-middle';
+            }
+            // Meet At Best
+            if($this->cond_buy_best !== null) {
+                return 'meet-at-best';
+            }
+            // Proposal
+            return 'proposal';
+        }
+        // Repeat ATW
+        if($this->cond_is_repeat_atw !== null) {
+            return 'repeat-atw';
+        }
+        // OCO
+        if($this->cond_is_oco !== null) {
+            return 'oco';
+        }
+        // Subject
+        if($this->cond_is_subject !== null) {
+            return 'subject';
+        }
+        return null;
+    }
+
+    public function scopeFindCounterNegotiation($query,$user, $private = false)
+    {
+        return $query->when(!$private, function($q){
+            $q->where('is_private', false);
+        })->whereHas('user',function($q) use ($user) {
             $q->where('id','!=',$user->id);
         })->orderBy('created_at', 'DESC');
     }
 
-    public function scopeConditions($query) {
+    public function scopeConditions($query)
+    {
         return $query->where(function($q){
             foreach($this->applicableConditions as $key => $default) {
                 $q->orWhere($key, '!=', $default);
@@ -205,7 +265,8 @@ class MarketNegotiation extends Model
     * test if is FoK
     * @return Boolean
     */
-    public function isFoK() {
+    public function isFoK()
+    {
         return ($this->cond_fok_apply_bid !== null || $this->cond_fok_spin !== null); 
     }
 
@@ -213,7 +274,8 @@ class MarketNegotiation extends Model
     * test if is Proposal
     * @return Boolean
     */
-    public function isProposal() {
+    public function isProposal()
+    {
         return (
             $this->is_private === true && 
             $this->cond_fok_spin === null &&
@@ -227,19 +289,22 @@ class MarketNegotiation extends Model
     * test if is MeetInMiddle
     * @return Boolean
     */
-    public function isMeetInMiddle() {
+    public function isMeetInMiddle()
+    {
         return (
             $this->is_private == true && 
             $this->cond_buy_mid !== null
         ); 
     }
 
-    public function kill() {
+    public function kill()
+    {
         $this->is_killed = true; // && with_fire = true ;)
         return $this->save();
     }
 
-    public function counter($user, $data) {
+    public function counter($user, $data)
+    {
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -253,14 +318,40 @@ class MarketNegotiation extends Model
         ]);
     }
 
-    public function reject() {
+    public function reject()
+    {
         $userMarket = $this->userMarket;
+        
+        // delete history
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->delete();
+        });
+        
+        // delete self
         $success = $this->delete();
-        $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
-        return true;
+
+        // reasign current if valid
+        $current_market_negotiation_id = $userMarket->current_market_negotiation_id;
+        if($success && ($current_market_negotiation_id == $this->id || $history->contains('id', $current_market_negotiation_id)) ) {
+            $userMarket->currentMarketNegotiation()->associate($userMarket->lastNegotiation)->save();
+        }
+        return $success ? true : false;
     }
 
-    public function getLatestBid() {
+    public function resolvePrivateHistory()
+    {
+        // update history tree
+        $history = $this->getConditionHistory();
+        $history->each(function($item){
+            $item->update([
+                'is_private' => false
+            ]);
+        });
+    }
+
+    public function getLatestBid()
+    {
         if($this->bid != null) {
             return $this->bid;
         }
@@ -270,7 +361,8 @@ class MarketNegotiation extends Model
         return null;
     }
 
-    public function getLatestOffer() {
+    public function getLatestOffer()
+    {
         if($this->offer != null) {
             return $this->offer;
         }
@@ -307,9 +399,9 @@ class MarketNegotiation extends Model
                 $qq->where('is_private', true);
                 $qq->where(function($qqq) use ($organisation_id) {
                     // if it was created by the organisaiton viewing, we show it
-                    $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
-                        $qqqq->where('organisation_id', $organisation_id);
-                    });
+                    // $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
+                    //     $qqqq->where('organisation_id', $organisation_id);
+                    // });
                     // OR If this has been traded, we show it
                     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
                         $qqqq->where('traded', true);
@@ -393,26 +485,80 @@ class MarketNegotiation extends Model
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
-
-            $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
-            $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
-            ->where($attr, $this->getAttribute($attr))
-            ->orderBy("id","ASC")
-            ->first();
-            $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
-            //set counter
-            $counterNegotiation = null;
-
-            if(!is_null($counterNegotiation))
+            $counterNegotiation = null;   
+            $newMarketNegotiation = null;
+            if(count($this->tradeNegotiations) == 0)
             {
+                 // find out who the the negotiation is sent to based of who set the level last
+                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid'; 
+                $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
+                ->where($attr, $this->getAttribute($attr))
+                ->orderBy("id","ASC")
+                ->first();
+                $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
+                $tradeNegotiation->traded = false;
+            }else
+            {
+                $counterNegotiation = $this->tradeNegotiations->last();
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
-            }
+                $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
+                $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
+
+                //if it is greater it is an amend but if it is less or eqaul it is traded
+                if($tradeNegotiation->quantity == $counterNegotiation->quantity)
+                {
+                    //create a new market negotiation if the quantity is 
+                    $tradeNegotiation->traded = true;
+                    $newMarketNegotiation = $this->replicate();
+                    $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
+                    $newMarketNegotiation->counter_user_id = null;
+                    $newMarketNegotiation->market_negotiation_id = null;
+
+                    if(!$requestedNegotiation->is_offer)
+                    {   
+                        $newMarketNegotiation->bid = null;
+                        $newMarketNegotiation->bid_qty = null;
+                        $newMarketNegotiation->offer_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
+
+                    }else
+                    {
+                        $newMarketNegotiation->offer = null;
+                        $newMarketNegotiation->offer_qty = null;
+                        $newMarketNegotiation->bid_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
+                    }
 
 
+                }elseif ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
+                {
+                    $tradeNegotiation->traded = true;
+                }
+            }            
+ 
             try {
                 DB::beginTransaction();
+
                 $this->tradeNegotiations()->save($tradeNegotiation);
-                
+               
+                if($newMarketNegotiation )
+                {
+                    $newMarketNegotiation->save();
+                }
+
+                // if this was a private proposal, cascade public update to history 
+                if($this->is_private == true) {
+                    $this->resolvePrivateHistory();
+                }
+                DB::commit();
+
+                if(!is_null($counterNegotiation))
+                {
+                    //alert the admin if trade size is less then the previous one
+                    if($tradeNegotiation->quantity < $counterNegotiation->quantity)
+                    {
+                        //@TODO alert admin
+                    }
+                }
+
                 if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
@@ -420,7 +566,7 @@ class MarketNegotiation extends Model
                 {
                     $this->setMarketNegotiationAction();
                 }
-                DB::commit();
+
 
                 return $tradeNegotiation;
             } catch (\Exception $e) {
@@ -624,7 +770,6 @@ class MarketNegotiation extends Model
     public function applyCondBuyMidCondition() {
         // assumption it exists... it should since you cant apply this to a quote...
         $parent = $this->marketNegotiationParent;
-
         $bid = doubleval($parent->getLatestBid());
         $offer = doubleval($parent->getLatestOffer());
 

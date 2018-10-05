@@ -11245,6 +11245,72 @@ input.input-small {
   color: #FFFFFF;
 }
 
+/* MEL */
+
+a,
+a:hover {
+  color: #269a9b;
+}
+
+table.table {
+  -webkit-box-shadow: 3px 4px 10px 0.2px #0c4545;
+          box-shadow: 3px 4px 10px 0.2px #0c4545;
+  color: #000000;
+  border: none;
+}
+
+.table thead th {
+  background-color: #269a9b !important;
+  border: none;
+  font-size: 1.2em;
+}
+
+.progress {
+  font-size: 1em;
+  height: 30px;
+}
+
+.nav-link,
+.nav-link:hover {
+  color: #ffffff;
+}
+
+.nav-tabs .nav-link.active {
+  color: #ffffff;
+}
+
+.nav-tabs {
+  border: none;
+}
+
+.well {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  border: 2px solid #b1b1b3;
+  border-radius: 90px;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#d2d2d2), to(white));
+  background-image: linear-gradient(#d2d2d2, white);
+  padding: 15px;
+}
+
+.mm-card {
+  border-radius: 5px;
+}
+
+.mm-card.card .card-header {
+  border-radius: 5px;
+}
+
+.mm-card.card .card-body {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 50px;
+}
+
+.mm-card.card .card-body .card-text {
+  color: #000000;
+}
+
 #trade_app {
   position: relative;
 }
@@ -17087,6 +17153,11 @@ input:checked + .slider:before {
   border-left: 2px solid #BB1D1D;
 }
 
+.trade-section.light-theme .market-tab.trade-negotiation-open.market-alert,
+.trade-section.dark-theme .market-tab.trade-negotiation-open.market-alert {
+  background-color: #BB1D1D;
+}
+
 .trade-section.light-theme .market-tab.trade-negotiation-pending,
 .trade-section.light-theme .market-tab.trade-negotiation-open,
 .trade-section.dark-theme .market-tab.trade-negotiation-pending,
@@ -17332,15 +17403,18 @@ input:checked + .slider:before {
   font-weight: bold;
 }
 
-.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest {
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest,
+.interaction-bar-wrapper .negotiation-history .is-interest {
   color: #2358BD;
 }
 
-.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-maker {
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-maker,
+.interaction-bar-wrapper .negotiation-history .is-maker {
   color: #37A53A;
 }
 
-.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org {
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org,
+.interaction-bar-wrapper .negotiation-history .is-my-org {
   color: #EBC300;
 }
 
@@ -17350,6 +17424,36 @@ input:checked + .slider:before {
 
 .condition {
   color: #EBC300;
+}
+
+.condition-toggle {
+  cursor: pointer;
+}
+
+.condition-toggle:after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+}
+
+.condition-toggle.collapsed:after {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
+  content: "";
+  border-top: 0;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0.3em solid;
+  border-left: 0.3em solid transparent;
 }
 
 .interaction-bar-wrapper .chat-bar,

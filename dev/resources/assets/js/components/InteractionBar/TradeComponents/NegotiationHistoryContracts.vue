@@ -42,7 +42,6 @@
         methods: {
             isLast(item)
             {
-                console.log();
                 return item.id == this.lastItem.id; 
             }
         },

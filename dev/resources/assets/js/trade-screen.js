@@ -76,8 +76,11 @@ Vue.component('interaction-bar', require('./components/InteractionBarComponent.v
     Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
     Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
     Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
+    
     Vue.component('ibar-trade-request', require('./components/InteractionBar/TradeComponents/TradeRequest.vue'));
     Vue.component('ibar-trade-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeDesiredQuantity.vue'));
+    Vue.component('ibar-trade-counter-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeCounterDesiredQuantity.vue'));
+    Vue.component('ibar-trade-work-balance', require('./components/InteractionBar/TradeComponents/TradeWorkBalance.vue'));
     Vue.component('ibar-counter-negotiation', require('./components/InteractionBar/MarketComponents/CounterNegotiation.vue'));
 
 // Action Bar Component
@@ -253,7 +256,7 @@ const app = new Vue({
         loadConfigs(config_list) {
             let promises = [];
             config_list.forEach(config => {
-                console.log(config)
+                // console.log(config)
                 promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
             });
             return Promise.all(promises);
@@ -413,14 +416,14 @@ const app = new Vue({
                 // if its not being tracked, track a new one
                 message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
                     // if the message is complete, attempt completion callback
-                    if(!err) {                        
+                    if(!err) {
                         // pull the message out of current and into completed
                         let completed_message = this.pusher_messages.splice(this.pusher_messages.indexOf(output_message), 1);  
                         this.completed_messages.push({checksum : completed_message[0].checksum,expires : completed_message[0].expires});
                         // run the message callback
                         callback(output_message.output);
                     } else {
-                        console.error("derp");
+                        console.error(err);
                     }
                 });
                 this.pusher_messages.push(message);

@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
 import UserMarketNegotiation from './UserMarketNegotiation';
+import ActiveCondition from './ActiveCondition';
 
 export default class UserMarket extends BaseModel {
 
@@ -12,8 +13,8 @@ export default class UserMarket extends BaseModel {
                 market_negotiations:{
                     addMethod: (market_negotiation) => { this.addNegotiation(market_negotiation) },
                 },
-                active_condition: {
-                    setMethod: (active_condition) => { this.setActiveCondition(active_condition) },
+                active_conditions: {
+                    setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
                 }
             }
         });
@@ -49,14 +50,10 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
-        this.active_condition = null;
-        this.active_condition_type = null;
+        this.active_conditions = [];
         
-        if(options && options.active_condition) {
-            this.setActiveCondition(options.active_condition);
-        }
-        if(options && options.active_condition_type) {
-            this.setActiveConditionType(options.active_condition_type);
+        if(options && options.active_conditions) {
+            this.setActiveConditions(options.active_conditions);
         }
 
     }
@@ -93,25 +90,28 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
-    *   setActiveFoK - add user user_market_negotiation
+    *   setActiveConditions - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveCondition(active_condition) {
-        
-        if(!(active_condition instanceof UserMarketNegotiation)) {
-            active_condition = new UserMarketNegotiation(active_condition);
-        }
-
-        active_condition.setUserMarket(this);
-        this.active_condition = active_condition;
+    setActiveConditions(active_conditions) {
+        this.active_conditions.splice(0, this.active_conditions.length);
+        console.log("HERE 123: ", active_conditions);
+        active_conditions.forEach(cond => {
+            this.addActiveCondition(cond);
+        });
     }
 
     /**
-    *   setActiveProposal - add user user_market_negotiation
+    *   addActiveCondition - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
-    setActiveConditionType(active_condition_type) {
-        this.active_condition_type = active_condition_type;
+    addActiveCondition(active_condition) {
+        
+        if(!(active_condition instanceof ActiveCondition)) {
+            active_condition = new ActiveCondition(this, active_condition);
+        }
+
+        this.active_conditions.push(active_condition);
     }
 
     /**
@@ -150,6 +150,11 @@ export default class UserMarket extends BaseModel {
         return this.current_market_negotiation;
     }
 
+
+    getLastNegotiation() {
+        return this.market_negotiations.length > 0 ? this.market_negotiations[this.market_negotiations.length - 1] : null;
+    }
+
     prepareStore() {
         return {
             user_market_request_id: this.user_market_request_id,
@@ -162,7 +167,6 @@ export default class UserMarket extends BaseModel {
     *  store
     */
     store(market_request) {
-        console.log("we going to error",market_request);
         // catch not assigned to a market request yet!
         if(market_request.id == null) {
             return new Promise((resolve, reject) => {
@@ -180,6 +184,29 @@ export default class UserMarket extends BaseModel {
                 reject(new Errors(err.response.data));
             });
         });
+    }
+
+
+    noFutherCares()
+    {
+        console.log(this.user_market_request_id,this.id);
+        // catch not assigned to a market request yet!
+        if(this.user_market_request_id == null) {
+            return new Promise((resolve, reject) => {
+                console.log("error man",this.user_market_request_id);
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+
+         return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id+"/no-further-cares")
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        }); 
     }
 
 

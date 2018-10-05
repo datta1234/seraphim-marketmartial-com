@@ -33,9 +33,9 @@
         <ibar-trade-desired-quantity 
             ref="mimTradePopover" 
             target="meet-in-middle-do-trade" 
-            :market-negotiation="marketNegotiation" 
+            :market-negotiation="negotiation" 
             :open="trade_open" 
-            :is-offer="!marketNegotiation.cond_buy_mid" 
+            :is-offer="!negotiation.cond_buy_mid" 
             @close="trade_open = false" 
             parent="cond-container">
         </ibar-trade-desired-quantity>
@@ -43,7 +43,7 @@
         <ibar-counter-negotiation 
             ref="mimCounterPopover" 
             target="meet-in-middle-counter" 
-            :market-negotiation="marketNegotiation" 
+            :market-negotiation="negotiation" 
             :open="counter_open"
             @close="counter_open = false" 
             parent="trade_app"
@@ -55,6 +55,7 @@
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import ActiveCondition from '~/lib/ActiveCondition';
     /*
         cond_buy_mid:
          true  = buy
@@ -62,8 +63,8 @@
     */
     export default {
         props: {
-            marketNegotiation: {
-                type: UserMarketNegotiation
+            condition: {
+                type: ActiveCondition
             },
         },
         data() {
@@ -74,10 +75,13 @@
         },
         computed: {
             'type': function() {
-                return this.marketNegotiation.cond_buy_mid ? "Sell" : "Buy";
+                return this.negotiation.cond_buy_mid ? "Sell" : "Buy";
             },
             'value': function() {
-                return this.marketNegotiation.cond_buy_mid ? this.marketNegotiation.bid : this.marketNegotiation.offer;
+                return this.negotiation.cond_buy_mid ? this.negotiation.bid : this.negotiation.offer;
+            },
+            negotiation() {
+                return this.condition.condition;
             }
         },
         methods: {
@@ -88,7 +92,7 @@
                 this.counter_open = true;
             },
             doReject() {
-                this.marketNegotiation.killNegotiation()
+                this.negotiation.killNegotiation()
                 .then(response => {
                     console.log(response);
                     this.errors = [];

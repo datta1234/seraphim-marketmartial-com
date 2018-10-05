@@ -81,10 +81,11 @@ class UserMarket extends Model
     }
 
     // conditions
-    public function lastConditionNegotiation()
+    public function activeConditionNegotiations()
     {
-        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
                     ->conditions()
+                    ->whereDoesntHave('marketNegotiationChildren')
                     ->orderBy('created_at',"DESC")
                     ->orderBy('id',"DESC");
     }
@@ -296,6 +297,28 @@ class UserMarket extends Model
     }
 
 
+    public function noFurthercares()
+    {
+        $lastUserMarket = $this->marketNegotiations()->latest()->first();
+        $newMarketNegotiation = $lastUserMarket->replicate();
+        $lastTradeNegotiation = $lastUserMarket->tradeNegotiations()->latest()->first();
+
+        $newMarketNegotiation->counter_user_id = null;
+        $newMarketNegotiation->market_negotiation_id = null;
+
+        if($lastTradeNegotiation->is_offer)
+        {   
+            $newMarketNegotiation->bid = null;
+            $newMarketNegotiation->bid_qty = null;
+
+        }else
+        {
+            $newMarketNegotiation->offer = null;
+            $newMarketNegotiation->offer_qty = null;
+        }
+        return $newMarketNegotiation->save();
+    }
+
 
     public function addNegotiation($user,$data)
     {
@@ -320,12 +343,15 @@ class UserMarket extends Model
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
             }
+            // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
             try {
                  DB::beginTransaction();
 
                 $this->marketNegotiations()->save($marketNegotiation);
-                $this->current_market_negotiation_id = $marketNegotiation->id;
+                if($marketNegotiation->is_private) {
+                    $this->current_market_negotiation_id = $marketNegotiation->id;
+                }
                 $this->save();
                 if($counterNegotiation)
                 {
@@ -396,37 +422,23 @@ class UserMarket extends Model
                                             return $item->setOrgContext($this->resolveOrganisation())
                                                         ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
                                         }),
-            "active_condition"      => null,
-            "active_condition_type" => null,
+            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isCounter(null, $cond);
+                                            if($active === null) {
+                                                $active = $this->isInterest();
+                                            }
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
         ];
-
-        $condNegotiation = $this->lastConditionNegotiation;
-        if($condNegotiation != null) {
-            // only if counter
-            $active = $this->isCounter(null, $condNegotiation);
-            \Log::info("COunter: ".(String)$active);
-            if($active === null) {
-                $active = $this->isInterest();
-                \Log::info("Interest: ".(String)$active);
-            }
-            \Log::info("Active: ".(String)$active);
-            if($active) {
-                $data['active_condition'] = $condNegotiation->preFormattedMarketNegotiation($uneditedmarketNegotiations);
-
-                // add Active FoK if exists
-                if($condNegotiation->isFoK() && $condNegotiation->is_killed !== true) {
-                    $data['active_condition_type'] = 'fok';
-                }
-                // add Active Proposal if exists
-                if($condNegotiation->isProposal()) {
-                    $data['active_condition_type'] = 'proposal';
-                }
-                // add Active Proposal if exists
-                if($condNegotiation->isMeetInMiddle()) {
-                    $data['active_condition_type'] = 'meet_in_middle';
-                }
-            }
-        }
 
         return $data;
     }
