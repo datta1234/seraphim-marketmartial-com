@@ -103,6 +103,8 @@
              * @param {Event} $event
              */
             changePage($event) {
+                EventBus.$emit('loading', 'requestDates');
+                this.dates_loaded = false;
                 this.current_page = $event;
                 this.loadExpiryDate();    
             },
