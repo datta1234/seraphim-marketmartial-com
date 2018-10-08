@@ -50,15 +50,6 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function bookedTradeStatuses()
-    {
-        return $this->belongsTo('App\Models\TradeConfirmations\BookedTradeStatus','booked_trade_status_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function tradeConfirmations()
     {
         return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');

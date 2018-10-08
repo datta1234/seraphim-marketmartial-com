@@ -18,9 +18,6 @@ $factory->define(App\Models\TradeConfirmations\BookedTrade::class, function (Fak
 		"stock_id" => function(){
 			return factory(App\Models\StructureItems\Stock::class)->create()->id;
 		},
-		"booked_trade_status_id" => function(){
-			return factory(App\Models\TradeConfirmations\BookedTradeStatus::class)->create()->id;
-		},
 		"is_sale" => rand(0,1) ==1,
 		"is_confirmed" => rand(0,1) ==1,
 		"is_rebate" => 0,
