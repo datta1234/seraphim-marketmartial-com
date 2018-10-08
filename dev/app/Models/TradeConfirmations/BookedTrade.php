@@ -13,7 +13,6 @@ class BookedTrade extends Model
 	 * @property integer $trading_account_id
 	 * @property integer $market_id
 	 * @property integer $stock_id
-	 * @property integer $booked_trade_status_id
 	 * @property boolean $is_sale
 	 * @property boolean $is_confirmed
 	 * @property double $amount
@@ -50,7 +49,7 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmations()
+    public function tradeConfirmation()
     {
         return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
     }
@@ -59,7 +58,7 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function stocks()
+    public function stock()
     {
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }
@@ -68,7 +67,7 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function markets()
+    public function market()
     {
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
@@ -86,7 +85,7 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function users()
+    public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
@@ -95,7 +94,7 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradingAccounts()
+    public function tradingAccount()
     {
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
     }

@@ -8,7 +8,7 @@ $factory->define(App\Models\TradeConfirmations\BookedTrade::class, function (Fak
 			$user =  factory(App\Models\UserManagement\User::class)->create();
 			return $user->id;
 		},
-		"trade_confirmation_id" => null, 
+		"trade_confirmation_id" => factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create()->id, 
 		"trading_account_id" => function($bookedTrade) {
 			return factory(App\Models\UserManagement\TradingAccount::class)->create(['user_id'=>$bookedTrade['user_id']])->id;
 		},

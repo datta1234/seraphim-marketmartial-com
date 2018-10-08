@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             $this->call(UserMarketRequestTradeablesSeeder::class);
             $this->call(UserMarketRequestItemSeeder::class);
             $this->call(TradeConfirmationSeeder::class);
+            $this->call(BookedTradeSeeder::class);
         }
 
         
