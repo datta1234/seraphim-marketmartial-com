@@ -5,10 +5,11 @@ use Faker\Generator as Faker;
 $factory->define(App\Models\TradeConfirmations\BookedTrade::class, function (Faker $faker) {
     return [
 		"user_id" => function(){
-			$user =  factory(App\Models\UserManagement\User::class)->create();
-			return $user->id;
+			return factory(App\Models\UserManagement\User::class)->create()->id;
 		},
-		"trade_confirmation_id" => factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create()->id, 
+		"trade_confirmation_id" => function(){
+			return factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create()->id;
+		}, 
 		"trading_account_id" => function($bookedTrade) {
 			return factory(App\Models\UserManagement\TradingAccount::class)->create(['user_id'=>$bookedTrade['user_id']])->id;
 		},
@@ -21,6 +22,7 @@ $factory->define(App\Models\TradeConfirmations\BookedTrade::class, function (Fak
 		"is_sale" => rand(0,1) ==1,
 		"is_confirmed" => rand(0,1) ==1,
 		"is_rebate" => 0,
-		"amount" => rand(0,1) == 1
+		"amount" => rand(0,1) == 1,
+		"rebate_trade_id" => null
 	];
 });

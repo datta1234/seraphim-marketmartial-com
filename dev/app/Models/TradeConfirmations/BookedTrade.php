@@ -13,6 +13,7 @@ class BookedTrade extends Model
 	 * @property integer $trading_account_id
 	 * @property integer $market_id
 	 * @property integer $stock_id
+     * @property integer $rebate_trade_id
 	 * @property boolean $is_sale
 	 * @property boolean $is_confirmed
 	 * @property double $amount
@@ -33,7 +34,15 @@ class BookedTrade extends Model
      * @var array
      */
     protected $fillable = [
-        'is_sale', 'is_confirmed', 'amount',
+        'is_sale',
+        'is_confirmed',
+        'amount',
+        'user_id',
+        'trade_confirmation_id',
+        'trading_account_id',
+        'market_id',
+        'stock_id',
+        'rebate_trade_id'
     ];
 
     /**
@@ -76,9 +85,9 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function rebates()
+    public function rebate()
     {
-        return $this->hasMany('App\Models\Trade\Rebate','booked_trade_id');
+        return $this->belongsTo('App\Models\TradeConfirmations\BookedTrade','rebate_trade_id');
     }
 
     /**
