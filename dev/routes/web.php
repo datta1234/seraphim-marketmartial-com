@@ -73,6 +73,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 		
 		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
 	});
+
+	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
 });
 
 

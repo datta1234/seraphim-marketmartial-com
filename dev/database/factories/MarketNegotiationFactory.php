@@ -14,9 +14,6 @@ $factory->define(App\Models\Market\MarketNegotiation::class, function (Faker $fa
 		"user_market_id" => function(){
             return factory(App\Models\Market\UserMarket::class)->create()->id;
         },
-		"market_negotiation_status_id" => function(){
-            return factory(App\Models\Market\MarketNegotiationStatus::class)->create()->id;
-        },
 		"bid" => $hasBid ? null:rand(0,10),
 		"offer" => $hasOffer ? null:rand(0,10),
 		"bid_qty" => $hasBid ? null:rand(0,3000),

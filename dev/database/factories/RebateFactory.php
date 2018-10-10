@@ -3,15 +3,20 @@
 use Faker\Generator as Faker;
  
 $factory->define(App\Models\Trade\Rebate::class, function (Faker $faker) {
-    
-    $userMarket = factory(App\Models\Market\UserMarket::class)->create();
     return [
-		"user_id" => $userMarket->user_id,
-		"user_market_id" => $userMarket->id,
-		"organisation_id" => $userMarket->user->organisation_id,
-		"user_market_request_id" => $userMarket->user_market_request_id,
-		"booked_trade_id" => null,
+		"user_id" => function(){
+			return factory(App\Models\UserManagement\User::class)->create()->id;
+		},
+		"user_market_id" => function(){
+            return factory(App\Models\Market\UserMarket::class)->create()->id;
+        },
+		"organisation_id" => function(){
+            return factory(App\Models\UserManagement\Organisation::class)->create()->id;
+        },
+		"user_market_request_id" => function(){
+            return factory(App\Models\MarketRequest\UserMarketRequest::class)->create()->id;
+        },
 		"is_paid" => rand(0,1) == 1,
 		"trade_date" => $faker->date()
-    ];
+	];
 });
