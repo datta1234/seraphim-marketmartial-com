@@ -312,27 +312,29 @@ m2=0..n</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>776</x>
-      <y>1624</y>
+      <y>1632</y>
       <w>40</w>
-      <h>88</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>712</x>
       <y>1520</y>
-      <w>168</w>
-      <h>112</h>
+      <w>232</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>trade_structure_groups
 --
 id: int(10)
 trade_structure_id: int(11)
+trade_structure_group_type_id: int(11)
 title: varchar(255)
+force_select: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
 
@@ -342,15 +344,15 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>872</x>
+      <x>936</x>
       <y>1504</y>
-      <w>424</w>
+      <w>360</w>
       <h>128</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>490.0;10.0;490.0;130.0;10.0;130.0</additional_attributes>
+    <additional_attributes>410.0;10.0;410.0;130.0;10.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLPackage</id>
@@ -2205,6 +2207,8 @@ bg=orange</panel_attributes>
 id: int(11)
 trade_confirmation_id: int(11)
 trade_structure_group_id: int(11)
+user_market_request_group_id: int(11)
+trade_confirmation_group: int(11) nullable
 is_options: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
@@ -2270,7 +2274,7 @@ m2=0..1</panel_attributes>
     <panel_attributes>m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>4640.0;10.0;4560.0;10.0;4560.0;840.0;390.0;840.0;390.0;380.0;10.0;380.0;10.0;340.0</additional_attributes>
+    <additional_attributes>4640.0;10.0;4560.0;10.0;4560.0;840.0;390.0;840.0;390.0;380.0;10.0;380.0;10.0;350.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -2325,5 +2329,17 @@ m2=0..n</panel_attributes>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0;70.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1312</x>
+      <y>1400</y>
+      <w>3288</w>
+      <h>672</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>4070.0;10.0;4070.0;60.0;3990.0;60.0;3990.0;820.0;10.0;820.0;10.0;140.0</additional_attributes>
   </element>
 </diagram>
