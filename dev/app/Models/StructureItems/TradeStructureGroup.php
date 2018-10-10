@@ -32,6 +32,7 @@ class TradeStructureGroup extends Model
         'title',
         'trade_structure_id',
         'force_select',
+        'trade_structure_group_type_id'
     ];
 
     /**

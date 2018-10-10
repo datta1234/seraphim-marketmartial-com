@@ -12,25 +12,30 @@ class TradeStructureTableSeeder extends Seeder
     public function run()
     {
         $tradeStructures = config('tradestructures');
+        $groups = \App\Models\StructureItems\TradeStructureGroupType::all();
+        $itemTypes = \App\Models\StructureItems\ItemType::all();
 
         foreach ($tradeStructures as $tradeStructure) 
         {
             $tradeStructureModel = factory(\App\Models\StructureItems\TradeStructure::class,$tradeStructure['title'],1)->create()
-                ->each(function($tradeStructureModel) use ($tradeStructure){
+                ->each(function($tradeStructureModel) use ($tradeStructure,$itemTypes){
 
+                    
                     foreach ($tradeStructure['trade_structure_group'] as $group) 
                     {   
-                   
+                        
                         $tradeStructureGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
                                    'title' => $group['title'],
                                    'trade_structure_id' => $tradeStructureModel->id,
-                                   'force_select'=> $group['force_select']
+                                   'force_select'=> $group['force_select'],
+                                    'trade_structure_group_type_id'=> 1 //@TODO remove hardcode place in config
+
                         ]);
 
                         foreach ($group['items'] as $item) 
                         {
-                            $itemType = \App\Models\StructureItems\ItemType::where('title',$item['type'])->first();
-                        
+                            //$itemType = \App\Models\StructureItems\ItemType::where('title',$item['type'])->first();
+                            $itemType = $itemTypes->firstWhere('title',$item['type']);
 
                             factory(\App\Models\StructureItems\Item::class)->create([
                                 'title' => $item['title'],
@@ -38,6 +43,48 @@ class TradeStructureTableSeeder extends Seeder
                                 'item_type_id' => $itemType->id
                             ]); 
                         }
+
+                        if(isset(($group['trade_confirmation_group']['options'])) && isset($group['trade_confirmation_group']['options']['items']))
+                        {
+                                $optionGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
+                                    'title' => "Options Group",
+                                    'trade_structure_id' => $tradeStructureModel->id,
+                                    'force_select'=> null,
+                                    'trade_structure_group_type_id'=> 3 //@TODO remove hardcode place in config
+                                ]);
+
+                           foreach ($group['trade_confirmation_group']['options']['items'] as $item) 
+                            {
+                                $itemType = $itemTypes->firstWhere('title',$item['type']);
+                                factory(\App\Models\StructureItems\Item::class)->create([
+                                    'title' => $item['title'],
+                                    'trade_structure_group_id' => $optionGroupModel->id,
+                                    'item_type_id' => $itemType->id
+                                ]); 
+                            } 
+                        }
+
+                        if(isset(($group['trade_confirmation_group']['futures'])) && isset($group['trade_confirmation_group']['futures']['items']))
+                        {
+                                $optionGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
+                                    'title' => "Futures Group",
+                                    'trade_structure_id' => $tradeStructureModel->id,
+                                    'force_select'=> null,
+                                    'trade_structure_group_type_id'=> 3 //@TODO remove hardcode place in config
+                                ]);
+
+                           foreach ($group['trade_confirmation_group']['futures']['items'] as $item) 
+                            {
+
+                                $itemType = $itemTypes->firstWhere('title',$item['type']);
+                                factory(\App\Models\StructureItems\Item::class)->create([
+                                    'title' => $item['title'],
+                                    'trade_structure_group_id' => $optionGroupModel->id,
+                                    'item_type_id' => $itemType->id
+                                ]); 
+                            } 
+                        }
+                        
                     }
                 });
 

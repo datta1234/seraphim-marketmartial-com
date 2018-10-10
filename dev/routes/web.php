@@ -14,7 +14,14 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	dd(config('tradestructures'));
+	 $tradeStructure = App\Models\StructureItems\TradeStructure::where('title','Outright')->with(['tradeStructureGroups' => function($q){
+            $q->where("trade_structure_group_type_id",1)
+            ->with('items');
+        }]
+        )->firstOrFail();
+
+
+	dd($tradeStructure);
 });
 
 /*
