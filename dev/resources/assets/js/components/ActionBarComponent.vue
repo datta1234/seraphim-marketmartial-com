@@ -5,7 +5,8 @@
                 <request-market-menu></request-market-menu>
                 <important-menu :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
                 <alerts-menu :notifications="market_notifications.alert" :markets="markets" v-if="market_notifications.alert.length >0"></alerts-menu>
-                <confirmations-menu :notifications="market_notifications.confirm" :markets="markets" v-if="market_notifications.confirm.length >0"></confirmations-menu>
+                
+                <confirmations-menu :trade_confirmations="trade_confirmations" v-if="trade_confirmations.length >0"></confirmations-menu>
             </div>
             <div class="col-3">
                 <div class="float-right">
@@ -33,6 +34,7 @@
     import UserMarket from '../lib/UserMarket';
     import UserMarketRequest from '../lib/UserMarketRequest';
     import UserMarketNegotiation from '../lib/UserMarketNegotiation';
+    import TradeConfirmation from '../lib/TradeConfirmation'
 
     export default {
         components: {
@@ -44,6 +46,9 @@
         },
         props:{
           'markets': {
+            type: Array
+          },
+          'trade_confirmations': {
             type: Array
           },
           'no_cares': {
@@ -88,7 +93,6 @@
                 this.market_notifications.confirm = [];
 
                 let important_states = ['REQUEST','REQUEST-VOL'];
-                //'REQUEST-SENT, 'REQUEST-SENT-VOL', 'REQUEST-VOL','sent'
                 let alert_states = ['alert'];
                 let confirm_states = ['confirm'];
 
@@ -108,15 +112,13 @@
                                 this.market_notifications.important.push(market_request);
                             }
                         }
-
-                        if(confirm_states.indexOf(market_request.attributes.state) > -1)
-                        {
-                            this.market_notifications.confirm.push(market_request);
-                        }
-
-                  
                     });
                 });
+
+                    // if(true)
+                    //     {
+                    //         this.market_notifications.confirm.push(market_request);
+                    //     }
 
             },
             toggleBar(set) {

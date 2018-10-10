@@ -34,6 +34,7 @@ class TradeConfirmation extends Model
      */
     protected $fillable = [];
 
+
     /**
      * The attributes that should be mutated to dates.
      *
@@ -120,6 +121,39 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
+    public function preFormatted()
+    {
+        $marketRequest = $this->tradeNegotiation->userMarket->userMarketRequest;
+        return [
+            'id'                        => $this->id,
+            'organisation'              => "BANK ABC",
+            'spot_price'                => $this->spot_price,
+            'future_reference'          => $this->future_reference,
+            'near_expiery_reference'    => $this->near_expiery_reference,
+            'contracts'                 => $this->contracts,
+            'puts'                      => $this->puts,
+            'calls'                     => $this->calls,
+            'delta'                     => $this->delta,
+            'gross_premiums'            => $this->gross_premiums,
+            'net_premiums'              => $this->net_premiums,
+            'is_confirmed'              => $this->is_confirmed,
+            'trade_structure_title'     => $marketRequest->tradeStructure->title,
+            'expiration'                => $marketRequest->getDynamicItems(['Expiration Date','Expiration Date 1','Expiration Date 2']),
+            'strike'                    => $marketRequest->getDynamicItems(['Strike']),
+            'quantity'                  => $marketRequest->getDynamicItems(['Quantity']),
+            'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
+            'market_request_id'         => $marketRequest->id,
+            'label'                     => $marketRequest->title,
+            'underlying_id'             => $marketRequest->underlying->id,
+            'underlying_title'          => $marketRequest->underlying->title,
+            'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            'traded_at'                 => $this->tradeNegotiation->updated_at,
+            'is_offer'                  => $this->tradeNegotiation->isOffer(),
+
+
+        ];
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -156,6 +190,28 @@ class TradeConfirmation extends Model
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
             'trade_confirmation_id');
     }
+
+    public function scopeSentByMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+    public function scopeSentToMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+
 
     public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
     {

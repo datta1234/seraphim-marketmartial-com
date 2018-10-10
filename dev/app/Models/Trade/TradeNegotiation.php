@@ -120,6 +120,12 @@ class TradeNegotiation extends Model
         return $this->belongsTo('App\Models\Market\MarketNegotiation','market_negotiation_id');
     }
 
+    //weather its a sale or offer determine on the first negotiation
+    public function isOffer()
+    {
+        return $this->marketNegotiation->TradeNegotiations()->first();
+    }
+
     public function preFormatted()
     {
         $loggedInUserOrganisationId = $this->resolveOrganisationId();

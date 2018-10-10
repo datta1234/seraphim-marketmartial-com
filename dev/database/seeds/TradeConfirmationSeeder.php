@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
-
 class TradeConfirmationSeeder extends Seeder
 {
     /**
@@ -13,6 +12,7 @@ class TradeConfirmationSeeder extends Seeder
     public function run()
     {
     	$marketNegotiations = App\Models\Market\MarketNegotiation::where('is_accepted', true)->get();
+        $tradeConfirmationStatutes = App\Models\TradeConfirmations\TradeConfirmationStatus::where('id',4)->get();
 
     	foreach ($marketNegotiations as $marketNegotiation) {
     		$traded_count = rand(1,16);
@@ -36,8 +36,8 @@ class TradeConfirmationSeeder extends Seeder
 
                 if($trading_account) {
 
-
-
+                    $status_id = $tradeConfirmationStatutes->random()->id;
+                    
     	            $tradeConfirmation = factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create([
     	                'send_user_id' => $tradeNegotiation->initiate_user_id,
     			        'receiving_user_id' => $tradeNegotiation->recieving_user_id,
@@ -45,58 +45,11 @@ class TradeConfirmationSeeder extends Seeder
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
     			        'trading_account_id' => $trading_account->id,
-    			        'is_confirmed' => true,
+                        'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);
 
-                        $marketRequest = $marketNegotiation->userMarket-marketRequest;
-                        $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
-
-
-                        foreach($groups as $tradeStructureGroup) {
-                            
-                            $tradeGroup = $marketRequest->userMarketRequestGroups()->create([
-                                'trade_structure_group_id'  =>  $tradeStructureGroup->id,
-                                'trade_confirmation_id'     =>  $tradeConfirmation->id,
-                                "is_option"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
-                                'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
-                            ]);
-
-
-                            foreach($tradeStructureGroup->items as $item) {
-
-                                $value = null;
-                                switch ($item->title) {
-                                    case 'is_offer':
-                                        $value = $is_offer;
-                                        break;
-                                    case 'put':
-                                        $value = rand(100,1000);
-                                        break;
-                                    case 'call':
-                                        $value = rand(100,1000);
-                                        break;
-                                    case 'volatility':
-                                        $value = $is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-                                        break;
-                                    case 'Gross Premiums':
-                                       $value = rand(100,1000);
-                                        break;
-                                    case 'Net Premiums':
-                                         $value = rand(100,1000);
-                                        break;
-                                }
-
-                                factory(App\Models\TradeConfirmations\TradeConfirmationItem::class)->create([
-                                    'item_id' => $item->id,
-                                    'user_market_request_group_id' => $tradeGroup->id,
-                                    'title' => $item->title,
-                                    'value' =>  $value
-                                ]);
-                            }
-                        }
-
-                    //based
+                       
 
 
                 }
@@ -128,6 +81,9 @@ class TradeConfirmationSeeder extends Seeder
 	    			->first();
 
                 if($trading_account) {
+                   $val = $tradeConfirmationStatutes->random()->id;
+                    
+
     	            $tradeConfirmation = factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create([
     	                'send_user_id' => $tradeNegotiation->initiate_user_id,
     			        'receiving_user_id' => $tradeNegotiation->recieving_user_id,
@@ -135,9 +91,7 @@ class TradeConfirmationSeeder extends Seeder
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
     			        'trading_account_id' => $trading_account->id,
-    			        'future_reference' => $marketNegotiation->future_reference,
-    			        'contracts' => $tradeNegotiation->quantity,
-    			        'is_confirmed' => true,
+                        'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);
                 }
@@ -163,6 +117,8 @@ class TradeConfirmationSeeder extends Seeder
 	    			->first();
 
                 if($trading_account) {
+                    $status_id = $tradeConfirmationStatutes->random()->id;
+                    
     	            $tradeConfirmation = factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create([
     	                'send_user_id' => App\Models\UserManagement\User::inRandomOrder()->first()->id,
     			        'receiving_user_id' => App\Models\UserManagement\User::inRandomOrder()->first()->id,
@@ -170,9 +126,7 @@ class TradeConfirmationSeeder extends Seeder
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
     			        'trading_account_id' => $trading_account->id,
-    			        'future_reference' => $marketNegotiation->future_reference,
-    			        'contracts' => $tradeNegotiation->quantity,
-    			        'is_confirmed' => true,
+                        'trade_confirmation_status_id' => $status_id,    			        
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);
                 }

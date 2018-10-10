@@ -12,7 +12,7 @@ class BookedTradeSeeder extends Seeder
      */
     public function run()
     {
-        $tradeConfirmations = App\Models\TradeConfirmations\TradeConfirmation::where('is_confirmed', true)->get();
+        $tradeConfirmations = App\Models\TradeConfirmations\TradeConfirmation::where('trade_confirmation_status_id', 4)->get();
 
         foreach ($tradeConfirmations as $tradeConfirmation) {
         	// When is offer is true the initiating user is the buying
@@ -36,7 +36,7 @@ class BookedTradeSeeder extends Seeder
 				"is_sale" => 1,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
-				"amount" => $tradeConfirmation->net_premiums,
+				"amount" => rand(0,100)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
             ]);
 
             // Create Buy booked trade
@@ -49,7 +49,7 @@ class BookedTradeSeeder extends Seeder
 				"is_sale" => 0,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
-				"amount" => $tradeConfirmation->net_premiums,
+				"amount" => rand(0,100)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
             ]);
 
         	if($tradeConfirmation->market_id !== 5) {

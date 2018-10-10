@@ -65,7 +65,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -142,7 +142,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -211,7 +211,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -288,7 +288,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -356,7 +356,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -432,7 +432,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -496,7 +496,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -560,7 +560,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -637,7 +637,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -705,7 +705,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -772,7 +772,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -843,7 +843,7 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"futures",
+                                                    "title"=>"future",
                                                     "type"=> "double"
                                                 ],
                                                 [
@@ -906,7 +906,7 @@ return [
                                     "type"=> "boolean"
                                 ],
                                 [
-                                    "title"=>"futures",
+                                    "title"=>"future",
                                     "type"=> "double"
                                 ],
                                 [
@@ -960,7 +960,7 @@ return [
                                     "type"=> "boolean"
                                 ],
                                 [
-                                    "title"=>"futures",
+                                    "title"=>"future",
                                     "type"=> "double"
                                 ],
                                 [
