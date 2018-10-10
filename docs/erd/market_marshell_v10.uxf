@@ -2208,7 +2208,7 @@ id: int(11)
 trade_confirmation_id: int(11)
 trade_structure_group_id: int(11)
 user_market_request_group_id: int(11)
-trade_confirmation_group: int(11) nullable
+trade_confirmation_group_id: int(11) nullable
 is_options: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
