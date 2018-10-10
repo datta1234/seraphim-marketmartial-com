@@ -10,6 +10,7 @@ require('./components/data-methods');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+window.math = require('mathjs');
 
 import Echo from "laravel-echo"
 
@@ -50,6 +51,7 @@ import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
 import UserMarketNegotiation from './lib/UserMarketNegotiation';
 import Message from './lib/Message'
+import TradeConfirmation from './lib/TradeConfirmation'
 
 import { EventBus } from './lib/EventBus.js';
 
@@ -216,6 +218,30 @@ const app = new Vue({
                     console.error(err);    
                 }
                 return self.market_types;
+            }, err => {
+                console.error(err);
+            });
+        },
+        loadTradeConfirmations(marketType) {
+            let self = this;
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
+            .then(tradeConfirmationResponse => {
+                if(tradeConfirmationResponse.status == 200) {
+                    // set the available market types
+                  
+
+                    tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
+                        x = new TradeConfirmation(x);
+                        self.trade_confirmations.push(x);   
+                        return x;
+                    });                
+
+                } else {
+                
+                    console.error(err);    
+                
+                }
+                return self.trade_confirmations;
             }, err => {
                 console.error(err);
             });
@@ -453,6 +479,7 @@ const app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        trade_confirmations: [],
         message_count: 0,
         page_loaded: false,
         // internal properties
@@ -478,11 +505,14 @@ const app = new Vue({
         .then(configs => {
             // load the trade data
             this.loadMarketTypes();
+
             this.loadUserConfig()
             .then(user_preferences => {
                 let promises = [];
                 if(user_preferences !== null) {
                     user_preferences.prefered_market_types.forEach(market_type => {
+                        promises.push(this.loadTradeConfirmations(market_type));
+
                         promises.push(
                             this.loadMarkets(market_type)
                             .then(markets => {
@@ -495,9 +525,10 @@ const app = new Vue({
                         );
                     });
                 }
+                //
                 return Promise.all(promises);
             })
-            .then(all_market_requests => {
+            .then(all_loaded => {
                 EventBus.$emit('loading', 'page');
                 this.page_loaded = true;
                 //load the no cares from storage
@@ -508,7 +539,6 @@ const app = new Vue({
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
         if(organisationUuid && organisationUuid.content)
         {
-            console.log("Org UUID: ", organisationUuid.content);
             window.Echo.private('organisation.'+organisationUuid.content)
             .listen('.UserMarketRequested', (userMarketRequest) => {
                 console.log("Fired '.UserMarketRequested'", userMarketRequest);

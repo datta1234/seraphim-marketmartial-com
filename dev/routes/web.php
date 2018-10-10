@@ -84,6 +84,10 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
+	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
+		'only' => ['store','index']
+	]);
+
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
     Route::get('stock', 'TradeScreen\StockController@index');
 
@@ -94,9 +98,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
     
 
-
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
-
 
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
@@ -105,9 +107,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 		'only' => ['store','index']
 	]);
 
-	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
-		'only' => ['store','index']
-	]);
+	
 
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
