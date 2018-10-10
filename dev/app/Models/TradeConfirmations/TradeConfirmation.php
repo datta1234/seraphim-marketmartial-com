@@ -16,18 +16,6 @@ class TradeConfirmation extends Model
 	 * @property integer $stock_id
 	 * @property integer $market_id
 	 * @property integer $traiding_account_id
-	 * @property double $spot_price
-	 * @property double $future_reference
-	 * @property double $near_expiery_reference
-	 * @property double $contracts
-	 * @property double $puts
-	 * @property double $calls
-	 * @property double $delta
-	 * @property double $buy_gross_premiums
-	 * @property double $buy_net_premiums
-     * @property double $sell_gross_premiums
-     * @property double $sell_net_premiums
-	 * @property boolean $is_confirmed
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
