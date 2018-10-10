@@ -15,7 +15,7 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $traiding_account_id
+	 * @property integer $trading_account_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -144,7 +144,7 @@ class TradeConfirmation extends Model
     */
     public function tradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
 
     /**

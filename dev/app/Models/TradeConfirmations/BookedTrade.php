@@ -105,6 +105,6 @@ class BookedTrade extends Model
     */
     public function tradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
 }

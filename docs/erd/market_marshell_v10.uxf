@@ -1085,7 +1085,7 @@ trade_confirmation_id: int(11) nullable
 trade_confirmation_status_id: int(11)
 market_id: int(11) nullable
 stock_id: int(11) nullable
-traiding_account_id: int(11)
+trading_account_id: int(11)
 created_at: timestamp
 updated_at: timestamp
 
