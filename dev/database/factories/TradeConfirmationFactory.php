@@ -21,7 +21,7 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class, functio
         'market_id' => function(){
             return factory(App\Models\StructureItems\Market::class)->create()->id;
         },
-        'traiding_account_id' => function(){
+        'trading_account_id' => function(){
             return factory(App\Models\UserManagement\TradingAccount::class)->create()->id;
         },
     ];

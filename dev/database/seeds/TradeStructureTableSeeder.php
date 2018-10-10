@@ -50,6 +50,7 @@ class TradeStructureTableSeeder extends Seeder
                                     'title' => "Options Group",
                                     'trade_structure_id' => $tradeStructureModel->id,
                                     'force_select'=> null,
+                                    'trade_structure_group_id'=>$tradeStructureGroupModel->id,
                                     'trade_structure_group_type_id'=> 3 //@TODO remove hardcode place in config
                                 ]);
 
@@ -70,6 +71,7 @@ class TradeStructureTableSeeder extends Seeder
                                     'title' => "Futures Group",
                                     'trade_structure_id' => $tradeStructureModel->id,
                                     'force_select'=> null,
+                                    'trade_structure_group_id'=>$tradeStructureGroupModel->id,
                                     'trade_structure_group_type_id'=> 3 //@TODO remove hardcode place in config
                                 ]);
 
