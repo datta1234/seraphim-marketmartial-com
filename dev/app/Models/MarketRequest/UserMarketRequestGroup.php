@@ -65,4 +65,14 @@ class UserMarketRequestGroup extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\TradeStructureGroup', 'trade_structure_group_id');
     }
+
+    /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'user_market_request_group_id');
+    }
 }

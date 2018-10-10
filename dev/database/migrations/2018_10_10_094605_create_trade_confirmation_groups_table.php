@@ -18,7 +18,7 @@ class CreateTradeConfirmationGroupsTable extends Migration
             $table->integer('trade_confirmation_id')->unsigned();
             $table->integer('trade_structure_group_id')->unsigned();
             $table->integer('user_market_request_group_id')->unsigned();
-            $table->integer('trade_confirmation_group')->nullable()->unsigned();
+            $table->integer('trade_confirmation_group_id')->nullable()->unsigned();
             $table->boolean('is_options');
             $table->timestamps();
 
@@ -31,7 +31,7 @@ class CreateTradeConfirmationGroupsTable extends Migration
             $table->foreign('user_market_request_group_id')
                     ->references('id')->on('user_market_request_groups');
 
-            $table->foreign('trade_confirmation_group')
+            $table->foreign('trade_confirmation_group_id')
                     ->references('id')->on('trade_confirmation_groups');
         });
     }

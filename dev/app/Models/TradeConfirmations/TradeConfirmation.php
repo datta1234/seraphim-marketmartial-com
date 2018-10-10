@@ -168,6 +168,16 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
     }
 
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id');
+    }
+
     public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
     {
         return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
