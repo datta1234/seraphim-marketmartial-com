@@ -32,7 +32,9 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class, functio
         'calls' => rand(0,3000),
         'delta' => rand(0,3000),
         'gross_premiums' => rand(0,3000),
-        'net_premiums' => rand(0,3000),
-        'is_confirmed' => rand(0,1) == 1,
+        'buy_gross_premiums' => rand(0,3000),
+        'buy_net_premiums' => rand(0,1) == 1,
+        'sell_gross_premiums' => rand(0,3000),
+        'sell_net_premiums' => rand(0,1) == 1,
     ];
 });
