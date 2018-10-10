@@ -32,20 +32,7 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'spot_price',
-		'future_reference',
-		'near_expiery_reference',
-		'contracts',
-		'puts',
-		'calls',
-		'delta',
-		'is_confirmed',
-        'buy_gross_premiums',
-        'buy_net_premiums',
-        'sell_gross_premiums',
-        'sell_net_premiums',
-    ];
+    protected $fillable = [];
 
     /**
      * The attributes that should be mutated to dates.

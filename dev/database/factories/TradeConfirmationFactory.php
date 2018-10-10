@@ -24,17 +24,5 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class, functio
         'traiding_account_id' => function(){
             return factory(App\Models\UserManagement\TradingAccount::class)->create()->id;
         },
-        'spot_price' => rand(1000,50000),
-        'future_reference' => rand(1000,50000),
-        'near_expiery_reference' => rand(0,3000),
-        'contracts' => rand(500,3000),
-        'puts' => rand(0,3000),
-        'calls' => rand(0,3000),
-        'delta' => rand(0,3000),
-        'gross_premiums' => rand(0,3000),
-        'buy_gross_premiums' => rand(0,3000),
-        'buy_net_premiums' => rand(0,1) == 1,
-        'sell_gross_premiums' => rand(0,3000),
-        'sell_net_premiums' => rand(0,1) == 1,
     ];
 });
