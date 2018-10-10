@@ -26,7 +26,47 @@ return [
                                         'title' => 'Quantity',
                                         'type' => 'Double'   
                                     ],
-                                ]
+                                ],
+                                "trade_confirmation_group"=>[
+                                    "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]                                
                         ]
                     ],
         ],
@@ -55,7 +95,48 @@ return [
                                             'title' => 'Quantity',
                                             'type' => 'Double'   
                                         ],
+                                    ],
+                                    "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
                                     ]
+
                             ],
                             [
                                 'title'=> 'Risky options',
@@ -75,7 +156,48 @@ return [
                                             'title' => 'Quantity',
                                             'type' => 'Double'   
                                         ],
+                                    ],
+                                     "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
                                     ]
+
                             ]
                         ],
         ],
@@ -103,6 +225,46 @@ return [
                                             'title' => 'Quantity',
                                             'type' => 'Double'   
                                         ],
+                                    ],
+                                 "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
                                     ]
                             ],
                             [
@@ -123,6 +285,46 @@ return [
                                             'title' => 'Quantity',
                                             'type' => 'Double'   
                                         ],
+                                    ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
                                     ]
                             ]
                         ],
@@ -151,7 +353,47 @@ return [
                                     'title' => 'Quantity',
                                     'type' => 'Double'   
                                 ],
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ],
                     [
                         'title'=> 'Fly Second option',
@@ -167,7 +409,47 @@ return [
                                     'title' => 'Quantity',
                                     'type' => 'Double'   
                                 ],
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ],
                     [
                         'title'=> 'Fly third option',
@@ -183,7 +465,47 @@ return [
                                     'title' => 'Quantity',
                                     'type' => 'Double'   
                                 ],
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ]
                 ],
         
@@ -212,7 +534,47 @@ return [
                                     'title' => 'Quantity',
                                     'type' => 'Double'   
                                 ],
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ],
                     [
                         'title'=> 'Switch Options',
@@ -232,7 +594,47 @@ return [
                                     'title' => 'Quantity',
                                     'type' => 'Double'   
                                 ],
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ]
                 ],
         
@@ -251,7 +653,47 @@ return [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
                                 ]
-                            ]
+                            ],
+                             "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ]
                 ],
         
@@ -262,7 +704,7 @@ return [
             'is_selectable' => false,
                 'trade_structure_group' => [
                     [
-                         'force_select' => true,
+                        'force_select' => true,
                         'title'=> 'default',
                         'items'=>
                             [
@@ -274,7 +716,47 @@ return [
                                     'title' => 'Expiration Date 2',
                                     'type' => 'expiration date'   
                                 ]
-                            ]
+                            ],
+                                "trade_confirmation_group"=>[
+                                        "options" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"put/call",
+                                                "type"=>"Boolean"
+                                            ],
+                                            [
+                                                "title"=>"volatity",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Gross Premiums",
+                                                "type"=>"Double"
+                                            ],
+                                            [
+                                                "title"=>"Net Premiums" ,
+                                                "type"=>"Double"
+                                            ],
+                                        ],
+                                        "futures" =>
+                                        [
+                                            [
+                                                "title"=>"sell/buy",
+                                                "type"=> "Boolean"
+                                            ],
+                                            [
+                                                "title"=>"futures",
+                                                "type"=> "double"
+                                            ],
+                                            [
+                                                "title"=>"contract",
+                                                "type"=> "double"
+                                            ]
+                                        ]
+                                    ]
                     ]
                 ],
         
@@ -293,7 +775,47 @@ return [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
                                 ]
+                            ],
+                            "trade_confirmation_group"=>[
+                            "options" =>
+                            [
+                                [
+                                    "title"=>"sell/buy",
+                                    "type"=>"Boolean"
+                                ],
+                                [
+                                    "title"=>"put/call",
+                                    "type"=>"Boolean"
+                                ],
+                                [
+                                    "title"=>"volatity",
+                                    "type"=>"Double"
+                                ],
+                                [
+                                    "title"=>"Gross Premiums",
+                                    "type"=>"Double"
+                                ],
+                                [
+                                    "title"=>"Net Premiums" ,
+                                    "type"=>"Double"
+                                ],
+                            ],
+                            "futures" =>
+                            [
+                                [
+                                    "title"=>"sell/buy",
+                                    "type"=> "Boolean"
+                                ],
+                                [
+                                    "title"=>"futures",
+                                    "type"=> "double"
+                                ],
+                                [
+                                    "title"=>"contract",
+                                    "type"=> "double"
+                                ]
                             ]
+                        ]
                     ],
                     [
                         'title'=> 'Switch Options',
@@ -304,7 +826,48 @@ return [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
                                 ]
+                            ],
+                            "trade_confirmation_group"=>[
+                            "options" =>
+                            [
+                                [
+                                    "title"=>"sell/buy",
+                                    "type"=>"Boolean"
+                                ],
+                                [
+                                    "title"=>"put/call",
+                                    "type"=>"Boolean"
+                                ],
+                                [
+                                    "title"=>"volatity",
+                                    "type"=>"Double"
+                                ],
+                                [
+                                    "title"=>"Gross Premiums",
+                                    "type"=>"Double"
+                                ],
+                                [
+                                    "title"=>"Net Premiums" ,
+                                    "type"=>"Double"
+                                ],
+                            ],
+                            "futures" =>
+                            [
+                                [
+                                    "title"=>"sell/buy",
+                                    "type"=> "Boolean"
+                                ],
+                                [
+                                    "title"=>"futures",
+                                    "type"=> "double"
+                                ],
+                                [
+                                    "title"=>"contract",
+                                    "type"=> "double"
+                                ]
                             ]
+                        ]
+
                     ]
                 ],
         
