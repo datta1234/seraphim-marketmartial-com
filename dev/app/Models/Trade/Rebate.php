@@ -8,11 +8,10 @@ class Rebate extends Model
 {
 	/**
 	 * @property integer $id
-	 * @property integer $user_id
+	 * @property integer $user_id - The user to determine put or call from the trade confirmation
 	 * @property integer $user_market_request_id
 	 * @property integer $user_market_id
-	 * @property integer $organisation_id
-	 * @property integer $booked_trade_id
+	 * @property integer $organisation_id - The Market Maker organisation id
 	 * @property boolean $is_paid
 	 * @property \Carbon\Carbon $trade_date
 	 * @property \Carbon\Carbon $created_at
@@ -32,7 +31,12 @@ class Rebate extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
+        'user_market_request_id',
+        'user_market_id',
+        'organisation_id',
         'is_paid',
+        'trade_date',
     ];
 
     /**
@@ -48,16 +52,7 @@ class Rebate extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function trades()
-    {
-        return $this->belongsTo('App\Models\Trade\Trade','trade_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function userMarketRequests()
+    public function userMarketRequest()
     {
         return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
     }
@@ -68,14 +63,14 @@ class Rebate extends Model
     */
     public function bookedTrades()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\BookedTrade','booked_trade_id');
+        return $this->hasMany('App\Models\Trade\Rebate','rebate_trade_id');
     }
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function userMarkets()
+    public function userMarket()
     {
         return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
     }
@@ -84,7 +79,7 @@ class Rebate extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function users()
+    public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
@@ -96,5 +91,54 @@ class Rebate extends Model
     public function organisations()
     {
         return $this->hasMany('App\Models\UserManagement\Organisation', 'organisation_id');
+    }
+
+    public function preFormat($user)
+    {
+        $trade_confirmation = $this->bookedTrade->tradeConfirmation;
+        $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
+
+        $data = [
+            "date"          => $this->trade_date,
+            "market"         => null,
+            "is_put"        => null,
+            "strike"        => $user_market_request_items["strike"],
+            "expiration"    => $user_market_request_items["expiration"],
+            "nominal"       => $user_market_request_items["nominal"],
+            "role"          => null,
+            "rebate"        => $this->bookedTrade->amount,
+        ];
+
+        // Resolve put or call
+        if($trade_confirmation->tradeNegotiation->is_offer == 1) {
+            $data["is_put"] = $this->user_id == $trade_confirmation->receiving_user_id ? true :
+                false;
+        } else {
+            $data["is_put"] = $this->user_id == $trade_confirmation->receiving_user_id ? false :
+                true;
+        }
+
+        // Resolve stock / market
+        if($this->bookedTrade->stock) {
+            $data["market"] = $this->bookedTrade->stock->name;
+        } else {
+            $data["market"] = $trade_confirmation->market->title;
+        }
+
+        // Resolve role
+        switch (true) {
+            case ($trade_confirmation->sendUser->organisation->id == $user->organisation->id):
+            case ($trade_confirmation->recievingUser->organisation->id == $user->organisation->id):
+                $data["role"] = 'Traded';
+                break;
+            case ($trade_confirmation->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+                $data["role"] = 'Market Maker (traded away)';
+                break;
+            default:
+                $data["role"] = null;
+                break;
+        }
+
+        return $data;
     }
 }

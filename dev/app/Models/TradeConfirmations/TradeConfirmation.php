@@ -16,16 +16,6 @@ class TradeConfirmation extends Model
 	 * @property integer $stock_id
 	 * @property integer $market_id
 	 * @property integer $traiding_account_id
-	 * @property double $spot_price
-	 * @property double $future_reference
-	 * @property double $near_expiery_reference
-	 * @property double $contracts
-	 * @property double $puts
-	 * @property double $calls
-	 * @property double $delta
-	 * @property double $gross_premiums
-	 * @property double $net_premiums
-	 * @property boolean $is_confirmed
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -42,18 +32,7 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'spot_price',
-		'future_reference',
-		'near_expiery_reference',
-		'contracts',
-		'puts',
-		'calls',
-		'delta',
-		'gross_premiums',
-		'net_premiums',
-		'is_confirmed',
-    ];
+    protected $fillable = [];
 
     /**
      * The attributes that should be mutated to dates.
@@ -212,20 +191,15 @@ class TradeConfirmation extends Model
         });
     }
 
-    public function preFormatStats($user = null)
+    public function resolveUserMarketRequestItems()
     {
-        $data = [
-            "id" => $this->id,
-            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-            "market" => $this->market->title,
-            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
-            "nominal" => array(),
-            "strike" => array(),
+        $resolved_items = [
             "expiration" => array(),
+            "strike" => array(),
             "strike_percentage" => array(),
-            "volatility" => array(),
+            "nominal" => array(),
         ];
-        
+
         // Get the user market request items
         $user_market_request_items = array();
         $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
@@ -243,23 +217,44 @@ class TradeConfirmation extends Model
                         case 'Expiration Date':
                         case 'Expiration Date 1':
                         case 'Expiration Date 2':
-                                $data["expiration"][] = $item->value;
+                                $resolved_items["expiration"][] = $item->value;
                             break;
                         case 'Strike':
-                            $data["strike"][] = $item->value;
+                            $resolved_items["strike"][] = $item->value;
                             if($this->spot_price !== null) {
-                                $data["strike_percentage"][] = round($item->value/$this->spot_price, 2);
+                                $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
                             } else {
-                                $data["strike_percentage"] = null;
+                                $resolved_items["strike_percentage"] = null;
                             }
                             break;
                         case 'Quantity':
-                                $data["nominal"][] = $item->value;
+                                $resolved_items["nominal"][] = $item->value;
                             break;
                     }
                 }    
             }   
         }
+        return $resolved_items;
+    }
+
+    public function preFormatStats($user = null)
+    {   
+        // @TODO - Add logic for market to be a single stock name if applicable
+        
+        $user_market_request_items = $this->resolveUserMarketRequestItems();
+        
+        $data = [
+            "id" => $this->id,
+            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+            "market" => $this->market->title,
+            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
+            "nominal" =>  $user_market_request_items["nominal"],
+            "strike" =>  $user_market_request_items["strike"],
+            "expiration" =>  $user_market_request_items["expiration"],
+            "strike_percentage" =>  $user_market_request_items["strike_percentage"],
+            "volatility" => array(),
+        ];
+        
         $market_negotiation = $this->tradeNegotiation->marketNegotiation;
         // volatility
         if($market_negotiation->bid_qty) {
@@ -391,5 +386,5 @@ class TradeConfirmation extends Model
         }*/
 
       return $trade_confirmations_query;
-  }
+    }
 }

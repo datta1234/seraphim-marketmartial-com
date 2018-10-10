@@ -243,7 +243,7 @@ updated_at:timestamp
       <x>1536</x>
       <y>1376</y>
       <w>224</w>
-      <h>160</h>
+      <h>144</h>
     </coordinates>
     <panel_attributes>user_market_request_items
 --
@@ -264,13 +264,13 @@ updated_at: timestamp
     <id>Relation</id>
     <coordinates>
       <x>904</x>
-      <y>1528</y>
+      <y>1512</y>
       <w>712</w>
-      <h>256</h>
+      <h>272</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>850.0;10.0;850.0;290.0;10.0;290.0</additional_attributes>
+    <additional_attributes>850.0;10.0;850.0;310.0;10.0;310.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -312,29 +312,27 @@ m2=0..n</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>776</x>
-      <y>1632</y>
+      <y>1624</y>
       <w>40</w>
-      <h>80</h>
+      <h>88</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>712</x>
       <y>1520</y>
-      <w>232</w>
-      <h>120</h>
+      <w>168</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>trade_structure_groups
 --
 id: int(10)
 trade_structure_id: int(11)
-trade_structure_group_type_id: int(11)
 title: varchar(255)
-force_select: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
 
@@ -344,15 +342,15 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>936</x>
+      <x>872</x>
       <y>1504</y>
-      <w>360</w>
+      <w>424</w>
       <h>128</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>410.0;10.0;410.0;130.0;10.0;130.0</additional_attributes>
+    <additional_attributes>490.0;10.0;490.0;130.0;10.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLPackage</id>
@@ -532,24 +530,24 @@ m2=0..n</panel_attributes>
     <coordinates>
       <x>3472</x>
       <y>1080</y>
-      <w>704</w>
+      <w>712</w>
       <h>72</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>860.0;10.0;330.0;10.0;330.0;60.0;10.0;60.0</additional_attributes>
+    <additional_attributes>870.0;10.0;330.0;10.0;330.0;60.0;10.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4408</x>
+      <x>4416</x>
       <y>1120</y>
-      <w>88</w>
+      <w>80</w>
       <h>96</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;90.0;10.0;90.0;90.0;10.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;80.0;10.0;80.0;90.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -830,12 +828,12 @@ m2=0..n</panel_attributes>
     <coordinates>
       <x>896</x>
       <y>664</y>
-      <w>3352</w>
+      <w>3360</w>
       <h>384</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;250.0;10.0;250.0;260.0;4150.0;260.0;4150.0;460.0</additional_attributes>
+    <additional_attributes>10.0;10.0;250.0;10.0;250.0;260.0;4160.0;260.0;4160.0;460.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1070,10 +1068,10 @@ layer=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4160</x>
+      <x>4168</x>
       <y>1032</y>
       <w>256</w>
-      <h>256</h>
+      <h>288</h>
     </coordinates>
     <panel_attributes>trade_confirmations
 --
@@ -1081,14 +1079,23 @@ id: int(11)
 send_user_id: int(11)
 receiving_user_id: int(11)
 trade_negotiation_id: int(11)
+spot_price: double(11,2) nullable
+future_reference: double(11,2) nullable
+near_expiery_reference: double(11,2) nullable
 trade_confirmation_id: int(11) nullable
 trade_confirmation_status_id: int(11)
 market_id: int(11) nullable
 stock_id: int(11) nullable
+contracts: double(11,2)
+puts: double(11,2) nullable
+calls: double(11,2) nullable
+delta: double(11,2) nullable
+gross_premiums: double(11,2)
+net_premiums: double(11,2)
+is_confirmed: tinyint(1)
 traiding_account_id: int(11)
 created_at: timestamp
 updated_at: timestamp
-
 layer=1</panel_attributes>
     <additional_attributes/>
   </element>
@@ -1127,8 +1134,8 @@ m2=0..n</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4160</x>
-      <y>1336</y>
+      <x>4168</x>
+      <y>1328</y>
       <w>256</w>
       <h>88</h>
     </coordinates>
@@ -1146,14 +1153,14 @@ layer=1</panel_attributes>
     <coordinates>
       <x>56</x>
       <y>64</y>
-      <w>4240</w>
+      <w>4248</w>
       <h>984</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>5260.0;1210.0;5260.0;990.0;1530.0;990.0;1520.0;10.0;10.0;10.0;10.0;220.0;350.0;220.0</additional_attributes>
+    <additional_attributes>5270.0;1210.0;5270.0;990.0;1530.0;990.0;1520.0;10.0;10.0;10.0;10.0;220.0;350.0;220.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1183,14 +1190,14 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4408</x>
+      <x>4416</x>
       <y>1072</y>
-      <w>144</w>
+      <w>136</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;160.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;150.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1412,8 +1419,8 @@ m2=0..1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>4160</x>
-      <y>1440</y>
+      <x>4176</x>
+      <y>1424</y>
       <w>256</w>
       <h>128</h>
     </coordinates>
@@ -1451,37 +1458,37 @@ layer=1</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>4112</x>
-      <y>1552</y>
-      <w>64</w>
-      <h>112</h>
+      <y>1536</y>
+      <w>80</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0;10.0;110.0;60.0;110.0</additional_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0;10.0;130.0;60.0;130.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>4112</x>
       <y>1120</y>
-      <w>64</w>
-      <h>400</h>
+      <w>80</w>
+      <h>384</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>60.0;10.0;10.0;10.0;10.0;470.0;60.0;470.0</additional_attributes>
+    <additional_attributes>70.0;10.0;10.0;10.0;10.0;450.0;80.0;450.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>896</x>
       <y>808</y>
-      <w>3280</w>
-      <h>744</h>
+      <w>3296</w>
+      <h>728</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;170.0;10.0;170.0;120.0;3990.0;110.0;3990.0;900.0;4080.0;900.0</additional_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0;170.0;120.0;3990.0;110.0;3990.0;880.0;4100.0;880.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1525,12 +1532,12 @@ m2=0..n</panel_attributes>
     <coordinates>
       <x>872</x>
       <y>824</y>
-      <w>3304</w>
-      <h>744</h>
+      <w>3320</w>
+      <h>728</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;220.0;10.0;220.0;120.0;4010.0;130.0;4010.0;900.0;4110.0;900.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;10.0;220.0;10.0;220.0;120.0;4010.0;130.0;4010.0;880.0;4130.0;880.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1892,36 +1899,36 @@ layer=7</panel_attributes>
     <coordinates>
       <x>896</x>
       <y>552</y>
-      <w>3320</w>
+      <w>3328</w>
       <h>496</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>4110.0;600.0;4110.0;310.0;440.0;310.0;440.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>4120.0;600.0;4120.0;310.0;440.0;310.0;440.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>872</x>
       <y>1104</y>
-      <w>3304</w>
+      <w>3312</w>
       <h>896</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>4110.0;10.0;3990.0;10.0;3990.0;1100.0;260.0;1100.0;260.0;190.0;10.0;190.0</additional_attributes>
+    <additional_attributes>4120.0;10.0;3990.0;10.0;3990.0;1100.0;260.0;1100.0;260.0;190.0;10.0;190.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>880</x>
       <y>1064</y>
-      <w>3296</w>
+      <w>3304</w>
       <h>928</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>4100.0;10.0;3970.0;10.0;3970.0;1140.0;300.0;1140.0;300.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>4110.0;10.0;3970.0;10.0;3970.0;1140.0;300.0;1140.0;300.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1962,14 +1969,14 @@ m2=0..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>4120</x>
+      <x>4128</x>
       <y>1136</y>
       <w>56</w>
-      <h>264</h>
+      <h>256</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1</panel_attributes>
-    <additional_attributes>50.0;10.0;30.0;10.0;30.0;300.0;50.0;300.0</additional_attributes>
+    <additional_attributes>50.0;10.0;20.0;10.0;20.0;290.0;50.0;290.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -2099,13 +2106,13 @@ value:float
     <id>Relation</id>
     <coordinates>
       <x>1656</x>
-      <y>1528</y>
+      <y>1512</y>
       <w>112</w>
-      <h>104</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0;120.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0;120.0;120.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -2184,153 +2191,5 @@ layer=1</panel_attributes>
 --
 bg=orange</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>4536</x>
-      <y>1280</y>
-      <w>264</w>
-      <h>128</h>
-    </coordinates>
-    <panel_attributes>trade_confirmation_groups
---
-id: int(11)
-trade_confirmation_id: int(11)
-trade_structure_group_id: int(11)
-user_market_request_group_id: int(11)
-trade_confirmation_group_id: int(11) nullable
-is_options: tinyint(1)
-created_at:timestamp
-updated_at:timestamp
-
-layer=1
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>4536</x>
-      <y>1488</y>
-      <w>272</w>
-      <h>128</h>
-    </coordinates>
-    <panel_attributes>trade_confirmation_items
---
-id: int(11)
-item_id:int(11)
-trade_confirmation_group_id: int(11)
-value: varchar(255)
-title: varchar(255)
-created_at: timestamp
-updated_at: timestamp
-
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>4672</x>
-      <y>1400</y>
-      <w>40</w>
-      <h>104</h>
-    </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>760</x>
-      <y>1608</y>
-      <w>3976</w>
-      <h>480</h>
-    </coordinates>
-    <panel_attributes>m1=0..n
-m2=0..1</panel_attributes>
-    <additional_attributes>4930.0;10.0;4930.0;580.0;10.0;580.0;10.0;250.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>824</x>
-      <y>1360</y>
-      <w>3728</w>
-      <h>688</h>
-    </coordinates>
-    <panel_attributes>m1=0..n
-m2=0..1
-</panel_attributes>
-    <additional_attributes>4640.0;10.0;4560.0;10.0;4560.0;840.0;390.0;840.0;390.0;380.0;10.0;380.0;10.0;350.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>448</x>
-      <y>1520</y>
-      <w>168</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>trade_structure_group_types
---
-id: int(10)
-title: varchar(255)
-created_at:timestamp
-updated_at:timestamp
-
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>608</x>
-      <y>1560</y>
-      <w>120</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>m1=1
-m2=0..n</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>4408</x>
-      <y>1256</y>
-      <w>144</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;100.0;10.0;100.0;80.0;160.0;80.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>4792</x>
-      <y>1296</y>
-      <w>72</w>
-      <h>96</h>
-    </coordinates>
-    <panel_attributes>m1=0..1
-m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;70.0;10.0;70.0;90.0;10.0;90.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1312</x>
-      <y>1400</y>
-      <w>3288</w>
-      <h>672</h>
-    </coordinates>
-    <panel_attributes>m1=0..n
-m2=0..1</panel_attributes>
-    <additional_attributes>4070.0;10.0;4070.0;60.0;3990.0;60.0;3990.0;820.0;10.0;820.0;10.0;140.0</additional_attributes>
   </element>
 </diagram>
