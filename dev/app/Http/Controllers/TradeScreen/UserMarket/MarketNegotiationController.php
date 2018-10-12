@@ -130,7 +130,7 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function counterProposal(Request $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function counterProposal(MarketNegotiationRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
         $this->authorize('counter',$marketNegotiation);
         $market = $marketNegotiation->counter($request->user(), $request->only(['bid', 'offer']));

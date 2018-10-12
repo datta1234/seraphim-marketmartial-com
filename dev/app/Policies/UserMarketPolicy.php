@@ -88,7 +88,7 @@ class UserMarketPolicy
         if($userMarket->currentMarketNegotiation->isFoK()) {
             return false;
         }
-        return $userMarket->userMarketRequest->isAcceptedState($current_org_id) || $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open";
+        return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open";
     }
 
     public function spinNegotiation(User $user, UserMarket $userMarket)

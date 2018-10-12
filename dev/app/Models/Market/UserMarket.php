@@ -67,7 +67,7 @@ class UserMarket extends Model
     */
     public function marketNegotiations()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id');
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"ASC");
     }
 
     public function firstNegotiation()

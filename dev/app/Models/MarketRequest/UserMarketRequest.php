@@ -347,7 +347,9 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
-        $is_killed          =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->is_killed === true : false;
+        $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
+        $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
+        $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
         $lastUntraded       =  $this->lastTradeNegotiationUnTraded();
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
@@ -360,7 +362,7 @@ class UserMarketRequest extends Model
         {
             return "request-vol";
         }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded && $is_killed)
+        elseif($acceptedState && !$marketOpen && !$lastUntraded && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ) )
         {
             return 'negotiation-open';
         }
