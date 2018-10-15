@@ -297,6 +297,28 @@ class UserMarket extends Model
     }
 
 
+    public function noFurthercares()
+    {
+        $lastUserMarket = $this->marketNegotiations()->latest()->first();
+        $newMarketNegotiation = $lastUserMarket->replicate();
+        $lastTradeNegotiation = $lastUserMarket->tradeNegotiations()->latest()->first();
+
+        $newMarketNegotiation->counter_user_id = null;
+        $newMarketNegotiation->market_negotiation_id = null;
+
+        if($lastTradeNegotiation->is_offer)
+        {   
+            $newMarketNegotiation->bid = null;
+            $newMarketNegotiation->bid_qty = null;
+
+        }else
+        {
+            $newMarketNegotiation->offer = null;
+            $newMarketNegotiation->offer_qty = null;
+        }
+        return $newMarketNegotiation->save();
+    }
+
 
     public function addNegotiation($user,$data)
     {

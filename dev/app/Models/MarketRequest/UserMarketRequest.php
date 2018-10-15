@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models\MarketRequest;
-
+use App\Models\MarketRequest\UserMarketRequestItem;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Events\UserMarketRequested;
@@ -332,12 +332,21 @@ class UserMarketRequest extends Model
         return false;
     }
 
-    public function lastTradeNegotiationUnTraded()
+    public function lastTradeNegotiationIsUnTraded()
     {
         if(!is_null($this->chosenUserMarket))
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded;  
+        }
+    }
+
+     public function lastTradeNegotiationIsTraded()
+    {
+        if(!is_null($this->chosenUserMarket))
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->traded;  
         }
     }
 
@@ -351,6 +360,8 @@ class UserMarketRequest extends Model
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
         $lastUntraded       =  $this->lastTradeNegotiationUnTraded();
+        $lastTraded         =  !$lastUntraded ? $this->lastTradeNegotiationIsTraded() : false;
+
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
@@ -366,11 +377,15 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-open';
         }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded)
+        elseif($acceptedState && !$marketOpen && !$lastUntraded && !$lastTraded)
         {
             return 'negotiation-pending';
         }
-        elseif ($marketOpen && !$lastUntraded)
+        elseif ($acceptedState && !$marketOpen && !$lastUntraded && $lastTraded)
+        {
+            return 'trade-negotiation-balance';
+        }
+        elseif ($marketOpen && !$lastUntraded && !$lastTraded)
         {
             return 'negotiation-open';
         }
@@ -445,7 +460,7 @@ class UserMarketRequest extends Model
 
 
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded)
+            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation))
             {
                 if($lastNegotiation->lastTradeNegotiation->initiateUser->organisation_id == $current_org_id)
                 {
@@ -477,7 +492,6 @@ class UserMarketRequest extends Model
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
         $tradeNegotiationRoles = $this->getCurrentUserRoleInTradeNegotiation($current_org_id);
 
-
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state'     => "",
@@ -502,7 +516,6 @@ class UserMarketRequest extends Model
                 }
             break;
             case "negotiation-pending":
-
                 if(in_array('negotiator',$marketNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.negotiator');
                
@@ -533,6 +546,15 @@ class UserMarketRequest extends Model
                     $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.other');
                 }
             break;
+            case "trade-negotiation-balance":
+                if(in_array('negotiator',$tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-balance.negotiator');
+                }else if(in_array('counter', $tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-balance.counter');
+                }else{
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-balance.other');
+                }
+            break;
         }
 
 
@@ -552,5 +574,32 @@ class UserMarketRequest extends Model
 
         return $attributes;
     }
+
+    public function getDynamicItem($attr)
+    {
+        $item = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
+                $q->whereHas('userMarketRequest',function($qq){
+                    $qq->where('id',$this->id);
+                });
+            })
+        ->where('title',$attr)
+        ->first();
+        if($item)
+        {
+            switch ($item->type) {
+                case 'double':
+                    return floatval($item->value);
+                    break;
+                default:
+                    return $item->value;
+                    break;
+            }
+        }else
+        {
+            return null;
+        }
+    }
+
+
 
 }

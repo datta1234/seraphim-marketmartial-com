@@ -281,13 +281,32 @@ export default class UserMarketRequest extends BaseModel {
     isTrading()
     {
         let isTrading = [
-            "TRADE-NEGOTIATION-OPEN",
-            "TRADE-NEGOTIATION-PENDING"
+            "TRADE-NEGOTIATION-SENDER",
+            "TRADE-NEGOTIATION-COUNTER",
+            "TRADE-NEGOTIATION-PENDING",
+            "TRADE-NEGOTIATION-BALANCER"
         ];
         return isTrading.indexOf(this.attributes.state) > -1; 
     }
 
-    state() {
+    canCounterTrade()
+    {
+        let canCounterTrade = [
+            "TRADE-NEGOTIATION-COUNTER"
+        ];
+        return canCounterTrade.indexOf(this.attributes.state) > -1; 
+    }
+
+    mustWorkBalance()
+    {
+        let mustWorkBalance = [
+            "TRADE-NEGOTIATION-BALANCER"
+        ];
+        return mustWorkBalance.indexOf(this.attributes.state) > -1;
+    }
+
+    state() 
+    {
         if(this.chosen_user_market == null) {
             return "quote";
         }

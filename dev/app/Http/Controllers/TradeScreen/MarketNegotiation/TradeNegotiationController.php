@@ -20,13 +20,12 @@ class TradeNegotiationController extends Controller
     public function store(TradeNegotiationStoreRequest $request,MarketNegotiation $marketNegotiation)
     {   
         $user = $request->user();
-             
         //$this->authorize('addTradeNegotiation',$marketNegotiation);     
         $tradeNegotiation = $marketNegotiation->addTradeNegotiation($user,$request->all());
         
        // $user->organisation->notify("market_request_store","Response sent to interest.",true);
         $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
-        return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to interest."]);
+        return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to counterparty."]);
 
     }
 }
