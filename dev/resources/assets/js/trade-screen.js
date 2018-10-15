@@ -519,6 +519,15 @@ const app = new Vue({
             .listen('ChatMessageReceived', (received_org_message) => {
                 this.$emit('chatMessageReceived', received_org_message);
             }); 
+
+            // possibly let us cath what happens when pusher dc's
+            window.Echo.connector.pusher.connection.bind('disconnected', function(event) {
+                console.error(event);
+                let re = confirm("Live update stream disconnected!\n\nIf problem persists, please contact an administrator\nReload Now?");
+                if(re) {
+                    location.reload();
+                }
+            });
         } else {
             console.error("Missing Organisation UUID");
             let re = confirm("Failed to load Organisation Credentials\nPlease reload your page\n\nIf problem persists, please contact an administrator\nReload Now?");
