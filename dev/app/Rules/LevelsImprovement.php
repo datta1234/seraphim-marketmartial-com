@@ -9,15 +9,17 @@ class LevelsImprovement implements Rule
 
    
     private $request; 
+    private $lastNegotiation;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($request)
+    public function __construct($request, $lastNegotiation)
     {
         $this->request = $request;
+        $this->lastNegotiation = $lastNegotiation;
     }
 
     /**
@@ -33,12 +35,14 @@ class LevelsImprovement implements Rule
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
-        $lastNegotiation = $this->request->user_market->lastNegotiation;
+        if(!$this->lastNegotiation) {
+            $this->lastNegotiation = $this->request->user_market->lastNegotiation;
+        }
         //check to see if the bid is improved or the offer
         if($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id) == "negotiation-open")
         {
             // if the last one was an FOK & killed
-            if($lastNegotiation->is_killed) {
+            if($this->lastNegotiation->is_killed) {
                 return  true;
             }
 
@@ -63,7 +67,6 @@ class LevelsImprovement implements Rule
             */
 
             // ensure its set
-            \Log::info([$attribute, $this->request->input($attribute)]);
             if($this->request->input($attribute)) {
                 /*
                     Ensure the value is improved
@@ -83,15 +86,14 @@ class LevelsImprovement implements Rule
                         [10, 5] = false && false
 
                 */
-                \Log::info([$attribute, ($this->request->input($attribute) > $lastNegotiation->{$attribute}) == $valid, ($this->request->input($attribute) < $lastNegotiation->{$attribute}) == !$valid]);
                 if(
-                    ($this->request->input($attribute) > $lastNegotiation->{$attribute}) == $valid &&
-                    ($this->request->input($attribute) < $lastNegotiation->{$attribute}) == !$valid
+                    ($this->request->input($attribute) > $this->lastNegotiation->{$attribute}) == $valid &&
+                    ($this->request->input($attribute) < $this->lastNegotiation->{$attribute}) == !$valid
                 ) {
                     return true;
                 } else {
                     /*
-                        If Value not improved, Ensure the Inverse value is improved
+                        If Value not improved, Ensure the Inverse value is improved ONLY if attribute equal
 
                         if 'bid' > check offer
                             ( offer > curOffer ) == false && 
@@ -108,10 +110,10 @@ class LevelsImprovement implements Rule
                             [10, 15] = false && false
 
                     */
-                    \Log::info([$attribute, ($this->request->input($inverse) > $lastNegotiation->{$inverse}) == !$valid, ($this->request->input($inverse) < $lastNegotiation->{$inverse}) == $valid]);
                     if(
-                        ($this->request->input($inverse) > $lastNegotiation->{$inverse}) == !$valid &&
-                        ($this->request->input($inverse) < $lastNegotiation->{$inverse}) == $valid
+                        floatval($this->request->input($attribute)) === $this->lastNegotiation->{$attribute} &&
+                        ($this->request->input($inverse) > $this->lastNegotiation->{$inverse}) == !$valid &&
+                        ($this->request->input($inverse) < $this->lastNegotiation->{$inverse}) == $valid
                     ) {
                         return true;
                     }

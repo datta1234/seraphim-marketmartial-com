@@ -248,7 +248,7 @@ class MarketNegotiation extends Model
         return $query->when(!$private, function($q){
             $q->where('is_private', false);
         })->whereHas('user',function($q) use ($user) {
-            $q->where('id','!=',$user->id);
+            $q->where('organisation_id','!=',$user->organisation_id);
         })->orderBy('created_at', 'DESC');
     }
 

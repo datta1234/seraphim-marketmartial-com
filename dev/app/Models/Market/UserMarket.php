@@ -388,6 +388,7 @@ class UserMarket extends Model
     public function isCounter($user = null, $negotiation = null) {
         $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        \Log::info([$org, $negotiation->marketNegotiationParent->user->organisation_id, $negotiation->user->organisation_id]);
         if($org == null) {
             return false;
         }
@@ -425,8 +426,10 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
+                                            \Log::info(["counter", $active]);
                                             if($active === null) {
                                                 $active = $this->isInterest();
+                                                \Log::info(["interest", $active]);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {

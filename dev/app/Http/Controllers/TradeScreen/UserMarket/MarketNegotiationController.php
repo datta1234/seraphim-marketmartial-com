@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Market\UserMarket;
 use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
+use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
 
 
 class MarketNegotiationController extends Controller
@@ -131,7 +132,7 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function counterProposal(MarketNegotiationRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function counterProposal(MarketNegotiationCounterRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
         $this->authorize('counter',$marketNegotiation);
         $market = $marketNegotiation->counter($request->user(), $request->only(['bid', 'offer']));

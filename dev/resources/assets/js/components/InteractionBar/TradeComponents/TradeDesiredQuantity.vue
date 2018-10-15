@@ -10,15 +10,32 @@
             </template>
             <b-row> 
                 <b-col cols="12" v-html="subtitle" class="text-center"></b-col>
-            </b-row>   
-            <b-row v-if="!confirmed">
-               <b-col cols="6">
-                    <b-btn variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
-               </b-col>
-               <b-col cols="6">
-                     <b-btn variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
-               </b-col>
             </b-row>
+            <template v-if="is_offer == null">
+              <b-row>
+                 <b-col cols="6">
+                      <b-btn variant="primary" size="sm" @click="is_offer = true">Buy</b-btn>
+                 </b-col>
+                 <b-col cols="6">
+                       <b-btn variant="primary" size="sm" @click="is_offer = false">Sell</b-btn>
+                 </b-col>
+              </b-row>
+            </template>
+            <template v-if="is_offer != null && !confirmed">
+              <b-row>
+                 <b-col cols="12" class="text-center">
+                      Confirm {{ btnText }}
+                 </b-col>
+               </b-row>
+               <b-row>
+                 <b-col cols="6">
+                      <b-btn variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
+                 </b-col>
+                 <b-col cols="6">
+                       <b-btn variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
+                 </b-col>
+              </b-row>
+            </template>
             <template v-if="confirmed">
             <div class="form-row align-items-center">
                  <label class="col-sm-4">
@@ -64,7 +81,7 @@
             },
             isOffer: {
                 type: Boolean,
-                default: false,
+                default: null,
             },
             parent: {
                 type: String,
@@ -73,6 +90,7 @@
         },
         data() {
              return {
+                is_offer: null,
                  confirmed:false,
                  tradeNegotiation: new TradeNegotiation(),
                  server_loading: false,
@@ -82,7 +100,7 @@
         },
         watch: {
             marketNegotiation: function () {
-                if(this.isOffer)
+                if(this.is_offer)
                 {
                   this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;
                 }else
@@ -99,7 +117,10 @@
                 let title = marketTitle+" "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+
                 " "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
                 
-                if(this.isOffer)
+                if(this.is_offer == null) {
+                  return "Buy Or Sell?"
+                }
+                if(this.is_offer)
                 {
                     return this.confirmed ?  title : "Lift the offer?";   
                 }else
@@ -109,7 +130,7 @@
            },
            subtitle(){
 
-            if(this.isOffer){
+            if(this.is_offer){
                return this.confirmed ? "You Are Buying @ <span class='text-success'>" + this.marketNegotiation.offer +'</span>': "";
             }else
             { 
@@ -119,23 +140,25 @@
 
            },
            btnText(){
-                return this.isOffer ? "Buy" : "Sell";
+                return this.is_offer ? "Buy" : "Sell";
            }            
         },
         methods: {
             cancel(){
                 this.$emit('close');
+                this.is_offer = null;
                 this.confirmed = false;
             },
            storeTradeNegotiation(){
                 this.server_loading = true;
-                this.tradeNegotiation.is_offer = this.isOffer;
+                this.tradeNegotiation.is_offer = this.is_offer;
 
                 this.tradeNegotiation.store(this.marketNegotiation)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
+                    this.is_offer = null;
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -146,8 +169,8 @@
            }
         },
         created() {
-
-            if(this.isOffer)
+            this.is_offer = this.is_offer;
+            if(this.is_offer)
             {
               this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;
             }else

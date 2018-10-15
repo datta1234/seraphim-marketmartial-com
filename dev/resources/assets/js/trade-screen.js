@@ -405,6 +405,7 @@ const app = new Vue({
             });
             if(typeof message !== 'undefined') {
                 // Break if there is already a completed message for this checksum
+                console.log("Found Existing Message", message);
                 return;
             }
 
@@ -508,29 +509,51 @@ const app = new Vue({
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
         if(organisationUuid && organisationUuid.content)
         {
-            console.log("Org UUID: ", organisationUuid.content);
-            window.Echo.private('organisation.'+organisationUuid.content)
-            .listen('.UserMarketRequested', (userMarketRequest) => {
-                console.log("Fired '.UserMarketRequested'", userMarketRequest);
-                //this should be the market thats created
-                this.handlePacket(userMarketRequest, (packet_data) => {
-                    console.log("publish Callback", packet_data);
-                    this.updateUserMarketRequest(packet_data.data);
-                    EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
-                });
-            })
-            .listen('ChatMessageReceived', (received_org_message) => {
-                this.$emit('chatMessageReceived', received_org_message);
-            }); 
-
-            // possibly let us cath what happens when pusher dc's
-            window.Echo.connector.pusher.connection.bind('disconnected', function(event) {
-                console.error(event);
+            let handlePusherDisconnect = function(event) {
+                console.error("Pusher failed Event: ", event);
                 let re = confirm("Live update stream disconnected!\n\nIf problem persists, please contact an administrator\nReload Now?");
                 if(re) {
                     location.reload();
                 }
-            });
+            };
+
+            let connectStream = (subCb) => {
+                console.log("Org UUID: ", organisationUuid.content);
+                // possibly let us cath what happens when pusher dc's
+                window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
+                let channel = window.Echo.private('organisation.'+organisationUuid.content)
+                .listen('.UUIDUpdated', (newIdentity) => {
+                    console.log("New ID", newIdentity);
+                    // remove bindings
+                    window.Echo.connector.pusher.connection.unbind('disconnected', handlePusherDisconnect);
+                    // leave old channel
+                    window.Echo.leave('organisation.'+organisationUuid.content);
+                    // set new UUID and re-connect
+                    organisationUuid.setAttribute('content', newIdentity.data);
+                    connectStream();
+
+                    // reload markets that may have been missed.
+                    this.reloadMarketRequests();
+                })
+                .listen('.UserMarketRequested', (userMarketRequest) => {
+                    console.log("Fired '.UserMarketRequested'", userMarketRequest);
+                    //this should be the market thats created
+                    this.handlePacket(userMarketRequest, (packet_data) => {
+                        console.log("publish Callback", packet_data);
+                        this.updateUserMarketRequest(packet_data.data);
+                        EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+                    });
+                })
+                .listen('ChatMessageReceived', (received_org_message) => {
+                    this.$emit('chatMessageReceived', received_org_message);
+                });
+                // bind sub success to subCb if present
+                if(subCb && subCb.constructor == Function) {
+                    channel.on('pusher:subscription_succeeded', subCb);
+                }
+            }
+            connectStream();
+            
         } else {
             console.error("Missing Organisation UUID");
             let re = confirm("Failed to load Organisation Credentials\nPlease reload your page\n\nIf problem persists, please contact an administrator\nReload Now?");
