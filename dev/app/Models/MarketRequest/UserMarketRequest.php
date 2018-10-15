@@ -359,7 +359,7 @@ class UserMarketRequest extends Model
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
-        $lastUntraded       =  $this->lastTradeNegotiationUnTraded();
+        $lastUntraded       =  $this->lastTradeNegotiationIsUnTraded();
         $lastTraded         =  !$lastUntraded ? $this->lastTradeNegotiationIsTraded() : false;
 
         /*
