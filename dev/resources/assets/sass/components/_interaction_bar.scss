@@ -212,3 +212,20 @@
         }
     }
 }
+
+
+.activity-block {
+    background: $ibar-btn-background-secondary;
+    border-radius: 3px;
+    padding: .25em .3em;
+
+
+    .dismiss {
+        &:hover {
+            cursor: pointer;
+        }
+        color: $mm-red;
+        float: right;
+        margin-right: .3em;
+    }
+}

@@ -359,9 +359,19 @@ class UserMarketRequest extends Model
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
-        $lastUntraded       =  $this->lastTradeNegotiationIsUnTraded();
-        $lastTraded         =  !$lastUntraded ? $this->lastTradeNegotiationIsTraded() : false;
+        $is_trading         =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTrading() : false;
+        $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
+        // \Log::info([
+        //     "hasQuotes > $hasQuotes",
+        //     "acceptedState > $acceptedState",
+        //     "marketOpen > $marketOpen",
+        //     "is_fok > $is_fok",
+        //     "is_private > $is_private",
+        //     "is_killed > $is_killed",
+        //     "lastTraded > $lastTraded",
+        //     "lastTraded. > $lastTraded",
+        // ]);
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
@@ -373,25 +383,21 @@ class UserMarketRequest extends Model
         {
             return "request-vol";
         }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ) )
-        {
-            return 'negotiation-open';
-        }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded && !$lastTraded)
+        elseif($acceptedState && !$marketOpen && !$is_trading)
         {
             return 'negotiation-pending';
         }
-        elseif ($acceptedState && !$marketOpen && !$lastUntraded && $lastTraded)
-        {
-            return 'trade-negotiation-balance';
-        }
-        elseif ($marketOpen && !$lastUntraded && !$lastTraded)
+        elseif($acceptedState && $marketOpen && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
         {
             return 'negotiation-open';
         }
-        elseif($lastUntraded)
+        elseif($acceptedState && !$marketOpen && $is_trading && !$lastTraded)
         {
             return 'trade-negotiation-pending';
+        }
+        elseif ($acceptedState && !$marketOpen && $is_trading && $lastTraded)
+        {
+            return 'trade-negotiation-balance';
         }
     }
 

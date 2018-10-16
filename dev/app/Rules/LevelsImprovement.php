@@ -16,7 +16,7 @@ class LevelsImprovement implements Rule
      *
      * @return void
      */
-    public function __construct($request, $lastNegotiation)
+    public function __construct($request, $lastNegotiation = null)
     {
         $this->request = $request;
         $this->lastNegotiation = $lastNegotiation;
@@ -35,11 +35,8 @@ class LevelsImprovement implements Rule
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
-        if(!$this->lastNegotiation) {
-            $this->lastNegotiation = $this->request->user_market->lastNegotiation;
-        }
         //check to see if the bid is improved or the offer
-        if($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id) == "negotiation-open")
+        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open"]))
         {
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
@@ -67,7 +64,7 @@ class LevelsImprovement implements Rule
             */
 
             // ensure its set
-            if($this->request->input($attribute)) {
+            if($this->request->input($attribute) != null) {
                 /*
                     Ensure the value is improved
 
@@ -111,7 +108,7 @@ class LevelsImprovement implements Rule
 
                     */
                     if(
-                        floatval($this->request->input($attribute)) === $this->lastNegotiation->{$attribute} &&
+                        floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->{$attribute}) &&
                         ($this->request->input($inverse) > $this->lastNegotiation->{$inverse}) == !$valid &&
                         ($this->request->input($inverse) < $this->lastNegotiation->{$inverse}) == $valid
                     ) {

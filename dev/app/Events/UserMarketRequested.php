@@ -36,7 +36,7 @@ class UserMarketRequested implements ShouldBroadcast
      */
     public function __construct(UserMarketRequest $userMarketRequest, $organisation, $message = null)
     {
-        $this->userMarketRequest = $userMarketRequest; 
+        $this->userMarketRequest = $userMarketRequest;
         $this->organisation = $organisation;
     }
 

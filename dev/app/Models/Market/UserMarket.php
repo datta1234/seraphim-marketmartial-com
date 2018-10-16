@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Traits\HasDismissibleActivity;
+    
 class UserMarket extends Model
 {
     use \App\Traits\ResolvesUser,SoftDeletes;
+    use HasDismissibleActivity; // activity tracked and dismissible
+
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -59,7 +62,12 @@ class UserMarket extends Model
 
     protected $hidden = ["user_id"];
 
-
+    /**
+    *   activityKey - identity for cached data
+    */
+    protected function activityKey() {
+        return $this->id;
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -289,7 +297,7 @@ class UserMarket extends Model
             DB::commit();
             return $marketNegotiation;
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            \Log::error($e);
             DB::rollBack();
             return false;
         }
@@ -327,10 +335,10 @@ class UserMarket extends Model
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
 
-            $counterNegotiation = $this->marketNegotiations()
-                                            ->findcounterNegotiation($user)
-                                            ->first();
-
+            $counterNegotiation = $this->lastNegotiation()
+                                ->findCounterNegotiation($user)
+                                ->first();
+            \Log::info($counterNegotiation);
 
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {
@@ -360,7 +368,7 @@ class UserMarket extends Model
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
-                \Log::error($e->getMessage());
+                \Log::error($e);
                 DB::rollBack();
                 return false;
             }
@@ -388,7 +396,6 @@ class UserMarket extends Model
     public function isCounter($user = null, $negotiation = null) {
         $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
-        \Log::info([$org, $negotiation->marketNegotiationParent->user->organisation_id, $negotiation->user->organisation_id]);
         if($org == null) {
             return false;
         }
@@ -426,10 +433,8 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
-                                            \Log::info(["counter", $active]);
                                             if($active === null) {
                                                 $active = $this->isInterest();
-                                                \Log::info(["interest", $active]);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
@@ -442,6 +447,8 @@ class UserMarket extends Model
                                             ];
                                         })->values(),
         ];
+
+        $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
 
         return $data;
     }

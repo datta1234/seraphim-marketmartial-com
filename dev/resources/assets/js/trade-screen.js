@@ -401,7 +401,8 @@ const app = new Vue({
 
             // Check if the message has already been completed in this.completed_messages
             let message = this.completed_messages.find( (msg_val) => {
-                return ( msg_val.checksum == chunk_data.checksum);
+                console.log("Checksum Compare: ", msg_val.checksum, chunk_data.checksum);
+                return ( msg_val.checksum == chunk_data.checksum );
             });
             if(typeof message !== 'undefined') {
                 // Break if there is already a completed message for this checksum

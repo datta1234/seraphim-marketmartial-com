@@ -17371,6 +17371,22 @@ input:checked + .slider:before {
   border-left: 0.3em solid transparent;
 }
 
+.activity-block {
+  background: #282828;
+  border-radius: 3px;
+  padding: .25em .3em;
+}
+
+.activity-block .dismiss {
+  color: #BB1D1D;
+  float: right;
+  margin-right: .3em;
+}
+
+.activity-block .dismiss:hover {
+  cursor: pointer;
+}
+
 .interaction-bar-wrapper .chat-bar,
 .interaction-bar-wrapper .chat-bar-content-pane,
 .interaction-bar-wrapper .chat-bar > .chat-content,

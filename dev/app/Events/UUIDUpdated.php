@@ -26,7 +26,6 @@ class UUIDUpdated implements ShouldBroadcast
     {
         $this->old_id = $old_id;
         $this->organisation = $organisation;
-        \Log::info(["Broadcasting refresh", $this->old_id, $this->organisation->uuid]);
     }
 
     /**

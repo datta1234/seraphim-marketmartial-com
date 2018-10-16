@@ -57,7 +57,7 @@ class SendStream implements ShouldBroadcast
     public function broadcastWith()
     {
         $this->data['total'] = $this->total;
-        $this->data['timestamp'] = now()->format("d-m-y H:i:s");
+        $this->data['timestamp'] = now()->toIso8601String();
         return $this->data;
     }
 }

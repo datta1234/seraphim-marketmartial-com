@@ -117,8 +117,18 @@ class MarketNegotiationController extends Controller
         // Handle Meet In Middle
         if($marketNegotiation->isProposal() || $marketNegotiation->isMeetInMiddle()) {
             $success = $marketNegotiation->reject();
-            $marketNegotiation->user->organisation->notify("condition_action","Proposal rejected by counter",true);
-            $marketNegotiation->counterUser->organisation->notify("condition_action","Proposal rejected",true);
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".rejected",
+                    "Proposal rejected by counter", 
+                    10
+                );
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".reject",
+                    "Proposal rejected", 
+                    10
+                );
         }
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();
