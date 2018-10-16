@@ -359,7 +359,7 @@ class UserMarketRequest extends Model
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
-        $is_trading         =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTrading() : false;
+        $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
         // \Log::info([
@@ -465,15 +465,15 @@ class UserMarketRequest extends Model
             $tradeNegotiationRoles = ["other"];
 
 
-            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation))
+            $tradeNegotiation = $this->chosenUserMarket->tradeNegotiations()->latest()->first();
+            if(!is_null($tradeNegotiation))
             {
-                if($lastNegotiation->lastTradeNegotiation->initiateUser->organisation_id == $current_org_id)
+                if($tradeNegotiation->initiateUser->organisation_id == $current_org_id)
                 {
                     $tradeNegotiationRoles = ["negotiator"];
                 }
 
-                if($lastNegotiation->lastTradeNegotiation->recievingUser->organisation_id == $current_org_id)
+                if($tradeNegotiation->recievingUser->organisation_id == $current_org_id)
                 {
                     $tradeNegotiationRoles = ["counter"];
                 }

@@ -159,6 +159,7 @@
                     this.errors = [];
                     this.$emit('close');
                     this.is_offer = null;
+                    this.confirmed = false;
                 })
                 .catch(err => {
                     this.server_loading = false;
@@ -168,8 +169,8 @@
                 });
            }
         },
-        created() {
-            this.is_offer = this.is_offer;
+        mounted() {
+            this.is_offer = this.isOffer;
             if(this.is_offer)
             {
               this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;

@@ -155,6 +155,10 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Trade\TradeNegotiation','user_market_id');
     }
 
+    public function isTrading() {
+        return !$this->tradeNegotiations()->latest()->first()->traded;
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

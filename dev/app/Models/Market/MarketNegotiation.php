@@ -194,6 +194,37 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function tradeAtBestSource()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $att = ($attr == 'bid' ? 'bid' : 'offer');
+        $value = ($attr == 'bid' ? floatval($this->bid) : floatval($this->offer));
+        $source = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @attr as _attr, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @attr := $att FROM $table WHERE id = _id
+                    ) as parent_attr
+                    FROM (
+                        SELECT @id := $id, @attr := $value
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @attr = $value
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+                ORDER BY _id ASC
+                LIMIT 1
+        ");
+        return self::hydrate($source)->first();
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function marketNegotiationChildren()
     {
         return $this->hasMany('App\Models\Market\MarketNegotiation','market_negotiation_id');
