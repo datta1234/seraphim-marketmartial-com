@@ -403,13 +403,13 @@ class MarketNegotiation extends Model
     }
 
     public function doTradeAtBest($quantity, $is_offer) {
-        $user = $this->
-        $tradeNegotiation = $this->addTradeNegotiation($user,[
-            "quantity"  =>  $quantity,
-            "is_offer"  =>  $is_offer
-        ]);
+        // $user = $this->
+        // $tradeNegotiation = $this->addTradeNegotiation($user,[
+        //     "quantity"  =>  $quantity,
+        //     "is_offer"  =>  $is_offer
+        // ]);
 
-        $this->fresh()->userMarket->userMarketRequest->notifyRequested();
+        // $this->fresh()->userMarket->userMarketRequest->notifyRequested();
     }
 
     public function kill()
