@@ -28,8 +28,14 @@ class DatabaseSeeder extends Seeder
         $this->call(InterestTableSeeder::class);
 
         //enable selection of trade structures
+        
         $this->call(ItemTypeSeeder::class);
+        
+        $this->call(TradeStructureGroupTypeSeeder::class);
         $this->call(TradeStructureTableSeeder::class);
+        
+        //possible statuses for the trade_confirmations
+        $this->call(TradeConfirmationStatusTableSeeder::class);
 
 
         /**
@@ -42,6 +48,7 @@ class DatabaseSeeder extends Seeder
             $this->call(UserMarketRequestTradeablesSeeder::class);
             $this->call(UserMarketRequestItemSeeder::class);
             $this->call(TradeConfirmationSeeder::class);
+            $this->call(TradeConfirmationItemSeeder::class);
             $this->call(BookedTradeSeeder::class);
         }
 

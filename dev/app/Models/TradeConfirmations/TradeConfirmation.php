@@ -15,19 +15,7 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $traiding_account_id
-	 * @property double $spot_price
-	 * @property double $future_reference
-	 * @property double $near_expiery_reference
-	 * @property double $contracts
-	 * @property double $puts
-	 * @property double $calls
-	 * @property double $delta
-	 * @property double $buy_gross_premiums
-	 * @property double $buy_net_premiums
-     * @property double $sell_gross_premiums
-     * @property double $sell_net_premiums
-	 * @property boolean $is_confirmed
+	 * @property integer $trading_account_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -44,20 +32,8 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'spot_price',
-		'future_reference',
-		'near_expiery_reference',
-		'contracts',
-		'puts',
-		'calls',
-		'delta',
-		'is_confirmed',
-        'buy_gross_premiums',
-        'buy_net_premiums',
-        'sell_gross_premiums',
-        'sell_net_premiums',
-    ];
+    protected $fillable = [];
+
 
     /**
      * The attributes that should be mutated to dates.
@@ -145,6 +121,39 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
+    public function preFormatted()
+    {
+        $marketRequest = $this->tradeNegotiation->userMarket->userMarketRequest;
+        return [
+            'id'                        => $this->id,
+            'organisation'              => "BANK ABC",
+            'spot_price'                => $this->spot_price,
+            'future_reference'          => $this->future_reference,
+            'near_expiery_reference'    => $this->near_expiery_reference,
+            'contracts'                 => $this->contracts,
+            'puts'                      => $this->puts,
+            'calls'                     => $this->calls,
+            'delta'                     => $this->delta,
+            'gross_premiums'            => $this->gross_premiums,
+            'net_premiums'              => $this->net_premiums,
+            'is_confirmed'              => $this->is_confirmed,
+            'trade_structure_title'     => $marketRequest->tradeStructure->title,
+            'expiration'                => $marketRequest->getDynamicItems(['Expiration Date','Expiration Date 1','Expiration Date 2']),
+            'strike'                    => $marketRequest->getDynamicItems(['Strike']),
+            'quantity'                  => $marketRequest->getDynamicItems(['Quantity']),
+            'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
+            'market_request_id'         => $marketRequest->id,
+            'label'                     => $marketRequest->title,
+            'underlying_id'             => $marketRequest->underlying->id,
+            'underlying_title'          => $marketRequest->underlying->title,
+            'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            'traded_at'                 => $this->tradeNegotiation->updated_at,
+            'is_offer'                  => $this->tradeNegotiation->isOffer(),
+
+
+        ];
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -169,8 +178,40 @@ class TradeConfirmation extends Model
     */
     public function tradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
+
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id');
+    }
+
+    public function scopeSentByMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+    public function scopeSentToMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+
 
     public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
     {

@@ -14,7 +14,8 @@ class UserMarketRequestItemSeeder extends Seeder
         $marketRequests = App\Models\MarketRequest\UserMarketRequest::all();
 
         foreach($marketRequests as $marketRequest) {
-            foreach($marketRequest->tradeStructure->tradeStructureGroups as $tradeStructureGroup) {
+            $groups = $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',1)->get();
+            foreach($groups as $tradeStructureGroup) {
                 
                 $tradeGroup = $marketRequest->userMarketRequestGroups()->create([
                     'trade_structure_group_id'  =>  $tradeStructureGroup->id,

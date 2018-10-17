@@ -15,7 +15,7 @@
 			</user-header>
 			
 			<!-- Actions and Alerts -->
-			<action-bar :markets="display_markets" :no_cares="no_cares"></action-bar>
+			<action-bar :trade_confirmations="trade_confirmations" :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
 			<!-- Markets sections -->
 			<div class="row user-markets mt-3">

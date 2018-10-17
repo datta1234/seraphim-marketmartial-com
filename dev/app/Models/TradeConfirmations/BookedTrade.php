@@ -13,7 +13,6 @@ class BookedTrade extends Model
 	 * @property integer $trading_account_id
 	 * @property integer $market_id
 	 * @property integer $stock_id
-     * @property integer $rebate_trade_id
 	 * @property boolean $is_sale
 	 * @property boolean $is_confirmed
 	 * @property double $amount
@@ -42,7 +41,6 @@ class BookedTrade extends Model
         'trading_account_id',
         'market_id',
         'stock_id',
-        'rebate_trade_id'
     ];
 
     /**
@@ -87,7 +85,7 @@ class BookedTrade extends Model
     */
     public function rebate()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\BookedTrade','rebate_trade_id');
+        return $this->hasOne('App\Models\TradeConfirmations\BookedTrade','booked_trade_id');
     }
 
     /**
@@ -105,6 +103,6 @@ class BookedTrade extends Model
     */
     public function tradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
 }

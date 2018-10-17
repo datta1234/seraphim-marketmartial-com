@@ -312,27 +312,29 @@ m2=0..n</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>776</x>
-      <y>1624</y>
+      <y>1632</y>
       <w>40</w>
-      <h>88</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>712</x>
       <y>1520</y>
-      <w>168</w>
-      <h>112</h>
+      <w>232</w>
+      <h>120</h>
     </coordinates>
     <panel_attributes>trade_structure_groups
 --
 id: int(10)
 trade_structure_id: int(11)
+trade_structure_group_type_id: int(11)
 title: varchar(255)
+force_select: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
 
@@ -342,15 +344,15 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>872</x>
+      <x>936</x>
       <y>1504</y>
-      <w>424</w>
+      <w>360</w>
       <h>128</h>
     </coordinates>
     <panel_attributes>m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>490.0;10.0;490.0;130.0;10.0;130.0</additional_attributes>
+    <additional_attributes>410.0;10.0;410.0;130.0;10.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLPackage</id>
@@ -1071,7 +1073,7 @@ layer=1</panel_attributes>
       <x>4160</x>
       <y>1032</y>
       <w>256</w>
-      <h>296</h>
+      <h>256</h>
     </coordinates>
     <panel_attributes>trade_confirmations
 --
@@ -1079,23 +1081,14 @@ id: int(11)
 send_user_id: int(11)
 receiving_user_id: int(11)
 trade_negotiation_id: int(11)
-spot_price: double(11,2) nullable
-future_reference: double(11,2) nullable
-near_expiery_reference: double(11,2) nullable
 trade_confirmation_id: int(11) nullable
 trade_confirmation_status_id: int(11)
 market_id: int(11) nullable
 stock_id: int(11) nullable
-contracts: double(11,2)
-puts: double(11,2) nullable
-calls: double(11,2) nullable
-delta: double(11,2) nullable
-gross_premiums: double(11,2)
-net_premiums: double(11,2)
-is_confirmed: tinyint(1)
-traiding_account_id: int(11)
+trading_account_id: int(11)
 created_at: timestamp
 updated_at: timestamp
+
 layer=1</panel_attributes>
     <additional_attributes/>
   </element>
@@ -1510,7 +1503,7 @@ m2=0..n</panel_attributes>
       <w>1120</w>
       <h>864</h>
     </coordinates>
-    <panel_attributes>m1=0..n
+    <panel_attributes>m1=1
 m2=0..1</panel_attributes>
     <additional_attributes>10.0;1050.0;210.0;1050.0;210.0;620.0;700.0;620.0;700.0;10.0;1360.0;10.0;1360.0;260.0</additional_attributes>
   </element>
@@ -2205,6 +2198,8 @@ bg=orange</panel_attributes>
 id: int(11)
 trade_confirmation_id: int(11)
 trade_structure_group_id: int(11)
+user_market_request_group_id: int(11)
+trade_confirmation_group_id: int(11) nullable
 is_options: tinyint(1)
 created_at:timestamp
 updated_at:timestamp
@@ -2270,7 +2265,7 @@ m2=0..1</panel_attributes>
     <panel_attributes>m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>4640.0;10.0;4560.0;10.0;4560.0;840.0;390.0;840.0;390.0;380.0;10.0;380.0;10.0;340.0</additional_attributes>
+    <additional_attributes>4640.0;10.0;4560.0;10.0;4560.0;840.0;390.0;840.0;390.0;380.0;10.0;380.0;10.0;350.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -2325,5 +2320,17 @@ m2=0..n</panel_attributes>
     <panel_attributes>m1=0..1
 m2=0..n</panel_attributes>
     <additional_attributes>10.0;10.0;70.0;10.0;70.0;90.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1312</x>
+      <y>1400</y>
+      <w>3288</w>
+      <h>672</h>
+    </coordinates>
+    <panel_attributes>m1=0..n
+m2=0..1</panel_attributes>
+    <additional_attributes>4070.0;10.0;4070.0;60.0;3990.0;60.0;3990.0;820.0;10.0;820.0;10.0;140.0</additional_attributes>
   </element>
 </diagram>
