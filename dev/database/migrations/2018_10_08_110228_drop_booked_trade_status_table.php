@@ -35,7 +35,7 @@ class DropBookedTradeStatusTable extends Migration
         });
 
         Schema::table('booked_trades', function (Blueprint $table){
-            $table->integer('booked_trade_status_id')->unsigned();
+            $table->integer('booked_trade_status_id')->nullable()->unsigned();
 
             $table->foreign('booked_trade_status_id')
                 ->references('id')->on('booked_trade_status');

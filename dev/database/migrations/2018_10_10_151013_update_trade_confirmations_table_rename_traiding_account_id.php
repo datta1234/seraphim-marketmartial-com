@@ -17,7 +17,7 @@ class UpdateTradeConfirmationsTableRenameTraidingAccountId extends Migration
             $table->dropForeign(['traiding_account_id']);
             $table->dropColumn(['traiding_account_id',]);
 
-            $table->integer('trading_account_id')->unsigned();
+            $table->integer('trading_account_id')->nullable()->unsigned();
             $table->foreign('trading_account_id')
                 ->references('id')->on('trading_accounts');
         });

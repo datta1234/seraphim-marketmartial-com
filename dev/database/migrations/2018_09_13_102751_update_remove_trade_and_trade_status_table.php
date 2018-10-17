@@ -82,7 +82,7 @@ class UpdateRemoveTradeAndTradeStatusTable extends Migration
             $table->dropForeign(['trade_negotiation_id']);
             $table->dropColumn(['trade_negotiation_id']);
 
-            $table->integer('trade_id')->unsigned();
+            $table->integer('trade_id')->nullable()->unsigned();
             $table->foreign('trade_id')
                 ->references('id')->on('trades');
         });

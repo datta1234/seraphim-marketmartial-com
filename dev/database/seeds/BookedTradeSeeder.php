@@ -74,7 +74,7 @@ class BookedTradeSeeder extends Seeder
 					"is_sale" => 0,
 					"is_confirmed" => 1,
 					"is_rebate" => 1,
-					"amount" => $tradeConfirmation->future_reference,
+					"amount" => rand(0,100),//$tradeConfirmation->future_reference,
 					"rebate_trade_id" => $rebate->id
 	            ]);
 
@@ -88,7 +88,7 @@ class BookedTradeSeeder extends Seeder
 					"is_sale" => 1,
 					"is_confirmed" => 1,
 					"is_rebate" => 1,
-					"amount" => $tradeConfirmation->future_reference - $tradeConfirmation->future_reference*0.25,
+					"amount" => rand(0,100),//$tradeConfirmation->future_reference - $tradeConfirmation->future_reference*0.25,
 					"rebate_trade_id" => $rebate->id
 	            ]);
         	}
