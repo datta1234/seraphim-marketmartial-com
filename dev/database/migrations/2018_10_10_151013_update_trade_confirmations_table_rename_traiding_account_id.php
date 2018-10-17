@@ -31,7 +31,8 @@ class UpdateTradeConfirmationsTableRenameTraidingAccountId extends Migration
     public function down()
     {
         Schema::table('trade_confirmations', function (Blueprint $table) {
-            $table->integer('traiding_account_id')->unsigned();
+           
+            $table->integer('traiding_account_id')->nullable()->unsigned();
             $table->foreign('traiding_account_id')
                 ->references('id')->on('trading_accounts');
 
