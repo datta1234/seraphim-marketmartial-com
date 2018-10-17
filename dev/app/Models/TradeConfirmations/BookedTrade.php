@@ -85,7 +85,7 @@ class BookedTrade extends Model
     */
     public function rebate()
     {
-        return $this->hasOne('App\Models\TradeConfirmations\BookedTrade','booked_trade_id');
+        return $this->hasOne('App\Models\Trade\Rebate','booked_trade_id');
     }
 
     /**

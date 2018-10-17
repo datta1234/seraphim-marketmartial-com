@@ -65,7 +65,7 @@ class Rebate extends Model
     */
     public function bookedTrade()
     {
-        return $this->belongsTo('App\Models\Trade\Rebate','booked_trade_id');
+        return $this->belongsTo('App\Models\TradeConfirmations\BookedTrade','booked_trade_id');
     }
 
     /**
@@ -142,5 +142,9 @@ class Rebate extends Model
         }
 
         return $data;
+    }
+
+    public function preFormatGraph() {
+        
     }
 }

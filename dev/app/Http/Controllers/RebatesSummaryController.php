@@ -7,6 +7,7 @@ use App\Models\Trade\Rebate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\StructureItems\Market;
+use App\Models\UserManagement\User;
 
 class RebatesSummaryController extends Controller
 {
@@ -33,12 +34,18 @@ class RebatesSummaryController extends Controller
                 return $item->bookedTrade->tradeConfirmation->market->title;
             });
         }
-        
+
         foreach ($date_grouped_rebates as $date => $market_rebates) {
             foreach ($market_rebates as $maket => $rebates) {
-                foreach ($rebates as $key => $rebate) {
-                    $rebate->pluck('');
-                    $rebate['amount'] = $rebate->
+                $market_rebates[$maket] = $rebates->groupBy(function ($item, $key) {
+                    return $item->user->full_name;
+                });
+
+                foreach ($market_rebates[$maket] as $key => $rebate) {
+                    //dd($rebates);
+                    $market_rebates[$maket][$key] = $rebates->sum(function ($single) {
+                        return $single->bookedTrade->amount;
+                    });
                 }
             }
         }
@@ -46,6 +53,8 @@ class RebatesSummaryController extends Controller
         $years = Rebate::where('organisation_id', $user->organisation->id)->select(
             DB::raw("YEAR(rebates.trade_date) as year")
         )->groupBy('year')->get();
+        
+        $users = User::where('organisation_id', $user->organisation->id)->pluck('full_name');
 
         $markets = Market::all()->pluck('title')->toArray();
         // Logic to remove any occurrences of Delta One
@@ -58,9 +67,7 @@ class RebatesSummaryController extends Controller
             }
         }
 
-        dd($markets,$rebates, $years->toArray());
-
-        return view('rebates_summary.index')->with(compact('rebates', 'years'));
+        return view('rebates_summary.index')->with(compact('rebates', 'years', 'users'));
     }
 
     /**
