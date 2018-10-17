@@ -1503,7 +1503,7 @@ m2=0..n</panel_attributes>
       <w>1120</w>
       <h>864</h>
     </coordinates>
-    <panel_attributes>m1=0..n
+    <panel_attributes>m1=1
 m2=0..1</panel_attributes>
     <additional_attributes>10.0;1050.0;210.0;1050.0;210.0;620.0;700.0;620.0;700.0;10.0;1360.0;10.0;1360.0;260.0</additional_attributes>
   </element>

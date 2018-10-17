@@ -36,7 +36,7 @@ class BookedTradeSeeder extends Seeder
 				"is_sale" => 1,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
-				"amount" => rand(0,100)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
+				"amount" => rand(10000,20000)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
             ]);
 
             // Create Buy booked trade
@@ -49,23 +49,14 @@ class BookedTradeSeeder extends Seeder
 				"is_sale" => 0,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
-				"amount" => rand(0,100)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
+				"amount" => rand(10000,20000)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
             ]);
 
         	if($tradeConfirmation->market_id !== 5) {
         		$market_make_trading_account = App\Models\UserManagement\TradingAccount::where("user_id", $marketMaker->id)->where("market_id", $tradeConfirmation->market_id)->first()->id;
 
-        		$rebate = factory(App\Models\Trade\Rebate::class)->create([
-					"user_id" => $marketMaker->id,
-					"user_market_id" => $tradeConfirmation->tradeNegotiation->userMarket->id,
-					"organisation_id" => $marketMaker->organisation->id,
-					"user_market_request_id" => $tradeConfirmation->tradeNegotiation->userMarket->userMarketRequest->id,
-					"is_paid" => 1,
-					"trade_date" => Carbon::now()->addMonths(rand(0,12)),
-	            ]);
-
-	            // Create Buy rebate booked trade
-	        	$buyRebateBookedTrade = factory(App\Models\TradeConfirmations\BookedTrade::class)->create([
+        		// Create rebate booked trade
+	        	$rebateBookedTrade = factory(App\Models\TradeConfirmations\BookedTrade::class)->create([
 					"user_id" => $marketMaker->id,
 					"trade_confirmation_id" => $tradeConfirmation->id, 
 					"trading_account_id" => $market_make_trading_account,
@@ -74,23 +65,20 @@ class BookedTradeSeeder extends Seeder
 					"is_sale" => 0,
 					"is_confirmed" => 1,
 					"is_rebate" => 1,
-					"amount" => rand(0,100),//$tradeConfirmation->future_reference,
-					"rebate_trade_id" => $rebate->id
+					"amount" => rand(10000,20000),//$tradeConfirmation->future_reference,
 	            ]);
 
-	        	// Create Sell rebate booked trade
-	        	$sellRebateBookedTrade = factory(App\Models\TradeConfirmations\BookedTrade::class)->create([
+        		$rebate = factory(App\Models\Trade\Rebate::class)->create([
 					"user_id" => $marketMaker->id,
-					"trade_confirmation_id" => $tradeConfirmation->id, 
-					"trading_account_id" => $market_make_trading_account,
-					"market_id" => $tradeConfirmation->market_id,
-					"stock_id" => $tradeConfirmation->stock_id,
-					"is_sale" => 1,
-					"is_confirmed" => 1,
-					"is_rebate" => 1,
-					"amount" => rand(0,100),//$tradeConfirmation->future_reference - $tradeConfirmation->future_reference*0.25,
-					"rebate_trade_id" => $rebate->id
+					"user_market_id" => $tradeConfirmation->tradeNegotiation->userMarket->id,
+					"organisation_id" => $marketMaker->organisation->id,
+					"user_market_request_id" => $tradeConfirmation->tradeNegotiation->userMarket->userMarketRequest->id,
+					"is_paid" => 1,
+					"trade_date" => Carbon::now()->addMonths(rand(0,12)),
+					"booked_trade_id" => $rebateBookedTrade->id,
 	            ]);
+
+	            
         	}
         }
     }

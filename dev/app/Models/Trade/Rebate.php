@@ -11,6 +11,7 @@ class Rebate extends Model
 	 * @property integer $user_id - The user to determine put or call from the trade confirmation
 	 * @property integer $user_market_request_id
 	 * @property integer $user_market_id
+     * @property integer $booked_trade_id 
 	 * @property integer $organisation_id - The Market Maker organisation id
 	 * @property boolean $is_paid
 	 * @property \Carbon\Carbon $trade_date
@@ -37,6 +38,7 @@ class Rebate extends Model
         'organisation_id',
         'is_paid',
         'trade_date',
+        'booked_trade_id'
     ];
 
     /**
@@ -61,9 +63,9 @@ class Rebate extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function bookedTrades()
+    public function bookedTrade()
     {
-        return $this->hasMany('App\Models\Trade\Rebate','rebate_trade_id');
+        return $this->belongsTo('App\Models\Trade\Rebate','booked_trade_id');
     }
 
     /**

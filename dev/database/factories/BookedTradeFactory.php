@@ -23,6 +23,5 @@ $factory->define(App\Models\TradeConfirmations\BookedTrade::class, function (Fak
 		"is_confirmed" => rand(0,1) ==1,
 		"is_rebate" => 0,
 		"amount" => rand(0,1) == 1,
-		"rebate_trade_id" => null
 	];
 });

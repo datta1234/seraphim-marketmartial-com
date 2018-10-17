@@ -17,6 +17,7 @@ $factory->define(App\Models\Trade\Rebate::class, function (Faker $faker) {
             return factory(App\Models\MarketRequest\UserMarketRequest::class)->create()->id;
         },
 		"is_paid" => rand(0,1) == 1,
-		"trade_date" => $faker->date()
+		"trade_date" => $faker->date(),
+		"booked_trade_id" => null
 	];
 });
