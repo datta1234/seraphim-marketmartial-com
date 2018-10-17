@@ -23,7 +23,7 @@
 </template>
 
 <script>
-	import BarGraph from './Components/BarGraph.js';
+	import BarGraph from '../BarGraph.js';
     export default {
     	components: {
 	      	BarGraph

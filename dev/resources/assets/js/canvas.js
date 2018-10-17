@@ -56,6 +56,9 @@ Vue.component('safex-table', require('./components/Stats/Components/SafexTable.v
 Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue'));
 Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue'));
 
+// Rebate Componenets
+Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));
+
 Vue.mixin({
     methods: {
         /*

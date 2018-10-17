@@ -12,7 +12,11 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        
+		        <rebates-earned :users="{{ json_encode($users) }}"
+		        				:authed_user="{{ json_encode(Auth::user()->full_name) }}"
+		        				:market_data="{{ json_encode($date_grouped_rebates) }}"
+		        				:yearly_total="{{ $total_rebates }}">
+		        </rebates-earned>
 		    @endslot
 		@endcomponent
 		

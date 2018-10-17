@@ -60,7 +60,8 @@ class BookedTradeSeeder extends Seeder
 					"user_id" => $marketMaker->id,
 					"trade_confirmation_id" => $tradeConfirmation->id, 
 					"trading_account_id" => $market_make_trading_account,
-					"market_id" => $tradeConfirmation->market_id,
+					/*"market_id" => $tradeConfirmation->market_id,*/
+					"market_id" => rand(1,5), //@TODO temp remove
 					"stock_id" => $tradeConfirmation->stock_id,
 					"is_sale" => 0,
 					"is_confirmed" => 1,
@@ -74,7 +75,8 @@ class BookedTradeSeeder extends Seeder
 					"organisation_id" => $marketMaker->organisation->id,
 					"user_market_request_id" => $tradeConfirmation->tradeNegotiation->userMarket->userMarketRequest->id,
 					"is_paid" => 1,
-					"trade_date" => Carbon::now()->addMonths(rand(0,12)),
+					/*"trade_date" => Carbon::now()->addMonths(rand(0,12)),*/
+					"trade_date" => Carbon::now()->addMonths(rand(0,2)), //@TODO temp remove
 					"booked_trade_id" => $rebateBookedTrade->id,
 	            ]);
 

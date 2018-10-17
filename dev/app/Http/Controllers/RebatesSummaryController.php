@@ -27,11 +27,16 @@ class RebatesSummaryController extends Controller
             ->groupBy(function ($item, $key) {
                 return Carbon::parse($item['trade_date'])->format('My');
             });
-
+        $total_rebates = null;
         foreach ($date_grouped_rebates as $date => $rebate) {
+            // Calculate the total organisation rebate amount for the year
+            $total_rebates += $rebate->sum(function ($single) {
+                return $single->bookedTrade->amount;
+            });
+
             // group market
             $date_grouped_rebates[$date] = $rebate->groupBy(function ($item, $key) {
-                return $item->bookedTrade->tradeConfirmation->market->title;
+                return $item->bookedTrade->market->title;
             });
         }
 
@@ -56,18 +61,8 @@ class RebatesSummaryController extends Controller
         
         $users = User::where('organisation_id', $user->organisation->id)->pluck('full_name');
 
-        $markets = Market::all()->pluck('title')->toArray();
-        // Logic to remove any occurrences of Delta One
-        $index = null;
-        foreach ($markets as $key => $market) {
-            $index = strtoupper(str_replace(" ", "",$market)) == 'DELTAONE' ? $key : $index;
-            if($index !== null) {
-                unset($markets[$index]);
-                $index = null;
-            }
-        }
-
-        return view('rebates_summary.index')->with(compact('rebates', 'years', 'users'));
+        return view('rebates_summary.index')
+            ->with(compact('date_grouped_rebates', 'years', 'users', 'total_rebates'));
     }
 
     /**
