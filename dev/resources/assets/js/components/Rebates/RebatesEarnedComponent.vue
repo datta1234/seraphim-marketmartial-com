@@ -42,9 +42,6 @@
             'market_data': {
                 type: Object
             },
-            'labels': {
-            	type: Object
-            },
             'users': {
                 type: Array
             },
