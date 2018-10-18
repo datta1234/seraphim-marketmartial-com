@@ -28,11 +28,11 @@
 							Users
 						</a>
 					</li>
-					<li class="nav-item">
+					{{--<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('admin.booked-trades.index') }}">
 						Booked Trades
 					</a>
-					</li>
+					</li>--}}
 					<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('rebate_summary.index') }}">
 							Rebates Summary
