@@ -100,8 +100,6 @@
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;
                             this.table_data[index].data = activityResponse.data.data;
-                            console.log("SERVER: ",activityResponse);
-                            console.log("Our DATA: ",this.table_data[index]);
                             this.table_data_loaded = true;
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;

@@ -116,10 +116,14 @@
                                 display: true,
                                 ticks: {
                                     scaleVal: 1000,
-                                    min: -15000,
-                                    max: 15000,
-                                    stepSize: 3000,
-                                    beginAtZero: true   // minimum value will be 0.
+                                    min: -1500,
+                                    max: 1500,
+                                    stepSize: 300,
+                                    default_min: -1500,
+                                    default_max: 1500,
+                                    default_stepSize: 300,
+                                    beginAtZero: true,   // minimum value will be 0.
+                                    callback: this.formatLargeNumberAxis
                                 }
                             },
                             {
@@ -130,7 +134,11 @@
                                     min: -100,
                                     max: 100,
                                     stepSize: 20,
-                                    beginAtZero: true   // minimum value will be 0.
+                                    default_min: -100,
+                                    default_max: 100,
+                                    default_stepSize: 20,
+                                    beginAtZero: true,   // minimum value will be 0.
+                                    callback: this.formatDeltaYAxis
                                 },
                             },
                         ],
@@ -140,9 +148,17 @@
                                 gridLines: {
                                     display:false
                                 },
-                                stacked: true
+                                stacked: true,
+                                ticks: {
+                                    callback: this.formatLargeNumberAxis
+                                },
                             }
                         ]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: this.formatToolTipLabel,
+                        }
                     },
                     responsive: true, 
                     maintainAspectRatio: false,
@@ -150,6 +166,15 @@
             };
         },
         methods: {
+            formatToolTipLabel(tooltipItem, data) {
+                return this.$root.splitValHelper(tooltipItem.yLabel, ',', 3);
+            },
+            formatLargeNumberAxis(value, index, values) {
+                return this.$root.splitValHelper(value, ',', 3);
+            },
+            formatDeltaYAxis(value, index, values) {
+                return value + '%';
+            },
             setChartData(data, market) {
                 this.active_market = market;
                 if(data == null) {
@@ -195,9 +220,18 @@
             },
             setDataSet(date_data) {
                 let temp_data_set = [];
+                // Clear data set
                 this.data_details.forEach(dataset => {
                     dataset.data = []; 
                 })
+                // Reset Scales
+                this.options.scales.yAxes.forEach(axis => {
+                    axis.ticks.min = axis.ticks.default_min;
+                    axis.ticks.max = axis.ticks.default_max;
+                    axis.ticks.stepSize = axis.ticks.default_stepSize;
+                });
+
+                // Create Data Sets
                 Object.keys(date_data).forEach(strike => {
                     let obj = {
                         'Put': null,
@@ -218,6 +252,7 @@
                         dataset.data.push(obj[dataset.label]); 
                     });
                 });
+                // Set Scales with data absolute max values
                 this.data_details.forEach(data_set => {
                     let scale = this.options.scales.yAxes.find(x => x.id == data_set.yAxisID).ticks;
                     if(scale.scaleVal) {
@@ -227,7 +262,10 @@
                                 Math.abs(Math.max(...data_set.data))
                             ) / scale.scaleVal
                         ) * scale.scaleVal;
+                        
                         max = max < scale.scaleVal ? scale.scaleVal : max;
+                        max = max < scale.max ? scale.max : max;
+
                         scale.min = -1 * max;
                         scale.max = max;
                         scale.stepSize = max / 5;

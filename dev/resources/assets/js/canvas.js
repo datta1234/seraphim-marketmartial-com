@@ -91,14 +91,21 @@ Vue.mixin({
         splitValHelper (val, splitter, frequency) {
             let tempVal = ('' + val);
             let floatVal = '';
+            let sign = '';
+            //Check if our passed value is negative signed
+            if( ("" + val).indexOf('-') !== -1 ) 
+            {
+                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
+                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
+            }
             //Check if our passed value is a float
-            if( ("" + val).indexOf('.') !== -1 ) 
+            if( ("" + tempVal).indexOf('.') !== -1 ) 
             {
                 floatVal = tempVal.slice(tempVal.indexOf('.'));
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));
             }
             //Creates an array of chars reverses and itterates through it
-            return tempVal.split('').reverse().reduce(function(x,y) {
+            return sign + tempVal.split('').reverse().reduce(function(x,y) {
                 //adds a space on the spesified frequency position
                 if(x[x.length-1].length == frequency)
                 {
