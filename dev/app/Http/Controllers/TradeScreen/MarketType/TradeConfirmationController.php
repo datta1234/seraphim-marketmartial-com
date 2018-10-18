@@ -19,7 +19,9 @@ class TradeConfirmationController extends Controller
         /*
         * had to merge to develop so need to stop tradeconfirmations from going through untill its refactored
         */
-        return [];
+        $data =TradeConfirmation::first()->preFormatted();
+        dd($data);
+
         //where organisation is involved
         $user = $request->user();
     	return TradeConfirmation::where(function($q) use($user)

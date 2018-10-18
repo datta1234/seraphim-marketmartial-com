@@ -121,31 +121,43 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function TradeStructure()
+    {
+        return $this->belongsTo('App\Models\StructureItems\TradeStructure','trade_structure_id');
+    }
+
+
+
+     /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketRequest()
+    {
+        return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
+    }
+
     public function preFormatted()
     {
-        $marketRequest = $this->tradeNegotiation->userMarket->userMarketRequest;
         return [
             'id'                        => $this->id,
             'organisation'              => "BANK ABC",
-            'spot_price'                => $this->spot_price,
-            'future_reference'          => $this->future_reference,
-            'near_expiery_reference'    => $this->near_expiery_reference,
-            'contracts'                 => $this->contracts,
-            'puts'                      => $this->puts,
-            'calls'                     => $this->calls,
-            'delta'                     => $this->delta,
-            'gross_premiums'            => $this->gross_premiums,
-            'net_premiums'              => $this->net_premiums,
-            'is_confirmed'              => $this->is_confirmed,
-            'trade_structure_title'     => $marketRequest->tradeStructure->title,
-            'expiration'                => $marketRequest->getDynamicItems(['Expiration Date','Expiration Date 1','Expiration Date 2']),
-            'strike'                    => $marketRequest->getDynamicItems(['Strike']),
-            'quantity'                  => $marketRequest->getDynamicItems(['Quantity']),
+
+            'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-            'market_request_id'         => $marketRequest->id,
-            'label'                     => $marketRequest->title,
-            'underlying_id'             => $marketRequest->underlying->id,
-            'underlying_title'          => $marketRequest->underlying->title,
+
+            'structure_fields'          => $this->tradeConfirmationGroups()->with('tradeConfirmationItems')->get(),
+            
+            'market_request_id'         => $this->marketRequest->id,
+            'market_request_title'                     => $this->marketRequest->title,
+            
+            'underlying_id'             => $this->marketRequest->underlying->id,
+            'underlying_title'          => $this->marketRequest->underlying->title,
+
             'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
             'traded_at'                 => $this->tradeNegotiation->updated_at,
             'is_offer'                  => $this->tradeNegotiation->isOffer(),
