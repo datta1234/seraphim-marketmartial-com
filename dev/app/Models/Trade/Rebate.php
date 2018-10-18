@@ -134,8 +134,4 @@ class Rebate extends Model
 
         return $data;
     }
-
-    public function preFormatGraph() {
-        
-    }
 }
