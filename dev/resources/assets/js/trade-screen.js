@@ -142,7 +142,7 @@ Vue.mixin({
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));
             }
             //Creates an array of chars reverses and itterates through it
-            return tempVal.split('').reverse().reduce(function(x,y) {
+            return sign + tempVal.split('').reverse().reduce(function(x,y) {
                 //adds a space on the spesified frequency position
                 if(x[x.length-1].length == frequency)
                 {
