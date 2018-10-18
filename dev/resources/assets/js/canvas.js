@@ -58,6 +58,7 @@ Vue.component('open-interests', require('./components/Stats/OpenInterestsCompone
 
 // Rebate Componenets
 Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));
+Vue.component('rebates-year-tables', require('./components/Rebates/RebatesYearTablesComponent.vue'));
 
 Vue.mixin({
     methods: {

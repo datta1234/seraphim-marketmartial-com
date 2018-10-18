@@ -103,7 +103,7 @@ class Rebate extends Model
         $data = [
             "date"          => $this->trade_date,
             "market"         => null,
-            "is_put"        => null,
+            "is_put"        => null /* $trade_confirmation->is_put */, // @TODO Resolve put or call
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],
@@ -111,20 +111,11 @@ class Rebate extends Model
             "rebate"        => $this->bookedTrade->amount,
         ];
 
-        // Resolve put or call
-        if($trade_confirmation->tradeNegotiation->is_offer == 1) {
-            $data["is_put"] = $this->user_id == $trade_confirmation->receiving_user_id ? true :
-                false;
-        } else {
-            $data["is_put"] = $this->user_id == $trade_confirmation->receiving_user_id ? false :
-                true;
-        }
-
         // Resolve stock / market
         if($this->bookedTrade->stock) {
-            $data["market"] = $this->bookedTrade->stock->name;
+            $data["market"] = $this->bookedTrade->stock->code;
         } else {
-            $data["market"] = $trade_confirmation->market->title;
+            $data["market"] = $this->bookedTrade->market->title;
         }
 
         // Resolve role

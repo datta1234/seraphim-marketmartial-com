@@ -81,6 +81,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	});
 
 	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
 });
 
 
