@@ -61,7 +61,7 @@ class BookedTradeSeeder extends Seeder
 					"trade_confirmation_id" => $tradeConfirmation->id, 
 					"trading_account_id" => $market_make_trading_account,
 					/*"market_id" => $tradeConfirmation->market_id,*/
-					"market_id" => rand(1,5), //@TODO temp remove
+					"market_id" => rand(1,4), //@TODO temp remove
 					"stock_id" => $tradeConfirmation->stock_id,
 					"is_sale" => 0,
 					"is_confirmed" => 1,
