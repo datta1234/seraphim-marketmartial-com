@@ -128,8 +128,15 @@ Vue.mixin({
         splitValHelper (val, splitter, frequency) {
             let tempVal = ('' + val);
             let floatVal = '';
+            let sign = '';
+            //Check if our passed value is negative signed
+            if( ("" + val).indexOf('-') !== -1 ) 
+            {
+                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
+                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
+            }
             //Check if our passed value is a float
-            if( ("" + val).indexOf('.') !== -1 ) 
+            if( ("" + tempVal).indexOf('.') !== -1 ) 
             {
                 floatVal = tempVal.slice(tempVal.indexOf('.'));
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));

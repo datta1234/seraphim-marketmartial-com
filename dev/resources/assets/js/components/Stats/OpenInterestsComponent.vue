@@ -122,7 +122,8 @@
                                     default_min: -1500,
                                     default_max: 1500,
                                     default_stepSize: 300,
-                                    beginAtZero: true   // minimum value will be 0.
+                                    beginAtZero: true,   // minimum value will be 0.
+                                    callback: this.formatLargeNumberAxis
                                 }
                             },
                             {
@@ -136,7 +137,8 @@
                                     default_min: -100,
                                     default_max: 100,
                                     default_stepSize: 20,
-                                    beginAtZero: true   // minimum value will be 0.
+                                    beginAtZero: true,   // minimum value will be 0.
+                                    callback: this.formatDeltaYAxis
                                 },
                             },
                         ],
@@ -146,9 +148,17 @@
                                 gridLines: {
                                     display:false
                                 },
-                                stacked: true
+                                stacked: true,
+                                ticks: {
+                                    callback: this.formatLargeNumberAxis
+                                },
                             }
                         ]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: this.formatToolTipLabel,
+                        }
                     },
                     responsive: true, 
                     maintainAspectRatio: false,
@@ -156,6 +166,15 @@
             };
         },
         methods: {
+            formatToolTipLabel(tooltipItem, data) {
+                return this.$root.splitValHelper(tooltipItem.yLabel, ',', 3);
+            },
+            formatLargeNumberAxis(value, index, values) {
+                return this.$root.splitValHelper(value, ',', 3);
+            },
+            formatDeltaYAxis(value, index, values) {
+                return value + '%';
+            },
             setChartData(data, market) {
                 this.active_market = market;
                 if(data == null) {
