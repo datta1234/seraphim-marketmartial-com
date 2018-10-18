@@ -148,7 +148,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 			->name('activity.upload_safex_data');
 		Route::post('/open-interest','Stats\OpenInterestControlller@store')
 			->name('open-interest.upload_data');
-    }); 
+    });
+
+    Route::resource('booked-trades', 'Admin\BookedTradesController', [
+		'as' => 'admin'
+	]);
 });
 
 Route::group(['middleware' => ['auth']], function() {
