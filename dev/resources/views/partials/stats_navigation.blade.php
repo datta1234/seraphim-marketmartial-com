@@ -31,4 +31,6 @@
     </div>
 </div>
 
-<upload-csv></upload-csv>
+@if(Auth::user()->role_id == 1)
+	<upload-csv></upload-csv>
+@endif

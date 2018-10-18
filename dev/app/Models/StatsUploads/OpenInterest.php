@@ -55,10 +55,13 @@ class OpenInterest extends Model
         'updated_at',
     ];
 
-    public static function parseDouble($value) {
-        return doubleval(str_replace(" ", "", $value));
-    }
-
+    /**
+     * Creates a new OpenInterest record from the passed array
+     *
+     * @param array $data
+     *
+     * @return App\Models\StatsUploads\OpenInterest
+     */
     public static function createFromCSV($data) {
     	
     	return self::create([
@@ -66,10 +69,10 @@ class OpenInterest extends Model
 			'contract'		=> $data['contract'],
 			'expiry_date'	=> \Carbon\Carbon::parse($data['expiry_date']),
 			'is_put'		=> ($data['is_put'] == 'P'),
-			'open_interest'	=> self::parseDouble($data['open_interest']),
-			'strike_price'	=> self::parseDouble($data['strike_price']),
-			'delta'			=> self::parseDouble($data['delta']),
-			'spot_price'	=> self::parseDouble($data['spot_price']),
+			'open_interest'	=> doubleval($data['open_interest']),
+			'strike_price'	=> doubleval($data['strike_price']),
+			'delta'			=> doubleval($data['delta']),
+			'spot_price'	=> doubleval($data['spot_price']),
     	]);
     }
 }

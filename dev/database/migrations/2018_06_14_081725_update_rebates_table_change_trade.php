@@ -28,7 +28,7 @@ class UpdateRebatesTableChangeTrade extends Migration
     public function down()
     {
         Schema::table('rebates', function (Blueprint $table) {
-             $table->integer('trade_id')->unsigned();
+            $table->integer('trade_id')->nullable()->unsigned();
             $table->foreign('trade_id')->references('id')->on('trades');
 
         });

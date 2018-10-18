@@ -36,7 +36,10 @@ class MarketUserMarketReqeustController extends Controller
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',
-                'userMarketRequestGroups.tradeStructureGroup',
+                'userMarketRequestGroups.tradeStructureGroup' =>function($q){
+                    $q->where("trade_structure_group_type_id",1)
+                    ->with('items');
+                },
                 'userMarketRequestGroups.userMarketRequestItems'
             ])->get();
 
@@ -74,7 +77,14 @@ class MarketUserMarketReqeustController extends Controller
     public function store(UserMarketRequestRequest $request, Market $market)
     {
         $input = $request->all();
-        $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with('tradeStructureGroups.items')->firstOrFail();
+    
+
+
+        $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with(['tradeStructureGroups' => function($q){
+            $q->where("trade_structure_group_type_id",1)
+            ->with('items');
+        }]
+        )->firstOrFail();
 
         $inputTradeStructureGroups = $request->input('trade_structure_groups');
         

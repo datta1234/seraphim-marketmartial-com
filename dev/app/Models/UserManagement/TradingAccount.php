@@ -56,7 +56,7 @@ class TradingAccount extends Model
     */
     public function bookedTrades()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','traiding_account_id');
+        return $this->hasMany('App\Models\TradeConfirmations\BookedTrade','trading_account_id');
     }
 
     /**
@@ -65,6 +65,6 @@ class TradingAccount extends Model
     */
     public function tradeConfirmations()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','traiding_account_id');
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trading_account_id');
     }
 }

@@ -11,6 +11,8 @@ use App\Models\StatsUploads\SafexTradeConfirmation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
+use Validator;
+use Illuminate\Validation\Rule;
 
 class ActivityControlller extends Controller
 {
@@ -149,27 +151,49 @@ class ActivityControlller extends Controller
      */
     public function store(CsvUploadDataRequest $request)
     {
-        // @TODO - truncate table before new import and validation for CSV
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
+        // Create a new array of csv file lines
         array_walk($csv, function(&$row) {
             array_walk($row, function(&$col) {
                 $col = trim($col);
             });
         });
 
+        // Replace the imported fields with the data base fields
         foreach ($csv[0] as $index => $field) {
             $csv[0][$index] = config('marketmartial.import_csv_field_mapping.safex_fields.'.$field);
         }
 
+        // remove headings field and map each value to the heading as key value pair
         array_walk($csv, function(&$a) use ($csv) {
             $a = array_combine($csv[0], $a);
+            // removing white space before validation
+            $a['strike'] = str_replace(" ", "", $a['strike']);
+            $a['trade_id'] = str_replace(" ", "", $a['trade_id']);
+            $a['nominal'] = str_replace(" ", "", $a['nominal']);
         });
         array_shift($csv);
         
+        // Validate the uploaded Csv fields
+        $validator = Validator::make($csv,
+            config('marketmartial.import_csv_field_mapping.safex_validation.rules'),
+            config('marketmartial.import_csv_field_mapping.safex_validation.messages')
+        );
+        if ($validator->fails()) {
+            return [
+                'success' => false,
+                'data' => ['messages' => $validator->messages()->toJson()],
+                'message' => 'Failed to upload Open Interest data.'
+            ];
+        }
+
+        // removes all previous safex trade confirmation records
+        SafexTradeConfirmation::truncate();
         try {
             DB::beginTransaction();
+            // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
             DB::commit();
         } catch (\Exception $e) {

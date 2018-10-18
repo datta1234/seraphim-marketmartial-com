@@ -29,7 +29,12 @@ class UserMarketRequestRequest extends FormRequest
         //fly selected, outright -> force yes
         //efp switch, risky, caly,options swicth, ->no force select
     
-       $this->tradeStructure = TradeStructure::where('title',$this->input('trade_structure'))->with('tradeStructureGroups.items.itemType')->first();
+    
+       $this->tradeStructure = TradeStructure::where('title',$this->input('trade_structure'))->with(['tradeStructureGroups'=>function($q){
+            $q->where("trade_structure_group_type_id",1)
+                ->with('items.itemType');
+           }])->first();
+       
        $rules = [
             'trade_structure' => 'required|exists:trade_structures,title', 
         ];

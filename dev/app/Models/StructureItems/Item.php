@@ -61,4 +61,14 @@ class Item extends Model
     {
         return $this->hasMany('App\Models\MarketRequest\UserMarketRequestItem','item_id');
     }
+
+    /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationItems()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationItem',
+            'item_id');
+    }
 }

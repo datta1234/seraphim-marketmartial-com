@@ -2,9 +2,9 @@
     <div dusk="activity-year-tables" class="activity-year-tables">
         <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
             <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="'accordion'+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
+                <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="accordion_base_id+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
             </b-card-header>
-            <b-collapse :id="'accordion'+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
+            <b-collapse :id="accordion_base_id+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
                 <b-card-body>
                     <b-row>
                         <b-col cols="12">
@@ -107,6 +107,7 @@
         },
         data() {
             return {
+                accordion_base_id: 'yearTableAccordion',
                 table_data_loaded: false,
             	table_years: [],
                 active_collapse: {
@@ -137,13 +138,16 @@
         },
         methods: {
             toggleState(toggle_id) {
-                let index = toggle_id.substr(toggle_id.indexOf('accordion') + 9);
-                if(toggle_id == ('accordion'+this.active_collapse.index)) {
+                if(toggle_id.indexOf(this.accordion_base_id) !== -1) {
+                    let index = toggle_id.substr(toggle_id.indexOf(this.accordion_base_id) + 
+                        this.accordion_base_id.length);
+                    if(toggle_id == ('accordion'+this.active_collapse.index)) {
 
-                } else {
-                    this.active_collapse.index = index;
-                    this.active_collapse.state = true;
-                    this.loadTableData(index, true);
+                    } else {
+                        this.active_collapse.index = index;
+                        this.active_collapse.state = true;
+                        this.loadTableData(index, true);
+                    }
                 }
             },
             loadTableData(index, is_toggle) {

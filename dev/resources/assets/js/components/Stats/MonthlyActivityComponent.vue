@@ -10,7 +10,7 @@
 		</div>
 		<div class="card graph-card">
 			<div v-if="has_data" class="card-body">
-				<bar-graph :data="active_data_set" :options="options"></bar-graph>
+				<bar-graph :chart-data="active_data_set" :options="options"></bar-graph>
 				<b-form-checkbox class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
 	    			Show only my trades
 			    </b-form-checkbox>
