@@ -103,7 +103,7 @@ class Rebate extends Model
         $data = [
             "date"          => $this->trade_date,
             "market"         => null,
-            "is_put"        => null /* $trade_confirmation->is_put */, // @TODO Resolve put or call
+            "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],

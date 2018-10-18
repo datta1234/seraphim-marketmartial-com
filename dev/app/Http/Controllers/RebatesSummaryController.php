@@ -99,10 +99,12 @@ class RebatesSummaryController extends Controller
             $rebates = Rebate::where('organisation_id', $user->organisation->id)
                 ->where('is_paid', true)
                 ->whereYear('trade_date', $request->input('year'))
-                ->paginate(10)
-                ->transform(function($rebate) use ($user){
-                    return $rebate->preFormat($user);
-                });
+                ->orderBy("trade_date", "ASC")
+                ->paginate(10);
+
+            $rebates->transform(function($rebate) use ($user){
+                return $rebate->preFormat($user);
+            });
         }
 
         return response()->json($rebates);

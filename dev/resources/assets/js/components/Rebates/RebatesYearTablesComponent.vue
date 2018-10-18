@@ -55,14 +55,14 @@
                     state: true,
                 },
                 table_fields: [
-                    { key: 'updated_at', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'updated_at', label: 'Instrument' },
-                    { key: 'updated_at', label: 'Option Strategy' },
-                    { key: 'updated_at', label: 'Strike' },
-                    { key: 'updated_at', label: 'Expiration' },
-                    { key: 'updated_at', label: 'Nominal (ZAR)' },
-                    { key: 'updated_at', label: 'Your Role' },
-                    { key: 'updated_at', label: 'Rebate' },
+                    { key: 'date', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'market', label: 'Instrument' },
+                    { key: 'is_put', label: 'Option Strategy' },
+                    { key: 'strike', label: 'Strike' },
+                    { key: 'expiration', label: 'Expiration' },
+                    { key: 'nominal', label: 'Nominal (ZAR)' },
+                    { key: 'role', label: 'Your Role' },
+                    { key: 'rebate', label: 'Rebate' },
                 ],
                 table_data:{},
             };
@@ -100,6 +100,8 @@
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;
                             this.table_data[index].data = activityResponse.data.data;
+                            console.log("SERVER: ",activityResponse);
+                            console.log("Our DATA: ",this.table_data[index]);
                             this.table_data_loaded = true;
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
@@ -137,14 +139,39 @@
                     return '-';
                 }
                 if( Array.isArray(item[key]) ) {
-                    let formatted = '';
-                    item[key].forEach(element => {
-                        formatted += (key == 'expiration' ? this.castToMoment(element) : element) + ' / ';
-                    });
-                    return formatted.substring(0, formatted.length - 3);
+                    return this.formatArrayItem(item[key], key); 
                 }
 
-                return key == 'updated_at' ? this.castToMoment(item[key]) : item[key];
+                switch (key) {
+                    case 'date':
+                        return this.castToMoment(item[key])
+                        break;
+                    case 'is_put':
+                        return item[key] == 1 ? "Put" : "Call";
+                        break;
+                    case 'date':
+                        return this.castToMoment(item[key]);
+                        break;
+                    default:
+                        return item[key];
+                }
+            },
+            formatArrayItem(array_item, key) {
+                let formatted_array = '';
+                array_item.forEach(element => {
+                    switch (key) {
+                        case 'expiration':
+                            formatted_array += this.castToMoment(element) + ' / ';
+                            break;
+                        case 'strike':
+                        case 'nominal':
+                            formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
+                            break;
+                        default:
+                            formatted_array += element + ' / ';
+                    }
+                });
+                return formatted_array.substring(0, formatted_array.length - 3);
             },
             /**
              * Casting a passed string to moment with a new format
