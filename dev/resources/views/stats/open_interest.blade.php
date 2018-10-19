@@ -13,7 +13,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <open-interests :data="{{ json_encode($grouped_open_interests) }}"></open-interests>
+		        <open-interests :data="{{ json_encode($grouped_open_interests, JSON_FORCE_OBJECT) }}"></open-interests>
 		    @endslot
 		@endcomponent
 	</div>

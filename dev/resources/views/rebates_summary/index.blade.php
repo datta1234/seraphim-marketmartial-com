@@ -14,7 +14,7 @@
 		    @slot('body')
 		        <rebates-earned :users="{{ json_encode($users) }}"
 		        				:authed_user="{{ json_encode(Auth::user()->full_name) }}"
-		        				:market_data="{{ json_encode($date_grouped_rebates) }}"
+		        				:market_data="{{ json_encode($date_grouped_rebates, JSON_FORCE_OBJECT) }}"
 		        				:yearly_total="{{ $total_rebates }}">
 		        </rebates-earned>
 		    @endslot

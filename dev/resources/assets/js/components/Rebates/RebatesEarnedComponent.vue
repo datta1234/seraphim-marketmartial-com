@@ -103,7 +103,7 @@
         },
         methods: {
             setChartData(data) {
-            	if(data == null) {
+            	if(data == null || Object.keys(data).length === 0) {
             		this.has_data = false;
             		return;
             	}

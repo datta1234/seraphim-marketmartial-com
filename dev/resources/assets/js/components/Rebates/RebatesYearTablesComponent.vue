@@ -114,18 +114,20 @@
                 }
             },
             initTableData() {
-                this.table_years.forEach( (element, key) => {
-                    this.table_data[key] = {
-                        data: null,
-                        date: element,
-                        current_page: 1,
-                        per_page: 10,
-                        total: 10,
-                        order_by: null,
-                        order_ascending: true
-                    };
-                });
-                this.loadTableData(0, false)
+                if(this.table_years.length > 0) {
+                    this.table_years.forEach( (element, key) => {
+                        this.table_data[key] = {
+                            data: null,
+                            date: element,
+                            current_page: 1,
+                            per_page: 10,
+                            total: 10,
+                            order_by: null,
+                            order_ascending: true
+                        };
+                    });
+                    this.loadTableData(0, false);
+                }
             },
             sortingChanged(index, ctx) {
                 this.table_data[index].order_by = ctx.sortBy;
