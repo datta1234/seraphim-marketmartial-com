@@ -27,7 +27,7 @@ class RebatesSummaryController extends Controller
             ->groupBy(function ($item, $key) {
                 return Carbon::parse($item['trade_date'])->format('My');
             });
-        $total_rebates = null;
+        $total_rebates = 0;
         foreach ($date_grouped_rebates as $date => $rebate) {
             // Calculate the total organisation rebate amount for the year
             $total_rebates += $rebate->sum(function ($single) {
