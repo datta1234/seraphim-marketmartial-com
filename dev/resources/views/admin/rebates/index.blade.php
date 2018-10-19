@@ -12,7 +12,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <rebates-table></rebates-table>
+		        <rebates-table rebate_data="{{ $rebates }}"></rebates-table>
 		    @endslot
 		@endcomponent
 	</div>

@@ -95,6 +95,15 @@ class Rebate extends Model
         return $this->hasMany('App\Models\UserManagement\Organisation', 'organisation_id');
     }
 
+    public function resolveMarketStock() {
+        // Resolve stock / market
+        if($this->bookedTrade->stock) {
+            return $this->bookedTrade->stock->code;
+        } else {
+            return $this->bookedTrade->market->title;
+        }
+    }
+
     public function preFormat($user)
     {
         $trade_confirmation = $this->bookedTrade->tradeConfirmation;
@@ -102,7 +111,7 @@ class Rebate extends Model
 
         $data = [
             "date"          => $this->trade_date,
-            "market"         => null,
+            "market"         => $this->resolveMarketStock(),
             "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
@@ -110,13 +119,6 @@ class Rebate extends Model
             "role"          => null,
             "rebate"        => $this->bookedTrade->amount,
         ];
-
-        // Resolve stock / market
-        if($this->bookedTrade->stock) {
-            $data["market"] = $this->bookedTrade->stock->code;
-        } else {
-            $data["market"] = $this->bookedTrade->market->title;
-        }
 
         // Resolve role
         switch (true) {
@@ -131,6 +133,27 @@ class Rebate extends Model
                 $data["role"] = null;
                 break;
         }
+
+        return $data;
+    }
+
+    public function preFormatAdmin()
+    {
+        $trade_confirmation = $this->bookedTrade->tradeConfirmation;
+        $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
+
+        $data = [
+            "date"          => $this->trade_date,
+            "user"          => $this->user->full_name,
+            "organisation"  => $this->user->organisation->title,
+            "market"        => $this->resolveMarketStock(),
+            "is_put"        => $trade_confirmation->is_put,
+            "strike"        => $user_market_request_items["strike"],
+            "expiration"    => $user_market_request_items["expiration"],
+            "nominal"       => $user_market_request_items["nominal"],
+            "rebate"        => $this->bookedTrade->amount,
+            "is_paid"       => $this->is_paid,
+        ];
 
         return $data;
     }

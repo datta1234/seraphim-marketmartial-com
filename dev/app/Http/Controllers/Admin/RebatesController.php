@@ -17,14 +17,18 @@ class RebatesController extends Controller
      */
     public function index(Request $request)
     {
-        $rebates = Rebate::basicSearch(
+        /*$rebates = Rebate::basicSearch(
                     $request->input('search'),
                     $request->input('_order_by') == '' ? null : $request->input('_order_by'),
                     $request->input('_order'),
                     $request->input('filter') == '' ? null : $request->input('filter'))
-                ->with('user','bookedTrade')
-                ->paginate(10);
-        dd($rebates->toArray());
+                ->with('user','bookedTrade','user.organisation')
+                ->paginate(10);*/
+        $rebates = Rebate::orderBy("trade_date", "ASC")->paginate(10);
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormatAdmin();
+        });
+
         if($request->ajax()) {
             return $rebates;
         }
