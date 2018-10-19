@@ -134,4 +134,61 @@ class Rebate extends Model
 
         return $data;
     }
+
+    /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param string  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = null,$orderBy="trade_date",$order='ASC', $filter = null)
+    {
+        if($orderBy == null)
+        {
+            $orderBy = "trade_date";
+        }
+
+        if($order == null)
+        {
+            $order = "ASC";
+        }
+
+        $UserQuery = Rebate::where( function ($q) use ($term)
+        {
+            $q->whereHas('user',function($q) use ($term){
+                $q->where('full_name','like',"%$term%");
+            })
+            ->orWhereHas('user',function($q) use ($term){
+                $q->where('email','like',"%$term%")
+                ->orWhereHas('organisation',function($q) use ($term){
+                    $q->where('title','like',"%$term%");
+                });
+            });
+        });
+
+/*        if($filter !== null) {
+            switch ($filter) {
+                case 'active':
+                    $UserQuery->where('users.verified', true)
+                    ->where('active', true);
+                    break;
+                case 'inactive':
+                    $UserQuery->where('users.verified', true)
+                    ->where('active', false);
+                    break;
+                case 'request':
+                    $UserQuery->where('users.verified', false)
+                    ->where('active', false);
+                    break;
+            }
+        }*/
+
+        $UserQuery->orderBy($orderBy,$order);
+
+        return $UserQuery;
+    }
 }

@@ -47,6 +47,8 @@ Vue.component('day-month-picker', require('./components/Profile/Components/DayMo
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
 //Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
+Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue'));
+Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue'));
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));

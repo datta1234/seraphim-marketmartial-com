@@ -153,6 +153,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
     Route::resource('booked-trades', 'Admin\BookedTradesController', [
 		'as' => 'admin'
 	]);
+
+	Route::resource('rebates', 'Admin\RebatesController', [
+		'as' => 'admin'
+	]);
 });
 
 Route::group(['middleware' => ['auth']], function() {
