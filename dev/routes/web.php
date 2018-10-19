@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	});
 
 	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
 });
 
 
@@ -147,7 +148,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 			->name('activity.upload_safex_data');
 		Route::post('/open-interest','Stats\OpenInterestControlller@store')
 			->name('open-interest.upload_data');
-    }); 
+    });
+
+    Route::resource('booked-trades', 'Admin\BookedTradesController', [
+		'as' => 'admin'
+	]);
 });
 
 Route::group(['middleware' => ['auth']], function() {
