@@ -49,11 +49,7 @@
         components: {
             BarGraph
         },
-    	props: {
-            'data': {
-                type: Object
-            },
-        },
+    	props: ['data'],
         computed: {
             expirationDates: function() {
                 return this.active_data_set.filter_dates;
