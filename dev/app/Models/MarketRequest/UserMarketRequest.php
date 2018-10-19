@@ -356,10 +356,22 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
-        $is_killed          =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->is_killed === true : false;
-        $lastUntraded       =  $this->lastTradeNegotiationIsUnTraded();
-        $lastTraded         =  !$lastUntraded ? $this->lastTradeNegotiationIsTraded() : false;
+        $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
+        $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
+        $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
+        $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
+        $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
+        // \Log::info([
+        //     "hasQuotes > $hasQuotes",
+        //     "acceptedState > $acceptedState",
+        //     "marketOpen > $marketOpen",
+        //     "is_fok > $is_fok",
+        //     "is_private > $is_private",
+        //     "is_killed > $is_killed",
+        //     "lastTraded > $lastTraded",
+        //     "lastTraded. > $lastTraded",
+        // ]);
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
@@ -371,25 +383,21 @@ class UserMarketRequest extends Model
         {
             return "request-vol";
         }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded && $is_killed)
-        {
-            return 'negotiation-open';
-        }
-        elseif($acceptedState && !$marketOpen && !$lastUntraded && !$lastTraded)
+        elseif($acceptedState && !$marketOpen && !$is_trading)
         {
             return 'negotiation-pending';
         }
-        elseif ($acceptedState && !$marketOpen && !$lastUntraded && $lastTraded)
-        {
-            return 'trade-negotiation-balance';
-        }
-        elseif ($marketOpen && !$lastUntraded && !$lastTraded)
+        elseif($acceptedState && $marketOpen && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
         {
             return 'negotiation-open';
         }
-        elseif($lastUntraded)
+        elseif($acceptedState && !$marketOpen && $is_trading && !$lastTraded)
         {
             return 'trade-negotiation-pending';
+        }
+        elseif ($acceptedState && !$marketOpen && $is_trading && $lastTraded)
+        {
+            return 'trade-negotiation-balance';
         }
     }
 
@@ -457,15 +465,15 @@ class UserMarketRequest extends Model
             $tradeNegotiationRoles = ["other"];
 
 
-            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation))
+            $tradeNegotiation = $this->chosenUserMarket->tradeNegotiations()->latest()->first();
+            if(!is_null($tradeNegotiation))
             {
-                if($lastNegotiation->lastTradeNegotiation->initiateUser->organisation_id == $current_org_id)
+                if($tradeNegotiation->initiateUser->organisation_id == $current_org_id)
                 {
                     $tradeNegotiationRoles = ["negotiator"];
                 }
 
-                if($lastNegotiation->lastTradeNegotiation->recievingUser->organisation_id == $current_org_id)
+                if($tradeNegotiation->recievingUser->organisation_id == $current_org_id)
                 {
                     $tradeNegotiationRoles = ["counter"];
                 }

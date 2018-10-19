@@ -15,6 +15,9 @@ export default class UserMarket extends BaseModel {
                 },
                 active_conditions: {
                     setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
+                },
+                activity: {
+                    setMethod: (activity) => { this.setActivity(activity) },
                 }
             }
         });
@@ -51,11 +54,14 @@ export default class UserMarket extends BaseModel {
         }
 
         this.active_conditions = [];
-        
         if(options && options.active_conditions) {
             this.setActiveConditions(options.active_conditions);
         }
 
+        this.activity = {};
+        if(options && options.activity) {
+            this.setActivity(options.activity);
+        }
     }
 
     /**
@@ -95,7 +101,6 @@ export default class UserMarket extends BaseModel {
     */
     setActiveConditions(active_conditions) {
         this.active_conditions.splice(0, this.active_conditions.length);
-        console.log("HERE 123: ", active_conditions);
         active_conditions.forEach(cond => {
             this.addActiveCondition(cond);
         });
@@ -112,6 +117,14 @@ export default class UserMarket extends BaseModel {
         }
 
         this.active_conditions.push(active_condition);
+    }
+
+    /**
+    *   setActivity - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActivity(activity) {
+        this.activity = activity;
     }
 
     /**
@@ -231,5 +244,28 @@ export default class UserMarket extends BaseModel {
             });
         });
 
+    }
+
+
+    /**
+    * Dismiss this organisation activity
+    */
+    dismissActivity(activity) {
+        // make a . notation string
+        activity = activity instanceof Array ? activity.join('.') : activity;
+        console.log(activity);
+
+        return new Promise((resolve, reject) => {
+            return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
+            .then(response => {
+                if(response.data.success) {
+                    this.setActivity(response.data.activity);
+                }
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
     }
 }

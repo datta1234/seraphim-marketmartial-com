@@ -149,20 +149,20 @@ class TradeConfirmation extends Model
 
             'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-
-            'structure_fields'          => $this->tradeConfirmationGroups()->with('tradeConfirmationItems')->get(),
+            'structure_groups'           => $this->tradeConfirmationGroups->map(function($item){
+                return $item->preFormatted();
+            }),
             
             'market_request_id'         => $this->marketRequest->id,
-            'market_request_title'                     => $this->marketRequest->title,
+            'market_request_title'      => $this->marketRequest->title,
             
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
 
             'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            
             'traded_at'                 => $this->tradeNegotiation->updated_at,
             'is_offer'                  => $this->tradeNegotiation->isOffer(),
-
-
         ];
     }
 

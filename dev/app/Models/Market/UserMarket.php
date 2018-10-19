@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Traits\HasDismissibleActivity;
+    
 class UserMarket extends Model
 {
     use \App\Traits\ResolvesUser,SoftDeletes;
+    use HasDismissibleActivity; // activity tracked and dismissible
+
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -59,7 +62,12 @@ class UserMarket extends Model
 
     protected $hidden = ["user_id"];
 
-
+    /**
+    *   activityKey - identity for cached data
+    */
+    protected function activityKey() {
+        return $this->id;
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -67,7 +75,7 @@ class UserMarket extends Model
     */
     public function marketNegotiations()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id');
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"ASC");
     }
 
     public function firstNegotiation()
@@ -145,6 +153,10 @@ class UserMarket extends Model
     public function tradeNegotiations()
     {
         return $this->hasMany('App\Models\Trade\TradeNegotiation','user_market_id');
+    }
+
+    public function isTrading() {
+        return !$this->tradeNegotiations()->latest()->first()->traded;
     }
 
     /**
@@ -289,7 +301,7 @@ class UserMarket extends Model
             DB::commit();
             return $marketNegotiation;
         } catch (\Exception $e) {
-            \Log::error($e->getMessage());
+            \Log::error($e);
             DB::rollBack();
             return false;
         }
@@ -327,10 +339,10 @@ class UserMarket extends Model
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
 
-            $counterNegotiation = $this->marketNegotiations()
-                                            ->findcounterNegotiation($user)
-                                            ->first();
-
+            $counterNegotiation = $this->lastNegotiation()
+                                ->findCounterNegotiation($user)
+                                ->first();
+            \Log::info($counterNegotiation);
 
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {
@@ -360,7 +372,7 @@ class UserMarket extends Model
                 DB::commit();
                 return $marketNegotiation;
             } catch (\Exception $e) {
-                \Log::error($e->getMessage());
+                \Log::error($e);
                 DB::rollBack();
                 return false;
             }
@@ -439,6 +451,8 @@ class UserMarket extends Model
                                             ];
                                         })->values(),
         ];
+
+        $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
 
         return $data;
     }

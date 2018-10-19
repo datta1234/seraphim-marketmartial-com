@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Market\UserMarket;
 use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
+use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
 
 
 class MarketNegotiationController extends Controller
@@ -116,8 +117,18 @@ class MarketNegotiationController extends Controller
         // Handle Meet In Middle
         if($marketNegotiation->isProposal() || $marketNegotiation->isMeetInMiddle()) {
             $success = $marketNegotiation->reject();
-            $marketNegotiation->user->organisation->notify("condition_action","Proposal rejected by counter",true);
-            $marketNegotiation->counterUser->organisation->notify("condition_action","Proposal rejected",true);
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".rejected",
+                    "Proposal rejected by counter", 
+                    10
+                );
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".reject",
+                    "Proposal rejected", 
+                    10
+                );
         }
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();
@@ -131,7 +142,7 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function counterProposal(Request $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function counterProposal(MarketNegotiationCounterRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
         $this->authorize('counter',$marketNegotiation);
         $market = $marketNegotiation->counter($request->user(), $request->only(['bid', 'offer']));

@@ -10,29 +10,33 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SendStream implements ShouldBroadcast
+class UUIDUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $broadcastName;
-    public $channel;
-    public $data;
-    public $total;
+
+    private $old_id;
+    private $organisation;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($broadcastName,$channel,$data,$total)
+    public function __construct($organisation, $old_id)
     {
-        $this->broadcastName = $broadcastName;
-        $this->channel = $channel;
-        $this->data =   $data;
-        $this->total =   $total;
-
+        $this->old_id = $old_id;
+        $this->organisation = $organisation;
     }
 
-     
+    /**
+    * The event's broadcast name.
+    *
+    * @return string
+    */
+    public function broadcastAs()
+    {
+        return 'UUIDUpdated';
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -41,23 +45,16 @@ class SendStream implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return $this->channel;
+        return new PrivateChannel('organisation.'.$this->old_id);    
     }
 
-    public function broadcastAs()
-    {
-        return  $this->broadcastName;
-    }
-
-     /**
+    /**
     * Get the data to broadcast.
     *
     * @return array
     */
     public function broadcastWith()
     {
-        $this->data['total'] = $this->total;
-        $this->data['timestamp'] = now()->toIso8601String();
-        return $this->data;
+        return ["message"=>"Client Identity Updated",'data'=>$this->organisation->uuid];
     }
 }

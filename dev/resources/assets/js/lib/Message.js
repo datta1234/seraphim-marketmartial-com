@@ -175,7 +175,8 @@ export default class Message {
             }
 
             // handle corrupt message
-            if( this.validateChecksum(this.full_message) ) {
+            console.log("Blah ["+this.expires.unix()+"]")
+            if( this.validateChecksum(this.full_message+this.expires.unix()) ) {
                 try {
                     resolve(JSON.parse(atob(this.full_message)));
                 } catch(err) {

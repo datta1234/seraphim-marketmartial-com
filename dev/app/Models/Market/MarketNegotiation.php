@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Trade\TradeNegotiation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\HasDismissibleActivity;
+
 
 
 class MarketNegotiation extends Model
 {
     use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
+    use HasDismissibleActivity; // activity tracked and dismissible
+
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -116,6 +120,12 @@ class MarketNegotiation extends Model
         'deleted_at'
     ];
 
+    /**
+    *   activityKey - identity for cached data
+    */
+    protected function activityKey() {
+        return $this->id;
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -147,6 +157,68 @@ class MarketNegotiation extends Model
                 JOIN $table outcome ON parent_struct._id = outcome.id
         ");
         return self::hydrate($history)->sortBy('id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationSource($attr)
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $att = ($attr == 'bid' ? 'bid' : 'offer');
+        $value = ($attr == 'bid' ? floatval($this->bid) : floatval($this->offer));
+        $source = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @attr as _attr, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @attr := $att FROM $table WHERE id = _id
+                    ) as parent_attr
+                    FROM (
+                        SELECT @id := $id, @attr := $value
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @attr = $value
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+                ORDER BY _id ASC
+                LIMIT 1
+        ");
+        return self::hydrate($source)->first();
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeAtBestSource()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $att = ($attr == 'bid' ? 'bid' : 'offer');
+        $value = ($attr == 'bid' ? floatval($this->bid) : floatval($this->offer));
+        $source = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @attr as _attr, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @attr := $att FROM $table WHERE id = _id
+                    ) as parent_attr
+                    FROM (
+                        SELECT @id := $id, @attr := $value
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @attr = $value
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+                ORDER BY _id ASC
+                LIMIT 1
+        ");
+        return self::hydrate($source)->first();
     }
 
     /**
@@ -223,10 +295,14 @@ class MarketNegotiation extends Model
             }
             // Meet At Best
             if($this->cond_buy_best !== null) {
-                return 'meet-at-best';
+                return 'trade-at-best';
             }
             // Proposal
             return 'proposal';
+        }
+        // Meet At Best - OPEN to market
+        if($this->cond_buy_best !== null) {
+            return 'trade-at-best-open';
         }
         // Repeat ATW
         if($this->cond_is_repeat_atw !== null) {
@@ -248,7 +324,7 @@ class MarketNegotiation extends Model
         return $query->when(!$private, function($q){
             $q->where('is_private', false);
         })->whereHas('user',function($q) use ($user) {
-            $q->where('id','!=',$user->id);
+            $q->where('organisation_id','!=',$user->organisation_id);
         })->orderBy('created_at', 'DESC');
     }
 
@@ -295,6 +371,45 @@ class MarketNegotiation extends Model
             $this->is_private == true && 
             $this->cond_buy_mid !== null
         ); 
+    }
+
+    /**
+    * test if is MeetInMiddle
+    * @return Boolean
+    */
+    public function isTradeAtBest()
+    {
+        return (
+            $this->is_private == true &&
+            $this->cond_buy_best !== null
+        ); 
+    }
+
+
+    public function isTrading() {
+        return $this->tradeNegotiations->count() > 0;
+    }
+
+    /**
+    * test if is MeetInMiddle
+    * @return Boolean
+    */
+    public function isTradeAtBestOpen()
+    {
+        return (
+            $this->is_private == false &&
+            $this->cond_buy_best !== null
+        ); 
+    }
+
+    public function doTradeAtBest($quantity, $is_offer) {
+        // $user = $this->
+        // $tradeNegotiation = $this->addTradeNegotiation($user,[
+        //     "quantity"  =>  $quantity,
+        //     "is_offer"  =>  $is_offer
+        // ]);
+
+        // $this->fresh()->userMarket->userMarketRequest->notifyRequested();
     }
 
     public function kill()
@@ -446,7 +561,8 @@ class MarketNegotiation extends Model
 
     public function setAmount($marketNegotiations,$attr)
     {
-        $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
+        // $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
+        $source = $this->marketNegotiationSource($attr);
         if($this->is_killed && $this->getAttribute($attr) == null) {
             return "";
         }
@@ -490,11 +606,8 @@ class MarketNegotiation extends Model
             if(count($this->tradeNegotiations) == 0)
             {
                  // find out who the the negotiation is sent to based of who set the level last
-                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid'; 
-                $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
-                ->where($attr, $this->getAttribute($attr))
-                ->orderBy("id","ASC")
-                ->first();
+                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
+                $sourceMarketNegotiation = $this->marketNegotiationSource($attr);
                 $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
                 $tradeNegotiation->traded = false;
             }else
@@ -635,6 +748,8 @@ class MarketNegotiation extends Model
             })
 
         ];
+
+        $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
 
         return $data;
     }
@@ -799,7 +914,9 @@ class MarketNegotiation extends Model
     * Apply cond_buy_best
     */
     public function applyCondBuyBestCondition() {
-
+        if($this->marketNegotiationParent->cond_buy_best->cond_buy_best !== null) {
+            $this->is_private = false; // ensure it stays open if its the responses
+        }
     }
 
     /* ============================== Conditions End ============================== */

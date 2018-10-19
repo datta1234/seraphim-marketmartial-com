@@ -19,8 +19,19 @@ class TradeConfirmationController extends Controller
         /*
         * had to merge to develop so need to stop tradeconfirmations from going through untill its refactored
         */
-        $data =TradeConfirmation::first()->preFormatted();
-        dd($data);
+        $data =TradeConfirmation::first()->with([
+            'tradeConfirmationGroups'=>function($q)
+            {
+                $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+            }
+        ])
+        ->take(5)
+        ->get()
+        ->map(function($item){
+            return $item->preFormatted();
+        });
+
+        return $data;
 
         //where organisation is involved
         $user = $request->user();

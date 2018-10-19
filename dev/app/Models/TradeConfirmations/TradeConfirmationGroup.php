@@ -75,4 +75,15 @@ class TradeConfirmationGroup extends Model
     {
         return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_group_id');
     }
+
+    public function preFormatted()
+    {
+        return [
+            'is_options'                    => $this->is_options,
+            'user_market_request_group'     => $this->userMarketRequestGroup->preFormatted(),
+            'trade_confirmation_items'      => $this->tradeConfirmationItems->map(function($item){
+                return $item->preFormatted();
+            })
+        ];
+    }
 }

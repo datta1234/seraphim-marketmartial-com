@@ -75,4 +75,13 @@ class UserMarketRequestGroup extends Model
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
             'user_market_request_group_id');
     }
+
+    public function preFormatted()
+    {
+        return [
+            'items' => $this->userMarketRequestItems->map(function($item){
+                return $item->preFormatted();
+            })
+        ];
+    }
 }

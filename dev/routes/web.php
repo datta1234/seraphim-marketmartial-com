@@ -100,7 +100,6 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     
 
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
-
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
 
@@ -112,6 +111,14 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
+
+
+
+    /*
+    *	Activity Routes
+    */
+    Route::delete('/user-market/{user_market}/activity/{activity}', 'ActivityController@userMarket');
+    
 });
 
 /**

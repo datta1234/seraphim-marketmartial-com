@@ -40,11 +40,25 @@ class MarketNegotiationTimeout implements ShouldQueue
         $stillActive = !$marketNegotiation->is_killed 
                     && $this->marketNegotiationID === $userMarket->currentMarketNegotiation->id;
         if($stillActive) {
-            // kill it
-            $marketNegotiation->kill();
-            if($marketNegotiation->cond_fok_spin == false) {
-                // @TODO: Notify Admin of No Activity
+            
+            // FoK
+            if($marketNegotiation->isFoK()){
+                // kill it
+                $marketNegotiation->kill();
+                if($marketNegotiation->cond_fok_spin == false) {
+                    // @TODO: Notify Admin of No Activity
+                }
             }
+
+            // Trade @ best
+            if($marketNegotiation->isTradeAtBestOpen()) {
+                // kill it
+                $marketNegotiation->kill();
+                if($marketNegotiation->cond_fok_spin == false) {
+                    // @TODO: Notify Admin of No Activity
+                }
+            }
+
             $userMarket->userMarketRequest->notifyRequested();
             echo 'killed';
         }

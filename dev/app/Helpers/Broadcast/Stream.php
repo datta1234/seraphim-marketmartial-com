@@ -39,7 +39,7 @@ class Stream
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
-        $this->checkSum = hash("sha256",$encoded);
+        $this->checkSum = hash("sha256",$encoded.$this->expires_at->timestamp);
         $this->chunks = [];
 
         while($encoded != $compiledData)
@@ -47,7 +47,7 @@ class Stream
             $chunk = [
                  "checksum"     => $this->checkSum,
                  "packet"       => $pointer + 1,
-                 "expires"      => $this->expires_at->format("d-m-y H:i:s"),
+                 "expires"      => $this->expires_at->toIso8601String(),
             ];
 
 
@@ -83,8 +83,6 @@ class Stream
 
     public function run($idx = null)
     {
- 
-
         foreach ($this->chunks as $k => $chunk) 
         {
             event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
