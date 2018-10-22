@@ -12,6 +12,7 @@ class Stream
     public $chunks = [];
     public $experation;
     public $checkSum;
+    public $nonce;
     private $overHead = [];
 
     function __construct($event) 
@@ -20,6 +21,7 @@ class Stream
         $this->channel = $event->broadcastOn();
         $this->data =   json_encode($event->broadcastWith());
         $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration'));
+        $this->nonce = str_random(10);
         $this->setupChunks();
         $this->storeData();
     }
@@ -39,7 +41,8 @@ class Stream
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
-        $this->checkSum = hash("sha256",$encoded.$this->expires_at->timestamp);
+        \Log::info('CHECK: ['.$encoded.$this->nonce.']');
+        $this->checkSum = hash("sha256",$encoded.$this->nonce);
         $this->chunks = [];
 
         while($encoded != $compiledData)
@@ -48,6 +51,7 @@ class Stream
                  "checksum"     => $this->checkSum,
                  "packet"       => $pointer + 1,
                  "expires"      => $this->expires_at->toIso8601String(),
+                 "token"        => $this->nonce,
             ];
 
 
