@@ -449,7 +449,7 @@ const app = new Vue({
             });
             if(typeof message === 'undefined') {
                 // if its not being tracked, track a new one
-                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
+                message = new Message(chunk_data, (err, output_message) => {
                     // if the message is complete, attempt completion callback
                     if(!err) {
                         // pull the message out of current and into completed
