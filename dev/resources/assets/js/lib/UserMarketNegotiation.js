@@ -231,6 +231,35 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     /**
+    *  repeat
+    */
+    repeatNegotiation() {
+
+        // catch not assigned to a market request yet!
+        if(!this._user_market || this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+        if(!this.id) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Negotiation"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id+"/repeat",{is_repeat: true})
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    /**
     *  spin
     */
     killNegotiation() {

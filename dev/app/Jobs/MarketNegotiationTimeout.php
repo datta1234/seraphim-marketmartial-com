@@ -36,9 +36,10 @@ class MarketNegotiationTimeout implements ShouldQueue
         echo "ID: ".$this->marketNegotiationID;
         $marketNegotiation = \App\Models\Market\MarketNegotiation::find($this->marketNegotiationID);
         $userMarket = $marketNegotiation->userMarket;
-        // still active = hasn't been killed AND is still the current negotiation on the user market
-        $stillActive = !$marketNegotiation->is_killed 
-                    && $this->marketNegotiationID === $userMarket->currentMarketNegotiation->id;
+        
+        $stillActive = !$marketNegotiation->is_killed //no killed
+                    && $marketNegotiation->marketNegotiationChildren()->count() == 0;// has no children
+
         if($stillActive) {
             
             // FoK
@@ -51,7 +52,7 @@ class MarketNegotiationTimeout implements ShouldQueue
             }
 
             // Trade @ best
-            if($marketNegotiation->isTradeAtBestOpen()) {
+            if($marketNegotiation->isTradeAtBest() || $marketNegotiation->isTradeAtBestOpen()) {
                 // kill it
                 $marketNegotiation->kill();
                 if($marketNegotiation->cond_fok_spin == false) {

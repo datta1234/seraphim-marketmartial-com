@@ -1,8 +1,8 @@
 <template>
     <b-row dusk="ibar-fok-active" class="active-cond-bar">
         <b-col cols="11" offset="1">
-            <div class="text-right negotiation">
-                <strong>20:00</strong>
+            <div class="text-right negotiation condition-timer">
+                <strong>{{ timer_value }}</strong>
             </div>
         </b-col>
         <b-col cols="12">
@@ -70,6 +70,8 @@
         },
         data() {
             return {
+                timer: null,
+                timer_value: null,
                 bid_sell: false,
                 offer_buy: false,
             }
@@ -116,8 +118,31 @@
                     this.errors = err.errors.errors;
                 });
             },
+            startTimer() {
+                if(this.timer != null) {
+                    this.stopTimer();
+                }
+                console.log("Creating Timer");
+                this.timer = setInterval(() => {
+                    console.log("Running Timer");
+                    let time = moment(this.negotiation.created_at).add(20, 'minutes');
+                    let diff = time.diff(moment());
+                    let dur = moment.duration(diff);
+                    console.log(time, diff, dur);
+                    this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
+                }, 1000);
+            },
+            stopTimer() {
+                console.log("Clearing Timer");
+                clearInterval(this.timer);
+                this.timer = null;
+            }
         },
         mounted() {
+            this.startTimer();
+        },
+        beforeDestroy() {
+            this.stopTimer();
         }
     }
 </script>

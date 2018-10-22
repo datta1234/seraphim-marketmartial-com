@@ -34,7 +34,7 @@ return [
         'db_timeout' => [
             'driver' => 'database',
             'table' => 'jobs',
-            'queue' => 'default',
+            'queue' => 'timeout',
             'retry_after' => 90,
         ],
 
