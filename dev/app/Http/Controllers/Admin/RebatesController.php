@@ -26,7 +26,6 @@ class RebatesController extends Controller
                         "filter_paid" => $request->input('filter_paid') == '' ? null : $request->input('filter_paid'),
                         "filter_date" => $request->input('date_filter'),
                     ])
-                ->with('user','bookedTrade','user.organisation')
                 ->paginate(10);
         $rebates->transform(function($rebate) {
             return $rebate->preFormatAdmin();
@@ -100,7 +99,7 @@ class RebatesController extends Controller
                 return [
                     'success' => true,
                     'data' => $rebate->preFormatAdmin(),
-                    'message' => 'Rebate Paid status successfully changed marked as Paid.'
+                    'message' => 'Rebate Paid status successfully changed.'
                 ];
             }
             return [

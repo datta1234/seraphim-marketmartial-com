@@ -3,10 +3,10 @@
     	<b-form v-on:submit.prevent="" id="chat-message-form">
             <b-row class="mt-2">
                 <b-col cols="1">
-                    <label class="mr-sm-2" for="admin-filter-users">Filter Paid:</label>
+                    <label class="mr-sm-2" for="admin-filter-paid">Filter Paid:</label>
                 </b-col>
                 <b-col cols="2">
-                    <b-form-select id="admin-filter-users"
+                    <b-form-select id="admin-filter-paid"
                                    class="w-100"
                                    :options="filter_options"
                                    v-model="sort_options.filter_paid">
@@ -15,10 +15,10 @@
             </b-row>
             <b-row class="mt-2">
                 <b-col cols="1">
-                    <label class="mr-sm-2" :for="'stats-table-search'+index">Search:</label>
+                    <label class="mr-sm-2" for="rebates-table-search">Search:</label>
                 </b-col>
                 <b-col cols="2">
-                    <b-input v-model="sort_options.search" class="w-100 mr-0" :id="'stats-table-search'+index" placeholder="Search Term" />
+                    <b-input v-model="sort_options.search" class="w-100 mr-0" id="rebates-table-search" placeholder="Search Term" />
                 </b-col>
                 <b-col cols="2">
                     <button type="submit" 

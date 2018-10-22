@@ -12,7 +12,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <booked-trades-table></booked-trades-table>
+		        <booked-trades-table booked_trade_data="{{ $booked_trades }}"></booked-trades-table>
 		    @endslot
 		@endcomponent
 	</div>

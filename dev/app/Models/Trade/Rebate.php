@@ -95,15 +95,6 @@ class Rebate extends Model
         return $this->hasMany('App\Models\UserManagement\Organisation', 'organisation_id');
     }
 
-    public function resolveMarketStock() {
-        // Resolve stock / market
-        if($this->bookedTrade->stock) {
-            return $this->bookedTrade->stock->code;
-        } else {
-            return $this->bookedTrade->market->title;
-        }
-    }
-
     public function preFormat($user)
     {
         $trade_confirmation = $this->bookedTrade->tradeConfirmation;
@@ -111,7 +102,7 @@ class Rebate extends Model
 
         $data = [
             "date"          => $this->trade_date,
-            "market"         => $this->resolveMarketStock(),
+            "market"         => $this->bookedTrade->resolveMarketStock(),
             "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
@@ -147,7 +138,7 @@ class Rebate extends Model
             "date"          => $this->trade_date,
             "user"          => $this->user->full_name,
             "organisation"  => $this->user->organisation->title,
-            "market"        => $this->resolveMarketStock(),
+            "market"        => $this->bookedTrade->resolveMarketStock(),
             "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
@@ -198,15 +189,16 @@ class Rebate extends Model
                 })
                 ->orWhereHas('market',function($q) use ($term){
                     $q->where('title','like',"%$term%");
-                })
-                ->orWhereHas('tradeConfirmation',function($q) use ($term){
-                    if(strtolower($term) === 'put'){
-                        $q->where('is_put','1');
-                    }
-                    if(strtolower($term) === 'call'){
-                        $q->where('is_put','0');
-                    }
                 });
+                if(strtolower($term) === 'put' || strtolower($term) === 'call'){
+                    $q->orWhereHas('tradeConfirmation',function($q) use ($term){
+                        if(strtolower($term) === 'put'){
+                            $q->where('is_put','1');
+                        } else {
+                            $q->where('is_put','0');
+                        }
+                    });
+                }
             });
         });
 
