@@ -34,6 +34,7 @@ export default class UserMarketRequest extends BaseModel {
             market_id:"",
             is_interest:false,
             is_market_maker: false,
+            is_trade_at_best_open: false,
             attributes: {
                 state: "",
                 bid_state: "",
@@ -286,7 +287,8 @@ export default class UserMarketRequest extends BaseModel {
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
-        return isTrading.indexOf(this.attributes.state) > -1; 
+        return isTrading.indexOf(this.attributes.state) > -1 
+            && this.is_trading_at_best == false; // if its trading at best, then its not trading
     }
 
     canCounterTrade()

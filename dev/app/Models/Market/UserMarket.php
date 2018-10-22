@@ -156,7 +156,8 @@ class UserMarket extends Model
     }
 
     public function isTrading() {
-        return !$this->tradeNegotiations()->latest()->first()->traded;
+        $trade = $this->tradeNegotiations()->latest()->first();
+        return ( $trade ? !$trade->traded : false );
     }
 
     /**
@@ -272,6 +273,7 @@ class UserMarket extends Model
 
     public function spinNegotiation($user)
     {
+        // @TODO: this will fail with privates...
         $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
         // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
         $marketNegotiation = $oldNegotiation->replicate();
@@ -358,7 +360,7 @@ class UserMarket extends Model
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
             try {
-                 DB::beginTransaction();
+                DB::beginTransaction();
 
                 $this->marketNegotiations()->save($marketNegotiation);
                 if($marketNegotiation->is_private) {
@@ -371,7 +373,7 @@ class UserMarket extends Model
                 }
                 DB::commit();
                 return $marketNegotiation;
-            } catch (\Exception $e) {
+            } catch (\Illuminate\Database\QueryException $e) {
                 \Log::error($e);
                 DB::rollBack();
                 return false;

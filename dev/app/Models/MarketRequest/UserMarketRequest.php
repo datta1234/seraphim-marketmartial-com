@@ -181,6 +181,13 @@ class UserMarketRequest extends Model
     }    
 
 
+    public function isTradeAtBestOpen() {
+        return  $this->chosenUserMarket
+            &&  $this->chosenUserMarket->lastNegotiation
+            &&  $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen();
+    }
+
+
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\MarketRequest\UserMarketRequest
@@ -212,6 +219,10 @@ class UserMarketRequest extends Model
             "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
             "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
         ];
+
+
+        // if its trading at best
+        $data['is_trade_at_best_open'] = $this->isTradeAtBestOpen();
 
         $showLevels = $this->isAcceptedState($current_org_id);
 
@@ -356,9 +367,13 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
+        
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
+
+        $is_trade_at_best   =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen() : false;
+
         $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
@@ -387,9 +402,13 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
+        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
         {
             return 'negotiation-open';
+        }
+        elseif($acceptedState && $marketOpen && $is_trade_at_best)
+        {
+            return 'trade-negotiation-open';
         }
         elseif($acceptedState && !$marketOpen && $is_trading && !$lastTraded)
         {
@@ -542,7 +561,17 @@ class UserMarketRequest extends Model
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-open.other');
                 }
             break;
-            case "trade-negotiation-pending":
+            case "trade-negotiation-open":
+                
+                if(in_array('negotiator',$tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.negotiator');
+                }else if(in_array('counter', $tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.counter');
+                }else{
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.other');
+                }
+            break;
+             case "trade-negotiation-pending":
                 
                 if(in_array('negotiator',$tradeNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.negotiator');

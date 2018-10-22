@@ -41,7 +41,7 @@ class Stream
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
-        \Log::info('CHECK: ['.$encoded.$this->nonce.']');
+        
         $this->checkSum = hash("sha256",$encoded.$this->nonce);
         $this->chunks = [];
 

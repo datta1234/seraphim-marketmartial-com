@@ -59,7 +59,8 @@ class MarketNegotiationRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-        $negotiation = $this->user_market->lastNegotiation()->findCounterNegotiation($this->user())->first();
+        $negotiation = $this->user_market->lastNegotiation()->notPrivate()->first();
+        // dd($negotiation);
         $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $negotiation)], function ($input) {
             return !is_null($input->bid_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 

@@ -8,7 +8,6 @@
                 <b-col class="mt-2">
                     <p class="text-center">
                         <small >{{ message }}</small>
-                        here
                     </p>
                 </b-col>
             </b-row>

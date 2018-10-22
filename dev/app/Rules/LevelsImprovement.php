@@ -40,7 +40,7 @@ class LevelsImprovement implements Rule
         {
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
-                return  true;
+                return true;
             }
 
             $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
