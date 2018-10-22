@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Trade\Rebate;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
+use App\Http\Requests\Admin\RebateUpdateRequest;
 
 class RebatesController extends Controller
 {
@@ -17,14 +18,16 @@ class RebatesController extends Controller
      */
     public function index(Request $request)
     {
-        /*$rebates = Rebate::basicSearch(
+        $rebates = Rebate::basicSearch(
                     $request->input('search'),
                     $request->input('_order_by') == '' ? null : $request->input('_order_by'),
                     $request->input('_order'),
-                    $request->input('filter') == '' ? null : $request->input('filter'))
+                    [
+                        "filter_paid" => $request->input('filter_paid') == '' ? null : $request->input('filter_paid'),
+                        "filter_date" => $request->input('date_filter'),
+                    ])
                 ->with('user','bookedTrade','user.organisation')
-                ->paginate(10);*/
-        $rebates = Rebate::orderBy("trade_date", "ASC")->paginate(10);
+                ->paginate(10);
         $rebates->transform(function($rebate) {
             return $rebate->preFormatAdmin();
         });
@@ -85,9 +88,27 @@ class RebatesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(RebateUpdateRequest $request, Rebate $rebate)
     {
-        //
+        if( $request->has('is_paid') ) {
+            // deactivate and reactivate logic
+            $rebate_update_result = $rebate->update([
+                'is_paid' => $request->input('is_paid'),
+            ]);
+
+            if($rebate_update_result){
+                return [
+                    'success' => true,
+                    'data' => $rebate->preFormatAdmin(),
+                    'message' => 'Rebate Paid status successfully changed marked as Paid.'
+                ];
+            }
+            return [
+                'success' => false,
+                'data' => null,
+                'message' => 'Failed to change rebate Paid status.'
+            ];
+        }
     }
 
     /**

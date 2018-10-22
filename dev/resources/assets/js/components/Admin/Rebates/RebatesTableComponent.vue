@@ -1,25 +1,43 @@
 <template>
     <div dusk="rebates-table" class="rebates-table" >
     	<b-form v-on:submit.prevent="" id="chat-message-form">
-            <b-row>
-                <b-col cols="6">
+            <b-row class="mt-2">
+                <b-col cols="1">
                     <label class="mr-sm-2" for="admin-filter-users">Filter Paid:</label>
+                </b-col>
+                <b-col cols="2">
                     <b-form-select id="admin-filter-users"
-                                   class="w-25"
+                                   class="w-100"
                                    :options="filter_options"
-                                   v-model="sort_options.filter"
-                                   @change="filterChanged">
+                                   v-model="sort_options.filter_paid">
                     </b-form-select>
                 </b-col>
-                <b-col cols="4" offset="2">
-                    <!-- <create-user></create-user> -->
-                    <slot></slot>
+            </b-row>
+            <b-row class="mt-2">
+                <b-col cols="1">
+                    <label class="mr-sm-2" :for="'stats-table-search'+index">Search:</label>
+                </b-col>
+                <b-col cols="2">
+                    <b-input v-model="sort_options.search" class="w-100 mr-0" :id="'stats-table-search'+index" placeholder="Search Term" />
+                </b-col>
+                <b-col cols="2">
                     <button type="submit" 
-                            class="btn mm-generic-trade-button float-right ml-0 mr-2" 
-                            @click="searchTerm">
-                        <i class="fas fa-search"></i>
+                            class="btn mm-button w-75 ml-0 mr-2" 
+                            @click="loadRebates()">
+                        Filter
                     </button>
-                    <b-input v-model="sort_options.search" class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
+                </b-col>
+                <b-col cols="4" offset="3">
+                    <datepicker v-model="sort_options.date_filter"
+                                class="float-right filter-date-picker"
+                                name="'rebate-datepicker'"
+                                placeholder="Select a date"
+                                :bootstrap-styling="true"
+                                :calendar-button="true"
+                                calendar-button-icon="fas fa-calendar-alt"
+                                :clear-button="true"
+                                clear-button-icon="fas fa-trash-alt">    
+                    </datepicker>
                 </b-col>
             </b-row>
         </b-form>
@@ -36,26 +54,20 @@
             <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
                 {{ formatItem(row.item, field.key) }}
             </template>
-            <!-- <template slot="action" slot-scope="data">
-                <button v-if="data.item.active && data.item.verified" 
+            <template slot="action" slot-scope="data">
+                <button v-if="data.item.is_paid" 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'active': false}, data.index, 'Deactivate')">
-                    Deactivate
-                </button>
-                <button v-else-if="!data.item.active && data.item.verified" 
-                        type="button" 
-                        class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'active': true}, data.index, 'Reactivate')">
-                    Reactivate
+                        @click="showModal(data.item, {'is_paid': false}, data.index, 'Mark this Rebate as Not Paid')">
+                    Unmark Paid
                 </button>
                 <button v-else 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'verified': true}, data.index, 'Verify')">
-                    Verify
+                        @click="showModal(data.item, {'is_paid': true}, data.index, 'Mark this Rebate as Paid')">
+                    Mark as Paid
                 </button>
-            </template> -->
+            </template>
         </b-table>
 
         <b-row v-if="items != null" class="justify-content-md-center">
@@ -76,14 +88,9 @@
                 Confirmation
             </div>
 
-            <b-row v-if="modal_data.user" class="justify-content-md-center">
+            <b-row class="justify-content-md-center">
                 <b-col class="text-center" cols="12">
-                    <p class="modal-info-text">Are you sure you want to {{ modal_data.confirm_message }} {{ modal_data.user.full_name }}?</p>
-                </b-col>
-            </b-row>
-            <b-row v-if="modal_data.user && modal_data.user_action.verified && modal_data.user.organisation.verified == 1" class="justify-content-md-center">
-                <b-col class="text-center" cols="12">
-                    <p class="modal-info-text">Note Verifying this user will verify the following organisation as well:<br>{{modal_data.user.organisation.title}}</p>
+                    <p class="modal-info-text">Are you sure you want to {{ modal_data.confirm_message }}?</p>
                 </b-col>
             </b-row>
 
@@ -91,7 +98,7 @@
             <div slot="modal-footer" class="w-100">
                 <b-row align-v="center">
                     <b-col cols="12">
-                        <b-button class="mm-modal-button ml-2 w-25" @click="userAction()">Ok</b-button>
+                        <b-button class="mm-modal-button ml-2 w-25" @click="rebateAction()">Ok</b-button>
                         <b-button class="mm-modal-button ml-2 w-25" @click="hideModal()">Cancel</b-button>
                     </b-col>
                 </b-row>
@@ -125,7 +132,6 @@
                     { key: 'nominal', label: 'Nominal' },
                     { key: 'rebate', label: 'Rebate' },
                     { key: 'is_paid', label: 'Paid' },
-                    { key: 'view', label: 'View' },
                     { key: 'action', label: 'Action' },
                 ],
                 current_page: 1,
@@ -140,15 +146,16 @@
                     {text: "Not Paid", value: '0'},
                 ],
                 sort_options: {
+                    date_filter: null,
                     search: '',
-                    filter: null,
+                    filter_paid: null,
                     order_by: null,
                     order_ascending: true,
                 },
                 modal_data: {
-                    user_action: null,
-                    user: null,
-                    user_index: null,
+                    rebate_action: null,
+                    rebate: null,
+                    rebate_index: null,
                     confirm_message: '',
                     show_modal: false,
                     modal_ref: 'confirm-action-modal',
@@ -158,28 +165,29 @@
         methods: {
             changePage($event) {
                 this.current_page = $event;
-                this.loadUsers();    
+                this.loadRebates();    
             },
             searchTerm() {
                 this.current_page = 1;
-                this.loadUsers();
+                this.loadRebates();
             },
-            loadUsers() {
+            loadRebates() {
                 axios.get(this.path, {
                     params:{
                         'page': this.current_page,
                         'search': this.sort_options.search,
                         '_order_by': (this.sort_options.order_by !== null ? this.sort_options.order_by : ''),
                         '_order': (this.sort_options.order_ascending ? 'ASC' : 'DESC'),
-                        'filter': (this.sort_options.filter !== null ? this.sort_options.filter : ''),
+                        'filter_paid': (this.sort_options.filter_paid !== null ? this.sort_options.filter_paid : ''),
+                        'date_filter': (this.sort_options.date_filter !== null ? moment(this.sort_options.date_filter).format('YYYY-MM-DD'): null),
                     }
                 })
-                .then(usersResponse => {
-                    if(usersResponse.status == 200) {
-                        this.current_page = usersResponse.data.current_page;
-                        this.per_page = usersResponse.data.per_page;
-                        this.total = usersResponse.data.total;
-                        this.items = usersResponse.data.data;
+                .then(rebatesResponse => {
+                    if(rebatesResponse.status == 200) {
+                        this.current_page = rebatesResponse.data.current_page;
+                        this.per_page = rebatesResponse.data.per_page;
+                        this.total = rebatesResponse.data.total;
+                        this.items = rebatesResponse.data.data;
                         /*EventBus.$emit('loading', 'requestDates');
                         this.dates_loaded = true;*/
                         this.users_loaded = true;
@@ -199,17 +207,16 @@
                 }
                 return "Request";
             },
-            userAction() {
-                let index = this.modal_data.user_index;
-                axios.put(axios.defaults.baseUrl + '/admin/user/'+this.modal_data.user.id, this.modal_data.user_action)
-                .then(usersResponse => {
-                    if(usersResponse.status == 200) {
-                        this.items[index].active = usersResponse.data.data.active;
-                        this.items[index].verified = usersResponse.data.data.verified;
+            rebateAction() {
+                let index = this.modal_data.rebate_index;
+                axios.put(axios.defaults.baseUrl + '/admin/rebates/'+this.modal_data.rebate.id, this.modal_data.rebate_action)
+                .then(rebatesResponse => {
+                    if(rebatesResponse.status == 200) {
+                        this.items[index].is_paid = rebatesResponse.data.data.is_paid;
                         this.hideModal();
-                        this.$toasted.success(usersResponse.data.message);
+                        this.$toasted.success(rebatesResponse.data.message);
                     } else {
-                        this.$toasted.error(usersResponse.data.message);  
+                        this.$toasted.error(rebatesResponse.data.message);
                     }
                 }, err => {
                     console.error(err);
@@ -218,31 +225,31 @@
             /**
              * Loads the Confirmation Modal 
              */
-            showModal(user, action, index, message) {
+            showModal(rebate, action, index, message) {
                 this.modal_data.confirm_message = message;
-                this.modal_data.user = user;
-                this.modal_data.user_action = action;
-                this.modal_data.user_index = index;
+                this.modal_data.rebate = rebate;
+                this.modal_data.rebate_action = action;
+                this.modal_data.rebate_index = index;
                 this.modal_data.show_modal = true;
             },
             /**
              * Closes the Confirmation Modal 
              */
             hideModal() {
-                this.modal_data.user = null;
-                this.modal_data.user_action = null;
-                this.modal_data.user_index = null;
+                this.modal_data.rebate = null;
+                this.modal_data.rebate_action = null;
+                this.modal_data.rebate_index = null;
                 this.modal_data.confirm_message = '';
                 this.modal_data.show_modal = false;
             },
             sortingChanged(ctx) {
                 this.sort_options.order_by = ctx.sortBy;
                 this.sort_options.order_ascending = ctx.sortDesc;
-                this.loadUsers();
+                this.loadRebates();
             },
             filterChanged(value) {
                 this.sort_options.filter = value;
-                this.loadUsers();
+                this.loadRebates();
             },
             formatItem(item, key) {
                 if(item[key] == null){

@@ -143,6 +143,7 @@ class Rebate extends Model
         $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
 
         $data = [
+            "id"            => $this->id,
             "date"          => $this->trade_date,
             "user"          => $this->user->full_name,
             "organisation"  => $this->user->organisation->title,
@@ -168,7 +169,7 @@ class Rebate extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function basicSearch($term = null,$orderBy="trade_date",$order='ASC', $filter = null)
+    public static function basicSearch($term = null,$orderBy="trade_date",$order='ASC',$filter = null)
     {
         if($orderBy == null)
         {
@@ -180,38 +181,48 @@ class Rebate extends Model
             $order = "ASC";
         }
 
-        $UserQuery = Rebate::where( function ($q) use ($term)
+        $rebateQuery = Rebate::where( function ($q) use ($term)
         {
             $q->whereHas('user',function($q) use ($term){
                 $q->where('full_name','like',"%$term%");
             })
             ->orWhereHas('user',function($q) use ($term){
-                $q->where('email','like',"%$term%")
+                $q->where('full_name','like',"%$term%")
                 ->orWhereHas('organisation',function($q) use ($term){
                     $q->where('title','like',"%$term%");
+                });
+            })
+            ->orWhereHas('bookedTrade',function($q) use ($term){
+                $q->whereHas('stock',function($q) use ($term){
+                    $q->where('code','like',"%$term%");
+                })
+                ->orWhereHas('market',function($q) use ($term){
+                    $q->where('title','like',"%$term%");
+                })
+                ->orWhereHas('tradeConfirmation',function($q) use ($term){
+                    if(strtolower($term) === 'put'){
+                        $q->where('is_put','1');
+                    }
+                    if(strtolower($term) === 'call'){
+                        $q->where('is_put','0');
+                    }
                 });
             });
         });
 
-/*        if($filter !== null) {
-            switch ($filter) {
-                case 'active':
-                    $UserQuery->where('users.verified', true)
-                    ->where('active', true);
-                    break;
-                case 'inactive':
-                    $UserQuery->where('users.verified', true)
-                    ->where('active', false);
-                    break;
-                case 'request':
-                    $UserQuery->where('users.verified', false)
-                    ->where('active', false);
-                    break;
+        // Apply Filters
+        if($filter !== null) {
+            if(isset($filter["filter_paid"])) {
+                $rebateQuery->where('is_paid', $filter["filter_paid"]);
             }
-        }*/
 
-        $UserQuery->orderBy($orderBy,$order);
+            if(!empty($filter["filter_date"])) {
+                $rebateQuery->whereDate('trade_date', $filter["filter_date"]);
+            }
+        }
 
-        return $UserQuery;
+        $rebateQuery->orderBy($orderBy,$order);
+
+        return $rebateQuery;
     }
 }
