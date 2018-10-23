@@ -177,13 +177,13 @@
                 })
                 .then(safexDataResponse => {
                     if(safexDataResponse.status == 200) {
-                        console.log("FROM SERVER: ",safexDataResponse.data);
+                        // console.log("FROM SERVER: ",safexDataResponse.data);
                         this.table_data.pagination.current_page = safexDataResponse.data.current_page;
                         this.table_data.pagination.per_page = safexDataResponse.data.per_page;
                         this.table_data.pagination.total = safexDataResponse.data.total;
                         this.table_data.data = safexDataResponse.data.data;
                         this.table_data.loaded = true;
-                        console.log(this.table_data.data);
+                        // console.log(this.table_data.data);
                     } else {
                         console.error(err); 
                     }
