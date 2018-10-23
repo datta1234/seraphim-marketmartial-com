@@ -2,9 +2,9 @@
     <b-row dusk="ibar-market-negotiation-market" class="ibar market-negotiation">
         <b-col>
             <b-row class="">
-                <b-col cols="6" offset="2">
+                <b-col cols="10">
                     <div class="text-center">
-                        <strong>{{ term }} at best</strong>
+                        <strong>{{ perspective }} {{ term }} at best</strong>
                     </div>
                 </b-col>
                 <b-col cols="2">
@@ -47,6 +47,9 @@
             marketNegotiation: {
                 type: UserMarketNegotiation
             },
+            rootNegotiation: {
+                type: UserMarketNegotiation
+            },
             currentNegotiation: {
                 type: UserMarketNegotiation
             },
@@ -64,6 +67,9 @@
             }
         },
         computed: {
+            perspective: function() {
+                return this.rootNegotiation.is_my_org ? "You are" : "Counter is";
+            },
             disabled_bid: function() {
                 return this.currentNegotiation.cond_buy_best == true;
             },

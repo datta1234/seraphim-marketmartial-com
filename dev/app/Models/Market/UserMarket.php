@@ -344,7 +344,6 @@ class UserMarket extends Model
             $counterNegotiation = $this->lastNegotiation()
                                 ->findCounterNegotiation($user)
                                 ->first();
-            \Log::info($counterNegotiation);
 
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {
@@ -356,6 +355,11 @@ class UserMarket extends Model
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+
+                // enforce responses to have the same condition
+                if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
+                    $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+                }
             }
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
@@ -410,6 +414,12 @@ class UserMarket extends Model
         }
         return $org == $negotiation->marketNegotiationParent->user->organisation_id;
     }
+
+
+    public function isTradeAtBestOpen() {
+        return  $this->lastNegotiation
+            &&  $this->lastNegotiation->isTradeAtBestOpen();
+    }
     
 
     /**
@@ -455,6 +465,12 @@ class UserMarket extends Model
         ];
 
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
+        // if its trading at best
+        $data['trading_at_best'] = ( 
+            $this->isTradeAtBestOpen() ? 
+            $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            null 
+        );
 
         return $data;
     }

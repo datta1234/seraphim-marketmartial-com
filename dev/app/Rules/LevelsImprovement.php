@@ -36,7 +36,7 @@ class LevelsImprovement implements Rule
         }
         $this->request->user_market->load('userMarketRequest');
         //check to see if the bid is improved or the offer
-        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open"]))
+        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {

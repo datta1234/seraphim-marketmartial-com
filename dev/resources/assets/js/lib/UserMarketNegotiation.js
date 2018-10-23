@@ -202,6 +202,36 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+
+    /**
+    *  improve trade at best
+    */
+    improveBestNegotiation(counter_market_negotiation) {
+        
+        // catch not assigned to a market request yet!
+        if(this.getUserMarket().id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+        // catch not created yet
+        if(this.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Negotiation"]));
+            });
+        }
+        // set to proposal by default (happens on server too hint type)
+        counter_market_negotiation.is_private = true;
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/improve", counter_market_negotiation.prepareStore())
+            .then(resolve)
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
     getDisplayCondition()
     {
        

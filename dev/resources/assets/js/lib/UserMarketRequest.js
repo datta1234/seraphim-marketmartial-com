@@ -34,7 +34,6 @@ export default class UserMarketRequest extends BaseModel {
             market_id:"",
             is_interest:false,
             is_market_maker: false,
-            is_trade_at_best_open: false,
             attributes: {
                 state: "",
                 bid_state: "",
@@ -78,6 +77,7 @@ export default class UserMarketRequest extends BaseModel {
         if(options && options.user_market) {
             this.setUserMarket(options.user_market);
         }
+             
     }
 
     /**

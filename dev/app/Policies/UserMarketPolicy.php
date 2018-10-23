@@ -90,9 +90,9 @@ class UserMarketPolicy
             return false;
         }
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
-            (
-                $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-pending" ||
-                $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open"
+            in_array(
+                $userMarket->userMarketRequest->getStatus($current_org_id), 
+                ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]
             );
     }
 

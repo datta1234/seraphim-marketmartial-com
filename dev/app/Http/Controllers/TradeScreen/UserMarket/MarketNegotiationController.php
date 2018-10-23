@@ -8,7 +8,7 @@ use App\Models\Market\UserMarket;
 use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
-
+use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationImproveBestRequest;
 
 class MarketNegotiationController extends Controller
 {
@@ -164,5 +164,22 @@ class MarketNegotiationController extends Controller
         
         return ['success'=>true, 'message'=>'Counter Sent'];
     }
+
+
+    /**
+     * Improve the current best for trade-at-best condition proposal
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function improveBest(MarketNegotiationImproveBestRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    {
+        $this->authorize('improveBest',$marketNegotiation);
+        $userMarket->lastNegotiation->improveBest($request->user(), $request->all());
+
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        return ['success'=>true, 'message'=>'Improvement Sent'];
+    }
+
 
 }

@@ -198,26 +198,32 @@ class MarketNegotiation extends Model
     {
         $table = $this->table;
         $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        
         $id = (int)$this->id;
-        $att = ($attr == 'bid' ? 'bid' : 'offer');
-        $value = ($attr == 'bid' ? floatval($this->bid) : floatval($this->offer));
+        $value = $this->cond_buy_best == true ? 1 : 0;
+
         $source = DB::select("
             SELECT *
                 FROM (
-                    SELECT @id AS _id, @attr as _attr, (
+                    SELECT @id AS _id, @cond as _cond, (
                         SELECT @id := $parentKey FROM $table WHERE id = _id
                     ) as parent_id, (
-                        SELECT @attr := $att FROM $table WHERE id = _id
-                    ) as parent_attr
+                        SELECT @cond := cond_buy_best FROM $table WHERE id = _id
+                    ) as parent_cond
                     FROM (
-                        SELECT @id := $id, @attr := $value
+                        SELECT @id := ?, @cond := ?
                     ) tmp1
-                    JOIN $table ON @id IS NOT NULL AND @attr = $value
+                    JOIN $table ON @id IS NOT NULL AND @cond = ?
                 ) parent_struct
                 JOIN $table outcome ON parent_struct._id = outcome.id
                 ORDER BY _id ASC
                 LIMIT 1
-        ");
+        ",[
+            $id,
+            $value,
+            $value,
+        ]);
+
         return self::hydrate($source)->first();
     }
 
@@ -462,7 +468,20 @@ class MarketNegotiation extends Model
         $newNegotiation->counter_user_id = $this->user_id;
         $newNegotiation->market_negotiation_id = $this->id;
 
-        $newNegotiation->save();
+        return $newNegotiation->save();
+    }
+
+    public function improveBest($user, $data)
+    {
+        $newNegotiation = $this->replicate();
+        $newNegotiation->user_id = $user->id;
+        $newNegotiation->counter_user_id = $this->user_id;
+        $newNegotiation->market_negotiation_id = $this->id;
+
+        // set bid/offer new values
+        $att = $this->cond_buy_best == true ? 'offer' : 'bid';
+        $newNegotiation->$att = $data[$att];
+        return $newNegotiation->save();
     }
 
     public function resolvePrivateHistory()
@@ -597,7 +616,7 @@ class MarketNegotiation extends Model
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id) {
+            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBestOpen()) {
                 return "SPIN";
             }
         }
@@ -945,7 +964,7 @@ class MarketNegotiation extends Model
     * Apply cond_buy_best
     */
     public function applyCondBuyBestCondition() {
-        if($this->marketNegotiationParent->cond_buy_best == null) {
+        if($this->marketNegotiationParent->cond_buy_best === null) {
             $this->is_private = true; // initial is private
             $this->is_repeat = true; // starts as a repeat
             
