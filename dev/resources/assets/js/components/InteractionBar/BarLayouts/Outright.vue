@@ -21,7 +21,13 @@
     <template v-if="!is_trading">
         <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
-        <ibar-trade-at-best-negotiation v-if="!can_negotiate && is_trading_at_best" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-trade-at-best-negotiation>
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best" 
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
    
         <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
             Alert me when cleared
@@ -249,7 +255,7 @@
                 return this.marketRequest.isTrading();
             },
             is_trading_at_best: function() {
-                return this.marketRequest.is_trade_at_best_open == true;
+                return this.marketRequest.chosen_user_market.isTradingAtBest();
             },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();
@@ -348,7 +354,18 @@
 
             },
             improveBestNegotiation() {
+                this.server_loading = true;
+                this.marketRequest.chosen_user_market.trading_at_best.improveBestNegotiation(this.proposed_user_market_negotiation)
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
 
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
             },
             sendQuote() {
 

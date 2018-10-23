@@ -25,6 +25,14 @@ trait AppliesConditions {
             if($item->applicableConditions) {
                 // go through all registered condition attributes
                 foreach($item->applicableConditions as $attr => $default) {
+                    
+                    // \Log::info([
+                    //     "Applying Condition: ".$attr,
+                    //     $item->$attr,
+                    //     $item->$attr !== $default,
+                    //     $item->isDirty($attr)
+                    // ]);
+
                     /* 
                     *   Only apply if:
                     *       1) The attribute is not the default value

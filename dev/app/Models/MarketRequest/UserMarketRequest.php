@@ -181,13 +181,6 @@ class UserMarketRequest extends Model
     }    
 
 
-    public function isTradeAtBestOpen() {
-        return  $this->chosenUserMarket
-            &&  $this->chosenUserMarket->lastNegotiation
-            &&  $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen();
-    }
-
-
     /**
     * Return pre formatted request for frontend
     * @return \App\Models\MarketRequest\UserMarketRequest
@@ -219,10 +212,6 @@ class UserMarketRequest extends Model
             "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
             "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
         ];
-
-
-        // if its trading at best
-        $data['is_trade_at_best_open'] = $this->isTradeAtBestOpen();
 
         $showLevels = $this->isAcceptedState($current_org_id);
 
