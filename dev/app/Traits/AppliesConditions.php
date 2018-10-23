@@ -47,5 +47,25 @@ trait AppliesConditions {
                 }
             }
         });
+
+        static::saved(function($item) {
+            if($item->applicableConditions) {
+                // go through all registered condition attributes to run post application
+                foreach($item->applicableConditions as $attr => $default) {
+
+                    /* 
+                    *   Only apply if:
+                    *       1) The attribute is not the default value
+                    *       2) The attribute has been changed (ie: dirty)
+                    */
+                    if($item->$attr !== $default) {
+                        if(method_exists($item, camel_case('apply_'.$attr.'_post_condition'))) {
+                            // method exists, lets apply the condition
+                            call_user_func([ $item, camel_case('apply_'.$attr.'_post_condition') ]);
+                        }
+                    }
+                }
+            }
+        });
     }
 }

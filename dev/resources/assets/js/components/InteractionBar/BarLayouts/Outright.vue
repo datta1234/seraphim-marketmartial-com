@@ -22,7 +22,7 @@
         <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
         <ibar-trade-at-best-negotiation 
-         v-if="!can_negotiate && is_trading_at_best" 
+         v-if="!can_negotiate && is_trading_at_best"
          :check-invalid="check_invalid" 
          :current-negotiation="last_negotiation" 
          :market-negotiation="proposed_user_market_negotiation"
@@ -109,10 +109,10 @@
                     </b-col>
                 </b-row>
 
-                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && !can_negotiate && is_trading_at_best">
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && !can_negotiate && is_trading_at_best && !is_trading_at_best_closed">
                     <b-col cols="6">
                          
-                        <b-button  class="w-100 mt-1" 
+                        <b-button class="w-100 mt-1" 
                          :disabled="check_invalid || server_loading" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -256,6 +256,10 @@
             },
             is_trading_at_best: function() {
                 return this.marketRequest.chosen_user_market.isTradingAtBest();
+            },
+            is_trading_at_best_closed: function() {
+                let negotiation = this.marketRequest.chosen_user_market.getCurrentNegotiation();
+                return negotiation ? !negotiation.hasTimeoutRemaining() : true;
             },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();

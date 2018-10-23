@@ -723,7 +723,8 @@ class MarketNegotiation extends Model
                 if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
-                }else
+                }
+                else
                 {
                     $this->setMarketNegotiationAction();
                 }
@@ -914,9 +915,13 @@ class MarketNegotiation extends Model
     private $timeout_cond_applied = false;
     public function applyCondTimeoutCondition() {
         if(!$this->timeout_cond_applied) {
+            $this->timeout_cond_applied = true;
+        }
+    }
+    public function applyCondTimeoutPostCondition() {
+        if($this->timeout_cond_applied) {
             $job = new \App\Jobs\MarketNegotiationTimeout($this);
             dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
-            $this->timeout_cond_applied = true;
         }
     }
 
