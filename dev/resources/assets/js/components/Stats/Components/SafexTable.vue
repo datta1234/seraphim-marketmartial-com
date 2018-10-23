@@ -4,7 +4,7 @@
             <div class="card-header text-center">
                 <h2 class="mt-2 mb-2">Rolling 6 Months of Safex Data</h2>
             </div>
-            <div class="card-body">
+            <div v-if="table_data.data.length > 0" class="card-body">
                 <b-row>
                     <b-col cols="12">
                         <b-form v-on:submit.prevent="" id="chat-message-form">
@@ -100,6 +100,9 @@
                     </b-col>
                 </b-row>
             </div>
+            <div v-else class="card-body">
+                <p class="text-center">No Safex Data to display</p>
+            </div>
         </div>
     </div>
 </template>
@@ -138,7 +141,7 @@
                         { key: 'expiry', label: 'Expiry' },
                         { key: 'nominal', label: 'Nominal' },
                     ],
-                    data: null,
+                    data: [],
                     param_options: {
                         market: null,
                         expiration: null,
@@ -174,12 +177,13 @@
                 })
                 .then(safexDataResponse => {
                     if(safexDataResponse.status == 200) {
-                        console.log("FROM SERVER: ",safexDataResponse.data);
+                        // console.log("FROM SERVER: ",safexDataResponse.data);
                         this.table_data.pagination.current_page = safexDataResponse.data.current_page;
                         this.table_data.pagination.per_page = safexDataResponse.data.per_page;
                         this.table_data.pagination.total = safexDataResponse.data.total;
                         this.table_data.data = safexDataResponse.data.data;
                         this.table_data.loaded = true;
+                        // console.log(this.table_data.data);
                     } else {
                         console.error(err); 
                     }

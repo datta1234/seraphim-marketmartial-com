@@ -2,20 +2,20 @@
 
 @section('content')
 	<div class="container-fluid">
-		{{-- Booked Trades Card --}}
+		{{-- Rebates Management Card --}}
 		@component('partials.content_card')
 		    @slot('header')
-		        <h2 class="mt-2 mb-2">Booked Trades</h2>
+		        <h2 class="mt-2 mb-2">Rebates Management</h2>
 		    @endslot
 		    @slot('title')
 		    @endslot
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <booked-trades-table booked_trade_data="{{ $booked_trades }}"></booked-trades-table>
+		        <rebates-table rebate_data="{{ $rebates }}"></rebates-table>
 		        <div class="row">
 					<div class="col-2 offset-10 mt-2 mb-2">
-						<download-csv button_text="Download Booked Trades CSV" end_point="/admin/booked-trades-csv" :is_rebate="false"></download-csv>
+						<download-csv button_text="Download Rebates CSV" end_point="/admin/rebates-csv" :is_rebate="true"></download-csv>
 					</div>
 				</div>
 		    @endslot

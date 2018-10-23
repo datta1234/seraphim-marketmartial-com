@@ -153,6 +153,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
     Route::resource('booked-trades', 'Admin\BookedTradesController', [
 		'as' => 'admin'
 	]);
+	Route::get('booked-trades-csv','Admin\BookedTradesController@downloadCsv');
+
+	Route::resource('rebates', 'Admin\RebatesController', [
+		'as' => 'admin'
+	]);
+	Route::get('rebates-csv','Admin\RebatesController@downloadCsv');
+
+	Route::get('organisation', 'Admin\OrganisationController@index');
 });
 
 Route::group(['middleware' => ['auth']], function() {
