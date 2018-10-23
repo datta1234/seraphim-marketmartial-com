@@ -8,6 +8,7 @@ use App\Models\Trade\Rebate;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
 use App\Http\Requests\Admin\RebateUpdateRequest;
+use Carbon\Carbon;
 
 class RebatesController extends Controller
 {
@@ -119,5 +120,52 @@ class RebatesController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function downloadCsv(Request $request)
+    {
+        // Get the rebates according to the passed filters
+        $rebates_query = Rebate::basicSearch(null,null,null, [
+                    'filter_paid' => $request->input('is_paid'),
+                    'filter_date' => $request->input('date'),
+                    'filter_expiration' => $request->input('expiration')
+                    ]);
+        // Filter Rebates by organisation if passed
+        if(!empty($request->input('organisation'))) {
+            $rebates_query->whereHas('user',function($q) use ($request){
+                $q->whereHas('organisation',function($q) use ($request){
+                    $q->where('id',$request->input('organisation'));
+                });
+            });
+        }
+
+        $rebates = $rebates_query->get();
+
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormatAdmin(true);
+        });
+
+        if($rebates->count() <= 0) {
+            return redirect()->back()->with('error', 'The selected csv download has no records');
+        }
+
+        $filename = Carbon::now()->format('Y_m_d_His')."_MM_rebates.csv";
+        $handle = fopen($filename, 'w+');
+
+        $rebate_keys = array_keys($rebates->first());
+        // Map CSV collumn headings to a config defined heading
+        $csv_headings = array_map( function($value) {
+                return config('marketmartial.export_csv_field_mapping.rebate_fields.'.$value);
+            },$rebate_keys);
+        fputcsv($handle, $csv_headings);
+
+        foreach ($rebates as $rebate) {
+            fputcsv($handle, $rebate);            
+        }
+
+        $headers = ['Content-Type' => 'text/csv'];
+        return response()->download($filename, $filename, $headers)->deleteFileAfterSend(true);
+
+
     }
 }

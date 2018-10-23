@@ -207,6 +207,7 @@ class ActivityControlller extends Controller
 
     public function safexRollingData(Request $request)
     {
+        // @TODO - Change reqeust to a custom reqeust
         return SafexTradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),

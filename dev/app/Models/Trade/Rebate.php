@@ -3,6 +3,7 @@
 namespace App\Models\Trade;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Rebate extends Model
 {
@@ -128,7 +129,7 @@ class Rebate extends Model
         return $data;
     }
 
-    public function preFormatAdmin()
+    public function preFormatAdmin($is_csv = false)
     {
         $trade_confirmation = $this->bookedTrade->tradeConfirmation;
         $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
@@ -146,6 +147,16 @@ class Rebate extends Model
             "rebate"        => $this->bookedTrade->amount,
             "is_paid"       => $this->is_paid,
         ];
+
+        if($is_csv) {
+            array_walk($data, function(&$field,$key) {
+                if($key == "is_paid") {
+                    $field = $field ? "Yes" : "No";
+                } else {
+                    $field = is_array($field) ? implode(" / ",$field) : $field;
+                }
+            });
+        }
 
         return $data;
     }
@@ -209,7 +220,26 @@ class Rebate extends Model
             }
 
             if(!empty($filter["filter_date"])) {
-                $rebateQuery->whereDate('trade_date', $filter["filter_date"]);
+                $rebateQuery->whereDate('trade_date', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
+            }
+
+            if(!empty($filter["filter_expiration"])) {
+                $rebateQuery->whereHas('bookedTrade', function ($query) use ($filter) {
+                    $query->whereHas('tradeConfirmation', function ($query) use ($filter) {
+                        $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
+                            $query->whereHas('userMarket', function ($query) use ($filter) {
+                                $query->whereHas('userMarketRequest', function ($query) use ($filter) {
+                                    $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
+                                        $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
+                                            $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                                                  ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             }
         }
 

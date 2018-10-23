@@ -42,7 +42,7 @@
             </b-row>
         </b-form>
         <!-- Main table element -->
-        <b-table v-if="users_loaded && items != null"
+        <b-table v-if="booked_trades_loaded && items != null"
                  class="mt-2 admin-users-table"
                  stacked="md"
                  :items="items"
@@ -113,11 +113,6 @@
     	props: [
             'booked_trade_data',
         ],
-        computed: {
-            base_url() {
-                return axios.defaults.baseUrl;
-            }
-        },
         data() {
             return {
                 items:  null,
@@ -138,7 +133,7 @@
                 per_page: 10,
                 total: 10,
                 path: '',
-                users_loaded: true,
+                booked_trades_loaded: true,
                 initial_load: 0,
                 filter_options: [
                     {text: "All", value: null},
@@ -190,7 +185,7 @@
                         this.items = booked_tradesResponse.data.data;
                         /*EventBus.$emit('loading', 'requestDates');
                         this.dates_loaded = true;*/
-                        this.users_loaded = true;
+                        this.booked_trades_loaded = true;
                     } else {
                         console.error(err);    
                     }
@@ -304,7 +299,6 @@
         },
         mounted() {
             let parsed_data = JSON.parse(this.booked_trade_data);
-            console.log("What we get: ",parsed_data);
             this.items = parsed_data.data;
             this.current_page = parsed_data.current_page;
             this.per_page = parsed_data.per_page;

@@ -3,7 +3,7 @@
     	<b-form v-on:submit.prevent="" id="chat-message-form">
             <b-row class="mt-2">
                 <b-col cols="1">
-                    <label class="mr-sm-2" for="admin-filter-paid">Filter Paid:</label>
+                    <label class="mr-sm-2" for="admin-filter-paid">Filter Status:</label>
                 </b-col>
                 <b-col cols="2">
                     <b-form-select id="admin-filter-paid"
@@ -42,7 +42,7 @@
             </b-row>
         </b-form>
         <!-- Main table element -->
-        <b-table v-if="users_loaded && items != null"
+        <b-table v-if="rebates_loaded && items != null"
                  class="mt-2 admin-users-table"
                  stacked="md"
                  :items="items"
@@ -113,11 +113,6 @@
     	props: [
             'rebate_data',
         ],
-        computed: {
-            base_url() {
-                return axios.defaults.baseUrl;
-            }
-        },
         data() {
             return {
             	items:  null,
@@ -138,7 +133,7 @@
                 per_page: 10,
                 total: 10,
                 path: '',
-                users_loaded: true,
+                rebates_loaded: true,
                 initial_load: 0,
                 filter_options: [
                     {text: "All", value: null},
@@ -190,7 +185,7 @@
                         this.items = rebatesResponse.data.data;
                         /*EventBus.$emit('loading', 'requestDates');
                         this.dates_loaded = true;*/
-                        this.users_loaded = true;
+                        this.rebates_loaded = true;
                     } else {
                         console.error(err);    
                     }
@@ -304,7 +299,6 @@
         },
         mounted() {
         	let parsed_data = JSON.parse(this.rebate_data);
-            console.log("What we get: ",parsed_data);
             this.items = parsed_data.data;
             this.current_page = parsed_data.current_page;
             this.per_page = parsed_data.per_page;
