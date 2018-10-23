@@ -1,6 +1,9 @@
 <template>
     <b-row dusk="ibar-market-negotiation-market" class="ibar market-negotiation">
-        <b-col>
+        <b-col v-if="timed_out" class="text-center">
+            The Negoitations have timed out, trade imminent.
+        </b-col>
+        <b-col v-if="!timed_out">
             <b-row class="">
                 <b-col cols="10">
                     <div class="text-center">
@@ -148,18 +151,14 @@
                 if(this.timer != null) {
                     this.stopTimer();
                 }
-                this.timer = setInterval(() => {
-                    let time = moment(this.currentNegotiation.created_at).add(20, 'minutes');
-                    let diff = time.diff(moment());
-                    // ensure its not shown if its timed out
-                    if(diff < 0) {
-                        this.timed_out = true;
-                        this.stopTimer();
-                    } else {
-                        let dur = moment.duration(diff);
-                        this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
-                    }
-                }, 1000);
+                this.timer = setInterval(this.runTimer, 1000);
+            },
+            runTimer() {
+                this.timer_value = this.currentNegotiation.getTimeoutRemaining();
+                if(this.timer_value == "00:00") {
+                    this.timed_out = true;
+                    this.stopTimer();
+                }
             },
             stopTimer() {
                 clearInterval(this.timer);
@@ -168,6 +167,7 @@
         },
         mounted() {
             this.startTimer();
+            this.runTimer(); // force initial setting
         },
         beforeDestroy() {
             this.stopTimer();

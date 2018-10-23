@@ -111,7 +111,21 @@ export default class UserMarketNegotiation extends BaseModel {
         };
     }
 
+    getTimeoutRemaining() {
+        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        // ensure its not shown if its timed out
+        if(diff < 0) {
+            return "00:00";
+        } else {
+            return moment.utc(moment.duration(diff).as('milliseconds')).format('mm:ss');
+        }
+    }
 
+    hasTimeoutRemaining() {
+        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        // ensure its not shown if its timed out
+        return diff > 0;
+    }
 
     storeWorkBalance(user_market,quantity) {
         // catch not assigned to a market request yet!

@@ -97,16 +97,21 @@ export default {
                 case "TRADE-NEGOTIATION-COUNTER":
                 case "TRADE-NEGOTIATION-BALANCER":
                     this.market_request_state = 'trade-negotiation-open';
-                       
-                       if(this.current_user_market_negotiation)
-                       {
-                            lastTradeNegotiation = this.current_user_market_negotiation.getLastTradeNegotiation();
-                       }
+                    
+                        if(this.marketRequest.chosen_user_market && this.marketRequest.chosen_user_market.isTradingAtBest()) {
+                            this.market_request_state_label = "";
+                            this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
+                            this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
+                        } else {
 
-                       if(lastTradeNegotiation)
-                       {
-                           this.market_request_state_label = lastTradeNegotiation.getVolLevel();
-                       }
+                            if(this.current_user_market_negotiation) {
+                                lastTradeNegotiation = this.current_user_market_negotiation.getLastTradeNegotiation();
+                            }
+
+                            if(lastTradeNegotiation) {
+                               this.market_request_state_label = lastTradeNegotiation.getVolLevel();
+                            }
+                        }
                        
                   break;
                   case "TRADE-NEGOTIATION-PENDING":

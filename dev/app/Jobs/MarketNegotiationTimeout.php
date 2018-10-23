@@ -40,6 +40,7 @@ class MarketNegotiationTimeout implements ShouldQueue
         $stillActive = !$marketNegotiation->is_killed //no killed
                     && $marketNegotiation->marketNegotiationChildren()->count() == 0;// has no children
 
+                    // is the latest negotiation in the tree
         if($stillActive) {
             
             // FoK
@@ -53,15 +54,19 @@ class MarketNegotiationTimeout implements ShouldQueue
 
             // Trade @ best
             if($marketNegotiation->isTradeAtBest() || $marketNegotiation->isTradeAtBestOpen()) {
-                // kill it
-                $marketNegotiation->kill();
-                if($marketNegotiation->cond_fok_spin == false) {
-                    // @TODO: Notify Admin of No Activity
-                }
+
+                $sourceNegotiation = $marketNegotiation->tradeAtBestSource();
+                $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
+                    "quantity"  =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
+                    "is_offer"  =>  $marketNegotiation->cond_buy_best
+                ]);
+                
+                $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
+
+                // @TODO: Notify Admin of No Activity
             }
 
             $userMarket->userMarketRequest->notifyRequested();
-            echo 'killed';
         }
         return true;
     }
