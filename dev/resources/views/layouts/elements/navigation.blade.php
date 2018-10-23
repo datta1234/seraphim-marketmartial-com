@@ -23,16 +23,20 @@
 					<a class="nav-link active p-0 ml-4" href="#">Previous day</a>
 				</li>
 				@if(Auth::user()->role_id == 1)
-					<li class="nav-item">
-						<a class="nav-link active p-0 ml-4" href="{{ route('admin.user.index') }}">
-							Users
-						</a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Management</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="{{ route('admin.user.index') }}">
+								Users
+							</a>
+							<a class="dropdown-item" href="{{ route('admin.rebates.index') }}">
+								Rebates
+							</a>
+							<a class="dropdown-item" href="{{ route('admin.booked-trades.index') }}">
+								Booked Trades
+							</a>
+						</div>
 					</li>
-					{{--<li class="nav-item">
-						<a class="nav-link active p-0 ml-4" href="{{ route('admin.booked-trades.index') }}">
-						Booked Trades
-					</a>
-					</li>--}}
 					<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('rebate_summary.index') }}">
 							Rebates Summary

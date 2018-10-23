@@ -293,16 +293,23 @@ class TradeConfirmation extends Model
         return $resolved_items;
     }
 
+    public function resolveMarketStock() {
+        // Resolve stock / market
+        if($this->stock) {
+            return $this->stock->code;
+        } else {
+            return $this->market->title;
+        }
+    }
+
     public function preFormatStats($user = null)
     {   
-        // @TODO - Add logic for market to be a single stock name if applicable
-        
         $user_market_request_items = $this->resolveUserMarketRequestItems();
         
         $data = [
             "id" => $this->id,
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-            "market" => $this->market->title,
+            "market" => $this->resolveMarketStock(),
             "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
             "nominal" =>  $user_market_request_items["nominal"],
             "strike" =>  $user_market_request_items["strike"],

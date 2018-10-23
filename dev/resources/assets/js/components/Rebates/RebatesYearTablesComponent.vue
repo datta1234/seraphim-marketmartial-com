@@ -146,11 +146,11 @@
                     case 'date':
                         return this.castToMoment(item[key])
                         break;
+                    case 'rebate':
+                        return this.$root.splitValHelper(item[key], ' ', 3);
+                        break;
                     case 'is_put':
                         return item[key] == 1 ? "Put" : "Call";
-                        break;
-                    case 'date':
-                        return this.castToMoment(item[key]);
                         break;
                     default:
                         return item[key];

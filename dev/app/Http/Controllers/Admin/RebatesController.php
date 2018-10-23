@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\TradeConfirmations\BookedTrade;
-use App\Http\Requests\Admin\BookedTradeUpdateRequest;
+use App\Models\Trade\Rebate;
+use App\Models\UserManagement\User;
+use App\Models\UserManagement\Organisation;
+use App\Http\Requests\Admin\RebateUpdateRequest;
 use Carbon\Carbon;
 
-class BookedTradesController extends Controller
+class RebatesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,26 +19,23 @@ class BookedTradesController extends Controller
      */
     public function index(Request $request)
     {
-        $booked_trades = BookedTrade::basicSearch(
+        $rebates = Rebate::basicSearch(
                     $request->input('search'),
                     $request->input('_order_by') == '' ? null : $request->input('_order_by'),
                     $request->input('_order'),
                     [
-                        "filter_status" => $request->input('filter_status') == '' ? null : $request->input('filter_status'),
+                        "filter_paid" => $request->input('filter_paid') == '' ? null : $request->input('filter_paid'),
                         "filter_date" => $request->input('date_filter'),
                     ])
-                ->where('is_rebate', false)
                 ->paginate(10);
-
-        $booked_trades->transform(function($booked_trade) {
-            return $booked_trade->preFormatAdmin();
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormatAdmin();
         });
 
         if($request->ajax()) {
-            return $booked_trades;
+            return $rebates;
         }
-
-        return view('admin.booked_trades.index')->with(['booked_trades' => $booked_trades->toJson()]);
+        return view('admin.rebates.index')->with(['rebates' => $rebates->toJson()]);
     }
 
     /**
@@ -89,25 +88,25 @@ class BookedTradesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BookedTradeUpdateRequest $request, BookedTrade $booked_trade)
+    public function update(RebateUpdateRequest $request, Rebate $rebate)
     {
-        if( $request->has('is_confirmed') ) {
+        if( $request->has('is_paid') ) {
             // deactivate and reactivate logic
-            $booked_trade_update_result = $booked_trade->update([
-                'is_confirmed' => $request->input('is_confirmed'),
+            $rebate_update_result = $rebate->update([
+                'is_paid' => $request->input('is_paid'),
             ]);
 
-            if($booked_trade_update_result){
+            if($rebate_update_result){
                 return [
                     'success' => true,
-                    'data' => $booked_trade->preFormatAdmin(),
-                    'message' => 'Booked Trade status successfully changed.'
+                    'data' => $rebate->preFormatAdmin(),
+                    'message' => 'Rebate Paid status successfully changed.'
                 ];
             }
             return [
                 'success' => false,
                 'data' => null,
-                'message' => 'Failed to change Booked Trade status.'
+                'message' => 'Failed to change rebate Paid status.'
             ];
         }
     }
@@ -125,43 +124,43 @@ class BookedTradesController extends Controller
 
     public function downloadCsv(Request $request)
     {
-        // Get the booked_trades according to the passed filters
-        $booked_trades_query = BookedTrade::basicSearch(null,null,null, [
-                    'filter_status' => $request->input('is_confirmed'),
+        // Get the rebates according to the passed filters
+        $rebates_query = Rebate::basicSearch(null,null,null, [
+                    'filter_paid' => $request->input('is_paid'),
                     'filter_date' => $request->input('date'),
                     'filter_expiration' => $request->input('expiration')
                     ]);
-        // Filter booked_trades by organisation if passed
+        // Filter Rebates by organisation if passed
         if(!empty($request->input('organisation'))) {
-            $booked_trades_query->whereHas('user',function($q) use ($request){
+            $rebates_query->whereHas('user',function($q) use ($request){
                 $q->whereHas('organisation',function($q) use ($request){
                     $q->where('id',$request->input('organisation'));
                 });
             });
         }
 
-        $booked_trades = $booked_trades_query->get();
+        $rebates = $rebates_query->get();
 
-        $booked_trades->transform(function($booked_trade) {
-            return $booked_trade->preFormatAdmin(true);
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormatAdmin(true);
         });
 
-        if($booked_trades->count() <= 0) {
+        if($rebates->count() <= 0) {
             return redirect()->back()->with('error', 'The selected csv download has no records');
         }
 
-        $filename = Carbon::now()->format('Y_m_d_His')."_MM_booked_trades.csv";
+        $filename = Carbon::now()->format('Y_m_d_His')."_MM_rebates.csv";
         $handle = fopen($filename, 'w+');
 
-        $booked_trade_keys = array_keys($booked_trades->first());
+        $rebate_keys = array_keys($rebates->first());
         // Map CSV collumn headings to a config defined heading
         $csv_headings = array_map( function($value) {
-                return config('marketmartial.export_csv_field_mapping.booked_trade_fields.'.$value);
-            },$booked_trade_keys);
+                return config('marketmartial.export_csv_field_mapping.rebate_fields.'.$value);
+            },$rebate_keys);
         fputcsv($handle, $csv_headings);
 
-        foreach ($booked_trades as $booked_trade) {
-            fputcsv($handle, $booked_trade);            
+        foreach ($rebates as $rebate) {
+            fputcsv($handle, $rebate);            
         }
 
         $headers = ['Content-Type' => 'text/csv'];
