@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\HasDismissibleActivity;
 
-
-
 class MarketNegotiation extends Model
 {
     use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
@@ -339,9 +337,11 @@ class MarketNegotiation extends Model
     {
         return $query->where(function($q){
             foreach($this->applicableConditions as $key => $default) {
-                $q->orWhere($key, '!=', $default);
+                if($key != 'cond_timeout') {
+                    $q->orWhere($key, '!=', $default);
+                }
             }
-        });
+        })->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 0 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
     }
 
     /**
@@ -905,6 +905,16 @@ class MarketNegotiation extends Model
 
                 $this->cond_timeout = true;
                 $this->applyCondTimeoutCondition(); // force it
+
+                // notify admin
+                $title_initiator = $this->user->organisation->title;
+                \Slack::postMessage([
+                    "as_user"   => false,
+                    "icon_emoji"=> ":alarm_clock:",
+                    "username"  => "Timeout-BOT",
+                    "text"      => "An FoK:Kill has been initiated by $title_initiator",
+                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                ]);
             }
         }
     }
@@ -976,10 +986,18 @@ class MarketNegotiation extends Model
             $this->cond_timeout = true;
             $this->applyCondTimeoutCondition(); // force it
 
-            // $this->doTradeAtBest($this->user, $this->cond_buy_best);
             $this->userMarket->userMarketRequest->notifyRequested();
 
-            // @TODO: notify admin, this is the first one.
+            $term = $this->cond_buy_best == true ? 'Buy' : 'Sell';
+            $title_initiator = $this->user->organisation->title;
+            \Slack::postMessage([
+                "as_user"   => false,
+                "icon_emoji"=> ":alarm_clock:",
+                "username"  => "Timeout-BOT",
+                "text"      => "A $term at Best has been initiated by $title_initiator",
+                "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+            ]);
+
         } else {
             $this->is_private = false; // ensure it stays open if its the responses
         }

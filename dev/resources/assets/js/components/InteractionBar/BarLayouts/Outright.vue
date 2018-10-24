@@ -108,8 +108,8 @@
                         </b-button>
                     </b-col>
                 </b-row>
-
-                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && !can_negotiate && is_trading_at_best && !is_trading_at_best_closed">
+                
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
                     <b-col cols="6">
                          
                         <b-button class="w-100 mt-1" 
@@ -258,8 +258,7 @@
                 return this.marketRequest.chosen_user_market.isTradingAtBest();
             },
             is_trading_at_best_closed: function() {
-                let negotiation = this.marketRequest.chosen_user_market.getCurrentNegotiation();
-                return negotiation ? !negotiation.hasTimeoutRemaining() : true;
+                return !this.last_negotiation.hasTimeoutRemaining();
             },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();

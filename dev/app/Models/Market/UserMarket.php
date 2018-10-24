@@ -418,7 +418,8 @@ class UserMarket extends Model
 
     public function isTradeAtBestOpen() {
         return  $this->lastNegotiation
-            &&  $this->lastNegotiation->isTradeAtBestOpen();
+            &&  $this->lastNegotiation->isTradeAtBestOpen()
+            &&  !$this->lastNegotiation->isTrading();
     }
     
 
@@ -463,10 +464,11 @@ class UserMarket extends Model
                                             ];
                                         })->values(),
         ];
-
+        // dd($this->activeConditionNegotiations()->toSql());
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
+        
         // if its trading at best
-        $data['trading_at_best'] = ( 
+        $data['trading_at_best'] = (
             $this->isTradeAtBestOpen() ? 
             $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
             null 

@@ -180,7 +180,8 @@ return [
 
         App\Providers\ComposerServiceProvider::class,
 
-        App\Providers\StreamServiceProvider::class
+        App\Providers\StreamServiceProvider::class,
+        App\Providers\SlackServiceProvider::class,
 
     ],
 
@@ -232,7 +233,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-
+        'Slack' => \App\Facades\Slack\Slack::class,
     ],
 
 ];
