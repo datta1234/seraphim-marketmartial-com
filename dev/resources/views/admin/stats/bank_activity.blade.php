@@ -14,7 +14,7 @@
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <monthly-activity :market_data="{{ json_encode($graph_data) }}"></monthly-activity>
+		        <bank-activity :market_data="{{ json_encode($graph_data) }}"></bank-activity>
 		    @endslot
 		@endcomponent
 		

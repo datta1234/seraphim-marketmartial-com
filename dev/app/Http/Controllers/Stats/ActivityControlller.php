@@ -110,7 +110,7 @@ class ActivityControlller extends Controller
         if($request->ajax()) {
             return $graph_data;
         }
-        
+
         return view('stats.my_activity')->with(compact('graph_data','years'));
     }
 
@@ -312,11 +312,18 @@ class ActivityControlller extends Controller
             return $carry;
         }, []);
 
+        // Adding all the markets that are not in our dataset
+        foreach ($markets as $market) {
+            if( !isset($graph_data[$market]) ) {
+                $graph_data[$market] = null;
+            }
+        }
+
         // Get the years for the yearly tables
         $years = TradeConfirmation::select(
             DB::raw("YEAR(trade_confirmations.updated_at) as year")
         )->groupBy('year')->get();
-
+        
         return view('admin.stats.bank_activity')->with(compact('graph_data','years','organisations'));
     }
 }

@@ -50,6 +50,7 @@ Vue.component('users-table', require('./components/Admin/Users/UsersTableCompone
 Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue'));
 Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue'));
 Vue.component('download-csv', require('./components/Admin/downloadCsvComponent.vue'));
+Vue.component('bank-activity', require('./components/Admin/Stats/BankActivityComponent.vue'));
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
