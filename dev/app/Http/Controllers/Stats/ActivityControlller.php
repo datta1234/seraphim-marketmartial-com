@@ -8,6 +8,7 @@ use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\Market;
 use App\Models\StatsUploads\SafexTradeConfirmation;
+use App\Models\UserManagement\Organisation;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
@@ -47,7 +48,8 @@ class ActivityControlller extends Controller
             DB::raw("concat(MONTH(trade_confirmations.updated_at),'-',YEAR(trade_confirmations.updated_at))  as month"),
             DB::raw("count(*) as total"),"markets.title")
                 ->leftJoin("markets", "trade_confirmations.market_id", "=", "markets.id")
-                ->groupBy("markets.title",'month');
+                ->groupBy("markets.title",'month')
+                ->where('trade_confirmation_status_id', 4);
 
         $years = TradeConfirmation::select(
             DB::raw("YEAR(trade_confirmations.updated_at) as year")
@@ -108,8 +110,8 @@ class ActivityControlller extends Controller
         if($request->ajax()) {
             return $graph_data;
         }
-
-        return view('stats.my_activity')->with(compact('user','graph_data','years'));
+        
+        return view('stats.my_activity')->with(compact('graph_data','years'));
     }
 
     public function yearActivity(MyActivityYearRequest $request)
@@ -125,7 +127,8 @@ class ActivityControlller extends Controller
                 "filter_expiration" => $request->input('filter_expiration')
             ]
         )
-        ->whereYear('updated_at',$request->input('year'));
+        ->whereYear('updated_at',$request->input('year'))
+        ->where('trade_confirmation_status_id', 4);
 
         if($request->input('is_my_activity')) {
             $trade_confirmations = $trade_confirmations->where(function ($tlq) use ($user) {
@@ -219,5 +222,101 @@ class ActivityControlller extends Controller
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
         )->paginate(10);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function adminShow(Request $request)
+    {
+        $markets = Market::pluck("title", "id");
+        $organisations = Organisation::pluck("title", "id");
+        $trade_confirmations = DB::select('SELECT tc.market_id ,
+            (
+                SELECT u.organisation_id
+                FROM users u
+                WHERE u.id = tc.send_user_id
+            ) as sending_org_id,
+            (
+                SELECT u.organisation_id
+                FROM users u
+                WHERE u.id = tc.receiving_user_id
+            ) as receiving_org_id,
+            (
+                SELECT (
+                    SELECT (
+                        SELECT uu.organisation_id
+                        FROM users uu
+                        WHERE uu.id = um.user_id
+                    )
+                    FROM user_markets um
+                    WHERE um.id = tn.user_market_id
+                )
+                FROM trade_negotiations tn
+                WHERE tn.id = tc.trade_negotiation_id
+
+
+            ) as maker_org_id
+            FROM `trade_confirmations` tc
+            WHERE tc.trade_confirmation_status_id = ?',[4]
+        );
+        
+        $graph_data = collect($trade_confirmations)->reduce(function ($carry, $item) use ($markets, $organisations){
+            $market_id = $markets[$item->market_id];
+            $sender_organisation = $organisations[$item->sending_org_id];
+            $receiver_organisation = $organisations[$item->receiving_org_id];
+            $maker_organisation = $organisations[$item->maker_org_id];
+
+            if( !isset($carry[$market_id]) ) {
+                $carry[$market_id] = [];
+            }
+
+            // ensure that the org is being tracked in new array and set default counts for each
+            if( !isset($carry[$market_id][$sender_organisation]) ) {
+                $carry[$market_id][$sender_organisation] = [
+                    'total' => 0,
+                    'traded' => 0,
+                    'traded_away' => 0
+                ];
+            }
+            if( !isset($carry[$market_id][$receiver_organisation]) ) {
+                $carry[$market_id][$receiver_organisation] = [
+                    'total' => 0,
+                    'traded' => 0,
+                    'traded_away' => 0
+                ];
+            }
+            if( !isset($carry[$market_id][$maker_organisation]) ) {
+                $carry[$market_id][$maker_organisation] = [
+                    'total' => 0,
+                    'traded' => 0,
+                    'traded_away' => 0
+                ];
+            }
+
+            // Number of trades - organisation was sending_org || receiving_org
+            $carry[$market_id][$sender_organisation]['total']++;
+            $carry[$market_id][$receiver_organisation]['total']++;
+
+            // Markets Made (Traded) - organisation was market maker and organisation traded
+            if( in_array($maker_organisation, [ $sender_organisation, $receiver_organisation ]) ) {
+                $carry[$market_id][$maker_organisation]['traded']++;
+            } else {
+            // Markets Made (Traded Away) - organisation was market maker and someone else traded
+                $carry[$market_id][$maker_organisation]['traded_away']++;
+            }
+
+            return $carry;
+        }, []);
+
+        // Get the years for the yearly tables
+        $years = TradeConfirmation::select(
+            DB::raw("YEAR(trade_confirmations.updated_at) as year")
+        )->groupBy('year')->get();
+
+        return view('admin.stats.bank_activity')->with(compact('graph_data','years','organisations'));
     }
 }
