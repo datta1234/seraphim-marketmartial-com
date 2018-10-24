@@ -17,12 +17,12 @@
 					<a class="nav-link active p-0 ml-4" href="{{ route('trade') }}">Trade</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link active p-0 ml-4" href="{{ route('activity.show') }}">Stats</a>
-				</li>
-				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="#">Previous day</a>
 				</li>
 				@if(Auth::user()->role_id == 1)
+					<li class="nav-item">
+						<a class="nav-link active p-0 ml-4" href="{{ route('admin.activity.show') }}">Stats</a>
+					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Management</a>
 						<div class="dropdown-menu">
@@ -43,6 +43,9 @@
 						</a>
 					</li>
 				@else
+					<li class="nav-item">
+						<a class="nav-link active p-0 ml-4" href="{{ route('activity.show') }}">Stats</a>
+					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More</a>
 						<div class="dropdown-menu">

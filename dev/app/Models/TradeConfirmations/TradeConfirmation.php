@@ -302,7 +302,7 @@ class TradeConfirmation extends Model
         }
     }
 
-    public function preFormatStats($user = null)
+    public function preFormatStats($user = null, $is_Admin = false)
     {   
         $user_market_request_items = $this->resolveUserMarketRequestItems();
         
@@ -326,7 +326,13 @@ class TradeConfirmation extends Model
 
         if($market_negotiation->offer_qty) {
             $data["volatility"][] = $market_negotiation->offer_qty;
-        }        
+        }
+
+        if($is_Admin) {
+            $data["seller"] = $this->sendUser->organisation->title;
+            $data["buyer"] = $this->recievingUser->organisation->title;
+            return $data;
+        }
 
         if($user === null) {
             $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
