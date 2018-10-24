@@ -116,7 +116,12 @@ class ActivityControlller extends Controller
 
     public function yearActivity(MyActivityYearRequest $request)
     {
+        // Checks if the table is all MM or My activity table
         $user = $request->input('is_my_activity') ? $request->user() : null;
+
+        // Checks for admin bank tables only
+        $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
+        
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
@@ -139,8 +144,8 @@ class ActivityControlller extends Controller
 
         $trade_confirmations = $trade_confirmations->paginate(10);
 
-        $trade_confirmations->transform(function($trade_confirmation) use ($user) {
-            return $trade_confirmation->preFormatStats($user);
+        $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
+            return $trade_confirmation->preFormatStats($user, $is_Admin);
         });
 
         return response()->json($trade_confirmations);

@@ -104,6 +104,9 @@
             'is_my_activity': {
                 type: Boolean
             },
+            'is_bank_level': {
+                type: Boolean
+            },
         },
         data() {
             return {
@@ -124,8 +127,6 @@
                     { key: 'strike', label: 'Strike' },
                     { key: 'volatility', label: 'Volatility' },
                     { key: 'expiration', label: 'Expiration' },
-                    { key: 'status', label: 'Status'/*, sortable: true, sortDirection: 'desc'*/ },
-                    (this.is_my_activity ? { key: 'trader', label: 'Trader'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
                 ],
                 table_data:{},
                 markets_filter: [
@@ -157,6 +158,7 @@
                 } else {
                     axios.get(axios.defaults.baseUrl + '/stats/my-activity/year', {
                         params:{
+                            'is_bank_level': (this.is_bank_level ? 1 : 0),
                             'is_my_activity': (this.is_my_activity ? 1 : 0),
                             'page': this.table_data[index].current_page,
                             'year': this.table_years[index],
@@ -272,9 +274,25 @@
                 this.table_data[index].current_page = $event;
                 this.loadTableData(index, false);
             },
+            setTableFields() {
+                if(this.is_bank_level) {
+                    this.table_fields.push({ key: 'seller', label: 'Seller' });
+                    this.table_fields.push({ key: 'buyer', label: 'Buyer' });
+                } else {
+                    this.table_fields.push(
+                        { key: 'status', label: 'Status' },
+                    );
+                    if(this.is_my_activity) {
+                        this.table_fields.push(
+                            { key: 'trader', label: 'Trader' },
+                        );
+                    }
+                }
+            }
         },
         mounted() {
             let unordered_years = [];
+            this.setTableFields();
             this.years.forEach(element => {
                 unordered_years.push(element.year);
             });
