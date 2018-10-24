@@ -66,7 +66,7 @@ class MarketNegotiationRequest extends FormRequest
         }); 
 
         $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this, $negotiation)], function ($input) {
-            return !is_null($input->offer_qty) && !$input->is_repeat && is_null($input->cond_buy_mid == null);
+            return !is_null($input->offer_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 
 
         $validator->sometimes('bid_qty', 'required|numeric', function ($input) {

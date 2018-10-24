@@ -33,7 +33,7 @@ class MarketNegotiationTimeout implements ShouldQueue
      */
     public function handle()
     {
-        echo "ID: ".$this->marketNegotiationID;
+        echo "Processing Timeout For Market Negotiation ID: ".$this->marketNegotiationID.PHP_EOL;
         $marketNegotiation = \App\Models\Market\MarketNegotiation::find($this->marketNegotiationID);
         $userMarket = $marketNegotiation->userMarket;
         
@@ -44,11 +44,22 @@ class MarketNegotiationTimeout implements ShouldQueue
         if($stillActive) {
             
             // FoK
-            if($marketNegotiation->isFoK()){
+            if($marketNegotiation->isFoK() && !$marketNegotiation->isTrading()){
                 // kill it
                 $marketNegotiation->kill();
                 if($marketNegotiation->cond_fok_spin == false) {
-                    // @TODO: Notify Admin of No Activity
+                    // Notify The Admin 
+                    $term = $marketNegotiation->cond_buy_best == true ? 'Buy' : 'Sell';
+                    $title_initiator = $sourceNegotiation->user->organisation->title;
+                    $title_responder = $marketNegotiation->user->organisation->title;
+                    $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
+                    \Slack::postMessage([
+                        "as_user"   => false,
+                        "icon_emoji"=> ":alarm_clock:",
+                        "username"  => "Timeout-BOT",
+                        "text"      => "A FoK:Kill Timeout has occured, Trading Between $title_initiator and $title_responder @ ",
+                        "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                    ]);
                 }
             }
 
@@ -57,13 +68,25 @@ class MarketNegotiationTimeout implements ShouldQueue
 
                 $sourceNegotiation = $marketNegotiation->tradeAtBestSource();
                 $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
-                    "quantity"  =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
-                    "is_offer"  =>  $marketNegotiation->cond_buy_best
+                    "quantity"      =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
+                    "is_offer"      =>  $marketNegotiation->cond_buy_best,
+                    "is_distpute"   =>  false,
                 ]);
                 
                 $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
 
-                // @TODO: Notify Admin of No Activity
+                // Notify The Admin 
+                $term = $marketNegotiation->cond_buy_best == true ? 'Buy' : 'Sell';
+                $title_initiator = $sourceNegotiation->user->organisation->title;
+                $title_responder = $marketNegotiation->user->organisation->title;
+                $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
+                \Slack::postMessage([
+                    "as_user"   => false,
+                    "icon_emoji"=> ":alarm_clock:",
+                    "username"  => "Timeout-BOT",
+                    "text"      => "A $term at Best Timeout has occured, Trading Between $title_initiator and $title_responder @ $level",
+                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                ]);
             }
 
             $userMarket->userMarketRequest->notifyRequested();
