@@ -118,9 +118,6 @@ class ActivityControlller extends Controller
     {
         // Checks if the table is all MM or My activity table
         $user = $request->input('is_my_activity') ? $request->user() : null;
-
-        // Checks for admin bank tables only
-        $is_Admin = $request->user()->isAdmin() && $request->input('is_bank_level');
         
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
@@ -144,8 +141,11 @@ class ActivityControlller extends Controller
 
         $trade_confirmations = $trade_confirmations->paginate(10);
 
-        $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
-            return $trade_confirmation->preFormatStats($user, $is_Admin);
+        $trade_confirmations->transform(function($trade_confirmation) use ($user, $request) {
+            return $trade_confirmation->preFormatStats(
+                $user, 
+                $request->has('is_bank_level') ? $request->input('is_bank_level') : null
+            );
         });
 
         return response()->json($trade_confirmations);

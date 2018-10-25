@@ -302,7 +302,7 @@ class TradeConfirmation extends Model
         }
     }
 
-    public function preFormatStats($user = null, $is_Admin = false)
+    public function preFormatStats($user = null, $is_bank_level = false)
     {   
         $user_market_request_items = $this->resolveUserMarketRequestItems();
         
@@ -328,7 +328,7 @@ class TradeConfirmation extends Model
             $data["volatility"][] = $market_negotiation->offer_qty;
         }
 
-        if($is_Admin) {
+        if(\Auth::user()->isAdmin() && $is_bank_level) {
             $data["seller"] = $this->sendUser->organisation->title;
             $data["buyer"] = $this->recievingUser->organisation->title;
             return $data;
