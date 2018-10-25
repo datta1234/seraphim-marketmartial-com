@@ -26,8 +26,8 @@ class ActivityControlller extends Controller
     public function index()
     {
         $years = TradeConfirmation::select(
-            DB::raw("YEAR(trade_confirmations.updated_at) as year")
-        )->groupBy('year')->get();
+            DB::raw("DISTINCT YEAR(trade_confirmations.updated_at) as year")
+        )->get();
 
         return view('stats.market_activity')->with(compact('years'));
     }
@@ -52,8 +52,8 @@ class ActivityControlller extends Controller
                 ->where('trade_confirmation_status_id', 4);
 
         $years = TradeConfirmation::select(
-            DB::raw("YEAR(trade_confirmations.updated_at) as year")
-        )->groupBy('year')->get();
+            DB::raw("DISTINCT YEAR(trade_confirmations.updated_at) as year")
+        )->get();
 
         if($request->ajax() && $request->has('my_trades') && $request->input('my_trades') == '1') {
             $my_org_trade_confirmations = clone $trade_confirmations;

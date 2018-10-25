@@ -196,8 +196,8 @@ class RebatesController extends Controller
         });
 
         $years = Rebate::select(
-            DB::raw("YEAR(rebates.trade_date) as year")
-        )->groupBy('year')->get();
+            DB::raw("DISTINCT YEAR(rebates.trade_date) as year")
+        )->get();
 
         return view('admin.rebates.summary')
             ->with(compact('graph_data', 'years', 'total_rebates'));
