@@ -120,7 +120,7 @@ class ActivityControlller extends Controller
         $user = $request->input('is_my_activity') ? $request->user() : null;
 
         // Checks for admin bank tables only
-        $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
+        $is_Admin = $request->user()->isAdmin() && $request->input('is_bank_level');
         
         $trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),

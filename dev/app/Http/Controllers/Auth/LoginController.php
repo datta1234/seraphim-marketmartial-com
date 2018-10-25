@@ -56,7 +56,7 @@ class LoginController extends Controller
 
     protected function redirectTo()
     {
-        if(\Auth::user()->role->title === 'Admin') {
+        if(\Auth::user()->isAdmin()) {
             return '/admin/user';
         } else {
             return $this->redirectTo;

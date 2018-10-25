@@ -112,7 +112,7 @@ class Rebate extends Model
             "rebate"        => $this->bookedTrade->amount,
         ];
 
-        if(\Auth::user()->role_id == 1){
+        if(\Auth::user()->isAdmin()){
             $data["bank"] = $this->user->organisation->title;
         }
 

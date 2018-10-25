@@ -98,7 +98,7 @@ class RebatesSummaryController extends Controller
         $user = $request->user();
         $rebates_query = Rebate::where('is_paid', true)->whereYear('trade_date', $request->input('year'));
 
-        if($user->role_id != 1) {
+        if(!$user->isAdmin()) {
             $rebates_query = $rebates_query->where('organisation_id', $user->organisation->id);
         }
 

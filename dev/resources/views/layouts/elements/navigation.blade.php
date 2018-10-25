@@ -19,7 +19,7 @@
 				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="#">Previous day</a>
 				</li>
-				@if(Auth::user()->role_id == 1)
+				@if(Auth::user()->isAdmin())
 					<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('admin.activity.show') }}">Stats</a>
 					</li>

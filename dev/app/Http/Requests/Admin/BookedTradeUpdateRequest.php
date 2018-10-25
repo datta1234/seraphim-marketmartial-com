@@ -13,7 +13,7 @@ class BookedTradeUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->role_id == 1;
+        return \Auth::user()->isAdmin();
     }
 
     /**

@@ -1,5 +1,5 @@
 <div class="card-group mt-4">
-	@if(Auth::user()->role_id == 1)
+	@if(Auth::user()->isAdmin())
 		<div class="card text-center stats-nav-card {{ Request::is('admin/stats/bank-activity') ? 'active' : '' }}">
 			<a class="" href="{{ route('admin.activity.show') }}">
 				<div class="card-body">
@@ -44,6 +44,6 @@
     </div>
 </div>
 
-@if(Auth::user()->role_id == 1)
+@if(Auth::user()->isAdmin())
 	<upload-csv></upload-csv>
 @endif
