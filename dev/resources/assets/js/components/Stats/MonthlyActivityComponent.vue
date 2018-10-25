@@ -75,6 +75,12 @@
             };
         },
         methods: {
+            /**
+             * Sets initialises data and for the chart 
+             *
+             * @param {string} market - to spesify a subset of data for the graph
+             * @param {object} data - the server data for the graph
+             */
             setChartData(data, market) {
             	this.active_market = market;
             	if(data == null) {
@@ -87,9 +93,15 @@
             	this.setLabels(data);
             	this.setDataSet(data);
             },
+            /**
+             * Sets the chart labels from the passed data 
+             *
+             * @param {object} data - the server data for the graph
+             */
             setLabels(data) {
             	Object.keys(data).forEach(set => {
             		data[set].forEach(date_details => {
+                        // Formats the month per element in data and adds it to labels
             			if(this.active_data_set.labels.indexOf(moment(date_details.month,'M-YYYY').format('MMM YY')) === -1) 
                         {
             				this.active_data_set.labels.push(
@@ -98,17 +110,31 @@
             			}
 		        	});
 		        });
+                // Sort the Labels (dates) chronologically
                 this.$root.dateStringArraySort(this.active_data_set.labels, 'MMM YY');  
             },
+            /**
+             * Sets each data set for the chart determined by the pre-defined datasets 
+             *
+             * @param {object} data - the server data for the graph
+             */
             setDataSet(data) {
             	Object.keys(data).forEach(set => {
             		this.active_data_set.datasets.push({
-            			label: this.data_details[set].label,
-				      	backgroundColor: this.data_details[set].backgroundColor,
-				      	data: this.setData(set, data),
+            			label: this.data_details[set].label,// sets dataset's labels
+				      	backgroundColor: this.data_details[set].backgroundColor, // sets the dataset's defined colour
+				      	data: this.setData(set, data),// sets dataset's data
             		});
 		        });
             },
+            /**
+             * Sets an array of data for the called dataset 
+             *
+             * @param {string} set - the data set this data is for
+             * @param {object} data - the server data for the graph
+             *
+             * @return {array} an array of data values for the graph bar data
+             */
             setData(set, data) {
             	let count_array = [];
             	this.active_data_set.labels.forEach(date => {
@@ -123,6 +149,12 @@
             	});
             	return count_array;
             },
+            /**
+             * Makes an axios get request to get graph data based on the
+             *  user's toggle of my_trades_only checkbox         
+             *
+             * @param {Boolean} checked - my_trades_only state
+             */
 	        toggleMyTrades(checked) {
 	        	axios.get(axios.defaults.baseUrl + 'my-activity', {
 	        		params:{
@@ -134,10 +166,11 @@
 	                    this.graph_data = activityResponse.data;
 	        			this.setChartData(activityResponse.data[this.active_market],this.active_market);    
 	                } else {
-	                	this.$toasted.error("Failed to load Your Trades.")
+	                	this.$toasted.error("Failed to load Your Trades.");
 	                    console.error(err);    
 	                }
 	            }, err => {
+                    this.$toasted.error("Failed to load Your Trades.");
 	                console.error(err);
 	            });
 	        },
