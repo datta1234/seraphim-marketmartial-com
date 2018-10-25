@@ -100,7 +100,6 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
-                            console.log(this.table_data[index]);
                             this.table_data[index].current_page = activityResponse.data.current_page;
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;
