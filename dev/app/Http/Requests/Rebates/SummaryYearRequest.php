@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Rebates;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BookedTradeUpdateRequest extends FormRequest
+class SummaryYearRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class BookedTradeUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->role_id == 1 ? true : false;
+        return true;
     }
 
     /**
@@ -24,7 +24,7 @@ class BookedTradeUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_confirmed' => 'required|boolean',
+            'year' => 'required|date_format:Y',
         ];
     }
 }

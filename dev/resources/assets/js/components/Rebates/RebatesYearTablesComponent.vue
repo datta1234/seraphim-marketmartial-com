@@ -44,6 +44,9 @@
             'years': {
                 type: Array
             },
+            'is_bank_level': {
+                type: Boolean
+            },
         },
         data() {
             return {
@@ -61,7 +64,8 @@
                     { key: 'strike', label: 'Strike' },
                     { key: 'expiration', label: 'Expiration' },
                     { key: 'nominal', label: 'Nominal (ZAR)' },
-                    { key: 'role', label: 'Your Role' },
+                    (this.is_bank_level ? { key: 'bank', label: 'Bank' } : {}),
+                    { key: 'role', label: (this.is_bank_level ? 'Their Role' : 'Your Role') },
                     { key: 'rebate', label: 'Rebate' },
                 ],
                 table_data:{},
@@ -96,6 +100,7 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
+                            console.log(this.table_data[index]);
                             this.table_data[index].current_page = activityResponse.data.current_page;
                             this.table_data[index].per_page = activityResponse.data.per_page;
                             this.table_data[index].total = activityResponse.data.total;

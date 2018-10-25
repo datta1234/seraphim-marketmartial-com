@@ -151,8 +151,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		'as' => 'admin'
 	]);
 	Route::get('rebates-csv','Admin\RebatesController@downloadCsv');
+	Route::get('/rebates-summary', 'Admin\RebatesController@summaryIndex')->name('admin.rebate_summary.index');
 
 	Route::get('organisation', 'Admin\OrganisationController@index');
+
 });
 
 Route::group(['middleware' => ['auth']], function() {
