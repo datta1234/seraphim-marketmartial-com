@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Trade\Rebate;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
+use App\Models\StructureItems\Market;
 use App\Http\Requests\Admin\RebateUpdateRequest;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class RebatesController extends Controller
 {
@@ -167,5 +169,37 @@ class RebatesController extends Controller
         return response()->download($filename, $filename, $headers)->deleteFileAfterSend(true);
 
 
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function summaryIndex(Request $request)
+    {
+        $markets = Market::where('title', '!=', 'DELTA ONE')->pluck("title", "id");
+        $rebates = Rebate::where('is_paid', true)->whereYear('trade_date', Carbon::now()->year)->get();
+       
+        $total_rebates = $rebates->sum(function ($rebate) {
+            return $rebate->bookedTrade->amount;
+        });
+
+        $graph_data = $rebates->reduce(function ($carry, $item) use ($markets){
+            if( !isset($carry[$item->user->organisation->title]) ) {
+                $carry[$item->user->organisation->title] = array_fill_keys( $markets->values()->toArray() , 0);
+            }
+
+            $carry[$item->user->organisation->title][$item->bookedTrade->market->title] +=  $item->bookedTrade->amount;
+            
+            return $carry;
+        });
+
+        $years = Rebate::select(
+            DB::raw("DISTINCT YEAR(rebates.trade_date) as year")
+        )->get();
+
+        return view('admin.rebates.summary')
+            ->with(compact('graph_data', 'years', 'total_rebates'));
     }
 }

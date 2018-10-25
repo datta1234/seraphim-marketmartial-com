@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Rebates;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStatusRequest extends FormRequest
+class SummaryYearRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UserStatusRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->role_id == 1;
+        return true;
     }
 
     /**
@@ -24,8 +24,7 @@ class UserStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'verified' => 'required_without:active|boolean',
-            'active' => 'required_without:verified|boolean',
+            'year' => 'required|date_format:Y',
         ];
     }
 }

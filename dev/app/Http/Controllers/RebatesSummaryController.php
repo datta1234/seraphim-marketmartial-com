@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\StructureItems\Market;
 use App\Models\UserManagement\User;
+use App\Http\Requests\Rebates\SummaryYearRequest;
 
 class RebatesSummaryController extends Controller
 {
@@ -92,21 +93,22 @@ class RebatesSummaryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(SummaryYearRequest $request)
     {
-        if($request->has('year')) {
-            $user = $request->user();
-            $rebates = Rebate::where('organisation_id', $user->organisation->id)
-                ->where('is_paid', true)
-                ->whereYear('trade_date', $request->input('year'))
-                ->orderBy("trade_date", "ASC")
-                ->paginate(10);
+        $user = $request->user();
+        $rebates_query = Rebate::where('is_paid', true)->whereYear('trade_date', $request->input('year'));
 
-            $rebates->transform(function($rebate) use ($user){
-                return $rebate->preFormat($user);
-            });
+        if($user->role_id != 1) {
+            $rebates_query = $rebates_query->where('organisation_id', $user->organisation->id);
         }
 
+        $rebates = $rebates_query->orderBy("trade_date", "ASC")->paginate(10);
+
+
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormat();
+        });
+        
         return response()->json($rebates);
     }
 

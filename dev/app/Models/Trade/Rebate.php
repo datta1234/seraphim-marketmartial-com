@@ -91,19 +91,19 @@ class Rebate extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function organisations()
+    public function organisation()
     {
-        return $this->hasMany('App\Models\UserManagement\Organisation', 'organisation_id');
+        return $this->belongsTo('App\Models\UserManagement\Organisation', 'organisation_id');
     }
 
-    public function preFormat($user)
+    public function preFormat()
     {
         $trade_confirmation = $this->bookedTrade->tradeConfirmation;
         $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
 
         $data = [
             "date"          => $this->trade_date,
-            "market"         => $this->bookedTrade->resolveMarketStock(),
+            "market"        => $this->bookedTrade->resolveMarketStock(),
             "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
@@ -112,13 +112,17 @@ class Rebate extends Model
             "rebate"        => $this->bookedTrade->amount,
         ];
 
+        if(\Auth::user()->role_id == 1){
+            $data["bank"] = $this->user->organisation->title;
+        }
+
         // Resolve role
         switch (true) {
-            case ($trade_confirmation->sendUser->organisation->id == $user->organisation->id):
-            case ($trade_confirmation->recievingUser->organisation->id == $user->organisation->id):
+            case ($trade_confirmation->sendUser->organisation->id == $this->organisation->id):
+            case ($trade_confirmation->recievingUser->organisation->id == $this->organisation->id):
                 $data["role"] = 'Traded';
                 break;
-            case ($trade_confirmation->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+            case ($trade_confirmation->tradeNegotiation->userMarket->user->organisation->id == $this->organisation->id):
                 $data["role"] = 'Market Maker (traded away)';
                 break;
             default:
@@ -138,7 +142,7 @@ class Rebate extends Model
             "id"            => $this->id,
             "date"          => $this->trade_date,
             "user"          => $this->user->full_name,
-            "organisation"  => $this->user->organisation->title,
+            "organisation"  => $this->organisation->title,
             "market"        => $this->bookedTrade->resolveMarketStock(),
             "is_put"        => $trade_confirmation->is_put,
             "strike"        => $user_market_request_items["strike"],

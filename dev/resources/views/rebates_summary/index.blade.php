@@ -20,6 +20,6 @@
 		    @endslot
 		@endcomponent
 		
-		<rebates-year-tables :years="{{ json_encode($years) }}"></rebates-year-tables>
+		<rebates-year-tables :is_bank_level="false" :years="{{ json_encode($years) }}"></rebates-year-tables>
 	</div>
 @endsection
