@@ -162,6 +162,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 
 	Route::get('organisation', 'Admin\OrganisationController@index');
 
+	Route::get('markets', 'Admin\MarketController@index')->name('admin.markets.index');
+	Route::put('markets','Admin\MarketController@update')->name('admin.markets.update');
 });
 
 Route::group(['middleware' => ['auth']], function() {
