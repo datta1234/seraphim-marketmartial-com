@@ -3,9 +3,11 @@
 namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class TradeConfirmation extends Model
 {
+    use \App\Traits\ResolvesUser;
 	/**
 	 * @property integer $id
 	 * @property integer $send_user_id
@@ -32,7 +34,17 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        "send_user_id",
+        "receiving_user_id",
+        "trade_negotiation_id",
+        "stock_id",
+        "market_id",
+        "trading_account_id",
+        "trade_confirmation_status_id",
+        "trade_structure_id",
+        "user_market_request_id"
+    ];
 
 
     /**
@@ -143,9 +155,11 @@ class TradeConfirmation extends Model
 
     public function preFormatted()
     {
+        $organisation = $this->resolveOrganisation();
+        
         return [
             'id'                        => $this->id,
-            'organisation'              => "BANK ABC",
+            'organisation'              => $organisation ? $organisation->title : null,
 
             'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
@@ -159,7 +173,9 @@ class TradeConfirmation extends Model
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
 
-            'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
+
+            'date'                      => Carbon::now()->format("Y-m-d H:i:s"),
             
             'traded_at'                 => $this->tradeNegotiation->updated_at,
             'is_offer'                  => $this->tradeNegotiation->isOffer(),
@@ -455,4 +471,99 @@ class TradeConfirmation extends Model
 
       return $trade_confirmations_query;
     }
+
+
+    public function setUp($tradeNegotiation)
+    {
+
+        $marketNegotiation = $tradeNegotiation->marketNegotiation;
+        $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
+
+        $tradeConfirmation = self::create([
+            'send_user_id' => $tradeNegotiation->initiate_user_id,
+            'receiving_user_id' => $tradeNegotiation->recieving_user_id,
+            'trade_negotiation_id' => $tradeNegotiation->id,
+            'stock_id' => null,
+            'market_id' => $marketRequest->market_id,
+            'trade_structure_id' =>  $marketRequest->trade_structure_id,
+            'user_market_request_id' => $marketRequest->id,
+            'trading_account_id' => null,
+            'trade_confirmation_status_id' =>1,
+        ]);
+       
+
+
+        //3 index
+        //4 single 
+        $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
+        foreach($groups as $tradeStructureGroup) {
+
+            $tradeGroup = $tradeConfirmation->tradeConfirmationGroups()->create([
+                'trade_structure_group_id'  =>  $tradeStructureGroup->id,
+                'trade_confirmation_id'     =>  $tradeConfirmation->id,
+                "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
+                'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
+            ]);
+
+            $this->setUpItems($marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+        }
+
+        return $tradeConfirmation;
+    } 
+
+     /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param array  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    private function setUpItems($marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+    {
+
+                
+                   foreach($tradeStructureGroup->items as $item) {
+
+                    $value = null;
+                    switch ($item->title) {
+                        case 'is_offer':
+                        $value = $tradeNegotiation->is_offer ? 1 : 0;
+                        break;
+                        case 'Put':
+                        $value = null;
+                        break;
+                        case 'Call':
+                        $value = null;
+                        break;
+                        case 'Volatility':
+                        $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                        break;
+                        case 'Gross Premiums':
+                        $value = null;
+                        break;
+                        case 'Net Premiums':
+                        $value = null;
+                        break;
+                        case 'Future':
+                        $value = null;
+                        break;
+                        case 'Contract':
+                        $value = $tradeNegotiation->quantity; //quantity
+                        break;
+                    }
+
+
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                }
+            
+    }
+
 }

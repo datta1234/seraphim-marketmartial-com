@@ -17,6 +17,18 @@ class TradeConfirmationGroup extends Model
 	 * @property \Carbon\Carbon $updated_at
 	 */
 
+        /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        "trade_structure_group_id",
+        "trade_confirmation_id",
+        "is_options",
+        "user_market_request_group_id"
+    ];
+
 	/**
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

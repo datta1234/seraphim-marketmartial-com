@@ -3,7 +3,7 @@ import TCStructures from './tradeconfirmations/index';
 
 export default class TradeConfirmation extends BaseModel {
 
-    constructor(options) {
+    constructor(options,fees) {
       
         super();
 
@@ -20,7 +20,9 @@ export default class TradeConfirmation extends BaseModel {
             underlying_title : "",
             is_single_stock : "",
             traded_at : "",
-            is_offer : ""
+            is_offer : "",
+            brokerage_fee: [],
+            date: ""
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -30,16 +32,15 @@ export default class TradeConfirmation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
-
-     
+        this.brokerage_fee = fees;
     }
 
-    static parse(json)
+    static parse(json,fees)
     {
-        
+        console.log(fees);
         switch(json.trade_structure_title) {
             case "Outright":
-                   return new  TCStructures.TradeConfirmationOutright(json);
+                   return new  TCStructures.TradeConfirmationOutright(json,fees.options_brokarage_fees.Outright);
                 break;
             case "Risky":
                 //@TODO runRisky()
@@ -67,34 +68,33 @@ export default class TradeConfirmation extends BaseModel {
     }
 
  
-
-
-
-
     /*
     * formulas from the macros
     */
-    callOptiondelta(startDate,expiry,future,volatility)
+    callOptionDelta(startDate,expiry,future,strike,volatility)
     {
-        let tt = (expiry - startDate) / 365;
-
-        let callOptionDelta = ((future/strike) + 0.5 * volatility ^2 * tt) / (volatility * tt ^0.5);
-
-        return - this.normSdist(callOptionDelta);
+        let tt = expiry.diff(startDate, 'days',true) / 365;
+        let callOptionDelta = (this.Ln(future/strike) + 0.5 * Math.pow(volatility,2) * tt) / ( volatility * Math.pow(tt,0.5));
+        let COD = -this.normSdist(callOptionDelta);
+        console.log(COD);
+        return COD;
     }
 
-    putOptionDelta(startDate,expiry,future,volatility)
+    putOptionDelta(startDate,expiry,future,strike,volatility)
     {
-        let tt = (expiry - startDate) / 365;
-        let d1 = (this.Ln(startDate/strike) + 0.5 * volatility ^ 2 * tt) / ( volatility * tt ^ 0.5);
-        return this.normSdist(-d1);
+        let tt = expiry.diff(startDate, 'days',true) / 365;
+        let d1 = (this.Ln(future/strike) + 0.5 * Math.pow(volatility,2) * tt) / ( volatility * Math.pow(tt,0.5));       
+        let POD = this.normSdist(-d1);
+        console.log(POD);
+        return POD;
     }
 
-    callOptionPremium(startDate,expiry,future,volatility,singleStock)
+    callOptionPremium(startDate,expiry,future,strike,volatility,singleStock)
     {
-        let tt = (expiry - startDate) / 365;
-        let h = this.Ln((future/strike)) / (volatility * tt ^ 0.5) + (volatility * tt^0.5) /2;
-        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * tt ^ 0.5);
+        let tt = expiry.diff(startDate, 'days',true) / 365;
+
+        let h = this.Ln((future/strike)) / (volatility * Math.pow(tt,0.5)) + (volatility * tt^0.5) /2;
+        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * Math.pow(tt,0.5));
 
         if(singleStock){
             return (callOptionPremium*10).toFixed(0);
@@ -105,10 +105,10 @@ export default class TradeConfirmation extends BaseModel {
 
     putOptionPremium(startDate,expiry,future,strike,volatility,singleStock)
     {
-        let tt = (expiry - startDate) / 365;
-        let h = (this.Ln(future/strike)) / (volatility * tt ^ 0.5 ) / (volatility * tt ^ 0.5 ) / 2;
+        let tt = expiry.diff(startDate, 'days',true) / 365;
+        let h = (this.Ln(future/strike)) / (volatility * Math.pow(tt,0.5) ) / (volatility * Math.pow(tt,0.5) ) / 2;
 
-        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * tt ^ 0.5);
+        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * Math.pow(tt,0.5));
 
          if(singleStock){
             return (callOptionPremium*10).toFixed(0);

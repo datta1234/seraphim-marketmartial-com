@@ -17794,6 +17794,13 @@ input:checked + .slider:before {
   background-color: #1c7c74;
 }
 
+@media (min-width: 768px) {
+  .modal-xl .modal-md {
+    width: 90%;
+    max-width: 1200px;
+  }
+}
+
 .shader {
   width: 100%;
   height: 100%;

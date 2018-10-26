@@ -230,8 +230,7 @@ const app = new Vue({
                     tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
                   
  
-                        x = TradeConfirmation.parse(x);
-
+                        x = TradeConfirmation.parse(x,this.config('fees'));
                         self.trade_confirmations.push(x);   
                         return x;
                     });
@@ -501,6 +500,8 @@ const app = new Vue({
             ["trade_structure","trade_structure.json"],     // [ <namespace> , <file_path> ]
             ["condition_titles"],                           // [ <namespace> ] ( assumes fileanme == <namespace>.json )
             "market_conditions",                            //   <namespace> ( same assumption as above )
+            "fees",                           // [ <namespace> , <file_path> ]
+
         ])
         .catch(err => {
             console.error(err);

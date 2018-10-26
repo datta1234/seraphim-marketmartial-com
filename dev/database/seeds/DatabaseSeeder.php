@@ -47,9 +47,13 @@ class DatabaseSeeder extends Seeder
             $this->call(UserMarketRequestSeeder::class);
             $this->call(UserMarketRequestTradeablesSeeder::class);
             $this->call(UserMarketRequestItemSeeder::class);
-            $this->call(TradeConfirmationSeeder::class);
+
+            //remove confirmations for now and using the simple negotiation one
+            $this->call(TradeNegotiationSeeder::class);
+
+            /*$this->call(TradeConfirmationSeeder::class);
             $this->call(TradeConfirmationItemSeeder::class);
-            $this->call(BookedTradeSeeder::class);
+            $this->call(BookedTradeSeeder::class);*/
         }
 
         

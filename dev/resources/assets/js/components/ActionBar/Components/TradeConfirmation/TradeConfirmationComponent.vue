@@ -1,7 +1,7 @@
 <template>
 <div>  
     <p>Thank you for your trade! Please check before accepting.</p>
-    <p>Date: {{ trade_confirmation.organisation }} </p>
+    <p>Date: {{ trade_confirmation.date }} </p>
     <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
     <div style="Display:inline;">
         <h3>Option</h3>
@@ -26,7 +26,7 @@
 
         <tr v-for="option_group in trade_confirmation.option_groups">
             <td>
-              {{ option_group.is_offer ? "Sell" : "Buy" }}
+              {{ (option_group.is_offer != null ? (option_group.is_offer ? "Sell" : "Buy"):'') }}
             </td>
             <td>
                 {{ option_group.underlying_title }}
@@ -35,13 +35,13 @@
                 {{ option_group.strike }} 
             </td>
             <td>
-                {{ option_group.put_call }} 
+                {{ option_group.is_put ? "Put" : "call" }} 
             </td>
             <td>
-                {{ option_group.quantity }} 
+                -   
             </td>
             <td>
-                {{ option_group.quantity }} 
+                {{ option_group.contracts }} 
             </td>
             <td>
                 {{ option_group.expires_at }}                            
@@ -50,10 +50,10 @@
                 {{ option_group.volatility }}
             </td>
             <td>
-                {{ option_group.gross_premiums }}
+                {{ option_group.gross_prem }}
             </td>
             <td>
-                {{ option_group.net_premiums }}
+                {{ option_group.net_prem }}
             </td>
         </tr>
       </tbody>
@@ -75,21 +75,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="future_group in trade_confirmation.future_groups">
+        <tr v-for="(future_group, key) in trade_confirmation.future_groups">
             <td>
-                {{ future_group.is_offer ? "Sell" : "Buy" }}
+              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Sell" : "Buy"):'') }}
             </td>
             <td>
 
             </td>
             <td>
-                           
+                 - 
+               <!--   <b-form-input v-model="trade_confirmation.future_groups[key]['spot']" type="text"></b-form-input> -->
+         
             </td>
             <td>
-                <b-form-input v-model="proposed_trade_confirmation.spot_price" type="text"></b-form-input>
+                <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="text"></b-form-input>
             </td>
             <td>
-                <b-form-input v-model="proposed_trade_confirmation.future_reference" type="text"></b-form-input>
+                <b-form-input :disabled="true" v-model="trade_confirmation.future_groups[key]['contracts']" type="text"></b-form-input>
             </td>
             <td>
                 {{ future_group.expires_at }}     
@@ -100,7 +102,7 @@
 
     <b-row>
         <b-col md="5" offset-md="7">
-            <button type="button" class="btn mm-generic-trade-button w-100 mb-1">Update and calculate</button>
+            <button type="button" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
             <button type="button" class="btn mm-generic-trade-button w-100 mb-1">Send to counterparty</button>
              <div class="form-group">
                 <label for="exampleFormControlSelect1">Account Booking</label>
@@ -128,15 +130,11 @@
             type: Object
           }
         },
-        data() {
-            return {
-                proposed_trade_confirmation: new TradeConfirmation()
-            };
-        },
         methods: {
-            phaseOne: function()
+            phaseTwo: function()
             {
-                this.trade_confirmation.phaseOne();   
+                console.log("phaseTwo");
+                this.trade_confirmation.phaseTwo();   
             }
            
         },

@@ -22,7 +22,7 @@
             </div>
         </b-popover>
         
-           <b-modal class="mm-modal mx-auto" ref="confirmationModelRef"  size="lg" hide-footer title="Using Component Methods">
+           <b-modal class="mm-modal mx-auto modal-xl" ref="confirmationModelRef"  hide-footer title="Using Component Methods">
                 <trade-confirmation-component v-if="selected_trade_confirmation != null" :trade_confirmation="selected_trade_confirmation"></trade-confirmation-component>
               <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">Close Me</b-btn>
             </b-modal>

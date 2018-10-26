@@ -10,7 +10,7 @@ const TradeConfirmationOutright = {
         }
         this.class = class TradeConfirmationOutright extends TradeConfirmation {
 
-            constructor(options) {
+            constructor(options,fees) {
                 super();
 
                 const defaults = {
@@ -27,7 +27,9 @@ const TradeConfirmationOutright = {
                     traded_at : "",
                     is_offer : "",
                     option_groups: [],
-                    future_groups: []
+                    future_groups: [],
+                    brokerage_fee: [],
+                    date: null
                 }
                 // assign options with defaults
                 Object.keys(defaults).forEach(key => {
@@ -39,12 +41,12 @@ const TradeConfirmationOutright = {
                 });
 
                 if(options && options.structure_groups) {
-                    this.setUpOptionColoumns(options.structure_groups);
-                }
 
-                if(options && options.structure_groups) {
+                    this.setUpOptionColoumns(options.structure_groups);
                     this.setUpFutureColoumns(options.structure_groups);
                 }
+
+                this.brokerage_fee = fees;
 
             }
 
@@ -76,80 +78,82 @@ const TradeConfirmationOutright = {
                 }); 
             }
 
-            phaseOne()
+
+            phaseTwo()
             {
-                //apply logic for single stock
-                let buyer =  true;//@TODO setup if trader is a buyer or seller;
 
-                this.trade_structure_title = trade_confirmation.trade_structure_title;
-                this.underlying_title = trade_confirmation.underlying_title;
-                this.underlying_id = trade_confirmation.underlying_id;
+                let startDate = moment(this.date,"YYYY-MM-DD");
 
-                //Strike 
-                //strike 1
-                this.stike = trade_confirmation.strike;
+                //
+                let spotRef1  = this.option_groups[0].spot;
+                let zarnominal1  = this.option_groups[0].nominal;
+                let underlying1  = this.option_groups[0].underlying_title;
+
+                let ssForIndex  = this.is_single_stock;
 
 
-                /* nominals/contracts */
-                this.quantity = trade_confirmation.quantity;
+                let future1 = this.future_groups[0].future;
+                let contracts1 = this.future_groups[0].contracts;
 
-                /*Expiry*/
-                this.expiration[0] = trade_confirmation.expiration[0]; 
+                let expiry1 = moment(this.option_groups[0].expires_at, "YYYY-MM-DD");
 
-                /*volatilty*/
-                this.volatility = trade_confirmation.volatility;
+                let strike1 = this.option_groups[0].strike;
+                let volatility1 = (this.option_groups[0].volatility/100);//its a percentage
 
-                /* single stock (true) or index false*/
-                this.is_single_stock = trade_confirmation.is_single_stock;
-            }
 
-            phaseTwo(spotRef, Zarnominal1 ,underlying1,singleStock,is_offer)
-            {
-                let contracts = (Zarnominal1/ spotRef * 100).toFixed(0);
+                let putDirection1   = 1;
+                let callDirection1  = 1; 
+
+                let contracts  = null;
 
                 //determine weather put or call
          
                 //can reduce this logic
-                if(is_offer)
+                if(!this.future_groups[0].is_offer)
                 {
-                    let putDirection1   = 1;
-                    let callDirection1  = 1;   
-                }else
-                {
-                    let putDirection1  = -1;
-                    let callDirection1 = -1; 
+                    putDirection1  = -1;
+                    callDirection1 = -1; 
                 }
 
-                let POD1 = putOptionDelta(startDate,expiry,future,volatility) * putDirection1;
-                let COD1 = callOptionDelta(startDate,expiry,future,volatility) * callDirection1;
+                let POD1 = Math.round(this.putOptionDelta(startDate,expiry1,future1,strike1,volatility1)) * putDirection1;
+                let COD1 = Math.round(this.callOptionDelta(startDate,expiry1,future1,strike1,volatility1)) * callDirection1;
+
+                console.log("POD1",Math.abs(POD1));
+                console.log("COD1",Math.abs(COD1));
 
                 if(Math.abs(POD1) <= Math.abs(COD1))
                 {
+
                     //set the cell to a put
-                    let is_put = true;
-                    let gross_premiums /* cell(16,10) */= (putOptionPremium(startDate,expiry1,futuref1,strike1,volatility) * contracts).toFixed(0) * putDirection1;
-                    let contracts/*cell(21,6)*/ = POD1;
+                    this.option_groups[0].is_put = true;
+                    this.option_groups[0].gross_prem /* cell(16,10) */= (this.putOptionPremium(startDate,expiry1,future1,strike1,volatility1) * contracts1).toFixed(0) * putDirection1;
+                    contracts/*cell(21,6)*/ = POD1;
                 }else
                 {
-                    let is_put = false;
-                    let gross_premiums /* cell(16,10) */= (callOptionPremium(startDate,expiry1,futuref1,strike1,volatility) * contracts).toFixed(0) * putDirection1;
-                    let contracts/*cell(21,6)*/ = COD1;
+                    this.option_groups[0].is_put = false;
+                    this.option_groups[0].gross_prem /* cell(16,10) */= (this.callOptionPremium(startDate,expiry1,future1,strike1,volatility1) * contracts1).toFixed(0) * putDirection1;
+                    contracts/*cell(21,6)*/ = COD1;
                 }
 
                 // futures and deltas buy/sell
                 if(contracts < 0)
                 {
-                    is_offer = false;
+                    this.option_groups[0].is_offer  = false;
                 }else
                 {
-                    is_offer = true;
+                    this.option_groups[0].is_offer  = true;
                 }
 
-                contracts = Math.abs(contracts);
+                this.future_groups[0].contracts = Math.abs(contracts);
+
+                this.feesCalc();
             }
 
             feesCalc()
             {
+                //get the spot price ref.
+                let spotref = 
+                this.option_groups[0].net_prem =  (this.option_groups[0].nominal * this.brokerage_fee[0].index / this.future_groups[0].quantity + this.option_groups[0].gross_prem).toFixed(2);
 
             }
 

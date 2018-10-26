@@ -27,7 +27,8 @@ class TradeConfirmationSeeder extends Seeder
 					"traded" => true,
 					"quantity" => $is_offer ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
 					"is_offer" => $is_offer,
-					"is_distpute" => false
+					"is_distpute" => false,
+             
 	            ]);
 
 	    		$trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
@@ -43,7 +44,9 @@ class TradeConfirmationSeeder extends Seeder
     			        'receiving_user_id' => $tradeNegotiation->recieving_user_id,
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
-    			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
+                        "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
@@ -89,7 +92,9 @@ class TradeConfirmationSeeder extends Seeder
     			        'receiving_user_id' => $tradeNegotiation->recieving_user_id,
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
-    			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
+                        "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
@@ -124,7 +129,9 @@ class TradeConfirmationSeeder extends Seeder
     			        'receiving_user_id' => App\Models\UserManagement\User::inRandomOrder()->first()->id,
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
-    			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
+                        "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,    			        
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),

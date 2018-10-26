@@ -81,4 +81,14 @@ class TradeStructureGroup extends Model
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
             'trade_structure_group_id');
     }
+
+        /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationItems()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationItem',
+            'trade_confirmation_group_id');
+    }
 }
