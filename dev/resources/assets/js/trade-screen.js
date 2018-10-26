@@ -22,9 +22,9 @@ window.Echo = new Echo({
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
 
-import Datepicker from 'vuejs-datepicker'
-import BootstrapVue from 'bootstrap-vue'
-import Toasted from 'vue-toasted'
+import Datepicker from 'vuejs-datepicker';
+import BootstrapVue from 'bootstrap-vue';
+import Toasted from 'vue-toasted';
 Vue.use(BootstrapVue)
 Vue.use(Toasted, {
     position: 'top-center',
@@ -37,8 +37,9 @@ Vue.use(Toasted, {
     },
     theme: 'primary'
 })
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -59,6 +60,8 @@ import { EventBus } from './lib/EventBus.js';
 Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
+// typeahead
+Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 

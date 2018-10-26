@@ -27,8 +27,10 @@
 
 <script>
     import IndexController from './Controllers/IndexControllerComponent.vue';
+    import SingleController from './Controllers/SingleControllerComponent.vue';
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
+    import StockSelection from './Components/StockSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     import Details from './Components/DetailsComponent.vue';
@@ -39,7 +41,9 @@
         components: {
             StepSelection,
             IndexController,
+            SingleController,
             MarketSelection,
+            StockSelection,
             StructureSelection,
             ExpirySelection,
             Details,
@@ -60,6 +64,7 @@
                 controllers: {
                     Selections: StepSelection,
                     Index: IndexController,
+                    Single: SingleController
                 },
             };
         },
