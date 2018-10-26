@@ -1,0 +1,78 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+/*use DB;*/
+
+class UpdateTradeConfirmationsAddingSendingReceivingAccounts extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        
+        Schema::table('trade_confirmations', function (Blueprint $table) {
+            $table->dropForeign(['trading_account_id']);
+            $table->dropColumn(['trading_account_id']);
+
+            $table->integer('send_trading_account_id')->nullable()->unsigned();
+            $table->integer('receiving_trading_account_id')->nullable()->unsigned();
+
+            $table->foreign('send_trading_account_id')
+                ->references('id')->on('trading_accounts');
+            $table->foreign('receiving_trading_account_id')
+                ->references('id')->on('trading_accounts');      
+            
+            //self::seedTradeConfirmationTradingAccounts(true);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('trade_confirmations', function (Blueprint $table) {
+            $table->dropForeign(['send_trading_account_id', 'receiving_trading_account_id']);
+            $table->dropColumn(['send_trading_account_id', 'receiving_trading_account_id']);
+            
+            $table->integer('trading_account_id')->nullable()->unsigned();
+
+            $table->foreign('trading_account_id')
+                ->references('id')->on('trading_accounts');
+            
+            //self::seedTradeConfirmationTradingAccounts(false);
+        });
+    }
+
+    private static function seedTradeConfirmationTradingAccounts($is_up)
+    {/*
+        $test = DB::table('trade_confirmations')
+        ->join('users AS send_users', function ($join) {
+            $join->on('trade_confirmations.send_user_id', '=', 'users.id');
+        })->join('trading_accounts AS send_trading_accounts', function ($join) {
+            $join->on('trading_accounts.user_id', '=', 'send_users.id')
+                ->where('trading_accounts.market_id', '=', 'trade_confirmations.market_id');
+
+        })->join('users AS receiving_users', function ($join) {
+            $join->on('trade_confirmations.receiving_user_id', '=', 'users.id');
+        })->join('trading_accounts AS receiving_trading_accounts', function ($join) {
+            $join->on('trading_accounts.user_id', '=', 'receiving_users.id')
+                ->where('trading_accounts.market_id', '=', 'trade_confirmations.market_id');
+        })
+        ->update( ($is_up ? [
+            'trade_confirmations.send_trading_account_id'=> DB::raw("user_market_requests.id"),
+            'trade_confirmations.receiving_trading_account_id'=> DB::raw("user_market_requests.id"),
+        ] : [
+            'trade_confirmations.trading_account_id'=> DB::raw("user_market_requests.id"),
+        ]));
+
+        dd($test->get()->toArray());*/
+    }
+}

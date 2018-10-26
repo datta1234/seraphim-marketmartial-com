@@ -14,7 +14,7 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	  
+	
 });
 
 /*
