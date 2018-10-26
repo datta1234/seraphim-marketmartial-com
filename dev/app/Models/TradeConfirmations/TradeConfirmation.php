@@ -321,16 +321,23 @@ class TradeConfirmation extends Model
         return $resolved_items;
     }
 
-    public function preFormatStats($user = null)
+    public function resolveMarketStock() {
+        // Resolve stock / market
+        if($this->stock) {
+            return $this->stock->code;
+        } else {
+            return $this->market->title;
+        }
+    }
+
+    public function preFormatStats($user = null, $is_Admin = false)
     {   
-        // @TODO - Add logic for market to be a single stock name if applicable
-        
         $user_market_request_items = $this->resolveUserMarketRequestItems();
         
         $data = [
             "id" => $this->id,
             "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-            "market" => $this->market->title,
+            "market" => $this->resolveMarketStock(),
             "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
             "nominal" =>  $user_market_request_items["nominal"],
             "strike" =>  $user_market_request_items["strike"],
@@ -347,7 +354,13 @@ class TradeConfirmation extends Model
 
         if($market_negotiation->offer_qty) {
             $data["volatility"][] = $market_negotiation->offer_qty;
-        }        
+        }
+
+        if($is_Admin) {
+            $data["seller"] = $this->sendUser->organisation->title;
+            $data["buyer"] = $this->recievingUser->organisation->title;
+            return $data;
+        }
 
         if($user === null) {
             $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';

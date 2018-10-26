@@ -17875,7 +17875,8 @@ input:checked + .slider:before {
   font-size: 4rem;
 }
 
-.monthly-activity .card-tab-button {
+.monthly-activity .card-tab-button,
+.bank-activity .card-tab-button {
   width: 7rem;
 }
 
@@ -17884,14 +17885,16 @@ input:checked + .slider:before {
 }
 
 .monthly-activity .mm-button,
-.open-interests .mm-button {
+.open-interests .mm-button,
+.bank-activity .mm-button {
   color: #ffffff;
   background-color: #939598;
   border-color: #939598;
 }
 
 .monthly-activity .mm-button.active,
-.open-interests .mm-button.active {
+.open-interests .mm-button.active,
+.bank-activity .mm-button.active {
   background-color: #1c7172;
   border-color: #1c7172;
 }
@@ -17901,14 +17904,16 @@ input:checked + .slider:before {
 }
 
 .all-market-activity .mm-button.mm-nav-button,
-.monthly-activity .mm-button.mm-nav-button {
+.monthly-activity .mm-button.mm-nav-button,
+.bank-activity .mm-button.mm-nav-button {
   color: #ffffff;
   background-color: #939598;
   border-color: #939598;
 }
 
 .all-market-activity .mm-button.mm-nav-button.active,
-.monthly-activity .mm-button.mm-nav-button.active {
+.monthly-activity .mm-button.mm-nav-button.active,
+.bank-activity .mm-button.mm-nav-button.active {
   background-color: #269a9b;
   border-color: #269a9b;
 }

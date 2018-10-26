@@ -50,15 +50,6 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 
 	Route::resource('user-pref', 'UserPrefController');
-		
-		//remove
-		Route::get('/my-activity', 'Stats\StatsController@show')->name('my_activity.show');
-		Route::get('/my-activity/year', 'Stats\StatsController@myYearActivity')
-			->name('my_activity.year');
-		Route::get('/my-activity/markets', 'Stats\MarketController@index')
-			->name('my_activity.markets');
-		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
-			->name('my_activity.expirations');
 
 	Route::group(['prefix' => 'stats'], function() {
 		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
@@ -74,6 +65,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	});
 
 	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
 });
 
 
@@ -154,7 +146,22 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 			->name('activity.upload_safex_data');
 		Route::post('/open-interest','Stats\OpenInterestControlller@store')
 			->name('open-interest.upload_data');
-    }); 
+		Route::get('/bank-activity', 'Stats\ActivityControlller@adminShow')->name('admin.activity.show');
+    });
+
+    Route::resource('booked-trades', 'Admin\BookedTradesController', [
+		'as' => 'admin'
+	]);
+	Route::get('booked-trades-csv','Admin\BookedTradesController@downloadCsv');
+
+	Route::resource('rebates', 'Admin\RebatesController', [
+		'as' => 'admin'
+	]);
+	Route::get('rebates-csv','Admin\RebatesController@downloadCsv');
+	Route::get('/rebates-summary', 'Admin\RebatesController@summaryIndex')->name('admin.rebate_summary.index');
+
+	Route::get('organisation', 'Admin\OrganisationController@index');
+
 });
 
 Route::group(['middleware' => ['auth']], function() {

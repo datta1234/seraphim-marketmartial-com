@@ -7,6 +7,8 @@ use App\Models\Trade\Rebate;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\StructureItems\Market;
+use App\Models\UserManagement\User;
+use App\Http\Requests\Rebates\SummaryYearRequest;
 
 class RebatesSummaryController extends Controller
 {
@@ -26,19 +28,30 @@ class RebatesSummaryController extends Controller
             ->groupBy(function ($item, $key) {
                 return Carbon::parse($item['trade_date'])->format('My');
             });
-
+        $total_rebates = 0;
         foreach ($date_grouped_rebates as $date => $rebate) {
+            // Calculate the total organisation rebate amount for the year
+            $total_rebates += $rebate->sum(function ($single) {
+                return $single->bookedTrade->amount;
+            });
+
             // group market
             $date_grouped_rebates[$date] = $rebate->groupBy(function ($item, $key) {
-                return $item->bookedTrade->tradeConfirmation->market->title;
+                return $item->bookedTrade->market->title;
             });
         }
-        
+
         foreach ($date_grouped_rebates as $date => $market_rebates) {
             foreach ($market_rebates as $maket => $rebates) {
-                foreach ($rebates as $key => $rebate) {
-                    $rebate->pluck('');
-                    $rebate['amount'] = $rebate->
+                $market_rebates[$maket] = $rebates->groupBy(function ($item, $key) {
+                    return $item->user->full_name;
+                });
+
+                foreach ($market_rebates[$maket] as $key => $rebate) {
+                    //dd($rebates);
+                    $market_rebates[$maket][$key] = $rebates->sum(function ($single) {
+                        return $single->bookedTrade->amount;
+                    });
                 }
             }
         }
@@ -46,21 +59,11 @@ class RebatesSummaryController extends Controller
         $years = Rebate::where('organisation_id', $user->organisation->id)->select(
             DB::raw("YEAR(rebates.trade_date) as year")
         )->groupBy('year')->get();
+        
+        $users = User::where('organisation_id', $user->organisation->id)->pluck('full_name');
 
-        $markets = Market::all()->pluck('title')->toArray();
-        // Logic to remove any occurrences of Delta One
-        $index = null;
-        foreach ($markets as $key => $market) {
-            $index = strtoupper(str_replace(" ", "",$market)) == 'DELTAONE' ? $key : $index;
-            if($index !== null) {
-                unset($markets[$index]);
-                $index = null;
-            }
-        }
-
-        dd($markets,$rebates, $years->toArray());
-
-        return view('rebates_summary.index')->with(compact('rebates', 'years'));
+        return view('rebates_summary.index')
+            ->with(compact('date_grouped_rebates', 'years', 'users', 'total_rebates'));
     }
 
     /**
@@ -90,21 +93,23 @@ class RebatesSummaryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+    public function show(SummaryYearRequest $request)
     {
-        if($request->has('year')) {
-            $user = $request->user();
-            $rebates = Rebate::where('organisation_id', $user->organisation->id)
-                ->where('is_paid', true)
-                ->whereYear('trade_date', $request->input('year'))
-                ->get()
-                ->transform(function($rebate) use ($user){
-                    return $rebate->preFormat($user);
-                })/*->groupBy(function ($item, $key) {
-                    return Carbon::parse($item['trade_date'])->format('My');
-                })*/;
+        $user = $request->user();
+        $rebates_query = Rebate::where('is_paid', true)->whereYear('trade_date', $request->input('year'));
+
+        if($user->role_id != 1) {
+            $rebates_query = $rebates_query->where('organisation_id', $user->organisation->id);
         }
-        dd($rebates, $user->organisation->id);
+
+        $rebates = $rebates_query->orderBy("trade_date", "ASC")->paginate(10);
+
+
+        $rebates->transform(function($rebate) {
+            return $rebate->preFormat();
+        });
+        
+        return response()->json($rebates);
     }
 
     /**

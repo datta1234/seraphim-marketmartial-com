@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserStatusRequest extends FormRequest
+class RebateUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class UserStatusRequest extends FormRequest
     public function rules()
     {
         return [
-            'verified' => 'required_without:active|boolean',
-            'active' => 'required_without:verified|boolean',
+            'is_paid' => 'required|boolean',
         ];
     }
 }

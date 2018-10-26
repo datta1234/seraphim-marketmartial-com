@@ -23,7 +23,7 @@
 </template>
 
 <script>
-	import BarGraph from './Components/BarGraph.js';
+	import BarGraph from '../BarGraph.js';
     export default {
     	components: {
 	      	BarGraph
@@ -108,7 +108,6 @@
 				      	data: this.setData(set, data),
             		});
 		        });
-                console.log(this.active_data_set);
             },
             setData(set, data) {
             	let count_array = [];
@@ -132,7 +131,6 @@
 	        	})
 	            .then(activityResponse => {
 	                if(activityResponse.status == 200) {
-	                    console.log(activityResponse);
 	                    this.graph_data = activityResponse.data;
 	        			this.setChartData(activityResponse.data[this.active_market],this.active_market);    
 	                } else {

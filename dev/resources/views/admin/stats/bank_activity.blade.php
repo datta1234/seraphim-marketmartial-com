@@ -7,17 +7,17 @@
 		{{-- Monthly Activity Card --}}
 		@component('partials.content_card')
 		    @slot('header')
-		        <h2 class="mt-2 mb-2">Monthly Activity</h2>
+		        <h2 class="mt-2 mb-2">Bank Activity</h2>
 		    @endslot
 		    @slot('title')
 		    @endslot
 		    @slot('decorator')
 		    @endslot
 		    @slot('body')
-		        <monthly-activity :market_data="{{ json_encode($graph_data) }}"></monthly-activity>
+		        <bank-activity :market_data="{{ json_encode($graph_data) }}"></bank-activity>
 		    @endslot
 		@endcomponent
 		
-		<activity-year-tables :is_bank_level="false" :is_my_activity="true" :years="{{ json_encode($years) }}"></activity-year-tables>
+		<activity-year-tables :is_bank_level="true" :is_my_activity="false" :years="{{ json_encode($years) }}"></activity-year-tables>
 	</div>
 @endsection
