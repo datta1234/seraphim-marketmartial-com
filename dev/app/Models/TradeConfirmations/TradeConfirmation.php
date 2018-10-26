@@ -15,17 +15,7 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $traiding_account_id
-	 * @property double $spot_price
-	 * @property double $future_reference
-	 * @property double $near_expiery_reference
-	 * @property double $contracts
-	 * @property double $puts
-	 * @property double $calls
-	 * @property double $delta
-	 * @property double $gross_premiums
-	 * @property double $net_premiums
-	 * @property boolean $is_confirmed
+	 * @property integer $trading_account_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -42,18 +32,8 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'spot_price',
-		'future_reference',
-		'near_expiery_reference',
-		'contracts',
-		'puts',
-		'calls',
-		'delta',
-		'gross_premiums',
-		'net_premiums',
-		'is_confirmed',
-    ];
+    protected $fillable = [];
+
 
     /**
      * The attributes that should be mutated to dates.
@@ -141,6 +121,39 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
+    public function preFormatted()
+    {
+        $marketRequest = $this->tradeNegotiation->userMarket->userMarketRequest;
+        return [
+            'id'                        => $this->id,
+            'organisation'              => "BANK ABC",
+            'spot_price'                => $this->spot_price,
+            'future_reference'          => $this->future_reference,
+            'near_expiery_reference'    => $this->near_expiery_reference,
+            'contracts'                 => $this->contracts,
+            'puts'                      => $this->puts,
+            'calls'                     => $this->calls,
+            'delta'                     => $this->delta,
+            'gross_premiums'            => $this->gross_premiums,
+            'net_premiums'              => $this->net_premiums,
+            'is_confirmed'              => $this->is_confirmed,
+            'trade_structure_title'     => $marketRequest->tradeStructure->title,
+            'expiration'                => $marketRequest->getDynamicItems(['Expiration Date','Expiration Date 1','Expiration Date 2']),
+            'strike'                    => $marketRequest->getDynamicItems(['Strike']),
+            'quantity'                  => $marketRequest->getDynamicItems(['Quantity']),
+            'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
+            'market_request_id'         => $marketRequest->id,
+            'label'                     => $marketRequest->title,
+            'underlying_id'             => $marketRequest->underlying->id,
+            'underlying_title'          => $marketRequest->underlying->title,
+            'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            'traded_at'                 => $this->tradeNegotiation->updated_at,
+            'is_offer'                  => $this->tradeNegotiation->isOffer(),
+
+
+        ];
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -165,8 +178,40 @@ class TradeConfirmation extends Model
     */
     public function tradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','traiding_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
+
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id');
+    }
+
+    public function scopeSentByMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+    public function scopeSentToMyOrganisation($query, $organisation_id)
+    {
+       return $query->where(function ($q)  use ($organisation_id) {
+                $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
+                    $qq->where('organisation_id', $organisation_id);
+                });
+            }
+        );
+    }
+
+
 
     public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
     {
@@ -202,20 +247,15 @@ class TradeConfirmation extends Model
         });
     }
 
-    public function preFormatStats($user = null)
+    public function resolveUserMarketRequestItems()
     {
-        $data = [
-            "id" => $this->id,
-            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-            "market" => $this->market->title,
-            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
-            "nominal" => array(),
-            "strike" => array(),
+        $resolved_items = [
             "expiration" => array(),
+            "strike" => array(),
             "strike_percentage" => array(),
-            "volatility" => array(),
+            "nominal" => array(),
         ];
-        
+
         // Get the user market request items
         $user_market_request_items = array();
         $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
@@ -233,23 +273,51 @@ class TradeConfirmation extends Model
                         case 'Expiration Date':
                         case 'Expiration Date 1':
                         case 'Expiration Date 2':
-                                $data["expiration"][] = $item->value;
+                                $resolved_items["expiration"][] = $item->value;
                             break;
                         case 'Strike':
-                            $data["strike"][] = $item->value;
+                            $resolved_items["strike"][] = $item->value;
                             if($this->spot_price !== null) {
-                                $data["strike_percentage"][] = round($item->value/$this->spot_price, 2);
+                                $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
                             } else {
-                                $data["strike_percentage"] = null;
+                                $resolved_items["strike_percentage"] = null;
                             }
                             break;
                         case 'Quantity':
-                                $data["nominal"][] = $item->value;
+                                $resolved_items["nominal"][] = $item->value;
                             break;
                     }
                 }    
             }   
         }
+        return $resolved_items;
+    }
+
+    public function resolveMarketStock() {
+        // Resolve stock / market
+        if($this->stock) {
+            return $this->stock->code;
+        } else {
+            return $this->market->title;
+        }
+    }
+
+    public function preFormatStats($user = null, $is_Admin = false)
+    {   
+        $user_market_request_items = $this->resolveUserMarketRequestItems();
+        
+        $data = [
+            "id" => $this->id,
+            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+            "market" => $this->resolveMarketStock(),
+            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
+            "nominal" =>  $user_market_request_items["nominal"],
+            "strike" =>  $user_market_request_items["strike"],
+            "expiration" =>  $user_market_request_items["expiration"],
+            "strike_percentage" =>  $user_market_request_items["strike_percentage"],
+            "volatility" => array(),
+        ];
+        
         $market_negotiation = $this->tradeNegotiation->marketNegotiation;
         // volatility
         if($market_negotiation->bid_qty) {
@@ -258,7 +326,13 @@ class TradeConfirmation extends Model
 
         if($market_negotiation->offer_qty) {
             $data["volatility"][] = $market_negotiation->offer_qty;
-        }        
+        }
+
+        if($is_Admin) {
+            $data["seller"] = $this->sendUser->organisation->title;
+            $data["buyer"] = $this->recievingUser->organisation->title;
+            return $data;
+        }
 
         if($user === null) {
             $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
@@ -312,7 +386,7 @@ class TradeConfirmation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public static function basicSearch($term = null,$orderBy="updated_at",$order='ASC', $filter = null)
+    public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
 
         // Search markets
@@ -326,15 +400,15 @@ class TradeConfirmation extends Model
 
         // Apply Filters
         if($filter !== null) {
-            if($filter["filter_date"] !== null) {
+            if(!empty($filter["filter_date"])) {
                 $trade_confirmations_query->whereDate('updated_at', $filter["filter_date"]);
             }
 
-            if($filter["filter_market"] !== null) {
+            if(!empty($filter["filter_market"])) {
                 $trade_confirmations_query->where('market_id', $filter["filter_market"]);
             }
 
-            if($filter["filter_expiration"] !== null) {
+            if(!empty($filter["filter_expiration"])) {
                 $trade_confirmations_query->whereHas('tradeNegotiation', function ($query) use ($filter) {
                     $query->whereHas('userMarket', function ($query) use ($filter) {
                         $query->whereHas('userMarketRequest', function ($query) use ($filter) {
@@ -381,5 +455,5 @@ class TradeConfirmation extends Model
         }*/
 
       return $trade_confirmations_query;
-  }
+    }
 }

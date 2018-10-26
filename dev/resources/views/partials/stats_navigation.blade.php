@@ -1,14 +1,27 @@
 <div class="card-group mt-4">
-	<div class="card text-center stats-nav-card {{ Request::is('stats/my-activity') ? 'active' : '' }}">
-		<a class="" href="{{ route('activity.show') }}">
-			<div class="card-body">
-				<h2><span class="icon icon-screen"></span></h2>
-                <h5 class="front-title">
-                    My Activity
-                </h5>
-			</div>
-		</a>
-    </div>
+	@if(Auth::user()->role_id == 1)
+		<div class="card text-center stats-nav-card {{ Request::is('admin/stats/bank-activity') ? 'active' : '' }}">
+			<a class="" href="{{ route('admin.activity.show') }}">
+				<div class="card-body">
+					<h2><span class="icon icon-screen"></span></h2>
+	                <h5 class="front-title">
+	                    Bank Activity
+	                </h5>
+				</div>
+			</a>
+	    </div>
+	@else
+		<div class="card text-center stats-nav-card {{ Request::is('stats/my-activity') ? 'active' : '' }}">
+			<a class="" href="{{ route('activity.show') }}">
+				<div class="card-body">
+					<h2><span class="icon icon-screen"></span></h2>
+	                <h5 class="front-title">
+	                    My Activity
+	                </h5>
+				</div>
+			</a>
+	    </div>
+	@endif
     <div class="card text-center stats-nav-card {{ Request::is('stats/market-activity') ? 'active' : '' }}">
 		<a class="" href="{{ route('activity.index') }}">
 			<div class="card-body">
@@ -31,4 +44,6 @@
     </div>
 </div>
 
-<upload-csv></upload-csv>
+@if(Auth::user()->role_id == 1)
+	<upload-csv></upload-csv>
+@endif

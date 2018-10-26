@@ -117,7 +117,7 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function markets()
+    public function market()
     {
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
@@ -606,6 +606,32 @@ class UserMarketRequest extends Model
         }
     }
 
+    public function getDynamicItems($attr)
+    {
+       $query = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
+                $q->whereHas('userMarketRequest',function($qq){
+                    $qq->where('id',$this->id);
+                });
+            });
 
+       if(!is_array($attr))
+       {
+           $query = $query->where('title',$attr);
+       }else
+       {
+            $query = $query->whereIn('title',$attr); 
+       }
+        return $query ->get()
+        ->map(function($item){
+            return $item->value;
+        });
+        
+    }
+
+    public function getUnderlyingAttribute()
+    {
+        //@TODO for sigle stock set up the relations and update method with tradeables
+        return $this->market;
+    }
 
 }

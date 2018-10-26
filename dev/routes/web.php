@@ -14,8 +14,7 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	$marketRequest = App\Models\MarketRequest\UserMarketRequest::find(1);
-	dd($marketRequest->getDynamicItem("Quantity"));
+	  
 });
 
 /*
@@ -51,15 +50,6 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 
 	Route::resource('user-pref', 'UserPrefController');
-		
-		//remove
-		Route::get('/my-activity', 'Stats\StatsController@show')->name('my_activity.show');
-		Route::get('/my-activity/year', 'Stats\StatsController@myYearActivity')
-			->name('my_activity.year');
-		Route::get('/my-activity/markets', 'Stats\MarketController@index')
-			->name('my_activity.markets');
-		Route::get('/my-activity/expirations', 'Stats\SafexExpirationDateController@index')
-			->name('my_activity.expirations');
 
 	Route::group(['prefix' => 'stats'], function() {
 		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
@@ -73,6 +63,9 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 		
 		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
 	});
+
+	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
 });
 
 
@@ -84,6 +77,10 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
+	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
+		'only' => ['store','index']
+	]);
+
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
     Route::get('stock', 'TradeScreen\StockController@index');
 
@@ -94,7 +91,6 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
     
 
-
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
     
     Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
@@ -103,9 +99,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 		'only' => ['store','index']
 	]);
 
-	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
-		'only' => ['store','index']
-	]);
+	
 
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
@@ -152,5 +146,26 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 			->name('activity.upload_safex_data');
 		Route::post('/open-interest','Stats\OpenInterestControlller@store')
 			->name('open-interest.upload_data');
-	});
+		Route::get('/bank-activity', 'Stats\ActivityControlller@adminShow')->name('admin.activity.show');
+    });
+
+    Route::resource('booked-trades', 'Admin\BookedTradesController', [
+		'as' => 'admin'
+	]);
+	Route::get('booked-trades-csv','Admin\BookedTradesController@downloadCsv');
+
+	Route::resource('rebates', 'Admin\RebatesController', [
+		'as' => 'admin'
+	]);
+	Route::get('rebates-csv','Admin\RebatesController@downloadCsv');
+	Route::get('/rebates-summary', 'Admin\RebatesController@summaryIndex')->name('admin.rebate_summary.index');
+
+	Route::get('organisation', 'Admin\OrganisationController@index');
+
+});
+
+Route::group(['middleware' => ['auth']], function() {
+		Route::get('assemble/oldstyle', function () {
+        return view('assemble.oldstyle')->with(['is_admin_update'=>false]);
+    }); 
 });

@@ -79,7 +79,6 @@ class UserMarketRequestSeeder extends Seeder
 
                         $userMarket->current_market_negotiation_id = $marketNegotiation->id;
                         $userMarket->save();
-                        var_dump($interestUser->email);
                     }
 
 

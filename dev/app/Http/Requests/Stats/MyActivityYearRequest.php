@@ -32,6 +32,7 @@ class MyActivityYearRequest extends FormRequest
             'filter_market' => 'exists:markets,id|nullable',
             'filter_expiration' => 'date_format:d M Y|nullable',
             'is_my_activity' => 'boolean',
+            'is_bank_level' => 'boolean',
         ];
     }
 }

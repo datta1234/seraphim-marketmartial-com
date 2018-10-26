@@ -294,6 +294,7 @@ class User extends Authenticatable
      * @param string $term
      * @param string $orderBy
      * @param string $order
+     * @param string  $filter
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
@@ -339,8 +340,8 @@ class User extends Authenticatable
 
         $UserQuery->orderBy($orderBy,$order);
 
-      return $UserQuery;
-  }
+        return $UserQuery;
+    }
 
     /**
      * Determines if a user has been verified and is active

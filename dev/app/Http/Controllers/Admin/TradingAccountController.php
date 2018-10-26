@@ -38,7 +38,9 @@ class TradingAccountController extends Controller
             }     
         }
 
-        $emails = $user->emails()->with('defaultLabel')->get();//get ones that have already been stored
+        //get ones that have already been stored
+        $emails = $user->emails()->with('defaultLabel')->get();
+
         // Used to determine admin interest update for the view
         $is_admin_update = true;
         return view('trading_account.edit')->with(compact('user','markets','trading_accounts','emails','is_admin_update'));
@@ -53,18 +55,18 @@ class TradingAccountController extends Controller
      */
     public function update(TradingAccountRequest $request, User $user)
     {
-        //TODO - change SIZWE logic to fit admin
         $tradingAccounts = $request->input('trading_accounts');
         $emails = $request->has('email') ? $request->input('email') : [];
-        $savedModels = $user->tradingAccounts()->with('market')->get();//get once that have alread been stored
-        $savedEmailModels = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
+        //get once that have alread been stored
+        $savedModels = $user->tradingAccounts()->with('market')->get();
+        //get once that have alread been stored
+        $savedEmailModels = $user->emails()->with('defaultLabel')->get();
 
         $tradingAccountModels = [];
         $emailModels = [];
         
         foreach ($tradingAccounts as $tradingAccount) 
         {
-    
             if(array_key_exists('id', $tradingAccount) || (!array_key_exists('id', $tradingAccount) && ($tradingAccount['safex_number'] != null || $tradingAccount['sub_account'] !=null))) 
             {
                  $tradingAccountModel = array_key_exists('id', $tradingAccount) ? $savedModels->firstWhere('id',$tradingAccount['id']) : New TradingAccount(); 

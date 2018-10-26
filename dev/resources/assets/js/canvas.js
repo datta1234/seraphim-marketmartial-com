@@ -47,6 +47,11 @@ Vue.component('day-month-picker', require('./components/Profile/Components/DayMo
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
 //Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
+Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue'));
+Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue'));
+Vue.component('download-csv', require('./components/Admin/downloadCsvComponent.vue'));
+Vue.component('bank-activity', require('./components/Admin/Stats/BankActivityComponent.vue'));
+Vue.component('rebates-assigned', require('./components/Admin/Rebates/RebatesAssignedComponent.vue'));
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
@@ -55,6 +60,10 @@ Vue.component('all-market-activity', require('./components/Stats/AllMarketActivi
 Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue'));
 Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue'));
 Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue'));
+
+// Rebate Componenets
+Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));
+Vue.component('rebates-year-tables', require('./components/Rebates/RebatesYearTablesComponent.vue'));
 
 Vue.mixin({
     methods: {
@@ -87,14 +96,21 @@ Vue.mixin({
         splitValHelper (val, splitter, frequency) {
             let tempVal = ('' + val);
             let floatVal = '';
+            let sign = '';
+            //Check if our passed value is negative signed
+            if( ("" + val).indexOf('-') !== -1 ) 
+            {
+                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
+                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
+            }
             //Check if our passed value is a float
-            if( ("" + val).indexOf('.') !== -1 ) 
+            if( ("" + tempVal).indexOf('.') !== -1 ) 
             {
                 floatVal = tempVal.slice(tempVal.indexOf('.'));
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));
             }
             //Creates an array of chars reverses and itterates through it
-            return tempVal.split('').reverse().reduce(function(x,y) {
+            return sign + tempVal.split('').reverse().reduce(function(x,y) {
                 //adds a space on the spesified frequency position
                 if(x[x.length-1].length == frequency)
                 {

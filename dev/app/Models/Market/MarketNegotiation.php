@@ -754,6 +754,11 @@ class MarketNegotiation extends Model
         return $data;
     }
 
+    public function getvolatilityAttribute()
+    {
+        return $this->tradeNegotiations()->first()->is_offer ? $this->offer : $this->bid;
+    }
+
 
     //     /**
     // * Return pre formatted request for frontend

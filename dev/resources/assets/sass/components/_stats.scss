@@ -49,11 +49,19 @@
 	}
 }
 
-.monthly-activity {
+.monthly-activity, .bank-activity {
 	.card-tab-button {
 		width: 7rem;
 	}
+}
 
+.open-interests {
+	.card-tab-button {
+		width: 6rem;
+	}
+}
+
+.monthly-activity, .open-interests, .bank-activity {
 	.mm-button {
 		color: $mm-white;
 		background-color: $stats-warm-grey;
@@ -72,7 +80,7 @@
 	}
 }
 
-.all-market-activity, .monthly-activity {
+.all-market-activity, .monthly-activity, .bank-activity {
 	.mm-button.mm-nav-button {
 		color: $mm-white;
 		background-color: $stats-warm-grey;

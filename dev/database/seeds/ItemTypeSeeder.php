@@ -21,6 +21,11 @@ class ItemTypeSeeder extends Seeder
                 'id' => 2,
                 'title' => 'double',
                 'validation_rule' => 'required|numeric'
+            ],
+            [
+                'id' => 3,
+                'title' => 'boolean',
+                'validation_rule' => 'required"boolean'
             ]
         ]);
     }

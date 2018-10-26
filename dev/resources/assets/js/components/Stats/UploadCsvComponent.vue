@@ -31,6 +31,26 @@
                     <b-form-file v-model="modal_data.file" ref="csvfileinput"></b-form-file>
                 </b-col>
             </b-row>
+            
+            <!-- Errors -->
+            <div class="upload-errors" v-if="upload_errors.length > 0">
+                <b-button v-b-toggle.errorCollapse class="mm-error-button w-100 mt-4">
+                    Errors ({{ upload_errors.length }})
+                    <span class="icon icon-solid-arrow-down float-right"></span>
+                </b-button>
+                <b-collapse id="errorCollapse">
+                    <b-card class="error-card">
+                        <div v-for="(line_error, index) in upload_errors" class="error-block">
+                            <p class="mb-0">
+                                Line: {{parseInt(line_error.line) + 1}}, field: {{line_error.field}}
+                            </p>
+                            <ul>
+                                <li v-for="(error, index) in line_error.errors">{{error}}</li>
+                            </ul>
+                        </div>
+                    </b-card>
+                </b-collapse>
+            </div>
 
             <!-- Modal footer content -->
             <div slot="modal-footer" class="w-100">
@@ -61,6 +81,7 @@
                     {text: "Safex Data", value: "market-activity"},
                     {text: "Open Interest Data", value: "open-interest"},
                 ],
+                upload_errors: [],
             };
         },
         methods: {
@@ -69,17 +90,26 @@
              */
             showModal() {
                 this.modal_data.show_modal = true;
+                this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
             },
             /**
              * Closes the Upload CSV Modal 
              */
             hideModal() {
                 this.modal_data.show_modal = false;
+                this.upload_errors = [];
                 this.clearFiles();
+                this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
+            /**
+             * Clears the csv file input
+             */
             clearFiles() {
               this.$refs.csvfileinput.reset();
             },
+            /**
+             * Makes an axios post request to upload a selected CSV         
+             */
             uploadFile() {
                 let formData = new FormData();
                 formData.append("csv_upload_file", this.modal_data.file);
@@ -91,6 +121,16 @@
                             this.hideModal();
                             this.$toasted.success(csvUploadResponse.data.message);
                         } else {
+                            this.upload_errors = [];
+                            // pushes csv validation errors to error object for display
+                            Object.keys(csvUploadResponse.data.data.messages).forEach(error => {
+                                let section_array = error.split('.');
+                                this.upload_errors.push({
+                                        line: section_array[0],
+                                        field: section_array[1], 
+                                        errors: csvUploadResponse.data.data.messages[error]
+                                    });
+                            });
                             this.$toasted.error(csvUploadResponse.data.message);      
                         }
                     } else {

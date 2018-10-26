@@ -10,6 +10,7 @@ require('./components/data-methods');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+window.math = require('mathjs');
 
 import Echo from "laravel-echo"
 
@@ -50,6 +51,7 @@ import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
 import UserMarketNegotiation from './lib/UserMarketNegotiation';
 import Message from './lib/Message'
+import TradeConfirmation from './lib/TradeConfirmation'
 
 import { EventBus } from './lib/EventBus.js';
 
@@ -126,14 +128,21 @@ Vue.mixin({
         splitValHelper (val, splitter, frequency) {
             let tempVal = ('' + val);
             let floatVal = '';
+            let sign = '';
+            //Check if our passed value is negative signed
+            if( ("" + val).indexOf('-') !== -1 ) 
+            {
+                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
+                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
+            }
             //Check if our passed value is a float
-            if( ("" + val).indexOf('.') !== -1 ) 
+            if( ("" + tempVal).indexOf('.') !== -1 ) 
             {
                 floatVal = tempVal.slice(tempVal.indexOf('.'));
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));
             }
             //Creates an array of chars reverses and itterates through it
-            return tempVal.split('').reverse().reduce(function(x,y) {
+            return sign + tempVal.split('').reverse().reduce(function(x,y) {
                 //adds a space on the spesified frequency position
                 if(x[x.length-1].length == frequency)
                 {
@@ -168,7 +177,6 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
-            // console.log("I NEVER GET CALLED",this.theme_toggle);
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },
@@ -216,6 +224,30 @@ const app = new Vue({
                     console.error(err);    
                 }
                 return self.market_types;
+            }, err => {
+                console.error(err);
+            });
+        },
+        loadTradeConfirmations(marketType) {
+            let self = this;
+            return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
+            .then(tradeConfirmationResponse => {
+                if(tradeConfirmationResponse.status == 200) {
+                    // set the available market types
+                  
+
+                    tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
+                        x = new TradeConfirmation(x);
+                        self.trade_confirmations.push(x);   
+                        return x;
+                    });                
+
+                } else {
+                
+                    console.error(err);    
+                
+                }
+                return self.trade_confirmations;
             }, err => {
                 console.error(err);
             });
@@ -455,6 +487,7 @@ const app = new Vue({
         display_markets: [],
         hidden_markets: [],
         market_types: [],
+        trade_confirmations: [],
         message_count: 0,
         page_loaded: false,
         // internal properties
@@ -480,11 +513,14 @@ const app = new Vue({
         .then(configs => {
             // load the trade data
             this.loadMarketTypes();
+
             this.loadUserConfig()
             .then(user_preferences => {
                 let promises = [];
                 if(user_preferences !== null) {
                     user_preferences.prefered_market_types.forEach(market_type => {
+                        promises.push(this.loadTradeConfirmations(market_type));
+
                         promises.push(
                             this.loadMarkets(market_type)
                             .then(markets => {
@@ -497,9 +533,10 @@ const app = new Vue({
                         );
                     });
                 }
+                //
                 return Promise.all(promises);
             })
-            .then(all_market_requests => {
+            .then(all_loaded => {
                 EventBus.$emit('loading', 'page');
                 this.page_loaded = true;
                 //load the no cares from storage
@@ -547,6 +584,7 @@ const app = new Vue({
                 })
                 .listen('ChatMessageReceived', (received_org_message) => {
                     this.$emit('chatMessageReceived', received_org_message);
+
                 });
                 // bind sub success to subCb if present
                 if(subCb && subCb.constructor == Function) {
