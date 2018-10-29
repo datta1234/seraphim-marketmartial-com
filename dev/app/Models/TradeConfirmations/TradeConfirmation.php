@@ -167,7 +167,7 @@ class TradeConfirmation extends Model
 
             'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-            'option_groups'           => $this->optionGroups->map(function($item){
+            'option_groups'             => $this->optionGroups->map(function($item){
                 return $item->preFormatted();
             })->toArray(),
             'future_groups'           => $this->futureGroups->map(function($item):array{
@@ -176,6 +176,9 @@ class TradeConfirmation extends Model
             'market_request_id'         => $this->marketRequest->id,
             'market_request_title'      => $this->marketRequest->title,
             
+            'market_id'                 => $this->market_id,
+
+
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
 

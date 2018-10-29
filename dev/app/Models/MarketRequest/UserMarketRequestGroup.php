@@ -76,9 +76,20 @@ class UserMarketRequestGroup extends Model
             'user_market_request_group_id');
     }
 
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradable()
+    {   
+        return $this->hasOne('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_group_id');
+    }
+
     public function preFormatted()
     {
         return [
+            "tradable" => $this->tradable ? $this->tradable->preFormatted() : null,
             'items' => $this->userMarketRequestItems->map(function($item){
                 return $item->preFormatted();
             })

@@ -30,7 +30,6 @@ class TradeConfirmationController extends Controller
         ->map(function($item){
             return $item->preFormatted();
         });
-
         return $data;
 
         //where organisation is involved

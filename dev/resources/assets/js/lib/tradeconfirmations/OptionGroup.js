@@ -20,6 +20,7 @@ export default class OptionGroup {
         this.strike = structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }) ? parseFloat(structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }).value) : null;
         this.gross_prem = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Gross Premiums' }) ? parseFloat(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Gross Premiums' }).value) : null;
         this.net_prem = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Net Premiums' }) ? parseFloat(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Net Premiums' }).value) : null;   
+        this.underlying_title = structureGroup.user_market_request_group.tradable ? structureGroup.user_market_request_group.tradable.title: null; 
     }
 
    

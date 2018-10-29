@@ -1,4 +1,4 @@
-\<?php
+<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -103,6 +103,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 
 	
     Route::post('trade-confirmation/{trade_confirmation}/phase-two','TradeScreen\TradeConfirmationController@phaseTwo');
+    Route::put('trade-confirmation/{trade_confirmation}','TradeScreen\TradeConfirmationController@update');
 
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');

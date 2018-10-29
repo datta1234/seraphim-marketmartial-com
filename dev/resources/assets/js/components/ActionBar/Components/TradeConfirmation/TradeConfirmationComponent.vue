@@ -80,7 +80,7 @@
               {{ (future_group.is_offer != null ? (future_group.is_offer ? "Sell" : "Buy"):'') }}
             </td>
             <td>
-
+              {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
             </td>
             <td>
                  - 
@@ -88,10 +88,10 @@
          
             </td>
             <td>
-                <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="text"></b-form-input>
+                <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
             </td>
             <td>
-                <b-form-input :disabled="true" v-model="trade_confirmation.future_groups[key]['contracts']" type="text"></b-form-input>
+                <b-form-input :disabled="true" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
             </td>
             <td>
                 {{ future_group.expires_at }}     
@@ -102,14 +102,11 @@
 
     <b-row>
         <b-col md="5" offset-md="7">
-            <button type="button" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
-            <button type="button" class="btn mm-generic-trade-button w-100 mb-1">Send to counterparty</button>
+            <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+            <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
              <div class="form-group">
                 <label for="exampleFormControlSelect1">Account Booking</label>
-
-
-
-                <b-form-select v-model="selected_trading_account">
+                <b-form-select :disabled="!can_proceed" v-model="selected_trading_account">
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                         </option>
                   </b-form-select>
@@ -125,10 +122,28 @@
 
     export default {
       name: 'TradeConfirmationComponent',
+      watch: {
+            trade_confirmation:{
+              handler:function (val) {
+                    let can_proceed = true;
+                    this.trade_confirmation.future_groups.forEach((group)=>{
+                        can_proceed = group.future.length > 0; 
+                        console.log(group);
+                        if(!can_proceed)
+                        {
+                            return false;//to break out of the each
+                        }
+                    });
+                    this.can_proceed = can_proceed;
+                },
+                deep: true
+            },
+        },
       data() {
         return {
                 trading_accounts:[],
-                selected_trading_account:null
+                selected_trading_account:null,
+                can_proceed: false
             }
         },
       props:{
@@ -139,10 +154,16 @@
         methods: {
             getTradingAccounts: function()
             {
+
+                console.log( this.trade_confirmation,"run get Tradeing accounts")
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     
                     this.trading_accounts = response.data.trading_accounts;
+
+                    this.selected_trading_account = this.trading_accounts.find((item)=>{
+                        return item.market_id == this.trade_confirmation.market_id;
+                    });
 
                 })
                 .catch(err => {
@@ -158,6 +179,16 @@
                     console.log(err);
                     //this.errors = err.errors.errors;
                 });
+            },
+            send: function()
+            {
+               this.trade_confirmation.send(this.selected_trading_account).then(response => {
+                    this.errors = [];
+                })
+                .catch(err => {
+                    console.log(err);
+                    //this.errors = err.errors.errors;
+                });  
             }
            
         },

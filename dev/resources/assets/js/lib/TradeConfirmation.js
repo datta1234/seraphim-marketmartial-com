@@ -38,6 +38,7 @@ export default class TradeConfirmation extends BaseModel {
                 trade_structure_title : "",
                 volatility : "",
                 structure_groups : "",
+                market_id : "",
                 market_request_id : "",
                 market_request_title : "",
                 underlying_id : "",
@@ -121,7 +122,6 @@ export default class TradeConfirmation extends BaseModel {
   
     postPhaseTwo()
     {
-
         return new Promise((resolve, reject) => {
            axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two', this.prepareStore())
            .then(response => {
@@ -135,7 +135,25 @@ export default class TradeConfirmation extends BaseModel {
             reject(new Errors(err.response.data));
         }); 
        });
+    }
 
+    send(trading_account)
+    {
+      return new Promise((resolve, reject) => {
+           axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+           })
+           .then(response => {
+
+            this.update(response.data.trade_confirmation);
+            resolve();
+        })
+           .catch(err => {
+            console.log(err);
+            reject(new Errors(err.response.data));
+        }); 
+       });
     }
 
     prepareStore() {
