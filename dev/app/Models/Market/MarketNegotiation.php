@@ -341,7 +341,7 @@ class MarketNegotiation extends Model
                     $q->orWhere($key, '!=', $default);
                 }
             }
-        })->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 0 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
+        })->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
     }
 
     /**

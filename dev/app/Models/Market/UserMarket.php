@@ -450,9 +450,12 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
+                                            \Log::info("counter: $active");
                                             if($active === null) {
                                                 $active = $this->isInterest();
+                                                \Log::info("interest: $active");
                                             }
+                                            \Log::info("active: $active");
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
                                             return [

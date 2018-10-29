@@ -40,7 +40,7 @@ class MarketNegotiationTimeout implements ShouldQueue
         $stillActive = !$marketNegotiation->is_killed //no killed
                     && $marketNegotiation->marketNegotiationChildren()->count() == 0;// has no children
 
-                    // is the latest negotiation in the tree
+        // is the latest negotiation in the tree
         if($stillActive) {
             
             // FoK
@@ -50,14 +50,14 @@ class MarketNegotiationTimeout implements ShouldQueue
                 if($marketNegotiation->cond_fok_spin == false) {
                     // Notify The Admin 
                     $term = $marketNegotiation->cond_buy_best == true ? 'Buy' : 'Sell';
-                    $title_initiator = $sourceNegotiation->user->organisation->title;
+                    $title_initiator = "test"; //$sourceNegotiation->user->organisation->title;
                     $title_responder = $marketNegotiation->user->organisation->title;
                     $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
                     \Slack::postMessage([
                         "as_user"   => false,
                         "icon_emoji"=> ":alarm_clock:",
                         "username"  => "Timeout-BOT",
-                        "text"      => "A FoK:Kill Timeout has occured, Trading Between $title_initiator and $title_responder @ ",
+                        "text"      => "A FoK:Kill Timeout has occured, Trading Between $title_initiator and $title_responder @ $level",
                         "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
                     ]);
                 }
