@@ -284,12 +284,10 @@
                 }
                 return false;
             },
-            validateProposal:function(check_invalid)
-            {
+            validateProposal:function(check_invalid) {
                 this.check_invalid = check_invalid;
             },
-            updateMessage: function(messageData)
-            {
+            updateMessage: function(messageData) {
                 if(messageData.user_market_request_id == this.marketRequest.id)
                 {
                     let message = messageData.message;
@@ -303,8 +301,7 @@
                 }
                
             },
-            calcUserMessages:function()
-            {
+            calcUserMessages:function() {
                 //if the users market quote is placed on hold notify the the current user if it is theres
                 if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
@@ -316,10 +313,10 @@
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
             },
-            subscribeToMarketRequest(){
+            subscribeToMarketRequest() {
 
             },
-            spinNegotiation(){
+            spinNegotiation() {
                 
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
