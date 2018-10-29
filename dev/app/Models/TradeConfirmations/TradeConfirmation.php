@@ -19,7 +19,8 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $trading_account_id
+	 * @property integer $send_trading_account_id
+     * @property integer $receiving_trading_account_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -42,7 +43,8 @@ class TradeConfirmation extends Model
         "trade_negotiation_id",
         "stock_id",
         "market_id",
-        "trading_account_id",
+        "send_trading_account_id",
+        "receiving_trading_account_id",
         "trade_confirmation_status_id",
         "trade_structure_id",
         "user_market_request_id"
@@ -208,9 +210,18 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradingAccount()
+    public function sendTradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','send_trading_account_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function receivingTradingAccount()
+    {
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','receiving_trading_account_id');
     }
 
     /**
@@ -524,7 +535,8 @@ class TradeConfirmation extends Model
             'market_id' => $marketRequest->market_id,
             'trade_structure_id' =>  $marketRequest->trade_structure_id,
             'user_market_request_id' => $marketRequest->id,
-            'trading_account_id' => null,
+            'send_trading_account_id' => null,
+            'receiving_trading_account_id' => null,
             'trade_confirmation_status_id' =>1,
         ]);
        

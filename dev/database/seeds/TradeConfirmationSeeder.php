@@ -31,11 +31,14 @@ class TradeConfirmationSeeder extends Seeder
              
 	            ]);
 
-	    		$trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
+	    		$send_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
 	    			->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
 	    			->first();
+                $receiving_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->recievingUser->id)
+                    ->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
+                    ->first();
 
-                if($trading_account) {
+                if($send_trading_account && $receiving_trading_account) {
 
                     $status_id = $tradeConfirmationStatutes->random()->id;
                     
@@ -47,7 +50,8 @@ class TradeConfirmationSeeder extends Seeder
                         "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
                         "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
                         "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
-    			        'trading_account_id' => $trading_account->id,
+    			        'send_trading_account_id' => $send_trading_account->id,
+                        'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);
@@ -79,11 +83,14 @@ class TradeConfirmationSeeder extends Seeder
 					"is_distpute" => false
 	            ]);
 
-	    		$trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
+	    		$send_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
 	    			->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
 	    			->first();
+                $receiving_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->recievingUser->id)
+                    ->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
+                    ->first();
 
-                if($trading_account) {
+                if($send_trading_account && $receiving_trading_account) {
                    $val = $tradeConfirmationStatutes->random()->id;
                     
 
@@ -95,7 +102,8 @@ class TradeConfirmationSeeder extends Seeder
                         "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
                         "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
                         "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
-    			        'trading_account_id' => $trading_account->id,
+                        'send_trading_account_id' => $send_trading_account->id,
+                        'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);
@@ -117,11 +125,14 @@ class TradeConfirmationSeeder extends Seeder
 					"is_distpute" => false
 	            ]);
 
-	    		$trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
+	    		$send_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
 	    			->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
 	    			->first();
+                $receiving_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->recievingUser->id)
+                    ->where('market_id',$marketNegotiation->userMarket->userMarketRequest->market_id)
+                    ->first();
 
-                if($trading_account) {
+                if($send_trading_account && $receiving_trading_account) {
                     $status_id = $tradeConfirmationStatutes->random()->id;
                     
     	            $tradeConfirmation = factory(App\Models\TradeConfirmations\TradeConfirmation::class)->create([
@@ -132,7 +143,8 @@ class TradeConfirmationSeeder extends Seeder
                         "market_id" =>  $marketNegotiation->userMarket->userMarketRequest->market_id,
                         "trade_structure_id" =>   $marketNegotiation->userMarket->userMarketRequest->trade_structure_id,
                         "user_market_request_id" =>  $marketNegotiation->userMarket->userMarketRequest->id,
-    			        'trading_account_id' => $trading_account->id,
+                        'send_trading_account_id' => $send_trading_account->id,
+                        'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,    			        
     			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
     	            ]);

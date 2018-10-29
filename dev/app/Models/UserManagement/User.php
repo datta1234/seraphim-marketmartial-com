@@ -352,4 +352,14 @@ class User extends Authenticatable
     {
         return (bool)$this->verified ? (bool)$this->active : null;
     }
+
+    /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role_id == 1;
+    }
 }

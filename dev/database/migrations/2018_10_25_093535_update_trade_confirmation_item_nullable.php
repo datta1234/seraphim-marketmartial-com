@@ -27,7 +27,7 @@ class UpdateTradeConfirmationItemNullable extends Migration
      */
     public function down()
     {
-         Schema::table('trade_confirmation_items', function (Blueprint $table) {
+        Schema::table('trade_confirmation_items', function (Blueprint $table) {
             // $table->string('value')->nullable(false)->change(); // since they'll be null coloumns theres no going back
         });
     }
