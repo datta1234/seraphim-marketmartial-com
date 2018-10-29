@@ -232,13 +232,12 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
+                console.log("RESPONSE",tradeConfirmationResponse);
                 if(tradeConfirmationResponse.status == 200) {
                     // set the available market types
                     tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
-                  
- 
-                        x = TradeConfirmation.parse(x,this.config('fees'));
-                        self.trade_confirmations.push(x);   
+                                          
+                       self.trade_confirmations.push(new TradeConfirmation(x));   
                         return x;
                     });
                    
@@ -582,7 +581,6 @@ const app = new Vue({
                     console.log("Fired '.UserMarketRequested'", userMarketRequest);
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
-                        console.log("publish Callback", packet_data);
                         this.updateUserMarketRequest(packet_data.data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });

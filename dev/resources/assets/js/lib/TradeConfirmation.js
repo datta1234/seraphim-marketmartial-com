@@ -1,28 +1,52 @@
 import BaseModel from './BaseModel';
-import TCStructures from './tradeconfirmations/index';
+
+import OptionGroup from './tradeconfirmations/OptionGroup';
+import FutureGroup from './tradeconfirmations/FutureGroup';
 
 export default class TradeConfirmation extends BaseModel {
 
     constructor(options,fees) {
-      
-        super();
+
+        super({
+            _used_model_list: [OptionGroup,FutureGroup],
+            _relations:{
+                option_groups: {
+                    addMethod: (option_groups) => { 
+                        this.addOptionGroups(option_groups) 
+                    },
+                    setMethod: (option_groups) => { 
+                        this.setOptionGroups(option_groups) 
+                    },
+                },
+                future_groups: {
+                    addMethod: (future_groups) => { 
+                        this.addFutureGroups(future_groups) 
+                    },
+                    setMethod: (structure_groups) => { 
+                        this.setFutureGroups(future_groups) 
+                    },
+                }
+            }
+        })
+
+        this.option_groups = [];
+        this.future_groups = [];
 
         const defaults = {
-            id : "",
-            organisation : "",
-            trade_structure_title : "",
-            volatility : "",
-            structure_groups : "",
-            option_groups:[],
-            market_request_id : "",
-            market_request_title : "",
-            underlying_id : "",
-            underlying_title : "",
-            is_single_stock : "",
-            traded_at : "",
-            is_offer : "",
-            brokerage_fee: [],
-            date: ""
+                id : "",
+                organisation : "",
+                trade_structure_title : "",
+                volatility : "",
+                structure_groups : "",
+                market_request_id : "",
+                market_request_title : "",
+                underlying_id : "",
+                underlying_title : "",
+                is_single_stock : "",
+                traded_at : "",
+                is_offer : "",
+                brokerage_fee: [],
+                date: ""
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -32,115 +56,92 @@ export default class TradeConfirmation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
-        this.brokerage_fee = fees;
-    }
 
-    static parse(json,fees)
-    {
-        console.log(fees);
-        switch(json.trade_structure_title) {
-            case "Outright":
-                   return new  TCStructures.TradeConfirmationOutright(json,fees.options_brokarage_fees.Outright);
-                break;
-            case "Risky":
-                //@TODO runRisky()
-                break;
-            case "Calander":
-                //@TODO runCalander()
-                break;
-           case "Fly":
-                //@TODO runRisky()
-                break;
-            case "Option Switch":
-                //@TODO runOptionSwitch()
-                break;
-           case "EFP":
-                //@TODO runEFP()
-                break;
-            case "Rolls":
-                //@TODO runRoll()
-                break;
-            case "EFP Switch":
-                //@TODO runEFPSwicth()
-                break;
+        // register option group
+        if(options && options.option_groups) {
+            console.log("option group method ran");
+           this.addOptionGroups(options.option_groups);
+        }
 
+         // register future groups
+        if(options && options.future_groups) {
+            console.log("future group method ran");
+           this.addFutureGroups(options.future_groups);
         }
     }
 
- 
-    /*
-    * formulas from the macros
-    */
-    callOptionDelta(startDate,expiry,future,strike,volatility)
+
+    getTradeStructures()
     {
-        let tt = expiry.diff(startDate, 'days',true) / 365;
-        let callOptionDelta = (this.Ln(future/strike) + 0.5 * Math.pow(volatility,2) * tt) / ( volatility * Math.pow(tt,0.5));
-        let COD = -this.normSdist(callOptionDelta);
-        return COD;
+        /* only care about the futuregroup the rest we do on the server */
+        let options = [];
+        this.future_groups.forEach((group)=>{
+          options.push(group.prepareStore());
+      });
+        return options;
     }
 
-    putOptionDelta(startDate,expiry,future,strike,volatility)
+    updateOptionColoumns(tradeStructureGroup)
     {
-        let tt = expiry.diff(startDate, 'days',true) / 365;
-        let d1 = (this.Ln(future/strike) + 0.5 * Math.pow(volatility,2) * tt) / ( volatility * Math.pow(tt,0.5));       
-        let POD = this.normSdist(-d1);
-        return POD;
+        console.log("update");
     }
 
-    callOptionPremium(startDate,expiry,future,strike,volatility,singleStock)
+    addOptionGroups(option_groups)
     {
-        let tt = expiry.diff(startDate, 'days',true) / 365;
-
-        let h = this.Ln(future/strike) / (volatility * Math.pow(tt,0.5) ) + (volatility * Math.pow(tt,0.5) ) / 2;
-        
-        console.log("tt",tt);
-        console.log("future",future);
-        console.log("strike",strike);
-        console.log("tt",volatility);
-        console.log("callOptionPremium h",h);
-
-        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * Math.pow(tt,0.5));
-
-        if(singleStock){
-            return (callOptionPremium*10).toFixed(0);
-        }else{
-            return (callOptionPremium*100).toFixed(2);
-        }  
+        option_groups.forEach((group)=>{
+            this.addOptionGroup(group);
+        });
     }
 
-    putOptionPremium(startDate,expiry,future,strike,volatility,singleStock)
+    addOptionGroup(option_group)
     {
-        let tt = expiry.diff(startDate, 'days',true) / 365;
-        let h = this.Ln(future/strike) / (volatility * Math.pow(tt,0.5) ) + (volatility * Math.pow(tt,0.5) ) / 2;
-        
-        let putOptionPremium = -future * this.normSdist(-h) + strike * this.normSdist(volatility * Math.pow(tt,0.5) - h);
-         
-         if(singleStock){
-                return (putOptionPremium*100).toFixed(2);
+        if(!(option_group instanceof OptionGroup)) {
+            option_group = new OptionGroup(option_group);
+        } 
 
-        }else{
-                return (putOptionPremium*10).toFixed(0);
-        }   
+        this.option_groups.push(option_group);   
     }
 
 
-    /*
-    *https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.excel.worksheetfunction.normsdist?view=excel-pia
-    *Returns the standard normal cumulative distribution function. The distribution has a mean of 0 (zero) and a standard deviation of one. Use this function in place of a table of standard normal curve areas.
-    */
-    normSdist(value)
+    addFutureGroups(future_groups)
     {
-        return .5*(1+math.erf(value/Math.sqrt(2)));
+        future_groups.forEach((group)=>{
+            this.addFutureGroup(group);
+        });
     }
 
-    /*
-    *https://docs.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.ln
-    *Returns the natural logarithm of a number. Natural logarithms are based on the constant e (2.71828182845904) 
-    */
-    Ln(value)
+    addFutureGroup(future_group)
     {
-        return Math.log(value);
+        if(!(future_group instanceof FutureGroup)) {
+            future_group = new FutureGroup(future_group);
+        } 
+        this.future_groups.push(future_group);   
     }
 
+  
+    postPhaseTwo()
+    {
+
+        return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two', this.prepareStore())
+           .then(response => {
+
+            this.update(response.data.trade_confirmation);
+            console.log(this);
+            resolve();
+        })
+           .catch(err => {
+            console.log(err);
+            reject(new Errors(err.response.data));
+        }); 
+       });
+
+    }
+
+    prepareStore() {
+        return {
+            id: this.id,
+            structure_groups: this.getTradeStructures()
+        };
+    }
 }
-TCStructures.init();

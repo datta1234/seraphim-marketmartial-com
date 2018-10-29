@@ -10,27 +10,40 @@ const TradeConfirmationOutright = {
         }
         this.class = class TradeConfirmationOutright extends TradeConfirmation {
 
-            constructor(options,fees) {
-                super();
+            constructor(options) {
 
-                const defaults = {
-                    id : "",
-                    organisation : "",
-                    trade_structure_title : "",
-                    volatility : "",
-                    structure_groups : [], 
-                    market_request_id : "",
-                    market_request_title : "",
-                    underlying_id : "",
-                    underlying_title : "",
-                    is_single_stock : "",
-                    traded_at : "",
-                    is_offer : "",
-                    option_groups: [],
-                    future_groups: [],
-                    brokerage_fee: [],
-                    date: null
+              super({
+                _used_model_list: [OptionGroup,FutureGroup],
+                _relations:{
+                    structure_groups: {
+                        addMethod: (structure_groups) => { 
+                            this.addOptionGroups(structure_groups) 
+                            this.addFutureGroups(structure_groups) 
+                        },
+                        setMethod: (structure_groups) => { 
+                            this.setUpOptionColoumns(structure_groups) 
+                            this.setUpFutureColoumns(structure_groups) 
+                        },
+                    }
                 }
+            });
+
+              const defaults = {
+                id : "",
+                organisation : "",
+                trade_structure_title : "",
+                volatility : "",
+                structure_groups : [], 
+                market_request_id : "",
+                market_request_title : "",
+                underlying_id : "",
+                underlying_title : "",
+                is_single_stock : "",
+                traded_at : "",
+                is_offer : "",
+                brokerage_fee: [],
+                date: null
+            }
                 // assign options with defaults
                 Object.keys(defaults).forEach(key => {
                     if(options && typeof options[key] !== 'undefined') {
@@ -40,44 +53,83 @@ const TradeConfirmationOutright = {
                     }
                 });
 
-                if(options && options.structure_groups) {
-
-                    this.setUpOptionColoumns(options.structure_groups);
-                    this.setUpFutureColoumns(options.structure_groups);
+               
+                // register option group
+                if(options && options.option_groups) {
+                    console.log("option group method ran");
+                    this.addOptionGroups(options.option_groups);
                 }
 
-                this.brokerage_fee = fees;
+                 // register future groups
+                if(options && options.future_groups) {
+                    console.log("future group method ran");
+                    this.addFutureGroups(options.future_groups);
+                }
 
             }
 
-            setUpOptionColoumns(tradeStructureGroup)
+            prepareStore() {
+                return {
+                    id: this.id,
+                    structure_groups: this.getTradeStructures()
+                };
+            }
+
+            getTradeStructures()
             {
-                tradeStructureGroup.forEach((group)=>{
-                   
-                    if(group.is_options)
-                    {
+                /* only care about the futuregroup the rest we do on the server */
+                let options = [];
+                this.future_groups.forEach((group)=>{
+                  options.push(group.prepareStore());
+                });
+                return options;
+            }
+
+            updateOptionColoumns(tradeStructureGroup)
+            {
+                console.log("update");
+            }
+
+            addOptionGroups(option_groups)
+            {
+                console.log("the Add Method",option_groups);
+
+                option_groups.forEach((group)=>{
+                    console.log("the Loop",group);
                         let option_group = new OptionGroup();
                         option_group.constructFromStructureGroup(group);
                         this.option_groups.push(option_group);   
-                    }
-                   
+                    
                 });
             }
 
-            setUpFutureColoumns(tradeStructureGroup)
+            addFutureGroups(future_groups)
             {
-                tradeStructureGroup.forEach((group)=>{
-                   
-                    if(!group.is_options)
-                    {
+                future_groups.forEach((group)=>{
+
                         let future_group = new FutureGroup();
                         future_group.constructFromStructureGroup(group);
                         this.future_groups.push(future_group);   
-                    }
-                   
                 }); 
             }
 
+            postPhaseTwo()
+            {
+
+                return new Promise((resolve, reject) => {
+                 axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two', this.prepareStore())
+                 .then(response => {
+
+                    this.update(response.data.trade_confirmation);
+
+                    resolve();
+                })
+                 .catch(err => {
+                    reject(new Errors(err.response.data));
+                }); 
+             });
+
+            }
 
             phaseTwo()
             {
@@ -107,7 +159,7 @@ const TradeConfirmationOutright = {
                 let contracts  = null;
 
                 //determine weather put or call
-         
+
                 //can reduce this logic
                 if(!this.future_groups[0].is_offer)
                 {
@@ -118,7 +170,7 @@ const TradeConfirmationOutright = {
                 let POD1 = Math.round(this.putOptionDelta(startDate,expiry1,future1,strike1,volatility1) * contracts1 ) * putDirection1;
                 let COD1 = Math.round(this.callOptionDelta(startDate,expiry1,future1,strike1,volatility1) * contracts1) * callDirection1;
 
-    
+
 
                 if(Math.abs(POD1) <= Math.abs(COD1))
                 {
@@ -142,10 +194,8 @@ const TradeConfirmationOutright = {
                 {
                     this.option_groups[0].is_offer  = true;
                 }
-                console.log("phaseTwo");
 
                 this.future_groups[0].contracts = Math.abs(contracts);
-                console.log("calc the fees");
                 this.feesCalc();
             }
 
@@ -155,12 +205,11 @@ const TradeConfirmationOutright = {
                 let IXoutrightFEE = 0.004;
                 let SpotReferencePrice1 = 50000; //@todo use admin value
                 let Brodirection1 = 1;
-               
+
                 if(!this.option_groups[0].is_offer)
                 {
                     Brodirection1 = -1;
                 }
-                console.log("here", Math.round(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + this.option_groups[0].gross_prem); 
                 this.option_groups[0].net_prem  = Math.round(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + this.option_groups[0].gross_prem; 
             }
 

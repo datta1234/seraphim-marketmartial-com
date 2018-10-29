@@ -25,7 +25,7 @@ class TradeConfirmationController extends Controller
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
             }
         ])
-        ->take(5)
+        ->take(1)
         ->get()
         ->map(function($item){
             return $item->preFormatted();

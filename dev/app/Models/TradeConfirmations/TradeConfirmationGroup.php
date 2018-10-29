@@ -91,11 +91,43 @@ class TradeConfirmationGroup extends Model
     public function preFormatted()
     {
         return [
+            'id'                            => $this->id,
             'is_options'                    => $this->is_options,
             'user_market_request_group'     => $this->userMarketRequestGroup->preFormatted(),
             'trade_confirmation_items'      => $this->tradeConfirmationItems->map(function($item){
                 return $item->preFormatted();
             })
         ];
+    }
+    public function setOpVal($title,$value)
+    {
+        $op = $this->tradeConfirmationItems->first(function($item) use ($title){
+            return strcasecmp($item->title,$title) == 0;
+        });  
+
+        if($op)
+        {
+            $op->value = $value;
+            $op->save();
+        }
+    }
+
+    public function getOpVal($title)
+    {
+        $marketRequestOptions =['Expiration Date','strike','Strike'];
+        
+        if(in_array($title, $marketRequestOptions))
+        {
+            $op = $this->userMarketRequestGroup->userMarketRequestItems->first(function($item) use ($title){
+                return strcasecmp($item->title,$title) == 0;
+            });
+        }else
+        {
+            $op = $this->tradeConfirmationItems->first(function($item) use ($title){
+                return strcasecmp($item->title,$title) == 0;
+            });  
+        }
+
+        return  $op ? $op->value : null;
     }
 }

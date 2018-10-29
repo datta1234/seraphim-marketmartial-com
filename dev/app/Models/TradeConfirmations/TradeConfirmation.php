@@ -8,6 +8,8 @@ use Carbon\Carbon;
 class TradeConfirmation extends Model
 {
     use \App\Traits\ResolvesUser;
+    use \App\Traits\CalcuatesForPhases;
+
 	/**
 	 * @property integer $id
 	 * @property integer $send_user_id
@@ -159,14 +161,16 @@ class TradeConfirmation extends Model
         
         return [
             'id'                        => $this->id,
-            'organisation'              => $organisation ? $organisation->title : null,
+            'organisation'              => rand(1,100),//$organisation ? $organisation->title : null,
 
             'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-            'structure_groups'           => $this->tradeConfirmationGroups->map(function($item){
+            'option_groups'           => $this->optionGroups->map(function($item){
                 return $item->preFormatted();
-            }),
-            
+            })->toArray(),
+            'future_groups'           => $this->futureGroups->map(function($item):array{
+                return $item->preFormatted();
+            })->toArray(),
             'market_request_id'         => $this->marketRequest->id,
             'market_request_title'      => $this->marketRequest->title,
             
@@ -210,6 +214,26 @@ class TradeConfirmation extends Model
     }
 
     /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function optionGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id')->where('is_options',true);
+    }
+
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function futureGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id')->where('is_options',false);
+    }
+
+   /**
     * Return relation based of trade_confirmation_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
@@ -538,45 +562,63 @@ class TradeConfirmation extends Model
     {
 
                 
-                   foreach($tradeStructureGroup->items as $item) {
+           foreach($tradeStructureGroup->items as $item) {
 
-                    $value = null;
-                    switch ($item->title) {
-                        case 'is_offer':
-                        $value = $tradeNegotiation->is_offer ? 1 : 0;
-                        break;
-                        case 'Put':
-                        $value = null;
-                        break;
-                        case 'Call':
-                        $value = null;
-                        break;
-                        case 'Volatility':
-                        $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-                        break;
-                        case 'Gross Premiums':
-                        $value = null;
-                        break;
-                        case 'Net Premiums':
-                        $value = null;
-                        break;
-                        case 'Future':
-                        $value = null;
-                        break;
-                        case 'Contract':
-                        $value = $tradeNegotiation->quantity; //quantity
-                        break;
-                    }
+            $value = null;
+            switch ($item->title) {
+                case 'is_offer':
+                $value = $tradeNegotiation->is_offer ? 1 : 0;
+                break;
+                case 'Put':
+                $value = null;
+                break;
+                case 'Call':
+                $value = null;
+                break;
+                case 'Volatility':
+                $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                break;
+                case 'Gross Premiums':
+                $value = null;
+                break;
+                case 'Net Premiums':
+                $value = null;
+                break;
+                case 'Future':
+                $value = null;
+                break;
+                case 'Contract':
+                $value = $tradeNegotiation->quantity; //quantity
+                break;
+            }
 
 
-                    $tradeGroup->tradeConfirmationItems()->create([
-                        'item_id' => $item->id,
-                        'title' => $item->title,
-                        'value' =>  $value,
-                        'trade_confirmation_group_id' => $tradeStructureGroup->id
-                    ]);
-                }
-            
+            $tradeGroup->tradeConfirmationItems()->create([
+                'item_id' => $item->id,
+                'title' => $item->title,
+                'value' =>  $value,
+                'trade_confirmation_group_id' => $tradeStructureGroup->id
+            ]);
+        }         
     }
 
+    public function updateGroups($groups)
+    {
+        foreach ($groups as $group) 
+        {
+            $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
+            foreach ($group['items'] as $item) 
+            {
+              $itemModel = $groupModel->tradeConfirmationItems()
+              ->where([
+                        'trade_confirmation_group_id' => $groupModel->id,
+                        'title'=>$item['title']
+                ])->first();
+              $itemModel->update(
+
+                    ['value'=>$item['value']]
+                );
+            }
+        }
+    }
 }

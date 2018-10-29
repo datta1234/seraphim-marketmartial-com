@@ -106,13 +106,13 @@
             <button type="button" class="btn mm-generic-trade-button w-100 mb-1">Send to counterparty</button>
              <div class="form-group">
                 <label for="exampleFormControlSelect1">Account Booking</label>
-                <select class="form-control" id="exampleFormControlSelect1">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
+
+
+
+                <b-form-select v-model="selected_trading_account">
+                        <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
+                        </option>
+                  </b-form-select>
               </div>
         </b-col>
     </b-row>
@@ -125,21 +125,44 @@
 
     export default {
       name: 'TradeConfirmationComponent',
+      data() {
+        return {
+                trading_accounts:[],
+                selected_trading_account:null
+            }
+        },
       props:{
           'trade_confirmation': {
             type: Object
           }
         },
         methods: {
+            getTradingAccounts: function()
+            {
+                axios.get(axios.defaults.baseUrl + '/trade-accounts')
+                .then(response => {
+                    
+                    this.trading_accounts = response.data.trading_accounts;
+
+                })
+                .catch(err => {
+                
+                }); 
+            },
             phaseTwo: function()
             {
-                console.log("phaseTwo");
-                this.trade_confirmation.phaseTwo();   
+                this.trade_confirmation.postPhaseTwo().then(response => {
+                    this.errors = [];
+                })
+                .catch(err => {
+                    console.log(err);
+                    //this.errors = err.errors.errors;
+                });
             }
            
         },
         mounted() {
-            
+           this.getTradingAccounts();
         }
     }
 </script>

@@ -14,7 +14,6 @@
 Auth::routes();
 
 Route::get('/test',function(){
-	  
 });
 
 /*
@@ -42,6 +41,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 	Route::get('/email-settings', 'EmailController@edit')->name('email.edit');
 	Route::post('/email-settings','EmailController@store')->name('email.store');
 	Route::put('/email-settings','EmailController@update')->name('email.update');
+
+	Route::get('/trade-accounts', 'TradingAccountController@index')->name('trade_settings.index');
 
 	Route::get('/trade-settings', 'TradingAccountController@edit')->name('trade_settings.edit');
 	Route::put('/trade-settings','TradingAccountController@update')->name('trade_settings.update');
@@ -100,7 +101,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 	]);
 
 	
-    Route::post('trade-confirmation','TradeScreen\StreamController@index');
+    Route::post('trade-confirmation/{trade_confirmation}/phase-two','TradeScreen\TradeConfirmationController@phaseTwo');
 
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
