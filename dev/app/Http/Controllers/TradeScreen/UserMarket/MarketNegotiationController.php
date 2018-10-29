@@ -109,7 +109,8 @@ class MarketNegotiationController extends Controller
 
         // Handle FOK kill
         if($marketNegotiation->isFoK()) {
-            $success = $marketNegotiation->kill();
+            $success = $marketNegotiation->kill(\Auth::user());
+            $message = "FoK Killed";
         }
 
         // Handle Meet In Middle
@@ -127,6 +128,7 @@ class MarketNegotiationController extends Controller
                     "Proposal rejected", 
                     10
                 );
+            $message = "Proposal Rejected";
         }
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();

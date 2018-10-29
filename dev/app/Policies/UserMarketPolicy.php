@@ -86,8 +86,9 @@ class UserMarketPolicy
     {
         $current_org_id = $user->organisation_id;
         // Cant respond to negotiation if FoK
-        if($userMarket->currentMarketNegotiation->isFoK()) {
-            return false;
+        if($userMarket->lastNegotiation->isFoK()) {
+            // only if its killed
+            return $userMarket->lastNegotiation->is_killed == true;
         }
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
             in_array(

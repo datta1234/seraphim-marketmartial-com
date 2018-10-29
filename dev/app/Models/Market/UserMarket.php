@@ -231,9 +231,8 @@ class UserMarket extends Model
     */
     public function repeatQuote($user)
     {
-        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
-        {
-            $query->whereHas('user',function($query) use ($user){
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user) {
+            $query->whereHas('user',function($query) use ($user) {
                 $query->where('organisation_id', $user->organisation_id);
             });
         })->first();

@@ -333,7 +333,7 @@ class MarketNegotiation extends Model
         })->orderBy('created_at', 'DESC');
     }
 
-    public function scopeConditions($query)
+    public function scopeConditions($query, $active = true)
     {
         return $query->where(function($q){
             foreach($this->applicableConditions as $key => $default) {
@@ -341,7 +341,12 @@ class MarketNegotiation extends Model
                     $q->orWhere($key, '!=', $default);
                 }
             }
-        })->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
+        })
+        ->when($active, function($q) {
+            // only active
+            $q->where('is_killed', '=', false);
+        })
+        ->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
     }
 
     /**
@@ -419,10 +424,60 @@ class MarketNegotiation extends Model
         // $this->fresh()->userMarket->userMarketRequest->notifyRequested();
     }
 
-    public function kill()
+
+    public function getMessage($scenario) {
+        switch($scenario) {
+            case 'fok_timeout':
+                $marketReq = $this->userMarket->userMarketRequest;
+                $exp = (new \Carbon\Carbon($marketReq->getDynamicItem('Expiration Date')))->format("My");
+                $message = $marketReq->market_title." ".$exp." ".$marketReq->getDynamicItem('Strike');
+                $state = $this->is_killed ? "Timeout Occured" : "Timeout Started";
+
+                return "FoK:".($this->cond_fok_spin ? 'Fill': 'Kill')." ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+            case 'trade_at_best_timeout':
+                $marketReq = $this->userMarket->userMarketRequest;
+                
+                $state = $this->isTrading() ? "Timeout Occured" : "Timeout Started";
+                $term = $this->cond_buy_best ? 'Buy' : 'Sell';
+                $level = $this->cond_buy_best ? $this->offer : $this->bid;
+                
+                $exp = (new \Carbon\Carbon($marketReq->getDynamicItem('Expiration Date')))->format("My");
+                $message = $marketReq->market_title." ".$exp." ".$marketReq->getDynamicItem('Strike');
+                if($this->isTrading()) {
+                    $message .= " - Trading @ ".$level;
+                }
+                
+                return $term." At Best: ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+        }
+    }
+
+    public function kill($user = null)
     {
         $this->is_killed = true; // && with_fire = true ;)
-        return $this->save();
+        $this->is_repeat = true;
+        $this->save();
+
+        $newNegotiation = $this->replicate();
+        
+        $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
+        $newNegotiation->market_negotiation_id = $this->id;
+
+        $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+
+        $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+        $inverse = $att == 'bid' ? 'offer' : 'bid';
+        $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+        $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+        $newNegotiation->{$inverse} = null;
+
+
+        $newNegotiation->cond_timeout = false; // dont apply on this one
+        // Override the condition application
+        $newNegotiation->fok_applied = true;
+        return $newNegotiation->save();
+
     }
 
     public function counter($user, $data)
@@ -446,7 +501,7 @@ class MarketNegotiation extends Model
         
         // delete history
         $history = $this->getConditionHistory();
-        $history->each(function($item){
+        $history->each(function($item) {
             $item->delete();
         });
         
@@ -912,7 +967,7 @@ class MarketNegotiation extends Model
                     "as_user"   => false,
                     "icon_emoji"=> ":alarm_clock:",
                     "username"  => "Timeout-BOT",
-                    "text"      => "An FoK:Kill has been initiated by $title_initiator",
+                    "text"      => $this->getMessage('fok_timeout'),
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
                 ]);
             }
@@ -988,13 +1043,11 @@ class MarketNegotiation extends Model
 
             $this->userMarket->userMarketRequest->notifyRequested();
 
-            $term = $this->cond_buy_best == true ? 'Buy' : 'Sell';
-            $title_initiator = $this->user->organisation->title;
             \Slack::postMessage([
                 "as_user"   => false,
                 "icon_emoji"=> ":alarm_clock:",
                 "username"  => "Timeout-BOT",
-                "text"      => "A $term at Best has been initiated by $title_initiator",
+                "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
                 "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
             ]);
 
