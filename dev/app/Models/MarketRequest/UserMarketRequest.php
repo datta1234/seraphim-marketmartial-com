@@ -126,6 +126,15 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function getMarketTitleAttribute()
+    {
+        return $this->markets()->pluck('title')[0];
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function rebates()
     {
         return $this->hasMany('App\Models\Trade\Rebate','user_market_request_id');
@@ -326,7 +335,7 @@ class UserMarketRequest extends Model
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
             {
-              return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat; 
+                return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
             }
         }
         return false;
@@ -391,7 +400,7 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
+        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading )
         {
             return 'negotiation-open';
         }
@@ -418,10 +427,12 @@ class UserMarketRequest extends Model
         if($interest_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id)
         {
             $marketRequestRoles = ["interest"];
-        }else if ($market_maker_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id) 
+        }
+        else if ($market_maker_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id) 
         {
             $marketRequestRoles = ["market_maker"];
-        }else if($market_maker_org_id == $current_org_id  && $interest_org_id == $current_org_id && $current_org_id  != null)
+        }
+        else if($market_maker_org_id == $current_org_id  && $interest_org_id == $current_org_id && $current_org_id  != null)
         {
             $marketRequestRoles = ["market_maker","interest"];
         }

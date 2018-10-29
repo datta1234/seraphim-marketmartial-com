@@ -40,7 +40,11 @@ class LevelsImprovement implements Rule
         {
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
-                return true;
+                $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
+                // if the attribute on the last killed FoK is the one under validation, ignore its value...
+                if($attribute == $cond_att) {
+                    return true;
+                }
             }
 
             $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
@@ -89,6 +93,15 @@ class LevelsImprovement implements Rule
                 ) {
                     return true;
                 } else {
+                    // if the last one was an FOK & killed
+                    if($this->lastNegotiation->is_killed) {
+                        $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
+                        // if the value was not improved, yet the same and the inverse on the last killed FoK is the one under validation, ignore its value...
+                        // still validate the same
+                        if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->{$attribute})) {
+                            return true;
+                        }
+                    }
                     /*
                         If Value not improved, Ensure the Inverse value is improved ONLY if attribute equal
 
