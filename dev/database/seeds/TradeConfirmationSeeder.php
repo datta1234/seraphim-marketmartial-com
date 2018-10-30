@@ -53,7 +53,7 @@ class TradeConfirmationSeeder extends Seeder
     			        'send_trading_account_id' => $send_trading_account->id,
                         'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
 
                        
@@ -105,7 +105,7 @@ class TradeConfirmationSeeder extends Seeder
                         'send_trading_account_id' => $send_trading_account->id,
                         'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
                 }
     		}
@@ -146,7 +146,7 @@ class TradeConfirmationSeeder extends Seeder
                         'send_trading_account_id' => $send_trading_account->id,
                         'receiving_trading_account_id' => $receiving_trading_account->id,
                         'trade_confirmation_status_id' => $status_id,    			        
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
                 }
     		}

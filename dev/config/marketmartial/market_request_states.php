@@ -21,6 +21,11 @@ return [
         'market_maker'    =>  "NEGOTIATION-OPEN-VOL",
         'other'           =>  "NEGOTIATION-OPEN-VOL"
     ],
+    'trade-negotiation-open' => [
+        'negotiator'      =>  "TRADE-NEGOTIATION-SENDER",
+        'counter'         =>  "TRADE-NEGOTIATION-COUNTER",
+        'other'           =>  "TRADE-NEGOTIATION-COUNTER"
+    ],
     'trade-negotiation-pending' => [
         'negotiator'      =>  "TRADE-NEGOTIATION-SENDER",
         'counter'         =>  "TRADE-NEGOTIATION-COUNTER",

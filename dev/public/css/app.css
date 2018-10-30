@@ -17431,6 +17431,11 @@ input:checked + .slider:before {
   color: #EBC300;
 }
 
+.interaction-bar-wrapper input[type="text"]:disabled {
+  background-color: #afafaf;
+  border-color: #8e8e8e;
+}
+
 .text-my-org {
   color: #EBC300;
 }
@@ -17483,6 +17488,10 @@ input:checked + .slider:before {
 
 .activity-block .dismiss:hover {
   cursor: pointer;
+}
+
+.condition-timer {
+  color: #EBC300;
 }
 
 .interaction-bar-wrapper .chat-bar,

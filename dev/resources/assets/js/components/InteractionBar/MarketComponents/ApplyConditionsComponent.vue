@@ -33,7 +33,7 @@
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
                                     <b-form-radio-group v-if="child.value.constructor === Array"
-                                                        v-bind:options="child.value"
+                                                        v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
                                                         v-on:change="e => setCondition(child.alias, e, c_group)"
                                                         name="">
@@ -44,7 +44,7 @@
 
                         <div class="ibar-condition-panel-content text-left" v-else>
                             <b-form-radio-group v-if="condition.value.constructor === Array"
-                                                v-bind:options="condition.value"
+                                                v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
                                                 v-on:change="e => setCondition(condition.alias, e, c_group)"
                                                 name="">
@@ -106,7 +106,7 @@
         },
         computed: {
             negotiation_stage() {
-                return this.marketRequest.state();
+                return this.marketRequest._stage;
             },
             condition_aliases() {
                 let getAlias = (list, group) => {
@@ -129,8 +129,13 @@
             }
         },
         methods: {
+            parseRadioGroup(group) {
+                return group.filter(x => {
+                    return x.hidden !== true && this.conditionDisplayed(x);
+                });
+            },
             conditionDisplayed(cond){
-                console.log(cond, this.negotiation_stage);
+                console.log(cond.alias, cond.only, this.negotiation_stage);
                 if(typeof cond.only !== 'undefined') {
                     if(cond.only == this.negotiation_stage) {
                         return true;

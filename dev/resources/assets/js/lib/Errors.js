@@ -2,8 +2,9 @@ module.exports =  class Errors {
     /**
      * Create a new Errors instance.
      */
-    constructor(errors) {
+    constructor(errors, message) {
         this.errors = errors.errors || errors || {};
+        this.message = errors.message || message || "";
     }
 
 

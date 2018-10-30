@@ -1,0 +1,66 @@
+<?php
+namespace App\Helpers\Slack;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
+use App\Events\ChatMessageReceived;
+
+class Slack
+{
+    private $httpClient;
+    private $baseUrl;
+    private $authToken;
+
+    function __construct() {
+       $this->httpClient = new Client();
+       $this->baseUrl = env('SLACK_API_URL');
+       $this->authToken = "Bearer ".env('SLACK_AUTH_BEARER');
+    }
+
+
+    /**
+    *   Send Request
+    *   
+    *   
+    */
+    protected function sendHttp($method, $headers, $body) {
+        
+        // set auth token
+        $headers['Authorization'] = $this->authToken;
+
+        // send request
+        try {
+            $response = $this->httpClient->request($method, $this->baseUrl.'/chat.postMessage', [
+                    'headers' => $headers,
+                    'body'  =>  json_encode($body)
+            ]);
+            return $response->getBody();
+
+        } catch(RequestException $e) {
+            // handle issue
+            \Log::error($e);
+            $error_data = array("Request" => Psr7\str($e->getRequest()));
+            if ($e->hasResponse()) {
+                $error_data["Response"] = Psr7\str($e->getResponse());
+            }
+            \Log::error(array( "Errors" => $error_data));
+            return false;
+        }
+    }
+
+    /**
+     * Send message to Slack
+     *
+     * @return void
+     */
+    public function postMessage($content)
+    {
+        $response = $this->sendHttp('POST',[
+            'Content-Type' =>'application/json', 
+            'Accept' => 'application/json'
+        ],$content);
+
+        return $response ? json_decode($response) : false;
+    }
+
+}
