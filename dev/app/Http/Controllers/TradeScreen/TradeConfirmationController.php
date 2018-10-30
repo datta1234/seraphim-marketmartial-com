@@ -92,14 +92,14 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 5;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
 
         }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 3;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
         }
 
         $data = $tradeConfirmation->fresh()->load([

@@ -219,8 +219,6 @@ class TradeConfirmation extends Model
         $is_reciever = $current_org_id == $this->recievingUser->organisation->id;
         $senderStatuses = [1,3];
         $receiverStatuses = [2,5];
-       
-       
        if($is_sender)
        {
            return  in_array($this->trade_confirmation_status_id,$senderStatuses);

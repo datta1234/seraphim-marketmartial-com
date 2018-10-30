@@ -4,7 +4,7 @@
     <p>Date: {{ trade_confirmation.date }} </p>
     <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
     <div style="Display:inline;">
-        <h3>Option</h3>
+        <h3 class="text-dark">Option</h3>
     </div>
 
     <table class="table table-sm">
@@ -60,7 +60,7 @@
     </table>
 
     <div>
-        <h3>Futures</h3>
+        <h3 class="text-dark">Futures</h3>
     </div>
       <table class="table table-sm">
       <thead>

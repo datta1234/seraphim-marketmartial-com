@@ -326,15 +326,22 @@ class UserMarketRequest extends Model
             } 
         } 
     }
-
+    
+    /*
+    *market is either open after a traded market or spin following each other
+    */
     public function openToMarket()
     {
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            
             if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
             {
                 return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
+            }else
+            {
+               return is_null($lastNegotiation->marketNegotiationParent);
             }
         }
         return false;
@@ -364,7 +371,6 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
-        
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;

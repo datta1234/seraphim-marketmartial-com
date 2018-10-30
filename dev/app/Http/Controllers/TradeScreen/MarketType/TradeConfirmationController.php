@@ -15,9 +15,7 @@ class TradeConfirmationController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request,MarketType $marketType)
-    {
-        return [];
-        //where organisation is involved        
+    {       
         $user = $request->user();
     	return TradeConfirmation::where(function($q) use($user,$marketType)
         {
