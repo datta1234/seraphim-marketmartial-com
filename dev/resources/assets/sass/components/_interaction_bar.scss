@@ -172,6 +172,14 @@
             color: $mm-yellow;
         }
     }
+
+
+    input[type="text"] {
+        &:disabled {
+            background-color: #afafaf;
+            border-color: #8e8e8e;
+        }
+    }
 }
 
 .text-my-org{
@@ -211,4 +219,25 @@
             border-left: 0.3em solid transparent;
         }
     }
+}
+
+
+.activity-block {
+    background: $ibar-btn-background-secondary;
+    border-radius: 3px;
+    padding: .25em .3em;
+
+
+    .dismiss {
+        &:hover {
+            cursor: pointer;
+        }
+        color: $mm-red;
+        float: right;
+        margin-right: .3em;
+    }
+}
+
+.condition-timer {
+    color: $mm-yellow;
 }

@@ -2,8 +2,9 @@ module.exports =  class Errors {
     /**
      * Create a new Errors instance.
      */
-    constructor(errors) {
-        this.errors = errors || {};
+    constructor(errors, message) {
+        this.errors = errors.errors || errors || {};
+        this.message = errors.message || message || "";
     }
 
 
@@ -35,6 +36,23 @@ module.exports =  class Errors {
 
     all() {
         return Object.keys(this.errors);
+    }
+
+
+    list(unique) {
+        unique = typeof unique === 'undefined' ? false : !!unique;
+        return Object.values(this.errors).reduce((out, item) => {
+            item.forEach(err => {
+                if(unique) {
+                    if(out.indexOf(err) == -1) {
+                        out.push(err);
+                    }
+                } else {
+                    out.push(err);
+                }
+            })
+            return out;
+        }, []);
     }
 
 

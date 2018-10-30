@@ -22,7 +22,7 @@
               </b-row>
               <b-row>
                     <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
-                        {{ error[0] }}
+                        {{ error }}
                     </b-col>
                     <b-col cols="12">       
                         <b-btn variant="primary" class="btn-block mt-2" :disabled="server_loading" @click="storeCounter()">Send Counter</b-btn>
@@ -90,7 +90,8 @@
             })
             .catch(err => {
               this.server_loading = false;
-              console.log(err);
+              this.errors = err.list(true);
+              console.log(this.errors);
             });
           }
         },

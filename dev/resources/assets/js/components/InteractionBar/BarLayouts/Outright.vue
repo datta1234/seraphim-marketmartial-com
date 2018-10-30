@@ -17,9 +17,17 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
+
     <template v-if="!is_trading">
         <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
    
         <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
             Alert me when cleared
@@ -100,6 +108,22 @@
                         </b-button>
                     </b-col>
                 </b-row>
+                
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                    <b-col cols="6">
+                         
+                        <b-button class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="improveBestNegotiation()">
+                                Send
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
                         <!-- !maker_quote && !marketRequest.chosen_user_market -->
@@ -124,7 +148,7 @@
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
         
-        <ibar-active-conditions v-if="marketRequest.chosen_user_market != null" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
 
     </b-container>
 </template>
@@ -139,7 +163,7 @@
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
-    
+    import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
     
 
     const showMessagesIn = [
@@ -154,7 +178,8 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
-            IbarActiveConditions
+            IbarActiveConditions,
+            IbarTradeAtBestNegotiation
         },
         props: {
             marketRequest: {
@@ -228,7 +253,12 @@
             },
             is_trading: function(){
                 return this.marketRequest.isTrading();
-
+            },
+            is_trading_at_best: function() {
+                return this.marketRequest.chosen_user_market.isTradingAtBest();
+            },
+            is_trading_at_best_closed: function() {
+                return !this.last_negotiation.hasTimeoutRemaining();
             },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();
@@ -254,12 +284,10 @@
                 }
                 return false;
             },
-            validateProposal:function(check_invalid)
-            {
+            validateProposal:function(check_invalid) {
                 this.check_invalid = check_invalid;
             },
-            updateMessage: function(messageData)
-            {
+            updateMessage: function(messageData) {
                 if(messageData.user_market_request_id == this.marketRequest.id)
                 {
                     let message = messageData.message;
@@ -273,21 +301,22 @@
                 }
                
             },
-            calcUserMessages:function()
-            {
+            calcUserMessages:function() {
                 //if the users market quote is placed on hold notify the the current user if it is theres
                 if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }else if(!this.can_negotiate && !this.is_trading)
+                }
+                else 
+                if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
             },
-            subscribeToMarketRequest(){
+            subscribeToMarketRequest() {
 
             },
-            spinNegotiation(){
+            spinNegotiation() {
                 
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
@@ -298,8 +327,8 @@
                 .catch(err => {
                     this.server_loading = false;
 
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -318,11 +347,25 @@
                 .catch(err => {
                     this.server_loading = false;
 
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
 
+            },
+            improveBestNegotiation() {
+                this.server_loading = true;
+                this.marketRequest.chosen_user_market.trading_at_best.improveBestNegotiation(this.proposed_user_market_negotiation)
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
+
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
             },
             sendQuote() {
 
@@ -346,8 +389,8 @@
                     console.log("this is an error",err);
 
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -365,8 +408,8 @@
                 })
                 .catch(err => {
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -382,8 +425,8 @@
                 })
                 .catch(err => {
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
             },
             pullQuote() {

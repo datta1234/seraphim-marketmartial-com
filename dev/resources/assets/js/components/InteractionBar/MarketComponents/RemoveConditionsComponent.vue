@@ -1,8 +1,8 @@
 <template>
     <b-row dusk="ibar-remove-conditions">
         <b-col cols="12" v-for="(group, key) in condition_groups" :key="key" class="text-center">
-            <label class="ibar-condition-remove-label" @click="removeConditionGroup(group)" v-if="group.title && groupIsSet(group)">
-                {{ group.title }}&nbsp;&nbsp;<span class="remove">X</span>
+            <label class="ibar-condition-remove-label" @click="removeConditionGroup(group)" v-if="getTitle(group) && groupIsSet(group)">
+                {{ getTitle(group) }}&nbsp;&nbsp;<span class="remove">X</span>
             </label>
         </b-col>
     </b-row>
@@ -76,6 +76,27 @@
                     }
                     return null;
                 };
+                let getValueTitles = (value, list, title) => {
+                    list = list ? list : {};
+                    title = title ? title : null;
+                    if(typeof value !== 'undefined' && value !== null)
+                    switch(value.constructor) {
+                        case Array:
+                            value.forEach(x => {
+                                list = Object.assign(list, getValueTitles(x, list, title));
+                            });
+                        break;
+                        case Object:
+                            if(value.title) {
+                                title = value.title;
+                            }
+                            list = Object.assign(list, getValueTitles(value.value, list, title));
+                        break;
+                        default: 
+                            list[String(value)] = title;
+                    }
+                    return list;
+                };
                 let getAlias = (list, grouping) => {
                     return list.reduce((a, v, i) => {
                         let group = ( grouping ? grouping : [i,v.title] );
@@ -91,6 +112,7 @@
                                 default: v.default,
                                 title: v.title,
                                 sets: getSets(v),
+                                titles: getValueTitles(v.value)
                             });
                         }
                         if(v.children) {
@@ -121,10 +143,22 @@
                     }
                 }
                 return false;
+            },
+            getTitle(group) {
+                let title = "";
+                for(let i = 0, cond; cond = group.items[i]; i++) {
+                    if(this.marketNegotiation[cond.alias] != cond.default)
+                    {
+                        if(cond.titles && cond.titles[String(this.marketNegotiation[cond.alias])] != null) {
+                            title += cond.titles[String(this.marketNegotiation[cond.alias])];
+                        }
+                    }
+                }
+                return title == "" ? group.title : title;
             }
         },
-        mounted(){
-            
+        mounted() {
+            console.log(this.condition_groups);
         }
     }
 </script>

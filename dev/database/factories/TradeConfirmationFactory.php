@@ -25,5 +25,11 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class,function
         'trading_account_id' => function(){
             return factory(App\Models\UserManagement\TradingAccount::class)->create()->id;
         },
+        'trade_structure_id'    =>  function() {
+            return App\Models\StructureItems\TradeStructure::first()->id;
+        },
+        'user_market_request_id'    =>  function() {
+            return factory(App\Models\MarketRequest\UserMarketRequest::class)->create()->id;
+        }
     ];
 });

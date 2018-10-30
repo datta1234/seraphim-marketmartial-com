@@ -4,7 +4,7 @@
             <strong>Proposal (Private)</strong>
         </b-col>
         <b-col cols="12">
-            <b-collapse :id="'condition-history-'+negotiation.id" class="mt-2">
+            <b-collapse :id="'condition-history-'+negotiation.id" class="mt-2" @shown="refreshTooltip()" @hidden="refreshTooltip()">
                 <counter-history :history="condition.history"></counter-history>
             </b-collapse>
         </b-col>
@@ -17,7 +17,7 @@
                         </span>
                     </b-col>
                     <b-col cols="2">
-                        <span>
+                        <span id="proposal-do-trade">
                             <a href="" @click.prevent.stop="doTrade">Trade</a>
                         </span>
                     </b-col>
@@ -32,6 +32,16 @@
                 </b-row>
             </div>
         </b-col>
+        
+        <ibar-trade-desired-quantity 
+            ref="proposalTradePopover" 
+            target="proposal-do-trade" 
+            :market-negotiation="negotiation" 
+            :open="trade_open" 
+            :is-offer="null"
+            @close="trade_open = false" 
+            parent="cond-container">
+        </ibar-trade-desired-quantity>
 
         <ibar-counter-negotiation 
             ref="proposalCounterPopover" 
@@ -63,6 +73,7 @@
         },
         data() {
             return {
+                trade_open: false,
                 counter_open: false
             }
         },
@@ -72,8 +83,12 @@
             }
         },
         methods: {
+            refreshTooltip() {
+                console.log("Refreshing", this.$refs.proposalCounterPopover)
+                this.$refs.proposalCounterPopover.$forceUpdate();
+            },
             doTrade() {
-                
+                this.trade_open = true;
             },
             doCounter() {
                 this.counter_open = true;

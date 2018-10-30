@@ -1,11 +1,12 @@
 <?php
+
 namespace App\Http\Requests\TradeScreen\UserMarket;
 
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\LevelsImprovement;
 
-class MarketNegotiationRequest extends FormRequest
+class MarketNegotiationCounterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -59,14 +60,15 @@ class MarketNegotiationRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-        $negotiation = $this->user_market->lastNegotiation()->notPrivate()->first();
-        // dd($negotiation);
-        $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $negotiation)], function ($input) {
-            return !is_null($input->bid_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
+        // get latest non mim
+        $lastNegotiation = $this->market_negotiation;
+
+        $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $lastNegotiation)], function ($input) {
+            return !is_null($input->bid_qty) && !$input->is_repeat;
         }); 
 
-        $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this, $negotiation)], function ($input) {
-            return !is_null($input->offer_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
+        $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this, $lastNegotiation)], function ($input) {
+            return !is_null($input->offer_qty) && !$input->is_repeat;
         }); 
 
         $validator->sometimes('bid_qty', 'required|numeric', function ($input) {
