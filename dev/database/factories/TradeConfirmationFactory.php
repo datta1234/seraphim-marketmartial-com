@@ -24,7 +24,10 @@ $factory->define(App\Models\TradeConfirmations\TradeConfirmation::class,function
         },
         'receiving_trading_account_id' => null,
         'trade_confirmation_status_id' => null,
-        'trading_account_id' => function(){
+        'send_trading_account_id' => function(){
+            return factory(App\Models\UserManagement\TradingAccount::class)->create()->id;
+        },
+        'receiving_trading_account_id' => function(){
             return factory(App\Models\UserManagement\TradingAccount::class)->create()->id;
         },
         'trade_structure_id'    =>  function() {

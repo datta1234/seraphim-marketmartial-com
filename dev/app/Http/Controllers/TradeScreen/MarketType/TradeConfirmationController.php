@@ -22,13 +22,13 @@ class TradeConfirmationController extends Controller
         {
             $q->sentByMyOrganisation($user->organisation_id)
                 ->marketType($marketType->id)
-                ->where('trade_confirmation_status_id',1);
+                ->whereIn('trade_confirmation_status_id',[1,5]);
 
         })->orWHere(function($q) use($user,$marketType){
             
             $q->sentToMyOrganisation($user->organisation_id)
                 ->marketType($marketType->id)
-                ->where('trade_confirmation_status_id',2);
+                ->whereIn('trade_confirmation_status_id',[2,3]);
 
         })->get()
         ->map(function($item){

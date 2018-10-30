@@ -61,7 +61,8 @@ trait CalcuatesForPhases {
             $isOffer = true;
             $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
         }
-        $this->futureGroups[0]->setOpVal('Contract',$contracts);
+
+        $this->futureGroups[0]->setOpVal('Contract', round($contracts));
         $this->feesCalc($isOffer,$gross_prem);
 	}
 

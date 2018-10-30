@@ -161,7 +161,7 @@ export default class TradeConfirmation extends BaseModel {
     confirm(trading_account)
     {
       return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'confirm',{
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/confirm',{
             "trading_account_id":trading_account.id,
             "trade_confirmation": this.prepareStore()
            })

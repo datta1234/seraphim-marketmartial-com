@@ -44,10 +44,18 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Congrats on the trade! Compelete the booking in the confirmation tab");
         }
+
+         $data = $tradeConfirmation->fresh()->load([
+            'tradeConfirmationGroups'=>function($q)
+            {
+                $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+            }
+        ])->preFormatted();
+
         return response()->json(['trade_confirmation' => $data]);
     }
 
-    public function confirm()
+    public function confirm(TradeConfirmation $tradeConfirmation,Request $request)
     {
         $user = $request->user();        
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
@@ -63,8 +71,42 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
-
         }
+
+         $data = $tradeConfirmation->fresh()->load([
+            'tradeConfirmationGroups'=>function($q)
+            {
+                $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+            }
+        ])->preFormatted();
+
+        return response()->json(['trade_confirmation' => $data]);
+    } 
+
+    public function dispute(TradeConfirmation $tradeConfirmation,Request $request)
+    {
+        $user = $request->user();        
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
+        {
+            $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 5;
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
+
+        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        {
+            $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 3;
+            $tradeConfirmation->save();
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
+        }
+
+        $data = $tradeConfirmation->fresh()->load([
+            'tradeConfirmationGroups'=>function($q)
+            {
+                $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+            }
+        ])->preFormatted();
+         
         return response()->json(['trade_confirmation' => $data]);
     }    
 }

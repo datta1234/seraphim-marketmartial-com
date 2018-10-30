@@ -102,8 +102,10 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
 		'only' => ['store','index']
 	]);
 
-	 Route::post('trade-confirmation/{trade_confirmation}/confirm','TradeScreen\TradeConfirmationController@confirm');
+	Route::post('trade-confirmation/{trade_confirmation}/dispute','TradeScreen\TradeConfirmationController@dispute');
+ 	Route::post('trade-confirmation/{trade_confirmation}/confirm','TradeScreen\TradeConfirmationController@confirm');
     Route::post('trade-confirmation/{trade_confirmation}/phase-two','TradeScreen\TradeConfirmationController@phaseTwo');
+
     Route::put('trade-confirmation/{trade_confirmation}','TradeScreen\TradeConfirmationController@update');
 
     Route::post('stream','TradeScreen\StreamController@index');

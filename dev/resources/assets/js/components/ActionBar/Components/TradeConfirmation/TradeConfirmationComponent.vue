@@ -62,7 +62,7 @@
     <div>
         <h3>Futures</h3>
     </div>
-
+    {{ "PROCEED "+can_proceed}}
       <table class="table table-sm">
       <thead>
         <tr>
@@ -136,27 +136,24 @@
 
     export default {
       name: 'TradeConfirmationComponent',
-      watch: {
-            trade_confirmation:{
-              handler:function (val) {
-                    let can_proceed = true;
-                    this.trade_confirmation.future_groups.forEach((group)=>{
-                        can_proceed = group.future.length > 0; 
-                        if(!can_proceed)
-                        {
-                            return false;//to break out of the each
-                        }
-                    });
-                    this.can_proceed = can_proceed;
-                },
-                deep: true
-            },
+        computed: {
+            can_proceed:function (val) {
+
+            let confirmation = this.trade_confirmation;
+            let future_groups = confirmation.future_groups;            
+            return future_groups.reduce((out, group)=>{
+                if(group.future.length == 0)
+                {
+                    out = false;
+                }
+                return out;
+            }, true);
         },
+    },
       data() {
         return {
                 trading_accounts:[],
                 selected_trading_account:null,
-                can_proceed: false
             }
         },
       props:{
