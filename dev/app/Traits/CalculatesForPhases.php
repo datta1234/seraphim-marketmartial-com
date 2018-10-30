@@ -10,7 +10,8 @@ trait CalcuatesForPhases {
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
         $contracts1 =  floatval($this->optionGroups[0]->getOpVal('Contract'));
-        $expiry1 = Carbon::createFromFormat("Y-m-d H:i:s",$this->optionGroups[0]->getOpVal('Expiration Date'));
+        $expiry1 = Carbon::createFromFormat("Y-m-d",$this->optionGroups[0]->getOpVal('Expiration Date'));
+
         $strike1 =  floatval($this->optionGroups[0]->getOpVal('strike'));
         $volatility1 = ( floatval($this->optionGroups[0]->getOpVal('volatility'))/100);//its a percentage
         

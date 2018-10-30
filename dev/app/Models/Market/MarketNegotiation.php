@@ -716,9 +716,8 @@ class MarketNegotiation extends Model
                 $tradeNegotiation->traded = false;
             }else
             {
+
                 $counterNegotiation = $this->tradeNegotiations->last();
-
-
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
@@ -747,15 +746,17 @@ class MarketNegotiation extends Model
                     }
 
 
-                }elseif ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
+                }else if ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
                 {
                     $tradeNegotiation->traded = true;
+                }else if ($tradeNegotiation->quantity > $counterNegotiation->quantity) 
+                {
+                    $tradeNegotiation->traded = false;
                 }
             }            
  
             try {
                 DB::beginTransaction();
-
                 $this->tradeNegotiations()->save($tradeNegotiation);
                
                 if($newMarketNegotiation )
@@ -766,7 +767,9 @@ class MarketNegotiation extends Model
                 if($tradeNegotiation->traded)
                 {
                    $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
-                   //$tradeConfirmation->notify();
+                   $message = "Congrats on the trade! Complete the booking in the confirmation tab";
+                   $organisation = $tradeNegotiation->recievingUser->organisation;
+                   $tradeConfirmation->notifyConfirmation($organisation,$message);
                 }
 
                 // if this was a private proposal, cascade public update to history 
@@ -797,6 +800,7 @@ class MarketNegotiation extends Model
 
                 return $tradeNegotiation;
             } catch (\Exception $e) {
+                dd($e);
                 \Log::error($e);
                 DB::rollBack();
                 return false;

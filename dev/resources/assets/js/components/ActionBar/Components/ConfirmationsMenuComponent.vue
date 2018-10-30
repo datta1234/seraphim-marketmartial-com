@@ -22,8 +22,8 @@
             </div>
         </b-popover>
         
-           <b-modal @hidden="hideModal" class="mm-modal mx-auto modal-xl" ref="confirmationModelRef"  hide-footer title="Using Component Methods">
-                <trade-confirmation-component v-if="selected_trade_confirmation != null" :trade_confirmation="selected_trade_confirmation"></trade-confirmation-component>
+           <b-modal @hidden="hideModal()" class="mm-modal mx-auto modal-xl" ref="confirmationModelRef"  hide-footer title="Using Component Methods">
+                <trade-confirmation-component @close="hideModal()" v-if="selected_trade_confirmation != null" :trade_confirmation="selected_trade_confirmation"></trade-confirmation-component>
             </b-modal>
 
         </div>
@@ -60,7 +60,6 @@
             },
             hideModal()
             {
-                console.log("here");
                 this.$refs.confirmationModelRef.hide()  ;
                 this.selected_trade_confirmation = null;
             }

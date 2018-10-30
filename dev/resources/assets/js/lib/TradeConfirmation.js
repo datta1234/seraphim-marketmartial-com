@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 
 import OptionGroup from './tradeconfirmations/OptionGroup';
 import FutureGroup from './tradeconfirmations/FutureGroup';
+import Errors from './Errors';
 
 export default class TradeConfirmation extends BaseModel {
 
@@ -62,13 +63,11 @@ export default class TradeConfirmation extends BaseModel {
 
         // register option group
         if(options && options.option_groups) {
-            console.log("option group method ran");
            this.addOptionGroups(options.option_groups);
         }
 
          // register future groups
         if(options && options.future_groups) {
-            console.log("future group method ran");
            this.addFutureGroups(options.future_groups);
         }
     }
@@ -162,6 +161,25 @@ export default class TradeConfirmation extends BaseModel {
     {
       return new Promise((resolve, reject) => {
            axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/confirm',{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+           })
+           .then(response => {
+
+            this.update(response.data.trade_confirmation);
+            resolve();
+        })
+           .catch(err => {
+            reject(new Errors(err.response.data));
+        }); 
+       });
+    }
+
+
+    dispute(trading_account)
+    {
+      return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
             "trading_account_id":trading_account.id,
             "trade_confirmation": this.prepareStore()
            })
