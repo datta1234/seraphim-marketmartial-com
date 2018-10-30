@@ -87,6 +87,8 @@ class Stream
 
     public function run($idx = null)
     {
+        \Log::info([$this->broadcastName,$this->channel,$this->chunks,$this->total]);
+
         foreach ($this->chunks as $k => $chunk) 
         {
             event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));

@@ -3,11 +3,12 @@
 namespace App\Models\Trade;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TradeConfirmations\TradeConfirmation;
 
 class TradeNegotiation extends Model
 {
     use \App\Traits\ResolvesUser;
-	
+
     /**
 	 * @property integer $id
 	 * @property integer $user_market_id
@@ -125,6 +126,15 @@ class TradeNegotiation extends Model
     {
         return $this->marketNegotiation->TradeNegotiations()->first();
     }
+
+    public function setUpConfirmation()
+    {
+       $tradeConfirmation = new TradeConfirmation();
+       return $tradeConfirmation->setUp($this);
+    }
+
+
+
 
     public function preFormatted()
     {

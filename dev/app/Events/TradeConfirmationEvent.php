@@ -9,30 +9,26 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Models\TradeConfirmations\TradeConfirmation;
+use App\Models\UserManagement\Organisation;
 
-class SendStream implements ShouldBroadcast
+class TradeConfirmationEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $broadcastName;
-    public $channel;
-    public $data;
-    public $total;
+
+    public $tradeconfirmation;
+    private $organisation;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($broadcastName,$channel,$data,$total)
+    public function __construct(TradeConfirmation $tradeconfirmation,Organisation $organisation)
     {
-        $this->broadcastName = $broadcastName;
-        $this->channel = $channel;
-        $this->data =   $data;
-        $this->total =   $total;
-
+        $this->tradeconfirmation = $tradeconfirmation;
+        $this->organisation = $organisation;
     }
-
-     
 
     /**
      * Get the channels the event should broadcast on.
@@ -41,29 +37,26 @@ class SendStream implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::info(
-            [$this->broadcastName,
-            $this->channel,
-            $this->data,
-            $this->total]
-        );
-        return $this->channel;
+        return new PrivateChannel('organisation.'.$this->organisation->uuid);
     }
 
+    /**
+    * The event's broadcast name.
+    *
+    * @return string
+    */
     public function broadcastAs()
     {
-        return  $this->broadcastName;
+        return 'TradeConfirmationEvent';
     }
 
-     /**
+    /**
     * Get the data to broadcast.
     *
     * @return array
     */
     public function broadcastWith()
     {
-        $this->data['total'] = $this->total;
-        $this->data['timestamp'] = now()->toIso8601String();
-        return $this->data;
+        return ["message"=>$this->organisation->getNotification(),'data'=>$this->tradeconfirmation->setOrgContext($this->organisation)->preFormatted()];
     }
 }

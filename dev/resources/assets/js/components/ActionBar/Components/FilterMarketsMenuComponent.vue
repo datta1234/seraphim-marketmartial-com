@@ -123,6 +123,7 @@
                 } else {
                     this.removeUserPreferenceMarketType(market_type)
                     .then( () => {
+                        this.$root.removeTradeConfirmations(market_type);
                         this.availableSelectedMarketTypes[market_type].marketType.markets.forEach((market) => {
                             this.removeMarket(market);
                         });
@@ -135,6 +136,7 @@
              * @param {string} $market a string detailing a Market.title to be added
              */
             addMarket(market_type) {
+                this.$root.loadTradeConfirmations(market_type);
                 this.$root.loadMarkets(market_type)
                 .then(markets => {
                     let promises = [];

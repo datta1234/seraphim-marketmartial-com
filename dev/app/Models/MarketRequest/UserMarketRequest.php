@@ -274,8 +274,7 @@ class UserMarketRequest extends Model
         {
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
-        } 
-        
+        }    
     }
 
     /*

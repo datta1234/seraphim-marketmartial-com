@@ -706,6 +706,7 @@ class MarketNegotiation extends Model
             $tradeNegotiation->user_market_id = $this->user_market_id;
             $counterNegotiation = null;   
             $newMarketNegotiation = null;
+
             if(count($this->tradeNegotiations) == 0)
             {
                  // find out who the the negotiation is sent to based of who set the level last
@@ -716,6 +717,8 @@ class MarketNegotiation extends Model
             }else
             {
                 $counterNegotiation = $this->tradeNegotiations->last();
+
+
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
@@ -760,10 +763,17 @@ class MarketNegotiation extends Model
                     $newMarketNegotiation->save();
                 }
 
+                if($tradeNegotiation->traded)
+                {
+                   $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
+                   //$tradeConfirmation->notify();
+                }
+
                 // if this was a private proposal, cascade public update to history 
                 if($this->is_private == true) {
                     $this->resolvePrivateHistory();
                 }
+
                 DB::commit();
 
                 if(!is_null($counterNegotiation))
