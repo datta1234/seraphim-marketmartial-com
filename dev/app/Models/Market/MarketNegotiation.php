@@ -662,7 +662,8 @@ class MarketNegotiation extends Model
 
                 if($tradeNegotiation->traded)
                 {
-                    $tradeNegotiation->setUpConfirmation();
+                   $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
+                   //$tradeConfirmation->notify();
                 }
 
                 // if this was a private proposal, cascade public update to history 

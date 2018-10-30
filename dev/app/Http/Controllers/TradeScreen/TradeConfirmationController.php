@@ -28,23 +28,43 @@ class TradeConfirmationController extends Controller
     }
 
     public function update(TradeConfirmation $tradeConfirmation,Request $request)
-    {
+    {   
         $user = $request->user();        
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
         {
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 2;
             $tradeConfirmation->save();
-            $tradeConfirmation->sendToReciever("Congrats on the trade! Compelete the booking in the confirmation tab");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Congrats on the trade! Compelete the booking in the confirmation tab");
 
         }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 2)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 3;
             $tradeConfirmation->save();
-            $tradeConfirmation->sendToInitiate("Congrats on the trade! Compelete the booking in the confirmation tab");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Congrats on the trade! Compelete the booking in the confirmation tab");
+        }
+        return response()->json(['trade_confirmation' => $data]);
+    }
+
+    public function confirm()
+    {
+        $user = $request->user();        
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
+        {
+            $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 4;
+            $tradeConfirmation->save();
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
+
+        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        {
+            $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 4;
+            $tradeConfirmation->save();
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
 
         }
-
+        return response()->json(['trade_confirmation' => $data]);
     }    
 }

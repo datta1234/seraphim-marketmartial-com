@@ -228,6 +228,13 @@ const app = new Vue({
                 console.error(err);
             });
         },
+        removeTradeConfirmations(marketType){
+                let self = this;
+                self.trade_confirmations = self.trade_confirmations.filter((item) => {
+
+                    return item.market_type_id == marketType.id;
+                });
+        },
         loadTradeConfirmations(marketType) {
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
@@ -241,7 +248,6 @@ const app = new Vue({
                         return x;
                     });
                    
-                    console.log(self.trade_confirmations);
 
 
                 } else {
@@ -350,19 +356,37 @@ const app = new Vue({
          * 
          * @todo - Add logic to display market if not already displaying
          */
-        updateUserMarketRequest(UserMarketRequestData) {
-            let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
+        updateUserMarketRequest(userMarketRequestData) {
+            let index = this.display_markets.findIndex( display_market => display_market.id == userMarketRequestData.market_id);
             if(index !== -1)
             {
-                let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
+                let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == userMarketRequestData.id);
                 if(request_index !== -1) {
-                    this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
+                    this.display_markets[index].updateMarketRequest(userMarketRequestData, request_index);
                 } else {
-                    this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
+                    this.display_markets[index].addMarketRequest(new UserMarketRequest(userMarketRequestData));
                 }
             } else {
                 //@TODO: Add logic to display market if not already displaying
             }
+        },
+        updateTradeConfirmation(tradeConfirmationData){
+        
+         let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
+        
+            if(index !== -1)
+            {
+                let trade_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.id);
+                
+                if(trade_confirmation_index !== -1) {
+                    this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
+                } else {
+                    this.trade_confirmations.push(new TradeConfirmationData(tradeConfirmationData));
+                }
+            } else {
+                //@TODO: Add logic to display market if not already displaying
+            }
+
         },
         /**
          * Loads user prefered theme setting base on local storage variable         
@@ -523,6 +547,7 @@ const app = new Vue({
                 let promises = [];
                 if(user_preferences !== null) {
                     user_preferences.prefered_market_types.forEach(market_type => {
+                       
                         promises.push(this.loadTradeConfirmations(market_type));
 
                         promises.push(
@@ -583,6 +608,17 @@ const app = new Vue({
                     this.handlePacket(userMarketRequest, (packet_data) => {
                         this.updateUserMarketRequest(packet_data.data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+                    });
+                })
+                .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
+                    //this should be the market thats created
+                    this.handlePacket(tradeConfirmationPackets, (packet_data) => {
+                        this.updateTradeConfirmation(packet_data.data);
+                        console.log("confirm it here");
+                        this.$toasted.show(packet_data.message.data,{
+                            'className':"mm-confirm-toast"
+                        });
+
                     });
                 })
                 .listen('ChatMessageReceived', (received_org_message) => {

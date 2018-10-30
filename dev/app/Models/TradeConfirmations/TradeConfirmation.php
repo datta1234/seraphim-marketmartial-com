@@ -3,6 +3,8 @@
 namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Broadcast\Stream;
+use App\Events\TradeConfirmationEvent;
 use Carbon\Carbon;
 
 class TradeConfirmation extends Model
@@ -157,6 +159,13 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
     }
 
+    public function notifyConfirmation($organisation,$message)
+    {
+        $organisation->notify("trade_confirmation_store",$message,true);
+        $stream = new Stream(new TradeConfirmationEvent($this,$organisation));
+        $stream->run();
+    }
+
     public function preFormatted()
     {
         $organisation = $this->resolveOrganisation();
@@ -177,6 +186,11 @@ class TradeConfirmation extends Model
             'market_request_title'      => $this->marketRequest->title,
             
             'market_id'                 => $this->market_id,
+
+            'market_type_id'            => $this->market->market_type_id,
+
+            'status_id'                 => $this->trade_confirmation_status_id,
+
 
 
             'underlying_id'             => $this->marketRequest->underlying->id,
@@ -255,6 +269,16 @@ class TradeConfirmation extends Model
     {
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
             'trade_confirmation_id');
+    }
+    
+    public function scopeMarketType($query, $market_type_id)
+    {
+       return $query->where(function ($q)  use ($market_type_id) {
+                $q->whereHas('market', function ($qq) use ($market_type_id) {
+                    $qq->where('market_type_id', $market_type_id);
+                });
+            }
+        );
     }
 
     public function scopeSentByMyOrganisation($query, $organisation_id)

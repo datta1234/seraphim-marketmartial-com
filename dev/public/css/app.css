@@ -17929,6 +17929,10 @@ input:checked + .slider:before {
   color: #FFFFFF;
 }
 
+.toasted.mm-confirm-toast.primary {
+  background-color: #E17428;
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

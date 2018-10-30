@@ -24,7 +24,7 @@ class TradeConfirmationEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Organisation $organisation,TradeConfirmation $tradeconfirmation)
+    public function __construct(TradeConfirmation $tradeconfirmation,Organisation $organisation)
     {
         $this->tradeconfirmation = $tradeconfirmation;
         $this->organisation = $organisation;
@@ -38,6 +38,16 @@ class TradeConfirmationEvent implements ShouldBroadcast
     public function broadcastOn()
     {
         return new PrivateChannel('organisation.'.$this->organisation->uuid);
+    }
+
+    /**
+    * The event's broadcast name.
+    *
+    * @return string
+    */
+    public function broadcastAs()
+    {
+        return 'TradeConfirmationEvent';
     }
 
     /**

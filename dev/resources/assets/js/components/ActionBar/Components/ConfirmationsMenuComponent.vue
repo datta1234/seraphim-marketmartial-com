@@ -62,7 +62,6 @@
             {
                 this.$refs.confirmationModelRef.hide()  ;
                 this.selected_trade_confirmation = null;
-
             }
         },
         mounted() {
