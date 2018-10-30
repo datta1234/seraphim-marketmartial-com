@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\MarketType;
+use App\Http\Requests\TradeScreen\TradeConfirmationStoreRequest;
 
 class TradeConfirmationController extends Controller
 {
@@ -14,7 +15,7 @@ class TradeConfirmationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function phaseTwo(TradeConfirmation $tradeConfirmation,Request $request)
+    public function phaseTwo(TradeConfirmation $tradeConfirmation,TradeConfirmationStoreRequest $request)
     {
     	$tradeConfirmation->updateGroups($request->input('structure_groups'));    	
         $tradeConfirmation->phaseTwo();
@@ -35,14 +36,14 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 2;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Congrats on the trade! Compelete the booking in the confirmation tab");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
 
         }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 2)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 3;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Congrats on the trade! Compelete the booking in the confirmation tab");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
         }
 
          $data = $tradeConfirmation->fresh()->load([
@@ -90,6 +91,7 @@ class TradeConfirmationController extends Controller
         {
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 5;
+            $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
 
         }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)

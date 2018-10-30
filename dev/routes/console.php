@@ -41,6 +41,10 @@ Artisan::command('mm:reset', function() {
         \App\Models\TradeConfirmations\Distpute::truncate();
         \App\Models\TradeConfirmations\BookedTrade::truncate();
         \App\Models\TradeConfirmations\TradeConfirmation::truncate();
+        \App\Models\TradeConfirmations\TradeConfirmationGroup::truncate();
+        \App\Models\TradeConfirmations\TradeConfirmationItem::truncate();
+
+
         \App\Models\Trade\TradeNegotiation::truncate();
 
         // Clear Market Negoting

@@ -571,7 +571,6 @@ class UserMarketRequest extends Model
                 }
             break;
              case "trade-negotiation-pending":
-                
                 if(in_array('negotiator',$tradeNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.negotiator');
                 }else if(in_array('counter', $tradeNegotiationRoles)){
@@ -605,7 +604,6 @@ class UserMarketRequest extends Model
         $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
         $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
     
-
         return $attributes;
     }
 

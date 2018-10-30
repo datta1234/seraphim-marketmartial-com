@@ -385,10 +385,20 @@ const app = new Vue({
                 let trade_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.id);
                 
                 if(trade_confirmation_index !== -1) {
-                    this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
+                    
+                    if(!tradeConfirmationData.can_interact)
+                    {
+                        this.trade_confirmations.splice(trade_confirmation_index,1);
+
+                    }else
+                    {
+                        this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
+                    }
+
                 } else {
-                    this.trade_confirmations.push(new TradeConfirmationData(tradeConfirmationData));
+                    this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));
                 }
+
             } else {
                 //@TODO: Add logic to display market if not already displaying
             }
@@ -620,11 +630,12 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
                         this.updateTradeConfirmation(packet_data.data);
-                        console.log("confirm it here");
-                        this.$toasted.show(packet_data.message.data,{
-                            'className':"mm-confirm-toast"
-                        });
-
+                        if(packet_data.message)
+                        {
+                             this.$toasted.show(packet_data.message.data,{
+                                'className':"mm-confirm-toast"
+                            }); 
+                        }
                     });
                 })
                 .listen('ChatMessageReceived', (received_org_message) => {
