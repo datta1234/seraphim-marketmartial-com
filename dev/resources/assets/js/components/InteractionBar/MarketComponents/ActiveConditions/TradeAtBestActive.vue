@@ -25,7 +25,7 @@
                                 </a>
                             </span>
                             <span>
-                                <a href="" @click.prevent.stop="doRepeat">Repeat</a>
+                                <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
                             </span>
                         </div>
                     </b-col>

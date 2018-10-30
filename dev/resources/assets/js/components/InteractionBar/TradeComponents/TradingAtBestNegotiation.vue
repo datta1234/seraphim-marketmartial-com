@@ -20,16 +20,16 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
-                            <b-form-input class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled || disabled_bid" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled || disabled_bid" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input class="w-100" v-model="marketNegotiation.bid" :disabled="disabled || disabled_bid" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled || disabled_bid" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input class="w-100" v-model="marketNegotiation.offer" :disabled="disabled || disabled_offer" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled || disabled_offer" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled || disabled_offer" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled || disabled_offer" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
                         </div>
                     </b-form>
                 </b-col>
