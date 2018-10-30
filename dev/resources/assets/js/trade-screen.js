@@ -91,6 +91,12 @@ Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 
+
+// directives
+import ActiveRequestDirective from './directives/active-request.js';
+Vue.directive('active-request', ActiveRequestDirective);
+
+
 Vue.mixin({
     methods: {
         /**

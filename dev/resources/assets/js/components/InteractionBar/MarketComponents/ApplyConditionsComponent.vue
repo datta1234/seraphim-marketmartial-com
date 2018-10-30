@@ -3,13 +3,14 @@
         <b-col>
             <b-row>
                 <b-col>
-                    <b-form-checkbox v-model="show_options" dusk="ibar-apply-a-condition" name="apply-a-condition" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
+                    <b-form-checkbox v-active-request v-model="show_options" dusk="ibar-apply-a-condition" name="apply-a-condition" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
                 </b-col>
             </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
             
                 <b-col v-for="(condition, c_group) in conditions" :key="c_group" cols="12" v-if="condition.hidden !== true && conditionDisplayed(condition)">
                     <b-btn @click="onToggleClick(condition, c_group)"
+                            v-active-request
                             variant="default" 
                             size="sm" 
                             class="w-75 mt-2 ibar-condition" 
@@ -33,6 +34,7 @@
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
                                     <b-form-radio-group v-if="child.value.constructor === Array"
+                                                         v-active-request
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
                                                         v-on:change="e => setCondition(child.alias, e, c_group)"
@@ -44,6 +46,7 @@
 
                         <div class="ibar-condition-panel-content text-left" v-else>
                             <b-form-radio-group v-if="condition.value.constructor === Array"
+                                                 v-active-request
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
                                                 v-on:change="e => setCondition(condition.alias, e, c_group)"

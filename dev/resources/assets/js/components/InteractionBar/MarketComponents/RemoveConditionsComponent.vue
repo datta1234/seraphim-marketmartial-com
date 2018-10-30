@@ -2,7 +2,7 @@
     <b-row dusk="ibar-remove-conditions">
         <b-col cols="12" v-for="(group, key) in condition_groups" :key="key" class="text-center">
             <label class="ibar-condition-remove-label" @click="removeConditionGroup(group)" v-if="getTitle(group) && groupIsSet(group)">
-                {{ getTitle(group) }}&nbsp;&nbsp;<span class="remove">X</span>
+                {{ getTitle(group) }}&nbsp;&nbsp;<span v-active-request class="remove">X</span>
             </label>
         </b-col>
     </b-row>

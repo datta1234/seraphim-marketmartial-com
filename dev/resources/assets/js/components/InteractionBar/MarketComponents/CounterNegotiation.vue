@@ -11,12 +11,12 @@
               <b-row>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input class="input-small" v-model="proposed_market_negotiation.bid" type="text" placeholder="Bid"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.bid" type="text" placeholder="Bid"></b-form-input>
                     </p>
                 </b-col>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input class="input-small" v-model="proposed_market_negotiation.offer" type="text" placeholder="Offer"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.offer" type="text" placeholder="Offer"></b-form-input>
                     </p>
                 </b-col>
               </b-row>
