@@ -156,7 +156,8 @@ class UserMarket extends Model
     }
 
     public function isTrading() {
-        return !$this->tradeNegotiations()->latest()->first()->traded;
+        $trade = $this->tradeNegotiations()->latest()->first();
+        return ( $trade ? !$trade->traded : false );
     }
 
     /**
@@ -230,9 +231,8 @@ class UserMarket extends Model
     */
     public function repeatQuote($user)
     {
-        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
-        {
-            $query->whereHas('user',function($query) use ($user){
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user) {
+            $query->whereHas('user',function($query) use ($user) {
                 $query->where('organisation_id', $user->organisation_id);
             });
         })->first();
@@ -272,6 +272,7 @@ class UserMarket extends Model
 
     public function spinNegotiation($user)
     {
+        // @TODO: this will fail with privates...
         $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
         // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
         $marketNegotiation = $oldNegotiation->replicate();
@@ -342,7 +343,6 @@ class UserMarket extends Model
             $counterNegotiation = $this->lastNegotiation()
                                 ->findCounterNegotiation($user)
                                 ->first();
-            \Log::info($counterNegotiation);
 
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {
@@ -354,11 +354,16 @@ class UserMarket extends Model
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
                 $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+
+                // enforce responses to have the same condition
+                if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
+                    $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+                }
             }
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
             try {
-                 DB::beginTransaction();
+                DB::beginTransaction();
 
                 $this->marketNegotiations()->save($marketNegotiation);
                 if($marketNegotiation->is_private) {
@@ -371,7 +376,7 @@ class UserMarket extends Model
                 }
                 DB::commit();
                 return $marketNegotiation;
-            } catch (\Exception $e) {
+            } catch (\Illuminate\Database\QueryException $e) {
                 \Log::error($e);
                 DB::rollBack();
                 return false;
@@ -408,6 +413,13 @@ class UserMarket extends Model
         }
         return $org == $negotiation->marketNegotiationParent->user->organisation_id;
     }
+
+
+    public function isTradeAtBestOpen() {
+        return  $this->lastNegotiation
+            &&  $this->lastNegotiation->isTradeAtBestOpen()
+            &&  !$this->lastNegotiation->isTrading();
+    }
     
 
     /**
@@ -437,9 +449,12 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
+                                            \Log::info("counter: $active");
                                             if($active === null) {
                                                 $active = $this->isInterest();
+                                                \Log::info("interest: $active");
                                             }
+                                            \Log::info("active: $active");
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
                                             return [
@@ -451,8 +466,15 @@ class UserMarket extends Model
                                             ];
                                         })->values(),
         ];
-
+        // dd($this->activeConditionNegotiations()->toSql());
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
+        
+        // if its trading at best
+        $data['trading_at_best'] = (
+            $this->isTradeAtBestOpen() ? 
+            $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            null 
+        );
 
         return $data;
     }

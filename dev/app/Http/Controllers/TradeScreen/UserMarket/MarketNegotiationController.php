@@ -8,7 +8,7 @@ use App\Models\Market\UserMarket;
 use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
-
+use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationImproveBestRequest;
 
 class MarketNegotiationController extends Controller
 {
@@ -50,19 +50,17 @@ class MarketNegotiationController extends Controller
             $this->authorize('addNegotiation',$userMarket);
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
         }
-       
-        $message = "Your levels have been sent.";
-        $request->user()->organisation->notify("market_negotiation_store",$message,true);
 
         //broadCast new market request;
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
+            $message = "Your levels have been sent.";
+            $request->user()->organisation->notify("market_negotiation_store",$message,true);
             return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
         } else {
-            return ['success'=>false,'data'=>$marketNegotiation ,'message'=>'There was a problem adding your levels'];
+            return response()->json(['success'=>false,'data'=>$marketNegotiation ,'message'=>'There was a problem adding your levels'], 500);
         }
     }
-
 
     /**
      * Display the specified resource.
@@ -111,7 +109,8 @@ class MarketNegotiationController extends Controller
 
         // Handle FOK kill
         if($marketNegotiation->isFoK()) {
-            $success = $marketNegotiation->kill();
+            $success = $marketNegotiation->kill(\Auth::user());
+            $message = "FoK Killed";
         }
 
         // Handle Meet In Middle
@@ -129,6 +128,7 @@ class MarketNegotiationController extends Controller
                     "Proposal rejected", 
                     10
                 );
+            $message = "Proposal Rejected";
         }
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();
@@ -150,4 +150,38 @@ class MarketNegotiationController extends Controller
         
         return ['success'=>true, 'message'=>'Counter Sent'];
     }
+
+    /**
+     * Counter the proposal
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function repeatProposal(MarketNegotiationCounterRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    {
+        $this->authorize('spinNegotiation',$userMarket); 
+        $marketNegotiation->repeat($request->user());
+
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        
+        return ['success'=>true, 'message'=>'Counter Sent'];
+    }
+
+
+    /**
+     * Improve the current best for trade-at-best condition proposal
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function improveBest(MarketNegotiationImproveBestRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    {
+        $this->authorize('improveBest',$marketNegotiation);
+        $userMarket->lastNegotiation->improveBest($request->user(), $request->all());
+
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        return ['success'=>true, 'message'=>'Improvement Sent'];
+    }
+
+
 }

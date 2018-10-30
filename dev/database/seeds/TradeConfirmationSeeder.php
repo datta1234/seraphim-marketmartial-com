@@ -44,9 +44,10 @@ class TradeConfirmationSeeder extends Seeder
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        'user_market_request_id' => $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
 
                        
@@ -90,9 +91,10 @@ class TradeConfirmationSeeder extends Seeder
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        'user_market_request_id' => $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
                 }
     		}
@@ -125,9 +127,10 @@ class TradeConfirmationSeeder extends Seeder
     			        'trade_negotiation_id' => $tradeNegotiation->id,
     			        'stock_id' => null,
     			        'market_id' => $marketNegotiation->userMarket->userMarketRequest->market_id,
+                        'user_market_request_id' => $marketNegotiation->userMarket->userMarketRequest->id,
     			        'trading_account_id' => $trading_account->id,
                         'trade_confirmation_status_id' => $status_id,    			        
-    			        'updated_at' => Carbon::now()->addMonths(rand(0,12)),
+    			        'updated_at' => Carbon::now()->addMonths(rand(0,12))
     	            ]);
                 }
     		}

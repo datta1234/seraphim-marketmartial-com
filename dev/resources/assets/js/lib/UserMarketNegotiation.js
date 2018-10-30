@@ -111,7 +111,21 @@ export default class UserMarketNegotiation extends BaseModel {
         };
     }
 
+    getTimeoutRemaining() {
+        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        // ensure its not shown if its timed out
+        if(diff < 0) {
+            return "00:00";
+        } else {
+            return moment.utc(moment.duration(diff).as('milliseconds')).format('mm:ss');
+        }
+    }
 
+    hasTimeoutRemaining() {
+        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        // ensure its not shown if its timed out
+        return diff > 0;
+    }
 
     storeWorkBalance(user_market,quantity) {
         // catch not assigned to a market request yet!
@@ -202,6 +216,36 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+
+    /**
+    *  improve trade at best
+    */
+    improveBestNegotiation(counter_market_negotiation) {
+        
+        // catch not assigned to a market request yet!
+        if(this.getUserMarket().id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+        // catch not created yet
+        if(this.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Negotiation"]));
+            });
+        }
+        // set to proposal by default (happens on server too hint type)
+        counter_market_negotiation.is_private = true;
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/improve", counter_market_negotiation.prepareStore())
+            .then(resolve)
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
     getDisplayCondition()
     {
        
@@ -221,6 +265,35 @@ export default class UserMarketNegotiation extends BaseModel {
         
         return new Promise((resolve, reject) => {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
+
+    /**
+    *  repeat
+    */
+    repeatNegotiation() {
+
+        // catch not assigned to a market request yet!
+        if(!this._user_market || this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market"]));
+            });
+        }
+
+        if(!this.id) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Negotiation"]));
+            });
+        }
+        
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id+"/repeat",{is_repeat: true})
             .then(response => {
                 resolve(response);
             })

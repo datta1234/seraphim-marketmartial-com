@@ -11,10 +11,12 @@
             <p class="text-center">{{ message }}&nbsp;&nbsp;<span @click="message = null">X</span></p>
         </b-row>
         <b-row v-for="cond in conditions" :key="cond.condition.id">
-            <component
-                :is="condition_components[cond.type]" 
-                :condition="cond">        
-            </component>
+            <b-col>
+                <component
+                    :is="condition_components[cond.type]" 
+                    :condition="cond">        
+                </component>
+            </b-col>
         </b-row>
     </b-container>
 </template>
@@ -27,7 +29,7 @@
     import ConditionFoKActive from './ActiveConditions/FoKActive';
     import ConditionProposalActive from './ActiveConditions/ProposalActive';
     import ConditionMeetInMiddleActive from './ActiveConditions/MeetInMiddleActive';
-    
+    import ConditionTradeAtBestActive from './ActiveConditions/TradeAtBestActive';
     
     export default {
         props: {
@@ -69,7 +71,8 @@
                 condition_components: {
                     'fok': ConditionFoKActive,
                     'proposal': ConditionProposalActive,
-                    'meet-in-middle': ConditionMeetInMiddleActive,          
+                    'meet-in-middle': ConditionMeetInMiddleActive,
+                    'trade-at-best': ConditionTradeAtBestActive,
                 }
             }
         },

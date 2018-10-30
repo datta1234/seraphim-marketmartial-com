@@ -75,4 +75,24 @@ class MarketNegotiationPolicy
         );
     }
 
+
+    /**
+     * Determine whether the user can improve the market negotiation
+     *
+     * @param  \App\Models\UserManagement\User  $user
+     * @param  \App\Models\Market\MarketNegotiation $userMarket
+     * @return bool
+     */
+    public function improveBest(User $user, MarketNegotiation $marketNegotiation)
+    {
+        $user_market = $marketNegotiation->userMarket;
+        $current_best = $user_market->lastNegotiation;
+        return (
+            $marketNegotiation->isTradeAtBest() &&
+            $current_best->isTradeAtBestOpen() &&
+            !$current_best->isTrading() &&
+            !!$user_market
+        );
+    }
+
 }
