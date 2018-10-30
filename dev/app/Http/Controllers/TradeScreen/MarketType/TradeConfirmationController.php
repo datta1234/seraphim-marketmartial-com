@@ -16,9 +16,8 @@ class TradeConfirmationController extends Controller
      */
     public function index(Request $request,MarketType $marketType)
     {
-        //where organisation is involved
-        return null;
-        
+        return [];
+        //where organisation is involved        
         $user = $request->user();
     	return TradeConfirmation::where(function($q) use($user,$marketType)
         {
