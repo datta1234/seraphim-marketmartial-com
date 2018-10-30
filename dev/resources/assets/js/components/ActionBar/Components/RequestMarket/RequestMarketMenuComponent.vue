@@ -70,6 +70,7 @@
         },
         computed: {
             modalTitle: function() {
+                console.log("Makin da titlelelele, ", this.modal_data.title);
                 return this.modal_data.title.join(' > ');
             }
         },
@@ -81,7 +82,6 @@
                 this.modal_data.selected_controller = 'Selections';
                 this.modal_data.step = 0;
                 this.modal_data.show_modal = true;
-                console.log("RUNNING: ", this.modal_data.selected_controller, this.modal_data.show_modal, this.modal_data);
                 this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
             },
             /**

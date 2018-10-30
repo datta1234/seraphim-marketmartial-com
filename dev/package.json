@@ -39,7 +39,6 @@
     "mathjs": "^5.2.0",
     "moment": "^2.22.1",
     "pusher-js": "^4.2.2",
-    "vue-bootstrap-typeahead": "^0.2.6",
     "vue-chartjs": "^3.4.0",
     "vue-flat-surface-shader": "^1.0.5",
     "vue-perfect-scrollbar": "^0.1.0",

@@ -39,7 +39,6 @@ Vue.use(Toasted, {
 })
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
-import VueBootstrapTypeahead from 'vue-bootstrap-typeahead'
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -60,8 +59,6 @@ import { EventBus } from './lib/EventBus.js';
 Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
-// typeahead
-Vue.component('vue-bootstrap-typeahead', VueBootstrapTypeahead)
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 

@@ -1,12 +1,7 @@
 <template>
     <div dusk="single-controller" class="single-controller">
-        <b-row v-if="errors.message != null">
-            <b-col cols="12">
-                <b-alert show dismissible fade variant="danger">{{ errors.message }}</b-alert>
-            </b-col>
-        </b-row>
         <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
-        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
+        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="stock_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
@@ -34,11 +29,12 @@
         },
         data() {
             return {
-                index_data: {
-                    market_type_title:'Single Stock Option',
+                stock_data: {
+                    market_type_title:'Single Stock Options',
                     market_type: null,
-                    index_market_object: {
-
+                    market_object: {
+                        stock: null,
+                        stock_code: null,
                         market:null,
                         trade_structure: '',
                         trade_structure_groups: [],
@@ -51,7 +47,7 @@
                 errors: {
                     message: null,
                     data: {
-                        Market:{
+                        Stock:{
                             messages:[]
                         },
                         Structure:{
@@ -98,10 +94,12 @@
             /**
              * Loads step component 
              */
-            loadStepComponent(component_data) {
-                if( component_data != 'back' ) {
+            loadStepComponent(step_detail, component_data) {
+                if( step_detail != 'back' ) {
                     this.nextStep();
-                    this.modal_data.title.push(component_data);
+                    if(step_detail) {
+                        this.modal_data.title.push(step_detail);
+                    }
                 } else {
                     if (this.modal_data.title[0] =='Confirm Market Request') {
                         this.modal_data.title = this.temp_title;
@@ -110,22 +108,30 @@
                 }
                 switch (this.modal_data.step) {
                     case 2:
-                        this.selected_step_component = 'Market';
+                        this.selected_step_component = 'Stock';
                         break;
                     case 3:
+                        this.stock_data.market_object.stock = component_data ? 
+                            component_data : this.stock_data.market_object.stock;
                         this.selected_step_component = 'Structure';
                         break;
                     case 4:
-                        this.index_data.number_of_dates = 1;
-                        if (this.index_data.index_market_object.trade_structure == 'Calendar') {
-                            this.index_data.number_of_dates = 2;
+                        this.stock_data.market_object.trade_structure = component_data ? 
+                            component_data : this.stock_data.market_object.trade_structure;
+                        this.stock_data.number_of_dates = 1;
+                        if (this.stock_data.market_object.trade_structure == 'Calendar') {
+                            this.stock_data.number_of_dates = 2;
                         }
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 5:
+                        this.stock_data.market_object.expiry_dates = component_data ?
+                            component_data : this.stock_data.market_object.expiry_dates;
                         this.selected_step_component = 'Details';
                         break;
                     case 6:
+                        this.stock_data.market_object.details = component_data ?
+                            component_data : this.stock_data.market_object.details;
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
@@ -136,13 +142,14 @@
                 }
             },
             /**
-             * Loads Stocks 
+             * Loads Singles Market
              */
-            loadStocks() {
+            loadMarket() {
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((element) => {
-                        if(element.title == this.index_data.market_type_title) {
-                            this.index_data.market_type = element;
+                        if(element.title == this.stock_data.market_type_title) {
+                            this.stock_data.market_type = element;
+                            this.stock_data.market_object.market = element.markets[0];
                         }
                     });
                 }
@@ -156,18 +163,14 @@
                 this.submitting_request = false;
                 
                 let new_data = this.formatRequestData();
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.index_market_object.market.id +'/market-request', new_data)
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.stock_data.market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     // success closes the modal
-                    if(newMarketRequestResponse.status == 200) {
-                        this.close_modal();
-                    } else {
-                        console.error(err);    
-                    }
+                    this.close_modal();
+                    
                     // toggle loading
                     EventBus.$emit('loading', 'requestSubmission');
                     this.submitting_request = true;
-
 
                 }).catch( (err) => {
                     // toggle loading
@@ -175,7 +178,6 @@
                     this.submitting_request = true;
                     
                     // server error loads the response errors and loads error step
-                    this.previousStep();
                     if (err.response && err.response.data.message) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
@@ -194,6 +196,30 @@
                 });
             },
             /**
+             * Formats the component data to a format to submit to the api for a new Single Stock Market
+             *
+             * @return {Object} - formatted data object
+             */
+            formatRequestData() {
+                // sets initial object structure
+                let formatted_data = {
+                    trade_structure: this.stock_data.market_object.trade_structure,
+                    trade_structure_groups:[]
+                }
+                this.stock_data.market_object.details.fields.forEach( (element,key) => {
+                    formatted_data.trade_structure_groups.push({
+                        is_selected: element.is_selected,
+                        stock: this.stock_data.market_object.stock.code,
+                        fields: {
+                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.stock_data.market_object.expiry_dates[key] : this.stock_data.market_object.expiry_dates[0] ),
+                            Strike: element.strike,
+                            Quantity: element.quantity
+                        }
+                    });
+                });
+                return formatted_data;
+            },
+            /**
              * Loads the earliest step correlating to the passed errors and adds the errors
              *  to the correct component error in this.errors.data
              *
@@ -204,12 +230,13 @@
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
                         switch (propArr[2]) {
-                            case "market_id":
+                            case "stock":
                                 errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Market.messages.indexOf(element) == -1) {
-                                        this.errors.data.Market.messages.push(element);
+                                    if (this.errors.data.Stock.messages.indexOf(element) == -1) {
+                                        this.errors.data.Stock.messages.push(element);
                                     }
                                 });
+                                this.temp_title.splice(-3);
                                 this.setLowestStep(1);
                                 break;
                             case "is_selected":
@@ -227,6 +254,7 @@
                                             this.errors.data.Expiry.messages.push(element);
                                         }
                                     });
+                                    this.temp_title.splice(-1);
                                     this.setLowestStep(3);
                                 } else {
                                     errors[prop].forEach( (element, key) => {
@@ -261,10 +289,15 @@
                                     this.errors.data.Structure.messages.push(element);
                                 }
                             });
+                            this.temp_title.splice(-2);
                             this.setLowestStep(2);
                         }
                     }
                 }
+                if(this.errors.message != null) {
+                    this.$toasted.error(this.errors.message);
+                }
+                this.modal_data.title = this.modal_data.step > 4 ? this.modal_data.title : this.temp_title;
                 this.loadStepComponent();
             },
             /**
@@ -274,30 +307,6 @@
                 if(new_step < this.modal_data.step) {    
                     this.modal_data.step = new_step;
                 }
-            },
-            /**
-             * Formats the component data to a format to submit to the api for a new Index Market
-             *
-             * @return {Object} - formatted data object
-             */
-            formatRequestData() {
-                // sets initial object structure
-                let formatted_data = {
-                    trade_structure: this.index_data.index_market_object.trade_structure,
-                    trade_structure_groups:[]
-                }
-                this.index_data.index_market_object.details.fields.forEach( (element,key) => {
-                    formatted_data.trade_structure_groups.push({
-                        is_selected: element.is_selected,
-                        market_id: this.index_data.index_market_object.market.id,
-                        fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.index_data.index_market_object.expiry_dates[key] : this.index_data.index_market_object.expiry_dates[0] ),
-                            Strike: element.strike,
-                            Quantity: element.quantity
-                        }
-                    });
-                });
-                return formatted_data;
             },
             /**
              * Casting a passed string to moment with a new format
@@ -310,7 +319,7 @@
         },
         mounted() {
             this.modal_data.title = ["Stock"];
-            this.loadStocks();
+            this.loadMarket();
             this.selected_step_component = 'Stock';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;
