@@ -56,7 +56,7 @@ class UserMarketRequestRequest extends FormRequest
 
         for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
         { 
-            $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
+            $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//easier to work with
             
             $stockInput = "trade_structure_groups.{$i}.stock";
             $marketInput = "trade_structure_groups.{$i}.market_id";

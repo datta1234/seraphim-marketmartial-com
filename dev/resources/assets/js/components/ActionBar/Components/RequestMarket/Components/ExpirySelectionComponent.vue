@@ -79,11 +79,11 @@
                 }
                 if(this.selected_dates.length == this.data.number_of_dates) {
                     this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
-                    this.data.index_market_object.expiry_dates = this.selected_dates;
+                    /*this.data.index_market_object.expiry_dates = this.selected_dates;*/
                     
                     this.callback(this.selected_dates.map( (current) => {
                         return this.castToMoment(current);
-                    }).join(' / '));
+                    }).join(' / '), this.selected_dates);
                 }
             },
             /**

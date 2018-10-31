@@ -4,75 +4,108 @@
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
-						<b-row v-if="display.show_expiry" align-h="center">
-                            <b-col :key="key" v-for="(date,key) in data.index_market_object.expiry_dates" 
-                                    cols="3" 
-                                    :offset="(key == 0)? 3:0"
-                                    class="text-center">
-                                <p><strong>{{ castToMoment(date) }}</strong></p>
-                            </b-col>
-                        </b-row>
-                        
-                        <b-row v-if="form_data.fields.length > 1" align-h="center">
-                            <b-col v-if="display.disable_choice" cols="12 mb-2">
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row>
-                                    <b-col cols="3" offset="3" class="text-center">    
-                                        <b-badge variant="info details-choice-badge">CHOICE</b-badge>
-                                    </b-col>
-                                    <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                        <b-badge variant="info details-choice-badge">CHOICE</b-badge>    
+                                </b-row>
+                            </b-col>
+                            <b-col v-if="data.market_object.stock" cols="1">
+                                
+                            </b-col>
+						<b-row v-if="display.show_expiry" align-h="center">
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                                <b-row align-h="center">
+                                    <b-col :key="key" v-for="(date,key) in data.market_object.expiry_dates" 
+                                            cols="3" 
+                                            :offset="(key == 0)? 3:0"
+                                            class="text-center">
+                                        <p><strong>{{ castToMoment(date) }}</strong></p>
                                     </b-col>
                                 </b-row>
                             </b-col>
-                            <b-col v-else cols="12">
-                                <b-form-radio-group id="risky-choices" 
-                                                    v-model="chosen_option" 
-                                                    name="choice"
-                                                    class="mb-2">
-                                    <b-row align-h="center">
-                                        <b-col cols="3" offset="3" class="text-center">    
-                                            <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
-                                        </b-col>
-                                        <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                            <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
-                                        </b-col>
-                                    </b-row>
-        		      		    </b-form-radio-group>
+                            <b-col v-if="data.market_object.stock" cols="1"></b-col>
+                        </b-row>
+                        
+                        <b-row v-if="form_data.fields.length > 1" align-h="center">
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                                <b-row align-h="center">
+                                    <b-col v-if="display.disable_choice" cols="12 mb-2">
+                                        <b-row>
+                                            <b-col cols="3" offset="3" class="text-center">    
+                                                <b-badge variant="info details-choice-badge">CHOICE</b-badge>
+                                            </b-col>
+                                            <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
+                                                <b-badge variant="info details-choice-badge">CHOICE</b-badge>    
+                                            </b-col>
+                                        </b-row>
+                                    </b-col>
+                                    <b-col v-else cols="12">
+                                        <b-form-radio-group id="risky-choices" 
+                                                            v-model="chosen_option" 
+                                                            name="choice"
+                                                            class="mb-2">
+                                            <b-row align-h="center">
+                                                <b-col cols="3" offset="3" class="text-center">    
+                                                    <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
+                                                </b-col>
+                                                <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
+                                                    <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
+                                                </b-col>
+                                            </b-row>
+                		      		    </b-form-radio-group>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col v-if="data.market_object.stock" cols="1">
+                                
                             </b-col>
                         </b-row>
 
 						<b-row align-h="center">
-							<b-col cols="3">
-								<label for="strike-0">Strike</label>
-							</b-col>
-		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input :id="'strike-'+index" 
-		      						type="number"
-		      						min="0"
-									v-model="field.strike"
-                                    :state="inputState(index, 'Strike')"
-									required>
-		      					</b-form-input>
-		      				</b-col>
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                                <b-row align-h="center">
+        							<b-col cols="3">
+        								<label for="strike-0">Strike</label>
+        							</b-col>
+        		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
+        		      					<b-form-input :id="'strike-'+index" 
+        		      						type="number"
+        		      						min="0"
+        									v-model="field.strike"
+                                            :state="inputState(index, 'Strike')"
+        									required>
+        		      					</b-form-input>
+        		      				</b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col v-if="data.market_object.stock" cols="1">
+                                <label for="strike-0">ZAR</label>
+                            </b-col>
 						</b-row>
 
 						<b-row align-h="center">
-							<b-col cols="3">
-								<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
-							</b-col>
-		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
-		      					<b-form-input :id="'quantity-'+index" 
-		      						type="number"
-									min="0"
-									v-model="field.quantity"
-                                    placeholder="500"
-                                    :state="inputState(index, 'Quantity')"
-									required>
-		      					</b-form-input>
-                                <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
-                                    *Warning: The recommended minimum quantity is 500.
-                                </p>
-		      				</b-col>
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                                <b-row align-h="center">
+            						<b-col cols="3">
+            							<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
+            						</b-col>
+            	      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
+            	      					<b-form-input :id="'quantity-'+index" 
+            	      						type="number"
+            								min="0"
+            								v-model="field.quantity"
+                                            placeholder="500"
+                                            :state="inputState(index, 'Quantity')"
+            								required>
+            	      					</b-form-input>
+                                        <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
+                                            *Warning: The recommended minimum quantity is 500.
+                                        </p>
+            	      				</b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col v-if="data.market_object.stock" cols="1">
+                                <label for="quantity-0">Rm</label>
+                            </b-col>
 						</b-row>
 
                         <b-row v-if="form_data.fields.length > 1">
@@ -144,8 +177,8 @@
             submitDetails(evt) {
                 evt.preventDefault();
                 Vue.nextTick( () => {
-                    this.data.index_market_object.details = this.form_data;
-                	this.callback(this.form_data);
+                    /*this.data.market_object.details = this.form_data;*/
+                	this.callback('',this.form_data);
 				})
             },
             /**
@@ -170,7 +203,7 @@
     		
     		this.form_data.fields.push({is_selected:true,strike: null,quantity: 500});
             // Sets up the view and object data defaults dictated by the structure
-            switch(this.data.index_market_object.trade_structure) {
+            switch(this.data.market_object.trade_structure) {
             	case 'Outright':
             		this.display.disable_choice = true,
             		this.chosen_option = null;

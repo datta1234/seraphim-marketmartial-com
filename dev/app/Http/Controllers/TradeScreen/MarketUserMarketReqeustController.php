@@ -185,16 +185,23 @@ class MarketUserMarketReqeustController extends Controller
 
 
 
-            } catch (Exception $e) 
-            {
+            } catch (\Illuminate\Database\QueryException $e) {
                 DB::rollBack();
                 Log::error($e->getMessage());
-                return ['success'=>false,'data'=> null,'message'=>'Could not create market request.'];
+                return response()->json([
+                    'success'=>false,
+                    'data'=> null,
+                    'message'=>'Could not create market request.', 
+                ], 500);
             }
 
         //broadCast new market request;
         $userMarketRequest->notifyRequested();
-        return ['success'=>true,'data'=> $responseData,'message'=>"Market Request created successfully."];
+        return response()->json([
+            'success'=>true,
+            'data'=> $responseData,
+            'message'=>"Market Request created successfully.", 
+        ], 201);
     }
 
     /**
