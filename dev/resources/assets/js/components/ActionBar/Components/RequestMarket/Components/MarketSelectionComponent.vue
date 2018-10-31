@@ -40,8 +40,8 @@
              * Sets the selected market and calls the component call back method
              */
             selectMarket(market) {
-                this.data.index_market_object.market = market;
-                this.callback(market.title);
+                /*this.data.index_market_object.market = market;*/
+                this.callback(market.title,market);
             },
         },
         mounted() {

@@ -36,15 +36,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -55,6 +55,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -65,11 +69,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -113,15 +117,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -132,6 +136,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -142,11 +150,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -182,15 +190,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -201,6 +209,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -211,11 +223,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -259,15 +271,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -278,6 +290,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -288,11 +304,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -327,15 +343,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -346,6 +362,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -356,11 +376,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -403,15 +423,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -422,6 +442,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -432,11 +456,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -467,15 +491,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -486,6 +510,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -496,11 +524,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -531,15 +559,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -550,6 +578,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -560,11 +592,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -608,15 +640,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -627,6 +659,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -637,11 +673,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -676,15 +712,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -695,6 +731,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -705,11 +745,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -743,15 +783,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -762,6 +802,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -772,11 +816,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -814,15 +858,15 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"put",
+                                                "title"=>"Put",
                                                 "type"=>"double"
                                             ],
                                             [
-                                                'title' =>'call',
+                                                'title' =>'Call',
                                                 'type'  =>'double'
                                             ],
                                             [
-                                                "title"=>"volatility",
+                                                "title"=>"Volatility",
                                                 "type"=>"double"
                                             ],
                                             [
@@ -833,6 +877,10 @@ return [
                                                 "title"=>"Net Premiums" ,
                                                 "type"=>"double"
                                             ],
+                                            [
+                                            "title"=>"Contract",
+                                            "type"=> "double"
+                                            ]
                                         ]
                                     ],
                                         "futures" =>
@@ -843,11 +891,11 @@ return [
                                                     "type"=> "boolean"
                                                 ],
                                                 [
-                                                    "title"=>"future",
+                                                    "title"=>"Future",
                                                     "type"=> "double"
                                                 ],
                                                 [
-                                                    "title"=>"contract",
+                                                    "title"=>"Contract",
                                                     "type"=> "double"
                                                 ]
                                             ]
@@ -882,11 +930,11 @@ return [
                                         "type"=>"boolean"
                                     ],
                                     [
-                                        "title"=>"put/call",
+                                        "title"=>"Put/Call",
                                         "type"=>"boolean"
                                     ],
                                     [
-                                        "title"=>"volatility",
+                                        "title"=>"Volatility",
                                         "type"=>"double"
                                     ],
                                     [
@@ -906,11 +954,11 @@ return [
                                     "type"=> "boolean"
                                 ],
                                 [
-                                    "title"=>"future",
+                                    "title"=>"Future",
                                     "type"=> "double"
                                 ],
                                 [
-                                    "title"=>"contract",
+                                    "title"=>"Contract",
                                     "type"=> "double"
                                 ]
                             ]
@@ -936,11 +984,11 @@ return [
                                         "type"=>"boolean"
                                     ],
                                     [
-                                        "title"=>"put/call",
+                                        "title"=>"Put/Call",
                                         "type"=>"boolean"
                                     ],
                                     [
-                                        "title"=>"volatility",
+                                        "title"=>"Volatility",
                                         "type"=>"double"
                                     ],
                                     [
@@ -960,11 +1008,11 @@ return [
                                     "type"=> "boolean"
                                 ],
                                 [
-                                    "title"=>"future",
+                                    "title"=>"Future",
                                     "type"=> "double"
                                 ],
                                 [
-                                    "title"=>"contract",
+                                    "title"=>"Contract",
                                     "type"=> "double"
                                 ]
                             ]

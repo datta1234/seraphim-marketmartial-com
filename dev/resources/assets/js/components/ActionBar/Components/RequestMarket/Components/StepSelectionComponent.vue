@@ -11,7 +11,7 @@
             </b-row>
             <b-row class="mt-2">
                 <b-col>
-                    <b-button id="single-stock-step-choice" class="mm-modal-market-button-alt w-100">Single Stock Options</b-button>
+                    <b-button id="single-stock-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('Single')">Single Stock Options</b-button>
                 </b-col>
                 <b-col>
                     <b-button id="rolls-step-choice" class="mm-modal-market-button-alt w-100">Rolls</b-button>

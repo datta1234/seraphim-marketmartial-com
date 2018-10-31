@@ -8,7 +8,7 @@
                             {{ getState(item) }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <button v-bind:class="{'btn-primary': item.is_on_hold,'btn-secondary': !item.is_on_hold}" 
+                            <button v-active-request v-bind:class="{'btn-primary': item.is_on_hold,'btn-secondary': !item.is_on_hold}" 
                                 class="w-100 btn btn-sm" 
                                 @click="putQuoteOnHold(item)"
                                 >
@@ -16,7 +16,7 @@
                             </button>
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <b-btn size="sm" class="w-100" variant="primary" @click="acceptQuote(item)">ACCEPT</b-btn>
+                            <b-btn v-active-request size="sm" class="w-100" variant="primary" @click="acceptQuote(item)">ACCEPT</b-btn>
                         </b-col>
                     </b-row>
                     <b-row no-gutters v-else-if="item.is_maker">

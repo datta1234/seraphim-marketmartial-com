@@ -17,7 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserMarketRequested implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels,SoftDeletes;
+    use Dispatchable, InteractsWithSockets, SerializesModels,SoftDeletes,\App\Traits\ResolvesUser;
+
 
     public $userMarketRequest;
     private $organisation;

@@ -1,19 +1,27 @@
 <template>
     <div dusk="confirm-market-request" class="step-selections">
         <b-container fluid>
-            <b-row align-h="start">
+            <b-row v-if="data.market_object.stock" align-h="start">
+                <b-col cols="3" class="mt-2">
+                    <p>STOCK NAME:</p>
+                </b-col>
+                <b-col cols="3" class="mt-2">
+                    <p>{{ data.market_object.stock.code }}</p>
+                </b-col>
+            </b-row>
+            <b-row v-else align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>{{ data.market_type.title.toUpperCase() }}:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>{{ data.index_market_object.market.title }}</p>
+                    <p>{{ data.market_object.market.title }}</p>
                 </b-col>
             </b-row>
             <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>EXPIRY:</p>
                 </b-col>
-                <b-col :key="index" v-for="(expiry_date, index) in data.index_market_object.expiry_dates"  cols="3" class="mt-2">
+                <b-col :key="index" v-for="(expiry_date, index) in data.market_object.expiry_dates"  cols="3" class="mt-2">
                     <p>{{ castToMoment(expiry_date) }}</p>
                 </b-col>
             </b-row>
@@ -21,15 +29,15 @@
                 <b-col cols="3" class="mt-2">
                     <p>STRIKE:</p>
                 </b-col>
-                <b-col :key="index" v-for="(field, index) in data.index_market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ field.strike }}<span v-if="field.is_selected && data.index_market_object.details.fields.length > 1"> (CH)</span></p>
+                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
+                	<p>{{ field.strike }}<span v-if="field.is_selected && data.market_object.details.fields.length > 1"> (CH)</span></p>
                 </b-col>
             </b-row>
             <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>QUANTITY:</p>
                 </b-col>
-                <b-col :key="index" v-for="(field, index) in data.index_market_object.details.fields" cols="3" class="mt-2">
+                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
                 	<p>{{ field.quantity }}</p>
                 </b-col>
             </b-row>
@@ -38,7 +46,7 @@
                     <p>STRUCTURE:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>{{ data.index_market_object.trade_structure }}</p>
+                    <p>{{ data.market_object.trade_structure }}</p>
                 </b-col>
             </b-row>
             <b-row v-if="errors.messages.length > 0" class="text-center mt-3">

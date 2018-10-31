@@ -10,10 +10,14 @@ return [
 	],
 	[
         'id' => 3,
-        'title' => 'Disiputed'
+        'title' => 'Disiputed: By Reciever'
 	],
 	[
         'id' => 4,
         'title' => 'Confirmed'
-	]
+	],
+	[
+        'id' => 5,
+        'title' => 'Disiputed: By Sender'
+	],
 ];

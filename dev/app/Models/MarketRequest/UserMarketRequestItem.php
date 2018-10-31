@@ -55,4 +55,12 @@ class UserMarketRequestItem extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\Item','item_id');
     }
+
+    public function preFormatted()
+    {
+        return [
+            'title'     => $this->title,
+            'value'     => $this->value
+        ];
+    }
 }

@@ -25,7 +25,7 @@
                                 </a>
                             </span>
                             <span>
-                                <a href="" @click.prevent.stop="doRepeat">Repeat</a>
+                                <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
                             </span>
                         </div>
                     </b-col>
@@ -81,11 +81,9 @@
             doRepeat() {
                 this.negotiation.repeatNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {
-                    console.log(err);
                     this.errors = err.errors;
                 });
             },

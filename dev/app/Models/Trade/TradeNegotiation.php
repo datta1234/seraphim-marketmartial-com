@@ -3,11 +3,12 @@
 namespace App\Models\Trade;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TradeConfirmations\TradeConfirmation;
 
 class TradeNegotiation extends Model
 {
     use \App\Traits\ResolvesUser;
-	
+
     /**
 	 * @property integer $id
 	 * @property integer $user_market_id
@@ -61,9 +62,10 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeNegotiationParents()
+    public function tradeNegotiationParent()
     {
-        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+
     }
 
     /**
@@ -72,7 +74,7 @@ class TradeNegotiation extends Model
     */
     public function tradeNegotiationChildren()
     {
-        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
     /**
@@ -125,6 +127,15 @@ class TradeNegotiation extends Model
     {
         return $this->marketNegotiation->TradeNegotiations()->first();
     }
+
+    public function setUpConfirmation()
+    {
+       $tradeConfirmation = new TradeConfirmation();
+       return $tradeConfirmation->setUp($this);
+    }
+
+
+
 
     public function preFormatted()
     {

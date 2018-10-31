@@ -46,12 +46,12 @@
                        
 
                         
-                         <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
+                         <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
 
 
-                        <b-button v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-active-request v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -59,8 +59,8 @@
                             <div slot="modal-footer" class="w-100">
                                 <b-row align-v="center">
                                     <b-col cols="12">
-                                        <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
-                                        <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                        <b-button v-active-request class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button v-active-request class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
                                     </b-col>
                                 </b-row>
                             </div>
@@ -72,7 +72,7 @@
                 <b-row class="justify-content-md-center" v-if="!maker_quote && !marketRequest.chosen_user_market">
                     <b-col cols="6">
 
-                        <b-button class="w-100 mt-1"
+                        <b-button v-active-request class="w-100 mt-1"
                           v-if="!maker_quote" 
                           :disabled="check_invalid || server_loading || conditionActive('fok')" 
                           size="sm" 
@@ -89,7 +89,7 @@
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
-                        <b-button  class="w-100 mt-1" 
+                        <b-button v-active-request class="w-100 mt-1" 
                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -97,7 +97,7 @@
                          @click="sendNegotiation()">
                                 Send
                         </b-button>
-                        <b-button class="w-100 mt-1" 
+                        <b-button v-active-request class="w-100 mt-1" 
                          :disabled="conditionActive('fok')" 
                          v-if="can_spin" 
                          size="sm" 
@@ -112,7 +112,7 @@
                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
                     <b-col cols="6">
                          
-                        <b-button class="w-100 mt-1" 
+                        <b-button v-active-request class="w-100 mt-1" 
                          :disabled="check_invalid || server_loading" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -127,7 +127,7 @@
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
                         <!-- !maker_quote && !marketRequest.chosen_user_market -->
-                         <b-button  v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
+                         <b-button v-active-request v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>

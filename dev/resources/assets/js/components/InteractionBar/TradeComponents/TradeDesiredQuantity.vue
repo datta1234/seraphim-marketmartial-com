@@ -14,10 +14,10 @@
             <template v-if="is_offer == null">
               <b-row>
                  <b-col cols="6">
-                      <b-btn variant="primary" size="sm" @click="is_offer = true">Buy</b-btn>
+                      <b-btn v-active-request variant="primary" size="sm" @click="is_offer = true">Buy</b-btn>
                  </b-col>
                  <b-col cols="6">
-                       <b-btn variant="primary" size="sm" @click="is_offer = false">Sell</b-btn>
+                       <b-btn v-active-request variant="primary" size="sm" @click="is_offer = false">Sell</b-btn>
                  </b-col>
               </b-row>
             </template>
@@ -29,10 +29,10 @@
                </b-row>
                <b-row>
                  <b-col cols="6">
-                      <b-btn variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
+                      <b-btn v-active-request variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
                  </b-col>
                  <b-col cols="6">
-                       <b-btn variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
+                       <b-btn v-active-request variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
                  </b-col>
               </b-row>
             </template>
@@ -54,7 +54,7 @@
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       
-                        <b-btn variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
+                        <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
                     </b-col>
                 </b-row>
             </template>

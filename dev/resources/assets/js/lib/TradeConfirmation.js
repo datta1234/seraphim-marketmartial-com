@@ -1,36 +1,56 @@
 import BaseModel from './BaseModel';
-import UserMarketRequest from './UserMarketRequest'
+
+import OptionGroup from './tradeconfirmations/OptionGroup';
+import FutureGroup from './tradeconfirmations/FutureGroup';
+import Errors from './Errors';
+
 export default class TradeConfirmation extends BaseModel {
 
-    constructor(options) {
+    constructor(options,fees) {
+
         super({
-            _used_model_list: [UserMarketRequest]
-        });
+            _used_model_list: [OptionGroup,FutureGroup],
+            _relations:{
+                option_groups: {
+                    addMethod: (option_groups) => { 
+                        this.addOptionGroups(option_groups) 
+                    },
+                    setMethod: (option_groups) => { 
+                        this.setOptionGroups(option_groups) 
+                    },
+                },
+                future_groups: {
+                    addMethod: (future_groups) => { 
+                        this.addFutureGroups(future_groups) 
+                    },
+                    setMethod: (structure_groups) => { 
+                        this.setFutureGroups(future_groups) 
+                    },
+                }
+            }
+        })
+
+        this.option_groups = [];
+        this.future_groups = [];
 
         const defaults = {
-            id:"",
-            organisation:"",
-            spot_price:"",
-            future_reference:"",
-            near_expiery_reference:"",
-            puts:"",
-            calls:"",
-            delta:"",
-            gross_premiums:"",
-            net_premiums:"",
-            is_confirmed:"",
-            trade_structure_title:"",
-            expiration:[],
-            strike:[],
-            quantity:[],
-            market_request_id:"",
-            label:"",
-            volatility:"",
-            is_single_stock:"",
-            underlying_id:"",
-            underlying_title:"",
-            is_sale:"",
-            traded_at: moment()
+                id : "",
+                organisation : "",
+                trade_structure_title : "",
+                volatility : "",
+                structure_groups : "",
+                market_id : "",
+                market_type_id : "",
+                market_request_id : "",
+                market_request_title : "",
+                underlying_id : "",
+                underlying_title : "",
+                is_single_stock : "",
+                traded_at : "",
+                is_offer : "",
+                brokerage_fee: [],
+                date: "",
+                status_id: null
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -40,258 +60,145 @@ export default class TradeConfirmation extends BaseModel {
                 this[key] = defaults[key];
             }
         });
-    }
 
-    readableExpiration()
-    {
-        return this.expiration.length > 1 ? this.expiration.join('/') : this.expiration[0] ;
-    }
+        // register option group
+        if(options && options.option_groups) {
+           this.addOptionGroups(options.option_groups);
+        }
 
-    phaseOneRun(trade_confirmation)
-    {
-        switch(trade_confirmation.trade_structure_title) {
-            case "Outright":
-                    this.runOutright(trade_confirmation);
-                break;
-            case "Risky":
-                //@TODO runRisky()
-                break;
-            case "Calander":
-                //@TODO runCalander()
-                break;
-           case "Fly":
-                //@TODO runRisky()
-                break;
-            case "Option Switch":
-                //@TODO runOptionSwitch()
-                break;
-           case "EFP":
-                //@TODO runEFP()
-                break;
-            case "Rolls":
-                //@TODO runRoll()
-                break;
-            case "EFP Switch":
-                //@TODO runEFPSwicth()
-                break;
-
+         // register future groups
+        if(options && options.future_groups) {
+           this.addFutureGroups(options.future_groups);
         }
     }
 
-    phaseTwoRun()
-    {
-        switch(this.trade_structure_title) {
-            case "Outright":
-                    this.outrightTwo();
-                break;
-            case "Risky":
-                //@TODO runRisky()
-                break;
-            case "Calander":
-                //@TODO runCalander()
-                break;
-           case "Fly":
-                //@TODO runRisky()
-                break;
-            case "Option Switch":
-                //@TODO runOptionSwitch()
-                break;
-           case "EFP":
-                //@TODO runEFP()
-                break;
-            case "Rolls":
-                //@TODO runRoll()
-                break;
-            case "EFP Switch":
-                //@TODO runEFPSwicth()
-                break;
 
-        }
+    getTradeStructures()
+    {
+        /* only care about the futuregroup the rest we do on the server */
+        let options = [];
+        this.future_groups.forEach((group)=>{
+          options.push(group.prepareStore());
+      });
+        return options;
     }
 
-    outrightTwo(spotRef, Zarnominal1 ,underlying1,singleStock,is_offer)
+    updateOptionColoumns(tradeStructureGroup)
     {
-        let contracts = (Zarnominal1/ spotRef * 100).toFixed(0);
+        console.log("update");
+    }
 
-        //determine weather put or call
-    
+    addOptionGroups(option_groups)
+    {
+        option_groups.forEach((group)=>{
+            this.addOptionGroup(group);
+        });
+    }
 
-        //can reduce this logic
-        if(is_offer)
-        {
-            let putDirection1   = 1;
-            let callDirection1  = 1;   
-        }else
-        {
-            let putDirection1  = -1;
-            let callDirection1 = -1; 
-        }
+    addOptionGroup(option_group)
+    {
+        if(!(option_group instanceof OptionGroup)) {
+            option_group = new OptionGroup(option_group);
+        } 
 
-        let POD1 = putOptionDelta(startDate,expiry,future,volatility) * putDirection1;
-        let COD1 = callOptionDelta(startDate,expiry,future,volatility) * callDirection1;
-
-        if(Math.abs(POD1) <= Math.abs(COD1))
-        {
-            //set the cell to a put
-            let is_put = true;
-            let gross_premiums /* cell(16,10) */= (putOptionPremium(startDate,expiry1,futuref1,strike1,volatility) * contracts).toFixed(0) * putDirection1;
-            let contracts/*cell(21,6)*/ = POD1;
-        }else
-        {
-            let is_put = false;
-            let gross_premiums /* cell(16,10) */= (callOptionPremium(startDate,expiry1,futuref1,strike1,volatility) * contracts).toFixed(0) * putDirection1;
-            let contracts/*cell(21,6)*/ = COD1;
-        }
-
-        // futures and deltas buy/sell
-        if(contracts < 0)
-        {
-            is_offer = false;
-        }else
-        {
-            is_offer = true;
-        }
-
-        contracts = Math.abs(contracts);
-
+        this.option_groups.push(option_group);   
     }
 
 
-    feesCalc()
+    addFutureGroups(future_groups)
     {
-        let singlefee = config('fees'.trade_structure.singles);
-        let indexfee = config('fees'.trade_structure.index);
-        
-        switch(this.trade_structure_title) {
-            case "Outright":
+        future_groups.forEach((group)=>{
+            this.addFutureGroup(group);
+        });
+    }
 
-                Math.round(spotRefPrice * 10 * Brodirection) + gross_premiums1 ;
+    addFutureGroup(future_group)
+    {
+        if(!(future_group instanceof FutureGroup)) {
+            future_group = new FutureGroup(future_group);
+        } 
+        this.future_groups.push(future_group);   
+    }
 
-                break;
-            case "Risky":
-                //@TODO runRisky()
-                break;
-            case "Calander":
-                //@TODO runCalander()
-                break;
-           case "Fly":
-                //@TODO runRisky()
-                break;
-            case "Option Switch":
-                //@TODO runOptionSwitch()
-                break;
-           case "EFP":
-                //@TODO runEFP()
-                break;
-            case "Rolls":
-                //@TODO runRoll()
-                break;
-            case "EFP Switch":
-                //@TODO runEFPSwicth()
-                break;
-        }
+  
+    postPhaseTwo()
+    {
+        return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two', this.prepareStore())
+           .then(response => {
 
+            this.update(response.data.trade_confirmation);
+            console.log(this);
+            resolve();
+        })
+           .catch(err => {
+            console.log(err);
+            reject(new Errors(err.response.data));
+        }); 
+       });
+    }
+
+    send(trading_account)
+    {
+      return new Promise((resolve, reject) => {
+           axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+           })
+           .then(response => {
+
+            this.update(response.data.trade_confirmation);
+            resolve();
+        })
+           .catch(err => {
+            console.log(err);
+            reject(new Errors(err.response.data));
+        }); 
+       });
+    }
+
+    confirm(trading_account)
+    {
+      return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/confirm',{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+           })
+           .then(response => {
+
+            this.update(response.data.trade_confirmation);
+            resolve();
+        })
+           .catch(err => {
+            reject(new Errors(err.response.data));
+        }); 
+       });
     }
 
 
-    runOutright(trade_confirmation)
+    dispute(trading_account)
     {
-        console.log(trade_confirmation);
-        console.log("run outright");
+      return new Promise((resolve, reject) => {
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+           })
+           .then(response => {
 
-        //apply logic for single stock
-        let buyer =  true;//@TODO setup if trader is a buyer or seller;
-        
-        this.trade_structure_title = trade_confirmation.trade_structure_title;
-        this.underlying_title = trade_confirmation.underlying_title;
-        this.underlying_id = trade_confirmation.underlying_id;
-
-         //Strike 
-         //strike 1
-        this.stike = trade_confirmation.strike;
-
-
-        /* nominals/contracts */
-        this.quantity = trade_confirmation.quantity;
-        
-        /*Expiry*/
-        this.expiration[0] = trade_confirmation.expiration[0]; 
-
-        /*volatilty*/
-        this.volatility = trade_confirmation.volatility;
-
-        /* single stock (true) or index false*/
-        this.is_single_stock = trade_confirmation.is_single_stock;
+            this.update(response.data.trade_confirmation);
+            resolve();
+        })
+           .catch(err => {
+            console.log(err);
+            reject(new Errors(err.response.data));
+        }); 
+       });
     }
 
-    runRisky()
-    {
-
+    prepareStore() {
+        return {
+            id: this.id,
+            structure_groups: this.getTradeStructures()
+        };
     }
-
-    /*
-    * formulas from the macros
-    */
-    callOptiondelta(startDate,expiry,future,volatility)
-    {
-        let tt = (expiry - startDate) / 365;
-
-        let callOptionDelta = ((future/strike) + 0.5 * volatility ^2 * tt) / (volatility * tt ^0.5);
-
-        return - this.normSdist(callOptionDelta);
-    }
-
-    putOptionDelta(startDate,expiry,future,volatility)
-    {
-        let tt = (expiry - startDate) / 365;
-        let d1 = (this.Ln(startDate/strike) + 0.5 * volatility ^ 2 * tt) / ( volatility * tt ^ 0.5);
-        return this.normSdist(-d1);
-    }
-
-    callOptionPremium(startDate,expiry,future,volatility,singleStock)
-    {
-        let tt = (expiry - startDate) / 365;
-        let h = this.Ln((future/strike)) / (volatility * tt ^ 0.5) + (volatility * tt^0.5) /2;
-        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * tt ^ 0.5);
-
-        if(singleStock){
-            return (callOptionPremium*10).toFixed(0);
-        }else{
-            return (callOptionPremium*100).toFixed(2);
-        }  
-    }
-
-    putOptionPremium(startDate,expiry,future,strike,volatility,singleStock)
-    {
-        let tt = (expiry - startDate) / 365;
-        let h = (this.Ln(future/strike)) / (volatility * tt ^ 0.5 ) / (volatility * tt ^ 0.5 ) / 2;
-
-        let callOptionPremium = future * this.normSdist(h) - strike * this.normSdist(h - volatility * tt ^ 0.5);
-
-         if(singleStock){
-            return (callOptionPremium*10).toFixed(0);
-        }else{
-            return (callOptionPremium*100).toFixed(2);
-        }   
-    }
-
-
-    /*
-    *https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.excel.worksheetfunction.normsdist?view=excel-pia
-    *Returns the standard normal cumulative distribution function. The distribution has a mean of 0 (zero) and a standard deviation of one. Use this function in place of a table of standard normal curve areas.
-    */
-    normSdist(value)
-    {
-        return .5*(1+math.erf(value/Math.sqrt(2)));
-    }
-
-    /*
-    *https://docs.microsoft.com/en-us/office/vba/api/excel.worksheetfunction.ln
-    *Returns the natural logarithm of a number. Natural logarithms are based on the constant e (2.71828182845904) 
-    */
-    Ln(value)
-    {
-        return Math.log(value);
-    }
-
 }

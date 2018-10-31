@@ -28,6 +28,8 @@
     import AlertsMenu from './ActionBar/Components/AlertsMenuComponent.vue';
     import ConfirmationsMenu from './ActionBar/Components/ConfirmationsMenuComponent.vue';
     import RequestMarketMenu from './ActionBar/Components/RequestMarket/RequestMarketMenuComponent.vue';
+   
+
     //lib imports
     import { EventBus } from '../lib/EventBus.js';
     import Market from '../lib/Market';
@@ -42,7 +44,8 @@
             ImportantMenu,
             AlertsMenu,
             ConfirmationsMenu,
-            RequestMarketMenu
+            RequestMarketMenu,
+
         },
         props:{
           'markets': {

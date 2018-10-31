@@ -49,6 +49,10 @@ class UserMarketController extends Controller
         $data['current_market_negotiation']['user_id'] = $request->user()->id;
         $userMarket = $userMarketRequest->createQuote($data);
 
+        if(!$userMarket) {
+            return response()->json(['error' => "Failed to store quote", 'message' => "Failed to store quote."], 500);
+        }
+
         // Set action that needs to be taken for the org related to this userMarketRequest
         $userMarket->userMarketRequest->setAction(
             $userMarket->userMarketRequest->user->organisation->id,

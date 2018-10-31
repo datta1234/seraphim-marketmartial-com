@@ -124,3 +124,10 @@
 		background-color: $mm-modal-header;
 	}
 }
+
+@media (min-width: 768px) {
+  .modal-xl .modal-md{
+    width: 90%;
+   max-width:1200px;
+  }
+}

@@ -1,7 +1,7 @@
 <template>
 	<b-row>
 		<b-col>
-		    <b-form-checkbox> Apply Premium Calculator</b-form-checkbox>
+		    <b-form-checkbox  v-active-request> Apply Premium Calculator</b-form-checkbox>
 		</b-col>
 	</b-row>
 </template>
