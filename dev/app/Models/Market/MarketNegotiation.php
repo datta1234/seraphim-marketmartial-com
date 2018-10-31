@@ -731,7 +731,7 @@ class MarketNegotiation extends Model
 
                 }else if ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
                 {
-                    $newMarketNegotiation = $this->setMarketNegotiationAfterTrade($user);
+                    //work the balance first
                     $tradeNegotiation->traded = true;
                 }else if ($tradeNegotiation->quantity > $counterNegotiation->quantity) 
                 {
@@ -784,7 +784,6 @@ class MarketNegotiation extends Model
 
                 return $tradeNegotiation;
             } catch (\Exception $e) {
-                dd($e);
                 \Log::error($e);
                 DB::rollBack();
                 return false;
@@ -796,7 +795,7 @@ class MarketNegotiation extends Model
     {
             $newMarketNegotiation = $this->replicate();
             $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
-            
+
             $newMarketNegotiation->counter_user_id = null;
             $newMarketNegotiation->market_negotiation_id = null;
 

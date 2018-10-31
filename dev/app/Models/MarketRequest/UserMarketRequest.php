@@ -332,6 +332,7 @@ class UserMarketRequest extends Model
     */
     public function openToMarket()
     {
+
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
@@ -375,9 +376,12 @@ class UserMarketRequest extends Model
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
 
+        $needsBalanceWorked =  $acceptedState ? $this->chosenUserMarket->needsBalanceWorked() : false;
+
         $is_trade_at_best   =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen() : false;
 
         $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
+
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
         // \Log::info([
@@ -393,6 +397,8 @@ class UserMarketRequest extends Model
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
+     
+
         if(!$hasQuotes)
         {
             return "request";
@@ -400,6 +406,9 @@ class UserMarketRequest extends Model
         elseif($hasQuotes && !$acceptedState)
         {
             return "request-vol";
+        }elseif($acceptedState && !$marketOpen && $lastTraded && $needsBalanceWorked)
+        {
+            return 'trade-negotiation-balance';
         }
         elseif($acceptedState && !$marketOpen && !$is_trading)
         {
@@ -528,8 +537,7 @@ class UserMarketRequest extends Model
             'offer_state'   => "",
             'action_needed' => ""
         ];
-
-     
+ 
         switch ($state) {
             case "request":
                 if(in_array("interest",$marketRequestRoles)) {

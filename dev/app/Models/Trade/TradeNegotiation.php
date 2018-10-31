@@ -62,9 +62,10 @@ class TradeNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeNegotiationParents()
+    public function tradeNegotiationParent()
     {
-        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+
     }
 
     /**
@@ -73,7 +74,7 @@ class TradeNegotiation extends Model
     */
     public function tradeNegotiationChildren()
     {
-        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
     /**

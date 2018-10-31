@@ -160,6 +160,19 @@ class UserMarket extends Model
         return ( $trade ? !$trade->traded : false );
     }
 
+    public function needsBalanceWorked()
+    {
+        $lastTrade = $this->tradeNegotiations()->latest()->first();
+        if($lastTrade)
+        {
+             return $lastTrade->tradeNegotiationParent ? $lastTrade->quantity < $lastTrade->tradeNegotiationParent->quantity : false;          
+        }else
+        {
+           return false;  
+        }
+        
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

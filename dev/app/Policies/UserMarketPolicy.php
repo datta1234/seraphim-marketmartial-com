@@ -93,7 +93,7 @@ class UserMarketPolicy
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
             in_array(
                 $userMarket->userMarketRequest->getStatus($current_org_id), 
-                ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]
+                ["negotiation-pending", "negotiation-open", "trade-negotiation-open","trade-negotiation-balance"]
             );
     }
 

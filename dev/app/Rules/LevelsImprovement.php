@@ -31,12 +31,19 @@ class LevelsImprovement implements Rule
      */
     public function passes($attribute, $value)
     {
+
+        $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
+
         if(!in_array($attribute, ['bid', 'offer'])) {
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
         //check to see if the bid is improved or the offer
-        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
+        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["trade-negotiation-balance"]))
+        {
+            return ($this->request->input($attribute) == $this->lastNegotiation->{$attribute}) || ($this->request->input($inverse) == $this->lastNegotiation->{$inverse});
+        }
+        else if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
 
 
@@ -49,7 +56,6 @@ class LevelsImprovement implements Rule
                 }
             }
 
-            $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
             $valid = ($attribute == 'bid');
             /*
                 both 'bid' & 'offer' follow same process, only change is comparisson '<' vs '>' 
