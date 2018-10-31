@@ -17431,6 +17431,11 @@ input:checked + .slider:before {
   color: #EBC300;
 }
 
+.interaction-bar-wrapper input[type="text"]:disabled {
+  background-color: #afafaf;
+  border-color: #8e8e8e;
+}
+
 .text-my-org {
   color: #EBC300;
 }
@@ -17483,6 +17488,10 @@ input:checked + .slider:before {
 
 .activity-block .dismiss:hover {
   cursor: pointer;
+}
+
+.condition-timer {
+  color: #EBC300;
 }
 
 .interaction-bar-wrapper .chat-bar,
@@ -17794,6 +17803,13 @@ input:checked + .slider:before {
   background-color: #1c7c74;
 }
 
+@media (min-width: 768px) {
+  .modal-xl .modal-md {
+    width: 90%;
+    max-width: 1200px;
+  }
+}
+
 .shader {
   width: 100%;
   height: 100%;
@@ -17920,6 +17936,10 @@ input:checked + .slider:before {
 .trade-popover .popover .popover-header {
   background: #1c7c74;
   color: #FFFFFF;
+}
+
+.toasted.mm-confirm-toast.primary {
+  background-color: #E17428;
 }
 
 @font-face {

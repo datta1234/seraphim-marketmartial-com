@@ -18,6 +18,9 @@ export default class UserMarket extends BaseModel {
                 },
                 activity: {
                     setMethod: (activity) => { this.setActivity(activity) },
+                },
+                trading_at_best: {
+                    setMethod: (negotiation) => { this.setTradingAtBest(negotiation) },
                 }
             }
         });
@@ -62,6 +65,12 @@ export default class UserMarket extends BaseModel {
         if(options && options.activity) {
             this.setActivity(options.activity);
         }
+
+        this.trading_at_best = null;
+        if(options && options.trading_at_best) {
+            this.setTradingAtBest(options.trading_at_best);
+        }   
+
     }
 
     /**
@@ -79,6 +88,27 @@ export default class UserMarket extends BaseModel {
     */
     getMarketRequest() {
         return this._user_market_request;
+    }
+
+    /**
+    *   setTradingAtBest - Set the TradeAtBestOpenRequest
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setTradingAtBest(negotiation) {
+     
+        if(!(negotiation instanceof UserMarketNegotiation)) {
+            negotiation = new UserMarketNegotiation(negotiation);
+        }
+        negotiation.setUserMarket(this);
+        this.trading_at_best = negotiation;
+    }
+
+    /**
+    *   isTradeAtBestOpen - get the chosen user market
+    *   @return {UserMarket}
+    */
+    isTradingAtBest() {
+        return typeof this.trading_at_best != undefined && this.trading_at_best != null;
     }
 
     /**

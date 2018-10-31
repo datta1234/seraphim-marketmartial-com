@@ -77,6 +77,8 @@ export default class UserMarketRequest extends BaseModel {
         if(options && options.user_market) {
             this.setUserMarket(options.user_market);
         }
+        
+        this.stage(); // refresh state 
     }
 
     /**
@@ -106,12 +108,13 @@ export default class UserMarketRequest extends BaseModel {
     *   @param {UserMarket} user_market - UserMarket object
     */
     setChosenUserMarket(user_market) {   
-     
+    
      if(!(user_market instanceof UserMarket)) {
             user_market = new UserMarket(user_market);
         }
         user_market.setMarketRequest(this);
         this.chosen_user_market = user_market;
+        this.stage(); // refresh state
     }
 
     /**
@@ -286,7 +289,10 @@ export default class UserMarketRequest extends BaseModel {
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
-        return isTrading.indexOf(this.attributes.state) > -1; 
+        console.log(this.is_trading_at_best);
+
+        return isTrading.indexOf(this.attributes.state) > -1 
+            && (this.is_trading_at_best == false || typeof this.is_trading_at_best =="undefined"); // if its trading at best, then its not trading
     }
 
     canCounterTrade()
@@ -294,6 +300,7 @@ export default class UserMarketRequest extends BaseModel {
         let canCounterTrade = [
             "TRADE-NEGOTIATION-COUNTER"
         ];
+        console.log(this.attributes.state);
         return canCounterTrade.indexOf(this.attributes.state) > -1; 
     }
 
@@ -305,12 +312,14 @@ export default class UserMarketRequest extends BaseModel {
         return mustWorkBalance.indexOf(this.attributes.state) > -1;
     }
 
-    state() 
+    stage() 
     {
         if(this.chosen_user_market == null) {
-            return "quote";
+            this._stage = "quote";
+            return this._stage;
         }
-        return "market";
+        this._stage = "market";
+        return this._stage;
     }
 
 }

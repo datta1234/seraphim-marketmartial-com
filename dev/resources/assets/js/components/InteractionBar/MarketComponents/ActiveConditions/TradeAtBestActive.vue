@@ -1,0 +1,121 @@
+<template>
+    <b-row dusk="ibar-tab-active" class="active-cond-bar" v-if="!timed_out">
+        <b-col cols="6" offset="3">
+            <div class="text-center condition-toggle">
+                <strong>{{ term }} At Best</strong>
+            </div>
+        </b-col>
+        <b-col cols="3">
+            <div class="text-right negotiation condition-timer">
+                <strong>{{ timer_value }}</strong>
+            </div>
+        </b-col>
+        <b-col cols="12">
+            <div class="cond-bar">
+                <b-row id="cond-container" class="trade-popover">
+                    <b-col>
+                        {{ term }} at best: {{ trade_value }}
+                    </b-col>
+                    <b-col>
+                        <div class="pull-right">
+                            <span id="tab-popover">
+                                <a  href="" 
+                                    @click.prevent.stop="doTrade">
+                                        {{ term }}
+                                </a>
+                            </span>
+                            <span>
+                                <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
+                            </span>
+                        </div>
+                    </b-col>
+                </b-row>
+            </div>
+
+            <ibar-trade-desired-quantity
+                ref="tabPopover" 
+                target="tab-popover" 
+                :market-negotiation="negotiation" 
+                :open="trade_open" 
+                :is-offer="negotiation.cond_buy_best == true" 
+                @close="trade_open = false" 
+                parent="cond-container">
+            </ibar-trade-desired-quantity>
+
+        </b-col>
+    </b-row>
+</template>
+<script>
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import ActiveCondition from '~/lib/ActiveCondition';
+
+    export default {
+        props: {
+            condition: {
+                type: ActiveCondition
+            },
+        },
+        data() {
+            return {
+                timed_out: false,
+                timer: null,
+                timer_value: null,
+                trade_open: false,
+            }
+        },
+        computed: {
+            term() {
+                return this.condition.condition.cond_buy_best ? 'Sell' : 'Buy' ;
+            },
+            negotiation() {
+                return this.condition.condition;
+            },
+            trade_value() {
+                return this.condition.condition.cond_buy_best ? this.condition.condition.offer : this.condition.condition.bid ;  
+            }
+        },
+        methods: {
+            doTrade() {
+                this.trade_open = true;
+            },
+            doRepeat() {
+                this.negotiation.repeatNegotiation()
+                .then(response => {
+                    console.log(response);
+                    this.errors = [];
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.errors = err.errors;
+                });
+            },
+            startTimer() {
+                if(this.timer != null) {
+                    this.stopTimer();
+                }
+                this.timer = setInterval(() => {
+                    let time = moment(this.negotiation.created_at).add(20, 'minutes');
+                    let diff = time.diff(moment());
+                    // ensure its not shown if its timed out
+                    if(diff < 0) {
+                        this.timed_out = true;
+                        this.stopTimer();
+                    } else {
+                        let dur = moment.duration(diff);
+                        this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
+                    }
+                }, 1000);
+            },
+            stopTimer() {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        },
+        mounted() {
+            this.startTimer();
+        },
+        beforeDestroy() {
+            this.stopTimer();
+        }
+    }
+</script>

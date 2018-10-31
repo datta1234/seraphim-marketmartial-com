@@ -78,20 +78,22 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
-        return $user->orgnisation_id === $userMarket->user->orgnisation_id;
+        return $user->orgnisation_id === $userMarket->user->orgnisation_id 
+            && $userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
 
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
         $current_org_id = $user->organisation_id;
         // Cant respond to negotiation if FoK
-        if($userMarket->currentMarketNegotiation->isFoK()) {
-            return false;
+        if($userMarket->lastNegotiation->isFoK()) {
+            // only if its killed
+            return $userMarket->lastNegotiation->is_killed == true;
         }
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
-            (
-                $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-pending" ||
-                $userMarket->userMarketRequest->getStatus($current_org_id) == "negotiation-open"
+            in_array(
+                $userMarket->userMarketRequest->getStatus($current_org_id), 
+                ["negotiation-pending", "negotiation-open", "trade-negotiation-open","trade-negotiation-balance"]
             );
     }
 

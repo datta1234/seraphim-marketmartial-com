@@ -31,19 +31,31 @@ class LevelsImprovement implements Rule
      */
     public function passes($attribute, $value)
     {
+
+        $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
+
         if(!in_array($attribute, ['bid', 'offer'])) {
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
         //check to see if the bid is improved or the offer
-        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open"]))
+        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["trade-negotiation-balance"]))
         {
+            return ($this->request->input($attribute) == $this->lastNegotiation->{$attribute}) || ($this->request->input($inverse) == $this->lastNegotiation->{$inverse});
+        }
+        else if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
+        {
+
+
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
-                return  true;
+                $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
+                // if the attribute on the last killed FoK is the one under validation, ignore its value...
+                if($attribute == $cond_att) {
+                    return true;
+                }
             }
 
-            $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
             $valid = ($attribute == 'bid');
             /*
                 both 'bid' & 'offer' follow same process, only change is comparisson '<' vs '>' 
@@ -89,6 +101,15 @@ class LevelsImprovement implements Rule
                 ) {
                     return true;
                 } else {
+                    // if the last one was an FOK & killed
+                    if($this->lastNegotiation->is_killed) {
+                        $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
+                        // if the value was not improved, yet the same and the inverse on the last killed FoK is the one under validation, ignore its value...
+                        // still validate the same
+                        if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->{$attribute})) {
+                            return true;
+                        }
+                    }
                     /*
                         If Value not improved, Ensure the Inverse value is improved ONLY if attribute equal
 

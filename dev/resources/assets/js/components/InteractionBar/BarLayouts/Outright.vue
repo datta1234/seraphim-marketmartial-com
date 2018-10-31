@@ -17,9 +17,17 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
+
     <template v-if="!is_trading">
         <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
    
         <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
             Alert me when cleared
@@ -38,12 +46,12 @@
                        
 
                         
-                         <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
+                         <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
 
 
-                        <b-button v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+                        <b-button v-active-request v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
 
-                        <b-button v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+                        <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
 
                         <!-- Modal Component -->
                         <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
@@ -51,8 +59,8 @@
                             <div slot="modal-footer" class="w-100">
                                 <b-row align-v="center">
                                     <b-col cols="12">
-                                        <b-button class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
-                                        <b-button class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                        <b-button v-active-request class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button v-active-request class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
                                     </b-col>
                                 </b-row>
                             </div>
@@ -64,7 +72,7 @@
                 <b-row class="justify-content-md-center" v-if="!maker_quote && !marketRequest.chosen_user_market">
                     <b-col cols="6">
 
-                        <b-button class="w-100 mt-1"
+                        <b-button v-active-request class="w-100 mt-1"
                           v-if="!maker_quote" 
                           :disabled="check_invalid || server_loading || conditionActive('fok')" 
                           size="sm" 
@@ -81,7 +89,7 @@
                  <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
                     <b-col cols="6">
                          
-                        <b-button  class="w-100 mt-1" 
+                        <b-button v-active-request class="w-100 mt-1" 
                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -89,7 +97,7 @@
                          @click="sendNegotiation()">
                                 Send
                         </b-button>
-                        <b-button class="w-100 mt-1" 
+                        <b-button v-active-request class="w-100 mt-1" 
                          :disabled="conditionActive('fok')" 
                          v-if="can_spin" 
                          size="sm" 
@@ -100,10 +108,26 @@
                         </b-button>
                     </b-col>
                 </b-row>
+                
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                    <b-col cols="6">
+                         
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="improveBestNegotiation()">
+                                Send
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+
                 <b-row class="justify-content-md-center">
                     <b-col cols="6">
                         <!-- !maker_quote && !marketRequest.chosen_user_market -->
-                         <b-button  v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
+                         <b-button v-active-request v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
                     </b-col>
                 </b-row>
             </b-col>
@@ -139,7 +163,7 @@
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
-    
+    import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
     
 
     const showMessagesIn = [
@@ -154,7 +178,8 @@
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
-            IbarActiveConditions
+            IbarActiveConditions,
+            IbarTradeAtBestNegotiation
         },
         props: {
             marketRequest: {
@@ -228,7 +253,12 @@
             },
             is_trading: function(){
                 return this.marketRequest.isTrading();
-
+            },
+            is_trading_at_best: function() {
+                return this.marketRequest.chosen_user_market.isTradingAtBest();
+            },
+            is_trading_at_best_closed: function() {
+                return !this.last_negotiation.hasTimeoutRemaining();
             },
             'can_disregard':function(){
                 return this.marketRequest.canApplyNoCares();
@@ -254,12 +284,10 @@
                 }
                 return false;
             },
-            validateProposal:function(check_invalid)
-            {
+            validateProposal:function(check_invalid) {
                 this.check_invalid = check_invalid;
             },
-            updateMessage: function(messageData)
-            {
+            updateMessage: function(messageData) {
                 if(messageData.user_market_request_id == this.marketRequest.id)
                 {
                     let message = messageData.message;
@@ -273,21 +301,22 @@
                 }
                
             },
-            calcUserMessages:function()
-            {
+            calcUserMessages:function() {
                 //if the users market quote is placed on hold notify the the current user if it is theres
                 if(this.maker_quote && this.maker_quote.is_on_hold)
                 {
                     this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
-                }else if(!this.can_negotiate && !this.is_trading)
+                }
+                else 
+                if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
                 {
                     this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
                 }
             },
-            subscribeToMarketRequest(){
+            subscribeToMarketRequest() {
 
             },
-            spinNegotiation(){
+            spinNegotiation() {
                 
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
@@ -298,8 +327,8 @@
                 .catch(err => {
                     this.server_loading = false;
 
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -318,11 +347,25 @@
                 .catch(err => {
                     this.server_loading = false;
 
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
 
+            },
+            improveBestNegotiation() {
+                this.server_loading = true;
+                this.marketRequest.chosen_user_market.trading_at_best.improveBestNegotiation(this.proposed_user_market_negotiation)
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
+
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
             },
             sendQuote() {
 
@@ -346,8 +389,8 @@
                     console.log("this is an error",err);
 
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -365,8 +408,8 @@
                 })
                 .catch(err => {
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
 
             },
@@ -382,8 +425,8 @@
                 })
                 .catch(err => {
                     this.server_loading = false;
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
                 });
             },
             pullQuote() {

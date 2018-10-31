@@ -126,6 +126,15 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function getMarketTitleAttribute()
+    {
+        return $this->markets()->pluck('title')[0];
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function rebates()
     {
         return $this->hasMany('App\Models\Trade\Rebate','user_market_request_id');
@@ -265,8 +274,7 @@ class UserMarketRequest extends Model
         {
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
-        } 
-        
+        }    
     }
 
     /*
@@ -318,15 +326,23 @@ class UserMarketRequest extends Model
             } 
         } 
     }
-
+    
+    /*
+    *market is either open after a traded market or spin following each other
+    */
     public function openToMarket()
     {
+
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            
             if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
             {
-              return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat; 
+                return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
+            }else
+            {
+               return is_null($lastNegotiation->marketNegotiationParent);
             }
         }
         return false;
@@ -359,7 +375,13 @@ class UserMarketRequest extends Model
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
+
+        $needsBalanceWorked =  $acceptedState ? $this->chosenUserMarket->needsBalanceWorked() : false;
+
+        $is_trade_at_best   =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen() : false;
+
         $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
+
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
         // \Log::info([
@@ -375,6 +397,8 @@ class UserMarketRequest extends Model
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
+     
+
         if(!$hasQuotes)
         {
             return "request";
@@ -382,14 +406,21 @@ class UserMarketRequest extends Model
         elseif($hasQuotes && !$acceptedState)
         {
             return "request-vol";
+        }elseif($acceptedState && !$marketOpen && $lastTraded && $needsBalanceWorked)
+        {
+            return 'trade-negotiation-balance';
         }
         elseif($acceptedState && !$marketOpen && !$is_trading)
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trading && ( !$is_fok || ( $is_fok && $is_killed ) || ( $is_fok && $is_private ) ))
+        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading )
         {
             return 'negotiation-open';
+        }
+        elseif($acceptedState && $marketOpen && $is_trade_at_best)
+        {
+            return 'trade-negotiation-open';
         }
         elseif($acceptedState && !$marketOpen && $is_trading && !$lastTraded)
         {
@@ -410,10 +441,12 @@ class UserMarketRequest extends Model
         if($interest_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id)
         {
             $marketRequestRoles = ["interest"];
-        }else if ($market_maker_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id) 
+        }
+        else if ($market_maker_org_id == $current_org_id && $current_org_id  != null && $market_maker_org_id != $interest_org_id) 
         {
             $marketRequestRoles = ["market_maker"];
-        }else if($market_maker_org_id == $current_org_id  && $interest_org_id == $current_org_id && $current_org_id  != null)
+        }
+        else if($market_maker_org_id == $current_org_id  && $interest_org_id == $current_org_id && $current_org_id  != null)
         {
             $marketRequestRoles = ["market_maker","interest"];
         }
@@ -504,8 +537,7 @@ class UserMarketRequest extends Model
             'offer_state'   => "",
             'action_needed' => ""
         ];
-
-     
+ 
         switch ($state) {
             case "request":
                 if(in_array("interest",$marketRequestRoles)) {
@@ -542,8 +574,17 @@ class UserMarketRequest extends Model
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-open.other');
                 }
             break;
-            case "trade-negotiation-pending":
+            case "trade-negotiation-open":
                 
+                if(in_array('negotiator',$tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.negotiator');
+                }else if(in_array('counter', $tradeNegotiationRoles)){
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.counter');
+                }else{
+                    $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-open.other');
+                }
+            break;
+             case "trade-negotiation-pending":
                 if(in_array('negotiator',$tradeNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.negotiator');
                 }else if(in_array('counter', $tradeNegotiationRoles)){
@@ -577,7 +618,6 @@ class UserMarketRequest extends Model
         $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
         $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
     
-
         return $attributes;
     }
 

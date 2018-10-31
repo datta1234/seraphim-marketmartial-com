@@ -19,6 +19,7 @@ export default class Message {
         const defaults = {
             checksum: '',
             total: 0,
+            token: '',
             expires: moment(),
         }
         // assign options with defaults
@@ -175,8 +176,8 @@ export default class Message {
             }
 
             // handle corrupt message
-            console.log("Blah ["+this.expires.unix()+"]")
-            if( this.validateChecksum(this.full_message+this.expires.unix()) ) {
+            console.log("Blah ["+this.full_message+this.token+"]")
+            if( this.validateChecksum(this.full_message+this.token) ) {
                 try {
                     resolve(JSON.parse(atob(this.full_message)));
                 } catch(err) {
