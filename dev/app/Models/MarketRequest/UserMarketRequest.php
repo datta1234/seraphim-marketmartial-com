@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Events\UserMarketRequested;
 use App\Helpers\Broadcast\Stream;
+use DB;
 
 class UserMarketRequest extends Model
 {
@@ -128,7 +129,7 @@ class UserMarketRequest extends Model
     */
     public function getMarketTitleAttribute()
     {
-        return $this->markets()->pluck('title')[0];
+        return $this->market()->pluck('title')[0];
     }
 
     /**
@@ -147,44 +148,55 @@ class UserMarketRequest extends Model
     */
     public function createQuote($data)
     {
-        $userMarket = $this->userMarkets()->create(
-            collect($data)->only([
-                'user_id',
-            ])->toArray()
-        );
+        try {
+            DB::beginTransaction();
 
-        // negotiation
-        $marketNegotiation = $userMarket
-            ->marketNegotiations()
-            ->create(
-                collect($data['current_market_negotiation'])->only([
-                    "user_id",
-                    "user_market_id",
-                    "bid",
-                    "offer",
-                    "offer_qty",
-                    "bid_qty",
-                    "bid_premium",
-                    "offer_premium",
-                    "future_reference",
-                    "has_premium_calc",
-
-                    // "is_private", // cant on quote
-                    "cond_is_repeat_atw",
-                    "cond_fok_apply_bid",
-                    "cond_fok_spin",
-                    "cond_timeout",
-                    "cond_is_oco",
-                    "cond_is_subject",
-                    // "cond_buy_mid", // cant on quote
-                    // "cond_buy_best", // cant on quote
+            $userMarket = $this->userMarkets()->create(
+                collect($data)->only([
+                    'user_id',
                 ])->toArray()
             );
 
-        $userMarket
-            ->currentMarketNegotiation()
-            ->associate($marketNegotiation)
-            ->save();
+            // negotiation
+            $marketNegotiation = $userMarket
+                ->marketNegotiations()
+                ->create(
+                    collect($data['current_market_negotiation'])->only([
+                        "user_id",
+                        "user_market_id",
+                        "bid",
+                        "offer",
+                        "offer_qty",
+                        "bid_qty",
+                        "bid_premium",
+                        "offer_premium",
+                        "future_reference",
+                        "has_premium_calc",
+
+                        // "is_private", // cant on quote
+                        "cond_is_repeat_atw",
+                        "cond_fok_apply_bid",
+                        "cond_fok_spin",
+                        "cond_timeout",
+                        "cond_is_oco",
+                        "cond_is_subject",
+                        // "cond_buy_mid", // cant on quote
+                        // "cond_buy_best", // cant on quote
+                    ])->toArray()
+                );
+
+            $userMarket
+                ->currentMarketNegotiation()
+                ->associate($marketNegotiation)
+                ->save();
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error($e);
+            return false;
+        }
 
         return $userMarket;
     }    
@@ -234,7 +246,7 @@ class UserMarketRequest extends Model
 
         }else
         {
-            $data["quotes"]            =    $this->userMarkets()->when(!$is_interest, function($query) use ($current_org_id) {
+            $data["quotes"]            =    $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
                                                 $query->where(function($query) use ($current_org_id) {
                                                     // Only publicly visible
                                                     $query->whereHas('currentMarketNegotiation', function($q) {
@@ -334,6 +346,10 @@ class UserMarketRequest extends Model
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
             {
+                // open if the last one is killed but isnt a fill
+                if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
+                    return true;
+                }
                 return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
             }
         }
@@ -596,8 +612,8 @@ class UserMarketRequest extends Model
         /*
         *   BID / OFFER states
         */
-        $attributes['bid_state'] = $authedUserMarket && $authedUserMarket->currentMarketNegotiation->bid ? 'action' : '';
-        $attributes['offer_state'] = $authedUserMarket && $authedUserMarket->currentMarketNegotiation->offer ? 'action' : '';
+        $attributes['bid_state'] = $authedUserMarket && $authedUserMarket->currentMarketNegotiation && $authedUserMarket->currentMarketNegotiation->bid ? 'action' : '';
+        $attributes['offer_state'] = $authedUserMarket && $authedUserMarket->currentMarketNegotiation && $authedUserMarket->currentMarketNegotiation->offer ? 'action' : '';
 
         /*
         *   Action needed (Alert)
