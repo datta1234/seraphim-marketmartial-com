@@ -148,11 +148,13 @@ class UserController extends Controller
                 ]);
                 $slack_integration->save();
                 $user->organisation->slackIntegrations()->attach($slack_integration->id);
+
+                Organisation::purgeCached();
             }
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
             if($request->ajax()) {
                 return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
             }

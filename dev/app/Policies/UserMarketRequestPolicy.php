@@ -66,7 +66,7 @@ class UserMarketRequestPolicy
      */
     public function addQoute(User $user, UserMarketRequest $userMarketRequest)
     {
-        return !$userMarketRequest->userMarkets()->whereHas('user',function($query) use ($user){
+        return !$userMarketRequest->userMarkets()->activeQuotes()->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id',$user->organisation_id);
             })->exists();
     }

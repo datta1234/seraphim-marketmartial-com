@@ -350,6 +350,15 @@ class MarketNegotiation extends Model
     }
 
     /**
+    * test if is RepeatATW
+    * @return Boolean
+    */
+    public function isRepeatATW()
+    {
+        return $this->cond_is_repeat_atw !== null; 
+    }
+
+    /**
     * test if is FoK
     * @return Boolean
     */
@@ -456,28 +465,38 @@ class MarketNegotiation extends Model
     public function kill($user = null)
     {
         $this->is_killed = true; // && with_fire = true ;)
-        $this->is_repeat = true;
+        // if its a fill
+        if($this->cond_fok_spin == true) {
+            $this->is_repeat = true;
+        }
         $this->save();
 
-        $newNegotiation = $this->replicate();
-        
-        $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
-        $newNegotiation->market_negotiation_id = $this->id;
+        // if this is the first one... send back to quote phase
+        if($this->marketNegotiationParent == null) {
+            $this->userMarket->userMarketRequest->chosen_user_market_id = null;
+            $this->userMarket->userMarketRequest->save();
+        }
 
-        $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+        if($this->cond_fok_spin == true) {
+            $newNegotiation = $this->replicate();
+            
+            $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
+            $newNegotiation->market_negotiation_id = $this->id;
 
-        $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
-        $inverse = $att == 'bid' ? 'offer' : 'bid';
-        $sourceMarketNegotiation = $this->marketNegotiationSource($att);
-        $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
-        $newNegotiation->{$inverse} = null;
+            $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+
+            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+            $inverse = $att == 'bid' ? 'offer' : 'bid';
+            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+            $newNegotiation->{$inverse} = null;
 
 
-        $newNegotiation->cond_timeout = false; // dont apply on this one
-        // Override the condition application
-        $newNegotiation->fok_applied = true;
-        return $newNegotiation->save();
-
+            $newNegotiation->cond_timeout = false; // dont apply on this one
+            // Override the condition application
+            $newNegotiation->fok_applied = true;
+            return $newNegotiation->save();
+        }
     }
 
     public function counter($user, $data)
@@ -671,7 +690,7 @@ class MarketNegotiation extends Model
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBestOpen()) {
+            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBestOpen() && !$this->isRepeatATW()) {
                 return "SPIN";
             }
         }

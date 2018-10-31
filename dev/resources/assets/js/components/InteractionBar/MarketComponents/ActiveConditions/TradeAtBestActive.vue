@@ -81,11 +81,9 @@
             doRepeat() {
                 this.negotiation.repeatNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {
-                    console.log(err);
                     this.errors = err.errors;
                 });
             },
