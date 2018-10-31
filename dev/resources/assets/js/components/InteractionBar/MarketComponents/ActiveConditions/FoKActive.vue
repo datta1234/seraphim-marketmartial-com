@@ -121,12 +121,14 @@
                 if(this.timer != null) {
                     this.stopTimer();
                 }
-                this.timer = setInterval(() => {
-                    let time = moment(this.negotiation.created_at).add(20, 'minutes');
-                    let diff = time.diff(moment());
-                    let dur = moment.duration(diff);
-                    this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
-                }, 1000);
+                this.timer = setInterval(this.runTimer, 1000);
+            },
+            runTimer() {
+                this.timer_value = this.negotiation.getTimeoutRemaining();
+                if(this.timer_value == "00:00") {
+                    this.timed_out = true;
+                    this.stopTimer();
+                }
             },
             stopTimer() {
                 clearInterval(this.timer);
@@ -135,6 +137,7 @@
         },
         mounted() {
             this.startTimer();
+            this.runTimer(); // force initial setting
         },
         beforeDestroy() {
             this.stopTimer();

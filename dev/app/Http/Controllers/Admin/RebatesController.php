@@ -167,8 +167,6 @@ class RebatesController extends Controller
 
         $headers = ['Content-Type' => 'text/csv'];
         return response()->download($filename, $filename, $headers)->deleteFileAfterSend(true);
-
-
     }
 
     /**
