@@ -30,7 +30,7 @@ class TradeNegotiationController extends Controller
             return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to counterparty."]);    
         }else
         {
-            return response()->json(['data' => false, 'message' => "Response sent to counterparty."],500);
+            return response()->json(['data' => false, 'message' => "Response failed to be sent."],500);
         }
     }
 }
