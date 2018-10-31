@@ -4,7 +4,7 @@
     <p>Date: {{ trade_confirmation.date }} </p>
     <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
     <div style="Display:inline;">
-        <h3>Option</h3>
+        <h3 class="text-dark">Option</h3>
     </div>
 
     <table class="table table-sm">
@@ -60,9 +60,8 @@
     </table>
 
     <div>
-        <h3>Futures</h3>
+        <h3 class="text-dark">Futures</h3>
     </div>
-    {{ "PROCEED "+can_proceed}}
       <table class="table table-sm">
       <thead>
         <tr>
@@ -89,6 +88,14 @@
             </td>
             <td>
                 <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
+                <span class="text-danger">
+                    <!-- @TODO figure out how to not hardcode the first value -->
+              <ul v-if="errors">
+                  <li class="text-danger" v-if="errors['structure_groups.0.items.0']" v-for="error in errors['structure_groups.0.items.0']">
+                      {{ error }}
+                  </li>  
+                </ul>
+                </span>
             </td>
             <td>
                 <b-form-input :disabled="true" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
@@ -99,8 +106,8 @@
         </tr>
       </tbody>
     </table>
-
-    <b-row>
+   
+     <b-row>
         <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
             <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
             <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
@@ -112,11 +119,10 @@
                   </b-form-select>
               </div>
         </b-col>
-
-       <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 2">
+       <b-col md="5" offset-md="7" v-else>
             <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
             <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-             <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send</button>
+             <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
              <div class="form-group">
                 <label for="exampleFormControlSelect1">Account Booking</label>
@@ -154,6 +160,7 @@
         return {
                 trading_accounts:[],
                 selected_trading_account:null,
+                errors:{}
             }
         },
       props:{
@@ -162,6 +169,13 @@
           }
         },
         methods: {
+            getError(field)
+            {
+                if(this.errors && this.errors.hasOwnProperty(field))
+                {
+                    return this.errors[field][0];
+                }
+            },
             getTradingAccounts: function()
             {
 
@@ -185,18 +199,29 @@
                     this.errors = [];
                 })
                 .catch(err => {
-                    console.log(err);
-                    //this.errors = err.errors.errors;
+                    this.errors = err.errors;
                 });
             },
             send: function()
             {
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
                     this.errors = [];
+                    this.$emit('close');
                 })
                 .catch(err => {
-                    console.log(err);
-                    //this.errors = err.errors.errors;
+                    this.errors = err.errors;
+                });  
+            },
+            dispute: function()
+            {
+                
+                this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
+                    this.$emit('close');
+                    this.errors = [];
+                })
+                .catch(err => {
+                    
+                    this.errors = err.errors;
                 });  
             },
             confirm: function()
@@ -204,13 +229,13 @@
                 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
                     this.errors = [];
+                    this.$emit('close');
                 })
                 .catch(err => {
-                    console.log(err);
-                    //this.errors = err.errors.errors;
+                    
+                    this.errors = err.errors;
                 });  
-            }
-           
+            }  
         },
         mounted() {
            this.getTradingAccounts();

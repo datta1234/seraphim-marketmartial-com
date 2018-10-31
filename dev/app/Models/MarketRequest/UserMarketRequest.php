@@ -338,12 +338,17 @@ class UserMarketRequest extends Model
             } 
         } 
     }
-
+    
+    /*
+    *market is either open after a traded market or spin following each other
+    */
     public function openToMarket()
     {
+
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            
             if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
             {
                 // open if the last one is killed but isnt a fill
@@ -351,6 +356,9 @@ class UserMarketRequest extends Model
                     return true;
                 }
                 return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
+            }else
+            {
+               return is_null($lastNegotiation->marketNegotiationParent);
             }
         }
         return false;
@@ -380,14 +388,16 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
-        
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
 
+        $needsBalanceWorked =  $acceptedState ? $this->chosenUserMarket->needsBalanceWorked() : false;
+
         $is_trade_at_best   =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen() : false;
 
         $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
+
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
         // \Log::info([
@@ -403,6 +413,8 @@ class UserMarketRequest extends Model
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
+     
+
         if(!$hasQuotes)
         {
             return "request";
@@ -410,6 +422,9 @@ class UserMarketRequest extends Model
         elseif($hasQuotes && !$acceptedState)
         {
             return "request-vol";
+        }elseif($acceptedState && !$marketOpen && $lastTraded && $needsBalanceWorked)
+        {
+            return 'trade-negotiation-balance';
         }
         elseif($acceptedState && !$marketOpen && !$is_trading)
         {
@@ -538,8 +553,7 @@ class UserMarketRequest extends Model
             'offer_state'   => "",
             'action_needed' => ""
         ];
-
-     
+ 
         switch ($state) {
             case "request":
                 if(in_array("interest",$marketRequestRoles)) {
@@ -587,7 +601,6 @@ class UserMarketRequest extends Model
                 }
             break;
              case "trade-negotiation-pending":
-                
                 if(in_array('negotiator',$tradeNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.trade-negotiation-pending.negotiator');
                 }else if(in_array('counter', $tradeNegotiationRoles)){
@@ -621,7 +634,6 @@ class UserMarketRequest extends Model
         $needs_action = $this->getAction($this->resolveOrganisationId(), $this->id);
         $attributes['action_needed'] = $needs_action == null ? false : $needs_action;        
     
-
         return $attributes;
     }
 

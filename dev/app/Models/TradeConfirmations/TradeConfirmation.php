@@ -161,9 +161,16 @@ class TradeConfirmation extends Model
 
     public function notifyConfirmation($organisation,$message)
     {
+        $sendOrg = $this->sendUser->organisation;
+        $receiveOrg = $this->recievingUser->organisation;
+
         $organisation->notify("trade_confirmation_store",$message,true);
-        $stream = new Stream(new TradeConfirmationEvent($this,$organisation));
+        
+        $stream = new Stream(new TradeConfirmationEvent($this,$sendOrg));
         $stream->run();
+
+        $stream = new Stream(new TradeConfirmationEvent($this, $receiveOrg));
+        $stream->run();        
     }
 
     public function preFormatted()
@@ -191,18 +198,35 @@ class TradeConfirmation extends Model
 
             'status_id'                 => $this->trade_confirmation_status_id,
 
-
+            'can_interact'              => $this->canInteract(),
 
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
 
             'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
 
-            'date'                      => Carbon::now()->format("Y-m-d H:i:s"),
+            'date'                      => Carbon::now()->format("Y-m-d"),
             
             'traded_at'                 => $this->tradeNegotiation->updated_at,
             'is_offer'                  => $this->tradeNegotiation->isOffer(),
         ];
+    }
+
+    public function canInteract()
+    {
+        $current_org_id =  $this->resolveOrganisationId();
+        $is_sender =   $current_org_id == $this->sendUser->organisation->id;
+        $is_reciever = $current_org_id == $this->recievingUser->organisation->id;
+        $senderStatuses = [1,3];
+        $receiverStatuses = [2,5];
+       if($is_sender)
+       {
+           return  in_array($this->trade_confirmation_status_id,$senderStatuses);
+       }else if($is_reciever)
+       {
+            return in_array($this->trade_confirmation_status_id,$senderStatuses);
+       }
+
     }
 
     /**
@@ -581,7 +605,7 @@ class TradeConfirmation extends Model
                 'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
             ]);
 
-            $this->setUpItems($marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+            $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
         }
 
         return $tradeConfirmation;
@@ -597,7 +621,7 @@ class TradeConfirmation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    private function setUpItems($marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+    private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
     {
 
                 
@@ -627,17 +651,45 @@ class TradeConfirmation extends Model
                 $value = null;
                 break;
                 case 'Contract':
-                $value = $tradeNegotiation->quantity; //quantity
+                    if(!$isOption)
+                    {
+                        $value = $tradeNegotiation->quantity; //quantity   
+                    }else
+                    {
+                        $value = null;
+                    }
                 break;
             }
 
+            if($item->title == "Gross Premiums" || $item->title =="Net Premiums")
+            {
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+                
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
 
-            $tradeGroup->tradeConfirmationItems()->create([
-                'item_id' => $item->id,
-                'title' => $item->title,
-                'value' =>  $value,
-                'trade_confirmation_group_id' => $tradeStructureGroup->id
-            ]);
+            }else
+            {
+                 $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    "is_seller" => null,
+                    'value' =>  $value,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+            }
+           
         }         
     }
 
