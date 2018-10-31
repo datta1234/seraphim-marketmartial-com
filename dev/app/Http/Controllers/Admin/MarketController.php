@@ -45,7 +45,7 @@ class MarketController extends Controller
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
-            Log::error($e->getMessage());
+            Log::error($e);
             return redirect()->back()->with('error', 'Failed to update the Market spot price references.');
         }
 
