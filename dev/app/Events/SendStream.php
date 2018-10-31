@@ -41,12 +41,6 @@ class SendStream implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::info(
-            [$this->broadcastName,
-            $this->channel,
-            $this->data,
-            $this->total]
-        );
         return $this->channel;
     }
 
