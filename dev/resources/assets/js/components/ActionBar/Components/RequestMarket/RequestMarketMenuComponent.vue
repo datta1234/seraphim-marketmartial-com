@@ -70,7 +70,6 @@
         },
         computed: {
             modalTitle: function() {
-                console.log("Makin da titlelelele, ", this.modal_data.title);
                 return this.modal_data.title.join(' > ');
             }
         },
