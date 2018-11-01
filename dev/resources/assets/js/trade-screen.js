@@ -556,14 +556,14 @@ const app = new Vue({
         .then(this.loadUserConfig)
         .then(configs => {
             // load the trade data
-            this.loadMarketTypes();
-
-            this.loadUserConfig()
-            .then(user_preferences => {
+            this.loadMarketTypes()
+            .then(market_types => {
                 let promises = [];
-                if(user_preferences !== null) {
-                    user_preferences.prefered_market_types.forEach(market_type => {
-                       
+                if(this.configs["user_preferences"] !== null) {
+                    this.configs["user_preferences"].prefered_market_types.forEach(market_type_id => {
+                        let market_type = this.market_types.find(element => {
+                            return element.id == market_type_id;
+                        });
                         promises.push(this.loadTradeConfirmations(market_type));
 
                         promises.push(

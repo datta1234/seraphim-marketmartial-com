@@ -16,7 +16,7 @@ class UserPrefController extends Controller
     {
         $user = Auth::user();
         $userPreferences = [
-            "prefered_market_types" => $user->marketInterests()->with('markets')->get()->toArray(),
+            "prefered_market_types" => $user->marketInterests()->pluck('market_type_id')->toArray(),
             "user_name" => $user->full_name
         ];
 
@@ -76,7 +76,7 @@ class UserPrefController extends Controller
     public function update(Request $request, $id)
     {
         Auth::user()->marketInterests()->attach($id);
-        $prefered_market_type = Auth::user()->marketInterests()->where('market_type_id','=',$id)->with('markets')->first();
+        $prefered_market_type = Auth::user()->marketInterests()->where('market_type_id','=',$id)->pluck('market_type_id')->first();
         return response()->json(['data' => $prefered_market_type, 'message' => 'Your account preferences have been successfully been updated.']);
     }
 
