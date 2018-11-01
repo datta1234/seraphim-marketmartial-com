@@ -175,6 +175,7 @@ class MarketUserMarketReqeustController extends Controller
                 }
                 if($input["trade_structure_groups"][0]["fields"]["Quantity"] < config('marketmartial.thresholds.quantity'))
                 {
+                    // @TODO - add send mail for singles where quantity is lower than 50
                     $recipients = User::whereHas('role', function ($query) {
                         $query->where('title', 'Admin');
                     })->get();
