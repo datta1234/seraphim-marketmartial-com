@@ -652,16 +652,24 @@ class MarketNegotiation extends Model
     }
 
     /*
-    For markets that have been SPUN: When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. If I improve the OFFER then it goes between me and the last party on the BID.
+    For markets that have been SPUN: 
+        When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. 
+        If I improve the OFFER then it goes between me and the last party on the BID.
     */
     public function getImprovedNegotiation($market_negotiation)
     {
        if($this->bid != $market_negotiation->bid)
        {
             return $this;
-       }else
+       }
+       else
        {
-            return $this->marketNegotiationParent; 
+            // failing on first quote
+            if($this->marketNegotiationParent == null)
+            {
+                return $this;
+            }
+            return $this->marketNegotiationParent;
        }
     }
 
@@ -851,11 +859,28 @@ class MarketNegotiation extends Model
         $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
         $loggedInUserOrganisationId = $this->resolveOrganisationId();
 
+        $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
+        $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
 
-        //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
-
-         $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
-         $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
+        // // not needed
+        // $bid_source = $this->marketNegotiationSource('bid')->user->organisation_id;
+        // $bid_source = ( 
+        //     $bid_source == $currentUserOrganisationId ? 'my_org' :
+        //     (   $bid_source == $marketMakerUserOrganisationId ? 'maker' : 
+        //         (   $bid_source == $interestUserOrganisationId ? 'interest' : 
+        //             'other'
+        //         )
+        //     )
+        // );
+        // $offer_source = $this->marketNegotiationSource('offer')->user->organisation_id;
+        // $offer_source = ( 
+        //     $offer_source == $currentUserOrganisationId ? 'my-org' :
+        //     (   $offer_source == $marketMakerUserOrganisationId ? 'maker' : 
+        //         (   $offer_source == $interestUserOrganisationId ? 'interest' : 
+        //             'other'
+        //         )
+        //     )
+        // );
 
         $data = [
             'id'                    => $this->id,
@@ -863,6 +888,8 @@ class MarketNegotiation extends Model
             "user_market_id"        => $this->user_market_id,
             "bid"                   => $this->bid,
             "offer"                 => $this->offer,
+            // "bid_source"            => $bid_source,
+            // "offer_source"          => $offer_source,
             "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
             "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
             "offer_qty"             => $this->offer_qty,

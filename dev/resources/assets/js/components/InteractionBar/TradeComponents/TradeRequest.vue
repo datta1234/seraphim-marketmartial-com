@@ -164,7 +164,6 @@
                 return marketNegotiation[attr];
             },
             getStateClass(attr) {
-
                 let source = this.marketNegotiation.getAmountSource(attr);
                 return {
                     "text": source[attr],

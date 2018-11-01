@@ -376,7 +376,6 @@ class UserMarket extends Model
                 $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
             }
 
-
             if($counterNegotiation)
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;

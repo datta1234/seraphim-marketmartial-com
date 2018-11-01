@@ -38,6 +38,7 @@ Artisan::command('mm:reset', function() {
         \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         // Clear Trading
+        \App\Models\Trade\Rebate::truncate();
         \App\Models\TradeConfirmations\Distpute::truncate();
         \App\Models\TradeConfirmations\BookedTrade::truncate();
         \App\Models\TradeConfirmations\TradeConfirmation::truncate();
