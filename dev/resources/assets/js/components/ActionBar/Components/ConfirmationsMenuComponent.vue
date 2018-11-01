@@ -69,7 +69,6 @@
             }
         },
         mounted() {
-            console.log("Check this data",trade_confirmations);
         }
     }
 </script>
