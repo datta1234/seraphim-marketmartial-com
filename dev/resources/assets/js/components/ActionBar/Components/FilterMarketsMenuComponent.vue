@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
-                            <h5 class="w-100 m-0 popover-over-text">{{ key }}</h5>
+                            <h5 class="w-1d00 m-0 popover-over-text">{{ key }}</h5>
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 
@@ -155,7 +155,7 @@
              * @param {string} $market_type a string detailing a MarketType.title to be added
              */
             addUserPreferenceMarketType(market_type) {
-                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences"))
+                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id)
                 .then(response => {
                     if(response.status == 200) {
                         this.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
