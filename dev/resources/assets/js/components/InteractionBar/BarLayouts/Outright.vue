@@ -432,7 +432,7 @@
             pullQuote() {
                 
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
-                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                // this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
 
                 this.server_loading = true;
                 // save
