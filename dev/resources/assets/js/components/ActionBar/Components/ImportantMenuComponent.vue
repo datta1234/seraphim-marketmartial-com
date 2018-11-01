@@ -18,7 +18,7 @@
                               <button
                                   :id="'important-nocare-' + market_request.id"
                                   type="button" class="btn mm-generic-trade-button w-100"
-                                  @click="addToNoCares(key,market_request.id)"
+                                  @click="addToNoCares(market_request.id)"
                                   v-bind:class="{ selected: status }">No Cares
                               </button>
                           </div>
@@ -82,34 +82,23 @@
              * Adds a single Important UserMarketRequest to no cares list and removes it from Markets array
              *
              * @param {string} $id a string id detailing the UserMarketRequests to be removed
-             *
-             * @todo Change $market to be the Market.id not Market.title
              */
-            addToNoCares(key,id) {
-
-               
+            addToNoCares(id) {
                 console.log("fire no cares");
                 EventBus.$emit('addToNoCares',id);
-                //this.notifications.splice(key,1);
             },
             /**
              * Adds all Important UserMarketRequest to no cares list and removes them from Markets array and
              *      closes the popover
-             *
-             * @todo Change market to be the Market.id not Market.title
              */
             applyBulkNoCares() {
-                // if(this.status) {
-
-                //   for (let i=0 ; i < this.notifications.length; i++) {
-                //     this.no_cares.push(this.notifications[i].id);
-                //     EventBus.$emit('addToNoCares',this.notifications[i].id);
-                //   };
-                //   this.notifications.splice(0,this.notifications.length);
-                //  this.saveNoCares();
-
-                // }
-                // this.onDismiss();
+                console.log("What are you? ",this.notifications);
+                if(this.status && this.notifications.length > 0) {
+                    this.notifications.forEach(market_request => {
+                        this.addToNoCares(market_request.id)
+                    });
+                }
+                this.onDismiss();
             },
             /**
              * Loads the Interaction Sidebar with the related UserMarketRequest
@@ -124,9 +113,6 @@
             },
         },
         mounted() {
-
-            //EventBus.$on('addToNoCares', this.addToNoCares);
-
         }
     }
 </script>

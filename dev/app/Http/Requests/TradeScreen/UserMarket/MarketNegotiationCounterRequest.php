@@ -63,13 +63,19 @@ class MarketNegotiationCounterRequest extends FormRequest
         // get latest non mim
         $lastNegotiation = $this->market_negotiation;
 
-        $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $lastNegotiation)], function ($input) {
+        $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric'], function ($input) {
             return !is_null($input->bid_qty) && !$input->is_repeat;
-        }); 
+        });
+        $validator->sometimes('bid', [new LevelsImprovement($this, $lastNegotiation)], function($input) use ($lastNegotiation) {
+            return $lastNegotiation->cond_buy_mid === null;
+        });
 
-        $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this, $lastNegotiation)], function ($input) {
+        $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric'], function ($input) {
             return !is_null($input->offer_qty) && !$input->is_repeat;
         }); 
+        $validator->sometimes('offer', [new LevelsImprovement($this, $lastNegotiation)], function($input) use ($lastNegotiation) {
+            return $lastNegotiation->cond_buy_mid === null;
+        });
 
         $validator->sometimes('bid_qty', 'required|numeric', function ($input) {
             return !is_null($input->bid) && !$input->is_repeat;

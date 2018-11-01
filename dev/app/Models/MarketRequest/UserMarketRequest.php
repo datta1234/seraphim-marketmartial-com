@@ -358,6 +358,7 @@ class UserMarketRequest extends Model
                 return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
             }else
             {
+                // @TODO: this is breaking the initial levels being set.
                return is_null($lastNegotiation->marketNegotiationParent);
             }
         }
@@ -400,18 +401,6 @@ class UserMarketRequest extends Model
 
         $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
 
-        if($this->id == 5) {
-            \Log::info([
-                "hasQuotes > $hasQuotes",
-                "acceptedState > $acceptedState",
-                "marketOpen > $marketOpen",
-                "is_fok > $is_fok",
-                "is_private > $is_private",
-                "is_killed > $is_killed",
-                "lastTraded > $lastTraded",
-                "lastTraded. > $lastTraded",
-            ]);
-        }
         
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
