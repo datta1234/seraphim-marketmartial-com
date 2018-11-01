@@ -22,7 +22,11 @@
             </div>
         </b-popover>
         
-           <b-modal @hidden="hideModal()" class="mm-modal mx-auto modal-xl" ref="confirmationModelRef"  hide-footer title="Using Component Methods">
+           <b-modal @hidden="hideModal()" class="mm-modal mx-auto modal-xl" ref="confirmationModelRef"  hide-footer>
+                <!-- Modal title content --> 
+                <div class="mm-modal-title" slot="modal-title">
+                    Confirmation
+                </div>
                 <trade-confirmation-component @close="hideModal()" v-if="selected_trade_confirmation != null" :trade_confirmation="selected_trade_confirmation"></trade-confirmation-component>
             </b-modal>
 
@@ -65,7 +69,7 @@
             }
         },
         mounted() {
-
+            console.log("Check this data",trade_confirmations);
         }
     }
 </script>
