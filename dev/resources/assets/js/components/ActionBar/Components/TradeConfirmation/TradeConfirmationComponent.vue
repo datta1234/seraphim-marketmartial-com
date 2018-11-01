@@ -238,7 +238,8 @@
             }  
         },
         mounted() {
-           this.getTradingAccounts();
+            console.log(this.trade_confirmation);
+            this.getTradingAccounts();
         }
     }
 </script>

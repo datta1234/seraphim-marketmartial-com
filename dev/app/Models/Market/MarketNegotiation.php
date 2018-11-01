@@ -1109,7 +1109,7 @@ class MarketNegotiation extends Model
     * Apply cond_buy_best
     */
     public function applyCondBuyBestCondition() {
-        if($this->marketNegotiationParent->cond_buy_best === null) {
+        if($this->marketNegotiationParent && $this->marketNegotiationParent->cond_buy_best === null) {
             $this->is_private = true; // initial is private
             $this->is_repeat = true; // starts as a repeat
             
