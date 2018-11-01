@@ -377,5 +377,13 @@ class User extends Authenticatable
         return $this->role->title == 'Trader';
     }    
 
-
+    /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role_id == 1;
+    }
 }
