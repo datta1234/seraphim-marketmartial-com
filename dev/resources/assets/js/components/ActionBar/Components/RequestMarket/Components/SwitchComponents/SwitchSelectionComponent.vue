@@ -24,7 +24,7 @@
                             <b-form-select :id="'index-choice-'+index"
                                            class="w-50"
                                            :options="index_options"
-                                           v-model="switch_option.index_market_id">
+                                           v-model="switch_option.index_market">
                             </b-form-select>
                         </b-col>
                     </b-row>
@@ -93,20 +93,20 @@
                     { text: 'Index Options', value: true },
                     { text: 'Single Stock Options', value: false },
                 ],
-                index_options: [],
+                index_options: [{ text: "Select an Index Option", value: null }],
                 chosen_option: null,
                 switch_options: [
                     {
                         is_index: true,
                         stock_listed: false,
                         stock_selection: null,
-                        index_market_id: null,
+                        index_market: null,
                     },
                     {
                         is_index: false,
                         stock_listed: false,
                         stock_selection: null,
-                        index_market_id: null,
+                        index_market: null,
                     },  
                 ], 
                 stock_selection: null,
@@ -122,14 +122,11 @@
                 let is_complete = false;
 
                 this.switch_options.forEach(switch_option => {
-                    is_complete = (switch_option.is_index && switch_option.index_market_id) 
+                    is_complete = (switch_option.is_index && switch_option.index_market) 
                         || (!switch_option.is_index && switch_option.stock_selection)
                 });
                 if( is_complete ) {
-                    // @TODO - Complete title and add to call back
-                    // Underlying vs. Underlying
-                    console.log("YEEET");
-                    //this.callback(,this.switch_options);
+                    this.callback(this.getTitle(),this.switch_options);
                 }
             },
             setSelectedStock(stock, is_listed, index) {
@@ -144,18 +141,29 @@
             },
             loadIndexMarkets() {
                 this.data.market_object.index_markets.forEach( index_market => {
-                    this.index_options.push({ text: index_market.title, value: index_market.id });
+                    this.index_options.push({ text: index_market.title, value: index_market });
                 });
-                /*this.switch_options[0].index_market_id = this.index_options[0].value;
-                this.switch_options[1].index_market_id = this.index_options[0].value;*/
             },
             toggleOption(option, index) {
                 if(option) {
                     this.switch_options[index].stock_listed = false;
                     this.switch_options[index].stock_selection = null;
                 } else {
-                    this.switch_options[index].index_market_id = null;
+                    this.switch_options[index].index_market = null;
                 }
+            },
+            getTitle() {
+                let title = [];
+                // Gets the selected Underlying
+                this.switch_options.forEach(switch_option => {
+                    if(switch_option.is_index && switch_option.index_market) {
+                        title.push(switch_option.index_market.title);
+                    } else if(!switch_option.is_index && switch_option.stock_selection) {
+                        title.push(switch_option.stock_selection.code);
+                    }
+                });
+                // Joins the Selected Underlying into title with format: Underlying vs. Underlying
+                return title.join(' vs. ');
             }
         },
         mounted() {

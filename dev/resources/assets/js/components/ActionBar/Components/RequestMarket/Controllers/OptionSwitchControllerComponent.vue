@@ -107,7 +107,7 @@
                     }
                     this.modal_data.title.pop();
                 }
-                switch (this.modal_data.step) {
+                /*switch (this.modal_data.step) {
                     case 2:
                         this.selected_step_component = 'Switch';
                         break;
@@ -140,7 +140,7 @@
                     case 7:
                         this.saveMarketRequest();
                     default:
-                }
+                }*/
             },
             /**
              * Loads Option Switch Markets
