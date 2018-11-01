@@ -62,6 +62,13 @@
 						</div>
 					</li>
 				@endif
+				@impersonating
+						<li class="nav-item">
+							<a class="nav-link active p-0 ml-4" href="{{ route('impersonate.leave') }}">
+								Leave Impersonation
+							</a>
+						</li>						
+				@endImpersonating
 				<li class="nav-item">
 					<a class="nav-link active p-0 ml-4" href="{{ route('logout') }}"
 					onclick="event.preventDefault();

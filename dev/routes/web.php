@@ -28,6 +28,7 @@ Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
+
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
 	Route::get('/my-profile', 'UserController@edit')->name('user.edit');
@@ -68,6 +69,9 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindo
 
 	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
 	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
+
+	Route::impersonate();
+
 });
 
 
@@ -124,6 +128,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
  * Admin routes
  */
 Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
+
 	Route::resource('user', 'Admin\UserController', [
 		'as' => 'admin'
 	]);
