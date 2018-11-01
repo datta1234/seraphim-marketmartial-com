@@ -30,7 +30,7 @@
                     <p>STRIKE:</p>
                 </b-col>
                 <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ field.strike }}<span v-if="field.is_selected && data.market_object.details.fields.length > 1"> (CH)</span></p>
+                	<p>{{ (data.market_object.stock ? "R" : "") + splitValHelper(field.strike,' ',3) }}<span v-if="field.is_selected && data.market_object.details.fields.length > 1"> (CH)</span></p>
                 </b-col>
             </b-row>
             <b-row align-h="start">
@@ -38,7 +38,8 @@
                     <p>QUANTITY:</p>
                 </b-col>
                 <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ field.quantity }}</p>
+                	<p>{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
+                        : splitValHelper(field.quantity,' ',3) }}</p>
                 </b-col>
             </b-row>
             <b-row align-h="start">
