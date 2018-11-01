@@ -651,7 +651,7 @@ class TradeConfirmation extends Model
                 $value = null;
                 break;
                 case 'Contract':
-                    if(!$isOption)
+                    if($isOption)
                     {
                         $value = $tradeNegotiation->quantity; //quantity   
                     }else

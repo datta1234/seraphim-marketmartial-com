@@ -236,10 +236,12 @@ const app = new Vue({
         },
         removeTradeConfirmations(marketType){
                 let self = this;
-                self.trade_confirmations = self.trade_confirmations.filter((item) => {
-
+                let index = self.trade_confirmations.findIndex((item) => {
                     return item.market_type_id == marketType.id;
                 });
+                if(index != -1) {
+                    
+                }
         },
         loadTradeConfirmations(marketType) {
             let self = this;
@@ -556,14 +558,14 @@ const app = new Vue({
         .then(this.loadUserConfig)
         .then(configs => {
             // load the trade data
-            this.loadMarketTypes();
-
-            this.loadUserConfig()
-            .then(user_preferences => {
+            this.loadMarketTypes()
+            .then(market_types => {
                 let promises = [];
-                if(user_preferences !== null) {
-                    user_preferences.prefered_market_types.forEach(market_type => {
-                       
+                if(this.configs["user_preferences"] !== null) {
+                    this.configs["user_preferences"].prefered_market_types.forEach(market_type_id => {
+                        let market_type = this.market_types.find(element => {
+                            return element.id == market_type_id;
+                        });
                         promises.push(this.loadTradeConfirmations(market_type));
 
                         promises.push(
@@ -619,9 +621,9 @@ const app = new Vue({
                     this.reloadMarketRequests();
                 })
                 .listen('.UserMarketRequested', (userMarketRequest) => {
-                    console.log("Fired '.UserMarketRequested'", userMarketRequest);
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
+                        console.log("Got Event 'UserMarketRequested'", packet_data.data);
                         this.updateUserMarketRequest(packet_data.data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
@@ -629,6 +631,7 @@ const app = new Vue({
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
+                        console.log("Got Event 'TradeConfirmationEvent'", packet_data.data);
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)
                         {

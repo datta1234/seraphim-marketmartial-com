@@ -701,7 +701,7 @@ class MarketNegotiation extends Model
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBestOpen() && !$this->isRepeatATW()) {
+            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBest() && !$this->isTradeAtBestOpen() && !$this->isRepeatATW()) {
                 return "SPIN";
             }
         }
@@ -1109,7 +1109,7 @@ class MarketNegotiation extends Model
     * Apply cond_buy_best
     */
     public function applyCondBuyBestCondition() {
-        if($this->marketNegotiationParent->cond_buy_best === null) {
+        if($this->marketNegotiationParent && $this->marketNegotiationParent->cond_buy_best === null) {
             $this->is_private = true; // initial is private
             $this->is_repeat = true; // starts as a repeat
             
@@ -1122,7 +1122,7 @@ class MarketNegotiation extends Model
                 "as_user"   => false,
                 "icon_emoji"=> ":alarm_clock:",
                 "username"  => "Timeout-BOT",
-                "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
+                "text"      => $this->getMessage('trade_at_best_timeout'),
                 "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
             ]);
 
