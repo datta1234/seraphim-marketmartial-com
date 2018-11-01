@@ -24,24 +24,29 @@ export default class BaseModel {
      */
     update(update_object) {
         Object.keys(this).forEach( key => {
-
             //changed from null to undifined check
             if(key[0] != '_' && typeof update_object[key] !== "undefined") {
                 if(Array.isArray(update_object[key])) {
+                    
 
                     //call array rebind method
                     this._updateArray(update_object[key],key);
                 } else if (update_object[key] instanceof Object) {
+                    
+
                     //call object rebind method
                     this._updateObject(update_object[key],key);
                 } else {
                     if(this[key] instanceof moment) {
+
                         this[key] = moment(update_object[key]);
                     } else {
+                        
                         this[key] = update_object[key];
                     }
-                }    
+                } 
             }
+
         });
     }
 
@@ -74,12 +79,14 @@ export default class BaseModel {
                 });
 
                 if(index == -1){
-
+                    console.log("add method");
                     
                     this._relations[key].addMethod(update_arr[i]);
                     //this[key].push(update_arr[i]);    
                                         
                 } else {
+                    console.log("put method");
+
                     this[key][index].update(update_arr[i]);
                 }
             }
@@ -127,7 +134,6 @@ export default class BaseModel {
      *   @param {string} key - a string key corrosponding to the class property
      */
     _updateObject(update_obj, key) {
-
         if(this._isModelInstance(this[key]).is_model) {
             this[key].update(update_obj);
         } else if(typeof this._relations[key] != 'undefined' && typeof this._relations[key].setMethod != 'undefined') {

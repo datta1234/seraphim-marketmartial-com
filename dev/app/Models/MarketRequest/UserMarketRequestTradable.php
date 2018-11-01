@@ -63,4 +63,25 @@ class UserMarketRequestTradable extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }
+
+    public function preFormatted()
+    {
+        if($this->market)
+        {   
+            $is_stock = false;
+            $title = $this->market->title;
+            $id = $this->market_id;   
+        }else
+        {
+            $is_stock = true;
+            $title = $this->stock->title;
+            $id = $this->stock_id;   
+        }
+
+        return [
+            "is_stock"  =>  $is_stock,
+            "id"        =>  $id,
+            "title"     =>  $title
+        ];
+    }
 }

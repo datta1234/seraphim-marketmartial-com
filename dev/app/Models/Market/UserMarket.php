@@ -78,6 +78,20 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"ASC");
     }
 
+    public function scopeActiveQuotes($query, $active = true)
+    {
+        $query->where(function($q) use ($active) {
+            $q->whereHas('firstNegotiation', function($qq) use ($active) {
+                $qq->where('is_killed', '=', !$active);
+            });
+        });
+    }
+
+    public function marketNegotiationsDesc()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"DESC");
+    }
+
     public function firstNegotiation()
     {
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"ASC")->orderBy('id',"ASC");
@@ -158,6 +172,19 @@ class UserMarket extends Model
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
         return ( $trade ? !$trade->traded : false );
+    }
+
+    public function needsBalanceWorked()
+    {
+        $lastTrade = $this->tradeNegotiations()->latest()->first();
+        if($lastTrade)
+        {
+             return $lastTrade->tradeNegotiationParent ? $lastTrade->quantity < $lastTrade->tradeNegotiationParent->quantity : false;          
+        }else
+        {
+           return false;  
+        }
+        
     }
 
     /**
@@ -273,13 +300,13 @@ class UserMarket extends Model
     public function spinNegotiation($user)
     {
         // @TODO: this will fail with privates...
-        $oldNegotiation = $this->marketNegotiations()->orderBy('created_at', 'desc')->first();       
+        $oldNegotiation = $this->lastNegotiation;       
         // $oldNegotiation = $userMarket->marketNegotiations()->orderBy('created_at', 'desc')->first();
         $marketNegotiation = $oldNegotiation->replicate();
         $marketNegotiation->is_repeat = true;
 
         $marketNegotiation->user_id = $user->id;
-        $counterNegotiation = $this->marketNegotiations()
+        $counterNegotiation = $this->marketNegotiationsDesc()
                                         ->findCounterNegotiation($user)
                                         ->first();
 

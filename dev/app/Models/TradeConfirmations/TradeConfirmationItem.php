@@ -16,6 +16,19 @@ class TradeConfirmationItem extends Model
 	 * @property \Carbon\Carbon $updated_at
 	 */
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        "item_id",
+        "title",
+        "value",
+        "trade_confirmation_group_id"
+    ];
+
+
 	/**
     * Return relation based of market_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -34,5 +47,13 @@ class TradeConfirmationItem extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\Item',
         	'item_id');
+    }
+
+    public function preFormatted()
+    {
+         return [
+            'title' => $this->title,
+            'value' => $this->value
+        ];
     }
 }

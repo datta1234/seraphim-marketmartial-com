@@ -111,7 +111,6 @@
             doKill() {
                 this.negotiation.killNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {
@@ -122,24 +121,23 @@
                 if(this.timer != null) {
                     this.stopTimer();
                 }
-                console.log("Creating Timer");
-                this.timer = setInterval(() => {
-                    console.log("Running Timer");
-                    let time = moment(this.negotiation.created_at).add(20, 'minutes');
-                    let diff = time.diff(moment());
-                    let dur = moment.duration(diff);
-                    console.log(time, diff, dur);
-                    this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
-                }, 1000);
+                this.timer = setInterval(this.runTimer, 1000);
+            },
+            runTimer() {
+                this.timer_value = this.negotiation.getTimeoutRemaining();
+                if(this.timer_value == "00:00") {
+                    this.timed_out = true;
+                    this.stopTimer();
+                }
             },
             stopTimer() {
-                console.log("Clearing Timer");
                 clearInterval(this.timer);
                 this.timer = null;
             }
         },
         mounted() {
             this.startTimer();
+            this.runTimer(); // force initial setting
         },
         beforeDestroy() {
             this.stopTimer();

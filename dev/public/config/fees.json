@@ -1,62 +1,45 @@
 {
-    "options_brokarage_fees":{
-        "outright":[
-            {
-                index: 0.004,
-                singles: 0.05
-            }
-        ],
-        "risky":[
-            {
-                index: 0.004,
-                singles: 0.05
+    "options_brokarage_fees": {
+        "Outright": [{
+            "index": 0.004,
+            "singles": 0.05
+        }],
+        "Risky": [{
+                "index": 0.004,
+                "singles": 0.05
             },
             {
-                index: 0.002,
-                singles: 0.025
+                "index": 0.002,
+                "singles": 0.025
             }
         ],
-        "calendar": [
-            {
-                index: 0.004,
-                single: 0.05
+        "Calendar": [{
+                "index": 0.004,
+                "singles": 0.05
             },
             {
-                index: 0.004,
-                single: 0.05
-            } 
-        ],
-        "fly": [
-            {
-                index: 0.0025,
-                singles: 0.035
+                "index": 0.004,
+                "singles": 0.05
             }
         ],
-        "option_switch": [
-            {
-                index: 0.004,
-                singles: 0.05
-            }
-        ]
+        "Fly": [{
+            "index": 0.0025,
+            "singles": 0.035
+        }],
+        "Option Switch": [{
+            "index": 0.004,
+            "singles": 0.05
+        }]
     },
-    "dela_one_brokerage_fees":{
-        "EFP":
-            [
-                {
-                    index: 0.0025,
-                }
-            ],
-        "rolls":
-            [
-                {
-                    index: 0.0025,
-                }
-            ],
-       "EFP_switch":
-            [
-                {
-                    index: 0.0025,
-                }
-            ]
+    "dela_one_brokerage_fees": {
+        "EFP": [{
+            "index": 0.0025
+        }],
+        "Rolls": [{
+            "index": 0.0025
+        }],
+        "EFP Switch": [{
+            "index": 0.0025
+        }]
     }
 }

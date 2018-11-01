@@ -25,7 +25,7 @@
                                 </a>
                             </span>
                             <span>
-                                <a href="" @click.prevent.stop="doRepeat">Repeat</a>
+                                <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
                             </span>
                         </div>
                     </b-col>
@@ -81,11 +81,9 @@
             doRepeat() {
                 this.negotiation.repeatNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {
-                    console.log(err);
                     this.errors = err.errors;
                 });
             },
@@ -93,18 +91,14 @@
                 if(this.timer != null) {
                     this.stopTimer();
                 }
-                this.timer = setInterval(() => {
-                    let time = moment(this.negotiation.created_at).add(20, 'minutes');
-                    let diff = time.diff(moment());
-                    // ensure its not shown if its timed out
-                    if(diff < 0) {
-                        this.timed_out = true;
-                        this.stopTimer();
-                    } else {
-                        let dur = moment.duration(diff);
-                        this.timer_value = moment.utc(dur.as('milliseconds')).format('mm:ss');
-                    }
-                }, 1000);
+                this.timer = setInterval(this.runTimer, 1000);
+            },
+            runTimer() {
+                this.timer_value = this.negotiation.getTimeoutRemaining();
+                if(this.timer_value == "00:00") {
+                    this.timed_out = true;
+                    this.stopTimer();
+                }
             },
             stopTimer() {
                 clearInterval(this.timer);
@@ -113,6 +107,7 @@
         },
         mounted() {
             this.startTimer();
+            this.runTimer(); // force initial setting
         },
         beforeDestroy() {
             this.stopTimer();

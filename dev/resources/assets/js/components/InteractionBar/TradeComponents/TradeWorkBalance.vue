@@ -4,13 +4,13 @@
 
           <b-row class="justify-content-md-center">
               <div cols="4">
-                  <b-form-input class="mb-5" type="text" v-model="quantity" placeholder="Contracts"></b-form-input>
+                  <b-form-input v-active-request class="mb-5" type="text" v-model="quantity" placeholder="Contracts"></b-form-input>
               </div>
               <label class="col-4 col-form-label">Contracts</label>
           </b-row>
           <b-row class="justify-content-md-center">
               <b-col cols="6">
-                    <b-button  class="w-100 mt-1" 
+                    <b-button v-active-request  class="w-100 mt-1" 
                                    :disabled="server_loading || quantity <= 0" 
                                    size="sm" 
                                    dusk="ibar-work-balance" 
@@ -18,7 +18,7 @@
                                    @click="storeWorkBalance()">
                                       Work the balance
                       </b-button>
-                       <b-button  class="w-100 mt-1" 
+                       <b-button v-active-request  class="w-100 mt-1" 
                                    :disabled="server_loading || quantity > 0" 
                                    size="sm" 
                                    dusk="ibar-no-further-balance" 

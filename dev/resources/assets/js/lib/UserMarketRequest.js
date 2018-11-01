@@ -289,8 +289,10 @@ export default class UserMarketRequest extends BaseModel {
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
+        console.log(this.is_trading_at_best);
+
         return isTrading.indexOf(this.attributes.state) > -1 
-            && this.is_trading_at_best == false; // if its trading at best, then its not trading
+            && (this.is_trading_at_best == false || typeof this.is_trading_at_best =="undefined"); // if its trading at best, then its not trading
     }
 
     canCounterTrade()
@@ -298,6 +300,7 @@ export default class UserMarketRequest extends BaseModel {
         let canCounterTrade = [
             "TRADE-NEGOTIATION-COUNTER"
         ];
+        console.log(this.attributes.state);
         return canCounterTrade.indexOf(this.attributes.state) > -1; 
     }
 
