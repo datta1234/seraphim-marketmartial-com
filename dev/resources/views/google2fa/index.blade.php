@@ -20,7 +20,14 @@
                             <label for="one_time_password" class="col-md-4 control-label">One Time Password</label>
 
                             <div class="col-md-6">
-                                <input id="one_time_password" type="number" class="form-control" name="one_time_password" required autofocus>
+                                <input id="one_time_password" type="number" class="form-control {{ $errors->any() ? 'is-invalid' : ''  }}" name="one_time_password" required autofocus>
+                                @if ($errors->any())
+                                    @foreach ($errors->all() as $error)
+                                        <span class="invalid-feedback">
+                                                <strong>{{ $error }}</strong>
+                                        </span>
+                                    @endforeach
+                                @endif
                             </div>
                         </div>
 
