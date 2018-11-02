@@ -273,12 +273,8 @@ const app = new Vue({
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
-                    if(!marketType.markets) {
-                        marketType.markets = [];
-                    }
                     marketResponse.data = marketResponse.data.map(x => {
-                        x = new Market(x);
-                        marketType.markets.push(x);   
+                        x = new Market(x);   
                         self.display_markets.push(x);
                         return x;
                     });
