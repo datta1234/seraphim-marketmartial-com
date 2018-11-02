@@ -131,7 +131,7 @@ class MarketNegotiationController extends Controller
             $message = "Proposal Rejected";
         }
 
-        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        $userMarket->userMarketRequest->fresh()->notifyRequested();
         return ['success'=>$success ,'message'=>$message];
     }
 

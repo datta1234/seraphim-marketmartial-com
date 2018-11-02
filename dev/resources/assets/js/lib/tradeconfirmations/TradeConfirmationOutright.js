@@ -55,6 +55,7 @@ const TradeConfirmationOutright = {
 
                
                 // register option group
+                this.option_groups = [];
                 if(options && options.option_groups) {
                     console.log("option group method ran");
                     this.addOptionGroups(options.option_groups);

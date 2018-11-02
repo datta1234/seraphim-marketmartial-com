@@ -9,7 +9,7 @@
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
-                            <h5 class="w-100 m-0 popover-over-text">{{ key }}</h5>
+                            <h5 class="w-1d00 m-0 popover-over-text">{{ key }}</h5>
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 
@@ -105,7 +105,7 @@
                 
                 Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
                     this.$root.config("user_preferences.prefered_market_types").forEach( (prefered_market_type) => {
-                        if(this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
+                        if(this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type) {
                             this.availableSelectedMarketTypes[key].state = true;
                         }
                     });
@@ -114,17 +114,23 @@
             /**
              * Filters the user's Market Type preference 
              */
-            filterMarketTypes(market_type, actionCheck) {
+            filterMarketTypes(market_type_key, actionCheck) {
                 if(actionCheck) {
-                    this.addUserPreferenceMarketType(market_type)
-                    .then( (market_type) => {
+                    this.addUserPreferenceMarketType(market_type_key)
+                    .then( (market_type_id) => {
+                        let market_type = this.$root.market_types.find(element => {
+                            return element.id == market_type_id;
+                        });
                         this.addMarket(market_type);
                     });
                 } else {
-                    this.removeUserPreferenceMarketType(market_type)
-                    .then( () => {
+                    this.removeUserPreferenceMarketType(market_type_key)
+                    .then( (market_type_id) => {
+                        let market_type = this.$root.market_types.find(element => {
+                            return element.id == market_type_id;
+                        });
                         this.$root.removeTradeConfirmations(market_type);
-                        this.availableSelectedMarketTypes[market_type].marketType.markets.forEach((market) => {
+                        this.availableSelectedMarketTypes[market_type_key].marketType.markets.forEach((market) => {
                             this.removeMarket(market);
                         });
                     });
@@ -155,7 +161,7 @@
              * @param {string} $market_type a string detailing a MarketType.title to be added
              */
             addUserPreferenceMarketType(market_type) {
-                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences"))
+                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id)
                 .then(response => {
                     if(response.status == 200) {
                         this.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
@@ -194,12 +200,12 @@
                 .then(response => {
                     if(response.status == 200) {
                         let index = this.$root.configs["user_preferences"].prefered_market_types.findIndex(function(element) {
-                            return element.id == response.data.data;
+                            return element == response.data.data;
                         });
                         if(index !== -1) {
                             return this.$root.configs["user_preferences"].prefered_market_types.splice(index , 1);
                         }
-                        return null;
+                        return response.data.data;
                     } else {
                         console.error(err);
                     }

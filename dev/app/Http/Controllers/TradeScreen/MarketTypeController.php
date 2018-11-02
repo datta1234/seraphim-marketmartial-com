@@ -15,7 +15,7 @@ class MarketTypeController extends Controller
      */
     public function index()
     {
-        return MarketType::with('markets')->get();
+        return MarketType::get();
     }
 
     /**

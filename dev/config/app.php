@@ -183,6 +183,12 @@ return [
         App\Providers\StreamServiceProvider::class,
         App\Providers\SlackServiceProvider::class,
 
+        /*
+         * 3rd Party Packages 
+         */
+        // user impersonate for admins
+        Lab404\Impersonate\ImpersonateServiceProvider::class,
+
     ],
 
     /*

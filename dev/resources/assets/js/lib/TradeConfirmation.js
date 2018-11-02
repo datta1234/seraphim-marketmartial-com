@@ -23,7 +23,7 @@ export default class TradeConfirmation extends BaseModel {
                     addMethod: (future_groups) => { 
                         this.addFutureGroups(future_groups) 
                     },
-                    setMethod: (structure_groups) => { 
+                    setMethod: (future_groups) => { 
                         this.setFutureGroups(future_groups) 
                     },
                 }
@@ -38,7 +38,7 @@ export default class TradeConfirmation extends BaseModel {
                 organisation : "",
                 trade_structure_title : "",
                 volatility : "",
-                structure_groups : "",
+                structure_groups : [],
                 market_id : "",
                 market_type_id : "",
                 market_request_id : "",

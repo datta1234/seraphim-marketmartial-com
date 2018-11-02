@@ -90,7 +90,11 @@
                                             :state="inputState(index, 'Quantity')"
             								required>
             	      					</b-form-input>
-                                        <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
+                                        <p  v-if="data.market_object.stock && field.quantity < 50"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The recommended minimum quantity is 50.
+                                        </p>
+                                        <p v-else-if="!data.market_object.stock && field.quantity < 500" class="modal-warning-text text-danger text-center">
                                             *Warning: The recommended minimum quantity is 500.
                                         </p>
             	      				</b-col>
@@ -193,8 +197,8 @@
             }
         },
         mounted() {
-    		
-    		this.form_data.fields.push({is_selected:true,strike: null,quantity: 500});
+    		let quantity_default = this.data.market_object.stock ? 50 : 500;
+    		this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
@@ -202,18 +206,18 @@
             		this.chosen_option = null;
             		break;
             	case 'Risky':
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
             		this.display.disable_choice = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
             		this.display.show_expiry = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.chosen_option = 0;
             		break;
             	default:

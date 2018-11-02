@@ -135,47 +135,46 @@
        },
        getConditionState(marketNegotiation, field) {
 
-        let getConditionText = (cond, object, field) => {
-                    // ensure the value exists in both object and condition test
-                    if(typeof object[cond.condition] !== 'undefined' && typeof cond[String(object[cond.condition])] !== 'undefined') {
-                        if(cond[String(object[cond.condition])].constructor === Object && typeof cond[String(object[cond.condition])].condition !== 'undefined') {
-                            return getConditionText(cond[String(object[cond.condition])], object, field)
-                        }
-                        return cond[String(object[cond.condition])][field]
+            let getConditionText = (cond, object, field) => {
+                // ensure the value exists in both object and condition test
+                if(typeof object[cond.condition] !== 'undefined' && typeof cond[String(object[cond.condition])] !== 'undefined') {
+                    if(cond[String(object[cond.condition])].constructor === Object && typeof cond[String(object[cond.condition])].condition !== 'undefined') {
+                        return getConditionText(cond[String(object[cond.condition])], object, field)
                     }
-                    return ""
-                };
-
-                for(let k in this.$root.config("condition_titles")) {
-                    let cond = this.$root.config("condition_titles")[k];
-                    let text = getConditionText(cond, marketNegotiation, field);
-                    if(text != null && text !="") {
-                        return text;
-                    }
+                    return cond[String(object[cond.condition])][field]
                 }
-                return null;
-            },
-            getText(attr,marketNegotiation) {
-                let source = marketNegotiation.getAmountSource(attr);
-                if(source.id != marketNegotiation.id && marketNegotiation.is_repeat)
-                {
-                    return marketNegotiation.is_interest == source.is_interest || marketNegotiation.is_maker == source.is_maker ? "SPIN " + marketNegotiation[attr]  : marketNegotiation[attr];
-                }
-                return marketNegotiation[attr];
-            },
-            getStateClass(attr) {
+                return null
+            };
 
-                let source = this.marketNegotiation.getAmountSource(attr);
-                return {
-                    "text": source[attr],
-                    "is-interest":source.is_interest && !source.is_my_org,
-                    "is-maker":source.is_maker && !source.is_my_org,
-                    "is-my-org":source.is_my_org
-                };        
+            for(let k in this.$root.config("condition_titles")) {
+                let cond = this.$root.config("condition_titles")[k];
+                let text = getConditionText(cond, marketNegotiation, field);
+                if(text != null) {
+                    return text;
+                }
             }
+            return null;
         },
-        mounted() {
+        getText(attr,marketNegotiation) {
+            let source = marketNegotiation.getAmountSource(attr);
+            if(source.id != marketNegotiation.id && marketNegotiation.is_repeat)
+            {
+                return marketNegotiation.is_interest == source.is_interest || marketNegotiation.is_maker == source.is_maker ? "SPIN " + marketNegotiation[attr]  : marketNegotiation[attr];
+            }
+            return marketNegotiation[attr];
+        },
+        getStateClass(attr) {
+            let source = this.marketNegotiation.getAmountSource(attr);
+            return {
+                "text": source[attr],
+                "is-interest":source.is_interest && !source.is_my_org,
+                "is-maker":source.is_maker && !source.is_my_org,
+                "is-my-org":source.is_my_org
+            };        
+        }
+    },
+    mounted() {
          this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
-     }
+    }
  }
 </script>

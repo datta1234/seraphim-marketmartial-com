@@ -4,6 +4,7 @@ namespace App\Models\UserManagement;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
@@ -32,6 +33,7 @@ class User extends Authenticatable
      */
 
     use Notifiable;
+    use Impersonate;
 
     /**
      * The table associated with the model.
@@ -352,6 +354,28 @@ class User extends Authenticatable
     {
         return (bool)$this->verified ? (bool)$this->active : null;
     }
+
+    /**
+     * Only admins can impersonate
+     * 
+     * @return bool
+     */
+    public function canImpersonate()
+    {
+        // For example
+        return $this->role->title == 'Admin';
+    }
+
+    /**
+     * Only traders can be impersonated
+     * 
+     * @return bool
+     */
+    public function canBeImpersonated()
+    {
+        // For example
+        return $this->role->title == 'Trader';
+    }    
 
     /**
      * Determines if a user is an admin
