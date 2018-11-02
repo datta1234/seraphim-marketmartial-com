@@ -38,6 +38,11 @@
 							<a class="dropdown-item" href="{{ route('admin.booked-trades.index') }}">
 								Booked Trades
 							</a>
+							@if(empty(Auth::user()->google2fa_secret))
+								<a class="dropdown-item" href="{{ route('admin.mfa.setup') }}">
+									Setup MFA
+								</a>
+							@endif
 						</div>
 					</li>
 					<li class="nav-item">

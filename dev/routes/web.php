@@ -176,6 +176,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 
 	Route::get('markets', 'Admin\MarketController@index')->name('admin.markets.index');
 	Route::put('markets','Admin\MarketController@update')->name('admin.markets.update');
+
+	Route::get('/mfa', 'Admin\MfaController@index')->name('admin.mfa.index');
+	Route::get('/mfa-setup', 'Admin\MfaController@setup')->name('admin.mfa.setup');
+	Route::get('/mfa-finish-setup', 'Admin\MfaController@finishSetup')->name('admin.mfa.finish_setup');
+	Route::post('2fa', function () {
+		return redirect('/admin/user');
+	})->name('2fa')->middleware('2fa');
+	
 });
 
 Route::group(['middleware' => ['auth']], function() {
