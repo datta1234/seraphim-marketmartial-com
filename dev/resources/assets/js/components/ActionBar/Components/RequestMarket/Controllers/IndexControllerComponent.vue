@@ -142,13 +142,13 @@
                 console.log("Current Data: ", this.index_data);
             },
             /**
-             * Loads Index Markets 
+             * Loads Index MarketType 
              */
-            loadIndexMarkets() {
+            loadMarketType() {
                 if(Array.isArray(this.$root.market_types)) {
-                    this.$root.market_types.forEach((element) => {
-                        if(element.title == this.index_data.market_type_title) {
-                            this.index_data.market_type = element;
+                    this.$root.market_types.forEach((market_type) => {
+                        if(market_type.title == this.index_data.market_type_title) {
+                            this.index_data.market_type = market_type;
                         }
                     });
                 }
@@ -318,7 +318,7 @@
         },
         mounted() {
             this.modal_data.title = ["Index"];
-            this.loadIndexMarkets();
+            this.loadMarketType();
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;

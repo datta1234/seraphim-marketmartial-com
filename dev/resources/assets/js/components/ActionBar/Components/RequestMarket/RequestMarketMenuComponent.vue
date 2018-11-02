@@ -40,6 +40,7 @@
     import Details from './Components/DetailsComponent.vue';
     import SwitchDetails from './Components/SwitchComponents/SwitchDetailsComponent.vue';
     import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
+    import SwitchConfirmMarketRequest from './Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
     export default {
         name: 'RequestMarketMenu',
@@ -56,6 +57,7 @@
             Details,
             SwitchDetails,
             ConfirmMarketRequest,
+            SwitchConfirmMarketRequest,
         },
         props:{
           

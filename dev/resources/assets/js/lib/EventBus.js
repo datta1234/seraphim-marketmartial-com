@@ -43,6 +43,9 @@ EventBus.$on('loading', (type, state) => {
         case "requestSubmission":
             EventBus.$emit("requestSubmissionLoaded", state);
         break;
+        case "requestMarkets":
+            EventBus.$emit("requestMarketsLoaded", state);
+        break;
     }
 });
 

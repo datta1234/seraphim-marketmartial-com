@@ -8,7 +8,7 @@
 <script>
     import SwitchSelection from '../Components/SwitchComponents/SwitchSelectionComponent.vue';
     import SwitchDetails from '../Components/SwitchComponents/SwitchDetailsComponent.vue';
-    import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
+    import SwitchConfirmMarketRequest from '../Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
     import Market from '../../../../../lib/Market';
     import { EventBus } from '../../../../../lib/EventBus.js';
@@ -71,7 +71,7 @@
                 selected_step_component: null,
                 components: {
                     Switch: SwitchSelection,
-                    Confirm: ConfirmMarketRequest,
+                    Confirm: SwitchConfirmMarketRequest,
                     Details: SwitchDetails,
                 },
                 temp_title: [],
@@ -107,40 +107,25 @@
                     }
                     this.modal_data.title.pop();
                 }
-                /*switch (this.modal_data.step) {
+                switch (this.modal_data.step) {
                     case 2:
                         this.selected_step_component = 'Switch';
                         break;
                     case 3:
-                        this.option_switch_data.market_object.stock = component_data ? 
-                            component_data : this.option_switch_data.market_object.stock;
-                        this.selected_step_component = 'Structure';
-                        break;
-                    case 4:
-                        this.option_switch_data.market_object.trade_structure = component_data ? 
-                            component_data : this.option_switch_data.market_object.trade_structure;
-                        this.option_switch_data.number_of_dates = 1;
-                        if (this.option_switch_data.market_object.trade_structure == 'Calendar') {
-                            this.option_switch_data.number_of_dates = 2;
-                        }
-                        this.selected_step_component = 'Expiry';                   
-                        break;
-                    case 5:
-                        this.option_switch_data.market_object.expiry_dates = component_data ?
-                            component_data : this.option_switch_data.market_object.expiry_dates;
+                        console.log("component_data: ", component_data);
                         this.selected_step_component = 'Details';
                         break;
-                    case 6:
+                    case 4:
                         this.option_switch_data.market_object.details = component_data ?
                             component_data : this.option_switch_data.market_object.details;
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
                         break;
-                    case 7:
+                    case 5:
                         this.saveMarketRequest();
                     default:
-                }*/
+                }
             },
             /**
              * Loads Option Switch Markets

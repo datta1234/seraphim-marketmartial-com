@@ -1,6 +1,7 @@
 <template>
     <div dusk="switch-details" class="switch-details">
         <b-container fluid>
+            SWITCH DETAILS
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
