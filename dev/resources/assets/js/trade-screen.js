@@ -96,6 +96,8 @@ Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 import ActiveRequestDirective from './directives/active-request.js';
 Vue.directive('active-request', ActiveRequestDirective);
 
+import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
+Vue.component('active-makers', ActiveMarketMakers);
 
 Vue.mixin({
     methods: {
@@ -623,7 +625,7 @@ const app = new Vue({
                 .listen('.UserMarketRequested', (userMarketRequest) => {
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
-                        console.log("Got Event 'UserMarketRequested'", packet_data.data);
+                        console.log("Got Event 'UserMarketRequested'", packet_data);
                         this.updateUserMarketRequest(packet_data.data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
@@ -631,7 +633,7 @@ const app = new Vue({
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
-                        console.log("Got Event 'TradeConfirmationEvent'", packet_data.data);
+                        console.log("Got Event 'TradeConfirmationEvent'", packet_data);
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)
                         {

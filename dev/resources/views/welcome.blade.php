@@ -6,7 +6,7 @@
 <div class="row justify-content-md-end">
     <div class="col col-md-12">
         <p class="float-right active-markets">
-            Active Market Makers Online: <strong>7</strong>
+            Active Market Makers Online: <strong><active-makers></active-makers></strong>
         </p>
     </div>
 </div>

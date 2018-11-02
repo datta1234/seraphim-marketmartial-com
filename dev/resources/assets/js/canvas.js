@@ -124,6 +124,8 @@ Vue.mixin({
     }
 });
 
+import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
+Vue.component('active-makers', ActiveMarketMakers);
 const app = new Vue({
     el: '#trade_app',
     methods: {
