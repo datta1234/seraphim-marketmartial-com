@@ -56,7 +56,6 @@ import TradeConfirmation from './lib/TradeConfirmation'
 import { EventBus } from './lib/EventBus.js';
 
 // datepicker
-Vue.component('app-reference', require('./AppReference'));
 Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);

@@ -1,7 +1,6 @@
 @extends('layouts.trade_app')
 
 @section('content')
-<app-reference></app-reference>
 <div class="container-fluid trade-screen-wrapper">
 	<div class="row interaction-bar-wrapper">
 		<interaction-bar></interaction-bar>
