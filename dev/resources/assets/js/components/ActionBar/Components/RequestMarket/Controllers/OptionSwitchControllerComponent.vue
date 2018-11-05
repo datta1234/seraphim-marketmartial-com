@@ -31,27 +31,31 @@
                     market_type_titles:['Index Option','Single Stock Options'],
                     market_types: [],
                     market_object: {
-                        switch1: {
-                            stock: null,
-                            stock_code: null,
-                            market:null,
-                            trade_structure: '',
-                            trade_structure_groups: [],
-                            expiry_dates:[],
-                            details: null,
-                        },
-                        switch2: {
-                            stock: null,
-                            stock_code: null,
-                            market:null,
-                            trade_structure: '',
-                            trade_structure_groups: [],
-                            expiry_dates:[],
-                            details: null,
-                        },
-                        index_markets: null,
+                        switch_details: null,
+                        trade_structure: 'Option Switch',
+                        trade_structure_groups: [
+                            {
+                                is_selected: true,
+                                stock: null,
+                                market_id: null,
+                                fields: {
+                                    "Expiration Date": null,
+                                    "Strike": null,
+                                    "Quantity": null
+                                }
+                            },
+                            {
+                                is_selected: false,
+                                stock: null,
+                                market_id: null,
+                                fields: {
+                                    "Expiration Date": null,
+                                    "Strike": null,
+                                    "Quantity": null
+                                }
+                            }
+                        ],
                     },
-                    number_of_dates: 1,
                 },
                 errors: {
                     message: null,
@@ -112,12 +116,11 @@
                         this.selected_step_component = 'Switch';
                         break;
                     case 3:
-                        console.log("component_data: ", component_data);
+                        this.option_switch_data.market_object.switch_details = component_data;
                         this.selected_step_component = 'Details';
                         break;
                     case 4:
-                        this.option_switch_data.market_object.details = component_data ?
-                            component_data : this.option_switch_data.market_object.details;
+                        console.log("Details data",component_data);
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
@@ -128,16 +131,13 @@
                 }
             },
             /**
-             * Loads Option Switch Markets
+             * Loads Option Switch Market Types
              */
-            loadMarkets() {
+            loadMarketTypes() {
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((element) => {
                         if(this.option_switch_data.market_type_titles.includes(element.title)) {
                             this.option_switch_data.market_types.push(element);
-                            if(this.option_switch_data.market_type_titles[0] == element.title) {
-                                this.option_switch_data.market_object.index_markets = element.markets;
-                            }
                         }
                     });
                 }
@@ -307,7 +307,7 @@
         },
         mounted() {
             this.modal_data.title = ["Option Switch"];
-            this.loadMarkets();
+            this.loadMarketTypes();
             this.selected_step_component = 'Switch';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;

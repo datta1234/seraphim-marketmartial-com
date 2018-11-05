@@ -1,121 +1,148 @@
 <template>
     <div dusk="switch-details" class="switch-details">
         <b-container fluid>
-            SWITCH DETAILS
-            <b-row class="justify-content-md-center">
+            <mm-loader theme="light" :default_state="true" event_name="requestDatesLoaded" width="200" height="200"></mm-loader>
+            <b-row v-if="dates_loaded" class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row>
-                                </b-row>
+                        <!-- Title section -->
+						<b-row class="mt-2" align-h="center">
+                            <b-col cols="5">
+                                {{ data.market_object.switch_details[0].is_index ?
+                                    data.market_object.switch_details[0].index_market.title
+                                    : data.market_object.switch_details[0].stock_selection.code }}
                             </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                
+                            <b-col cols="2">
+                                VS.
                             </b-col>
-						<b-row v-if="display.show_expiry" align-h="center">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row align-h="center">
-                                    <b-col :key="key" v-for="(date,key) in data.market_object.expiry_dates" 
-                                            cols="3" 
-                                            :offset="(key == 0)? 3:0"
-                                            class="text-center">
-                                        <p><strong>{{ castToMoment(date) }}</strong></p>
-                                    </b-col>
-                                </b-row>
-                            </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1"></b-col>
-                        </b-row>
-                        
-                        <b-row v-if="form_data.fields.length > 1" align-h="center">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row align-h="center">
-                                    <b-col v-if="display.disable_choice" cols="12 mb-2">
-                                        <b-row>
-                                            <b-col cols="3" offset="3" class="text-center">    
-                                                <b-badge variant="info details-choice-badge">CHOICE</b-badge>
-                                            </b-col>
-                                            <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                                <b-badge variant="info details-choice-badge">CHOICE</b-badge>    
-                                            </b-col>
-                                        </b-row>
-                                    </b-col>
-                                    <b-col v-else cols="12">
-                                        <b-form-radio-group id="risky-choices" 
-                                                            v-model="chosen_option" 
-                                                            name="choice"
-                                                            class="mb-2">
-                                            <b-row align-h="center">
-                                                <b-col cols="3" offset="3" class="text-center">    
-                                                    <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
-                                                </b-col>
-                                                <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
-                                                    <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
-                                                </b-col>
-                                            </b-row>
-                		      		    </b-form-radio-group>
-                                    </b-col>
-                                </b-row>
-                            </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                
+                            <b-col cols="5">
+                                {{ data.market_object.switch_details[1].is_index ?
+                                    data.market_object.switch_details[1].index_market.title
+                                    : data.market_object.switch_details[1].stock_selection.code }}
                             </b-col>
                         </b-row>
-
-						<b-row align-h="center">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row align-h="center">
-        							<b-col cols="3">
-        								<label for="strike-0">Strike</label>
-        							</b-col>
-        		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
-        		      					<b-form-input :id="'strike-'+index" 
-        		      						type="number"
-        		      						min="0"
-        									v-model="field.strike"
-                                            :state="inputState(index, 'Strike')"
-        									required>
-        		      					</b-form-input>
-        		      				</b-col>
+                        <!-- Expiry section -->
+                        <b-row class="mt-2" align-h="center">
+                            <b-col cols="5">
+                                <b-row class="mt-2">
+                                    <b-col cols="12">
+                                        <label class="mr-sm-2" for="option-expiry-0">Expiry:</label>
+                                        <b-form-select id="option-expiry-1"
+                                                       class="w-100"
+                                                       :options="expiry_dates"
+                                                       v-model="form_data.fields[0].expiration">
+                                        </b-form-select>
+                                    </b-col>
                                 </b-row>
                             </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="strike-0">ZAR</label>
+                            <b-col cols="5" offset="2">
+                                <b-row class="mt-2">
+                                    <b-col cols="12">
+                                        <label class="mr-sm-2" for="option-expiry-1">Expiry:</label>
+                                        <b-form-select id="option-expiry-2"
+                                                       class="w-100"
+                                                       :options="expiry_dates"
+                                                       v-model="form_data.fields[1].expiration">
+                                        </b-form-select>
+                                    </b-col>
+                                </b-row>
                             </b-col>
-						</b-row>
-
-						<b-row align-h="center">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                        </b-row>
+                        <!-- Choice section -->
+                        <b-row align-h="center">
+                            <b-col cols="12">
+                                <b-form-radio-group id="risky-choices" 
+                                                    v-model="chosen_option" 
+                                                    name="choice"
+                                                    class="mb-2">
+                                    <b-row align-h="center">
+                                        <b-col cols="3" offset="3" class="text-center">    
+                                            <b-form-radio id="choice-0" value="0">CHOICE</b-form-radio>
+                                        </b-col>
+                                        <b-col cols="3" offset="2" class="text-center">
+                                            <b-form-radio id="choice-1" value="1">CHOICE</b-form-radio>    
+                                        </b-col>
+                                    </b-row>
+                                </b-form-radio-group>
+                            </b-col>
+                        </b-row>
+                        <!-- Strike section -->
+                        <b-row align-h="center">
+                            <b-col cols="5">
                                 <b-row align-h="center">
-            						<b-col cols="3">
-            							<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
-            						</b-col>
-            	      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
-            	      					<b-form-input :id="'quantity-'+index" 
-            	      						type="number"
-            								min="0"
-            								v-model="field.quantity"
-                                            placeholder="500"
-                                            :state="inputState(index, 'Quantity')"
-            								required>
-            	      					</b-form-input>
-                                        <p v-if="field.quantity < 500" class="modal-warning-text text-danger text-center">
-                                            *Warning: The recommended minimum quantity is 500.
+                                    <b-col cols="3">
+                                        <label for="strike-0">Strike</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-form-input id="strike-0"
+                                            v-model="form_data.fields[0].strike"
+                                            :state="inputState(0, 'Strike')"
+                                            required>
+                                        </b-form-input>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col cols="5" offset="2">
+                                <b-row align-h="center">
+                                    <b-col cols="3">
+                                        <label for="strike-1">Strike</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-form-input id="strike-1"
+                                            v-model="form_data.fields[1].strike"
+                                            :state="inputState(1, 'Strike')"
+                                            required>
+                                        </b-form-input>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                        </b-row>
+                        <!-- Quantity section -->
+                        <b-row align-h="center">
+                            <b-col cols="5">
+                                <b-row align-h="center">
+                                    <b-col cols="3">
+                                        <label for="quantity-0">Quantity</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-form-input id="quantity-0" 
+                                            type="number"
+                                            min="0"
+                                            v-model="form_data.fields[0].quantity"
+                                            :placeholder="form_data.fields[0].quantity_default+''"
+                                            :state="inputState(0, 'Quantity')"
+                                            required>
+                                        </b-form-input>
+                                        <p  v-if="form_data.fields[0].quantity < form_data.fields[0].quantity_default"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The recommended minimum quantity is {{ form_data.fields[0].quantity_default }}.
                                         </p>
-            	      				</b-col>
+                                    </b-col>
                                 </b-row>
                             </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="quantity-0">Rm</label>
-                            </b-col>
-						</b-row>
-
-                        <b-row v-if="form_data.fields.length > 1">
-                            <b-col class="text-center mt-3">    
-                                <p class="modal-info-text">
-                                    All trades will maintain the above ratio.
-                                </p>
+                            <b-col cols="5" offset="2">
+                                <b-row align-h="center">
+                                    <b-col cols="3">
+                                        <label for="quantity-1">Quantity</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-form-input id="quantity-1" 
+                                            type="number"
+                                            min="0"
+                                            v-model="form_data.fields[1].quantity"
+                                            :placeholder="form_data.fields[1].quantity_default+''"
+                                            :state="inputState(1, 'Quantity')"
+                                            required>
+                                        </b-form-input>
+                                        <p  v-if="form_data.fields[1].quantity < form_data.fields[1].quantity_default"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The recommended minimum quantity is {{ form_data.fields[1].quantity_default }}.
+                                        </p>
+                                    </b-col>
+                                </b-row>
                             </b-col>
                         </b-row>
+                       
 
                         <b-row v-if="errors.messages.length > 0" class="text-center mt-4">
                             <b-col :key="index" v-for="(error, index) in errors.messages" cols="12">
@@ -136,6 +163,7 @@
 </template>
 
 <script>
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'SwitchDetails',
         props:{
@@ -165,7 +193,11 @@
             	chosen_option: null,
                 form_data: {
                 	fields: []
-                }
+                },
+                dates_loaded: false,
+                expiry_dates: [
+                    {text: "Select Expiration", value: null}
+                ],
             };
         },
         methods: {
@@ -198,35 +230,49 @@
              */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
-            }
+            },
+            /**
+             * Loads Expiry Dates from API and sets pagination variables
+             */
+            loadExpiryDate() {
+                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page='+this.current_page,  {
+                    params:{
+                        'not_paginate': true,
+                    }
+                })
+                .then(expiryDateResponse => {
+                    if(expiryDateResponse.status == 200) {
+                        Object.keys(expiryDateResponse.data).forEach(key => {
+                            this.expiry_dates.push({
+                                text: moment(expiryDateResponse.data[key].date, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'),
+                                value: expiryDateResponse.data[key].date,
+                            });
+                        });
+                        EventBus.$emit('loading', 'requestDates');
+                        this.dates_loaded = true;
+                    } else {
+                        console.error(err);    
+                    }
+                }, err => {
+                    console.error(err);
+                });
+            },
         },
         mounted() {
-    		
-    		this.form_data.fields.push({is_selected:true,strike: null,quantity: 500});
-            // Sets up the view and object data defaults dictated by the structure
-            switch(this.data.market_object.trade_structure) {
-            	case 'Outright':
-            		this.display.disable_choice = true,
-            		this.chosen_option = null;
-            		break;
-            	case 'Risky':
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
-            		this.chosen_option = 0;
-            		break;
-            	case 'Fly':
-            		this.display.disable_choice = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
-            		this.form_data.fields[2].is_selected = true;
-            		break;
-            	case 'Calendar':
-            		this.display.show_expiry = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: 500});
-            		this.chosen_option = 0;
-            		break;
-            	default:
-
-            }
+            this.dates_loaded = false;
+            this.loadExpiryDate();
+            // Sets up the view and object data defaults
+            this.data.market_object.switch_details.forEach( (element, index) => {
+              this.form_data.fields.push({
+                    is_index: element.is_index,
+                    expiration:null,
+                    is_selected: index == 0 ? true : false,
+                    strike: null,
+                    quantity: element.is_index ? 500 : 50,
+                    quantity_default: element.is_index ? 500 : 50,
+                });
+            });
+            this.chosen_option = 0;
         }
     }
 </script>

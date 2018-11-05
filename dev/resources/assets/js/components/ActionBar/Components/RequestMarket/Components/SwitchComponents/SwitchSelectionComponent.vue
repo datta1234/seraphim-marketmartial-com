@@ -1,7 +1,8 @@
 <template>
     <div dusk="switch-selection" class="switch-selection">
         <b-container fluid>
-            <b-row :key="index" v-for="(switch_option, index) in switch_options" align-h="center">
+            <mm-loader theme="light" :default_state="true" event_name="requestMarketsLoaded" width="200" height="200"></mm-loader>
+            <b-row v-if="markets_loaded" :key="index" v-for="(switch_option, index) in switch_options" align-h="center">
                 <b-col cols="12">
                     <b-row align-h="center">
                         <b-col cols="3">
@@ -70,7 +71,7 @@
 
 <script>
     import TypeHeadInputComponent from '../TypeHeadInputComponent.vue';
-
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'SwitchSelection',
         components: {
@@ -111,6 +112,7 @@
                 ], 
                 stock_selection: null,
                 stock_listed: false,
+                markets_loaded: false,
             };
         },
         methods: {
@@ -139,9 +141,25 @@
                         && !this.switch_options[index].stock_listed 
                     : false;
             },
+            /**
+             * Loads Markets from API
+             */
             loadIndexMarkets() {
-                this.data.market_object.index_markets.forEach( index_market => {
-                    this.index_options.push({ text: index_market.title, value: index_market });
+                axios.get(axios.defaults.baseUrl + '/trade/market-type/'+this.data.market_types[0].id+'/market')
+                .then(marketsResponse => {
+                    if(marketsResponse.status == 200) {
+                        marketsResponse.data.forEach(market => {
+                            this.index_options.push({ text: market.title, value: market });
+                        });
+                        EventBus.$emit('loading', 'requestMarkets');
+                        this.markets_loaded = true;
+                    } else {
+                        this.$toasted.error("Failed to load markets");
+                        console.error(err);    
+                    }
+                }, err => {
+                    this.$toasted.error("Failed to load markets");
+                    console.error(err);
                 });
             },
             toggleOption(option, index) {
@@ -167,6 +185,7 @@
             }
         },
         mounted() {
+            this.markets_loaded = false,
             this.loadIndexMarkets();
         }
     }
