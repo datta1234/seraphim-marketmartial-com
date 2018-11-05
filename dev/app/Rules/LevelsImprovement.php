@@ -38,14 +38,15 @@ class LevelsImprovement implements Rule
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
+
+        $org_status = $this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id);
         //check to see if the bid is improved or the offer
-        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["trade-negotiation-balance"]))
+        if(in_array($org_status, ["trade-negotiation-balance"]))
         {
             return ($this->request->input($attribute) == $this->lastNegotiation->{$attribute}) || ($this->request->input($inverse) == $this->lastNegotiation->{$inverse});
         }
-        else if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
+        else if(in_array($org_status, ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
-
 
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {

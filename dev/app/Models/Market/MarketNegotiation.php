@@ -701,7 +701,12 @@ class MarketNegotiation extends Model
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBest() && !$this->isTradeAtBestOpen() && !$this->isRepeatATW()) {
+            if($this->user->organisation_id == $source->user->organisation_id 
+                && !$this->isTradeAtBest() 
+                && !$this->isTradeAtBestOpen() 
+                && !$this->isRepeatATW()
+                && !$this->isFoK()
+            ) {
                 return "SPIN";
             }
         }

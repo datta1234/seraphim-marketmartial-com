@@ -19,7 +19,7 @@
 
 
     <template v-if="!is_trading">
-        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('fok') ||meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
 
         <ibar-trade-at-best-negotiation 
          v-if="!can_negotiate && is_trading_at_best"
@@ -136,7 +136,7 @@
     
             
 
-    <ibar-trade-counter-desired-quantity v-if="is_trading" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+    <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
     <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
     <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
@@ -276,11 +276,13 @@
         methods: {
             conditionActive(type) {
                 if( this.marketRequest.chosen_user_market !== null && 
-                    this.marketRequest.chosen_user_market.active_condition !== null && 
-                    this.marketRequest.chosen_user_market.active_condition_type !== null &&
-                    this.marketRequest.chosen_user_market.active_condition_type == type
+                    this.marketRequest.chosen_user_market.active_conditions !== null 
                 ) {
-                    return true;
+                    for(let i = 0, cond; cond = this.marketRequest.chosen_user_market.active_conditions[i]; i++) {
+                        if(cond.type == type) {
+                            return true;
+                        }
+                    }
                 }
                 return false;
             },
@@ -554,7 +556,6 @@
         mounted() {
             this.init();
             EventBus.$on('notifyUser',this.updateMessage);
-
         }
     }
 </script>
