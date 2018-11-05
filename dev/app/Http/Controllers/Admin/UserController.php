@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
-{
+{       
     /**
      * Display a listing of the resource.
      *
