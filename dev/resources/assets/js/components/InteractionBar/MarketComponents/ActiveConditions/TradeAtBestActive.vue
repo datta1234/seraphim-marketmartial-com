@@ -65,7 +65,7 @@
         },
         computed: {
             term() {
-                return this.condition.condition.cond_buy_best ? 'Sell' : 'Buy' ;
+                return this.condition.condition.cond_buy_best ? 'Buy' : 'Sell' ;
             },
             negotiation() {
                 return this.condition.condition;
