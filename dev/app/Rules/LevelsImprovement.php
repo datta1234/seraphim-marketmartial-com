@@ -38,15 +38,15 @@ class LevelsImprovement implements Rule
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
+
+        $org_status = $this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id);
         //check to see if the bid is improved or the offer
-        if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["trade-negotiation-balance"]))
+        if(in_array($org_status, ["trade-negotiation-balance"]))
         {
-            return ($this->request->input($attribute) == $this->lastNegotiation->{$attribute}) || ($this->request->input($inverse) == $this->lastNegotiation->{$inverse});
+            return ($this->request->input($attribute) == $this->lastNegotiation->getLatest($attribute)) || ($this->request->input($inverse) == $this->lastNegotiation->getLatest($inverse));
         }
-        else if(in_array($this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id), ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
+        else if(in_array($org_status, ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
-
-
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
                 $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
@@ -96,8 +96,8 @@ class LevelsImprovement implements Rule
 
                 */
                 if(
-                    ($this->request->input($attribute) > $this->lastNegotiation->{$attribute}) == $valid &&
-                    ($this->request->input($attribute) < $this->lastNegotiation->{$attribute}) == !$valid
+                    ($this->request->input($attribute) > $this->lastNegotiation->getLatest($attribute)) == $valid &&
+                    ($this->request->input($attribute) < $this->lastNegotiation->getLatest($attribute)) == !$valid
                 ) {
                     return true;
                 } else {
@@ -106,7 +106,7 @@ class LevelsImprovement implements Rule
                         $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
                         // if the value was not improved, yet the same and the inverse on the last killed FoK is the one under validation, ignore its value...
                         // still validate the same
-                        if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->{$attribute})) {
+                        if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->getLatest($attribute))) {
                             return true;
                         }
                     }
@@ -129,13 +129,38 @@ class LevelsImprovement implements Rule
 
                     */
                     if(
-                        floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->{$attribute}) &&
-                        ($this->request->input($inverse) > $this->lastNegotiation->{$inverse}) == !$valid &&
-                        ($this->request->input($inverse) < $this->lastNegotiation->{$inverse}) == $valid
+                        floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->getLatest($attribute)) &&
+                        ($this->request->input($inverse) > $this->lastNegotiation->getLatest($inverse)) == !$valid &&
+                        ($this->request->input($inverse) < $this->lastNegotiation->getLatest($inverse)) == $valid
                     ) {
                         return true;
                     }
                 }
+            }
+            /*
+                If Value not present, Ensure the Inverse value is Present && improved
+
+                if 'bid' > check offer
+                    ( offer > curOffer ) == false && 
+                    ( offer < curOffer ) == true
+                eg:
+                    [10, 15] = true && true
+                    [10, 5] = false && false
+
+                if 'offer' > check bid
+                    ( bid > curBid ) == false &&
+                    ( bid < curBid ) == true
+                eg:
+                    [10, 5] = true && true
+                    [10, 15] = false && false
+
+            */
+            if(
+                $this->request->input($attribute) == null &&
+                ($this->request->input($inverse) > $this->lastNegotiation->getLatest($inverse)) == !$valid &&
+                ($this->request->input($inverse) < $this->lastNegotiation->getLatest($inverse)) == $valid
+            ) {
+                return true;
             }
         }
         return false;

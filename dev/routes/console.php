@@ -58,6 +58,9 @@ Artisan::command('mm:reset', function() {
         \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
         \App\Models\MarketRequest\UserMarketRequestItem::truncate();
         
+        // empty the jobs
+        \DB::table('jobs')->truncate();
+
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         \Artisan::call('cache:clear');

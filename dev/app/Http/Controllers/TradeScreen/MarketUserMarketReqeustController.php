@@ -33,6 +33,7 @@ class MarketUserMarketReqeustController extends Controller
     public function index(Request $request,Market $market)
     {
         $userMarketRequests = $market->userMarketRequests()
+            ->activeForToday()
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',

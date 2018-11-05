@@ -677,3 +677,16 @@ table.table {
 .mm-card.card .card-body .card-text {
 	color: $mm-black;
 }
+
+
+[mm-disabled] {
+	opacity: 0.65;
+	pointer-events:none;
+	&input {
+		background-color: #afafaf;
+    	border-color: #8e8e8e;
+	}
+	&.btn {
+		background-color: #afafaf;
+	}
+}

@@ -27,6 +27,11 @@ Route::get('/contact', 'PageController@contact')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
+// Keepalive For Trade Screen
+Route::get('/ping', function() {
+    // valid session still alive, continue
+    return response("pong");
+});
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
 
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');

@@ -123,6 +123,18 @@ class UserMarketRequest extends Model
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
+
+    /**
+    * Scope for active markets today
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeActiveForToday($query)
+    {
+        return $query->where(function($q) {
+            $q->where('created_at', '>', now()->startOfDay());
+        });
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

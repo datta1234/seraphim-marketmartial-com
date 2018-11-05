@@ -594,6 +594,19 @@ class MarketNegotiation extends Model
         return null;
     }
 
+    public function getLatest($side)
+    {
+        $side = ( $side == 'bid' ? 'bid' : 'offer' );
+
+        if($this->{$side} != null) {
+            return $this->{$side};
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatest($side);
+        }
+        return null;
+    }
+
 
     public function repeatNegotiation($user)
     {
@@ -701,7 +714,12 @@ class MarketNegotiation extends Model
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id && !$this->isTradeAtBest() && !$this->isTradeAtBestOpen() && !$this->isRepeatATW()) {
+            if($this->user->organisation_id == $source->user->organisation_id 
+                && !$this->isTradeAtBest() 
+                && !$this->isTradeAtBestOpen() 
+                && !$this->isRepeatATW()
+                && !$this->isFoK()
+            ) {
                 return "SPIN";
             }
         }

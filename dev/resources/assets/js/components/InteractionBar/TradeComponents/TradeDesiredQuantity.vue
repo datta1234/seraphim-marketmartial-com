@@ -42,7 +42,7 @@
                   Desired Quantity
                 </label>
                 <div class="col-sm-4">
-                  <input type="text" class="form-control" id="inlineFormInputName" v-model="tradeNegotiation.quantity">
+                  <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
                 </div>
                 <label class="col-sm-4">
                   Contracts

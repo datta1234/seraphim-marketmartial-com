@@ -296,6 +296,15 @@ class UserMarket extends Model
         );
     }
 
+    public function findCounterNegotiation($user) {
+        if($this->marketNegotiationsDesc()->count() == 1) {
+            return $this->lastNegotiation;
+        }
+        return $this->marketNegotiationsDesc()
+            ->findCounterNegotiation($user)
+            ->first();
+    }
+
 
     public function spinNegotiation($user)
     {
@@ -306,9 +315,7 @@ class UserMarket extends Model
         $marketNegotiation->is_repeat = true;
 
         $marketNegotiation->user_id = $user->id;
-        $counterNegotiation = $this->marketNegotiationsDesc()
-                                        ->findCounterNegotiation($user)
-                                        ->first();
+        $counterNegotiation = $this->findCounterNegotiation($user);
 
         if($counterNegotiation)
         {
@@ -367,9 +374,7 @@ class UserMarket extends Model
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
 
-            $counterNegotiation = $this->lastNegotiation()
-                                ->findCounterNegotiation($user)
-                                ->first();
+            $counterNegotiation = $this->findCounterNegotiation($user);
 
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {

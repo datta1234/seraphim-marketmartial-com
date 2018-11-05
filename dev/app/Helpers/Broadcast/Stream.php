@@ -21,7 +21,7 @@ class Stream
         $this->channel = $event->broadcastOn();
         $this->data =   json_encode($event->broadcastWith());
         $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration'));
-        $this->nonce = str_random(10);
+        $this->nonce = str_random(16);
         $this->setupChunks();
         $this->storeData();
     }
@@ -30,7 +30,6 @@ class Stream
     {
         return substr($str,($pointer * $prev_limit_bytes),$limit_in_bytes);
     }
-
 
     public function setupChunks()
     {
@@ -58,7 +57,7 @@ class Stream
             $usedBytes = $this->calcUsedOverHead($chunk);
             $limit_in_bytes = $limit - $usedBytes;
             $chunk["data"]  = $this->getChunkAtPointer($encoded,$pointer,$prev_limit_bytes, $limit_in_bytes);
-           $compiledData   = $compiledData .$chunk["data"];
+            $compiledData   = $compiledData .$chunk["data"];
             $this->chunks[] = $chunk; 
             $prev_limit_bytes = $limit_in_bytes;
             $pointer++;
@@ -76,6 +75,14 @@ class Stream
 
     public function storeData()
     {
+        $active_requests = Cache::get('activeStreamData', []);
+        $channel  = $this->channel->name;
+        if(!isset($active_requests[$channel])) {
+            $active_requests[$channel] = [];
+        }
+        $active_requests[$channel][$this->checkSum] = $this->expires_at;
+        Cache::forever('activeStreamData', $active_requests);
+
         Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);  
     }
 

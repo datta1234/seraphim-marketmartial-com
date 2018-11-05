@@ -60,9 +60,8 @@ class LoginController extends Controller
             if (\Auth::user()->google2fa_secret === NULL)
                 return '/admin/user';
             else
-                return '/admin/mfa';
-                
-            return $this->redirectTo;
+                return '/admin/mfa';        
         }
+        return $this->redirectTo;
     }
 }

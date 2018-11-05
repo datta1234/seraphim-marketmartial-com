@@ -13,15 +13,13 @@
                 <b-row id="cond-container" class="trade-popover" no-gutters>
                     <b-col cols="6">
                         <span>
-                            Trade At {{ negotiation.bid+" / "+negotiation.offer }}
+                            Trade At {{ ( negotiation.bid ? negotiation.bid : '-' )+" / "+( negotiation.offer ? negotiation.offer : '-' ) }}
                         </span>
                     </b-col>
-                    <b-col cols="2">
+                    <b-col cols="6">
                         <span id="proposal-do-trade">
                             <a href="" @click.prevent.stop="doTrade">Trade</a>
                         </span>
-                    </b-col>
-                    <b-col cols="4">
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
