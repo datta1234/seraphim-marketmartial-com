@@ -31,30 +31,9 @@
                     market_type_titles:['Index Option','Single Stock Options'],
                     market_types: [],
                     market_object: {
-                        switch_details: null,
+                        switch_options: null,
                         trade_structure: 'Option Switch',
-                        trade_structure_groups: [
-                            {
-                                is_selected: true,
-                                stock: null,
-                                market_id: null,
-                                fields: {
-                                    "Expiration Date": null,
-                                    "Strike": null,
-                                    "Quantity": null
-                                }
-                            },
-                            {
-                                is_selected: false,
-                                stock: null,
-                                market_id: null,
-                                fields: {
-                                    "Expiration Date": null,
-                                    "Strike": null,
-                                    "Quantity": null
-                                }
-                            }
-                        ],
+                        trade_structure_groups: [],
                     },
                 },
                 errors: {
@@ -116,11 +95,20 @@
                         this.selected_step_component = 'Switch';
                         break;
                     case 3:
-                        this.option_switch_data.market_object.switch_details = component_data;
+                        if(component_data) {
+                            this.option_switch_data.market_object.switch_options = component_data;
+                        }
                         this.selected_step_component = 'Details';
                         break;
                     case 4:
-                        console.log("Details data",component_data);
+                        if(component_data) {
+                            this.option_switch_data.market_object.switch_options.forEach( (switch_option,index) => {
+                                switch_option["expiration"] = component_data.fields[index]["expiration"];
+                                switch_option["is_selected"] = component_data.fields[index]["is_selected"];
+                                switch_option["quantity"] = component_data.fields[index]["quantity"];
+                                switch_option["strike"] = component_data.fields[index]["strike"];
+                            });
+                        }
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
@@ -151,7 +139,11 @@
                 this.submitting_request = false;
                 
                 let new_data = this.formatRequestData();
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.option_switch_data.market_object.market.id +'/market-request', new_data)
+                let market_id = this.option_switch_data.market_object.switch_options[0].is_index ?
+                    this.option_switch_data.market_object.switch_options[0].index_market.id
+                    : '4';
+
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ market_id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     // success closes the modal
                     this.close_modal();
@@ -194,16 +186,21 @@
                     trade_structure: this.option_switch_data.market_object.trade_structure,
                     trade_structure_groups:[]
                 }
-                this.option_switch_data.market_object.details.fields.forEach( (element,key) => {
+                console.log("Data to format: ", this.option_switch_data);
+                this.option_switch_data.market_object.switch_options.forEach( (element,index) => {
                     formatted_data.trade_structure_groups.push({
                         is_selected: element.is_selected,
-                        stock: this.option_switch_data.market_object.stock.code,
                         fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.option_switch_data.market_object.expiry_dates[key] : this.option_switch_data.market_object.expiry_dates[0] ),
-                            Strike: element.strike,
-                            Quantity: element.quantity
+                            "Expiration Date": element.expiration,
+                            "Strike": element.strike,
+                            "Quantity": element.quantity
                         }
                     });
+                    if(element.is_index) {
+                        formatted_data.trade_structure_groups[index].market_id = element.index_market.id;
+                    } else {
+                        formatted_data.trade_structure_groups[index].stock = element.stock_selection.code;
+                    }
                 });
                 return formatted_data;
             },
@@ -218,13 +215,14 @@
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
                         switch (propArr[2]) {
+                            case "market_id":
                             case "stock":
                                 errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Stock.messages.indexOf(element) == -1) {
-                                        this.errors.data.Stock.messages.push(element);
+                                    if (this.errors.data.Switch.messages.indexOf(element) == -1) {
+                                        this.errors.data.Switch.messages.push(element);
                                     }
                                 });
-                                this.temp_title.splice(-3);
+                                this.temp_title.splice(-1);
                                 this.setLowestStep(1);
                                 break;
                             case "is_selected":
@@ -233,28 +231,18 @@
                                         this.errors.data.Details.messages.push(element);
                                     }
                                 });
-                                this.setLowestStep(4);
+                                this.setLowestStep(2);
                                 break;
                             case "fields":
-                                if(propArr[3] == 'Expiration Date') {
-                                    errors[prop].forEach( (element, key) => {
-                                        if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
-                                            this.errors.data.Expiry.messages.push(element);
-                                        }
-                                    });
-                                    this.temp_title.splice(-1);
-                                    this.setLowestStep(3);
-                                } else {
-                                    errors[prop].forEach( (element, key) => {
-                                        if (this.errors.data.Details.messages.indexOf(element) == -1) {
-                                            this.errors.data.Details.messages.push(element);
-                                        }
-                                    });
-                                    if (this.errors.data.Details.fields.indexOf(prop) == -1) {
-                                        this.errors.data.Details.fields.push(prop);
+                                errors[prop].forEach( (element, key) => {
+                                    if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                        this.errors.data.Details.messages.push(element);
                                     }
-                                    this.setLowestStep(4);
+                                });
+                                if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                    this.errors.data.Details.fields.push(prop);
                                 }
+                                this.setLowestStep(2);
                                 break;
                             default:
                                 errors[prop].forEach( (element, key) => {
@@ -270,15 +258,14 @@
                                     this.errors.data.Details.messages.push(element);
                                 }
                             });
-                            this.setLowestStep(4);
+                            this.setLowestStep(2);
                         } else {
                             errors[prop].forEach( (element, key) => {
-                                if (this.errors.data.Structure.messages.indexOf(element) == -1) {
-                                    this.errors.data.Structure.messages.push(element);
+                                if (this.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                    this.errors.data.Confirm.messages.push(element);
                                 }
                             });
-                            this.temp_title.splice(-2);
-                            this.setLowestStep(2);
+                            this.setLowestStep(3);
                         }
                     }
                 }

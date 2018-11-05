@@ -8,17 +8,17 @@
                         <!-- Title section -->
 						<b-row class="mt-2" align-h="center">
                             <b-col cols="5">
-                                {{ data.market_object.switch_details[0].is_index ?
-                                    data.market_object.switch_details[0].index_market.title
-                                    : data.market_object.switch_details[0].stock_selection.code }}
+                                {{ data.market_object.switch_options[0].is_index ?
+                                    data.market_object.switch_options[0].index_market.title
+                                    : data.market_object.switch_options[0].stock_selection.code }}
                             </b-col>
                             <b-col cols="2">
                                 VS.
                             </b-col>
                             <b-col cols="5">
-                                {{ data.market_object.switch_details[1].is_index ?
-                                    data.market_object.switch_details[1].index_market.title
-                                    : data.market_object.switch_details[1].stock_selection.code }}
+                                {{ data.market_object.switch_options[1].is_index ?
+                                    data.market_object.switch_options[1].index_market.title
+                                    : data.market_object.switch_options[1].stock_selection.code }}
                             </b-col>
                         </b-row>
                         <!-- Expiry section -->
@@ -30,6 +30,7 @@
                                         <b-form-select id="option-expiry-1"
                                                        class="w-100"
                                                        :options="expiry_dates"
+                                                       :state="inputState(0, 'Expiration Date')"
                                                        v-model="form_data.fields[0].expiration">
                                         </b-form-select>
                                     </b-col>
@@ -42,6 +43,7 @@
                                         <b-form-select id="option-expiry-2"
                                                        class="w-100"
                                                        :options="expiry_dates"
+                                                       :state="inputState(1, 'Expiration Date')"
                                                        v-model="form_data.fields[1].expiration">
                                         </b-form-select>
                                     </b-col>
@@ -262,7 +264,7 @@
             this.dates_loaded = false;
             this.loadExpiryDate();
             // Sets up the view and object data defaults
-            this.data.market_object.switch_details.forEach( (element, index) => {
+            this.data.market_object.switch_options.forEach( (element, index) => {
               this.form_data.fields.push({
                     is_index: element.is_index,
                     expiration:null,
@@ -273,6 +275,7 @@
                 });
             });
             this.chosen_option = 0;
+            console.log("Detail errors: ", this.errors.fields);
         }
     }
 </script>

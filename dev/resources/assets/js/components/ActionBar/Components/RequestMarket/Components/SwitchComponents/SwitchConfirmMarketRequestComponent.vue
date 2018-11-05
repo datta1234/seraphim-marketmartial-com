@@ -1,53 +1,15 @@
 <template>
     <div dusk="confirm-market-request" class="step-selections">
         <b-container fluid>
-            <b-row v-if="data.market_object.stock" align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>STOCK NAME:</p>
+            <b-row :key="index" v-for="(display_field, index) in display_fields" align-h="start">
+                <b-col cols="4">
+                    <p>{{ display_field }}:</p>
                 </b-col>
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.stock.code }}</p>
+                <b-col cols="4">
+                    <p>{{ getDisplayDetal(display_field, 0) }}</p>
                 </b-col>
-            </b-row>
-            <b-row v-else align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_type.title.toUpperCase() }}:</p>
-                </b-col>
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.market.title }}</p>
-                </b-col>
-            </b-row>
-            <b-row align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>EXPIRY:</p>
-                </b-col>
-                <b-col :key="index" v-for="(expiry_date, index) in data.market_object.expiry_dates"  cols="3" class="mt-2">
-                    <p>{{ castToMoment(expiry_date) }}</p>
-                </b-col>
-            </b-row>
-            <b-row align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>STRIKE:</p>
-                </b-col>
-                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ (data.market_object.stock ? "R" : "") + splitValHelper(field.strike,' ',3) }}<span v-if="field.is_selected && data.market_object.details.fields.length > 1"> (CH)</span></p>
-                </b-col>
-            </b-row>
-            <b-row align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>QUANTITY:</p>
-                </b-col>
-                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
-                        : splitValHelper(field.quantity,' ',3) }}</p>
-                </b-col>
-            </b-row>
-            <b-row align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>STRUCTURE:</p>
-                </b-col>
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.trade_structure }}</p>
+                <b-col cols="4">
+                    <p>{{ getDisplayDetal(display_field, 1) }}</p>
                 </b-col>
             </b-row>
             <b-row v-if="errors.messages.length > 0" class="text-center mt-3">
@@ -68,7 +30,7 @@
 
 <script>
     export default {
-        name: 'ConfirmMarketRequest',
+        name: 'SwitchConfirmMarketRequest',
         props:{
             'callback': {
                 type: Function
@@ -82,6 +44,13 @@
         },
         data() {
             return {
+                display_fields: [
+                    "UNDERLYING",
+                    "EXPIRY",
+                    "STRIKE",
+                    "QUANTITY/RATIO",
+                    "STRUCTURE",
+                ]
             };
         },
         methods: {
@@ -90,6 +59,30 @@
              */
             confirmDetails() {
                 this.callback();
+            },
+            getDisplayDetal(display_field, option_index) {
+                let switch_option = this.data.market_object.switch_options[option_index];
+                switch (display_field) {
+                    case "UNDERLYING":
+                        return switch_option.is_index ? switch_option.index_market.title : switch_option.stock_selection.code;
+                        break;
+                    case "EXPIRY":
+                            return this.castToMoment(switch_option.expiration);
+                        break;
+                    case "STRIKE":
+                        return (switch_option.is_index ? '' : 'R') + this.$root.splitValHelper(switch_option.strike,' ',3) 
+                            + (switch_option.is_selected ? '(CH)' : '');
+                        break;
+                    case "QUANTITY/RATIO":
+                        return switch_option.is_index ? switch_option.quantity + " contracts" 
+                            : this.$root.formatRandQty(switch_option.quantity) + 'm';
+                        break;
+                    case "STRUCTURE":
+                        return option_index == 0 ? this.data.market_object.trade_structure : '';
+                        break;
+                    default:
+                        return '-';
+                }
             },
             /**
              * Casting a passed string to moment with a new format
