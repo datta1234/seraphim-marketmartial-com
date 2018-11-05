@@ -9,19 +9,18 @@ const ActiveRequestState = {
     registered_elements: [],
     registered_context: [],
     toggleElements: () => {
+        ActiveRequestState.registered_elements.forEach(x => {
+            ActiveRequestState.toggleElement(x);
+        });
+    },
+    toggleElement: (el) => {
         if (ActiveRequestState.active_requests > 0) {
-            console.log("[ActiveRequest] ON");
-            ActiveRequestState.registered_elements.forEach(x => {
-                x.setAttribute('mm-disabled', true);
-            });
+            console.log("[ActiveRequest] TOGGLE ON");
+            el.setAttribute('mm-disabled', true);
         } else {
             if(!awaiting_stream) {
-                console.log("[ActiveRequest] OFF");
-                ActiveRequestState.registered_elements.forEach(x => {
-                    x.removeAttribute('mm-disabled');
-                });
-            } else {
-                console.log("[ActiveRequest] AWAITING STREAM");
+                console.log("[ActiveRequest] TOGGLE OFF");
+                el.removeAttribute('mm-disabled');
             }
         }
     }
@@ -69,7 +68,7 @@ const init = (app) => {
                 });
                 awaiting_stream = true;
             }
-            
+
             if(ActiveRequestState.active_requests > 0) {
                 ActiveRequestState.active_requests--;
             }
@@ -91,7 +90,7 @@ export default {
     bind: (el, binding, vnode, oldVnode) => {
         if(ActiveRequestState.registered_elements.indexOf(el) == -1) {
             ActiveRequestState.registered_elements.push(el);
-            ActiveRequestState.toggleElements();
+            ActiveRequestState.toggleElement(el);
         }
     },
     update: (el, binding, vnode, oldVnode) => {

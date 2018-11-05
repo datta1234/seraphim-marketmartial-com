@@ -594,6 +594,19 @@ class MarketNegotiation extends Model
         return null;
     }
 
+    public function getLatest($side)
+    {
+        $side = ( $side == 'bid' ? 'bid' : 'offer' );
+
+        if($this->{$side} != null) {
+            return $this->{$side};
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatest($side);
+        }
+        return null;
+    }
+
 
     public function repeatNegotiation($user)
     {

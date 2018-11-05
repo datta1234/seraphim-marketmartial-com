@@ -339,7 +339,6 @@
                 // link now that we are saving
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
                 // this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-                console.log("this is the proposed user market",this.user_market);
                 this.server_loading = true;
                 this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
                 .then(response => {
@@ -388,8 +387,6 @@
                
                 })
                 .catch(err => {
-                    console.log("this is an error",err);
-
                     this.server_loading = false;
                     this.history_message = err.message;
                     this.errors = err.errors;

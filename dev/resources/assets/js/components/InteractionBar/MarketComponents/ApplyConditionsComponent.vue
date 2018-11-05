@@ -138,7 +138,6 @@
                 });
             },
             conditionDisplayed(cond){
-                console.log(cond.alias, cond.only, this.negotiation_stage);
                 if(typeof cond.only !== 'undefined') {
                     if(cond.only == this.negotiation_stage) {
                         return true;

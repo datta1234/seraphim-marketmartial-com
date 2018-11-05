@@ -11,12 +11,12 @@
               <b-row>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.bid" type="text" placeholder="Bid"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.bid" :disabled="disabled_bid" type="text" placeholder="Bid"></b-form-input>
                     </p>
                 </b-col>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.offer" type="text" placeholder="Offer"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.offer" :disabled="disabled_offer" type="text" placeholder="Offer"></b-form-input>
                     </p>
                 </b-col>
               </b-row>
@@ -70,7 +70,14 @@
             };
         },
         computed: {
-         
+          disabled_bid() {
+            let val = !!this.proposed_market_negotiation.offer;
+            return val;
+          },
+          disabled_offer() {
+            let val = !!this.proposed_market_negotiation.bid;
+            return val;
+          },
         },
         methods: {
           addCustomClass(evt) {
@@ -83,6 +90,12 @@
           },
           storeCounter() {
             this.server_loading = true;
+            if(this.disabled_bid) {
+              this.proposed_market_negotiation.bid_qty = null;
+            }
+            if(this.disabled_offer) {
+              this.proposed_market_negotiation.offer_qty = null;
+            }
             this.marketNegotiation.counterNegotiation(this.proposed_market_negotiation)
             .then(data => {
               this.server_loading = false;

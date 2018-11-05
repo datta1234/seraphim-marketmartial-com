@@ -291,7 +291,7 @@ export default class UserMarketRequest extends BaseModel {
         ];
 
         return isTrading.indexOf(this.attributes.state) > -1 
-            && (this.is_trading_at_best == false && this.is_trading_at_best_closed); // if its trading at best, then its not trading
+            && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
     }
 
     get is_trading_at_best() {
