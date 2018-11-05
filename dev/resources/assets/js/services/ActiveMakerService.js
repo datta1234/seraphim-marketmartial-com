@@ -34,7 +34,7 @@ const ping = () => {
 
 const init = (app) => {
     state._ignore_header = app.$root.config('app.ajax.headers.ignore');
-    console.log("INitialised ActiveMaker", app, state);
+    
     // ensure it happens only once
     if(state.keepalive == null) {
         axios.interceptors.response.use((response) => {

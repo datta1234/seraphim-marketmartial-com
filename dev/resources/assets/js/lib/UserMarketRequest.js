@@ -289,10 +289,17 @@ export default class UserMarketRequest extends BaseModel {
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
-        console.log(this.is_trading_at_best);
 
         return isTrading.indexOf(this.attributes.state) > -1 
-            && (this.is_trading_at_best == false || typeof this.is_trading_at_best =="undefined"); // if its trading at best, then its not trading
+            && (this.is_trading_at_best == false && this.is_trading_at_best_closed); // if its trading at best, then its not trading
+    }
+
+    get is_trading_at_best() {
+        return this.chosen_user_market && this.chosen_user_market.trading_at_best;
+    }
+
+    get is_trading_at_best_closed() {
+        return this.chosen_user_market && this.chosen_user_market.trading_at_best && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining();
     }
 
     canCounterTrade()

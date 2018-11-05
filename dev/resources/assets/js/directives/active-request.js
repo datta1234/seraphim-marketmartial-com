@@ -3,17 +3,25 @@ import Stream from '~/services/Stream';
 
 let awaiting_stream = false;
 const ActiveRequestState = {
+    // _instance: null,
     _ignore_header: "ignore",
     active_requests: 0,
     registered_elements: [],
+    registered_context: [],
     toggleElements: () => {
         if (ActiveRequestState.active_requests > 0) {
-            // console.log("Toggling Off ["+ActiveRequestState.registered_elements.length+"] Elements");
-            ActiveRequestState.registered_elements.forEach(x => x.setAttribute('disabled', '') );
+            console.log("[ActiveRequest] ON");
+            ActiveRequestState.registered_elements.forEach(x => {
+                x.setAttribute('mm-disabled', true);
+            });
         } else {
-            // console.log("Toggling On ["+ActiveRequestState.registered_elements.length+"] Elements");
             if(!awaiting_stream) {
-                ActiveRequestState.registered_elements.forEach(x => x.removeAttribute('disabled') );
+                console.log("[ActiveRequest] OFF");
+                ActiveRequestState.registered_elements.forEach(x => {
+                    x.removeAttribute('mm-disabled');
+                });
+            } else {
+                console.log("[ActiveRequest] AWAITING STREAM");
             }
         }
     }
@@ -21,11 +29,10 @@ const ActiveRequestState = {
 
 const init = (app) => {
     ActiveRequestState._ignore_header = app.$root.config('app.ajax.headers.ignore');
-    console.log("INitialised ActiveRequest", app, ActiveRequestState);
 
     Stream.interface.attach((key) => {
         setTimeout(() => {
-            console.log("Completion Of Wait Time");
+            console.log("[ActiveRequest] RECEIVED STREAM");
             awaiting_stream = false;
             ActiveRequestState.toggleElements();
         }, 0);
@@ -37,6 +44,7 @@ const init = (app) => {
         // handle load
         if(typeof config.headers[ActiveRequestState._ignore_header] === 'undefined') {
             ActiveRequestState.active_requests++;
+            console.log("[ActiveRequest] SENDING REQUEST");
             ActiveRequestState.toggleElements();
         }
 
@@ -52,20 +60,20 @@ const init = (app) => {
 
     // Add a response interceptor
     axios.interceptors.response.use((response) => {
-         // headers catchment
-        if(response.headers && typeof response.headers['pending-streams'] != 'undefined') {
-            response.headers['pending-streams'].split(',').forEach(key => {
-                Stream.expect(key);
-                console.log("Triggered Header: ", key);
-            });
-            awaiting_stream = true;
-        }
-
         // handle unload
         if(typeof response.config.headers[ActiveRequestState._ignore_header] === 'undefined') {
+            // headers catchment
+            if(response.headers && typeof response.headers['pending-streams'] != 'undefined') {
+                response.headers['pending-streams'].split(',').forEach(key => {
+                    Stream.expect(key);
+                });
+                awaiting_stream = true;
+            }
+            
             if(ActiveRequestState.active_requests > 0) {
                 ActiveRequestState.active_requests--;
             }
+            console.log("[ActiveRequest] RECEIVED RESPONSE");
             ActiveRequestState.toggleElements();
         }
         return response;
@@ -87,7 +95,7 @@ export default {
         }
     },
     update: (el, binding, vnode, oldVnode) => {
-        ActiveRequestState.toggleElements();
+        // ActiveRequestState.toggleElements(); // dont update every time
     },
     unbind: (el, binding, vnode, oldVnode) => {
         if(ActiveRequestState.registered_elements.indexOf(el) !== -1) {
