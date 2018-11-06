@@ -9,23 +9,20 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
+                <span v-if="selectable && canBid" class="pointer" @click="selectOption(false)" id="popover-hit">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
-
-                <span v-if="!selectable">
+                <span v-else>
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
 
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-
-                <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
+                <span v-if="selectable && canOffer" class="pointer" @click="selectOption(true)" id="popover-lift">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
-
-                <span v-if="!selectable">
+                <span v-else>
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
             </b-col>
@@ -48,10 +45,9 @@
             <small>{{ marketNegotiation.time }}</small>
         </p>
     </b-col>
+    <ibar-trade-desired-quantity v-if="selectable && canBid" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" @toggleModal="toggleHit($event)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" parent="last-negotiation"></ibar-trade-desired-quantity>
-
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" parent="last-negotiation"></ibar-trade-desired-quantity>
+    <ibar-trade-desired-quantity v-if="selectable && canOffer" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" @toggleModal="toggleLift($event)" parent="last-negotiation"></ibar-trade-desired-quantity>
 
     <b-col cols="12">
         <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
@@ -111,6 +107,14 @@
         },
         lastTradeNegotiation: function(){
             return this.marketNegotiation.getLastTradeNegotiation();
+        },
+        canBid: function(){
+            let source = this.marketNegotiation.getAmountSource("bid");
+            return !source.is_my_org;
+        },
+        canOffer: function(){
+            let source = this.marketNegotiation.getAmountSource("offer");
+            return !source.is_my_org;
         }
     },
     methods: {
@@ -133,6 +137,14 @@
            this.liftOpen = false
            this.hitOpen = false;
        },
+       toggleHit(nv)
+       {
+            this.hitOpen = nv;
+       },
+       toggleLift(nv)
+       {
+        this.liftOpen = nv;
+       },
        getConditionState(marketNegotiation, field) {
 
             let getConditionText = (cond, object, field) => {
@@ -154,14 +166,6 @@
                 }
             }
             return null;
-        },
-        getText(attr,marketNegotiation) {
-            let source = marketNegotiation.getAmountSource(attr);
-            if(source.id != marketNegotiation.id && marketNegotiation.is_repeat)
-            {
-                return marketNegotiation.is_interest == source.is_interest || marketNegotiation.is_maker == source.is_maker ? "SPIN " + marketNegotiation[attr]  : marketNegotiation[attr];
-            }
-            return marketNegotiation[attr];
         },
         getStateClass(attr) {
             let source = this.marketNegotiation.getAmountSource(attr);

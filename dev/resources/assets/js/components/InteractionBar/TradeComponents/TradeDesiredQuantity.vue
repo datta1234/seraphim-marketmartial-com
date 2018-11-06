@@ -1,5 +1,5 @@
 <template>
-       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
+       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="openModal" triggers="" :container="parent">
             <template slot="title">
                <div class="text-center">{{ title }}
                    <a @click="cancel" class="close" aria-label="Close">
@@ -13,11 +13,11 @@
             </b-row>
             <template v-if="is_offer == null">
               <b-row>
-                 <b-col cols="6">
-                      <b-btn v-active-request variant="primary" size="sm" @click="is_offer = true">Buy</b-btn>
+                 <b-col cols="12">
+                      <b-btn v-active-request block variant="primary" size="sm" @click="is_offer = true">Buy</b-btn>
                  </b-col>
-                 <b-col cols="6">
-                       <b-btn v-active-request variant="primary" size="sm" @click="is_offer = false">Sell</b-btn>
+                 <b-col cols="12">
+                       <b-btn class="mt-2" block v-active-request variant="primary" size="sm" @click="is_offer = false">Sell</b-btn>
                  </b-col>
               </b-row>
             </template>
@@ -29,10 +29,10 @@
                </b-row>
                <b-row>
                  <b-col cols="12">
-                      <b-btn v-active-request variant="danger" block @click="cancel()">Cancel</b-btn>
+                       <b-btn v-active-request variant="primary" block @click="confirmed = true">{{ btnText }}</b-btn>
                  </b-col>
-                 <b-col cols="12">
-                       <b-btn class="mt-2" v-active-request variant="primary" block @click="confirmed = true">{{ btnText }}</b-btn>
+                  <b-col class="mt-2"  cols="12">
+                      <b-btn v-active-request variant="danger" block @click="cancel()">Cancel</b-btn>
                  </b-col>
               </b-row>
             </template>
@@ -47,7 +47,6 @@
                 <label class="col-sm-4">
                   Contracts
                 </label>
-
             </div>
                 <b-row>
                     <b-col cols="12" :key="key" v-for="(error,key) in errors" class="text-danger">
@@ -56,6 +55,7 @@
                     <b-col cols="12">       
                         <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
                     </b-col>
+
                 </b-row>
             </template>
       </b-popover>
@@ -94,7 +94,8 @@
                  confirmed:false,
                  tradeNegotiation: new TradeNegotiation(),
                  server_loading: false,
-                 errors: []
+                 errors: [],
+                 openModal: false
 
             };
         },
@@ -107,6 +108,21 @@
                 {
                   this.tradeNegotiation.quantity = this.marketNegotiation.bid_qty;
                 }
+
+                this.reset();
+            },
+            open: function()
+            {
+             // this.openModal = this.open;
+             console.log("open got hit");
+             this.openModal = this.open;
+
+            },
+            openModal: function()
+            {
+             // this.openModal = this.open;
+             console.log("open method fired");
+             this.$emit('toggleModal',this.openModal);
             }
         },
         computed: {
@@ -144,8 +160,17 @@
            }            
         },
         methods: {
+          reset() {
+                 this.is_offer = null;
+                 this.confirmed =false;
+                 this.tradeNegotiation = new TradeNegotiation();
+                 this.server_loading = false;
+                 this.errors = [];
+                 this.openModal = false;
+          },
             cancel(){
                 this.$emit('close');
+                this.openModal = false;
                 this.is_offer = this.isOffer;
                 this.confirmed = false;
             },
@@ -165,12 +190,15 @@
                     this.server_loading = false;
 
                     this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    this.errors = err.errors;
+
                 });
            }
         },
         mounted() {
             this.is_offer = this.isOffer;
+            //this.openModal = this.open;
+
             if(this.is_offer)
             {
               this.tradeNegotiation.quantity = this.marketNegotiation.offer_qty;

@@ -19,8 +19,9 @@ class TradeNegotiationController extends Controller
      */
     public function store(TradeNegotiationStoreRequest $request,MarketNegotiation $marketNegotiation)
     {
+        dd("here");
         $user = $request->user();
-        // $this->authorize('addTradeNegotiation',$marketNegotiation);
+        $this->authorize('addTradeNegotiation',$marketNegotiation);
         $tradeNegotiation = $marketNegotiation->addTradeNegotiation($user,$request->all());
         
         // $user->organisation->notify("market_request_store","Response sent to interest.",true);
