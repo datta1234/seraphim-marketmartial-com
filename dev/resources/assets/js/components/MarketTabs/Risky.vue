@@ -1,19 +1,31 @@
 <template>
-    <div dusk="market-tab-risky" class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
-        <div class="row justify-content-md-center">
-            <div class="col market-tab-name market-tab-name">
-                {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.risky.strike")], '&nbsp;', 3) }}    
-            </div>
-            <div class="col market-tab-state">
-                
-                <span v-if="market_request_state_label != ''">
-                    <span class="">{{ market_request_state_label }}</span>
-                </span>
-                <span v-else>
-                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span> / <span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
-                </span>
-            </div>
-        </div>
+    <div dusk="market-tab-risky"  class="col market-tab market-tab-risky p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
+        <b-row class="justify-content-md-center">
+            <b-col class="market-tab-name market-tab-name">
+                <b-row no-gutters align-v="center" align-h="center">
+                    <b-col v-if="marketRequest.market.is('singles')">
+                        {{ marketRequest.tradable_items.default.title }}&nbsp;
+                    </b-col>
+                    <b-col cols="auto">
+                        <div class="market-tab-strikes">
+                            {{ strike_1 }}
+                            <br>
+                            {{ strike_2 }}
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-col>
+            <b-col class="market-tab-state">
+                <b-row align-v="center" align-h="center" class="h-100">
+                    <b-col v-if="market_request_state_label != ''">
+                        <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
+                    </b-col>
+                    <b-col v-else>
+                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
@@ -26,55 +38,79 @@
         props: {
             marketRequest: {
                 type: UserMarketRequest
+            },
+             no_cares: {
+                type: Array
             }
         },
         watch: {
-            'marketRequest.attributes.state': function(nV, oV) {
-                this.calcMarketState();
-            },
-            'marketRequest.user_markets': function(nV, oV) {
-                this.calcMarketState();
-            },
-            'marketRequest.chosen_user_market': function(nV, oV) {
-                this.calcMarketState();
+            'marketRequest': {
+                handler: function(nV, oV) {
+                    this.calcMarketState();
+                },
+                deep: true
             }
         },
         mixins: [MarketTabMixin],
         data() {
             return {
                 user_market: null,
-                current_negotiation: null,
-
-                user_market_bid: null,
-                user_market_offer: null,
-
                 isActive: false,
             };
         },
         computed: {
+            strike_1: function() {
+                let group = 'default';
+                let func = this.marketRequest.tradable_items[group].is_stock ? 'formatRandQty' : 'splitValHelper';
+                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.risky.strike")] )
+                    + ( this.marketRequest.trade_items[group].choice ? 'ch' : '  ' )
+            },
+            strike_2: function() {
+                let group = this.$root.config("trade_structure.risky.group_2");
+                let func = this.marketRequest.tradable_items[group].is_stock ? 'formatRandQty' : 'splitValHelper';
+                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.risky.strike")] )
+                    + ( this.marketRequest.trade_items[group].choice ? 'ch' : '  ' )
+            },
             marketState: function() {
                 return {
+                    'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',
+                    'trade-negotiation-pending':  this.market_request_state == 'trade-negotiation-pending',
+                    'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
+                    'negotiation-vol': this.market_request_state == 'negotiation-vol',
                     'market-request-grey': this.market_request_state == 'request-grey',
-                    'market-request': this.market_request_state == 'request',
-                    'market-alert': this.market_request_state == 'alert',
+                    'market-request': !this.marketRequest.is_interest  && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
+                    'market-request-vol': this.market_request_state == 'request-vol',
+                    'market-alert': this.marketRequest.attributes.action_needed,
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
                 }
             },
             bidState: function() {
-                return {
-                    'user-action': this.marketRequest.attributes.bid_state == 'action',
+                if(this.marketRequest.chosen_user_market)
+                {
+                    return this.getStateClass(this.current_user_market_negotiation,'bid');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.bid_state == 'action',
+                    }   
                 }
+               
             },
             offerState: function() {
-                return {
-                    'user-action': this.marketRequest.attributes.offer_state == 'action',
+                if(this.marketRequest.chosen_user_market)
+                {
+                    return this.getStateClass(this.current_user_market_negotiation,'offer');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.offer_state == 'action',
+                    }   
                 }
             }
         },
         methods: {
             loadInteractionBar() {
-                console.log("load Bar");
                 this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
@@ -83,12 +119,16 @@
         mounted() {
             // initial setup of states
             this.calcMarketState();
+
             EventBus.$on('interactionClose', (marketRequest) => {
                 this.isActive = false;
             });
             EventBus.$on('interactionChange', (marketRequest) => {
-                if(this.marketRequest !== marketRequest) {
+                if(this.marketRequest.id !== marketRequest.id) {
                     this.isActive = false;
+                }else
+                {
+                    this.isActive = true;
                 }
             });
         }

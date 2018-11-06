@@ -25,7 +25,8 @@ class TradeConfirmationItem extends Model
         "item_id",
         "title",
         "value",
-        "trade_confirmation_group_id"
+        "trade_confirmation_group_id",
+        "is_seller"
     ];
 
 

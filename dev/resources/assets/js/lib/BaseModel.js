@@ -78,15 +78,11 @@ export default class BaseModel {
                     return element.id == update_arr[i].id;
                 });
 
-                if(index == -1){
-                    console.log("add method");
-                    
+                if(index == -1){                    
                     this._relations[key].addMethod(update_arr[i]);
                     //this[key].push(update_arr[i]);    
                                         
                 } else {
-                    console.log("put method");
-
                     this[key][index].update(update_arr[i]);
                 }
             }

@@ -45,7 +45,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import Config from './lib/Config';
 import Market from './lib/Market';
 import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
@@ -186,13 +186,18 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
+            
+            // toggle on html tag too
+            document.documentElement.classList.remove( this.theme_toggle ? 'dark' : 'light' );
+            document.documentElement.classList.add( this.theme_toggle ? 'light' : 'dark' );
+
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },
     watch: {
         'display_markets': function(nv, ov) {
             this.reorderDisplayMarkets(nv);
-        },
+        }
     },
     methods: {
         /**
@@ -250,7 +255,7 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-                console.log("RESPONSE",tradeConfirmationResponse);
+
                 if(tradeConfirmationResponse.status == 200) {
                     // set the available market types
                     tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
@@ -259,8 +264,6 @@ const app = new Vue({
                         return x;
                     });
                    
-
-
                 } else {
                 
                     console.error(err);    
@@ -276,12 +279,8 @@ const app = new Vue({
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
-                    if(!marketType.markets) {
-                        marketType.markets = [];
-                    }
                     marketResponse.data = marketResponse.data.map(x => {
-                        x = new Market(x);
-                        marketType.markets.push(x);   
+                        x = new Market(x);   
                         self.display_markets.push(x);
                         return x;
                     });
@@ -298,6 +297,7 @@ const app = new Vue({
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
+                    console.log("Retrieved Market Requests: ", market.id, marketResponse.data);
                     market.addMarketRequests(marketResponse.data);
                     return marketResponse.data;
                 } else {
@@ -382,7 +382,8 @@ const app = new Vue({
             }
         },
         updateTradeConfirmation(tradeConfirmationData){
-        
+        console.log("update the tradeconfirmation data",tradeConfirmationData)
+
          let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
         
             if(index !== -1)
@@ -401,7 +402,12 @@ const app = new Vue({
                     }
 
                 } else {
-                    this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));
+                    console.log(tradeConfirmationData)
+                    //only keep the interaction if the user can interact with it
+                    if(tradeConfirmationData.can_interact)
+                    {
+                        this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));    
+                    }
                 }
 
             } else {
@@ -544,6 +550,7 @@ const app = new Vue({
         completed_messages: [],
     },
     mounted: function() {
+        Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();
         // load config files
@@ -635,8 +642,10 @@ const app = new Vue({
                     });
                 })
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
+                    console.log(".TradeConfirmationEvent triggerd");
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
+
                         console.log("Got Event 'TradeConfirmationEvent'", packet_data);
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)

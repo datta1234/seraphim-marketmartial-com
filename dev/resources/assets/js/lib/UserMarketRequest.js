@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
+import Config from './Config';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -61,6 +62,12 @@ export default class UserMarketRequest extends BaseModel {
         // register trade_items
         if(options && options.trade_items) {
             this.addTradeItems(options.trade_items);
+        }
+
+        // register tradable_items
+        this.tradable_items = {};
+        if(options && options.tradable_items) {
+            this.setTradableItems(options.tradable_items);
         }
 
         // register quotes
@@ -200,6 +207,27 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
+    *   addTradableItem - add trade item
+    *   @param {} trade_item - trade item object
+    */
+    setTradableItem(group, item) {
+        this.tradable_items[group] = item;
+    }
+
+    /**
+    *   addTradableItems - add array of trade items
+    *   @param {Array} tradable_items - array of trade item objects
+    */
+    setTradableItems(tradable_items) {
+        Object.keys(tradable_items).forEach(trade_group => {
+            Object.keys(tradable_items[trade_group]).forEach(title => {
+                this.setTradableItem(trade_group, tradable_items[trade_group]);
+            });
+
+        });
+    }
+
+    /**
     *   setMarket - Set the parent Market
     *   @param {Market} market - Market object
     */
@@ -215,6 +243,10 @@ export default class UserMarketRequest extends BaseModel {
         return this._market;
     }
 
+    get market() {
+        return this._market;
+    }
+
     /**
     *   actionTaken - Alerts the server that an action has been taken on a Market Request
     *   @return response from the request or the error
@@ -226,13 +258,26 @@ export default class UserMarketRequest extends BaseModel {
             });
         }
         return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', {'action_needed': false})
+            axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', 
+                {
+                    'action_needed': false
+                },
+                {
+                    headers: {
+                        [Config.get('app.ajax.headers.ignore')]: true
+                    }
+                }
+            )
             .then(response => {
                 this.attributes.action_needed = response.data.data.action_needed;
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                if(err.response) {
+                    reject(new Errors(err.response.data));
+                } else {
+                    reject(err);
+                }
             }); 
         });
     }
@@ -283,23 +328,27 @@ export default class UserMarketRequest extends BaseModel {
 
     isTrading()
     {
-        let isTrading = [
+        let tradingStates = [
             "TRADE-NEGOTIATION-SENDER",
             "TRADE-NEGOTIATION-COUNTER",
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
 
-        return isTrading.indexOf(this.attributes.state) > -1 
+        console.log("is trading got called",tradingStates.indexOf(this.attributes.state) > -1,this.is_trading_at_best == false,this.is_trading_at_best,this.is_trading_at_best_closed);
+
+        return tradingStates.indexOf(this.attributes.state) > -1 
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
     }
 
     get is_trading_at_best() {
-        return this.chosen_user_market && this.chosen_user_market.trading_at_best;
+        // console.log("is_trading_at_best ",this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
+        return (this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
     }
 
     get is_trading_at_best_closed() {
-        return this.chosen_user_market && this.chosen_user_market.trading_at_best && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining();
+        // console.log("is_trading_at_best_closed()",(this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining()));
+        return (this.chosen_user_market !=null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining());
     }
 
     canCounterTrade()
@@ -307,7 +356,6 @@ export default class UserMarketRequest extends BaseModel {
         let canCounterTrade = [
             "TRADE-NEGOTIATION-COUNTER"
         ];
-        console.log(this.attributes.state);
         return canCounterTrade.indexOf(this.attributes.state) > -1; 
     }
 

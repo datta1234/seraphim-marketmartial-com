@@ -1,20 +1,18 @@
 <template>
-    <div dusk="index-controller" class="index-controller">
+    <div dusk="option-switch-controller" class="option-switch-controller">
         <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
-        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
+        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="option_switch_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
 <script>
-    import MarketSelection from '../Components/MarketSelectionComponent.vue';
-    import StructureSelection from '../Components/StructureSelectionComponent.vue';
-    import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
-    import Details from '../Components/DetailsComponent.vue';
-    import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
+    import SwitchSelection from '../Components/SwitchComponents/SwitchSelectionComponent.vue';
+    import SwitchDetails from '../Components/SwitchComponents/SwitchDetailsComponent.vue';
+    import SwitchConfirmMarketRequest from '../Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
-        name: 'IndexController',
+        name: 'OptionSwitchController',
         props:{
             'close_modal': {
                 type: Function
@@ -28,30 +26,19 @@
         },
         data() {
             return {
-                index_data: {
-                    market_type_title:'Index Option',
-                    market_type: null,
+                option_switch_data: {
+                    market_type_titles:['Index Option','Single Stock Options'],
+                    market_types: [],
                     market_object: {
-
-                        market:null,
-                        trade_structure: '',
+                        switch_options: null,
+                        trade_structure: 'Option Switch',
                         trade_structure_groups: [],
-                        expiry_dates:[],
-                        details: null,
-
                     },
-                    number_of_dates: 1,
                 },
                 errors: {
                     message: null,
                     data: {
-                        Market:{
-                            messages:[]
-                        },
-                        Structure:{
-                            messages:[]
-                        },
-                        Expiry:{
+                        Switch:{
                             messages:[]
                         },
                         Details:{
@@ -65,11 +52,9 @@
                 },
                 selected_step_component: null,
                 components: {
-                    Market: MarketSelection,
-                    Structure: StructureSelection,
-                    Expiry: ExpirySelection,
-                    Confirm: ConfirmMarketRequest,
-                    Details: Details,
+                    Switch: SwitchSelection,
+                    Confirm: SwitchConfirmMarketRequest,
+                    Details: SwitchDetails,
                 },
                 temp_title: [],
                 submitting_request: true,
@@ -92,7 +77,7 @@
             /**
              * Loads step component 
              */
-            loadStepComponent(step_detail,component_data) {
+            loadStepComponent(step_detail, component_data) {
                 if( step_detail != 'back' ) {
                     this.nextStep();
                     if(step_detail) {
@@ -107,48 +92,40 @@
                 }
                 switch (this.modal_data.step) {
                     case 2:
-                        this.selected_step_component = 'Market';
+                        this.selected_step_component = 'Switch';
                         break;
                     case 3:
-                        this.index_data.market_object.market = component_data ? 
-                            component_data : this.index_data.market_object.market;
-                        this.selected_step_component = 'Structure';
-                        break;
-                    case 4:
-                        this.index_data.market_object.trade_structure = component_data ? 
-                            component_data : this.index_data.market_object.trade_structure;
-                        this.index_data.number_of_dates = 1;
-                        if (this.index_data.market_object.trade_structure == 'Calendar') {
-                            this.index_data.number_of_dates = 2;
+                        if(component_data) {
+                            this.option_switch_data.market_object.switch_options = component_data;
                         }
-                        this.selected_step_component = 'Expiry';                   
-                        break;
-                    case 5:
-                        this.index_data.market_object.expiry_dates = component_data ?
-                            component_data : this.index_data.market_object.expiry_dates;
                         this.selected_step_component = 'Details';
                         break;
-                    case 6:
-                        this.index_data.market_object.details = component_data ?
-                            component_data : this.index_data.market_object.details;
+                    case 4:
+                        if(component_data) {
+                            this.option_switch_data.market_object.switch_options.forEach( (switch_option,index) => {
+                                switch_option["expiration"] = component_data.fields[index]["expiration"];
+                                switch_option["is_selected"] = component_data.fields[index]["is_selected"];
+                                switch_option["quantity"] = component_data.fields[index]["quantity"];
+                                switch_option["strike"] = component_data.fields[index]["strike"];
+                            });
+                        }
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
                         break;
-                    case 7:
+                    case 5:
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.index_data);
             },
             /**
-             * Loads Index MarketType 
+             * Loads Option Switch Market Types
              */
-            loadMarketType() {
+            loadMarketTypes() {
                 if(Array.isArray(this.$root.market_types)) {
-                    this.$root.market_types.forEach((market_type) => {
-                        if(market_type.title == this.index_data.market_type_title) {
-                            this.index_data.market_type = market_type;
+                    this.$root.market_types.forEach((element) => {
+                        if(this.option_switch_data.market_type_titles.includes(element.title)) {
+                            this.option_switch_data.market_types.push(element);
                         }
                     });
                 }
@@ -162,14 +139,18 @@
                 this.submitting_request = false;
                 
                 let new_data = this.formatRequestData();
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.market_object.market.id +'/market-request', new_data)
+                let market_id = this.option_switch_data.market_object.switch_options[0].is_index ?
+                    this.option_switch_data.market_object.switch_options[0].index_market.id
+                    : '4';
+
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ market_id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     // success closes the modal
                     this.close_modal();
+                    
                     // toggle loading
                     EventBus.$emit('loading', 'requestSubmission');
                     this.submitting_request = true;
-
 
                 }).catch( (err) => {
                     // toggle loading
@@ -195,24 +176,54 @@
                 });
             },
             /**
+             * Formats the component data to a format to submit to the api for a new Single Stock Market
+             *
+             * @return {Object} - formatted data object
+             */
+            formatRequestData() {
+                // sets initial object structure
+                let formatted_data = {
+                    trade_structure: this.option_switch_data.market_object.trade_structure,
+                    trade_structure_groups:[]
+                }
+                console.log("Data to format: ", this.option_switch_data);
+                this.option_switch_data.market_object.switch_options.forEach( (element,index) => {
+                    formatted_data.trade_structure_groups.push({
+                        is_selected: element.is_selected,
+                        fields: {
+                            "Expiration Date": element.expiration,
+                            "Strike": element.strike,
+                            "Quantity": element.quantity
+                        }
+                    });
+                    if(element.is_index) {
+                        formatted_data.trade_structure_groups[index].market_id = element.index_market.id;
+                    } else {
+                        formatted_data.trade_structure_groups[index].stock = element.stock_selection.code;
+                    }
+                });
+                return formatted_data;
+            },
+            /**
              * Loads the earliest step correlating to the passed errors and adds the errors
              *  to the correct component error in this.errors.data
              *
              * @params {Object} errors
              */
             loadErrorStep(errors) {
-                this.setLowestStep(5);
+                this.setLowestStep(3);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
                         switch (propArr[2]) {
                             case "market_id":
+                            case "stock":
                                 errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Market.messages.indexOf(element) == -1) {
-                                        this.errors.data.Market.messages.push(element);
+                                    if (this.errors.data.Switch.messages.indexOf(element) == -1) {
+                                        this.errors.data.Switch.messages.push(element);
                                     }
                                 });
-                                this.temp_title.splice(-3);
+                                this.temp_title.splice(-1);
                                 this.setLowestStep(1);
                                 break;
                             case "is_selected":
@@ -221,28 +232,18 @@
                                         this.errors.data.Details.messages.push(element);
                                     }
                                 });
-                                this.setLowestStep(4);
+                                this.setLowestStep(2);
                                 break;
                             case "fields":
-                                if(propArr[3] == 'Expiration Date') {
-                                    errors[prop].forEach( (element, key) => {
-                                        if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
-                                            this.errors.data.Expiry.messages.push(element);
-                                        }
-                                    });
-                                    this.temp_title.splice(-1);
-                                    this.setLowestStep(3);
-                                } else {
-                                    errors[prop].forEach( (element, key) => {
-                                        if (this.errors.data.Details.messages.indexOf(element) == -1) {
-                                            this.errors.data.Details.messages.push(element);
-                                        }
-                                    });
-                                    if (this.errors.data.Details.fields.indexOf(prop) == -1) {
-                                        this.errors.data.Details.fields.push(prop);
+                                errors[prop].forEach( (element, key) => {
+                                    if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                        this.errors.data.Details.messages.push(element);
                                     }
-                                    this.setLowestStep(4);
+                                });
+                                if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                    this.errors.data.Details.fields.push(prop);
                                 }
+                                this.setLowestStep(2);
                                 break;
                             default:
                                 errors[prop].forEach( (element, key) => {
@@ -258,15 +259,14 @@
                                     this.errors.data.Details.messages.push(element);
                                 }
                             });
-                            this.setLowestStep(4);
+                            this.setLowestStep(2);
                         } else {
                             errors[prop].forEach( (element, key) => {
-                                if (this.errors.data.Structure.messages.indexOf(element) == -1) {
-                                    this.errors.data.Structure.messages.push(element);
+                                if (this.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                    this.errors.data.Confirm.messages.push(element);
                                 }
                             });
-                            this.temp_title.splice(-2);
-                            this.setLowestStep(2);
+                            this.setLowestStep(3);
                         }
                     }
                 }
@@ -285,30 +285,6 @@
                 }
             },
             /**
-             * Formats the component data to a format to submit to the api for a new Index Market
-             *
-             * @return {Object} - formatted data object
-             */
-            formatRequestData() {
-                // sets initial object structure
-                let formatted_data = {
-                    trade_structure: this.index_data.market_object.trade_structure,
-                    trade_structure_groups:[]
-                }
-                this.index_data.market_object.details.fields.forEach( (element,key) => {
-                    formatted_data.trade_structure_groups.push({
-                        is_selected: element.is_selected,
-                        market_id: this.index_data.market_object.market.id,
-                        fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.index_data.market_object.expiry_dates[key] : this.index_data.market_object.expiry_dates[0] ),
-                            Strike: element.strike,
-                            Quantity: element.quantity
-                        }
-                    });
-                });
-                return formatted_data;
-            },
-            /**
              * Casting a passed string to moment with a new format
              *
              * @param {string} date_string
@@ -318,9 +294,9 @@
             },
         },
         mounted() {
-            this.modal_data.title = ["Index"];
-            this.loadMarketType();
-            this.selected_step_component = 'Market';
+            this.modal_data.title = ["Option Switch"];
+            this.loadMarketTypes();
+            this.selected_step_component = 'Switch';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;
         }

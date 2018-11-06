@@ -11338,12 +11338,40 @@ table.table {
   background-color: #afafaf;
 }
 
+#trade_html {
+  position: relative;
+  height: 100%;
+}
+
+#trade_html.light {
+  background-color: #D3D8DC;
+}
+
+#trade_html.dark {
+  background-color: #191919;
+}
+
+#trade_body {
+  position: relative;
+  height: 100%;
+  padding-bottom: 65px;
+  margin-bottom: 0px;
+}
+
 #trade_app {
   position: relative;
+  height: 100%;
 }
 
 #trade_app .trade-screen-wrapper {
   position: relative;
+  height: 100%;
+  padding-bottom: 65px;
+  margin-bottom: 0px;
+}
+
+#trade_app .trade-section {
+  overflow-y: auto;
 }
 
 #trade_app .trade-section.light-theme {
@@ -11410,6 +11438,10 @@ table.table {
 #trade_app span,
 #trade_app .market-tab {
   font-family: "Muli-Bold";
+}
+
+#trade_app .user-markets {
+  min-height: 40%;
 }
 
 #trade_app .user-market {
@@ -16810,6 +16842,7 @@ readers do not read off random characters that represent icons */
   background-color: #1a333f;
   -webkit-box-shadow: 0px 1px 6px 3px black;
           box-shadow: 0px 1px 6px 3px black;
+  height: 58px;
 }
 
 #mainNav .nav-item > a {
@@ -17197,6 +17230,11 @@ input:checked + .slider:before {
   border-left: 2px solid #BB1D1D;
 }
 
+.trade-section.light-theme .market-tab .market-tab-strikes,
+.trade-section.dark-theme .market-tab .market-tab-strikes {
+  text-align: left;
+}
+
 .trade-section.light-theme .market-tab.market-request-grey,
 .trade-section.dark-theme .market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;
@@ -17290,18 +17328,23 @@ input:checked + .slider:before {
   width: 0px;
 }
 
+.interaction-bar-wrapper .interaction-bar .interaction-scrollable {
+  height: 100%;
+}
+
 .interaction-bar-wrapper .interaction-bar .interaction-content {
   width: 0px;
   opacity: 0;
-  height: 100%;
+  height: auto;
   padding: 0px;
   margin: 0px;
   padding: 0px;
   float: left;
   color: #fff;
+  background-color: #000705;
   position: relative;
-  padding-bottom: 150px;
-  margin-bottom: 150px;
+  top: 58px;
+  bottom: 65px;
 }
 
 .interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {

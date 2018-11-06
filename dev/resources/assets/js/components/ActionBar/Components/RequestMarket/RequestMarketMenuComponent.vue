@@ -26,15 +26,23 @@
 </template>
 
 <script>
+    // Controllers
     import IndexController from './Controllers/IndexControllerComponent.vue';
     import SingleController from './Controllers/SingleControllerComponent.vue';
+    import OptionSwitchController from './Controllers/OptionSwitchControllerComponent.vue';
+    import EFPController from './Controllers/EFPControllerComponent.vue';
+    import RollsController from './Controllers/RollsControllerComponent.vue';
+    // Components
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
     import StockSelection from './Components/StockSelectionComponent.vue';
+    import SwitchSelection from './Components/SwitchComponents/SwitchSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     import Details from './Components/DetailsComponent.vue';
+    import SwitchDetails from './Components/SwitchComponents/SwitchDetailsComponent.vue';
     import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
+    import SwitchConfirmMarketRequest from './Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
     export default {
         name: 'RequestMarketMenu',
@@ -42,12 +50,18 @@
             StepSelection,
             IndexController,
             SingleController,
+            OptionSwitchController,
+            EFPController,
+            RollsController,
             MarketSelection,
             StockSelection,
+            SwitchSelection,
             StructureSelection,
             ExpirySelection,
             Details,
+            SwitchDetails,
             ConfirmMarketRequest,
+            SwitchConfirmMarketRequest,
         },
         props:{
           
@@ -64,7 +78,10 @@
                 controllers: {
                     Selections: StepSelection,
                     Index: IndexController,
-                    Single: SingleController
+                    Single: SingleController,
+                    OptionSwitch: OptionSwitchController,
+                    EFP: EFPController,
+                    Rolls: RollsController
                 },
             };
         },

@@ -17,9 +17,21 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-
-    <template v-if="!is_trading">
-        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+    <template v-if="last_is_self">
+        <p class="text-center">
+            Levels Sent, Awaiting response
+        </p>
+    </template>
+    <template v-if="!is_trading && !last_is_self">
+        <ibar-market-negotiation-contracts 
+            class="mb-1" v-if="can_negotiate" 
+            @validate-proposal="validateProposal" 
+            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
+            :check-invalid="check_invalid" 
+            :current-negotiation="last_negotiation" 
+            :market-negotiation="proposed_user_market_negotiation"
+        >
+        </ibar-market-negotiation-contracts>
 
         <ibar-trade-at-best-negotiation 
          v-if="!can_negotiate && is_trading_at_best"
@@ -74,7 +86,7 @@
 
                         <b-button v-active-request class="w-100 mt-1"
                           v-if="!maker_quote" 
-                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
+                          :disabled="check_invalid || server_loading" 
                           size="sm" 
                           dusk="ibar-action-send" 
                           variant="primary" 
@@ -90,7 +102,7 @@
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -104,7 +116,7 @@
                          dusk="ibar-action-send" 
                          variant="primary" 
                          @click="spinNegotiation()">
-                            Spin
+                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
                         </b-button>
                     </b-col>
                 </b-row>
@@ -132,13 +144,13 @@
                 </b-row>
             </b-col>
         </b-row>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
     </template>
     
             
-
     <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+
     <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
-    <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -222,6 +234,12 @@
             }
         },
         computed: {
+            'last_is_self': function() {
+                if(this.last_negotiation) {
+                    return this.last_negotiation.is_my_org;
+                }
+                return false;
+            },
             'meet_in_the_middle_proposed': function(){
                 return this.proposed_user_market_negotiation.cond_buy_mid != null;
             },
@@ -241,9 +259,12 @@
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
             },
             'market_title': function() {
-                return this.marketRequest.getMarket().title+" "
-                +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+" "
-                +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
+                return [
+                    this.marketRequest.tradable_items.default.title,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")],
+                    this.marketRequest.trade_structure,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")]
+                ].join(' ');
             },
             'market_time': function() {
                 return this.marketRequest.updated_at.format("HH:mm");
@@ -432,6 +453,7 @@
                 
                 this.proposed_user_market.setMarketRequest(this.marketRequest);
                 // this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                console.log(this.proposed_user_market);
 
                 this.server_loading = true;
                 // save
@@ -470,7 +492,8 @@
                        this[k] = defaults[k]; 
                     }
                 });
-
+                
+                this.$forceUpdate();
             },
             setUpProposal(){
 
@@ -521,7 +544,7 @@
                     this.proposed_user_market_negotiation.bid_qty = this.maker_quote.bid_qty;  
                 }
                 else
-                {                    
+                {
                     this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
                     this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
                 }

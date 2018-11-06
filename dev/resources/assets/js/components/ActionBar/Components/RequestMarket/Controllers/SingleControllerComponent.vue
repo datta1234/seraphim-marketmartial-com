@@ -12,7 +12,6 @@
     import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
-    import Market from '../../../../../lib/Market';
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
         name: 'SingleController',
@@ -35,7 +34,7 @@
                     market_object: {
                         stock: null,
                         stock_code: null,
-                        market:null,
+                        //market:null,
                         trade_structure: '',
                         trade_structure_groups: [],
                         expiry_dates:[],
@@ -103,8 +102,9 @@
                 } else {
                     if (this.modal_data.title[0] =='Confirm Market Request') {
                         this.modal_data.title = this.temp_title;
+                    } else {
+                        this.modal_data.title.pop();
                     }
-                    this.modal_data.title.pop();
                 }
                 switch (this.modal_data.step) {
                     case 2:
@@ -142,17 +142,31 @@
                 }
             },
             /**
-             * Loads Singles Market
+             * Loads Singles MarketType
              */
-            loadMarket() {
+            loadMarketType() {
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((element) => {
                         if(element.title == this.stock_data.market_type_title) {
                             this.stock_data.market_type = element;
-                            this.stock_data.market_object.market = element.markets[0];
                         }
                     });
                 }
+            },
+            /**
+             * Loads Markets from API
+             */
+            loadMarkets() {
+                axios.get(axios.defaults.baseUrl + '/trade/market-type/'+this.stock_data.market_type.id+'/market')
+                .then(marketsResponse => {
+                    if(marketsResponse.status == 200) {
+                        this.stock_data.market_object.market = marketsResponse.data[0];
+                    } else {
+                        console.error(err);    
+                    }
+                }, err => {
+                    console.error(err);
+                });
             },
             /**
              * Saves Market Request with the completed composed data and then closes the modal
@@ -226,6 +240,7 @@
              * @params {Object} errors
              */
             loadErrorStep(errors) {
+                this.setLowestStep(5);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
@@ -319,7 +334,8 @@
         },
         mounted() {
             this.modal_data.title = ["Stock"];
-            this.loadMarket();
+            this.loadMarketType();
+            this.loadMarkets();
             this.selected_step_component = 'Stock';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;

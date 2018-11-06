@@ -1,20 +1,19 @@
 <template>
-    <div dusk="index-controller" class="index-controller">
+    <div dusk="efp-controller" class="efp-controller">
         <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
-        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="index_data" :callback="loadStepComponent"></component>
+        <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="controller_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
 <script>
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
-    import StructureSelection from '../Components/StructureSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
     import Details from '../Components/DetailsComponent.vue';
-    import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
+    import ConfirmMarketRequest from '../Components/NewConfirmMarketRequestComponent.vue';
 
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
-        name: 'IndexController',
+        name: 'EFPController',
         props:{
             'close_modal': {
                 type: Function
@@ -28,27 +27,24 @@
         },
         data() {
             return {
-                index_data: {
+                controller_data: {
                     market_type_title:'Index Option',
                     market_type: null,
                     market_object: {
 
                         market:null,
-                        trade_structure: '',
+                        trade_structure: 'EFP',
                         trade_structure_groups: [],
-                        expiry_dates:[],
+                        expiry_dates: [],
                         details: null,
-
                     },
                     number_of_dates: 1,
+                    request_market_id: 5,
                 },
                 errors: {
                     message: null,
                     data: {
                         Market:{
-                            messages:[]
-                        },
-                        Structure:{
                             messages:[]
                         },
                         Expiry:{
@@ -66,7 +62,6 @@
                 selected_step_component: null,
                 components: {
                     Market: MarketSelection,
-                    Structure: StructureSelection,
                     Expiry: ExpirySelection,
                     Confirm: ConfirmMarketRequest,
                     Details: Details,
@@ -110,45 +105,38 @@
                         this.selected_step_component = 'Market';
                         break;
                     case 3:
-                        this.index_data.market_object.market = component_data ? 
-                            component_data : this.index_data.market_object.market;
-                        this.selected_step_component = 'Structure';
-                        break;
-                    case 4:
-                        this.index_data.market_object.trade_structure = component_data ? 
-                            component_data : this.index_data.market_object.trade_structure;
-                        this.index_data.number_of_dates = 1;
-                        if (this.index_data.market_object.trade_structure == 'Calendar') {
-                            this.index_data.number_of_dates = 2;
-                        }
+                        this.controller_data.market_object.market = component_data ? 
+                            component_data : this.controller_data.market_object.market;
+                        this.controller_data.number_of_dates = 1;
                         this.selected_step_component = 'Expiry';                   
                         break;
-                    case 5:
-                        this.index_data.market_object.expiry_dates = component_data ?
-                            component_data : this.index_data.market_object.expiry_dates;
+                    case 4:
+                        this.controller_data.market_object.expiry_dates = component_data ?
+                            component_data : this.controller_data.market_object.expiry_dates;
                         this.selected_step_component = 'Details';
                         break;
-                    case 6:
-                        this.index_data.market_object.details = component_data ?
-                            component_data : this.index_data.market_object.details;
+                    case 5:
+                        this.controller_data.market_object.details = component_data ?
+                            component_data : this.controller_data.market_object.details;
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
                         break;
-                    case 7:
+                    case 6:
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.index_data);
+                console.log("Current Data: ", this.controller_data);
             },
             /**
              * Loads Index MarketType 
              */
             loadMarketType() {
+                console.log("Market Types",this.$root.market_types);
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((market_type) => {
-                        if(market_type.title == this.index_data.market_type_title) {
-                            this.index_data.market_type = market_type;
+                        if(market_type.title == this.controller_data.market_type_title) {
+                            this.controller_data.market_type = market_type;
                         }
                     });
                 }
@@ -160,9 +148,7 @@
                 // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
-                
-                let new_data = this.formatRequestData();
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.market_object.market.id +'/market-request', new_data)
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData())
                 .then(newMarketRequestResponse => {
                     // success closes the modal
                     this.close_modal();
@@ -201,7 +187,7 @@
              * @params {Object} errors
              */
             loadErrorStep(errors) {
-                this.setLowestStep(5);
+                this.setLowestStep(4);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
@@ -212,16 +198,8 @@
                                         this.errors.data.Market.messages.push(element);
                                     }
                                 });
-                                this.temp_title.splice(-3);
+                                this.temp_title.splice(-2);
                                 this.setLowestStep(1);
-                                break;
-                            case "is_selected":
-                                errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Details.messages.indexOf(element) == -1) {
-                                        this.errors.data.Details.messages.push(element);
-                                    }
-                                });
-                                this.setLowestStep(4);
                                 break;
                             case "fields":
                                 if(propArr[3] == 'Expiration Date') {
@@ -231,7 +209,7 @@
                                         }
                                     });
                                     this.temp_title.splice(-1);
-                                    this.setLowestStep(3);
+                                    this.setLowestStep(2);
                                 } else {
                                     errors[prop].forEach( (element, key) => {
                                         if (this.errors.data.Details.messages.indexOf(element) == -1) {
@@ -241,7 +219,7 @@
                                     if (this.errors.data.Details.fields.indexOf(prop) == -1) {
                                         this.errors.data.Details.fields.push(prop);
                                     }
-                                    this.setLowestStep(4);
+                                    this.setLowestStep(3);
                                 }
                                 break;
                             default:
@@ -252,22 +230,11 @@
                                 });
                         }
                     } else {
-                        if (prop.indexOf('trade_structure_groups') != -1) {
-                            errors[prop].forEach( (element, key) => {
-                                if (this.errors.data.Details.messages.indexOf(element) == -1) {
-                                    this.errors.data.Details.messages.push(element);
-                                }
-                            });
-                            this.setLowestStep(4);
-                        } else {
-                            errors[prop].forEach( (element, key) => {
-                                if (this.errors.data.Structure.messages.indexOf(element) == -1) {
-                                    this.errors.data.Structure.messages.push(element);
-                                }
-                            });
-                            this.temp_title.splice(-2);
-                            this.setLowestStep(2);
-                        }
+                        errors[prop].forEach( (element, key) => {
+                            if (this.errors.data.Confirm.messages.indexOf(element) == -1) {
+                                this.errors.data.Confirm.messages.push(element);
+                            }
+                        });
                     }
                 }
                 if(this.errors.message != null) {
@@ -276,6 +243,7 @@
                 this.modal_data.title = this.modal_data.step > 4 ? this.modal_data.title : this.temp_title;
                 this.loadStepComponent();
             },
+
             /**
              * Sets a new lowest step if the passed step is lower than the current lowest step
              */
@@ -291,22 +259,16 @@
              */
             formatRequestData() {
                 // sets initial object structure
-                let formatted_data = {
-                    trade_structure: this.index_data.market_object.trade_structure,
-                    trade_structure_groups:[]
-                }
-                this.index_data.market_object.details.fields.forEach( (element,key) => {
-                    formatted_data.trade_structure_groups.push({
-                        is_selected: element.is_selected,
-                        market_id: this.index_data.market_object.market.id,
+                return {
+                    trade_structure: this.controller_data.market_object.trade_structure,
+                    trade_structure_groups: [{
+                        market_id: this.controller_data.market_object.market.id,
                         fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.index_data.market_object.expiry_dates[key] : this.index_data.market_object.expiry_dates[0] ),
-                            Strike: element.strike,
-                            Quantity: element.quantity
-                        }
-                    });
-                });
-                return formatted_data;
+                            "Expiration Date": this.castToMoment( this.controller_data.market_object.expiry_dates[0] ),
+                            Quantity: this.controller_data.market_object.details.fields[0].quantity,
+                        }    
+                    }]
+                }
             },
             /**
              * Casting a passed string to moment with a new format
@@ -318,7 +280,7 @@
             },
         },
         mounted() {
-            this.modal_data.title = ["Index"];
+            this.modal_data.title = ["EFP"];
             this.loadMarketType();
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);

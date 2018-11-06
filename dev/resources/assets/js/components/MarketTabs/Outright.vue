@@ -1,19 +1,29 @@
 <template>
     <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
-        <div class="row justify-content-md-center">
-            <div class="col market-tab-name market-tab-name">
-                    {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}  
-            </div>
-            <div class="col market-tab-state">
-                
-                <span v-if="market_request_state_label != ''">
-                    <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
-                </span>
-                <span v-else>
-                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
-                </span>
-            </div>
-        </div>
+        <b-row class="justify-content-md-center">
+            <b-col class="market-tab-name market-tab-name">
+                <b-row no-gutters align-v="center" align-h="center">
+                    <b-col v-if="marketRequest.market.is('singles')">
+                        {{ marketRequest.tradable_items.default.title }}&nbsp;
+                    </b-col>
+                    <b-col cols="auto">
+                        <div class="market-tab-strikes">
+                            {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-col>
+            <b-col class="market-tab-state">
+                <b-row align-v="center" align-h="center" class="h-100">
+                    <b-col v-if="market_request_state_label != ''">
+                        <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
+                    </b-col>
+                    <b-col v-else>
+                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
@@ -87,7 +97,7 @@
         },
         methods: {
             loadInteractionBar() {
-               this.toggleActionTaken();
+                this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }

@@ -1,16 +1,9 @@
 <template>
-    <div dusk="detail" class="step-selections">
+    <div dusk="details" class="details">
         <b-container fluid>
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row>
-                                </b-row>
-                            </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                
-                            </b-col>
 						<b-row v-if="display.show_expiry" align-h="center">
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
@@ -60,7 +53,7 @@
                             </b-col>
                         </b-row>
 
-						<b-row align-h="center">
+						<b-row v-if="display.has_strike" align-h="center">
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
         							<b-col cols="3">
@@ -164,6 +157,7 @@
             	display:{
             		show_expiry: false,
             		disable_choice: false,
+                    has_strike: true,
             	},
             	chosen_option: null,
                 form_data: {
@@ -205,28 +199,39 @@
         },
         mounted() {
     		let quantity_default = this.data.market_object.stock ? 50 : 500;
-    		this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
+            this.display.has_strike = true;
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             		this.display.disable_choice = true,
             		this.chosen_option = null;
             		break;
             	case 'Risky':
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             		this.display.disable_choice = true,
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             		this.display.show_expiry = true,
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.chosen_option = 0;
             		break;
+                case 'EFP':
+                case 'Rolls':
+                    this.form_data.fields.push({is_selected:true,quantity: quantity_default});
+                    this.display.disable_choice = true,
+                    this.display.has_strike = false;
+                    this.chosen_option = null;
+                    break;
             	default:
 
             }

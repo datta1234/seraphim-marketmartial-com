@@ -42,10 +42,19 @@ EventBus.$on('loading', (type, state) => {
         break;
         case "requestSubmission":
             EventBus.$emit("requestSubmissionLoaded", state);
+       case "confirmationSubmission":
+            EventBus.$emit("confirmationSubmissionLoaded", state);
+        break;
+        case "requestMarkets":
+            EventBus.$emit("requestMarketsLoaded", state);
         break;
     }
 });
 
 EventBus.$on('theme', (state) => {
     EventBus.$emit("toggleTheme", state);
+});
+
+EventBus.$on('force-display-update', (val) => {
+    EventBus.$emit('display-update-forced', val);
 });

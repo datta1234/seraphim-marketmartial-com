@@ -47,7 +47,7 @@ class TradeStructureTableSeeder extends Seeder
                         if(isset(($group['trade_confirmation_group']['options'])) && isset($group['trade_confirmation_group']['options']['items']))
                         {
                                 $optionGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
-                                    'title' => "Options Group",
+                                    'title' => $group['trade_confirmation_group']['options']['title'],
                                     'trade_structure_id' => $tradeStructureModel->id,
                                     'force_select'=> null,
                                     'trade_structure_group_id'=>$tradeStructureGroupModel->id,
@@ -68,7 +68,7 @@ class TradeStructureTableSeeder extends Seeder
                         if(isset(($group['trade_confirmation_group']['futures'])) && isset($group['trade_confirmation_group']['futures']['items']))
                         {
                                 $optionGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
-                                    'title' => "Futures Group",
+                                    'title' => $group['trade_confirmation_group']['futures']['title'],
                                     'trade_structure_id' => $tradeStructureModel->id,
                                     'force_select'=> null,
                                     'trade_structure_group_id'=>$tradeStructureGroupModel->id,
