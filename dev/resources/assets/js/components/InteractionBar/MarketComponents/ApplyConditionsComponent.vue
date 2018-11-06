@@ -34,7 +34,8 @@
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content">
                                     <b-form-radio-group v-if="child.value.constructor === Array"
-                                                         v-active-request
+                                                        v-active-request
+                                                        v-model="marketNegotiation[child.alias]"
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
                                                         v-on:change="e => setCondition(child.alias, e, c_group)"
@@ -46,7 +47,8 @@
 
                         <div class="ibar-condition-panel-content text-left" v-else>
                             <b-form-radio-group v-if="condition.value.constructor === Array"
-                                                 v-active-request
+                                                v-active-request
+                                                v-model="marketNegotiation[condition.alias]"
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
                                                 v-on:change="e => setCondition(condition.alias, e, c_group)"
@@ -148,6 +150,7 @@
                 return true;
             },
             onToggleClick(condition, group) {
+                console.log("onToggleClick", condition, group, this.marketNegotiation);
                 if(condition.children) {
                     condition.children.forEach(child => {
                         if(typeof child.value !== 'undefined') {
@@ -182,19 +185,21 @@
                 }
             },
             setCondition(condition, value, group) {
+                console.log("setCondition", condition, value, group);
+                let default_val = typeof condition.default_value !== 'undefined' ? condition.default_value : null;
                 this.resetConditions(group, value.ignores);
                 switch(value.constructor) {
                     case Object:
-                        this.marketNegotiation[condition.alias] = condition.default_value === null ? value.value : condition.default_value;
+                        this.marketNegotiation[condition.alias] = default_val === null ? value.value : default_val;
                         if(value.sets) {
                             value.sets.forEach(v => {
-                                this.marketNegotiation[v.alias] = condition.default_value === null ? v.value : condition.default_value;
+                                this.marketNegotiation[v.alias] = default_val === null ? v.value : default_val;
                             });
                         }
                     break;
                     case Boolean:
                     default:
-                        this.marketNegotiation[condition.alias] = condition.default_value === null ? value : condition.default_value;
+                        this.marketNegotiation[condition.alias] = default_val === null ? value : default_val;
                 }
                 this.updateShownGroups();
             },
