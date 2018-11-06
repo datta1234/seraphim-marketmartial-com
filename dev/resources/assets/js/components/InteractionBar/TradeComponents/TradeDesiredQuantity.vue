@@ -146,7 +146,7 @@
         },
         methods: {
           reset() {
-                 this.is_offer = null;
+                 this.is_offer = this.isOffer;
                  this.confirmed =false;
                  this.tradeNegotiation = new TradeNegotiation();
                  this.server_loading = false;
