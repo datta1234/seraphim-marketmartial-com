@@ -78,13 +78,19 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
-        return $user->orgnisation_id === $userMarket->user->orgnisation_id 
-            && $userMarket->userMarketRequest->chosenUserMarket()->exists();
+        return $user->organisation_id === $userMarket->user->organisation_id 
+            && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
 
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
         $current_org_id = $user->organisation_id;
+
+        // Cant Negotiate With Self
+        // if($userMarket->lastNegotiation->user->organisation_id == $current_org_id) {
+        //     return false;
+        // }
+
         // Cant respond to negotiation if FoK
         if($userMarket->lastNegotiation->isFoK()) {
             // only if its killed

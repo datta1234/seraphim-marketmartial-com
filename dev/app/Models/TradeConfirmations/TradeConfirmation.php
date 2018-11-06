@@ -166,9 +166,11 @@ class TradeConfirmation extends Model
 
         $organisation->notify("trade_confirmation_store",$message,true);
         
+        \Log::info(["the organisation send",$sendOrg->id]);
         $stream = new Stream(new TradeConfirmationEvent($this,$sendOrg));
         $stream->run();
 
+        \Log::info(["the organisation recieving",$receiveOrg->id]);
         $stream = new Stream(new TradeConfirmationEvent($this, $receiveOrg));
         $stream->run();        
     }
@@ -176,17 +178,18 @@ class TradeConfirmation extends Model
     public function preFormatted()
     {
         $organisation = $this->resolveOrganisation();
-        
+        $is_sender  = $organisation->id == $this->sendUser->organisation_id;
+
         return [
             'id'                        => $this->id,
-            'organisation'              => rand(1,100),//$organisation ? $organisation->title : null,
+            'organisation'              =>  $organisation ? $organisation->title : null,
 
             'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-            'option_groups'             => $this->optionGroups->map(function($item){
-                return $item->preFormatted();
+            'option_groups'             => $this->optionGroups->map(function($item) use ($is_sender){
+                return $item->preFormatted($is_sender);
             })->toArray(),
-            'future_groups'           => $this->futureGroups->map(function($item):array{
+            'future_groups'           => $this->futureGroups->map(function($item){
                 return $item->preFormatted();
             })->toArray(),
             'market_request_id'         => $this->marketRequest->id,
@@ -219,12 +222,13 @@ class TradeConfirmation extends Model
         $is_reciever = $current_org_id == $this->recievingUser->organisation->id;
         $senderStatuses = [1,3];
         $receiverStatuses = [2,5];
+        
        if($is_sender)
        {
            return  in_array($this->trade_confirmation_status_id,$senderStatuses);
        }else if($is_reciever)
        {
-            return in_array($this->trade_confirmation_status_id,$senderStatuses);
+            return in_array($this->trade_confirmation_status_id,$receiverStatuses);
        }
 
     }
@@ -661,7 +665,7 @@ class TradeConfirmation extends Model
                 break;
             }
 
-            if($item->title == "Gross Premiums" || $item->title =="Net Premiums")
+            if($item->title =="Net Premiums")
             {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,

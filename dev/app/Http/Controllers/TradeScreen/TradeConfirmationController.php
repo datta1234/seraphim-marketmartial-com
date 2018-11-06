@@ -19,6 +19,7 @@ class TradeConfirmationController extends Controller
     {
     	$tradeConfirmation->updateGroups($request->input('structure_groups'));    	
         $tradeConfirmation->phaseTwo();
+        
         $data = $tradeConfirmation->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {

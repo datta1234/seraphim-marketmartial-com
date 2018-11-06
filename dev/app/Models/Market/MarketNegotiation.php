@@ -359,6 +359,15 @@ class MarketNegotiation extends Model
     }
 
     /**
+    * test if is RepeatATW
+    * @return Boolean
+    */
+    public function isRepeatATWRepeat()
+    {
+        return $this->marketNegotiationParent &&  $this->marketNegotiationParent->cond_is_repeat_atw !== null; 
+    }
+
+    /**
     * test if is FoK
     * @return Boolean
     */
@@ -718,6 +727,7 @@ class MarketNegotiation extends Model
                 && !$this->isTradeAtBest() 
                 && !$this->isTradeAtBestOpen() 
                 && !$this->isRepeatATW()
+                && !$this->isRepeatATWRepeat()
                 && !$this->isFoK()
             ) {
                 return "SPIN";
@@ -796,11 +806,14 @@ class MarketNegotiation extends Model
                     $newMarketNegotiation->save();
                 }
 
+                /*
+                * a trade has occured so generate the required trade confirmation
+                */
                 if($tradeNegotiation->traded)
                 {
                    $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
                    $message = "Congrats on the trade! Complete the booking in the confirmation tab";
-                   $organisation = $tradeNegotiation->recievingUser->organisation;
+                   $organisation = $tradeConfirmation->sendUser->organisation;
                    $tradeConfirmation->notifyConfirmation($organisation,$message);
                 }
 

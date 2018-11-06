@@ -73,11 +73,10 @@
             };
         },
         methods: {
-            'is_empty': function(value){
+            'is_empty': function(value) {
                 return value === undefined || value === null || value === '';
             },
             'check_invalid':function() {
-                return false;
                 let invalid_states = {
                     all_empty: false,
                     bid_pair: false,

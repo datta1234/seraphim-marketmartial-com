@@ -91,4 +91,26 @@ export default class UserMarketQuote extends BaseModel {
             }); 
         });
     }
+
+
+     /**
+    *  delete
+    */
+    delete() {
+        // catch not assigned to a market request yet!
+        if(this._user_market_request == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors(["Invalid Market Request"]));
+            });
+        }
+        return new Promise((resolve, reject) => {
+            return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this._user_market_request.id+"/user-market/"+this.id)
+            .then(response => {
+               resolve(response);
+            })
+            .catch(err => {
+                reject(new Errors(err.response.data));
+            });
+        });
+    }
 }

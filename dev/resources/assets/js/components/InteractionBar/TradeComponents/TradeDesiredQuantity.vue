@@ -28,11 +28,11 @@
                  </b-col>
                </b-row>
                <b-row>
-                 <b-col cols="6">
-                      <b-btn v-active-request variant="danger"  size="sm" @click="cancel()">Cancel</b-btn>
+                 <b-col cols="12">
+                      <b-btn v-active-request variant="danger" block @click="cancel()">Cancel</b-btn>
                  </b-col>
-                 <b-col cols="6">
-                       <b-btn v-active-request variant="primary" size="sm" @click="confirmed = true">{{ btnText }}</b-btn>
+                 <b-col cols="12">
+                       <b-btn class="mt-2" v-active-request variant="primary" block @click="confirmed = true">{{ btnText }}</b-btn>
                  </b-col>
               </b-row>
             </template>
@@ -146,7 +146,7 @@
         methods: {
             cancel(){
                 this.$emit('close');
-                this.is_offer = null;
+                this.is_offer = this.isOffer;
                 this.confirmed = false;
             },
            storeTradeNegotiation(){
@@ -158,7 +158,7 @@
                     this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
-                    this.is_offer = null;
+                    this.is_offer = this.isOffer;
                     this.confirmed = false;
                 })
                 .catch(err => {

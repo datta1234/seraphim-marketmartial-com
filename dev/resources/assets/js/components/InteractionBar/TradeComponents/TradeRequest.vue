@@ -113,6 +113,12 @@
             return this.marketNegotiation.getLastTradeNegotiation();
         }
     },
+    watch: {
+        'marketNegotiation': function() {
+            this.liftOpen = false;
+            this.hitOpen = false;
+        }
+    },
     methods: {
         selectOption(isOffer)
         {

@@ -110,6 +110,18 @@ class MarketNegotiationController extends Controller
         // Handle FOK kill
         if($marketNegotiation->isFoK()) {
             $success = $marketNegotiation->kill(\Auth::user());
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".killed",
+                    "FoK killed by counter", 
+                    10
+                );
+            $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".kill",
+                    "FoK killed", 
+                    10
+                );
             $message = "FoK Killed";
         }
 

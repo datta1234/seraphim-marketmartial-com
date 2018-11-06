@@ -314,6 +314,11 @@ class UserMarket extends Model
         $marketNegotiation = $oldNegotiation->replicate();
         $marketNegotiation->is_repeat = true;
 
+        // if its a repeat ATW just repeat it, dont repeat the condition
+        if($marketNegotiation->isRepeatATW()) {
+            $marketNegotiation->cond_is_repeat_atw = null;
+        }
+
         $marketNegotiation->user_id = $user->id;
         $counterNegotiation = $this->findCounterNegotiation($user);
 
