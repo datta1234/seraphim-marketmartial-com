@@ -19,7 +19,6 @@ class TradeNegotiationController extends Controller
      */
     public function store(TradeNegotiationStoreRequest $request,MarketNegotiation $marketNegotiation)
     {
-        dd("here");
         $user = $request->user();
         $this->authorize('addTradeNegotiation',$marketNegotiation);
         $tradeNegotiation = $marketNegotiation->addTradeNegotiation($user,$request->all());
