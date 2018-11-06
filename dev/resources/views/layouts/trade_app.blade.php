@@ -72,7 +72,7 @@
     <title>Market Martial</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
     
     <!-- Scripts -->
     <script>
@@ -92,7 +92,7 @@
     @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/trade-screen.js') }}"></script>
+    <script src="{{ mix('js/trade-screen.js') }}"></script>
     <script type="text/javascript">function doABarrelRoll(){var a="-webkit-",b='transform:rotate(1turn);',c='transition:4s;';document.head.innerHTML+='<style id="doABarrelRoll">body{'+a+b+a+c+b+c+'}</style>';setTimeout(function(){var element = document.getElementById('doABarrelRoll');element.parentNode.removeChild(element);}, 4000);}</script>
 </body>
 </html>

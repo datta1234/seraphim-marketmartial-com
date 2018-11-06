@@ -67,7 +67,7 @@
     <title>Market Martial</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -108,7 +108,7 @@
     @include('layouts.elements.footer')
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/public.js') }}"></script>
+    <script src="{{ mix('js/public.js') }}"></script>
     @yield('footer-scripts')
 </body>
 </html>
