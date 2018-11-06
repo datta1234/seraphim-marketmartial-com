@@ -2,7 +2,8 @@
     <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
         <div class="row justify-content-md-center">
             <div class="col market-tab-name market-tab-name">
-                    {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}  
+                <span v-if="marketRequest.market.is('singles')">{{ marketRequest.tradable_items.default.title }}&nbsp;</span>
+                <span>{{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}</span>
             </div>
             <div class="col market-tab-state">
                 

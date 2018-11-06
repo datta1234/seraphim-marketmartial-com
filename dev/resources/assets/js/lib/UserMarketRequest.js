@@ -64,6 +64,12 @@ export default class UserMarketRequest extends BaseModel {
             this.addTradeItems(options.trade_items);
         }
 
+        // register tradable_items
+        this.tradable_items = {};
+        if(options && options.tradable_items) {
+            this.setTradableItems(options.tradable_items);
+        }
+
         // register quotes
         if(options && options.quotes) {
             this.addUserMarketQuotes(options.quotes);
@@ -201,6 +207,27 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
+    *   addTradableItem - add trade item
+    *   @param {} trade_item - trade item object
+    */
+    setTradableItem(group, item) {
+        this.tradable_items[group] = item;
+    }
+
+    /**
+    *   addTradableItems - add array of trade items
+    *   @param {Array} tradable_items - array of trade item objects
+    */
+    setTradableItems(tradable_items) {
+        Object.keys(tradable_items).forEach(trade_group => {
+            Object.keys(tradable_items[trade_group]).forEach(title => {
+                this.setTradableItem(trade_group, tradable_items[trade_group]);
+            });
+
+        });
+    }
+
+    /**
     *   setMarket - Set the parent Market
     *   @param {Market} market - Market object
     */
@@ -213,6 +240,10 @@ export default class UserMarketRequest extends BaseModel {
     *   @return {Market}
     */
     getMarket() {
+        return this._market;
+    }
+
+    get market() {
         return this._market;
     }
 

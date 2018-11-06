@@ -259,9 +259,12 @@
                  return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
             },
             'market_title': function() {
-                return this.marketRequest.getMarket().title+" "
-                +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+" "
-                +this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
+                return [
+                    ( this.marketRequest.market.is('singles') ? this.marketRequest.tradable_items.default.title : this.marketRequest.market.title ),
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")],
+                    this.marketRequest.trade_structure,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")]
+                ].join(' ');
             },
             'market_time': function() {
                 return this.marketRequest.updated_at.format("HH:mm");
