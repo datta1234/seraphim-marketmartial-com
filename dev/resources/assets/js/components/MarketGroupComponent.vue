@@ -12,7 +12,7 @@
                         <div class="col-12">
                             <p class="mb-1">{{ date }}</p>
                         </div>
-                        <market-tab :market-request="m_req" :key="m_req_index" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
+                        <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
                     
                 </div>
@@ -26,7 +26,7 @@
 <script>
     import Market from '../lib/Market';
     import moment from 'moment';
-    
+    import { EventBus } from '~/lib/EventBus';
 
     export default {
         props: {
@@ -38,10 +38,8 @@
             }
         },
         watch: {
-            'market.market_requests': function (nV, oV) {
-                this.market_date_groups = this.mapMarketRequestGroups(nV);
-                this.reorderMarketRequestStrike(this.market_date_groups);
-                this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
+            'market.market_requests': function (nV) {
+                this.updateRequests(nV);
             }
         },
         data() {
@@ -80,11 +78,16 @@
                     });
                 });
             },
-
+            updateRequests(reqs) {
+                this.market_date_groups = this.mapMarketRequestGroups(reqs);
+                this.reorderMarketRequestStrike(this.market_date_groups);
+                this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
+                console.log("Group State: ", this.market_date_groups, this.market_date_groups_order);
+            }
         },
         mounted() {
-            this.market_date_groups = this.mapMarketRequestGroups(this.market.market_requests);
-            console.log(this.market_date_groups);
+            this.updateRequests(this.market.market_requests);
+            EventBus.$on('display-update-forced', () => this.updateRequests(this.market.market_requests));
         }
     }
 </script>

@@ -1,5 +1,7 @@
 import BaseModel from './BaseModel';
-import UserMarketRequest from './UserMarketRequest'
+import UserMarketRequest from './UserMarketRequest';
+import { EventBus } from './EventBus';
+
 export default class Market extends BaseModel {
 
     constructor(options) {
@@ -67,7 +69,11 @@ export default class Market extends BaseModel {
         }
         if (is_new_market) {
             market_req.setMarket(this);
+            console.log("Adding MarketRequest: ", market_req);
             this.market_requests.push(market_req);
+            EventBus.$emit('force-display-update');
+        } else {
+            console.log("MarketRequest Already Tracked: ", market_req);
         }
     }
 
@@ -88,6 +94,7 @@ export default class Market extends BaseModel {
     *   @param {Array} market_requests - array of UserMarketRequest objects
     */
     addMarketRequests(market_requests) {
+        console.log("Adding ["+market_requests.length+"] Market Requests");
         market_requests.forEach(market_req => {
             this.addMarketRequest(market_req);
         });
