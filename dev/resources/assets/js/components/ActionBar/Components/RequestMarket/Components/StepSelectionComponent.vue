@@ -19,7 +19,7 @@
             </b-row>
             <b-row class="mt-2">
                 <b-col>
-                    <b-button id="options-switch-step-choice" class="mm-modal-market-button-alt w-100">Options Switch</b-button>
+                    <b-button id="options-switch-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('OptionSwitch')">Options Switch</b-button>
                 </b-col>
                 <b-col>
                     <b-button id="efp-switch-step-choice" class="mm-modal-market-button-alt w-100">EFP Switch</b-button>

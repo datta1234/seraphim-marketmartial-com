@@ -1,5 +1,5 @@
 <template>
-    <div dusk="expiry-selection" class="step-selections">
+    <div dusk="expiry-selection" class="expiry-selections">
         <b-container fluid>
             <mm-loader theme="light" :default_state="true" event_name="requestDatesLoaded" width="200" height="200"></mm-loader>
             <b-row v-if="dates_loaded && data.number_of_dates > 1" class="justify-content-md-center">

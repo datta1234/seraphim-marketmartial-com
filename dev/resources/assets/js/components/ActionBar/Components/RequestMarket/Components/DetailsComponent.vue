@@ -1,16 +1,9 @@
 <template>
-    <div dusk="detail" class="step-selections">
+    <div dusk="details" class="details">
         <b-container fluid>
             <b-row class="justify-content-md-center">
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
-                                <b-row>
-                                </b-row>
-                            </b-col>
-                            <b-col v-if="data.market_object.stock" cols="1">
-                                
-                            </b-col>
 						<b-row v-if="display.show_expiry" align-h="center">
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
