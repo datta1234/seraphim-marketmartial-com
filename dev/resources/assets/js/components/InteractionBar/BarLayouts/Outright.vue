@@ -148,8 +148,8 @@
     </template>
     
             
-
     <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+
     <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
 
         <!-- <b-row class="mb-2">

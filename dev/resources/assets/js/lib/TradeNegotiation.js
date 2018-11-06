@@ -94,11 +94,7 @@ export default class TradeNegotiation extends BaseModel {
     {
         let text;
         
-        if(this.traded)
-        {
-            text =   this.getUserMarketNegotiation().getFirstTradeNegotiation().is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid;
-            return text + " (" + this.quantity + ") ";
-        }
+        
 
         if(this.sent_by_me)
         {
@@ -109,8 +105,15 @@ export default class TradeNegotiation extends BaseModel {
             text = this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer :"You bought @ "+this.getUserMarketNegotiation().bid;
         }else
         {
-            text = "Trading at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+            if(this.traded)
+            {
+                text =   this.getUserMarketNegotiation().getFirstTradeNegotiation().is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid;
+                return text + " (" + this.quantity + ") ";
+            }else
+            {
+                text = "Trading at "; 
+                text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid; 
+            }
         }
         return text;
     }

@@ -102,8 +102,9 @@
                 } else {
                     if (this.modal_data.title[0] =='Confirm Market Request') {
                         this.modal_data.title = this.temp_title;
+                    } else {
+                        this.modal_data.title.pop();
                     }
-                    this.modal_data.title.pop();
                 }
                 switch (this.modal_data.step) {
                     case 2:
@@ -239,6 +240,7 @@
              * @params {Object} errors
              */
             loadErrorStep(errors) {
+                this.setLowestStep(5);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
