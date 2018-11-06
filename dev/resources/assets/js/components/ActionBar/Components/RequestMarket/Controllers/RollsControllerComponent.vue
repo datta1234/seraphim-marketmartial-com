@@ -95,8 +95,9 @@
                 } else {
                     if (this.modal_data.title[0] =='Confirm Market Request') {
                         this.modal_data.title = this.temp_title;
+                    } else {
+                        this.modal_data.title.pop();
                     }
-                    this.modal_data.title.pop();
                 }
                 switch (this.modal_data.step) {
                     case 2:
@@ -115,7 +116,7 @@
                         break;
                     case 5:
                         this.controller_data.market_object.details = component_data ?
-                            component_data : this.index_data.market_object.details;
+                            component_data : this.controller_data.market_object.details;
                         this.temp_title = this.modal_data.title;
                         this.modal_data.title = ['Confirm Market Request'];
                         this.selected_step_component = 'Confirm';
@@ -146,18 +147,8 @@
                 // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
-                let new_data = {
-                    trade_structure: 'Rolls',
-                    trade_structure_groups: [{
-                        market_id: 2,
-                        fields: {
-                            "Expiration Date 1": "2020-09-15",
-                            "Expiration Date 2": "2020-09-15",
-                            Quantity: 505,
-                        }    
-                    }]
-                };
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData())
+
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData() )
                 .then(newMarketRequestResponse => {
                     // success closes the modal
                     this.close_modal();
@@ -196,6 +187,7 @@
              * @params {Object} errors
              */
             loadErrorStep(errors) {
+                this.setLowestStep(4);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
@@ -206,16 +198,30 @@
                                         this.errors.data.Market.messages.push(element);
                                     }
                                 });
-                                this.temp_title.splice(-1);
+                                this.temp_title.splice(-2);
                                 this.setLowestStep(1);
                                 break;
                             case "fields":
-                                errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
-                                        this.errors.data.Expiry.messages.push(element);
+                                if(propArr[3] == 'Expiration Date 1' || propArr[3] == 'Expiration Date 2') {
+                                    errors[prop].forEach( (element, key) => {
+                                        if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
+                                            this.errors.data.Expiry.messages.push(element);
+                                        }
+                                    });
+                                    this.temp_title.splice(-1);
+                                    this.setLowestStep(2);
+                                } else {
+                                    errors[prop].forEach( (element, key) => {
+                                        if (this.errors.data.Details.messages.indexOf(element) == -1) {
+                                            this.errors.data.Details.messages.push(element);
+                                        }
+                                    });
+                                    if (this.errors.data.Details.fields.indexOf(prop) == -1) {
+                                        this.errors.data.Details.fields.push(prop);
                                     }
-                                });
-                                this.setLowestStep(2);
+                                    this.setLowestStep(3);
+                                }
+                                break;
                             default:
                                 errors[prop].forEach( (element, key) => {
                                     if (this.errors.data.Confirm.messages.indexOf(element) == -1) {
