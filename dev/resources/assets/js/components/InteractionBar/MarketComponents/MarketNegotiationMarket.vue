@@ -49,10 +49,27 @@
                     this.$emit('validate-proposal', this.check_invalid());
                 },
                 deep: true
+            },
+            'marketNegotiation.cond_buy_mid'(nv, ov) {
+                console.log("Changed: ", nv)
+                if(nv !== null) {
+                    if(ov === null) {
+                        this.old.bid = this.marketNegotiation.bid;
+                        this.old.offer = this.marketNegotiation.offer;
+                    }
+                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.old.bid + this.old.offer ) / 2;
+                } else {
+                    this.marketNegotiation.bid = this.old.bid;
+                    this.marketNegotiation.offer = this.old.offer;
+                }
             }
         },
         data() {
             return {
+                old: {
+                    bid: 0,
+                    offer: 0,
+                }
             };
         },
         methods: {

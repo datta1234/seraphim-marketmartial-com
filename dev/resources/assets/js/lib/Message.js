@@ -1,7 +1,12 @@
 const message_timeout = 5000;
 const missing_packet_path = '/trade/stream';
+const state = {
+    recieved: [],
+    expected: []
+};
 import Sha256 from './Char256Hash/sha256';
 import crypto from 'crypto';
+import Stream from '~/services/Stream';
 export default class Message {
 
     /**
@@ -114,6 +119,7 @@ export default class Message {
         if(this.is_complete) {
             this.doCompletion()
             .then((data) => {
+                Stream.recieve(this.checksum);
                 this.callback(null, this);
             })
             .catch(err => {

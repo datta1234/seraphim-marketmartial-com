@@ -146,8 +146,21 @@ class MarketNegotiationController extends Controller
     {
         $this->authorize('counter',$marketNegotiation);
         $market = $marketNegotiation->counter($request->user(), $request->only(['bid', 'offer']));
-        $userMarket->fresh()->userMarketRequest->notifyRequested();
+
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".countered",
+                "Counter Proposal received", 
+                10
+            );
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".counter",
+                "Proposal countered", 
+                10
+            );
         
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
         return ['success'=>true, 'message'=>'Counter Sent'];
     }
 
@@ -162,8 +175,20 @@ class MarketNegotiationController extends Controller
         $this->authorize('spinNegotiation',$userMarket); 
         $marketNegotiation->repeat($request->user());
 
-        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".repeated",
+                "Proposal repeated by counter", 
+                10
+            );
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".repeat",
+                "Proposal repeated", 
+                10
+            );
         
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
         return ['success'=>true, 'message'=>'Counter Sent'];
     }
 
@@ -177,7 +202,28 @@ class MarketNegotiationController extends Controller
     public function improveBest(MarketNegotiationImproveBestRequest $request, UserMarket $userMarket,MarketNegotiation $marketNegotiation)
     {
         $this->authorize('improveBest',$marketNegotiation);
-        $userMarket->lastNegotiation->improveBest($request->user(), $request->all());
+        $last = $userMarket->lastNegotiation;
+
+        $last->improveBest($request->user(), $request->all());
+
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".improved",
+                "New best level has been set", 
+                10
+            );
+        $last->userMarket
+            ->trackActivity(
+                "organisation.".$last->user->organisation_id.".proposal.".$last->id.".improved",
+                "New best level has been set",
+                10
+            );
+        $marketNegotiation->userMarket
+            ->trackActivity(
+                "organisation.".$request->user()->organisation_id.".proposal.".$last->id.".improve",
+                "Best level improved", 
+                10
+            );
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         return ['success'=>true, 'message'=>'Improvement Sent'];

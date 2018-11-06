@@ -158,7 +158,6 @@
             }
         },
         mounted() {
-            console.log(this.condition_groups);
         }
     }
 </script>

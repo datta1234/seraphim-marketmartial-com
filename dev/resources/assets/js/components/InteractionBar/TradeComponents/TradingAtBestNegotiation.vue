@@ -16,7 +16,7 @@
                     </div>
                 </b-col>
             </b-row>
-            <b-row class="mb-3">
+            <b-row class="mb-3" v-if="!rootNegotiation.is_my_org">
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
@@ -63,24 +63,18 @@
         },
         watch: {
             marketNegotiation: {
-                handler:function() {
+                handler() {
                     this.$emit('validate-proposal', this.check_invalid());
                 },
                 deep: true
             }
         },
         computed: {
-            perspective: function() {
+            perspective() {
                 return this.rootNegotiation.is_my_org ? "You are" : "Counter is";
             },
-            disabled_bid: function() {
-                return this.currentNegotiation.cond_buy_best == true;
-            },
-            disabled_offer: function() {
-                return this.currentNegotiation.cond_buy_best == false;
-            },
             term() {
-                return this.currentNegotiation.cond_buy_best ? 'Buying' : 'Selling' ;
+                return this.rootNegotiation.cond_buy_best ? 'Buying' : 'Selling' ;
             }
         },
         data() {
@@ -88,6 +82,8 @@
                 timed_out: false,
                 timer: null,
                 timer_value: null,
+                disabled_bid: false,
+                disabled_offer: false,
             };
         },
         methods: {
@@ -168,6 +164,8 @@
         mounted() {
             this.startTimer();
             this.runTimer(); // force initial setting
+            this.disabled_bid = this.rootNegotiation.cond_buy_best == true;
+            this.disabled_offer = this.rootNegotiation.cond_buy_best == false;
         },
         beforeDestroy() {
             this.stopTimer();

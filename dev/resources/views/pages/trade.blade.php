@@ -26,7 +26,7 @@
 			<div class="row mt-5">
 				<div class="col col-lg-3 offset-lg-9">
 					<div class="float-right">
-						<p id="active-markets-indicator">Active Market Makers Online: <strong>7</strong></p>
+						<p id="active-markets-indicator">Active Market Makers Online: <strong><active-makers></active-makers></strong></p>
 
 		        		<!-- Rounded toggle switch -->
 		        		<theme-toggle></theme-toggle>

@@ -35,6 +35,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ExpectsStreamResponse::class,
+            \App\Http\Middleware\TrackActiveSessions::class,
         ],
 
         'api' => [
@@ -61,5 +63,6 @@ class Kernel extends HttpKernel
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
+        '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
     ];
 }

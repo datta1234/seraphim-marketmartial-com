@@ -11,6 +11,9 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 Vue.use(FlatSurfaceShader);
 Vue.component('header-canvas', require('./components/HeaderCanvas.vue'));
 
+import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
+Vue.component('active-makers', ActiveMarketMakers);
+
 const app = new Vue({
     el: '#app',
     methods: {

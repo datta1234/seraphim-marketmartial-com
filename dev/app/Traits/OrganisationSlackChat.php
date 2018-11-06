@@ -123,6 +123,9 @@ trait OrganisationSlackChat {
 
 
         $formatted_messages = array();
+        if(!isset($response->messages)) {
+            return false;
+        }
         foreach ($response->messages as $message) {
             if($message->type === 'message') {
                 if(property_exists($message,'subtype') && $message->subtype === 'bot_message') {

@@ -57,9 +57,11 @@ class LoginController extends Controller
     protected function redirectTo()
     {
         if(\Auth::user()->role->title === 'Admin') {
-            return '/admin/user';
-        } else {
-            return $this->redirectTo;
+            if (\Auth::user()->google2fa_secret === NULL)
+                return '/admin/user';
+            else
+                return '/admin/mfa';        
         }
+        return $this->redirectTo;
     }
 }

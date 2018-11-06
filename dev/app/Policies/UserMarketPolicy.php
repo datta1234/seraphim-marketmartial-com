@@ -90,6 +90,12 @@ class UserMarketPolicy
             // only if its killed
             return $userMarket->lastNegotiation->is_killed == true;
         }
+
+        // if the last one was an Repeat ATW
+        if($userMarket->lastNegotiation->isRepeatATW()) {
+            return false;
+        }
+        
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
             in_array(
                 $userMarket->userMarketRequest->getStatus($current_org_id), 

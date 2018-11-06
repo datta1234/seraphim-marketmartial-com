@@ -27,6 +27,11 @@ Route::get('/contact', 'PageController@contact')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
+// Keepalive For Trade Screen
+Route::get('/ping', function() {
+    // valid session still alive, continue
+    return response("pong");
+});
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
 
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
@@ -176,6 +181,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 
 	Route::get('markets', 'Admin\MarketController@index')->name('admin.markets.index');
 	Route::put('markets','Admin\MarketController@update')->name('admin.markets.update');
+
+	Route::get('/mfa', 'Admin\MfaController@index')->name('admin.mfa.index');
+	Route::get('/mfa-setup', 'Admin\MfaController@setup')->name('admin.mfa.setup');
+	Route::get('/mfa-finish-setup', 'Admin\MfaController@finishSetup')->name('admin.mfa.finish_setup');
+	Route::post('2fa', function () {
+		return redirect('/admin/user');
+	})->name('2fa')->middleware('2fa');
+	
 });
 
 Route::group(['middleware' => ['auth']], function() {

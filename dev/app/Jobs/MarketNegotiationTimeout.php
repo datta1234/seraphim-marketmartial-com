@@ -34,7 +34,7 @@ class MarketNegotiationTimeout implements ShouldQueue
     public function handle()
     {
         echo "Processing Timeout For Market Negotiation ID: ".$this->marketNegotiationID.PHP_EOL;
-        $marketNegotiation = \App\Models\Market\MarketNegotiation::find($this->marketNegotiationID);
+        $marketNegotiation = \App\Models\Market\MarketNegotiation::findOrFail($this->marketNegotiationID);
         $userMarket = $marketNegotiation->userMarket;
         
         $stillActive = !$marketNegotiation->is_killed //no killed

@@ -62,6 +62,7 @@ class User extends Authenticatable
         'organisation_id',
         'verified',
         'is_invited',
+        'google2fa_secret',
     ];
 
     /**
@@ -70,7 +71,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'google2fa_secret'
     ];
 
     /**
@@ -386,4 +387,28 @@ class User extends Authenticatable
     {
         return $this->role_id == 1;
     }
+
+    /**
+     * Ecrypt the user's google_2fa secret.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setGoogle2faSecretAttribute($value)
+    {
+         $this->attributes['google2fa_secret'] = encrypt($value);
+    }
+
+    /**
+     * Decrypt the user's google_2fa secret.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getGoogle2faSecretAttribute($value)
+    {
+        if ($value === NULL) 
+            return NULL;
+        return decrypt($value);
+    }    
 }

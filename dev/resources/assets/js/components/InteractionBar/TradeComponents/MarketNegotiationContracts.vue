@@ -34,8 +34,12 @@
                 type: UserMarketNegotiation
             }
         },
+        watch: {
+            
+        },
         data() {
             return {
+                
             };
         },
         mounted() {
