@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\TradeScreen\MarketNegotiation;
 
-use Illuminate\Foundation\Http\FormRequest;
+use \Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
+use \App\Rules\PreventSelfTrade;
 
 class TradeNegotiationStoreRequest extends FormRequest
 {
@@ -26,7 +27,7 @@ class TradeNegotiationStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_offer' => 'required|boolean',
+            'is_offer' => ['required','boolean',new PreventSelfTrade($this->market_negotiation,$this->user())],
             'quantity' => 'required|numeric'
         ];
     }

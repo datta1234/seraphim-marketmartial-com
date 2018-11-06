@@ -17,7 +17,7 @@ class MarketController extends Controller
      */
     public function index()
     {
-    	$markets = Market::all();
+    	$markets = Market::where('needs_spot',true)->get();
     	return view('admin.markets.index')->with(compact('markets'));
     }
 

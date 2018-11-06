@@ -39,6 +39,18 @@ export default class Market extends BaseModel {
         }
     }
 
+    is(type) {
+        switch(type) {
+            case 'index':
+                return this.title.toUpperCase() == 'INDEX';
+            break;
+            case 'singles':
+                return this.title.toUpperCase() == 'SINGLES';
+            break;
+            // add ass you need
+        }
+    }
+
     /**
     *   addMarketRequest - add user market
     *   @param {UserMarketRequest} market - UserMarket objects
