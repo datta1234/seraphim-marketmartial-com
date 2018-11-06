@@ -117,6 +117,12 @@
             return !source.is_my_org;
         }
     },
+    watch: {
+        'marketNegotiation': function() {
+            this.liftOpen = false;
+            this.hitOpen = false;
+        }
+    },
     methods: {
         selectOption(isOffer)
         {

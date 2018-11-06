@@ -359,6 +359,15 @@ class MarketNegotiation extends Model
     }
 
     /**
+    * test if is RepeatATW
+    * @return Boolean
+    */
+    public function isRepeatATWRepeat()
+    {
+        return $this->marketNegotiationParent &&  $this->marketNegotiationParent->cond_is_repeat_atw !== null; 
+    }
+
+    /**
     * test if is FoK
     * @return Boolean
     */
@@ -718,6 +727,7 @@ class MarketNegotiation extends Model
                 && !$this->isTradeAtBest() 
                 && !$this->isTradeAtBestOpen() 
                 && !$this->isRepeatATW()
+                && !$this->isRepeatATWRepeat()
                 && !$this->isFoK()
             ) {
                 return "SPIN";

@@ -70,6 +70,7 @@
                 "title": "Fill or kill",
                 "alias": "cond_fok_spin",
                 "default": null,
+                "default_value": true,
                 "value": [
                     {
                         "value": { 
