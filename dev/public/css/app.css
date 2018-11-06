@@ -16810,6 +16810,7 @@ readers do not read off random characters that represent icons */
   background-color: #1a333f;
   -webkit-box-shadow: 0px 1px 6px 3px black;
           box-shadow: 0px 1px 6px 3px black;
+  height: 58px;
 }
 
 #mainNav .nav-item > a {
@@ -17290,18 +17291,22 @@ input:checked + .slider:before {
   width: 0px;
 }
 
+.interaction-bar-wrapper .interaction-bar .interaction-scrollable {
+  height: 100%;
+}
+
 .interaction-bar-wrapper .interaction-bar .interaction-content {
   width: 0px;
   opacity: 0;
-  height: 100%;
+  height: auto;
   padding: 0px;
   margin: 0px;
   padding: 0px;
   float: left;
   color: #fff;
   position: relative;
-  padding-bottom: 150px;
-  margin-bottom: 150px;
+  top: 58px;
+  bottom: 65px;
 }
 
 .interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {

@@ -98,7 +98,11 @@ trait OrganisationSlackChat {
             'Accept' => 'application/json'
         ];
         $response = null;
-
+        // no slack channel set up
+        if(!$user->organisation->slack_channel) {
+            // @TODO: Notify admin of fault?
+            return false;
+        }
         try {
             $client = new Client();
             $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$user->organisation->slack_channel->value, [

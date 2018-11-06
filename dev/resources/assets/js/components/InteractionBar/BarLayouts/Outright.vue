@@ -17,9 +17,21 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-
-    <template v-if="!is_trading">
-        <ibar-market-negotiation-contracts class="mb-1" v-if="can_negotiate" @validate-proposal="validateProposal" :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" :check-invalid="check_invalid" :current-negotiation="last_negotiation" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+    <template v-if="last_is_self">
+        <p class="text-center">
+            Levels Sent, Awaiting response
+        </p>
+    </template>
+    <template v-if="!is_trading && !last_is_self">
+        <ibar-market-negotiation-contracts 
+            class="mb-1" v-if="can_negotiate" 
+            @validate-proposal="validateProposal" 
+            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
+            :check-invalid="check_invalid" 
+            :current-negotiation="last_negotiation" 
+            :market-negotiation="proposed_user_market_negotiation"
+        >
+        </ibar-market-negotiation-contracts>
 
         <ibar-trade-at-best-negotiation 
          v-if="!can_negotiate && is_trading_at_best"
@@ -132,13 +144,13 @@
                 </b-row>
             </b-col>
         </b-row>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
     </template>
     
             
 
     <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
     <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
-    <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -222,6 +234,12 @@
             }
         },
         computed: {
+            'last_is_self': function() {
+                if(this.last_negotiation) {
+                    return this.last_negotiation.is_my_org;
+                }
+                return false;
+            },
             'meet_in_the_middle_proposed': function(){
                 return this.proposed_user_market_negotiation.cond_buy_mid != null;
             },

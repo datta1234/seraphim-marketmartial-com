@@ -186,13 +186,18 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
+            
+            // toggle on html tag too
+            document.documentElement.classList.remove( this.theme_toggle ? 'dark' : 'light' );
+            document.documentElement.classList.add( this.theme_toggle ? 'light' : 'dark' );
+
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },
     watch: {
         'display_markets': function(nv, ov) {
             this.reorderDisplayMarkets(nv);
-        },
+        }
     },
     methods: {
         /**

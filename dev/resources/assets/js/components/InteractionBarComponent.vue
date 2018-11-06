@@ -1,12 +1,14 @@
 <template>
     <div dusk="interaction-bar" class="interaction-bar" v-bind:class="{ 'active': opened }">
 
-        <VuePerfectScrollbar class="interaction-content" ref="barContent">
-            <ibar-negotiation-bar :market-request="market_request"></ibar-negotiation-bar>
-               <div class="interaction-bar-toggle" @click="toggleBar(false)">
-            <span class="icon icon-arrows-left"></span>
-            </div>
-        </VuePerfectScrollbar>
+        <div class="interaction-content">
+            <VuePerfectScrollbar ref="barContent" class="interaction-scrollable">
+                <ibar-negotiation-bar :market-request="market_request"></ibar-negotiation-bar>
+                <div class="interaction-bar-toggle" @click="toggleBar(false)">
+                    <span class="icon icon-arrows-left"></span>
+                </div>
+            </VuePerfectScrollbar>
+        </div>
      
     </div>
 </template>

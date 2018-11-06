@@ -117,6 +117,7 @@
                         if(v.alias) {
                             a[v.alias] = {
                                 default: v.default,
+                                default_value: v.default_value,
                                 group: ( group ? group : i )
                             };
                         }
@@ -151,20 +152,20 @@
                     condition.children.forEach(child => {
                         if(typeof child.value !== 'undefined') {
                             if(child.value.constructor == Boolean) {
-                                this.setCondition(child.alias, child.value, group);
+                                this.setCondition(child, child.value, group);
                             }
                             if(child.value.constructor == Array) {
-                                this.setCondition(child.alias, child.value[0], group);
+                                this.setCondition(child, child.value[0], group);
                             }
                         }
                     });
                 } else {
                     if(typeof condition.value !== 'undefined') {
                         if(condition.value.constructor == Boolean) {
-                            this.setCondition(condition.alias, condition.value, group);
+                            this.setCondition(condition, condition.value, group);
                         }
                         if(condition.value.constructor == Array) {
-                            this.setCondition(condition.alias, condition.value[0], group);
+                            this.setCondition(condition, condition.value[0], group);
                         }
                     }
                 }
@@ -180,20 +181,20 @@
                     }
                 }
             },
-            setCondition(alias, value, group) {
+            setCondition(condition, value, group) {
                 this.resetConditions(group, value.ignores);
                 switch(value.constructor) {
                     case Object:
-                        this.marketNegotiation[alias] = value.value;
+                        this.marketNegotiation[condition.alias] = condition.default_value === null ? value.value : condition.default_value;
                         if(value.sets) {
                             value.sets.forEach(v => {
-                                this.marketNegotiation[v.alias] = v.value;
+                                this.marketNegotiation[v.alias] = condition.default_value === null ? v.value : condition.default_value;
                             });
                         }
                     break;
                     case Boolean:
                     default:
-                        this.marketNegotiation[alias] = value;
+                        this.marketNegotiation[condition.alias] = condition.default_value === null ? value : condition.default_value;
                 }
                 this.updateShownGroups();
             },
