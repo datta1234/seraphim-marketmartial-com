@@ -489,7 +489,8 @@
                        this[k] = defaults[k]; 
                     }
                 });
-
+                
+                this.$forceUpdate();
             },
             setUpProposal(){
 

@@ -34,7 +34,7 @@
                 {{ marketNegotiation.offer_qty ? marketNegotiation.offer_qty : "-"  }}
             </b-col>
         </b-row>
-        <b-row>
+        <b-row> 
 
             <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
 
@@ -111,6 +111,12 @@
         },
         lastTradeNegotiation: function(){
             return this.marketNegotiation.getLastTradeNegotiation();
+        }
+    },
+    watch: {
+        'marketNegotiation': function() {
+            this.liftOpen = false;
+            this.hitOpen = false;
         }
     },
     methods: {
