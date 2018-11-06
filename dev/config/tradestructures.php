@@ -772,7 +772,11 @@ return [
                                 [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
-                                ]
+                                ],
+                                [
+                                    'title' => 'Quantity',
+                                    'type' => 'double'
+                                ],
                             ],
                              "trade_confirmation_group"=>[
                                         "options" =>
@@ -847,7 +851,11 @@ return [
                                 [
                                     'title' => 'Expiration Date 2',
                                     'type' => 'expiration date'   
-                                ]
+                                ],
+                                [
+                                    'title' => 'Quantity',
+                                    'type' => 'double'   
+                                ],
                             ],
                                 "trade_confirmation_group"=>[
                                     "options" =>
@@ -918,7 +926,11 @@ return [
                                 [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
-                                ]
+                                ],
+                                [
+                                    'title' => 'Quantity',
+                                    'type' => 'double'   
+                                ],
                             ],
                             "trade_confirmation_group"=>[
                             "options" =>
@@ -972,7 +984,11 @@ return [
                                 [
                                     'title' => 'Expiration Date',
                                     'type' => 'expiration date'   
-                                ]
+                                ],
+                                [
+                                    'title' => 'Quantity',
+                                    'type' => 'double'   
+                                ],
                             ],
                             "trade_confirmation_group"=>[
                             "options" =>
