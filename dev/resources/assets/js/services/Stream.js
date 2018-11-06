@@ -8,21 +8,21 @@ const state = {
 }
 
 const recieve = (hash) => {
-    console.log("[Stream] RECEIVED ", hash);
+    // console.log("[Stream] RECEIVED ", hash);
     if(state.recieved.indexOf(hash) == -1) {
         state.recieved.push(hash);
     }
     clearMatches();
 }
 const expect = (hash) => {
-    console.log("[Stream] EXPECTING ", hash);
+    // console.log("[Stream] EXPECTING ", hash);
     if(state.expected.indexOf(hash) == -1) {
         state.expected.push(hash);
     }
     clearMatches();
 }
 const complete = (hash) => {
-    console.log("[Stream] COMPLETED ", hash);
+    // console.log("[Stream] COMPLETED ", hash);
     // maintain history of max_length
     if(state.completed.length >= state.max_length) {
         state.completed.shift();
@@ -49,7 +49,7 @@ const emitter = {
     },
     attach: (cb) => {
         if(emitter.clients.indexOf(cb) == -1) {
-            console.log("[Stream] ATTACHED ", cb);
+            // console.log("[Stream] ATTACHED ", cb);
             emitter.clients.push(cb);
             return true;
         }
@@ -57,7 +57,7 @@ const emitter = {
     },
     detach: (cb) => {
         if(emitter.clients.indexOf(cb) != -1) {
-            console.log("[Stream] DETATCHED ", cb);
+            // console.log("[Stream] DETATCHED ", cb);
             emitter.clients.splice(emitter.clients.indexOf(cb), 1);
             return true;
         }

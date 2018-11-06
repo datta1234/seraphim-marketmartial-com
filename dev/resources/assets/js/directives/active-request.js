@@ -15,11 +15,11 @@ const ActiveRequestState = {
     },
     toggleElement: (el) => {
         if (ActiveRequestState.active_requests > 0) {
-            console.log("[ActiveRequest] TOGGLE ON");
+            // console.log("[ActiveRequest] TOGGLE ON");
             el.setAttribute('mm-disabled', true);
         } else {
             if(!awaiting_stream) {
-                console.log("[ActiveRequest] TOGGLE OFF");
+                // console.log("[ActiveRequest] TOGGLE OFF");
                 el.removeAttribute('mm-disabled');
             }
         }
@@ -31,7 +31,7 @@ const init = (app) => {
 
     Stream.interface.attach((key) => {
         setTimeout(() => {
-            console.log("[ActiveRequest] RECEIVED STREAM");
+            // console.log("[ActiveRequest] RECEIVED STREAM");
             awaiting_stream = false;
             ActiveRequestState.toggleElements();
         }, 0);
@@ -43,7 +43,7 @@ const init = (app) => {
         // handle load
         if(typeof config.headers[ActiveRequestState._ignore_header] === 'undefined') {
             ActiveRequestState.active_requests++;
-            console.log("[ActiveRequest] SENDING REQUEST");
+            // console.log("[ActiveRequest] SENDING REQUEST");
             ActiveRequestState.toggleElements();
         }
 
@@ -72,7 +72,7 @@ const init = (app) => {
             if(ActiveRequestState.active_requests > 0) {
                 ActiveRequestState.active_requests--;
             }
-            console.log("[ActiveRequest] RECEIVED RESPONSE");
+            // console.log("[ActiveRequest] RECEIVED RESPONSE");
             ActiveRequestState.toggleElements();
         }
         return response;
