@@ -114,9 +114,9 @@
             /**
              * Filters the user's Market Type preference 
              */
-            filterMarketTypes(market_type_key, actionCheck) {
-                if(actionCheck) {
-                    this.addUserPreferenceMarketType(market_type_key)
+            filterMarketTypes(type_key, is_add) {
+                if(is_add) {
+                    this.addUserPreferenceMarketType(type_key)
                     .then( (market_type_id) => {
                         let market_type = this.$root.market_types.find(element => {
                             return element.id == market_type_id;
@@ -124,17 +124,16 @@
                         this.addMarket(market_type);
                     });
                 } else {
-                    this.removeUserPreferenceMarketType(market_type_key)
+                    this.removeUserPreferenceMarketType(type_key)
                     .then( (market_type_id) => {
                         let market_type = this.$root.market_types.find(element => {
                             return element.id == market_type_id;
                         });
                         this.$root.removeTradeConfirmations(market_type);
-                        this.availableSelectedMarketTypes[market_type_key].marketType.markets.forEach((market) => {
-                            this.removeMarket(market);
-                        });
+                        this.removeMarket(type_key);
                     });
                 }
+                console.log("Filter: ",this.$root.market_types);
             },
             /**
              * Adds a selected Market to Display Markets
@@ -177,16 +176,15 @@
             /**
              * Removes a selected Market from Display Markets
              * 
-             * @param {string} $market a string detailing a Market.title to be removed
+             * @param {string} $market_type_key a string detailing a Type to be removed
              */
-            removeMarket(market) {
-                let index = this.markets.findIndex(function(element) {
-                    return element.id == market.id;
+            removeMarket(market_type_key) {
+                let list = this.markets.filter( (market) => {
+                    return market.market_type_id == this.availableSelectedMarketTypes[market_type_key].marketType.id;
                 });
-                if(index !== -1) {
-                    this.markets.splice(index , 1);
-                }
-                // make api call to amend user pref for market types
+                list.forEach(market => {
+                    this.markets.splice(this.markets.indexOf(market), 1);
+                });
                 this.checkSelected();
             },
             /**
