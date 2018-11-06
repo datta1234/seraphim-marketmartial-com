@@ -147,7 +147,17 @@
                 // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
-
+                let new_data = {
+                    trade_structure: 'Rolls',
+                    trade_structure_groups: [{
+                        market_id: 2,
+                        fields: {
+                            "Expiration Date 1": "2020-09-15",
+                            "Expiration Date 2": "2020-09-15",
+                            Quantity: 505,
+                        }    
+                    }]
+                };
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData())
                 .then(newMarketRequestResponse => {
                     // success closes the modal
