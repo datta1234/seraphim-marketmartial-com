@@ -12,7 +12,6 @@
     import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
-    import Market from '../../../../../lib/Market';
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
         name: 'SingleController',

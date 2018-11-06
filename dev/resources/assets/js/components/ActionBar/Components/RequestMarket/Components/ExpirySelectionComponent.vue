@@ -83,7 +83,7 @@
                     
                     this.callback(this.selected_dates.map( (current) => {
                         return this.castToMoment(current);
-                    }).join(' / '), this.selected_dates);
+                    }).join( this.data.market_object.trade_structure == 'Rolls' ? ' vs ' : ' / ' ), this.selected_dates);
                 }
             },
             /**

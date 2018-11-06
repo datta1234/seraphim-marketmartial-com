@@ -1,5 +1,5 @@
 <template>
-    <div dusk="single-controller" class="single-controller">
+    <div dusk="option-switch-controller" class="option-switch-controller">
         <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
         <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="option_switch_data" :callback="loadStepComponent"></component>
     </div>
@@ -10,10 +10,9 @@
     import SwitchDetails from '../Components/SwitchComponents/SwitchDetailsComponent.vue';
     import SwitchConfirmMarketRequest from '../Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
-    import Market from '../../../../../lib/Market';
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
-        name: 'SingleController',
+        name: 'OptionSwitchController',
         props:{
             'close_modal': {
                 type: Function
