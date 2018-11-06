@@ -78,8 +78,8 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
-        return $user->orgnisation_id === $userMarket->user->orgnisation_id 
-            && $userMarket->userMarketRequest->chosenUserMarket()->exists();
+        return $user->organisation_id === $userMarket->user->organisation_id 
+            && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
 
     public function addNegotiation(User $user, UserMarket $userMarket)
