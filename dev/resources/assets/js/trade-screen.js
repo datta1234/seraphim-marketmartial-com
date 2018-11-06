@@ -45,7 +45,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import Config from './lib/Config';
 import Market from './lib/Market';
 import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
@@ -540,6 +540,7 @@ const app = new Vue({
         completed_messages: [],
     },
     mounted: function() {
+        Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();
         // load config files

@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
+import Config from './Config';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -226,13 +227,26 @@ export default class UserMarketRequest extends BaseModel {
             });
         }
         return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', {'action_needed': false})
+            axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', 
+                {
+                    'action_needed': false
+                },
+                {
+                    headers: {
+                        [Config.get('app.ajax.headers.ignore')]: true
+                    }
+                }
+            )
             .then(response => {
                 this.attributes.action_needed = response.data.data.action_needed;
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                if(err.response) {
+                    reject(new Errors(err.response.data));
+                } else {
+                    reject(err);
+                }
             }); 
         });
     }

@@ -74,7 +74,7 @@
 
                         <b-button v-active-request class="w-100 mt-1"
                           v-if="!maker_quote" 
-                          :disabled="check_invalid || server_loading || conditionActive('fok')" 
+                          :disabled="check_invalid || server_loading" 
                           size="sm" 
                           dusk="ibar-action-send" 
                           variant="primary" 
@@ -90,7 +90,7 @@
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -104,7 +104,7 @@
                          dusk="ibar-action-send" 
                          variant="primary" 
                          @click="spinNegotiation()">
-                            Spin
+                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
                         </b-button>
                     </b-col>
                 </b-row>
