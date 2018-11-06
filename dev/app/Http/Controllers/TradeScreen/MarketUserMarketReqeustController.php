@@ -180,6 +180,7 @@ class MarketUserMarketReqeustController extends Controller
                     $recipients = User::whereHas('role', function ($query) {
                         $query->where('title', 'Admin');
                     })->get();
+                    // @TODO: try catch seperately dont fail request if cant send mail
                     \Notification::send($recipients, new MarketRequestQuantityLowNotification($userMarketRequest));
                 }
 

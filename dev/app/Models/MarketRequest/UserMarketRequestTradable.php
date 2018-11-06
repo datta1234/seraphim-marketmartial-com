@@ -66,7 +66,7 @@ class UserMarketRequestTradable extends Model
 
     public function preFormatted()
     {
-        if($this->market)
+        if($this->market_id != null)
         {   
             $is_stock = false;
             $title = $this->market->title;
@@ -74,7 +74,7 @@ class UserMarketRequestTradable extends Model
         }else
         {
             $is_stock = true;
-            $title = $this->stock->title;
+            $title = $this->stock->code;
             $id = $this->stock_id;   
         }
 
