@@ -9,7 +9,7 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable && canBid" class="pointer" @click="selectOption(false)" id="popover-hit">
+                <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
                 <span v-else>
@@ -19,7 +19,7 @@
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable && canOffer" class="pointer" @click="selectOption(true)" id="popover-lift">
+                <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
                 <span v-else>
@@ -45,9 +45,9 @@
             <small>{{ marketNegotiation.time }}</small>
         </p>
     </b-col>
-    <ibar-trade-desired-quantity v-if="selectable && canBid" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)" @toggleModal="toggleHit($event)" parent="last-negotiation"></ibar-trade-desired-quantity>
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    <ibar-trade-desired-quantity v-if="selectable && canOffer" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)" @toggleModal="toggleLift($event)" parent="last-negotiation"></ibar-trade-desired-quantity>
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
     <b-col cols="12">
         <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
@@ -120,30 +120,22 @@
     methods: {
         selectOption(isOffer)
         {
-            if(isOffer)
-            {
-               this.liftOpen = true; 
-               this.hitOpen = false;
 
-           }else
-           {
-               this.liftOpen = false;
-               this.hitOpen = true;
-           }
+        if(isOffer && this.canOffer)
+        {
+            this.liftOpen = true; 
+            this.hitOpen = false;
 
+        }else if(!isOffer && this.canBid)
+        {
+            this.liftOpen = false;
+            this.hitOpen = true;
+        }              
        },
        cancelOption(isOffer)
        {
            this.liftOpen = false
            this.hitOpen = false;
-       },
-       toggleHit(nv)
-       {
-            this.hitOpen = nv;
-       },
-       toggleLift(nv)
-       {
-        this.liftOpen = nv;
        },
        getConditionState(marketNegotiation, field) {
 

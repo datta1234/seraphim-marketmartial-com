@@ -1,5 +1,5 @@
 <template>
-       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="openModal" triggers="" :container="parent">
+       <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
             <template slot="title">
                <div class="text-center">{{ title }}
                    <a @click="cancel" class="close" aria-label="Close">
@@ -94,9 +94,7 @@
                  confirmed:false,
                  tradeNegotiation: new TradeNegotiation(),
                  server_loading: false,
-                 errors: [],
-                 openModal: false
-
+                 errors: []
             };
         },
         watch: {
@@ -110,19 +108,6 @@
                 }
 
                 this.reset();
-            },
-            open: function()
-            {
-             // this.openModal = this.open;
-             console.log("open got hit");
-             this.openModal = this.open;
-
-            },
-            openModal: function()
-            {
-             // this.openModal = this.open;
-             console.log("open method fired");
-             this.$emit('toggleModal',this.openModal);
             }
         },
         computed: {
@@ -166,11 +151,9 @@
                  this.tradeNegotiation = new TradeNegotiation();
                  this.server_loading = false;
                  this.errors = [];
-                 this.openModal = false;
           },
             cancel(){
                 this.$emit('close');
-                this.openModal = false;
                 this.is_offer = this.isOffer;
                 this.confirmed = false;
             },
@@ -197,7 +180,6 @@
         },
         mounted() {
             this.is_offer = this.isOffer;
-            //this.openModal = this.open;
 
             if(this.is_offer)
             {
