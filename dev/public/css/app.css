@@ -11324,6 +11324,20 @@ table.table {
   color: #000000;
 }
 
+[mm-disabled] {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+[mm-disabled]input {
+  background-color: #afafaf;
+  border-color: #8e8e8e;
+}
+
+[mm-disabled].btn {
+  background-color: #afafaf;
+}
+
 #trade_app {
   position: relative;
 }

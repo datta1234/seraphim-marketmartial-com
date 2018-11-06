@@ -1,7 +1,7 @@
 <template>
     <b-container fluid dusk="ibar-conditions-active">
         <b-row v-if="activity" v-for="(negotiation, condition_type) in activity" :key="condition_type">
-            <b-col cols="12" v-for="(negotiation, negotiation_id) in negotiation" :key="negotiation_id">
+            <b-col cols="12" no-gutters v-for="(negotiation, negotiation_id) in negotiation" :key="negotiation_id">
                 <p class="activity-block text-center" v-for="(note, type) in negotiation" :key="type">
                     {{ note }}&nbsp;&nbsp;<span class="dismiss" @click="userMarket.dismissActivity([condition_type, negotiation_id, type])">X</span>
                 </p>
@@ -82,7 +82,6 @@
                     this.message = data.message.data
                 }
             });
-            console.log('conditions', this.conditions);
         }
     }
 </script>

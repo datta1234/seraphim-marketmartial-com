@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
+        '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
     ];
 }

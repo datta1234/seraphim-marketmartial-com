@@ -96,6 +96,7 @@ Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 import ActiveRequestDirective from './directives/active-request.js';
 Vue.directive('active-request', ActiveRequestDirective);
 
+import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
 Vue.component('active-makers', ActiveMarketMakers);
 
@@ -273,12 +274,8 @@ const app = new Vue({
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
-                    if(!marketType.markets) {
-                        marketType.markets = [];
-                    }
                     marketResponse.data = marketResponse.data.map(x => {
-                        x = new Market(x);
-                        marketType.markets.push(x);   
+                        x = new Market(x);   
                         self.display_markets.push(x);
                         return x;
                     });
@@ -554,47 +551,50 @@ const app = new Vue({
             ["trade_structure","trade_structure.json"],     // [ <namespace> , <file_path> ]
             ["condition_titles"],                           // [ <namespace> ] ( assumes fileanme == <namespace>.json )
             "market_conditions",                            //   <namespace> ( same assumption as above )
-            "fees",                           // [ <namespace> , <file_path> ]
-
+            "fees",                                         // [ <namespace> , <file_path> ]
+            "app",
         ])
         .catch(err => {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then(this.loadUserConfig)
         .then(configs => {
-            // load the trade data
-            this.loadMarketTypes()
-            .then(market_types => {
-                let promises = [];
-                if(this.configs["user_preferences"] !== null) {
-                    this.configs["user_preferences"].prefered_market_types.forEach(market_type_id => {
-                        let market_type = this.market_types.find(element => {
-                            return element.id == market_type_id;
-                        });
-                        promises.push(this.loadTradeConfirmations(market_type));
-
-                        promises.push(
-                            this.loadMarkets(market_type)
-                            .then(markets => {
-                                markets.forEach(market => {
-                                    promises.push(
-                                        this.loadMarketRequests(market)
-                                    );
-                                });
-                            })
-                        );
+            // Initialise Hooks
+            ActiveRequestDirective.init(app);
+            ActiveMakerService.init(app);
+            return configs;
+        })
+        .then(this.loadUserConfig)
+        .then(this.loadMarketTypes)
+        .then(market_types => {
+            let promises = [];
+            if(this.configs["user_preferences"] !== null) {
+                this.configs["user_preferences"].prefered_market_types.forEach(market_type_id => {
+                    let market_type = this.market_types.find(element => {
+                        return element.id == market_type_id;
                     });
-                }
-                //
-                return Promise.all(promises);
-            })
-            .then(all_loaded => {
-                EventBus.$emit('loading', 'page');
-                this.page_loaded = true;
-                //load the no cares from storage
-                this.loadNoCares();
-            });
+                    promises.push(this.loadTradeConfirmations(market_type));
+
+                    promises.push(
+                        this.loadMarkets(market_type)
+                        .then(markets => {
+                            markets.forEach(market => {
+                                promises.push(
+                                    this.loadMarketRequests(market)
+                                );
+                            });
+                        })
+                    );
+                });
+            }
+            //
+            return Promise.all(promises);
+        })
+        .then(all_loaded => {
+            EventBus.$emit('loading', 'page');
+            this.page_loaded = true;
+            //load the no cares from storage
+            this.loadNoCares();
         });
 
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
@@ -674,9 +674,6 @@ const app = new Vue({
         EventBus.$on('toggleTheme', this.setThemeState);
     }
 });
-
-
-
 
 // test code
 // import emulation from './emulate';

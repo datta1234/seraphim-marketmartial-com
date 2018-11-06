@@ -45,6 +45,9 @@ EventBus.$on('loading', (type, state) => {
        case "confirmationSubmission":
             EventBus.$emit("confirmationSubmissionLoaded", state);
         break;
+        case "requestMarkets":
+            EventBus.$emit("requestMarketsLoaded", state);
+        break;
     }
 });
 

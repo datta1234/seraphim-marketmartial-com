@@ -146,7 +146,7 @@
         methods: {
             cancel(){
                 this.$emit('close');
-                this.is_offer = null;
+                this.is_offer = this.isOffer;
                 this.confirmed = false;
             },
            storeTradeNegotiation(){
@@ -158,7 +158,7 @@
                     this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
-                    this.is_offer = null;
+                    this.is_offer = this.isOffer;
                     this.confirmed = false;
                 })
                 .catch(err => {

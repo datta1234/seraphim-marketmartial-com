@@ -1,0 +1,7 @@
+{
+    "ajax": {
+        "headers": {
+            "ignore": "mm-background-load"
+        }
+    }
+}

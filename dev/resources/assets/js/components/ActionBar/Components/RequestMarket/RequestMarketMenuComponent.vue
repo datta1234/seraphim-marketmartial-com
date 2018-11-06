@@ -1,6 +1,6 @@
 <template>
     <div dusk="request-market-menu" class="request-market-menu">
-        <b-button :disabled="!$root.market_types.length > 0" class="btn mm-request-button mr-2 p-1" @click="showModal()">Request a Market</b-button>
+        <b-button v-active-request :disabled="!$root.market_types.length > 0" class="btn mm-request-button mr-2 p-1" @click="showModal()">Request a Market</b-button>
         
         <!-- Confirmations Modal -->
         <b-modal class="mm-modal mx-auto" size="lg" v-model="modal_data.show_modal" :ref="modal_data.modal_ref">
@@ -26,15 +26,21 @@
 </template>
 
 <script>
+    // Controllers
     import IndexController from './Controllers/IndexControllerComponent.vue';
     import SingleController from './Controllers/SingleControllerComponent.vue';
+    import OptionSwitchController from './Controllers/OptionSwitchControllerComponent.vue';
+    // Components
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
     import StockSelection from './Components/StockSelectionComponent.vue';
+    import SwitchSelection from './Components/SwitchComponents/SwitchSelectionComponent.vue';
     import StructureSelection from './Components/StructureSelectionComponent.vue';
     import ExpirySelection from './Components/ExpirySelectionComponent.vue';
     import Details from './Components/DetailsComponent.vue';
+    import SwitchDetails from './Components/SwitchComponents/SwitchDetailsComponent.vue';
     import ConfirmMarketRequest from './Components/ConfirmMarketRequestComponent.vue';
+    import SwitchConfirmMarketRequest from './Components/SwitchComponents/SwitchConfirmMarketRequestComponent.vue';
 
     export default {
         name: 'RequestMarketMenu',
@@ -42,12 +48,16 @@
             StepSelection,
             IndexController,
             SingleController,
+            OptionSwitchController,
             MarketSelection,
             StockSelection,
+            SwitchSelection,
             StructureSelection,
             ExpirySelection,
             Details,
+            SwitchDetails,
             ConfirmMarketRequest,
+            SwitchConfirmMarketRequest,
         },
         props:{
           
@@ -64,7 +74,8 @@
                 controllers: {
                     Selections: StepSelection,
                     Index: IndexController,
-                    Single: SingleController
+                    Single: SingleController,
+                    OptionSwitch: OptionSwitchController
                 },
             };
         },
