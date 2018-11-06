@@ -88,21 +88,31 @@ class TradeConfirmationGroup extends Model
         return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_group_id');
     }
 
-    public function preFormatted()
+    public function preFormatted($is_sender = null)
     {
         return [
             'id'                            => $this->id,
             'is_options'                    => $this->is_options,
             'user_market_request_group'     => $this->userMarketRequestGroup->preFormatted(),
-            'trade_confirmation_items'      => $this->tradeConfirmationItems->map(function($item){
+            'trade_confirmation_items'      => 
+            $this->tradeConfirmationItems()
+            ->where(function($query) use ($is_sender) {
+
+                $query->whereNull('is_seller')
+                ->orWhere('is_seller',$is_sender);
+            })
+            ->get()
+            ->map(function($item){
                 return $item->preFormatted();
             })
         ];
     }
-    public function setOpVal($title,$value)
+
+    public function setOpVal($title,$value,$is_sender = null)
     {
-        $op = $this->tradeConfirmationItems->first(function($item) use ($title){
-            return strcasecmp($item->title,$title) == 0;
+        $op = $this->tradeConfirmationItems->first(function($item) use ($title,$is_sender){
+            $can_see = $item->is_seller === null || $item->is_seller == $is_sender;
+            return strcasecmp($item->title,$title) == 0 && $can_see;
         });  
 
         if($op)
@@ -112,7 +122,7 @@ class TradeConfirmationGroup extends Model
         }
     }
 
-    public function getOpVal($title)
+    public function getOpVal($title,$is_sender = null)
     {
         $marketRequestOptions =['Expiration Date','strike','Strike'];
         
@@ -123,8 +133,10 @@ class TradeConfirmationGroup extends Model
             });
         }else
         {
-            $op = $this->tradeConfirmationItems->first(function($item) use ($title){
-                return strcasecmp($item->title,$title) == 0;
+            $op = $this->tradeConfirmationItems
+            ->first(function($item) use ($title, $is_sender){
+                $can_see = $item->is_seller === null || $item->is_seller == $is_sender;
+                return strcasecmp($item->title,$title) == 0 && $can_see;
             });  
         }
 

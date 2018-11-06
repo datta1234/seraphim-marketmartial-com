@@ -778,11 +778,14 @@ class MarketNegotiation extends Model
                     $newMarketNegotiation->save();
                 }
 
+                /*
+                * a trade has occured so generate the required trade confirmation
+                */
                 if($tradeNegotiation->traded)
                 {
                    $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
                    $message = "Congrats on the trade! Complete the booking in the confirmation tab";
-                   $organisation = $tradeNegotiation->recievingUser->organisation;
+                   $organisation = $tradeConfirmation->sendUser->organisation;
                    $tradeConfirmation->notifyConfirmation($organisation,$message);
                 }
 

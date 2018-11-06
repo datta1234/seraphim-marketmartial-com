@@ -249,7 +249,7 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-                console.log("RESPONSE",tradeConfirmationResponse);
+
                 if(tradeConfirmationResponse.status == 200) {
                     // set the available market types
                     tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
@@ -258,8 +258,6 @@ const app = new Vue({
                         return x;
                     });
                    
-
-
                 } else {
                 
                     console.error(err);    
@@ -381,7 +379,8 @@ const app = new Vue({
             }
         },
         updateTradeConfirmation(tradeConfirmationData){
-        
+        console.log("update the tradeconfirmation data",tradeConfirmationData)
+
          let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
         
             if(index !== -1)
@@ -400,7 +399,12 @@ const app = new Vue({
                     }
 
                 } else {
-                    this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));
+                    console.log(tradeConfirmationData)
+                    //only keep the interaction if the user can interact with it
+                    if(tradeConfirmationData.can_interact)
+                    {
+                        this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));    
+                    }
                 }
 
             } else {
@@ -631,8 +635,10 @@ const app = new Vue({
                     });
                 })
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
+                    console.log(".TradeConfirmationEvent triggerd");
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
+
                         console.log("Got Event 'TradeConfirmationEvent'", packet_data);
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)

@@ -36,12 +36,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -117,12 +113,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -190,12 +182,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -271,12 +259,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -343,12 +327,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -423,12 +403,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -491,12 +467,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -559,12 +531,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -640,12 +608,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -712,12 +676,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -783,12 +743,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -858,12 +814,8 @@ return [
                                                 "type"=>"boolean"
                                             ],
                                             [
-                                                "title"=>"Put",
+                                                "title"=>"is_put",
                                                 "type"=>"double"
-                                            ],
-                                            [
-                                                'title' =>'Call',
-                                                'type'  =>'double'
                                             ],
                                             [
                                                 "title"=>"Volatility",
@@ -984,7 +936,7 @@ return [
                                         "type"=>"boolean"
                                     ],
                                     [
-                                        "title"=>"Put/Call",
+                                        "title"=>"is_put",
                                         "type"=>"boolean"
                                     ],
                                     [

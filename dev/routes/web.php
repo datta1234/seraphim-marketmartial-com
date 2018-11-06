@@ -32,6 +32,7 @@ Route::get('/ping', function() {
     // valid session still alive, continue
     return response("pong");
 });
+
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
 
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
