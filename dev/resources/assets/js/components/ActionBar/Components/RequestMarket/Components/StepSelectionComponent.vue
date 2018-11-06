@@ -6,7 +6,7 @@
                     <b-button id="index-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('Index')">Index Options</b-button>
                 </b-col>
                 <b-col>
-                    <b-button id="efp-step-choice" class="mm-modal-market-button-alt w-100">EFP</b-button>
+                    <b-button id="efp-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('EFP')">EFP</b-button>
                 </b-col>
             </b-row>
             <b-row class="mt-2">
@@ -14,7 +14,7 @@
                     <b-button id="single-stock-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('Single')">Single Stock Options</b-button>
                 </b-col>
                 <b-col>
-                    <b-button id="rolls-step-choice" class="mm-modal-market-button-alt w-100">Rolls</b-button>
+                    <b-button id="rolls-step-choice" class="mm-modal-market-button-alt w-100" @click="nextStep('Rolls')">Rolls</b-button>
                 </b-col>
             </b-row>
             <b-row class="mt-2">
