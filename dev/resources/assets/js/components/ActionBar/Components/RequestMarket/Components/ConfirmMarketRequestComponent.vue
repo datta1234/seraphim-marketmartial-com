@@ -1,7 +1,27 @@
 <template>
     <div dusk="confirm-market-request" class="step-selections">
         <b-container fluid>
-            <b-row v-if="data.market_object.stock" align-h="start">
+            <b-row v-if="display.is_versus_market" align-h="start">
+                <b-col cols="3" class="mt-2">
+                    <p>INDEX:</p>
+                </b-col>
+                <b-col cols="3" class="mt-2">
+                    <p>
+                        {{ data.market_object.markets[0].title }}
+                        <span v-if="data.market_object.details.fields[0].is_selected && display.show_choice"> (CH)</span>
+                    </p>
+                </b-col>
+                <b-col cols="3" class="mt-2">
+                    <p>VS.</p>
+                </b-col>
+                <b-col cols="3" class="mt-2">
+                    <p>
+                        {{ data.market_object.markets[1].title }}
+                        <span v-if="data.market_object.details.fields[1].is_selected && display.show_choice"> (CH)</span>
+                    </p>
+                </b-col>
+            </b-row>
+            <b-row v-else-if="display.is_stock_only" align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>STOCK NAME:</p>
                 </b-col>
@@ -21,23 +41,34 @@
                 <b-col cols="3" class="mt-2">
                     <p>EXPIRY:</p>
                 </b-col>
-                <b-col :key="index" v-for="(expiry_date, index) in data.market_object.expiry_dates"  cols="3" class="mt-2">
+                <b-col v-if="display.is_versus_date" cols="3" class="mt-2">
+                    <p>{{ data.market_object.expiry_dates.map(x => this.castToMoment(x)).join(' vs ') }}</p>
+                </b-col>
+                <b-col  v-else :key="index" v-for="(expiry_date, index) in data.market_object.expiry_dates"  
+                        cols="3" 
+                        class="mt-2">
                     <p>{{ castToMoment(expiry_date) }}</p>
                 </b-col>
             </b-row>
-            <b-row align-h="start">
+            <b-row v-if="display.has_strike" align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>STRIKE:</p>
                 </b-col>
                 <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>{{ (data.market_object.stock ? "R" : "") + splitValHelper(field.strike,' ',3) }}<span v-if="field.is_selected && data.market_object.details.fields.length > 1"> (CH)</span></p>
+                	<p>
+                        {{ (data.market_object.stock ? "R" : "") + splitValHelper(field.strike,' ',3) }}
+                        <span v-if="field.is_selected && display.show_choice"> (CH)</span>
+                    </p>
                 </b-col>
             </b-row>
             <b-row align-h="start">
                 <b-col cols="3" class="mt-2">
                     <p>QUANTITY:</p>
                 </b-col>
-                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
+                <b-col  :key="index" v-for="(field, index) in data.market_object.details.fields"
+                        cols="3"
+                        :offset="(display.is_versus_market && index != 0) ? 3 : 0" 
+                        class="mt-2">
                 	<p>{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
                         : splitValHelper(field.quantity,' ',3) }}</p>
                 </b-col>
@@ -82,6 +113,13 @@
         },
         data() {
             return {
+                display:{
+                    is_stock_only: false,
+                    show_choice: false,
+                    has_strike: true,
+                    is_versus_market: false,
+                    is_versus_date: false,
+                },
             };
         },
         methods: {
@@ -100,7 +138,36 @@
                 return moment(date_string, 'YYYY-MM-DD HH:mm:ss').format('MMMYY');
             },
         },
-        mounted() {
+        created() {
+            this.display.show_choice = true;
+            this.display.has_strike = true;
+            this.display.is_versus_market = false;
+            this.display.is_versus_date = false;
+
+            this.display.is_stock_only = this.data.market_object.stock ? true : false;
+            
+            switch(this.data.market_object.trade_structure) {
+                case 'Outright':
+                    this.display.show_choice = false;
+                    break;
+                case 'Risky':
+                case 'Fly':
+                case 'Calendar':
+                    break;
+                case 'EFP':
+                    this.display.has_strike = false;
+                    break;
+                case 'Rolls':
+                    this.display.has_strike = false;
+                    this.display.is_versus_date = true;
+                    break;
+                case 'EFP Switch':
+                    this.display.has_strike = false;
+                    this.display.is_versus_market = true;
+                    break;
+                default:
+
+            }
         }
     }
 </script>

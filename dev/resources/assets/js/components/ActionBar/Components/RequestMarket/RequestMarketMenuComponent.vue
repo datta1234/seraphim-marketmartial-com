@@ -15,7 +15,7 @@
            <div slot="modal-footer" class="w-100">
                 <b-row align-v="center">
                     <b-col cols="12">
-                        <b-button class="mm-modal-button mr-2 w-25" v-if="modal_data.step > 0" @click="previousStep()">Back</b-button>
+                        <b-button v-active-request class="mm-modal-button mr-2 w-25" v-if="modal_data.step > 0" @click="previousStep()">Back</b-button>
                         <b-button class="mm-modal-button ml-2 w-25" @click="hideModal()">Cancel</b-button>
                     </b-col>
                 </b-row>
@@ -32,6 +32,7 @@
     import OptionSwitchController from './Controllers/OptionSwitchControllerComponent.vue';
     import EFPController from './Controllers/EFPControllerComponent.vue';
     import RollsController from './Controllers/RollsControllerComponent.vue';
+    import EFPSwitchController from './Controllers/EFPSwitchControllerComponent.vue';
     // Components
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
@@ -53,6 +54,7 @@
             OptionSwitchController,
             EFPController,
             RollsController,
+            EFPSwitchController,
             MarketSelection,
             StockSelection,
             SwitchSelection,
@@ -81,7 +83,8 @@
                     Single: SingleController,
                     OptionSwitch: OptionSwitchController,
                     EFP: EFPController,
-                    Rolls: RollsController
+                    Rolls: RollsController,
+                    EFPSwitch: EFPSwitchController,
                 },
             };
         },

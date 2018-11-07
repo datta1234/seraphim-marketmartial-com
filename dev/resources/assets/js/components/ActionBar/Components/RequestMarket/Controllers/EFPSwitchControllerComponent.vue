@@ -1,19 +1,19 @@
 <template>
-    <div dusk="rolls-controller" class="rolls-controller">
+    <div dusk="efp-switch-controller" class="efp-switch-controller">
         <mm-loader theme="light" :default_state="false" event_name="requestSubmissionLoaded" width="200" height="200"></mm-loader>
         <component v-if="submitting_request" v-bind:is="components[selected_step_component]" :errors="errors.data[selected_step_component]" :data="controller_data" :callback="loadStepComponent"></component>
     </div>
 </template>
 
 <script>
-    import MarketSelection from '../Components/MarketSelectionComponent.vue';
+    import SwitchSelection from '../Components/SwitchComponents/SwitchSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
     import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
     import { EventBus } from '~/lib/EventBus.js';
     export default {
-        name: 'RollsController',
+        name: 'EFPSwitchController',
         props:{
             'close_modal': {
                 type: Function
@@ -28,13 +28,14 @@
         data() {
             return {
                 controller_data: {
-                    market_type_title:'Index Option',
-                    market_type: null,
+                    market_type_titles:['Index Option'],
+                    market_types: [],
                     market_object: {
 
-                        market:null,
-                        trade_structure: 'Rolls',
+                        markets:null,
+                        trade_structure: 'EFP Switch',
                         trade_structure_groups: [],
+                        expiry_dates: [],
                         details: null,
                     },
                     number_of_dates: 1,
@@ -43,7 +44,7 @@
                 errors: {
                     message: null,
                     data: {
-                        Market:{
+                        Switch:{
                             messages:[]
                         },
                         Expiry:{
@@ -60,7 +61,7 @@
                 },
                 selected_step_component: null,
                 components: {
-                    Market: MarketSelection,
+                    Switch: SwitchSelection,
                     Expiry: ExpirySelection,
                     Confirm: ConfirmMarketRequest,
                     Details: Details,
@@ -87,6 +88,7 @@
              * Loads step component 
              */
             loadStepComponent(step_detail,component_data) {
+                console.log("Component Data: ",component_data);
                 if( step_detail != 'back' ) {
                     this.nextStep();
                     if(step_detail) {
@@ -101,12 +103,16 @@
                 }
                 switch (this.modal_data.step) {
                     case 2:
-                        this.selected_step_component = 'Market';
+                        this.selected_step_component = 'Switch';
                         break;
                     case 3:
-                        this.controller_data.market_object.market = component_data ? 
-                            component_data : this.controller_data.market_object.market;
-                        this.controller_data.number_of_dates = 2;
+                        if(component_data) {
+                            this.controller_data.market_object.markets = [];
+                            component_data.forEach(selected_market => {
+                                this.controller_data.market_object.markets.push(selected_market.index_market);
+                            });
+                        }
+                        this.controller_data.number_of_dates = 1;
                         this.selected_step_component = 'Expiry';                   
                         break;
                     case 4:
@@ -128,14 +134,13 @@
                 console.log("Current Data: ", this.controller_data);
             },
             /**
-             * Loads Index MarketType 
+             * Loads Option Switch Market Types
              */
-            loadMarketType() {
-                console.log("Market Types",this.$root.market_types);
+            loadMarketTypes() {
                 if(Array.isArray(this.$root.market_types)) {
-                    this.$root.market_types.forEach((market_type) => {
-                        if(market_type.title == this.controller_data.market_type_title) {
-                            this.controller_data.market_type = market_type;
+                    this.$root.market_types.forEach((element) => {
+                        if(this.controller_data.market_type_titles.includes(element.title)) {
+                            this.controller_data.market_types.push(element);
                         }
                     });
                 }
@@ -147,8 +152,7 @@
                 // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
-
-                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData() )
+                axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData())
                 .then(newMarketRequestResponse => {
                     // success closes the modal
                     this.close_modal();
@@ -194,15 +198,15 @@
                         switch (propArr[2]) {
                             case "market_id":
                                 errors[prop].forEach( (element, key) => {
-                                    if (this.errors.data.Market.messages.indexOf(element) == -1) {
-                                        this.errors.data.Market.messages.push(element);
+                                    if (this.errors.data.Switch.messages.indexOf(element) == -1) {
+                                        this.errors.data.Switch.messages.push(element);
                                     }
                                 });
                                 this.temp_title.splice(-2);
                                 this.setLowestStep(1);
                                 break;
                             case "fields":
-                                if(propArr[3] == 'Expiration Date 1' || propArr[3] == 'Expiration Date 2') {
+                                if(propArr[3] == 'Expiration Date') {
                                     errors[prop].forEach( (element, key) => {
                                         if (this.errors.data.Expiry.messages.indexOf(element) == -1) {
                                             this.errors.data.Expiry.messages.push(element);
@@ -259,17 +263,21 @@
              */
             formatRequestData() {
                 // sets initial object structure
-                return {
+                let formatted_data = {
                     trade_structure: this.controller_data.market_object.trade_structure,
-                    trade_structure_groups: [{
-                        market_id: this.controller_data.market_object.market.id,
-                        fields: {
-                            "Expiration Date 1": this.castToMoment( this.controller_data.market_object.expiry_dates[0] ),
-                            "Expiration Date 2": this.castToMoment( this.controller_data.market_object.expiry_dates[1] ),
-                            Quantity: this.controller_data.market_object.details.fields[0].quantity,
-                        }    
-                    }]
+                    trade_structure_groups:[]
                 }
+                this.controller_data.market_object.details.fields.forEach( (element,index) => {
+                    formatted_data.trade_structure_groups.push({
+                        is_selected: element.is_selected,
+                        market_id: this.controller_data.market_object.markets[index].id,
+                        fields: {
+                            "Expiration Date": this.castToMoment( this.controller_data.market_object.expiry_dates[0] ),
+                            Quantity: element.quantity
+                        }
+                    });
+                });
+                return formatted_data;
             },
             /**
              * Casting a passed string to moment with a new format
@@ -281,9 +289,9 @@
             },
         },
         mounted() {
-            this.modal_data.title = ["EFP"];
-            this.loadMarketType();
-            this.selected_step_component = 'Market';
+            this.modal_data.title = ["EFP Switch"];
+            this.loadMarketTypes();
+            this.selected_step_component = 'Switch';
             this.$on('modal_step', this.loadStepComponent);
             this.submitting_request = true;
         }

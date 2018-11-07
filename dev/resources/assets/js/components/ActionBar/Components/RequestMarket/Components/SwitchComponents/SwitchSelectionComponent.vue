@@ -4,7 +4,7 @@
             <mm-loader theme="light" :default_state="true" event_name="requestMarketsLoaded" width="200" height="200"></mm-loader>
             <b-row v-if="markets_loaded" :key="index" v-for="(switch_option, index) in switch_options" align-h="center">
                 <b-col cols="12">
-                    <b-row align-h="center">
+                    <b-row v-if="data.market_types.length > 1" align-h="center">
                         <b-col cols="3">
                             <label :for="'option-'+index+'-choice'">Select Options:</label>
                         </b-col>
@@ -58,7 +58,7 @@
                 </b-col>
             </b-row>
             <b-form-group class="text-center mt-4 mb-0">
-                <b-button :disabled="false" 
+                <b-button :disabled="canProceed" 
                           id="submit-index-details" 
                           class="mm-modal-market-button-alt w-25" 
                           @click="selectStock()">
@@ -88,6 +88,17 @@
                 type: Object
             }
         },
+        computed: {
+            'canProceed': function(){
+                return !this.switch_options.reduce( (accumulator, currentValue) => {
+                    if(currentValue.is_index) {
+                        return accumulator && ( currentValue.index_market ? true : false);
+                    } else {
+                        return accumulator && ( currentValue.stock_selection ? true : false);
+                    }
+                }, true);
+            }
+        },
         data() {
             return {
                 options: [
@@ -95,21 +106,7 @@
                     { text: 'Single Stock Options', value: false },
                 ],
                 index_options: [{ text: "Select an Index Option", value: null }],
-                chosen_option: null,
-                switch_options: [
-                    {
-                        is_index: true,
-                        stock_listed: false,
-                        stock_selection: null,
-                        index_market: null,
-                    },
-                    {
-                        is_index: false,
-                        stock_listed: false,
-                        stock_selection: null,
-                        index_market: null,
-                    },  
-                ], 
+                switch_options: [], 
                 stock_selection: null,
                 stock_listed: false,
                 markets_loaded: false,
@@ -185,6 +182,29 @@
             }
         },
         mounted() {
+            let options = {};
+            this.data.market_types.forEach( element => {
+                switch(element.title) {
+                    case 'Index Option':
+                        options.is_index = false;
+                        options.index_market = null;
+                        break;
+                    case 'Single Stock Options':
+                        options.stock_listed = false;
+                        options.stock_selection = null;
+                        break;
+                }
+            });
+            this.switch_options.push(Object.assign({}, options));
+            this.switch_options.push(Object.assign({}, options));
+
+            if(this.data.market_types.length > 1) {
+                this.switch_options[0].is_index = true;
+            } else {
+                this.switch_options.forEach(switch_option => {
+                    switch_option.is_index = true;
+                });
+            }
             this.markets_loaded = false,
             this.loadIndexMarkets();
         }
