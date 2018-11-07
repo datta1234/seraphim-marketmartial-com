@@ -1,15 +1,32 @@
 #trade_html {
-	
+	position: relative;
+    height: 100%;
+	&.light{
+		background-color: $mm-background;
+	}
+	&.dark {
+		background-color: $mm-background-alt;
+	}
 }
 #trade_body {
-
+	position: relative;
+	height: 100%;
+	padding-bottom: $trade-footer-height;
+	margin-bottom: 0px;
 }
 
 #trade_app {
 	position: relative;
+	height: 100%;
 
 	.trade-screen-wrapper {
 		position: relative;
+		height: 100%;
+		padding-bottom: $trade-footer-height;
+    	margin-bottom: 0px;
+	}
+	.trade-section {
+		overflow-y: auto;
 	}
 	.trade-section.light-theme {
 		background-color: $mm-background;
@@ -55,6 +72,10 @@
 	p, span, .market-tab {
 		font-family: $mm-font-sub-head;
 	} 
+	
+	.user-markets {
+		min-height: 40%;
+	}
 
 	.user-market {
 		padding:0px;

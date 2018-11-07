@@ -30,8 +30,15 @@ class PreventSelfTrade implements Rule
     public function passes($attribute, $value)
     {
         $attr = $value ? 'offer' : 'bid';
-        $source = $this->marketNegotiation->marketNegotiationSource($attr);        
-        return $source->user->organisation_id != $this->user->organisation_id;
+        if(!$this->marketNegotiation->tradeNegotiations()->exists())
+        {
+            $source = $this->marketNegotiation->marketNegotiationSource($attr);        
+            return $source->user->organisation_id != $this->user->organisation_id;
+        }else
+        {
+          return true;//ensure that the policy does the rest  
+        }
+      
     }
 
     /**

@@ -33,6 +33,10 @@ class UserMarketRequestGroup extends Model
         'user_market_request_id'
     ];
 
+    protected $casts = [
+        'is_selected' => 'boolean'
+    ];
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

@@ -473,7 +473,8 @@ return [
                                 "id" => 55,
                                 "title"=>"Gross Premiums",
                                 "type"=>"double"
-                            ], 56,                            [
+                            ],
+                            [
                                 // __item__
                                 "id" => 57,
                                 "title"=>"Net Premiums" ,

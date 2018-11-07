@@ -328,23 +328,27 @@ export default class UserMarketRequest extends BaseModel {
 
     isTrading()
     {
-        let isTrading = [
+        let tradingStates = [
             "TRADE-NEGOTIATION-SENDER",
             "TRADE-NEGOTIATION-COUNTER",
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
 
-        return isTrading.indexOf(this.attributes.state) > -1 
+        console.log("is trading got called",tradingStates.indexOf(this.attributes.state) > -1,this.is_trading_at_best == false,this.is_trading_at_best,this.is_trading_at_best_closed);
+
+        return tradingStates.indexOf(this.attributes.state) > -1 
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
     }
 
     get is_trading_at_best() {
-        return this.chosen_user_market && this.chosen_user_market.trading_at_best;
+        // console.log("is_trading_at_best ",this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
+        return (this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
     }
 
     get is_trading_at_best_closed() {
-        return this.chosen_user_market && this.chosen_user_market.trading_at_best && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining();
+        // console.log("is_trading_at_best_closed()",(this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining()));
+        return (this.chosen_user_market !=null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining());
     }
 
     canCounterTrade()
@@ -352,7 +356,6 @@ export default class UserMarketRequest extends BaseModel {
         let canCounterTrade = [
             "TRADE-NEGOTIATION-COUNTER"
         ];
-        console.log(this.attributes.state);
         return canCounterTrade.indexOf(this.attributes.state) > -1; 
     }
 
