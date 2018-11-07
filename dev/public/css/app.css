@@ -17741,16 +17741,22 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
-.trade-section.dark-theme .mm-modal .modal-body,
-.trade-section.light-theme .mm-modal .modal-body,
-.interaction-content .mm-modal .modal-body {
+#trade_app .trade-section.dark-theme .mm-modal .modal-body,
+#trade_app .trade-section.light-theme .mm-modal .modal-body,
+#trade_app .interaction-content .mm-modal .modal-body {
   color: #1D3641;
 }
 
-.trade-section.dark-theme .mm-modal .modal-body p,
-.trade-section.light-theme .mm-modal .modal-body p,
-.interaction-content .mm-modal .modal-body p {
-  color: #1D3641 !important;
+#trade_app .trade-section.dark-theme .mm-modal .modal-body p,
+#trade_app .trade-section.dark-theme .mm-modal .modal-body h2,
+#trade_app .trade-section.dark-theme .mm-modal .modal-body h4,
+#trade_app .trade-section.light-theme .mm-modal .modal-body p,
+#trade_app .trade-section.light-theme .mm-modal .modal-body h2,
+#trade_app .trade-section.light-theme .mm-modal .modal-body h4,
+#trade_app .interaction-content .mm-modal .modal-body p,
+#trade_app .interaction-content .mm-modal .modal-body h2,
+#trade_app .interaction-content .mm-modal .modal-body h4 {
+  color: #1D3641;
 }
 
 .mm-modal {
