@@ -15,7 +15,7 @@
            <div slot="modal-footer" class="w-100">
                 <b-row align-v="center">
                     <b-col cols="12">
-                        <b-button class="mm-modal-button mr-2 w-25" v-if="modal_data.step > 0" @click="previousStep()">Back</b-button>
+                        <b-button v-active-request class="mm-modal-button mr-2 w-25" v-if="modal_data.step > 0" @click="previousStep()">Back</b-button>
                         <b-button class="mm-modal-button ml-2 w-25" @click="hideModal()">Cancel</b-button>
                     </b-col>
                 </b-row>

@@ -1,6 +1,6 @@
 <template>
     <div dusk="filter-markets-menu" class="filter-markets-menu">
-        <button id="action-filter-market-button" type="button" class="btn mm-transparent-button mr-2">
+        <button v-active-request id="action-filter-market-button" type="button" class="btn mm-transparent-button mr-2">
             <span class="icon icon-add"></span> Markets
         </button>
         <!-- Filter market popover -->
@@ -38,10 +38,10 @@
 </template>
 
 <script>
-	import Market from '../../../lib/Market';
-    import UserMarket from '../../../lib/UserMarket';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+	import Market from '~/lib/Market';
+    import UserMarket from '~/lib/UserMarket';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     export default {
         name: 'FilterMarketsMenu',
     	props:{

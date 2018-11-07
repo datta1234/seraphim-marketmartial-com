@@ -12,7 +12,7 @@
     import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
-    import { EventBus } from '../../../../../lib/EventBus.js';
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'IndexController',
         props:{
