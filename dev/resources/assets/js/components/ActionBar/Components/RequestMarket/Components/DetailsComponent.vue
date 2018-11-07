@@ -76,8 +76,6 @@
         							</b-col>
         		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
         		      					<b-form-input :id="'strike-'+index" 
-        		      						type="number"
-        		      						min="0"
         									v-model="field.strike"
                                             :state="inputState(index, 'Strike')"
         									required>

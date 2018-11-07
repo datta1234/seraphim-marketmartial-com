@@ -6,9 +6,9 @@
                 <b-col cols="12">
                     <b-row v-if="data.market_types.length > 1" align-h="center">
                         <b-col cols="3">
-                            <label :for="'option-'+index+'-choice'">Select Options:</label>
+                            <label :for="'option-'+index+'-choice'">Select Options</label>
                         </b-col>
-                        <b-col cols="9">
+                        <b-col cols="6">
                             <b-form-radio-group :id="'option-'+index+'-choice'"
                                                 v-model="switch_options[index].is_index"
                                                 :options="options"
@@ -21,9 +21,9 @@
                         <b-col cols="3">
                             <label class="mr-sm-2" :for="'index-choice-'+index">Underlying Name:</label>
                         </b-col>
-                        <b-col cols="9">
+                        <b-col cols="6">
                             <b-form-select :id="'index-choice-'+index"
-                                           class="w-50"
+                                           class="w-75"
                                            :options="index_options"
                                            v-model="switch_option.index_market">
                             </b-form-select>
@@ -31,15 +31,15 @@
                     </b-row>
                     <b-row v-else align-h="center">
                         <b-col cols="3">
-                            <label class="mr-sm-2" for="admin-filter-paid">Underlying Name:</label>
+                            <label class="mr-sm-2" for="admin-filter-paid">Underlying Name</label>
                         </b-col>
-                        <b-col cols="9">
+                        <b-col cols="6">
                             <type-head-input-component  route="/trade/stock" 
                                                         :callback="(stock, is_listed) => setSelectedStock(stock, is_listed, index)" 
-                                                        class="w-50">
+                                                        class="w-75">
                             </type-head-input-component>
                             <p  v-if="stockFound(index)" 
-                                class="modal-warning-text text-danger text-center w-50">
+                                class="modal-warning-text text-danger text-center w-75">
                                 *Warning: Stock not found.
                             </p>
                         </b-col>
