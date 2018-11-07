@@ -260,7 +260,7 @@
             },
             'market_title': function() {
                 return [
-                    this.marketRequest.tradable_items.default.title,
+                    this.marketRequest.trade_items.default.tradable.title,
                     this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")],
                     this.marketRequest.trade_structure,
                     this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")]

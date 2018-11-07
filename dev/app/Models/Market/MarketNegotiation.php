@@ -285,6 +285,10 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
+    public function getRatioAttribute() {
+        return $this->getLatestBidQty() / $this->getLatestOfferQty();
+    }
+
     public function getActiveConditionTypeAttribute()
     {
         // FoK (can also be private... needs to be first)
@@ -599,6 +603,28 @@ class MarketNegotiation extends Model
         }
         if($this->market_negotiation_id != null) {
             return $this->marketNegotiationParent->getLatestOffer();
+        }
+        return null;
+    }
+
+    public function getLatestBidQty()
+    {
+        if($this->bid_qty != null) {
+            return $this->bid_qty;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestBidQty();
+        }
+        return null;
+    }
+
+    public function getLatestOfferQty()
+    {
+        if($this->offer_qty != null) {
+            return $this->offer_qty;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestOfferQty();
         }
         return null;
     }

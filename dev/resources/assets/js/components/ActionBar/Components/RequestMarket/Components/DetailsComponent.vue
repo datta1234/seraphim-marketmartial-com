@@ -18,6 +18,18 @@
                             <b-col v-if="data.market_object.stock" cols="1"></b-col>
                         </b-row>
                         
+                        <b-row v-if="display.versus" align-h="center">
+                            <b-col cols="3" offset="3" class="text-center">    
+                                <h4>{{ data.market_object.markets[0].title }}</h4>
+                            </b-col>
+                            <b-col cols="1">
+                                <h4>VS.</h4>
+                            </b-col>
+                            <b-col cols="3"class="text-center">    
+                                <h4>{{ data.market_object.markets[1].title }}</h4>
+                            </b-col>
+                        </b-row>
+
                         <b-row v-if="form_data.fields.length > 1" align-h="center">
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
@@ -40,7 +52,10 @@
                                                 <b-col cols="3" offset="3" class="text-center">    
                                                     <b-form-radio id="choice-0" :disabled="display.disable_choice" value="0">CHOICE</b-form-radio>
                                                 </b-col>
-                                                <b-col cols="3" :offset="(form_data.fields.length == 3)? 3: 0" class="text-center">
+                                                <b-col  cols="3" 
+                                                        :offset="(form_data.fields.length == 3)? 3
+                                                            : (display.versus? 1 : 0)"
+                                                        class="text-center">
                                                     <b-form-radio id="choice-1" :disabled="display.disable_choice" value="1">CHOICE</b-form-radio>    
                                                 </b-col>
                                             </b-row>
@@ -61,8 +76,6 @@
         							</b-col>
         		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
         		      					<b-form-input :id="'strike-'+index" 
-        		      						type="number"
-        		      						min="0"
         									v-model="field.strike"
                                             :state="inputState(index, 'Strike')"
         									required>
@@ -79,9 +92,11 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
             						<b-col cols="3">
-            							<label for="quantity-0">Quantity <span v-if="form_data.fields.length > 1"> (Ratio)</span></label>
+            							<label for="quantity-0">Quantity <span v-if="display.is_ratio"> (Ratio)</span></label>
             						</b-col>
-            	      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
+            	      				<b-col  :key="index" v-for="(field, index) in form_data.fields"
+                                            cols="3" 
+                                            :offset="(display.versus && index != 0)? 1 : 0">
             	      					<b-form-input :id="'quantity-'+index" 
             	      						type="number"
             								min="0"
@@ -105,7 +120,7 @@
                             </b-col>
 						</b-row>
 
-                        <b-row v-if="form_data.fields.length > 1">
+                        <b-row v-if="display.is_ratio">
                             <b-col class="text-center mt-3">    
                                 <p class="modal-info-text">
                                     All trades will maintain the above ratio.
@@ -158,6 +173,8 @@
             		show_expiry: false,
             		disable_choice: false,
                     has_strike: true,
+                    versus: false,
+                    is_ratio: false,
             	},
             	chosen_option: null,
                 form_data: {
@@ -197,9 +214,11 @@
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
             }
         },
-        mounted() {
+        created() {
     		let quantity_default = this.data.market_object.stock ? 50 : 500;
             this.display.has_strike = true;
+            this.display.versus = false;
+            this.display.is_ratio = false;
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
@@ -210,19 +229,22 @@
             	case 'Risky':
                     this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
             		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.display.is_ratio = true;
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
                     this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.display.disable_choice = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.display.is_ratio = true;
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
                     this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
             		this.display.show_expiry = true,
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.display.is_ratio = true;
             		this.chosen_option = 0;
             		break;
                 case 'EFP':
@@ -232,8 +254,14 @@
                     this.display.has_strike = false;
                     this.chosen_option = null;
                     break;
-            	default:
-
+                case 'EFP Switch':
+                    this.form_data.fields.push({is_selected:true,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:false,quantity: quantity_default});
+                    this.display.disable_choice = false,
+                    this.display.has_strike = false;
+                    this.display.versus = true;
+                    this.chosen_option = 0;
+                    break;
             }
         }
     }

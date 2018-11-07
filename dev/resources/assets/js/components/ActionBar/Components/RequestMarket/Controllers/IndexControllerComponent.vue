@@ -12,7 +12,7 @@
     import Details from '../Components/DetailsComponent.vue';
     import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
-    import { EventBus } from '../../../../../lib/EventBus.js';
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'IndexController',
         props:{
@@ -295,12 +295,14 @@
                     trade_structure: this.index_data.market_object.trade_structure,
                     trade_structure_groups:[]
                 }
-                this.index_data.market_object.details.fields.forEach( (element,key) => {
+                this.index_data.market_object.details.fields.forEach( (element,index) => {
                     formatted_data.trade_structure_groups.push({
                         is_selected: element.is_selected,
                         market_id: this.index_data.market_object.market.id,
                         fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.index_data.market_object.expiry_dates[key] : this.index_data.market_object.expiry_dates[0] ),
+                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? 
+                                this.index_data.market_object.expiry_dates[index]
+                                : this.index_data.market_object.expiry_dates[0] ),
                             Strike: element.strike,
                             Quantity: element.quantity
                         }

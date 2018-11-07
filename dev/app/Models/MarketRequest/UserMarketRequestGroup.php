@@ -80,14 +80,35 @@ class UserMarketRequestGroup extends Model
             'user_market_request_group_id');
     }
 
+    /**
+    * Scope of choice's
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeChosen($query) {
+        return $query->where('is_selected', true);
+    }
+
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function tradable()
-    {   
+    {
         return $this->hasOne('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_group_id');
+    }
+
+    /**
+    * Return related volatility
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function volatility()
+    {
+        $um_id = $this->userMarketRequest->chosen_user_market_id;
+        return $this->hasOne('App\Models\Market\UserMarketVolatility','user_market_request_group_id')
+                    ->where(function($q) use($um_id) {
+                        return $q->where('user_market_id', $um_id);
+                    });
     }
 
     public function preFormatted()
