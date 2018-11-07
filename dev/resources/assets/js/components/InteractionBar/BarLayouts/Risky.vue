@@ -1,8 +1,10 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-risky">
 
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
+        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
+        <ibar-market-requested class="mb-2" :market-request="marketRequest" :trade-structure="'risky'"></ibar-market-requested>
+
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
          :message="history_message"
@@ -23,6 +25,8 @@
         </p>
     </template>
     <template v-if="!is_trading && !last_is_self">
+        
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
         <ibar-market-negotiation-contracts 
             class="mb-1" v-if="can_negotiate" 
             @validate-proposal="validateProposal" 
@@ -32,6 +36,7 @@
             :market-negotiation="proposed_user_market_negotiation"
         >
         </ibar-market-negotiation-contracts>
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
 
         <ibar-trade-at-best-negotiation 
          v-if="!can_negotiate && is_trading_at_best"
@@ -175,8 +180,9 @@
     import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
+    import IbarVolatilityField from '../MarketComponents/VolatilityField';
+    import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
-    
 
     const showMessagesIn = [
         "market_request_store",
@@ -191,6 +197,8 @@
             IbarApplyConditions,
             IbarRemoveConditions,
             IbarActiveConditions,
+            IbarVolatilityField,
+            IbarMarketRequested,
             IbarTradeAtBestNegotiation
         },
         props: {
@@ -234,6 +242,14 @@
             }
         },
         computed: {
+            'trade_group_1': function() {
+                let group = 'default';
+                return this.marketRequest.trade_items[group];
+            },
+            'trade_group_2': function() {
+                let group = this.$root.config("trade_structure.risky.group_2");
+                return this.marketRequest.trade_items[group];
+            },
             'last_is_self': function() {
                 if(this.last_negotiation) {
                     return this.last_negotiation.is_my_org;
@@ -260,7 +276,7 @@
             },
             'market_title': function() {
                 return [
-                    this.marketRequest.tradable_items.default.title,
+                    this.marketRequest.trade_items.default.tradable.title,
                     this.marketRequest.trade_items.default[this.$root.config("trade_structure.risky.expiration_date")],
                     this.marketRequest.trade_structure
                 ].join(' ');

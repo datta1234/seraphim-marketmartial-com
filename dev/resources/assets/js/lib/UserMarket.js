@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
 import UserMarketNegotiation from './UserMarketNegotiation';
+import UserMarketVolatility from '~/lib/UserMarketVolatility';
 import ActiveCondition from './ActiveCondition';
 
 export default class UserMarket extends BaseModel {
@@ -21,6 +22,10 @@ export default class UserMarket extends BaseModel {
                 },
                 trading_at_best: {
                     setMethod: (negotiation) => { this.setTradingAtBest(negotiation) },
+                },
+                volatilities: {
+                    addMethod: (volatility) => { this.addVolatility(volatility) },
+                    setMethod: (volatility) => { this.setVolatility(volatility) },
                 }
             }
         });
@@ -54,6 +59,11 @@ export default class UserMarket extends BaseModel {
 
         if(options && options.market_negotiations) {
             this.addNegotiations(options.market_negotiations);
+        }
+
+        this.volatilities = [];
+        if(options && options.volatilities) {
+            this.setVolatilities(options.volatilities);
         }
 
         this.active_conditions = [];
@@ -137,6 +147,34 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    addVolatility(volatility) {
+        if(!(volatility instanceof UserMarketVolatility)) {
+            volatility = new UserMarketVolatility(volatility);
+        }
+        volatility.setUserMarket(this);
+        this.volatilities.push(volatility);
+        console.log("Added Volatility", volatility);
+    }
+
+    /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    setVolatilities(volatilities) {
+        this.volatilities.splice(0, this.volatilities.length);
+        volatilities.forEach(vol => {
+            this.addVolatility(vol);
+        });
+    }
+
+    volatilityForGroup(group_id) {
+        return this.volatilities.find(x => x.group_id == group_id);
+    }
+
+    /**
     *   addActiveCondition - add user user_market_negotiation
     *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
     */
@@ -202,6 +240,7 @@ export default class UserMarket extends BaseModel {
         return {
             user_market_request_id: this.user_market_request_id,
             current_market_negotiation: this.current_market_negotiation.prepareStore(),
+            volatilities: this.volatilities.map(x => x.prepareStore())
         };
     }
 

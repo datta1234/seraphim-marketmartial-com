@@ -4,7 +4,7 @@
             <b-col class="market-tab-name market-tab-name">
                 <b-row no-gutters align-v="center" align-h="center">
                     <b-col v-if="marketRequest.market.is('singles')">
-                        {{ marketRequest.tradable_items.default.title }}&nbsp;
+                        {{ marketRequest.trade_items.default.tradable.title }}&nbsp;
                     </b-col>
                     <b-col cols="auto">
                         <div class="market-tab-strikes">

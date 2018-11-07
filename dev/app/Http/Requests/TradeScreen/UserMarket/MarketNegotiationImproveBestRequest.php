@@ -5,6 +5,7 @@ namespace App\Http\Requests\TradeScreen\UserMarket;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\LevelsImprovement;
+use App\Rules\MaintainsRatio;
 
 class MarketNegotiationImproveBestRequest extends FormRequest
 {
@@ -57,6 +58,8 @@ class MarketNegotiationImproveBestRequest extends FormRequest
         if($negotiation->id == $lastNegotiation->id) {
             $validator->errors()->add('market_negotiation', 'Requested Negotiation is no longer the latest levels, Please try again.');
         } else {
+            $ratio = $this->user_market->firstNegotiation->ratio;
+
             $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $lastNegotiation)], function ($input) use($lastNegotiation) {
                 return $lastNegotiation->cond_buy_best == false;
             }); 
@@ -65,11 +68,11 @@ class MarketNegotiationImproveBestRequest extends FormRequest
                 return $lastNegotiation->cond_buy_best == true;
             }); 
 
-            $validator->sometimes('bid_qty', 'required_with:bid|numeric', function ($input) use($lastNegotiation) {
+            $validator->sometimes('bid_qty', ['required','numeric', new MaintainsRatio($this, $ratio, $lastNegotiation)], function ($input) use($lastNegotiation) {
                 return $lastNegotiation->cond_buy_best == false;
             }); 
 
-            $validator->sometimes('offer_qty', 'required_with:offer|numeric', function ($input) use($lastNegotiation) {
+            $validator->sometimes('offer_qty', ['required_with:offer','numeric'new MaintainsRatio($this, $ratio, $lastNegotiation)], function ($input) use($lastNegotiation) {
                 return $lastNegotiation->cond_buy_best == true;
             }); 
         }

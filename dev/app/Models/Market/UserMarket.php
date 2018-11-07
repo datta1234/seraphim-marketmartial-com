@@ -169,6 +169,15 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Trade\TradeNegotiation','user_market_id');
     }
 
+    /**
+    * Return related market volatilities
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function volatilities()
+    {
+        return $this->hasMany('App\Models\Market\UserMarketVolatility','user_market_id');
+    }
+
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
         return ( $trade ? !$trade->traded : false );
@@ -501,6 +510,9 @@ class UserMarket extends Model
                                                 'type'      => $cond->activeConditionType
                                             ];
                                         })->values(),
+            "volatilities"          =>  $this->volatilities->map(function($vol){
+                                            return $vol->preFormatted();
+                                        }),
         ];
         // dd($this->activeConditionNegotiations()->toSql());
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
