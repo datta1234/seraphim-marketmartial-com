@@ -36,8 +36,8 @@
 <script>
     import TradeConfirmationComponent from './TradeConfirmation/TradeConfirmationComponent.vue';
 
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import TradeConfirmation from '../../../lib/TradeConfirmation';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import TradeConfirmation from '~/lib/TradeConfirmation';
     // Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 
     export default {
