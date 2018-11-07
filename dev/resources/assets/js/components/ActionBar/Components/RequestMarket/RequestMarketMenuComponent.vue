@@ -32,6 +32,7 @@
     import OptionSwitchController from './Controllers/OptionSwitchControllerComponent.vue';
     import EFPController from './Controllers/EFPControllerComponent.vue';
     import RollsController from './Controllers/RollsControllerComponent.vue';
+    import EFPSwitchController from './Controllers/EFPSwitchControllerComponent.vue';
     // Components
     import StepSelection from './Components/StepSelectionComponent.vue';
     import MarketSelection from './Components/MarketSelectionComponent.vue';
@@ -53,6 +54,7 @@
             OptionSwitchController,
             EFPController,
             RollsController,
+            EFPSwitchController,
             MarketSelection,
             StockSelection,
             SwitchSelection,
@@ -81,7 +83,8 @@
                     Single: SingleController,
                     OptionSwitch: OptionSwitchController,
                     EFP: EFPController,
-                    Rolls: RollsController
+                    Rolls: RollsController,
+                    EFPSwitch: EFPSwitchController,
                 },
             };
         },

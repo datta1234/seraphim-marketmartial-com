@@ -9,7 +9,7 @@
     import MarketSelection from '../Components/MarketSelectionComponent.vue';
     import ExpirySelection from '../Components/ExpirySelectionComponent.vue';
     import Details from '../Components/DetailsComponent.vue';
-    import ConfirmMarketRequest from '../Components/NewConfirmMarketRequestComponent.vue';
+    import ConfirmMarketRequest from '../Components/ConfirmMarketRequestComponent.vue';
 
     import { EventBus } from '../../../../../lib/EventBus.js';
     export default {
