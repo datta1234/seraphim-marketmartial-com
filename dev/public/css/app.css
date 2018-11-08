@@ -11363,11 +11363,16 @@ table.table {
   height: 100%;
 }
 
+#trade_app #trade-footer {
+  position: fixed;
+}
+
 #trade_app .trade-screen-wrapper {
-  position: relative;
+  position: absolute;
   height: 100%;
-  padding-bottom: 65px;
-  margin-bottom: 0px;
+  top: 58px;
+  bottom: 65px;
+  margin: 0px;
 }
 
 #trade_app .trade-section {

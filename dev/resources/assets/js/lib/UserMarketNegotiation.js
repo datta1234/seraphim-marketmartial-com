@@ -113,6 +113,30 @@ export default class UserMarketNegotiation extends BaseModel {
         };
     }
 
+    prepareAmend(user_market) {
+        return {
+            id: this.id,
+            bid: this.bid,
+            offer: this.offer,
+            bid_qty: this.bid_qty,
+            offer_qty: this.offer_qty,
+            is_repeat: !!this.is_repeat,
+            has_premium_calc: !!this.has_premium_calc,
+            bid_premium: this.bid_premium,
+            offer_premium: this.offer_premium,
+            is_private: this.is_private,
+            cond_is_repeat_atw: this.cond_is_repeat_atw,
+            cond_fok_apply_bid: this.cond_fok_apply_bid,
+            cond_fok_spin: this.cond_fok_spin,
+            cond_timeout: this.cond_timeout,
+            cond_is_oco: this.cond_is_oco,
+            cond_is_subject: this.cond_is_subject,
+            cond_buy_mid: this.cond_buy_mid,
+            cond_buy_best: this.cond_buy_best,
+            volatilities: user_market.volatilities.map(x => x.prepareStore())
+        };
+    }
+
     getTimeoutRemaining() {
         let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
         // ensure its not shown if its timed out
@@ -333,7 +357,7 @@ export default class UserMarketNegotiation extends BaseModel {
 
         return new Promise((resolve, reject) => {
 
-             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareStore())
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareAmend(user_market))
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 // link now that we are saved
