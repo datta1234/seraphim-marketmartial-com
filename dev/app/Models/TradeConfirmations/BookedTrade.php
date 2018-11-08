@@ -109,6 +109,10 @@ class BookedTrade extends Model
 
     public function resolveMarketStock() {
         // Resolve stock / market
+        /*
+        *@TODO modify as stock will be removed 
+        *
+        */
         if($this->stock) {
             return $this->stock->code;
         } else {
@@ -120,7 +124,6 @@ class BookedTrade extends Model
     {
         $trade_confirmation = $this->tradeConfirmation;
         $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
-
         $data = [
             "id"            => $this->id,
             "date"          => $this->created_at->format('Y-m-d H:i:s'),
