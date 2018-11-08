@@ -177,6 +177,7 @@ class UserMarket extends Model
     public function needsBalanceWorked()
     {
         $lastTrade = $this->tradeNegotiations()->latest()->first();
+//        \Log::info([$lastTrade->id]);
         if($lastTrade)
         {
              return $lastTrade->tradeNegotiationParent ? $lastTrade->quantity < $lastTrade->tradeNegotiationParent->quantity : false;          
