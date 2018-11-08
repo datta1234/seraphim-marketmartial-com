@@ -175,6 +175,7 @@ class MarketUserMarketReqeustController extends Controller
 
             DB::commit();
 
+
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             Log::error($e);

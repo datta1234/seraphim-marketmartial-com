@@ -75,12 +75,20 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
         }
 
-         $data = $tradeConfirmation->fresh()->load([
+        /*
+        *   
+        */
+        $tradeConfirmation->bookTrades();
+        
+        $data = $tradeConfirmation->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
             }
         ])->preFormatted();
+
+
+         //perform the booked trades
 
         return response()->json(['trade_confirmation' => $data]);
     } 

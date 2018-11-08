@@ -81,25 +81,25 @@ class UserMarketStoreRequest extends FormRequest
             return !is_null($input->current_market_negotiation["offer_qty"]);
         }); 
 
-        $ratio = $userMarketRequest->getRatio();
+        // $ratio = $userMarketRequest->ratio;
 
         $validator->sometimes(
             ['current_market_negotiation.bid_qty'], 
-            ['required','numeric', new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')], 
+            ['required','numeric', /*new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')*/], 
             function ($input) {
                 return !is_null($input->current_market_negotiation["bid"]);
         }); 
 
         $validator->sometimes(
             ['current_market_negotiation.offer_qty'], 
-            ['required_with:offer','numeric', new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')], 
+            ['required_with:offer','numeric', /*new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')*/], 
             function ($input) {
                 return !is_null($input->current_market_negotiation["offer"]);
         }); 
     
         // Risky / Calendar / Fly
         $validator->sometimes(['volatilities'], ['required', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
-            return in_array($userMarketRequest->trade_structure_id, [1, 2, 3]);
+            return in_array($userMarketRequest->trade_structure_id, [2, 3, 4]);
         });
     }
 }

@@ -291,8 +291,23 @@ class UserMarket extends Model
             });
         })->first();
         $this->update(['is_on_hold'=>false]);
-      
-      return  $marketNegotiation->update($data);
+
+        \Log::info(["here1: ", $data['volatilities']]);
+        if(isset($data['volatilities']) && !empty($data['volatilities'])) {
+            $vols = collect($data['volatilities'])->keyBy('group_id');
+            \Log::info(["here2: ", $vols]);
+            $groups = $this->volatilities;
+            \Log::info(["here3: ", $groups]);
+            foreach($groups as $group) {
+                if(isset($vols[$group->user_market_request_group_id])) {
+                    $group->volatility = $vols[$group->user_market_request_group_id]['value'];
+                    $done = $group->save();
+                    \Log::info(["here4: ", $done, $vols[$group->user_market_request_group_id]['value']]);
+                }
+            }
+        }
+
+        return  $marketNegotiation->update($data);
     }
 
 
@@ -403,6 +418,16 @@ class UserMarket extends Model
                 // enforce responses to have the same condition
                 if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
                     $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+                }
+
+                // add missing values (prior data)
+                if($marketNegotiation->bid == null) {
+                    $marketNegotiation->bid = $counterNegotiation->bid;
+                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+                }
+                if($marketNegotiation->offer == null) {
+                    $marketNegotiation->offer = $counterNegotiation->offer;
+                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
                 }
             }
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
