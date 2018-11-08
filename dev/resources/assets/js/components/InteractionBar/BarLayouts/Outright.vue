@@ -545,8 +545,8 @@
                 }
                 else
                 {
-                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
-                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.defaultQuantity();
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.defaultQuantity();
                 }
             },
             setUpData() {

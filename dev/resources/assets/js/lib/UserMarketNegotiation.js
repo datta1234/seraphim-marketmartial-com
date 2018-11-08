@@ -371,7 +371,7 @@ export default class UserMarketNegotiation extends BaseModel {
             prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
         }
         
-        if(typeof prevItem !== "undefined" &&  prevItem != null  && ( prevItem[attr] == this[attr] || (this[attr] == null || this[attr] == '') ) )
+        if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
         {
             return prevItem.getAmountSource(attr);   
         }else
@@ -444,6 +444,9 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+    get ratio() {
+        return this.bid_qty / this.offer_qty;
+    }
     
 
 }

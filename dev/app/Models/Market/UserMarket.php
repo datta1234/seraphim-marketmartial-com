@@ -404,6 +404,16 @@ class UserMarket extends Model
                 if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
                     $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
                 }
+
+                // add missing values (prior data)
+                if($marketNegotiation->bid == null) {
+                    $marketNegotiation->bid = $counterNegotiation->bid;
+                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+                }
+                if($marketNegotiation->offer == null) {
+                    $marketNegotiation->offer = $counterNegotiation->offer;
+                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+                }
             }
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 

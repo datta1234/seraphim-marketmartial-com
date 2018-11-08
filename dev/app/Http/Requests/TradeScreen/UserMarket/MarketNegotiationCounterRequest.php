@@ -63,7 +63,7 @@ class MarketNegotiationCounterRequest extends FormRequest
     {
         // get latest non mim
         $lastNegotiation = $this->market_negotiation;
-        $ratio = $this->user_market->firstNegotiation->ratio;
+        /*$ratio = $this->user_market->firstNegotiation->ratio;*/
 
         $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric'], function ($input) {
             return !is_null($input->bid_qty) && !$input->is_repeat;
@@ -79,11 +79,11 @@ class MarketNegotiationCounterRequest extends FormRequest
             return $lastNegotiation->cond_buy_mid === null;
         });
 
-        $validator->sometimes('bid_qty', ['required','numeric', new MaintainsRatio($this, $ratio, $lastNegotiation)], function ($input) {
+        $validator->sometimes('bid_qty', ['required','numeric', /*new MaintainsRatio($this, $ratio, $lastNegotiation)*/], function ($input) {
             return !is_null($input->bid) && !$input->is_repeat;
         }); 
 
-        $validator->sometimes('offer_qty', ['required_with:offer','numeric'new MaintainsRatio($this, $ratio, $lastNegotiation)], function ($input) {
+        $validator->sometimes('offer_qty', ['required_with:offer','numeric', /*new MaintainsRatio($this, $ratio, $lastNegotiation)*/], function ($input) {
             return !is_null($input->offer) && !$input->is_repeat;
         }); 
     }

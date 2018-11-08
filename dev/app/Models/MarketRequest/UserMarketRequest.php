@@ -154,7 +154,7 @@ class UserMarketRequest extends Model
     }
 
 
-    public function getRatio() {
+    public function getRatioAttribute() {
         return $this->getDynamicItems('Quantity')->reduce(function($out, $item) {
             if($out == null) {
                 $out = $item;
@@ -272,6 +272,7 @@ class UserMarketRequest extends Model
                 }
                 return $data;
             }),
+            "ratio"             => $this->ratio,
             "attributes"        => $this->resolveRequestAttributes(),
             "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
             "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
@@ -345,9 +346,13 @@ class UserMarketRequest extends Model
             $marketCount = $this->chosenUserMarket->marketNegotiations()->withTrashed()->count();
 
             if($is_interest){
-              return  $marketCount > 0;
+                return  $marketCount > 0;
             }else{
-              return $marketCount > 1;
+                // quote same org as interest - self made market, open to all be default
+                if($this->chosenUserMarket->user->organisation_id == $interest_org_id) {
+                    return $marketCount > 0;
+                }
+                return $marketCount > 1;
             }
 
         }   
@@ -392,17 +397,30 @@ class UserMarketRequest extends Model
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             
-            if(!is_null($lastNegotiation) && !is_null($lastNegotiation->marketNegotiationParent))
+            if(!is_null($lastNegotiation))
             {
-                // open if the last one is killed but isnt a fill
-                if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
-                    return true;
+                // negotiation history exists
+                if(!is_null($lastNegotiation->marketNegotiationParent)) {
+                    // open if the last one is killed but isnt a fill
+                    if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
+                        return true;
+                    }
+                    return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
+                } else {
+                    \Log::info('Got here yea');
+                    // there should only be one - is it same org = open
+                    $marketCount = $this->chosenUserMarket->marketNegotiations()->withTrashed()->count();
+                    $interest_org_id = $this->chosenUserMarket->user->organisation_id;
+                    $market_maker_org_id = $this->chosenUserMarket->firstNegotiation->user->organisation_id;
+                    if($marketCount == 1 && $interest_org_id == $market_maker_org_id) {
+                        return true; 
+                    }
                 }
-                return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
+
             }else
             {
                 // @TODO: this is breaking the initial levels being set.
-               return is_null($lastNegotiation->marketNegotiationParent);
+                return is_null($lastNegotiation->marketNegotiationParent);
             }
         }
         return false;

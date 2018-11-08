@@ -43,6 +43,7 @@ export default class UserMarketRequest extends BaseModel {
                 is_interest: false
             },
             quote: null,
+            ratio: null,
             chosen_user_market: null,
             created_at: moment(),
             updated_at: moment(),
@@ -348,5 +349,32 @@ export default class UserMarketRequest extends BaseModel {
         }
         this._stage = "market";
         return this._stage;
+    }
+
+    get trade_structure_slug() {
+        switch(this.trade_structure) {
+            case 'Outright':
+                return 'outright';
+            break;
+            case 'Risky':
+                return 'risky';
+            break;
+            case 'Fly':
+                return 'fly';
+            break;
+            case 'Option Switch':
+                return 'option_switch';
+            break;
+        };
+    }
+
+    defaultQuantity()
+    {
+        let group = Object.values(this.trade_items).find(item => item.choice == false);
+        let ts = this.trade_structure_slug;
+        let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
+        let val = group[conf];
+        console.log(group, ts, conf, val);
+        return val;
     }
 }

@@ -243,7 +243,7 @@
         },
         computed: {
             'trade_group_1': function() {
-                let group = 'default';
+                let group = this.$root.config("trade_structure.risky.group_1");
                 return this.marketRequest.trade_items[group];
             },
             'trade_group_2': function() {
@@ -560,8 +560,9 @@
                 }
                 else
                 {
-                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
-                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+                    console.log('called defaultQuantity');
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.defaultQuantity();
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.defaultQuantity();
                 }
             },
             setUpData() {

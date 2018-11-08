@@ -113,7 +113,6 @@
                 if(typeof this.currentNegotiation !== 'undefined' && this.currentNegotiation != null && this.currentNegotiation.is_killed != true) {
                     let currentBid = this.currentNegotiation.getAmountSource('bid');
                     let currentOffer = this.currentNegotiation.getAmountSource('offer');
-                    console.log(currentBid, currentOffer);
                     // Check new currentNegotiation is valid
                     invalid_states.previous = 
                             (

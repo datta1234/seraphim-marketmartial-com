@@ -19,7 +19,9 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
-        "group_1": "default"
+        "group_1": "default",
+        "group_2": "Fly Second option",
+        "group_3": "Fly third option"
     },
     "calendar": {
         "title": "Calendar",
