@@ -359,6 +359,9 @@ export default class UserMarketRequest extends BaseModel {
             case 'Risky':
                 return 'risky';
             break;
+            case 'Calendar':
+                return 'calendar';
+            break;
             case 'Fly':
                 return 'fly';
             break;
@@ -374,7 +377,6 @@ export default class UserMarketRequest extends BaseModel {
         let ts = this.trade_structure_slug;
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
         let val = group[conf];
-        console.log(group, ts, conf, val);
         return val;
     }
 }

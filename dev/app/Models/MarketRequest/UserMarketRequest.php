@@ -132,6 +132,7 @@ class UserMarketRequest extends Model
     {
         return $query->where(function($q) {
             $q->where('created_at', '>', now()->startOfDay());
+            
         });
     }
 
