@@ -177,7 +177,8 @@
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
     
-
+    import NegotiationBarMixin from '../NegotiationBarMixin';
+    
     const showMessagesIn = [
         "market_request_store",
         "market_request_update",
@@ -187,6 +188,7 @@
 
 
     export default {
+        mixins: [NegotiationBarMixin],
         components: {
             IbarApplyConditions,
             IbarRemoveConditions,
@@ -194,9 +196,7 @@
             IbarTradeAtBestNegotiation
         },
         props: {
-            marketRequest: {
-                type: UserMarketRequest
-            }
+            
         },
         data() {
             return {
