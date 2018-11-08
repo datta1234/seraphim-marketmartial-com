@@ -4,6 +4,7 @@ namespace App\Http\Requests\TradeScreen\MarketRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
+use App\Rules\QuotesVolatilities;
 
 class UserMarketUpdateRequest extends FormRequest
 {
@@ -64,7 +65,7 @@ class UserMarketUpdateRequest extends FormRequest
         }); 
 
         // Risky / Calendar / Fly
-        $validator->sometimes(['volatilities'], ['required', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
+        $validator->sometimes(['volatilities'], ['required_without:accept', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
             return in_array($userMarketRequest->trade_structure_id, [2, 3, 4]);
         });
     }

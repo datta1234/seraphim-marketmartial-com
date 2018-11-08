@@ -17,19 +17,21 @@
 </template>
 <script>
 import UserMarket from '~/lib/UserMarket';
+import UserMarketQuote from '~/lib/UserMarketQuote';
 import UserMarketVolatility from '~/lib/UserMarketVolatility';
 
 export default {
     props: {
         userMarket: {
-            type: UserMarket,
+            type: [UserMarket, UserMarketQuote],
             default: new UserMarket()
         },
         tradeGroup: Object,
         disabled: Boolean
     },
     watch: {
-        'userMarket':function(nv) {
+        'userMarket':function(nv, ov) {
+            console.log("Changed !!!!> ", nv, ov);
             this.assignVolatility();
         }
     },

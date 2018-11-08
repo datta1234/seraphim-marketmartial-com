@@ -185,14 +185,6 @@
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
 
     import NegotiationBarMixin from '../NegotiationBarMixin';
-    
-    const showMessagesIn = [
-        "market_request_store",
-        "market_request_update",
-        "market_request_delete",
-        "market_negotiation_store"
-    ];
-
 
     export default {
         mixins: [NegotiationBarMixin],
@@ -224,6 +216,12 @@
                 server_loading: false,
                 check_invalid: false,
                 errors: [],
+                showMessagesIn: [
+                    "market_request_store",
+                    "market_request_update",
+                    "market_request_delete",
+                    "market_negotiation_store"
+                ],
             };
         },
 

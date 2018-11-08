@@ -11,10 +11,6 @@ export default {
             type: UserMarketRequest
         }
     },
-    data() {
-        return {
-        };
-    },
     watch: {
             'marketRequest': {
                 handler: function(newVal, oldVal) {
@@ -108,7 +104,7 @@ export default {
             if(messageData.user_market_request_id == this.marketRequest.id)
             {
                 let message = messageData.message;
-                if(message !== null && typeof message === "object" && showMessagesIn.indexOf(message.key) > -1)
+                if(message !== null && typeof message === "object" && this.showMessagesIn.indexOf(message.key) > -1)
                 {
                    this.history_message = message.data;
                 }else if(message === null)
@@ -216,6 +212,7 @@ export default {
             this.proposed_user_market_negotiation.patchQuote(this.marketRequest, this.proposed_user_market)
             .then(response => {
 
+                this.proposed_user_market = new UserMarket();
                 this.server_loading = false;                    
                 this.errors = [];
                 
@@ -305,11 +302,7 @@ export default {
             {
                 if(this.marketRequest.sent_quote != null)//already have my quote
                 {
-                    this.proposed_user_market = this.marketRequest.sent_quote;
-                }
-                else
-                {
-                    this.proposed_user_market = new UserMarket();
+                    this.proposed_user_market.id = this.marketRequest.sent_quote.id;
                 }
 
             }

@@ -291,8 +291,23 @@ class UserMarket extends Model
             });
         })->first();
         $this->update(['is_on_hold'=>false]);
-      
-      return  $marketNegotiation->update($data);
+
+        \Log::info(["here1: ", $data['volatilities']]);
+        if(isset($data['volatilities']) && !empty($data['volatilities'])) {
+            $vols = collect($data['volatilities'])->keyBy('group_id');
+            \Log::info(["here2: ", $vols]);
+            $groups = $this->volatilities;
+            \Log::info(["here3: ", $groups]);
+            foreach($groups as $group) {
+                if(isset($vols[$group->user_market_request_group_id])) {
+                    $group->volatility = $vols[$group->user_market_request_group_id]['value'];
+                    $done = $group->save();
+                    \Log::info(["here4: ", $done, $vols[$group->user_market_request_group_id]['value']]);
+                }
+            }
+        }
+
+        return  $marketNegotiation->update($data);
     }
 
 

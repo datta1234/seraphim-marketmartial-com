@@ -29,6 +29,12 @@ Vue.use(Toasted, {
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { Bar } from 'vue-chartjs';
 
+// Directives
+import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
+Vue.component('active-makers', ActiveMarketMakers);
+import ActiveRequestDirective from './directives/active-request.js';
+Vue.directive('active-request', ActiveRequestDirective);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -123,9 +129,6 @@ Vue.mixin({
         },
     }
 });
-
-import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
-Vue.component('active-makers', ActiveMarketMakers);
 const app = new Vue({
     el: '#trade_app',
     methods: {
@@ -135,6 +138,7 @@ const app = new Vue({
         
     },
     mounted: function() {
-        
+        ActiveRequestDirective.init(this);
+        ActiveMakerService.init(this);
     }
 });
