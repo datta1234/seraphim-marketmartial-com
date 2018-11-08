@@ -1,13 +1,6 @@
 {
-<<<<<<< HEAD
-    "/js/trade-screen.js": "/js/trade-screen.js?id=ae1beb0d86a7c164e8e5",
-    "/css/app.css": "/css/app.css?id=a5b06232a373bd90a7ff",
-    "/js/canvas.js": "/js/canvas.js?id=33609975a9a726026ef2",
-    "/js/public.js": "/js/public.js?id=8aeb604dfeb48e800612"
-=======
-    "/js/trade-screen.js": "/js/trade-screen.js?id=7443b22594d236ec32f4",
-    "/css/app.css": "/css/app.css?id=02a85b1377d3ce9bf589",
-    "/js/canvas.js": "/js/canvas.js?id=829489764940d03a66e1",
-    "/js/public.js": "/js/public.js?id=fc83ce77bd21b676285e"
->>>>>>> 4734074d77376815bed0aa8688aafafd2a5a7cb4
+    "/js/trade-screen.js": "/js/trade-screen.js",
+    "/css/app.css": "/css/app.css",
+    "/js/canvas.js": "/js/canvas.js",
+    "/js/public.js": "/js/public.js"
 }
