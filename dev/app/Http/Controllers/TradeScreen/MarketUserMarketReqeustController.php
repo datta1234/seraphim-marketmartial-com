@@ -78,8 +78,6 @@ class MarketUserMarketReqeustController extends Controller
     public function store(UserMarketRequestRequest $request, Market $market)
     {
         $input = $request->all();
-    
-
 
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with(['tradeStructureGroups' => function($q){
             $q->where("trade_structure_group_type_id",1)
