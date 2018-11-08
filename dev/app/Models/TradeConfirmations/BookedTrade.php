@@ -34,14 +34,15 @@ class BookedTrade extends Model
      * @var array
      */
     protected $fillable = [
-        'is_sale',
         'is_confirmed',
         'amount',
         'user_id',
         'trade_confirmation_id',
         'trading_account_id',
-        'market_id',
-        'stock_id',
+        "user_market_request_id",
+        "is_sale",
+        "is_purchase",
+        "is_rebate"
     ];
 
     /**

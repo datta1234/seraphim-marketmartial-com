@@ -723,24 +723,30 @@ public function preFormatStats($user = null, $is_Admin = false)
         $this->bookedTrades()->create([
             "trading_account_id" => $this->send_trading_account_id,
             "is_sale" => false,
+            "is_purchase" => true,
+
             "is_confirmed" => false,
             "amount" => $this->resolveNetPremium($this->send_user_id),
             "user_id" => $this->send_user_id,
             "trade_confirmation_id" => $this->id,
-            "market_id" => 1,
-            "stock_id" => 1,
+            "market_request_id" => $this->id,
+
         ]);
 
         $this->bookedTrades()->create([
             "trading_account_id" => $this->receiving_trading_account_id,
             "is_sale" => true,
+            "is_purchase" => false,
+
             "is_confirmed" => false,
             "amount" => $this->resolveNetPremium($this->receiving_user_id),
             "user_id" => $this->receiving_user_id,
             "trade_confirmation_id" => $this->id,
-            "market_id" => 1,
-            "stock_id" => 1,
+            "market_request_id" => $this->tradeConfirmation->user_market_request_id,
         ]);
+
+       //$rebate->notifyNew($organisation,$message);
+
     }
 
     public function resolveNetPremium()
