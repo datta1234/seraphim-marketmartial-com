@@ -190,7 +190,7 @@
                     // toggle loading
                     EventBus.$emit('loading', 'requestSubmission');
                     this.submitting_request = true;
-                    
+                    this.setLowestStep(5);
                     // server error loads the response errors and loads error step
                     if (err.response && err.response.data.message) {
                         // The request was made and the server responded with a status code
@@ -202,11 +202,14 @@
                       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                       // http.ClientRequest in node.js
                       console.error(err.request);
+                      this.$toasted.error("a Server connection error has occurred.");
                     } else {
                       // Something happened in setting up the request that triggered an Error
                       console.error(err.message);
+                      this.$toasted.error("Oops, Something went wrong.");
                     }
                     console.error(err.config);
+                    this.loadStepComponent();
                 });
             },
             /**
@@ -240,7 +243,6 @@
              * @params {Object} errors
              */
             loadErrorStep(errors) {
-                this.setLowestStep(5);
                 for(let prop in errors) {
                     if(prop.indexOf('.') != -1) {
                         let propArr = prop.split('.');
@@ -313,7 +315,6 @@
                     this.$toasted.error(this.errors.message);
                 }
                 this.modal_data.title = this.modal_data.step > 4 ? this.modal_data.title : this.temp_title;
-                this.loadStepComponent();
             },
             /**
              * Sets a new lowest step if the passed step is lower than the current lowest step
