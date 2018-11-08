@@ -44,7 +44,8 @@ class UserMarketUpdateRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-
+        $userMarketRequest = $this->user_market_request;
+        
         $validator->sometimes(['bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
             return !is_null($input->bid_qty);
         }); 
@@ -61,5 +62,10 @@ class UserMarketUpdateRequest extends FormRequest
             return !is_null($input->offer);
 
         }); 
+
+        // Risky / Calendar / Fly
+        $validator->sometimes(['volatilities'], ['required', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
+            return in_array($userMarketRequest->trade_structure_id, [2, 3, 4]);
+        });
     }
 }

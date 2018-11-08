@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
+    "/js/trade-screen.js": "/js/trade-screen.js?id=e21bd362cbcd1403bf96",
+=======
     "/js/trade-screen.js": "/js/trade-screen.js?id=2294cc82de27a8826174",
+>>>>>>> dd299fa5bb28f1f6e006eae8f4e0306c95050707
     "/css/app.css": "/css/app.css?id=02a85b1377d3ce9bf589",
     "/js/canvas.js": "/js/canvas.js?id=829489764940d03a66e1",
     "/js/public.js": "/js/public.js?id=fc83ce77bd21b676285e"
