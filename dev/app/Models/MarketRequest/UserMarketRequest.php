@@ -426,20 +426,29 @@ class UserMarketRequest extends Model
         return false;
     }
 
-    public function lastTradeNegotiationIsUnTraded()
-    {
-        if(!is_null($this->chosenUserMarket))
-        {
-            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded;  
-        }
-    }
+    // public function lastTradeNegotiationIsUnTraded()
+    // {
+    //     if(!is_null($this->chosenUserMarket))
+    //     {
+    //         $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+    //         return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && !$lastNegotiation->lastTradeNegotiation->traded;  
+    //     }
+    // }
 
      public function lastTradeNegotiationIsTraded()
     {
         if(!is_null($this->chosenUserMarket))
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            if($lastNegotiation->lastTradeNegotiation)
+            {
+                \Log::info(["the last negotiation",$lastNegotiation->lastTradeNegotiation->id]);
+            }else
+            {
+                \Log::info(["no last lastTradeNegotiation",$lastNegotiation->id]);
+
+            }
+
             return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->traded;  
         }
     }
@@ -460,7 +469,7 @@ class UserMarketRequest extends Model
 
         $is_trading         =  $acceptedState ? $this->chosenUserMarket->isTrading() : false;
 
-        $lastTraded         =  $is_trading ? $this->lastTradeNegotiationIsTraded() : false;
+        $lastTraded         =  $this->lastTradeNegotiationIsTraded();
 
         
         /*
@@ -493,10 +502,7 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-pending';
         }
-        elseif ($acceptedState && !$marketOpen && $is_trading && $lastTraded)
-        {
-            return 'trade-negotiation-balance';
-        }
+        
     }
 
     
