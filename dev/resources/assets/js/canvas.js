@@ -30,6 +30,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { Bar } from 'vue-chartjs';
 
 // Directives
+import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
 Vue.component('active-makers', ActiveMarketMakers);
 import ActiveRequestDirective from './directives/active-request.js';
@@ -148,7 +149,7 @@ const app = new Vue({
         loadConfig(config_name, config_file) {
             let self = this;
             config_file = (typeof config_file !== 'undefined' ? config_file : config_name+".json");
-            return axios.get(axios.defaults.baseUrl + '/config/'+config_file)
+            return window.axios.get(window.axios.defaults.baseUrl + '/config/'+config_file)
             .then(configResponse => {
                 if(configResponse.status == 200) {
                     // proxy through vue logic
@@ -172,7 +173,9 @@ const app = new Vue({
         configs: {}
     },
     mounted: function() {
-        this.loadConfigs()
+        this.loadConfigs([
+            "app",
+        ])
         .then(() => {
             ActiveRequestDirective.init(this);
             ActiveMakerService.init(this);

@@ -3,29 +3,42 @@
         <b-col>
             <b-row align-v="end">
                 <b-col cols="10">
-                    <b-row no-gutters v-for="(item, index) in tradings" :key="index">
-                        <b-col cols="3" class="text-left" v-if="columns.indexOf('quantity') != -1">
-                            <span v-if="item.is_stock">
-                                ({{ formatRandQty(item.quantity, '&nbsp;', 3) }}m)
-                            </span>
-                            <span v-else>
-                                ({{ splitValHelper(item.quantity, '&nbsp;', 3) }})
-                            </span>
+                    <b-row no-gutters>
+
+                        <b-col cols="auto" class="text-left" v-if="columns.indexOf('quantity') != -1">
+                            <div class="pl-1 pr-1" v-for="(item, index) in tradings" :key="index">
+                                <span v-if="item.is_stock">
+                                    ({{ formatRandQty(item.quantity, '&nbsp;', 3) }}m)
+                                </span>
+                                <span v-else>
+                                    ({{ splitValHelper(item.quantity, '&nbsp;', 3) }})
+                                </span>
+                            </div>
                         </b-col>
-                        <b-col cols="3" class="text-left" v-if="columns.indexOf('expiration_date') != -1">
-                            {{ item.expiry }}
+
+                        <b-col cols="auto" class="text-left" v-if="columns.indexOf('expiration_date') != -1">
+                            <div class="pl-1 pr-1" v-for="(item, index) in tradings" :key="index">
+                                {{ item.expiry }}
+                            </div>
                         </b-col>
-                        <b-col cols="3" class="text-left" v-if="columns.indexOf('strike') != -1">
-                            <span v-if="item.is_stock">
-                                {{ formatRandQty(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
-                            </span>
-                            <span v-else>
-                                {{ splitValHelper(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
-                            </span>
+
+                        <b-col cols="auto" class="text-left" v-if="columns.indexOf('strike') != -1">
+                            <div class="pl-1 pr-1" v-for="(item, index) in tradings" :key="index">
+                                <span v-if="item.is_stock">
+                                    {{ formatRandQty(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
+                                </span>
+                                <span v-else>
+                                    {{ splitValHelper(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
+                                </span>
+                            </div>
                         </b-col>
-                        <b-col cols="3" class="text-center" v-if="columns.indexOf('status') != -1">
-                            {{ (item.choice ? ( item.vol ? item.vol : 'choice' )  : 'bid&nbsp;/&nbsp;offer') }}
+
+                        <b-col cols="auto" class="text-center" v-if="columns.indexOf('status') != -1">
+                            <div class="pl-1 pr-1" v-for="(item, index) in tradings" :key="index">
+                                {{ (item.choice ? ( item.vol ? item.vol : 'choice' )  : 'bid&nbsp;/&nbsp;offer') }}
+                            </div>
                         </b-col>
+
                     </b-row>
                 </b-col>
                 <b-col cols="2">
