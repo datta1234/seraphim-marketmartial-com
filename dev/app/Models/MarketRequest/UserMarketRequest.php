@@ -215,7 +215,7 @@ class UserMarketRequest extends Model
                 ->associate($marketNegotiation)
                 ->save();
 
-            if(isset($data['volatilities'])) {
+            if(isset($data['volatilities']) && !empty($data['volatilities'])) {
                 $vols = collect($data['volatilities'])->keyBy('group_id');
                 $groups = $this->userMarketRequestGroups()->chosen()->get();
                 foreach($groups as $group) {

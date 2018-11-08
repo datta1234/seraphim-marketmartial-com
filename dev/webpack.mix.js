@@ -23,5 +23,4 @@ mix.webpackConfig({
 mix.js('resources/assets/js/trade-screen.js', 'public/js').version();
 mix.js('resources/assets/js/canvas.js', 'public/js').version();
 mix.js('resources/assets/js/public.js', 'public/js').version();
-
 mix.sass('resources/assets/sass/app.scss', 'public/css').version();
