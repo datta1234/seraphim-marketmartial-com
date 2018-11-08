@@ -60,22 +60,6 @@
 		.toggle {
 			color: $mm-text-white;
 		}
-	}
-
-	.sub-nav {
-		box-shadow: 0px 1px 6px 0px black;
-
-		p {
-			font-family: $mm-font-body-alt;
-		}
-	}
-
-	h1, h2, h3, h4, h5, h6 {
-		font-family: $mm-font-sub-head;
-	}
-
-	p, span, .market-tab {
-		font-family: $mm-font-sub-head;
 	} 
 	
 	.user-markets {
@@ -94,6 +78,24 @@
 				border-right: none;
 			}
 		}
+	}
+}
+
+#trade_app, #canvas_app {
+	.sub-nav {
+		box-shadow: 0px 1px 6px 0px black;
+
+		p {
+			font-family: $mm-font-body-alt;
+		}
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		font-family: $mm-font-sub-head;
+	}
+
+	p, span, .market-tab {
+		font-family: $mm-font-sub-head;
 	}
 }
 

@@ -11421,30 +11421,6 @@ table.table {
   color: #FFFFFF;
 }
 
-#trade_app .sub-nav {
-  -webkit-box-shadow: 0px 1px 6px 0px black;
-          box-shadow: 0px 1px 6px 0px black;
-}
-
-#trade_app .sub-nav p {
-  font-family: Arial;
-}
-
-#trade_app h1,
-#trade_app h2,
-#trade_app h3,
-#trade_app h4,
-#trade_app h5,
-#trade_app h6 {
-  font-family: "Muli-Bold";
-}
-
-#trade_app p,
-#trade_app span,
-#trade_app .market-tab {
-  font-family: "Muli-Bold";
-}
-
 #trade_app .user-markets {
   min-height: 40%;
 }
@@ -11460,6 +11436,41 @@ table.table {
 
 #trade_app .user-market:last-child .user-market-group {
   border-right: none;
+}
+
+#trade_app .sub-nav,
+#canvas_app .sub-nav {
+  -webkit-box-shadow: 0px 1px 6px 0px black;
+          box-shadow: 0px 1px 6px 0px black;
+}
+
+#trade_app .sub-nav p,
+#canvas_app .sub-nav p {
+  font-family: Arial;
+}
+
+#trade_app h1,
+#trade_app h2,
+#trade_app h3,
+#trade_app h4,
+#trade_app h5,
+#trade_app h6,
+#canvas_app h1,
+#canvas_app h2,
+#canvas_app h3,
+#canvas_app h4,
+#canvas_app h5,
+#canvas_app h6 {
+  font-family: "Muli-Bold";
+}
+
+#trade_app p,
+#trade_app span,
+#trade_app .market-tab,
+#canvas_app p,
+#canvas_app span,
+#canvas_app .market-tab {
+  font-family: "Muli-Bold";
 }
 
 .menu-actions .icon {

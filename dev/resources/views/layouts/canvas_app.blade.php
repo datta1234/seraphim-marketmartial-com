@@ -20,8 +20,8 @@
         ]) !!};
     </script>
     </head>
-    <body id="trade_body" class="canvas-body">
-        <div id="trade_app">
+    <body id="canvas_body" class="canvas-body">
+        <div id="canvas_app">
             @include('layouts.elements.navigation', [ 'layout' => [ 'fluid' => true ] ])
             
             @yield('content')
