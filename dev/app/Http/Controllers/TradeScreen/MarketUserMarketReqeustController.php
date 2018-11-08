@@ -95,108 +95,126 @@ class MarketUserMarketReqeustController extends Controller
         ];
 
         try {
-                DB::beginTransaction();
+            DB::beginTransaction();
 
-                $userMarketRequest = new UserMarketRequest([
-                    "trade_structure_id"                => $tradeStructure->id,
-                    "user_market_request_statuses_id"   => 1,
-                    "market_id"                         => $market->id,
-                    "chosen_user_market_id"             => null
+            $userMarketRequest = new UserMarketRequest([
+                "trade_structure_id"                => $tradeStructure->id,
+                "user_market_request_statuses_id"   => 1,
+                "market_id"                         => $market->id,
+                "chosen_user_market_id"             => null
+            ]);
+
+            
+            $userMarketRequest->user_id = $request->user()->id;
+            $userMarketRequest->save();
+            $responseData = ['id'=> $userMarketRequest->id];
+
+            for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
+            {
+
+
+                $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
+                $userMarketRequestGroup = UserMarketRequestGroup::create([
+                    'is_selected'               =>  $tradeStructuregroup->force_select === null ? $inputTradeStructureGroups[$i]['is_selected'] : $tradeStructuregroup->force_select,
+                    'trade_structure_group_id'  =>  $tradeStructuregroup->id,
+                    'user_market_request_id'    => $userMarketRequest->id
                 ]);
 
-                
-                $userMarketRequest->user_id = $request->user()->id;
-                $userMarketRequest->save();
-                $responseData = ['id'=> $userMarketRequest->id];
+                $stock_id = null; 
+                $market_id = null;     
 
-                for($i = 0; $i < $tradeStructure->tradeStructureGroups->count(); $i++) 
+                if(array_key_exists('stock', $inputTradeStructureGroups[$i]))//if a stock id passed then
                 {
-
-
-                    $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
-                    $userMarketRequestGroup = UserMarketRequestGroup::create([
-                        'is_selected'               =>  $tradeStructuregroup->force_select === null ? $inputTradeStructureGroups[$i]['is_selected'] : $tradeStructuregroup->force_select,
-                        'trade_structure_group_id'  =>  $tradeStructuregroup->id,
-                        'user_market_request_id'    => $userMarketRequest->id
-                    ]);
-
-                    $stock_id = null; 
-                    $market_id = null;     
-
-                    if(array_key_exists('stock', $inputTradeStructureGroups[$i]))//if a stock id passed then
+                    $stock = Stock::where('code',$inputTradeStructureGroups[$i]['stock'])->first();
+                    if(!$stock)
                     {
-                        $stock = Stock::where('code',$inputTradeStructureGroups[$i]['stock'])->first();
-                        if(!$stock)
-                        {
-                            $stock = Stock::create([
-                                'code'      => $inputTradeStructureGroups[$i]['stock'],
-                                'verified'  => true
-                            ]);
-                        }
-                        $stock_id = $stock->id;
-                        $responseData['trade_items'][$tradeStructuregroup->title]["stock_code"] = $stock->code;
+                        $stock = Stock::create([
+                            'code'      => $inputTradeStructureGroups[$i]['stock'],
+                            'verified'  => true
+                        ]);
+                    }
+                    $stock_id = $stock->id;
+                    $responseData['trade_items'][$tradeStructuregroup->title]["stock_code"] = $stock->code;
+
+                }else
+                {
+                    $market_id = $inputTradeStructureGroups[$i]['market_id'];
+                    $responseData['trade_items'][$tradeStructuregroup->title]["market"] = $market->title;
+                }
+
+                $userMarketRequestTradable = UserMarketRequestTradable::create([
+                    "user_market_request_id"        => $userMarketRequest->id,
+                    "market_id"                     => $market_id,
+                    "stock_id"                      => $stock_id, 
+                    "user_market_request_group_id"  => $userMarketRequestGroup->id
+                ]);
+                
+
+                $inputTradeStructureGroupsfields = $inputTradeStructureGroups[$i]['fields'];
+                
+                foreach ($tradeStructuregroup->items as $structureItem)
+                {
+                    if(array_key_exists($structureItem->title, $inputTradeStructureGroupsfields))
+                    {       
+                     //most of the values are based of the relation of schema only the va,ue is grabed from the join
+                     $userMarketRequestItem =   UserMarketRequestItem::create([
+                            'user_market_request_group_id'  => $userMarketRequestGroup->id,
+                            'item_id'                       => $structureItem->id,
+                            'title'                         => $structureItem->title,
+                            'type'                          => $structureItem->itemType->title,
+                            'value'                         => $inputTradeStructureGroupsfields[$structureItem->title]//actual sent from the frontend
+                        ]); 
+
+                    $responseData['trade_items'][$tradeStructuregroup->title][$userMarketRequestItem->title] = $userMarketRequestItem->value;
 
                     }else
                     {
-                        $market_id = $inputTradeStructureGroups[$i]['market_id'];
-                        $responseData['trade_items'][$tradeStructuregroup->title]["market"] = $market->title;
+                        // throw exception market request input incomplte
                     }
-
-                    $userMarketRequestTradable = UserMarketRequestTradable::create([
-                        "user_market_request_id"        => $userMarketRequest->id,
-                        "market_id"                     => $market_id,
-                        "stock_id"                      => $stock_id, 
-                        "user_market_request_group_id"  => $userMarketRequestGroup->id
-                    ]);
-
-
-                    $inputTradeStructureGroupsfields = $inputTradeStructureGroups[$i]['fields'];
                     
-                    foreach ($tradeStructuregroup->items as $structureItem)
-                    {
-                        if(array_key_exists($structureItem->title, $inputTradeStructureGroupsfields))
-                        {       
-                         //most of the values are based of the relation of schema only the va,ue is grabed from the join
-                         $userMarketRequestItem =   UserMarketRequestItem::create([
-                                'user_market_request_group_id'  => $userMarketRequestGroup->id,
-                                'item_id'                       => $structureItem->id,
-                                'title'                         => $structureItem->title,
-                                'type'                          => $structureItem->itemType->title,
-                                'value'                         => $inputTradeStructureGroupsfields[$structureItem->title]//actual sent from the frontend
-                            ]); 
-
-                        $responseData['trade_items'][$tradeStructuregroup->title][$userMarketRequestItem->title] = $userMarketRequestItem->value;
-
-                        }else
-                        {
-                            // throw exception market request input incomplte
-                        }
-                        
-                    }
                 }
-                if($input["trade_structure_groups"][0]["fields"]["Quantity"] < config('marketmartial.thresholds.quantity'))
-                {
-                    // @TODO - add send mail for singles where quantity is lower than 50
-                    $recipients = User::whereHas('role', function ($query) {
-                        $query->where('title', 'Admin');
-                    })->get();
-                    // @TODO: try catch seperately dont fail request if cant send mail
-                    \Notification::send($recipients, new MarketRequestQuantityLowNotification($userMarketRequest));
-                }
-
-                DB::commit();
-
-
-
-            } catch (\Illuminate\Database\QueryException $e) {
-                DB::rollBack();
-                Log::error($e->getMessage());
-                return response()->json([
-                    'success'=>false,
-                    'data'=> null,
-                    'message'=>'Could not create market request.', 
-                ], 500);
             }
+
+            DB::commit();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            Log::error($e);
+            return response()->json([
+                'success'=>false,
+                'data'=> null,
+                'message'=>'Could not create market request.', 
+            ], 500);
+        }
+
+        // Determine if any of the trade_structure_groups has a quantity below the threshold for that relevant market
+        $all_above_threshold = array_reduce($input["trade_structure_groups"], function($carry, $item) {
+
+            if(array_key_exists('stock', $item)) {
+                return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.stock_quantity'));
+            }
+
+            $config_market_default = config('marketmartial.thresholds.index_quantity.'.$item["market_id"]);
+            if($config_market_default == null) {
+                return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.quantity')); 
+            }
+
+            return $carry && ($item["fields"]["Quantity"] >= $config_market_default);
+        }, true);       
+
+        // Send the admin a notification if requested market is below the threshold
+        if(!$all_above_threshold)
+        {
+            $recipients = User::whereHas('role', function ($query) {
+                $query->where('title', 'Admin');
+            })->get();
+            try {
+                \Notification::send($recipients, new MarketRequestQuantityLowNotification($userMarketRequest));
+            } catch(\Swift_TransportException $e) {
+                Log::error($e);
+            }
+        }
+
 
         //broadCast new market request;
         $userMarketRequest->notifyRequested();
