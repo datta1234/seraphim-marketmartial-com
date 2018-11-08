@@ -396,7 +396,8 @@ class UserMarketRequest extends Model
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            
+            // dd($lastNegotiation);
+
             if(!is_null($lastNegotiation))
             {
                 // negotiation history exists
@@ -405,9 +406,14 @@ class UserMarketRequest extends Model
                     if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
                         return true;
                     }
+                    if($lastNegotiation->isTraded())
+                    {
+                        return true;
+                    }
+
                     return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
-                    \Log::info('Got here yea');
+
                     // there should only be one - is it same org = open
                     $marketCount = $this->chosenUserMarket->marketNegotiations()->withTrashed()->count();
                     $interest_org_id = $this->chosenUserMarket->user->organisation_id;
@@ -482,7 +488,7 @@ class UserMarketRequest extends Model
         elseif($hasQuotes && !$acceptedState)
         {
             return "request-vol";
-        }elseif($acceptedState && !$marketOpen && $lastTraded && $needsBalanceWorked)
+        }elseif($acceptedState && $lastTraded && $needsBalanceWorked)
         {
             return 'trade-negotiation-balance';
         }
