@@ -297,6 +297,7 @@ const app = new Vue({
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
+                    console.log("Retrieved Market Requests: ", market.id, marketResponse.data);
                     market.addMarketRequests(marketResponse.data);
                     return marketResponse.data;
                 } else {

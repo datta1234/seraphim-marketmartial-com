@@ -4,6 +4,7 @@ namespace App\Http\Requests\TradeScreen\UserMarket;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\LevelsImprovement;
+use App\Rules\MaintainsRatio;
 
 class MarketNegotiationRequest extends FormRequest
 {
@@ -60,7 +61,8 @@ class MarketNegotiationRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $negotiation = $this->user_market->lastNegotiation()->notPrivate()->first();
-        // dd($negotiation);
+        $ratio = $this->user_market->firstNegotiation->ratio;
+
         $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $negotiation)], function ($input) {
             return !is_null($input->bid_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 
@@ -69,11 +71,11 @@ class MarketNegotiationRequest extends FormRequest
             return !is_null($input->offer_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 
 
-        $validator->sometimes('bid_qty', 'required|numeric', function ($input) {
+        $validator->sometimes('bid_qty', ['required','numeric', new MaintainsRatio($this, $ratio, $negotiation)], function ($input) {
             return !is_null($input->bid) && !$input->is_repeat;
         }); 
 
-        $validator->sometimes('offer_qty', 'required_with:offer|numeric', function ($input) {
+        $validator->sometimes('offer_qty', ['required_with:offer','numeric', new MaintainsRatio($this, $ratio, $negotiation)], function ($input) {
             return !is_null($input->offer) && !$input->is_repeat;
         }); 
     }

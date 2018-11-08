@@ -6,72 +6,96 @@
             	<b-col cols="12">
 	                <b-form @submit="submitDetails" id="index-details-form">
                         <!-- Title section -->
-						<b-row class="mt-2" align-h="center">
-                            <b-col cols="5">
-                                {{ data.market_object.switch_options[0].is_index ?
-                                    data.market_object.switch_options[0].index_market.title
-                                    : data.market_object.switch_options[0].stock_selection.code }}
+						<b-row class="mt-2">
+                            <b-col cols="5" class="text-center">
+                                <b-row>
+                                    <b-col cols="6" offset="3">
+                                        <h4>
+                                            {{ data.market_object.switch_options[0].is_index ?
+                                                data.market_object.switch_options[0].index_market.title
+                                                : data.market_object.switch_options[0].stock_selection.code }}
+                                        </h4>
+                                    </b-col>
+                                </b-row>
                             </b-col>
-                            <b-col cols="2">
-                                VS.
+                            <b-col cols="2" class="text-center">
+                                <h4>VS.</h4>
                             </b-col>
-                            <b-col cols="5">
-                                {{ data.market_object.switch_options[1].is_index ?
-                                    data.market_object.switch_options[1].index_market.title
-                                    : data.market_object.switch_options[1].stock_selection.code }}
+                            <b-col cols="5" class="text-center">
+                                <b-row>
+                                    <b-col cols="6" offset="3">
+                                        <h4>
+                                            {{ data.market_object.switch_options[1].is_index ?
+                                                data.market_object.switch_options[1].index_market.title
+                                                : data.market_object.switch_options[1].stock_selection.code }}
+                                        </h4>
+                                    </b-col>
+                                </b-row>
                             </b-col>
                         </b-row>
                         <!-- Expiry section -->
-                        <b-row class="mt-2" align-h="center">
+                        <b-row class="mt-2">
                             <b-col cols="5">
-                                <b-row class="mt-2">
-                                    <b-col cols="12">
-                                        <label class="mr-sm-2" for="option-expiry-0">Expiry:</label>
+                                <b-row>
+                                    <b-col cols="3">
+                                        <label class="mr-sm-2" for="option-expiry-0">Expiry</label>
+                                    </b-col>
+                                    <b-col cols="6">
                                         <b-form-select id="option-expiry-1"
-                                                       class="w-100"
                                                        :options="expiry_dates"
                                                        :state="inputState(0, 'Expiration Date')"
-                                                       v-model="form_data.fields[0].expiration">
+                                                       v-model="form_data.fields[0].expiration"
+                                                       required>
                                         </b-form-select>
                                     </b-col>
                                 </b-row>
                             </b-col>
                             <b-col cols="5" offset="2">
-                                <b-row class="mt-2">
-                                    <b-col cols="12">
-                                        <label class="mr-sm-2" for="option-expiry-1">Expiry:</label>
+                                <b-row>
+                                    <b-col cols="3">
+                                        <label class="mr-sm-2" for="option-expiry-1">Expiry</label>
+                                    </b-col>
+                                    <b-col cols="6">
                                         <b-form-select id="option-expiry-2"
-                                                       class="w-100"
                                                        :options="expiry_dates"
                                                        :state="inputState(1, 'Expiration Date')"
-                                                       v-model="form_data.fields[1].expiration">
+                                                       v-model="form_data.fields[1].expiration"
+                                                       required>
                                         </b-form-select>
                                     </b-col>
                                 </b-row>
                             </b-col>
                         </b-row>
                         <!-- Choice section -->
-                        <b-row align-h="center">
+                        <b-row>
                             <b-col cols="12">
                                 <b-form-radio-group id="risky-choices" 
                                                     v-model="chosen_option" 
                                                     name="choice"
-                                                    class="mb-2">
-                                    <b-row align-h="center">
-                                        <b-col cols="3" offset="3" class="text-center">    
-                                            <b-form-radio id="choice-0" value="0">CHOICE</b-form-radio>
+                                                    class="mb-2 mt-4">
+                                    <b-row>
+                                        <b-col cols="5">
+                                            <b-row>
+                                                <b-col cols="6" offset="2">
+                                                    <b-form-radio class="ml-5" id="choice-0" value="0">CHOICE</b-form-radio>
+                                                </b-col>
+                                            </b-row> 
                                         </b-col>
-                                        <b-col cols="3" offset="2" class="text-center">
-                                            <b-form-radio id="choice-1" value="1">CHOICE</b-form-radio>    
+                                        <b-col cols="5" offset="2">
+                                            <b-row>
+                                                <b-col cols="6" offset="2">
+                                                    <b-form-radio class="ml-5" id="choice-1" value="1">CHOICE</b-form-radio>    
+                                                </b-col>
+                                            </b-row>
                                         </b-col>
                                     </b-row>
                                 </b-form-radio-group>
                             </b-col>
                         </b-row>
                         <!-- Strike section -->
-                        <b-row align-h="center">
+                        <b-row>
                             <b-col cols="5">
-                                <b-row align-h="center">
+                                <b-row>
                                     <b-col cols="3">
                                         <label for="strike-0">Strike</label>
                                     </b-col>
@@ -82,10 +106,15 @@
                                             required>
                                         </b-form-input>
                                     </b-col>
+                                    <b-col cols="3">
+                                        <label for="strike-0">
+                                            {{ form_data.fields[0].is_index ? "Points" : "ZAR"}}
+                                        </label>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                             <b-col cols="5" offset="2">
-                                <b-row align-h="center">
+                                <b-row>
                                     <b-col cols="3">
                                         <label for="strike-1">Strike</label>
                                     </b-col>
@@ -96,13 +125,18 @@
                                             required>
                                         </b-form-input>
                                     </b-col>
+                                    <b-col cols="3">
+                                        <label for="strike-1">
+                                            {{ form_data.fields[1].is_index ? "Points" : "ZAR"}}
+                                        </label>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                         </b-row>
                         <!-- Quantity section -->
-                        <b-row align-h="center">
+                        <b-row>
                             <b-col cols="5">
-                                <b-row align-h="center">
+                                <b-row>
                                     <b-col cols="3">
                                         <label for="quantity-0">Quantity</label>
                                     </b-col>
@@ -120,10 +154,15 @@
                                             *Warning: The recommended minimum quantity is {{ form_data.fields[0].quantity_default }}.
                                         </p>
                                     </b-col>
+                                    <b-col cols="3">
+                                        <label for="quantity-0">
+                                            {{ form_data.fields[0].is_index ? "Contracts" : "Rm"}}
+                                        </label>
+                                    </b-col>
                                 </b-row>
                             </b-col>
                             <b-col cols="5" offset="2">
-                                <b-row align-h="center">
+                                <b-row>
                                     <b-col cols="3">
                                         <label for="quantity-1">Quantity</label>
                                     </b-col>
@@ -140,6 +179,11 @@
                                             class="modal-warning-text text-danger text-center">
                                             *Warning: The recommended minimum quantity is {{ form_data.fields[1].quantity_default }}.
                                         </p>
+                                    </b-col>
+                                    <b-col cols="3">
+                                        <label for="quantity-1">
+                                            {{ form_data.fields[1].is_index ? "Contracts" : "Rm"}}
+                                        </label>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -198,7 +242,7 @@
                 },
                 dates_loaded: false,
                 expiry_dates: [
-                    {text: "Select Expiration", value: null}
+                    {text: "Select Expiry", value: null}
                 ],
             };
         },

@@ -4,6 +4,8 @@ namespace App\Http\Requests\TradeScreen\MarketRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
+use App\Rules\QuotesVolatilities;
+use App\Rules\MaintainsRatio;
 
 class UserMarketStoreRequest extends FormRequest
 {
@@ -69,7 +71,7 @@ class UserMarketStoreRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-     
+        $userMarketRequest = $this->user_market_request;
 
         $validator->sometimes(['current_market_negotiation.bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
             return !is_null($input->current_market_negotiation["bid_qty"]);
@@ -79,12 +81,25 @@ class UserMarketStoreRequest extends FormRequest
             return !is_null($input->current_market_negotiation["offer_qty"]);
         }); 
 
-        $validator->sometimes(['current_market_negotiation.bid_qty'], 'required|numeric', function ($input) {
-            return !is_null($input->current_market_negotiation["bid"]);
+        $ratio = $userMarketRequest->getRatio();
+
+        $validator->sometimes(
+            ['current_market_negotiation.bid_qty'], 
+            ['required','numeric', new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')], 
+            function ($input) {
+                return !is_null($input->current_market_negotiation["bid"]);
         }); 
 
-        $validator->sometimes(['current_market_negotiation.offer_qty'], 'required_with:offer|numeric', function ($input) {
-            return !is_null($input->current_market_negotiation["offer"]);
+        $validator->sometimes(
+            ['current_market_negotiation.offer_qty'], 
+            ['required_with:offer','numeric', new MaintainsRatio($this, $ratio, null, 'current_market_negotiation')], 
+            function ($input) {
+                return !is_null($input->current_market_negotiation["offer"]);
         }); 
+    
+        // Risky / Calendar / Fly
+        $validator->sometimes(['volatilities'], ['required', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
+            return in_array($userMarketRequest->trade_structure_id, [1, 2, 3]);
+        });
     }
 }

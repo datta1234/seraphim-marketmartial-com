@@ -11338,12 +11338,40 @@ table.table {
   background-color: #afafaf;
 }
 
+#trade_html {
+  position: relative;
+  height: 100%;
+}
+
+#trade_html.light {
+  background-color: #D3D8DC;
+}
+
+#trade_html.dark {
+  background-color: #191919;
+}
+
+#trade_body {
+  position: relative;
+  height: 100%;
+  padding-bottom: 65px;
+  margin-bottom: 0px;
+}
+
 #trade_app {
   position: relative;
+  height: 100%;
 }
 
 #trade_app .trade-screen-wrapper {
   position: relative;
+  height: 100%;
+  padding-bottom: 65px;
+  margin-bottom: 0px;
+}
+
+#trade_app .trade-section {
+  overflow-y: auto;
 }
 
 #trade_app .trade-section.light-theme {
@@ -11410,6 +11438,10 @@ table.table {
 #trade_app span,
 #trade_app .market-tab {
   font-family: "Muli-Bold";
+}
+
+#trade_app .user-markets {
+  min-height: 40%;
 }
 
 #trade_app .user-market {
@@ -17198,6 +17230,11 @@ input:checked + .slider:before {
   border-left: 2px solid #BB1D1D;
 }
 
+.trade-section.light-theme .market-tab .market-tab-strikes,
+.trade-section.dark-theme .market-tab .market-tab-strikes {
+  text-align: left;
+}
+
 .trade-section.light-theme .market-tab.market-request-grey,
 .trade-section.dark-theme .market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;
@@ -17304,6 +17341,7 @@ input:checked + .slider:before {
   padding: 0px;
   float: left;
   color: #fff;
+  background-color: #000705;
   position: relative;
   top: 58px;
   bottom: 65px;
@@ -17375,6 +17413,11 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .interaction-bar .active-cond-bar .cond-bar {
   padding: 10px 10px;
   background: #BB1D1D;
+}
+
+.interaction-bar-wrapper .interaction-bar .market-requested-info {
+  border-bottom: 1px solid #6D6E70;
+  padding-bottom: .5em;
 }
 
 .interaction-bar-wrapper .interaction-bar-toggle {
@@ -17698,16 +17741,22 @@ input:checked + .slider:before {
   max-width: 1000px;
 }
 
-.trade-section.dark-theme .mm-modal .modal-body,
-.trade-section.light-theme .mm-modal .modal-body,
-.interaction-content .mm-modal .modal-body {
+#trade_app .trade-section.dark-theme .mm-modal .modal-body,
+#trade_app .trade-section.light-theme .mm-modal .modal-body,
+#trade_app .interaction-content .mm-modal .modal-body {
   color: #1D3641;
 }
 
-.trade-section.dark-theme .mm-modal .modal-body p,
-.trade-section.light-theme .mm-modal .modal-body p,
-.interaction-content .mm-modal .modal-body p {
-  color: #1D3641 !important;
+#trade_app .trade-section.dark-theme .mm-modal .modal-body p,
+#trade_app .trade-section.dark-theme .mm-modal .modal-body h2,
+#trade_app .trade-section.dark-theme .mm-modal .modal-body h4,
+#trade_app .trade-section.light-theme .mm-modal .modal-body p,
+#trade_app .trade-section.light-theme .mm-modal .modal-body h2,
+#trade_app .trade-section.light-theme .mm-modal .modal-body h4,
+#trade_app .interaction-content .mm-modal .modal-body p,
+#trade_app .interaction-content .mm-modal .modal-body h2,
+#trade_app .interaction-content .mm-modal .modal-body h4 {
+  color: #1D3641;
 }
 
 .mm-modal {

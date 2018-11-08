@@ -74,7 +74,7 @@
         },
         methods: {
             'is_empty': function(value) {
-                return value === undefined || value === null || value === '';
+                return value === undefined || value == null || value == '';
             },
             'check_invalid':function() {
                 let invalid_states = {
@@ -111,16 +111,19 @@
                 
                 // Check for previous quote
                 if(typeof this.currentNegotiation !== 'undefined' && this.currentNegotiation != null && this.currentNegotiation.is_killed != true) {
+                    let currentBid = this.currentNegotiation.getAmountSource('bid');
+                    let currentOffer = this.currentNegotiation.getAmountSource('offer');
+                    console.log(currentBid, currentOffer);
                     // Check new currentNegotiation is valid
                     invalid_states.previous = 
                             (
-                                !this.is_empty(this.currentNegotiation.bid)
-                                && this.marketNegotiation.bid < this.currentNegotiation.bid
+                                !this.is_empty(this.marketNegotiation.bid)
+                                && this.marketNegotiation.bid < currentBid.bid
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
-                                !this.is_empty(this.currentNegotiation.offer)
-                                && this.marketNegotiation.offer > this.currentNegotiation.offer
+                                !this.is_empty(this.marketNegotiation.offer)
+                                && this.marketNegotiation.offer > currentOffer.offer
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
                 }

@@ -31,12 +31,12 @@
    
 
     //lib imports
-    import { EventBus } from '../lib/EventBus.js';
-    import Market from '../lib/Market';
-    import UserMarket from '../lib/UserMarket';
-    import UserMarketRequest from '../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../lib/UserMarketNegotiation';
-    import TradeConfirmation from '../lib/TradeConfirmation'
+    import { EventBus } from '~/lib/EventBus.js';
+    import Market from '~/lib/Market';
+    import UserMarket from '~/lib/UserMarket';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import TradeConfirmation from '~/lib/TradeConfirmation'
 
     export default {
         components: {

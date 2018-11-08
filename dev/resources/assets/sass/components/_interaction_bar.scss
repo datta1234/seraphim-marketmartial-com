@@ -25,6 +25,8 @@
             float:left;
             color:#fff;
 
+            background-color: $mm-background-dark;
+
             // overflow-y: auto;
             position: relative;
 
@@ -92,6 +94,10 @@
                 background: $mm-red;
             }
 
+        }
+        .market-requested-info {
+            border-bottom:1px solid $mm-light-grey;
+            padding-bottom: .5em;
         }
 
     }

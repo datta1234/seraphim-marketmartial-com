@@ -1,13 +1,161 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-risky">
-        
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
-        
-        <ibar-negotiation-history-contracts :history="market_history" class="mb-2"></ibar-negotiation-history-contracts>
 
-        <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        
+        <ibar-market-requested class="mb-2" :market-request="marketRequest" :trade-structure="'risky'"></ibar-market-requested>
 
-        <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
+        <!-- VOL SPREAD History - Market-->
+        <ibar-negotiation-history-market 
+         :message="history_message"
+         :history="marketRequest.quotes" 
+         v-if="marketRequest.quotes && !marketRequest.chosen_user_market" 
+         class="mb-3"
+         @update-on-hold="setUpProposal" 
+         @update-on-accept="setUpProposal"
+        >
+        </ibar-negotiation-history-market>
+   
+        <!-- Contracts History - Trade-->
+        <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
+
+    <template v-if="last_is_self">
+        <p class="text-center">
+            Levels Sent, Awaiting response
+        </p>
+    </template>
+    <template v-if="!is_trading && !last_is_self">
+        
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
+        <ibar-market-negotiation-contracts 
+            class="mb-1" v-if="can_negotiate" 
+            @validate-proposal="validateProposal" 
+            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
+            :check-invalid="check_invalid" 
+            :current-negotiation="last_negotiation" 
+            :market-negotiation="proposed_user_market_negotiation"
+        >
+        </ibar-market-negotiation-contracts>
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
+
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
+   
+        <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
+            Alert me when cleared
+        </b-form-checkbox>
+        
+        <b-row class="mb-1">
+            <b-col cols="10">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                    {{ error[0] }}
+                </b-col>
+                <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
+                <b-row class="justify-content-md-center mb-1">
+                    <b-col cols="6">
+
+                        <!-- || (maker_quote && !is_on_hold) && ( !maker_quote|| (maker_quote && !maker_quote.is_repeat)) -->
+                       
+
+                        
+                         <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
+
+
+                        <b-button v-active-request v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+
+                        <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+
+                        <!-- Modal Component -->
+                        <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
+                            <p>Are you sure you want to pull this quote?</p>
+                            <div slot="modal-footer" class="w-100">
+                                <b-row align-v="center">
+                                    <b-col cols="12">
+                                        <b-button v-active-request class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button v-active-request class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                    </b-col>
+                                </b-row>
+                            </div>
+                        </b-modal>
+
+
+                    </b-col>
+                </b-row>
+                <b-row class="justify-content-md-center" v-if="!maker_quote && !marketRequest.chosen_user_market">
+                    <b-col cols="6">
+
+                        <b-button v-active-request class="w-100 mt-1"
+                          v-if="!maker_quote" 
+                          :disabled="check_invalid || server_loading" 
+                          size="sm" 
+                          dusk="ibar-action-send" 
+                          variant="primary" 
+                          @click="sendQuote()">
+                            Send
+                        </b-button>
+                        
+
+                    </b-col>
+                </b-row>
+
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                    <b-col cols="6">
+                         
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="sendNegotiation()">
+                                Send
+                        </b-button>
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="conditionActive('fok')" 
+                         v-if="can_spin" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="spinNegotiation()">
+                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
+                        </b-button>
+                    </b-col>
+                </b-row>
+                
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                    <b-col cols="6">
+                         
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="improveBestNegotiation()">
+                                Send
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+
+                <b-row class="justify-content-md-center">
+                    <b-col cols="6">
+                        <!-- !maker_quote && !marketRequest.chosen_user_market -->
+                         <b-button v-active-request v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+    </template>
+    
+            
+
+    <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+    <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -15,13 +163,44 @@
             </b-col>
         </b-row> -->
 
+      <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
+        
+        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+
     </b-container>
 </template>
 <script>
-    import { EventBus } from '../../../lib/EventBus.js';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import UserMarket from '~/lib/UserMarket';
+    
+    import moment from 'moment';
+
+    import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
+    import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+    import IbarActiveConditions from '../MarketComponents/ActiveConditions';
+    import IbarVolatilityField from '../MarketComponents/VolatilityField';
+    import IbarMarketRequested from '../MarketComponents/MarketRequested';
+    import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
+
+    const showMessagesIn = [
+        "market_request_store",
+        "market_request_update",
+        "market_request_delete",
+        "market_negotiation_store"
+    ];
+
+
     export default {
+        components: {
+            IbarApplyConditions,
+            IbarRemoveConditions,
+            IbarActiveConditions,
+            IbarVolatilityField,
+            IbarMarketRequested,
+            IbarTradeAtBestNegotiation
+        },
         props: {
             marketRequest: {
                 type: UserMarketRequest
@@ -29,69 +208,389 @@
         },
         data() {
             return {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
                 state_premium_calc: false,
-
+                market_request_subscribe: false,
                 user_market: null,
                 market_history: [],
-                market_time: ""
+
+                proposed_user_market: new UserMarket(),
+                proposed_user_market_negotiation: new UserMarketNegotiation(),
+
+                default_user_market_negotiation:new UserMarketNegotiation(),
+                history_message: null,
+
+                removable_conditions: [],
+                server_loading: false,
+                check_invalid: false,
+                errors: [],
             };
         },
         watch: {
-            'marketRequest': function() {
-                this.init();
+            'marketRequest': {
+                handler: function(newVal, oldVal) {
+                    
+                    if(newVal.id != oldVal.id)
+                    {
+                        this.init();
+                    }else
+                    {
+                      this.reset(['history_message']);
+                      this.setUpData(); 
+                    }
+                },
+                deep: true
             }
         },
         computed: {
+            'trade_group_1': function() {
+                let group = 'default';
+                return this.marketRequest.trade_items[group];
+            },
+            'trade_group_2': function() {
+                let group = this.$root.config("trade_structure.risky.group_2");
+                return this.marketRequest.trade_items[group];
+            },
+            'last_is_self': function() {
+                if(this.last_negotiation) {
+                    return this.last_negotiation.is_my_org;
+                }
+                return false;
+            },
+            'meet_in_the_middle_proposed': function(){
+                return this.proposed_user_market_negotiation.cond_buy_mid != null;
+            },
+            'maker_quote': function() {
+                return this.marketRequest.quotes.find(quote => quote.is_maker); // ??? why not chosen user market ???
+            },
+            'last_negotiation': function (){
+               let chosen_market = this.marketRequest.chosen_user_market;
+                if(chosen_market && chosen_market.market_negotiations.length >0)
+                {
+                    return chosen_market.market_negotiations[chosen_market.market_negotiations.length - 1];
+                }
+
+                return null;
+            },
+            'is_on_hold': function(){   
+                 return  this.marketRequest.quotes.find(quote => quote.is_maker && quote.is_on_hold);
+            },
             'market_title': function() {
-                return this.marketRequest.getMarket().title+" "
-                +this.marketRequest.trade_items.default["Expiration Date"]+" "
-                +this.marketRequest.trade_items.default["Strike"];
+                return [
+                    this.marketRequest.trade_items.default.tradable.title,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.risky.expiration_date")],
+                    this.marketRequest.trade_structure
+                ].join(' ');
+            },
+            'market_time': function() {
+                return this.marketRequest.updated_at.format("HH:mm");
+            },
+            'can_negotiate':function(){
+                return this.marketRequest.canNegotiate();
+            },
+            is_trading: function(){
+                return this.marketRequest.isTrading();
+            },
+            is_trading_at_best: function() {
+                return this.marketRequest.chosen_user_market.isTradingAtBest();
+            },
+            is_trading_at_best_closed: function() {
+                return !this.last_negotiation.hasTimeoutRemaining();
+            },
+            'can_disregard':function(){
+                return this.marketRequest.canApplyNoCares();
+            },
+            'can_spin':function(){
+                return this.marketRequest.canSpin();
+            },
+            'in_no_cares':function(){
+                return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
+            },
+            'mustWorkBalance':function(){
+                return this.marketRequest.mustWorkBalance();
             }
         },
         methods: {
-            setMarketTitle() {
-                
+            conditionActive(type) {
+                if( this.marketRequest.chosen_user_market !== null && 
+                    this.marketRequest.chosen_user_market.active_conditions !== null 
+                ) {
+                    for(let i = 0, cond; cond = this.marketRequest.chosen_user_market.active_conditions[i]; i++) {
+                        if(cond.type == type) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             },
-            setMarketTime() {
-                this.market_time = "10:10";
+            validateProposal:function(check_invalid) {
+                this.check_invalid = check_invalid;
             },
-            reset() {
-                let defaults = {
-                    bid: null,
-                    offer: null,
-                    bid_qty: 0,
-                    offer_qty: 0,
+            updateMessage: function(messageData) {
+                if(messageData.user_market_request_id == this.marketRequest.id)
+                {
+                    let message = messageData.message;
+                    if(message !== null && typeof message === "object" && showMessagesIn.indexOf(message.key) > -1)
+                    {
+                       this.history_message = message.data;
+                    }else if(message === null)
+                    {
+                        this.history_message = null;
+                    } 
+                }
+               
+            },
+            calcUserMessages:function() {
+                //if the users market quote is placed on hold notify the the current user if it is theres
+                if(this.maker_quote && this.maker_quote.is_on_hold)
+                {
+                    this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
+                }
+                else 
+                if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
+                {
+                    this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
+                }
+            },
+            subscribeToMarketRequest() {
 
-                    state_conditions: false,
+            },
+            spinNegotiation() {
+                
+                this.server_loading = true;
+                this.proposed_user_market_negotiation.spinNegotiation(this.user_market)   
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
+
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+
+            },
+            sendNegotiation(){
+
+                // link now that we are saving
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+                // this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                this.server_loading = true;
+                this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
+
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+
+
+            },
+            improveBestNegotiation() {
+                this.server_loading = true;
+                this.marketRequest.chosen_user_market.trading_at_best.improveBestNegotiation(this.proposed_user_market_negotiation)
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.server_loading = false;
+
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+            },
+            sendQuote() {
+
+                // link now that we are saving
+
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+                this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+
+                this.server_loading = true;
+
+                // save
+                this.proposed_user_market.store(this.marketRequest)
+                .then(response => {
+
+                    this.server_loading = false;
+                    this.errors = [];
+                
+               
+                })
+                .catch(err => {
+                    this.server_loading = false;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+
+            },
+            amendQuote() {
+
+                this.server_loading = true;
+
+                // save
+                this.proposed_user_market_negotiation.patchQuote(this.marketRequest, this.proposed_user_market)
+                .then(response => {
+
+                    this.server_loading = false;                    
+                    this.errors = [];
+                    
+                })
+                .catch(err => {
+                    this.server_loading = false;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+
+            },
+            repeatQuote() {
+               this.proposed_user_market.setMarketRequest(this.marketRequest);
+               this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);              
+               this.server_loading = true;
+                // save
+                this.proposed_user_market_negotiation.repeatQuote()
+                .then(response => {
+                    this.server_loading = false;
+                    this.errors = [];                   
+                })
+                .catch(err => {
+                    this.server_loading = false;
+                    this.history_message = err.message;
+                    this.errors = err.errors;
+                });
+            },
+            pullQuote() {
+                
+                this.proposed_user_market.setMarketRequest(this.marketRequest);
+                // this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
+                console.log(this.proposed_user_market);
+
+                this.server_loading = true;
+                // save
+                this.proposed_user_market.delete()
+                .then(response => {
+                    this.server_loading = false;                    
+                    this.$refs.pullModal.hide();
+                })
+                .catch(err => {
+                    this.server_loading = false;
+                    this.errors = err.errors;
+                    this.$refs.pullModal.hide();
+                });
+
+            },
+            reset(ignore = []) {
+                let defaults = {
                     state_premium_calc: false,
 
                     user_market: null,
                     market_history: [],
-                    market_time: ""
+
+                    proposed_user_market: new UserMarket(),
+                    proposed_user_market_negotiation: new UserMarketNegotiation(),
+                    default_user_market_negotiation:new UserMarketNegotiation(),
+                    history_message: null,
+                    removable_conditions: [],
+                    server_loading: false,
+                    check_invalid: false,
+                    errors: [],
                 };
+
                 Object.keys(defaults).forEach(k => {
-                    this[k] = defaults[k];
+                    if(ignore.indexOf(k) == -1)
+                    {
+                       this[k] = defaults[k]; 
+                    }
                 });
+                
+                this.$forceUpdate();
+            },
+            setUpProposal(){
+
+                // set up the new UserMarket as quote to be sent
+                
+                /*
+                *if there's no chosen user market then work with it under quote
+                *else post for the specific user market
+                */
+                let chosen_user_market =  this.marketRequest.chosen_user_market;
+                if(chosen_user_market)
+                {
+                   this.user_market = this.marketRequest.chosen_user_market;
+                }else
+                {
+                    if(this.marketRequest.sent_quote != null)//already have my quote
+                    {
+                        this.proposed_user_market = this.marketRequest.sent_quote;
+                    }
+                    else
+                    {
+                        this.proposed_user_market = new UserMarket();
+                    }
+
+                }
+
+            },
+            hideModal() {
+                this.$refs.pullModal.hide();
+            },
+            setDefaultQuantities() {
+                //if we have a chosen negotiation use that else its still dealing with quotes
+                if(this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null) )
+                {
+                    this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
+                    this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
+
+                    this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
+                    this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+
+                }
+                else if(this.maker_quote != null && (this.maker_quote.offer_qty != null || this.maker_quote.bid_qty != null) )
+                {
+                    //we are editing our old one
+                    this.proposed_user_market_negotiation.id  = this.maker_quote.id;
+
+                    this.proposed_user_market_negotiation.offer_qty = this.maker_quote.offer_qty;
+                    this.proposed_user_market_negotiation.bid_qty = this.maker_quote.bid_qty;  
+                }
+                else
+                {
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
+                }
+            },
+            setUpData() {
+                // set up up data
+                if(this.marketRequest) {
+                    console.log(this.marketRequest);
+                    this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
+                    
+                    this.setUpProposal();
+                    this.setDefaultQuantities();
+                    this.calcUserMessages();
+
+                    // // relate
+                    EventBus.$emit('interactionChange',this.marketRequest);
+                    EventBus.$emit('removefromNoCares',this.marketRequest.id);
+
+                }
+            },
+            addToNoCares() {
+                EventBus.$emit('addToNoCares',this.marketRequest.id);
             },
             init() {
-                console.log("Mounted BAR", this.marketRequest);
-                this.reset();
-                if(this.marketRequest) {
-                    this.user_market = this.marketRequest.getChosenUserMarket();
-                    this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                    this.setMarketTitle();
-                    this.setMarketTime();
-                }
+                this.reset();// clear current state
+                this.setUpData();
             }
         },
         mounted() {
             this.init();
+            EventBus.$on('notifyUser',this.updateMessage);
         }
     }
 </script>

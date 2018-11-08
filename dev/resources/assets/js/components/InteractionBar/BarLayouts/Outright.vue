@@ -260,7 +260,7 @@
             },
             'market_title': function() {
                 return [
-                    ( this.marketRequest.market.is('singles') ? this.marketRequest.tradable_items.default.title : this.marketRequest.market.title ),
+                    this.marketRequest.trade_items.default.tradable.title,
                     this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")],
                     this.marketRequest.trade_structure,
                     this.marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")]
@@ -544,7 +544,7 @@
                     this.proposed_user_market_negotiation.bid_qty = this.maker_quote.bid_qty;  
                 }
                 else
-                {                    
+                {
                     this.proposed_user_market_negotiation.offer_qty = this.marketRequest.trade_items.default.Quantity;
                     this.proposed_user_market_negotiation.bid_qty = this.marketRequest.trade_items.default.Quantity;
                 }

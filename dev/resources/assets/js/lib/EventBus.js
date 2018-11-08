@@ -54,3 +54,7 @@ EventBus.$on('loading', (type, state) => {
 EventBus.$on('theme', (state) => {
     EventBus.$emit("toggleTheme", state);
 });
+
+EventBus.$on('force-display-update', (val) => {
+    EventBus.$emit('display-update-forced', val);
+});

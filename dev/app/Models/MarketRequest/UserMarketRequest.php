@@ -154,6 +154,19 @@ class UserMarketRequest extends Model
     }
 
 
+    public function getRatio() {
+        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) {
+            if($out == null) {
+                $out = $item;
+            } else {
+                $out = $out / $item;
+            }
+            \Log::info([$out, $item]);
+            return $out;
+        }, null);
+    }
+
+
     /**
     * Return relation based of _id_foreign index
     * @return \App\Models\Market\UserMarket
@@ -202,6 +215,18 @@ class UserMarketRequest extends Model
                 ->associate($marketNegotiation)
                 ->save();
 
+            if(isset($data['volatilities'])) {
+                $vols = collect($data['volatilities'])->keyBy('group_id');
+                $groups = $this->userMarketRequestGroups()->chosen()->get();
+                foreach($groups as $group) {
+                    $userMarket->volatilities()->create([
+                        'user_market_id'    =>  $this->id,
+                        'user_market_request_group_id'  =>  $group->id,
+                        'volatility'    =>  $vols[$group->id]['value']
+                    ]);
+                }
+            }
+
             DB::commit();
 
         } catch (\Exception $e) {
@@ -231,24 +256,21 @@ class UserMarketRequest extends Model
             'is_interest'       => $is_interest,
             "is_market_maker"   => false,
             "trade_structure"   => $this->tradeStructure->title,
-            "tradable_items" => $this->userMarketRequestGroups
-            ->keyBy('tradeStructureGroup.title')
-            ->map(function($group) {
-                if($group->tradable) {
-                    return $group->tradable->preFormatted();
-                } else {
-                    return null;
-                }
-            }),
             "trade_items"       => $this->userMarketRequestGroups
              ->keyBy('tradeStructureGroup.title')
              ->map(function($group) {
-                return $group->userMarketRequestItems->keyBy('title')->map(function($item) {
+                $data = $group->userMarketRequestItems->keyBy('title')->map(function($item) {
                     if($item->type == 'expiration date') {
                         return (new \Carbon\Carbon($item->value))->format("My");
                     }
                     return $item->value;
                 });
+                $data['id'] = $group->id;
+                $data['choice'] = $group->is_selected;
+                if($group->tradable) {
+                    $data['tradable'] = $group->tradable->preFormatted();
+                }
+                return $data;
             }),
             "attributes"        => $this->resolveRequestAttributes(),
             "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
