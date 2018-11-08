@@ -894,7 +894,7 @@ class MarketNegotiation extends Model
                 return false;
             }
     }
-
+    
 
     public function setMarketNegotiationAfterTrade()
     {
@@ -902,7 +902,7 @@ class MarketNegotiation extends Model
             $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
 
             $newMarketNegotiation->counter_user_id = null;
-            $newMarketNegotiation->market_negotiation_id = $newMarketNegotiation->id;
+            $newMarketNegotiation->market_negotiation_id = $this->id;
 
             if(!$requestedNegotiation->is_offer)
             {   

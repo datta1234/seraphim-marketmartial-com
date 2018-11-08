@@ -3,7 +3,10 @@
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
-        <ibar-market-requested class="mb-2" :market-request="marketRequest" :trade-structure="'fly'"></ibar-market-requested>
+        <ibar-market-requested class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_columns">
+        </ibar-market-requested>
 
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
@@ -222,6 +225,11 @@
                     "market_request_delete",
                     "market_negotiation_store"
                 ],
+                market_requested_columns: [
+                    'quantity',
+                    'strike',
+                    'status'
+                ]
             };
         },
         

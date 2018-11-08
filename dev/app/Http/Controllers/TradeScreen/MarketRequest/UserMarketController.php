@@ -64,7 +64,17 @@ class UserMarketController extends Controller
         $userMarketRequest->notifyRequested();
 
         return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
+    }
 
+    public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
+    {
+      $user = $request->user();   
+      $userMarket->workTheBalance($user,$request->input('quantity'));
+      
+      $user->organisation->notify("market_request_store","You have worked the balance",true);
+      $userMarketRequest->notifyRequested();
+
+      return response()->json(['data' => $userMarket, 'message' => "You have worked the balance"]);
     }
 
 

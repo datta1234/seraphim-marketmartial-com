@@ -1,7 +1,8 @@
 {
     "ajax": {
         "headers": {
-            "ignore": "mm-background-load"
+            "ignore": "mm-background-load",
+            "active-maker": 
         }
     }
 }
