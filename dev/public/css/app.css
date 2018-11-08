@@ -17425,6 +17425,10 @@ input:checked + .slider:before {
   padding-bottom: .5em;
 }
 
+.interaction-bar-wrapper .interaction-bar .market-requested-info .info-col {
+  font-size: .8em;
+}
+
 .interaction-bar-wrapper .interaction-bar-toggle {
   width: 0px;
   height: 100%;

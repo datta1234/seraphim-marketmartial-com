@@ -98,6 +98,9 @@
         .market-requested-info {
             border-bottom:1px solid $mm-light-grey;
             padding-bottom: .5em;
+            .info-col {
+                font-size: .8em;
+            }
         }
 
     }
