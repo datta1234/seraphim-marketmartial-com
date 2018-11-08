@@ -17258,12 +17258,12 @@ input:checked + .slider:before {
   background-color: #071a22;
 }
 
-.market-tab-state .is-interest {
-  color: #2358BD;
-}
-
 .market-tab-state .is-maker {
   color: #37A53A;
+}
+
+.market-tab-state .is-interest {
+  color: #2358BD;
 }
 
 .market-tab-state .is-my-org {
@@ -17478,14 +17478,14 @@ input:checked + .slider:before {
   font-weight: bold;
 }
 
-.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest,
-.interaction-bar-wrapper .negotiation-history .is-interest {
-  color: #2358BD;
-}
-
 .interaction-bar-wrapper .ibar-negotiation-history-contracts .is-maker,
 .interaction-bar-wrapper .negotiation-history .is-maker {
   color: #37A53A;
+}
+
+.interaction-bar-wrapper .ibar-negotiation-history-contracts .is-interest,
+.interaction-bar-wrapper .negotiation-history .is-interest {
+  color: #2358BD;
 }
 
 .interaction-bar-wrapper .ibar-negotiation-history-contracts .is-my-org,

@@ -105,11 +105,11 @@
   
 .market-tab-state
 {
-    .is-interest{
-        color: $mm-blue;
-    }
     .is-maker{
         color: $mm-market-maker;
+    }
+    .is-interest{
+        color: $mm-blue;
     }
     .is-my-org{
         color: $mm-yellow;
