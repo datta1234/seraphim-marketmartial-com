@@ -130,7 +130,7 @@ Vue.mixin({
     }
 });
 const app = new Vue({
-    el: '#trade_app',
+    el: '#canvas_app',
     methods: {
         
     },
