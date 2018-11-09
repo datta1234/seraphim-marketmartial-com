@@ -7,7 +7,7 @@
         
             <div class="container-fluid organisation-chat">
                 <div class="chat-header text-center pt-1 mb-3 pr-2">
-                    <span class="icon icon-chat float-left"></span>
+                    <span v-bind:class="{'new-message-alert': new_incoming}" class="icon icon-chat float-left"></span>
                     <h3 class="pr-3">Messages</h3>
                     <h3 id="chat-bar-dismiss" class="float-right close" @click="fireChatBar()">x</h3>
                 </div>
@@ -73,10 +73,30 @@
     export default {
         data() {
             return {
+                new_incoming: false,
                 opened: false,
                 new_message: "",
                 quick_message: "",
-                display_messages: [],
+                display_messages: [
+                    {
+                        message: "@MM No cares, thanks",
+                        status: "received",
+                        time_stamp: "1541689780.000200",
+                        user_name: "Bradley Johnson",
+                    },
+                    {
+                        message: "Test message",
+                        status: "received",
+                        time_stamp: "1541689610.000100",
+                        user_name: "Bradley Johnson",
+                    },
+                    {
+                    message: "I bet you care a little",
+                    status: null,
+                    time_stamp: "1541689932.000400",
+                    user_name: "Market Martial",
+                    }
+                ],
                 quick_message_options: [
                     {
                         title: 'No cares, thanks',
@@ -94,9 +114,6 @@
             };
         },
         methods: {
-            doSomething(e) {
-                console.log("WORKING");
-            },
             sendMessage() {
                 if(this.new_message || this.quick_message) {
                     let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
@@ -111,10 +128,9 @@
                         Vue.nextTick( () => {
                             chat_history.scrollTop = chat_history.scrollHeight;
                         });
-                    })
-                    .catch(err => {
-                        console.log("TEST ERRORS ", err.response.data);
-                        reject(new Errors(err.response.data));
+                    }, err => {
+                        console.error(err);
+                        this.$toasted.error(err.response.data.message);
                     });
                 } else {
                     this.new_message = "";
@@ -131,6 +147,13 @@
                 let chat_history = this.$refs.chat_history;
                 chat_history.scrollTop = chat_history.scrollHeight;
                 this.$root.message_count = this.opened ? 0 : this.$root.message_count;
+            },
+            toggleNewIncomingState(set){
+                if(typeof set != 'undefined') {
+                    this.new_incoming = set == true;
+                } else {
+                    this.new_incoming = !this.new_incoming;
+                }
             },
             /**
              * Fires the Chat Bar toggle event
@@ -162,16 +185,13 @@
             loadChatHistory() {
                 axios.get(axios.defaults.baseUrl + '/trade/organisation-chat')
                 .then(chatHistoryResponse => {
-                    if(chatHistoryResponse.status == 200) {
-                        this.display_messages = chatHistoryResponse.data.data;
-                        Vue.nextTick( () => {
-                            this.$refs.chat_history.scrollTop = this.$refs.chat_history.scrollHeight;
-                        });
-                    } else {
-                        console.error(err);    
-                    }
+                    this.display_messages = chatHistoryResponse.data.data;
+                    Vue.nextTick( () => {
+                        this.$refs.chat_history.scrollTop = this.$refs.chat_history.scrollHeight;
+                    });
                 }, err => {
                     console.error(err);
+                    this.$toasted.error(err.response.data.message);
                 });
             },
             addNewMessage(message) {
@@ -196,7 +216,11 @@
                         this.display_messages[this.display_messages.length -1].status = "received";
                     }
                     Vue.nextTick( () => {
-                        chat_history.scrollTop = should_scroll ? chat_history.scrollHeight : chat_history.scrollTop;
+                        if(should_scroll) {
+                            chat_history.scrollTop = chat_history.scrollHeight;
+                        } else {
+                            this.toggleNewIncomingState(true);
+                        }
                     });
                 } else {
                     this.display_messages[message_index].status = 'received';
@@ -205,8 +229,15 @@
             messageUserName(username) {
                 return username == this.$root.config('user_preferences.user_name')? "You": username;
             },
+            resetNewMessageState() {
+                if(this.new_incoming && this.$refs.chat_history.scrollTop === 
+                    (this.$refs.chat_history.scrollHeight - this.$refs.chat_history.offsetHeight) ) {
+                    this.toggleNewIncomingState(false);
+                }
+            },
         },
         mounted() {
+            this.$refs.chat_history.onscroll = this.resetNewMessageState;
             this.chatBarListener();
             this.newChatMessageListener();
             this.loadChatHistory();
