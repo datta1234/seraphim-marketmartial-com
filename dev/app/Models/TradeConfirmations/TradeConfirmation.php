@@ -4,7 +4,10 @@ namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Broadcast\Stream;
+use App\Models\Trade\Rebate;
 use App\Events\TradeConfirmationEvent;
+use App\Models\TradeConfirmations\TradeConfirmationItem;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class TradeConfirmation extends Model
@@ -166,12 +169,10 @@ class TradeConfirmation extends Model
 
         $organisation->notify("trade_confirmation_store",$message,true);
         
-        \Log::info(["the organisation send",$sendOrg->id]);
-        $stream = new Stream(new TradeConfirmationEvent($this,$sendOrg));
+        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this,$sendOrg));
         $stream->run();
 
-        \Log::info(["the organisation recieving",$receiveOrg->id]);
-        $stream = new Stream(new TradeConfirmationEvent($this, $receiveOrg));
+        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this, $receiveOrg));
         $stream->run();        
     }
 
@@ -655,18 +656,20 @@ public function preFormatStats($user = null, $is_Admin = false)
             $value = null;
             break;
             case 'Contract':
-            if($isOption)
-            {
-                        $value = $tradeNegotiation->quantity; //quantity   
-                    }else
-                    {
-                        $value = null;
-                    }
-                    break;
-                }
-
-                if($item->title =="Net Premiums")
+            
+                if($isOption)
                 {
+                    $value = $tradeNegotiation->quantity; //quantity   
+                }else
+                {
+                    $value = null;
+                }
+                break;
+            }
+
+                if($item->title =="Net Premiums" || $item->title =="is_offer")
+                {
+
                     $tradeGroup->tradeConfirmationItems()->create([
                         'item_id' => $item->id,
                         'title' => $item->title,
@@ -717,40 +720,90 @@ public function preFormatStats($user = null, $is_Admin = false)
       }
   }
 
-  public function bookTheTrade()
+  public function setAccount($user,$trading_account)
   {
+    if($user->organisation_id == $this->sendUser->organisation_id)
+    {
+        $this->send_trading_account_id = $trading_account;
+    }
+    else if($user->organisation_id == $this->recievingUser->organisation_id)
+    {
+        $this->receiving_trading_account_id = $trading_account;
+    }
+  }
 
-        $this->bookedTrades()->create([
-            "trading_account_id" => $this->send_trading_account_id,
-            "is_sale" => false,
-            "is_purchase" => true,
+  public function bookTheTrades()
+  {
+     try {
+         DB::beginTransaction();
+            //trade trade for sender
 
-            "is_confirmed" => false,
-            "amount" => $this->resolveNetPremium($this->send_user_id),
-            "user_id" => $this->send_user_id,
-            "trade_confirmation_id" => $this->id,
-            "market_request_id" => $this->id,
+            $sendisOffer = $this->resolveItem("is_offer",true);
+            $this->bookedTrades()->create([
+                "trading_account_id"        => $this->send_trading_account_id,
+                "is_sale"                   => !$sendisOffer,
+                "is_purchase"               => $sendisOffer,
+                "is_rebate"                 => false,
+                "is_confirmed"              => false,
+                "amount"                    => $this->resolveItem("Net Premiums",true),
+                "user_id"                   => $this->send_user_id,
+                "trade_confirmation_id"     => $this->id,
+                "market_request_id"         => $this->user_market_request_id
+            ]);
 
-        ]);
+            //trade trade for reciever
+            $sendisOffer = $this->resolveItem("is_offer",false);
+            $this->bookedTrades()->create([
+                "trading_account_id"        => $this->receiving_trading_account_id,
+                "is_sale"                   => !$sendisOffer ,
+                "is_purchase"               => $sendisOffer ,
+                "is_rebate"                 => false,
+                "is_confirmed"              => false,
+                "amount"                    => $this->resolveItem("Net Premiums",false),
+                "user_id"                   => $this->receiving_user_id,
+                "trade_confirmation_id"     => $this->id,
+                "market_request_id"         => $this->user_market_request_id
+            ]);
 
-        $this->bookedTrades()->create([
-            "trading_account_id" => $this->receiving_trading_account_id,
-            "is_sale" => true,
-            "is_purchase" => false,
+            $userMarket = $this->marketRequest->chosenUserMarket;
+            Rebate::create([
+                "user_market_request_id"    => $this->user_market_request_id,
+                "user_market_id"            => $userMarket->id,
+                "organisation_id"           => $userMarket->user->organisation_id,
+                "user_id"                   => $userMarket->user_id,
+                "is_paid"                   => false,
+                "trade_confirmation_id"     => $this->id,
+                "trade_date"                => Carbon::now(),
+                "amount"                    => 6777
+            ]);
+            //book the trade
 
-            "is_confirmed" => false,
-            "amount" => $this->resolveNetPremium($this->receiving_user_id),
-            "user_id" => $this->receiving_user_id,
-            "trade_confirmation_id" => $this->id,
-            "market_request_id" => $this->tradeConfirmation->user_market_request_id,
-        ]);
+        DB::commit();
+     
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            \Log::error($e);
+        }
 
-       //$rebate->notifyNew($organisation,$message);
-
+        $organisation = $userMarket->user->organisation;
+        $organisation->notify("market_negotiation_store","You earned a commission",true);
+        Rebate::notifyOrganisationUpdate($organisation);
     }
 
-    public function resolveNetPremium()
+    public function resolveItem($title,$isSeller)
     {
-        return 100;
+        $netPremium = TradeConfirmationItem::whereHas('tradeConfirmationGroup', function ($q) {
+            $q->whereHas('tradeConfirmation',function($qq){
+                $qq->where('id',$this->id);
+            });
+        })
+        ->where('title',$title)
+        ->where('is_seller',$isSeller)
+        ->first();
+
+        if($netPremium)
+        {
+            return $netPremium->value;
+        }
     }
 }

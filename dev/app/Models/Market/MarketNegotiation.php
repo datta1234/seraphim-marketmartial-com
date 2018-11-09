@@ -820,6 +820,9 @@ class MarketNegotiation extends Model
             {
 
                 $counterNegotiation = $this->tradeNegotiations->last();
+
+
+                
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;

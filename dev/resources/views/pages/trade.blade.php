@@ -8,10 +8,12 @@
 		<b-col v-bind:class="tradeTheme" class="trade-section pb-5 interaction-bar-content-pane">
 			<user-header 
 				user_name="{{ $user->full_name }}" 
+				
 				@if( isset($organisation) ) 
 					organisation="{{ $organisation->title }}"
 				@endif
-				total_rebate="{{ $total_rebate }}">
+				
+				:total_rebate="{{ $total_rebate }}">
 			</user-header>
 			
 			<!-- Actions and Alerts -->

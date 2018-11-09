@@ -190,7 +190,7 @@ class MarketUserMarketReqeustController extends Controller
 
             } catch (\Illuminate\Database\QueryException $e) {
                 DB::rollBack();
-                Log::error($e->getMessage());
+                Log::error($e);
                 return response()->json([
                     'success'=>false,
                     'data'=> null,
