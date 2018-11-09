@@ -149,7 +149,9 @@ class Rebate extends Model
 
     public static function notifyOrganisationUpdate($organisation)
     {
-        $data = ["total"=>Rebate::all()->where('organisation',$organisation->id)->sum('amount')];
+        \Log::info(['this is the notifyOrganisationUpdate',["total"=>Rebate::where('organisation_id',$organisation->id)->sum('amount')]]);
+
+        $data = ["total"=>Rebate::where('organisation_id',$organisation->id)->sum('amount')];
         event(new RebateEvent($data,$organisation));
     }
 

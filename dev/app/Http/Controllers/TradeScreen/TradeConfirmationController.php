@@ -64,7 +64,9 @@ class TradeConfirmationController extends Controller
 
     public function confirm(TradeConfirmation $tradeConfirmation,Request $request)
     {
-        $user = $request->user();        
+        $user = $request->user();
+        $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
+        $tradeConfirmation->save();
         // if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
         // {
         //     $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');

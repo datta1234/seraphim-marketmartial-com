@@ -734,10 +734,11 @@ public function preFormatStats($user = null, $is_Admin = false)
 
   public function bookTheTrades()
   {
+    $userMarket = $this->marketRequest->chosenUserMarket;
+
      try {
          DB::beginTransaction();
-            //trade trade for sender
-
+            // trade trade for sender
             $sendisOffer = $this->resolveItem("is_offer",true);
             $this->bookedTrades()->create([
                 "trading_account_id"        => $this->send_trading_account_id,
@@ -765,7 +766,6 @@ public function preFormatStats($user = null, $is_Admin = false)
                 "market_request_id"         => $this->user_market_request_id
             ]);
 
-            $userMarket = $this->marketRequest->chosenUserMarket;
             Rebate::create([
                 "user_market_request_id"    => $this->user_market_request_id,
                 "user_market_id"            => $userMarket->id,
@@ -774,7 +774,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 "is_paid"                   => false,
                 "trade_confirmation_id"     => $this->id,
                 "trade_date"                => Carbon::now(),
-                "amount"                    => 6777
+                "amount"                    => 6777//@todo add real commision
             ]);
             //book the trade
 
@@ -784,9 +784,10 @@ public function preFormatStats($user = null, $is_Admin = false)
             DB::rollBack();
             \Log::error($e);
         }
-
+         \Log::info(['after we booked our trades']);
         $organisation = $userMarket->user->organisation;
-        $organisation->notify("market_negotiation_store","You earned a commission",true);
+        $organisation->notify("rebate_earned","You earned a commission",true);
+         \Log::info(['calling notifyOrganisationUpdate']);
         Rebate::notifyOrganisationUpdate($organisation);
     }
 
