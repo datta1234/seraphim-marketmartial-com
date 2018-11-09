@@ -34,6 +34,7 @@ class QuotesVolatilities implements Rule
             if(!isset($vols[$group->id])) {
                 return false;
             }
+            // @TODO: update rule to ensure they are present
         }
         return true;
     }
