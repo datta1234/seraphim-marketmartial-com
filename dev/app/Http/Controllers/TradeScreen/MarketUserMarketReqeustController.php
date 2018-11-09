@@ -97,7 +97,6 @@ class MarketUserMarketReqeustController extends Controller
 
             $userMarketRequest = new UserMarketRequest([
                 "trade_structure_id"                => $tradeStructure->id,
-                "user_market_request_statuses_id"   => 1,
                 "market_id"                         => $market->id,
                 "chosen_user_market_id"             => null
             ]);
@@ -285,14 +284,14 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function actionTaken(Request $request, UserMarketRequest $userMarketRequest)
     {   
-        if(!$request->input('action_needed')) {
+        if($request->has('action_needed')) {
             if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
                 $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));
-                return ['success'=>true,'data'=> ["action_needed" => false],'message'=>"Action successfully updated."];
+                return response()->json(['data'=> ["action_needed" => false],'message'=>"Action successfully updated."]);
             } else {
-                return ['success'=>true,'data'=> ["action_needed" => false],'message'=>"No action currently tracked."];
+                return response()->json(['data'=> ["action_needed" => false],'message'=>"No action currently tracked."]);
             }
         }
-        return ['success'=>false,'data'=> null,'message'=>'Failed to update action.'];
+        return response()->json(['message'=>'Failed to update action.', 'errors'=>['action_needed'=>'Action needed is required parameter']], 422);
     }
 }

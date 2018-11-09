@@ -17,7 +17,6 @@ class UserMarketRequest extends Model
      * @property integer $id
      * @property integer $user_id
      * @property integer $trade_structure_id
-     * @property integer $user_market_request_statuses_id
      * @property integer $chosen_user_market_id
      * @property integer $market_id
      * @property \Carbon\Carbon $created_at
@@ -36,23 +35,11 @@ class UserMarketRequest extends Model
      *
      * @var array
      */
-    protected $fillable = ["market_id","trade_structure_id","user_market_request_statuses_id","chosen_user_market_id"];
+    protected $fillable = ["market_id","trade_structure_id","chosen_user_market_id"];
 
     // protected $dates = [
     //     'created_at'
     // ];
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function userMarketRequestStatus()
-    {
-        return $this->belongsTo(
-            'App\Models\MarketRequest\UserMarketRequestStatus',
-            'user_market_request_statuses_id'
-        );
-    }
 
     /**
     * Return relation based of _id_foreign index
@@ -156,15 +143,18 @@ class UserMarketRequest extends Model
 
 
     public function getRatioAttribute() {
-        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) {
-            if($out == null) {
-                $out = $item;
-            } else {
-                $out = $out / $item;
+        $first = null;
+        \Log::info([" Items: ", $this->id, $this->getDynamicItems('Quantity')]);
+        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) use (&$first) {
+            if($first == null) {
+                $first = floatval($item);
             }
-            \Log::info([$out, $item]);
+            \Log::info([" Ratio: ", $this->id, $first, $item]);
+            if($first != $item) {
+                $out = true;
+            }
             return $out;
-        }, null);
+        }, false);
     }
 
 
@@ -741,7 +731,7 @@ class UserMarketRequest extends Model
        {
             $query = $query->whereIn('title',$attr); 
        }
-        return $query ->get()
+        return $query->get()
         ->map(function($item){
             return $item->value;
         });

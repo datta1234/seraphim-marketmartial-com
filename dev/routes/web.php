@@ -14,7 +14,9 @@
 Auth::routes();
 
 Route::get('/test',function(){
-
+	$organisation = App\Models\UserManagement\Organisation::first();
+	$sum = $organisation->rebates()->noTrade()->sum('amount');
+	dd($sum);
 });
 
 /*

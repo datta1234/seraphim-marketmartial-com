@@ -58,6 +58,9 @@ trait OrganisationSlackChat {
                     "channel": $slack_organisation_channel
                 }
         */
+        if(!$organisation->slack_channel) {
+            return false;
+        }
         $body = [
             "text" => $message,
             "as_user" => false,

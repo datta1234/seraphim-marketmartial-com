@@ -96,6 +96,10 @@
 */
 
 /*
+*   market tabs
+*/
+
+/*
 *   Chat Bar
 */
 
@@ -151,6 +155,10 @@ a.mm-base {
 
 /*
 *   Interaction Bar
+*/
+
+/*
+*   market tabs
 */
 
 /*
@@ -11278,6 +11286,12 @@ table.table {
   font-size: 1.2em;
 }
 
+.table tbody td,
+.table thead th {
+  padding-bottom: 0.4rem;
+  padding-top: 0.4rem;
+}
+
 .progress {
   font-size: 1em;
   height: 30px;
@@ -11358,13 +11372,13 @@ table.table {
   margin-bottom: 0px;
 }
 
+#trade_body #trade-footer {
+  position: fixed;
+}
+
 #trade_app {
   position: relative;
   height: 100%;
-}
-
-#trade_app #trade-footer {
-  position: fixed;
 }
 
 #trade_app .trade-screen-wrapper {
@@ -17184,6 +17198,17 @@ input:checked + .slider:before {
   font-size: 1.1rem;
 }
 
+.trade-section.light-theme .market-tab-group-title,
+.trade-section.dark-theme .market-tab-group-title {
+  max-width: 320px;
+  margin: auto;
+}
+
+.trade-section.light-theme .market-tab-wrapper,
+.trade-section.dark-theme .market-tab-wrapper {
+  max-width: 310px;
+}
+
 .trade-section.light-theme .market-tab,
 .trade-section.dark-theme .market-tab {
   background-color: #071a22;
@@ -17193,8 +17218,7 @@ input:checked + .slider:before {
           box-shadow: 4px 4px 8px -1px #000000;
   cursor: pointer;
   /* max-width: 350px; */
-  max-width: 297.5px;
-  margin: auto;
+  max-width: 100%;
 }
 
 .trade-section.light-theme .market-tab.active,
@@ -17202,6 +17226,24 @@ input:checked + .slider:before {
   -webkit-box-shadow: 0px 0px 10px 5px #EBC300;
           box-shadow: 0px 0px 10px 5px #EBC300;
   border: 0.15em solid #EBC300;
+}
+
+.trade-section.light-theme .market-tab-ratio,
+.trade-section.dark-theme .market-tab-ratio {
+  padding-left: 1.5em;
+}
+
+.trade-section.light-theme .market-tab-ratio.has-ratio:before,
+.trade-section.dark-theme .market-tab-ratio.has-ratio:before {
+  content: "R";
+  color: red;
+  font-size: 1.5em;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .trade-section.light-theme .market-tab.market-alert,
@@ -17701,6 +17743,46 @@ input:checked + .slider:before {
 .organisation-chat .own-chat .chat-block {
   color: #1D3641;
   background-color: #9fe29f;
+}
+
+.organisation-chat .chat-header .new-message-alert {
+  color: #f3931c;
+  border-radius: 15px;
+  -webkit-box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
+          box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
+  -webkit-animation: pulse 2s 5;
+          animation: pulse 2s 5;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+  }
+
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+  }
+
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+            box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+  }
+
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+            box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+  }
+
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+            box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+  }
 }
 
 .popover .popover-body {

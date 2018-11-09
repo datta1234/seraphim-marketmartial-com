@@ -142,7 +142,7 @@ class ActivityControlller extends Controller
             });
         }
 
-        $trade_confirmations = $trade_confirmations->paginate(10);
+        $trade_confirmations = $trade_confirmations->paginate(25);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
             return $trade_confirmation->preFormatStats($user, $is_Admin);
@@ -190,11 +190,10 @@ class ActivityControlller extends Controller
             config('marketmartial.import_csv_field_mapping.safex_validation.messages')
         );
         if ($validator->fails()) {
-            return [
-                'success' => false,
-                'data' => ['messages' => $validator->messages()->toJson()],
-                'message' => 'Failed to upload Open Interest data.'
-            ];
+            return response()->json([
+                'errors' => $validator->messages(),
+                'message' => 'Failed to upload Safex data.'
+            ], 422);
         }
 
         // removes all previous safex trade confirmation records
@@ -207,10 +206,10 @@ class ActivityControlller extends Controller
         } catch (\Exception $e) {
             \Log::error($e);
             DB::rollBack();
-            return ['success' => false,'data' => null, 'message' => 'Failed to upload Safex data.'];
+            return response()->json(['message' => 'Failed to upload Safex data.', 'errors'=>[]], 500);
         }
 
-        return ['success' => true,'data' => null,'message' => 'Safex data successfully uploaded.'];
+        return response()->json(['data' => null,'message' => 'Safex data successfully uploaded.']);
     }
 
     public function safexRollingData(Request $request)
@@ -226,7 +225,7 @@ class ActivityControlller extends Controller
                 "filter_expiration" => $request->input('filter_expiration'),
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
-        )->paginate(10);
+        )->paginate(25);
     }
 
     /**

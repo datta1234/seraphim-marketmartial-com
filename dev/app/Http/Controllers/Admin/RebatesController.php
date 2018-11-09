@@ -99,17 +99,15 @@ class RebatesController extends Controller
             ]);
 
             if($rebate_update_result){
-                return [
-                    'success' => true,
+                return response()->json([
                     'data' => $rebate->preFormatAdmin(),
                     'message' => 'Rebate Paid status successfully changed.'
-                ];
+                ]);
             }
-            return [
-                'success' => false,
+            return response()->json([
                 'data' => null,
                 'message' => 'Failed to change rebate Paid status.'
-            ];
+            ],500);
         }
     }
 

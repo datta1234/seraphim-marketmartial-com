@@ -228,7 +228,7 @@ export default class UserMarketRequest extends BaseModel {
     actionTaken() {
         if(!this.attributes.action_needed) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["No actions needed"]));
+                reject(new Errors("No actions needed"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -247,11 +247,7 @@ export default class UserMarketRequest extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                if(err.response) {
-                    reject(new Errors(err.response.data));
-                } else {
-                    reject(err);
-                }
+                reject(err);
             }); 
         });
     }
@@ -368,6 +364,15 @@ export default class UserMarketRequest extends BaseModel {
             case 'Option Switch':
                 return 'option_switch';
             break;
+            case 'EFP Switch':
+                return 'efp_switch';
+            break;
+            case 'EFP':
+                return 'efp';
+            break;
+            case 'Rolls':
+                return 'rolls';
+            break;
         };
     }
 
@@ -375,7 +380,9 @@ export default class UserMarketRequest extends BaseModel {
     {
         let group = Object.values(this.trade_items).find(item => item.choice == false);
         let ts = this.trade_structure_slug;
+        console.log(ts);
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
+        console.log(conf);
         let val = group[conf];
         return val;
     }

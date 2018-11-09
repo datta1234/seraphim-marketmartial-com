@@ -47,7 +47,6 @@ class RebateEvent implements ShouldBroadcast
     */
     public function broadcastWith()
     {
-        \Log::info(["the organisation the stream goes to",$this->organisation->id,$this->data]);
         return ["message"=>$this->organisation->getNotification(),'data'=>$this->data];
     }
 }

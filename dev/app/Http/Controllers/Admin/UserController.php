@@ -106,20 +106,18 @@ class UserController extends Controller
 
             if($user_update_result){
                 if($request->ajax()) {
-                    return [
-                        'success' => true,
+                    return response()->json([
                         'data' => $user,
                         'message' => $request->input('active') ? 'User Reactivated.': 'User Deactivated.'
-                    ];
+                    ]);
                 }
                 return redirect()->back()->with('success', $request->input('active') ? 'User Reactivated.': 'User Deactivated.');
             }
             if($request->ajax()) {
-                return [
-                        'success' => false,
+                return response()->json([
                         'data' => null,
                         'message' => $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .'
-                    ];
+                    ],500);
             }
             return redirect()->back()->with('error', $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .');
         }
@@ -156,12 +154,12 @@ class UserController extends Controller
             DB::rollBack();
             Log::error($e);
             if($request->ajax()) {
-                return ['success' => false, 'data' => null, 'message' => 'Failed to verify the user.'];
+                return response()->json(['data' => null, 'message' => 'Failed to verify the user.'],500);
             }
             return redirect()->back()->with('error', 'Failed to verify the user.');
         }
         if($request->ajax()) {
-            return ['success' => true, 'data' => $user, 'message' => 'User has been verified.'];
+            return response()->json(['data' => $user, 'message' => 'User has been verified.']);
         }
         return redirect()->back()->with('success', 'User has been verified.');
 

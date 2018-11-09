@@ -25,9 +25,9 @@ class ChatController extends Controller
         $message_history = $user->organisation->channelMessageHistory($user);
 
         if( $message_history === false ) {
-            return ['success'=>false,'data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'];
+            return response()->json(['data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'], 500);
         }
-        return ['success' => true,'data' => $message_history,'message' => 'Message sent.'];
+        return response()->json(['data' => $message_history,'message' => 'Message sent.'], 200);
     }
 
     /**
@@ -38,30 +38,26 @@ class ChatController extends Controller
      */
     public function store(SendSlackChatRequest $request)
     {
-        if( $request->has('new_message') || $request->has('quick_message') ) {
-            $user = Auth::user();
-            $response = null;
-            if( $request->has('new_message') ) {
-                $response = $user->organisation->sendMessage(str_replace(env('SLACK_ADMIN_REF'),"<@".env('SLACK_ADMIN_ID').">",$request->input('new_message')), $user->full_name, $user->organisation);
-            } else {
-                $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name, $user->organisation);
-            }
-            if($response === false) {
-                return ['success'=>false,'data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'];
-            } else {
-                return [
-                    'success' => true,
-                    'data' => [
-                        "user_name" => $response->message->username, 
-                        "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 
-                        "time_stamp" => $response->message->ts,
-                        "status" => null
-                    ],
-                    'message' => 'Message sent.'
-                ];       
-            }
+        $user = Auth::user();
+        $response = null;
+        if( $request->has('new_message') ) {
+            $response = $user->organisation->sendMessage(str_replace(env('SLACK_ADMIN_REF'),"<@".env('SLACK_ADMIN_ID').">",$request->input('new_message')), $user->full_name, $user->organisation);
+        } else {
+            $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name, $user->organisation);
         }
-        return ['success'=>false,'data'=> null,'message'=>'Invalid request.'];
+        if($response === false) {
+            return response()->json(['data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'], 500);
+        } else {
+            return response()->json([
+                'data' => [
+                    "user_name" => $response->message->username, 
+                    "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 
+                    "time_stamp" => $response->message->ts,
+                    "status" => null
+                ],
+                'message' => 'Message sent.'
+            ], 200);       
+        }
     }
 
     public function receiveChat(ReceiveSlackChatRequest $request)

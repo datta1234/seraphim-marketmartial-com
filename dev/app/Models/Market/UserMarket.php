@@ -217,23 +217,21 @@ class UserMarket extends Model
     public static function placeOldQuotesOnHold()
     {
         //get all the user market that have no chosen market on market request
-        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'))->toDateString();
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'));
         $updatedMarketsId = self::where('created_at','<=',$date)
         ->where('is_on_hold',false)
         ->whereDoesntHave('marketNegotiations',function($q){
             $q->where('is_accepted',true);
         })
         ->doesntHave('userMarketRequest.chosenUserMarket')
-        ->select('id')
-        ->get()
         ->pluck('id');
-
+        
         if(count($updatedMarketsId) > 0)
         {
             self::whereIn('id',$updatedMarketsId)->update(['is_on_hold' => true]);
             self::whereIn('id',$updatedMarketsId)->each(function ($userMarket, $key) {
                 $organisation = $userMarket->user->organisation;
-                $userMarket->userMarketRequest->notifyRequested([$organisation]);
+                $userMarket->fresh()->userMarketRequest->notifyRequested([$organisation]);
             });  
         }
     }
@@ -441,7 +439,8 @@ class UserMarket extends Model
         $newMarketNegotiation->user_market_id = $this->id;
         $newMarketNegotiation->market_negotiation_id = $lastMarketNegotiation->id;
 
-        $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->latest()->first();
+        //see what the trade negotiation was started
+        $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->first();
         
         $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
         $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
@@ -453,7 +452,7 @@ class UserMarket extends Model
             $newMarketNegotiation->offer_qty = $quantity;
         }else
         {
-            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->bid = $lastMarketNegotiation->bid;
             $newMarketNegotiation->bid_qty = $quantity;
         }
 

@@ -106,11 +106,10 @@ class OpenInterestControlller extends Controller
             config('marketmartial.import_csv_field_mapping.open_interest_validation.messages')
         );
         if ($validator->fails()) {
-            return [
-                'success' => false,
-                'data' => ['messages' => $validator->messages()],
+            return response()->json([
+                'errors' => $validator->messages(),
                 'message' => 'Failed to upload Open Interest data.'
-            ];
+            ], 422);
         }
 
         // removes all previous open interest records
@@ -123,9 +122,9 @@ class OpenInterestControlller extends Controller
         } catch (\Exception $e) {
             \Log::error($e);
             DB::rollBack();
-            return ['success' => false,'data' => null, 'message' => 'Failed to upload Open Interest data.'];
+            return response()->json(['message' => 'Failed to upload Open Interest data.', 'errors'=>[]], 500);
         }
 
-        return ['success' => true,'data' => null,'message' => 'Open Interest data successfully uploaded.'];
+        return response()->json(['data' => null,'message' => 'Open Interest data successfully uploaded.']);
     }
 }
