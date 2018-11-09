@@ -121,7 +121,6 @@
                 }, err => {
                     console.error(err);
                     this.$toasted.error(err.message);
-                    console.log("ERORORORORORR ",err.errors);
                     if(err.errors) {
                         Object.keys(err.errors).forEach(error => {
                             let section_array = error.split('.');
