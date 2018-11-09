@@ -19,7 +19,13 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
+import Errors from './lib/Errors';
 window.axios = require('axios');
+window.axios.interceptors.response.use((response) => {
+    return response;
+}, (error, data) => {
+    return Promise.reject(new Errors(error));
+});
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
