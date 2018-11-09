@@ -445,16 +445,15 @@ class UserMarket extends Model
         
         $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
         $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
-
         $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
 
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->offer    = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
             $newMarketNegotiation->offer_qty = $quantity;
         }else
         {
-            $newMarketNegotiation->offer    = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
             $newMarketNegotiation->bid_qty = $quantity;
         }
 

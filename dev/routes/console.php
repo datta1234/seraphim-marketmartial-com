@@ -18,7 +18,6 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 Artisan::command('gen:fok', function () {
-    
     $id = 1;
     
     $n = \App\Models\Market\MarketNegotiation::find($id);
@@ -27,6 +26,17 @@ Artisan::command('gen:fok', function () {
 
 })->describe('Debug FOK');
 
+Artisan::command('mm:populate', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'OrganisationTableSeeder'
+    ]);
+});
+
+Artisan::command('mm:sample', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'SampleSeeder'
+    ]);
+});
 
 Artisan::command('mm:reset', function() {
     // fail if 
@@ -50,10 +60,12 @@ Artisan::command('mm:reset', function() {
 
         // Clear Market Negoting
         \App\Models\Market\MarketNegotiation::truncate();
+        \App\Models\Market\UserMarketVolatility::truncate();
         \App\Models\Market\UserMarket::truncate();
         \App\Models\Market\UserMarketSubscription::truncate();
 
         // Clear Market Requesting
+        \App\Models\MarketRequest\UserMarketRequestTradable::truncate();
         \App\Models\MarketRequest\UserMarketRequest::truncate();
         \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
         \App\Models\MarketRequest\UserMarketRequestItem::truncate();

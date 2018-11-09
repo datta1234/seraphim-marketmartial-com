@@ -121,10 +121,14 @@ export default class TradeConfirmation extends BaseModel {
     }
 
   
-    postPhaseTwo()
+    postPhaseTwo(trading_account)
     {
+        console.log("calculate");
         return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two', this.prepareStore())
+           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two',{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation_data": this.prepareStore()
+           })
            .then(response => {
 
             this.update(response.data.trade_confirmation);
@@ -143,7 +147,7 @@ export default class TradeConfirmation extends BaseModel {
       return new Promise((resolve, reject) => {
            axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
             "trading_account_id":trading_account.id,
-            "trade_confirmation": this.prepareStore()
+            "trade_confirmation_data": this.prepareStore()
            })
            .then(response => {
 

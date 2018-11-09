@@ -1,13 +1,164 @@
 <template>
-    <b-container fluid dusk="ibar-negotiation-bar-efp_switch">
-        
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
-        
-        <ibar-negotiation-history-contracts :history="market_history" class="mb-2"></ibar-negotiation-history-contracts>
+    <b-container fluid dusk="ibar-negotiation-bar-efp-switch">
 
-        <ibar-market-negotiation-contracts class="mb-5" :market-negotiation="proposed_user_market_negotiation"></ibar-market-negotiation-contracts>
+        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        
+       <ibar-market-requested class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_columns">
+        </ibar-market-requested>
 
-        <!-- <ibar-apply-conditions class="mb-5" :conditions=""></ibar-apply-conditions> -->
+        <!-- VOL SPREAD History - Market-->
+        <ibar-negotiation-history-market 
+         :message="history_message"
+         :history="marketRequest.quotes" 
+         v-if="marketRequest.quotes && !marketRequest.chosen_user_market" 
+         class="mb-3"
+         @update-on-hold="setUpProposal" 
+         @update-on-accept="setUpProposal"
+        >
+        </ibar-negotiation-history-market>
+   
+        <!-- Contracts History - Trade-->
+        <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
+
+    <template v-if="last_is_self">
+        <p class="text-center">
+            Levels Sent, Awaiting response
+        </p>
+    </template>
+    <template v-if="!is_trading && !last_is_self">
+        
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
+        <ibar-market-negotiation-contracts 
+            class="mb-1" v-if="can_negotiate" 
+            @validate-proposal="validateProposal" 
+            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
+            :check-invalid="check_invalid" 
+            :current-negotiation="last_negotiation" 
+            :market-negotiation="proposed_user_market_negotiation"
+        >
+        </ibar-market-negotiation-contracts>
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
+
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
+   
+        <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
+            Alert me when cleared
+        </b-form-checkbox>
+        
+        <b-row class="mb-1">
+            <b-col cols="10">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                    {{ error[0] }}
+                </b-col>
+                <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
+                <b-row class="justify-content-md-center mb-1">
+                    <b-col cols="6">
+
+                        <!-- || (maker_quote && !is_on_hold) && ( !maker_quote|| (maker_quote && !maker_quote.is_repeat)) -->
+                       
+
+                        
+                         <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="check_invalid || server_loading" size="sm" dusk="ibar-action-amend" variant="primary" @click="amendQuote()">Amend</b-button>
+
+
+                        <b-button v-active-request v-if="is_on_hold && (maker_quote && !maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-repeat" variant="primary" @click="repeatQuote()">Repeat</b-button>
+
+                        <b-button v-active-request v-if="maker_quote || is_on_hold || (maker_quote && maker_quote.is_repeat)" class="w-100 mt-1" :disabled="server_loading" size="sm" dusk="ibar-action-pull" variant="primary" v-b-modal.pullQuote>Pull</b-button>
+
+                        <!-- Modal Component -->
+                        <b-modal ref="pullModal" id="pullQuote" title="Pull Market" class="mm-modal mx-auto">
+                            <p>Are you sure you want to pull this quote?</p>
+                            <div slot="modal-footer" class="w-100">
+                                <b-row align-v="center">
+                                    <b-col cols="12">
+                                        <b-button v-active-request class="mm-modal-button mr-2 w-25" @click="pullQuote()">Pull</b-button>
+                                        <b-button v-active-request class="btn mm-modal-button ml-2 w-25 btn-secondary" @click="hideModal()">Cancel</b-button>
+                                    </b-col>
+                                </b-row>
+                            </div>
+                        </b-modal>
+
+
+                    </b-col>
+                </b-row>
+                <b-row class="justify-content-md-center" v-if="!maker_quote && !marketRequest.chosen_user_market">
+                    <b-col cols="6">
+
+                        <b-button v-active-request class="w-100 mt-1"
+                          v-if="!maker_quote" 
+                          :disabled="check_invalid || server_loading" 
+                          size="sm" 
+                          dusk="ibar-action-send" 
+                          variant="primary" 
+                          @click="sendQuote()">
+                            Send
+                        </b-button>
+                        
+
+                    </b-col>
+                </b-row>
+
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                    <b-col cols="6">
+                         
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="sendNegotiation()">
+                                Send
+                        </b-button>
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="conditionActive('fok')" 
+                         v-if="can_spin" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="spinNegotiation()">
+                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
+                        </b-button>
+                    </b-col>
+                </b-row>
+                
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                    <b-col cols="6">
+                         
+                        <b-button v-active-request class="w-100 mt-1" 
+                         :disabled="check_invalid || server_loading" 
+                         size="sm" 
+                         dusk="ibar-action-send" 
+                         variant="primary" 
+                         @click="improveBestNegotiation()">
+                                Send
+                        </b-button>
+                    </b-col>
+                </b-row>
+
+
+                <b-row class="justify-content-md-center">
+                    <b-col cols="6">
+                        <!-- !maker_quote && !marketRequest.chosen_user_market -->
+                         <b-button v-active-request v-if="can_disregard && !in_no_cares" class="w-100 mt-1" size="sm" dusk="ibar-action-nocares" variant="secondary" @click="addToNoCares()">No Cares</b-button>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+    </template>
+    
+            
+
+    <ibar-trade-counter-desired-quantity v-if="is_trading && !is_trading_at_best" :market-request="marketRequest"></ibar-trade-counter-desired-quantity>
+    <ibar-trade-work-balance v-if="mustWorkBalance" :market-request="marketRequest"></ibar-trade-work-balance>
 
         <!-- <b-row class="mb-2">
             <b-col>
@@ -15,83 +166,100 @@
             </b-col>
         </b-row> -->
 
+      <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
+        
+        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+
     </b-container>
 </template>
 <script>
-    import { EventBus } from '../../../lib/EventBus.js';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import UserMarket from '~/lib/UserMarket';
+    
+    import moment from 'moment';
+
+    import IbarApplyConditions from '../MarketComponents/ApplyConditionsComponent';
+    import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
+    import IbarActiveConditions from '../MarketComponents/ActiveConditions';
+    import IbarVolatilityField from '../MarketComponents/VolatilityField';
+    import IbarMarketRequested from '../MarketComponents/MarketRequested';
+    import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
+
+    import NegotiationBarMixin from '../NegotiationBarMixin';
+
     export default {
+        mixins:[NegotiationBarMixin],
+        components: {
+            IbarApplyConditions,
+            IbarRemoveConditions,
+            IbarActiveConditions,
+            IbarVolatilityField,
+            IbarMarketRequested,
+            IbarTradeAtBestNegotiation
+        },
         props: {
-            marketRequest: {
-                type: UserMarketRequest
-            }
+            
         },
         data() {
             return {
-                bid: null,
-                offer: null,
-                bid_qty: 0,
-                offer_qty: 0,
-
-                state_conditions: false,
                 state_premium_calc: false,
-
+                market_request_subscribe: false,
                 user_market: null,
                 market_history: [],
-                market_time: ""
+
+                proposed_user_market: new UserMarket(),
+                proposed_user_market_negotiation: new UserMarketNegotiation(),
+
+                default_user_market_negotiation:new UserMarketNegotiation(),
+                history_message: null,
+
+                removable_conditions: [],
+                server_loading: false,
+                check_invalid: false,
+                errors: [],
+                showMessagesIn: [
+                    "market_request_store",
+                    "market_request_update",
+                    "market_request_delete",
+                    "market_negotiation_store"
+                ],
+                market_requested_columns: [
+                    'quantity',
+                    'tradable',
+                    'status'
+                ]
             };
         },
-        watch: {
-            'marketRequest': function() {
-                this.init();
-            }
-        },
+        
         computed: {
+            'trade_group_1': function() {
+                let group = this.$root.config("trade_structure.efp_switch.group_1");
+                return this.marketRequest.trade_items[group];
+            },
+            'trade_group_2': function() {
+                let group = this.$root.config("trade_structure.efp_switch.group_2");
+                return this.marketRequest.trade_items[group];
+            },
             'market_title': function() {
-                return this.marketRequest.getMarket().title+" "
-                +this.marketRequest.trade_items.default["Expiration Date"]+" "
-                +this.marketRequest.trade_items.default["Strike"];
-            }
+                let group1 = this.$root.config("trade_structure.efp_switch.group_1");
+                let group2 = this.$root.config("trade_structure.efp_switch.group_2");
+                return [
+                    this.marketRequest.trade_items[group1].tradable.title,
+                    'vs',
+                    this.marketRequest.trade_items[group2].tradable.title,
+                    this.marketRequest.trade_items[group1][this.$root.config("trade_structure.efp_switch.expiration_date")],
+                    'EFP Switch'
+                ].join(' ');
+            },
         },
         methods: {
-            setMarketTitle() {
-                
-            },
-            setMarketTime() {
-                this.market_time = "10:10";
-            },
-            reset() {
-                let defaults = {
-                    bid: null,
-                    offer: null,
-                    bid_qty: 0,
-                    offer_qty: 0,
-
-                    state_conditions: false,
-                    state_premium_calc: false,
-
-                    user_market: null,
-                    market_history: [],
-                    market_time: ""
-                };
-                Object.keys(defaults).forEach(k => {
-                    this[k] = defaults[k];
-                });
-            },
-            init() {
-                console.log("Mounted BAR", this.marketRequest);
-                this.reset();
-                if(this.marketRequest) {
-                    this.user_market = this.marketRequest.getChosenUserMarket();
-                    this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                    this.setMarketTitle();
-                    this.setMarketTime();
-                }
-            }
+            
         },
         mounted() {
             this.init();
+            EventBus.$on('notifyUser',this.updateMessage);
         }
     }
 </script>

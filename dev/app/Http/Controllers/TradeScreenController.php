@@ -13,7 +13,7 @@ class TradeScreenController extends Controller
     {
     	$user = Auth::user();
     	$organisation = $user->organisation;
-    	$total_rebate = $user->userTotalRebate();
+    	$total_rebate = $organisation->rebates()->noTrade()->sum('amount');
         
         return view('pages.trade')->with([
         	'user' => $user, 

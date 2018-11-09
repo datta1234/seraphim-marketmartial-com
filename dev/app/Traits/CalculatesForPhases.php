@@ -16,7 +16,7 @@ trait CalcuatesForPhases {
 
     public function outrightTwo()
     {
-         $organisation = $this->resolveOrganisation();
+        $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -99,8 +99,8 @@ trait CalcuatesForPhases {
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
     }
 
-
-    public function feesCalc($isOffer,$gross_prem)
+    
+    public function feesCalc($isOffer,$gross_prem,$is_sender)
     {
          
         //get the spot price ref.

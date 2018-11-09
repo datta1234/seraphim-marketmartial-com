@@ -35,13 +35,13 @@ class TradeConfirmationStoreRequest extends FormRequest
         $this->trade_confirmation->load(['futureGroups'=>function($q){
             $q->with('tradeConfirmationItems.item');
         }]);
-
+        
         $rules = [];
         for($i = 0; $i < $this->trade_confirmation->futureGroups->count(); $i++) 
         { 
-            $item = "structure_groups.{$i}.items.*";
-            $futureLabel= "structure_groups.{$i}.items.*.title";
-            $futureValue = "structure_groups.{$i}.items.*.value";
+            $item = "trade_confirmation_data.structure_groups.{$i}.items.*";
+            $futureLabel= "trade_confirmation_data.structure_groups.{$i}.items.*.title";
+            $futureValue = "trade_confirmation_data.structure_groups.{$i}.items.*.value";
             
             $rules[$item] = [new ItemRule()];
             $rules[$futureLabel] = "required:required";

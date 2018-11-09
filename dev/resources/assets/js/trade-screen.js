@@ -656,6 +656,13 @@ const app = new Vue({
                         }
                     });
                 })
+                .listen('RebateEvent', (rebate) => {
+                    if(rebate.message)
+                    {
+                         this.$toasted.show(rebate.message.data); 
+                    }
+                    EventBus.$emit('rebateUpdate', rebate.data);
+                })
                 .listen('ChatMessageReceived', (received_org_message) => {
                     this.$emit('chatMessageReceived', received_org_message);
                 });

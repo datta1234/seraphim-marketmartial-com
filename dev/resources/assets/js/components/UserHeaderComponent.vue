@@ -9,13 +9,15 @@
                 <p class="pt-1">{{ time.computed_time }}</p>
             </div>
             <div class="col-4 total-rebate">
-                <p class="float-right pt-1">Rebates: <strong>{{ formatRandQty(total_rebate) }}</strong></p>
+                <p class="float-right pt-1">Rebates: <strong>{{ formatRandQty(displayRebate) }}</strong></p>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+    //lib imports
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         props: [
             'user_name',
@@ -28,7 +30,8 @@
                     location:'SA',
                     computed_time:'',
                     _interval: null
-                }
+                },
+                displayRebate: null
             };
         },
         methods: {
@@ -40,11 +43,26 @@
             showTime() {
                 //Getting current time and setting our time object.
                 this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
-            }
+            },
+          /**
+             * Listens for a pageLoaded event firing
+             *
+             * @event /lib/EventBus#pageLoaded
+             */
+            rebateListener() {
+                console.log("got to the rebate Listens");
+                EventBus.$on("rebateUpdate",(data)=>{
+                    console.log("got into the Listens",data);
+                    this.displayRebate = data.total;
+                });
+            },
         },
         mounted() {
             //Sets interval for running clock
             this.time._interval = setInterval(this.showTime, 1000);
+            this.displayRebate = this.total_rebate;
+            this.rebateListener();
+
         }
     }
 </script>

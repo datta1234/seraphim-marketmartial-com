@@ -12,11 +12,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Models\Trade\Rebate;
 use App\Models\UserManagement\Organisation;
 
-class TradeConfirmationEvent implements ShouldBroadcast
+class RebateEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $rebate;
+    public $data;
     private $organisation;
 
     /**
@@ -24,9 +24,9 @@ class TradeConfirmationEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Rebate $rebate,Organisation $organisation)
+    public function __construct($data,Organisation $organisation)
     {
-        $this->rebate = $rebate;
+        $this->data = $data;
         $this->organisation = $organisation;
     }
 
@@ -41,22 +41,12 @@ class TradeConfirmationEvent implements ShouldBroadcast
     }
 
     /**
-    * The event's broadcast name.
-    *
-    * @return string
-    */
-    public function broadcastAs()
-    {
-        return 'Rebate Event';
-    }
-
-    /**
     * Get the data to broadcast.
     *
     * @return array
     */
     public function broadcastWith()
     {
-        return ["message"=>$this->organisation->getNotification(),'data'=>$this->rebate->setOrgContext($this->organisation)->preFormatted()];
+        return ["message"=>$this->organisation->getNotification(),'data'=>$this->data];
     }
 }
