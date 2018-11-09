@@ -97,7 +97,6 @@ class MarketUserMarketReqeustController extends Controller
 
             $userMarketRequest = new UserMarketRequest([
                 "trade_structure_id"                => $tradeStructure->id,
-                "user_market_request_statuses_id"   => 1,
                 "market_id"                         => $market->id,
                 "chosen_user_market_id"             => null
             ]);

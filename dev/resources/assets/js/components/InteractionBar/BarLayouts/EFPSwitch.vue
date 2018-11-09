@@ -227,6 +227,7 @@
                 ],
                 market_requested_columns: [
                     'quantity',
+                    'tradable',
                     'status'
                 ]
             };
@@ -246,10 +247,10 @@
                 let group2 = this.$root.config("trade_structure.efp_switch.group_2");
                 return [
                     this.marketRequest.trade_items[group1].tradable.title,
-                    'vs.',
+                    'vs',
                     this.marketRequest.trade_items[group2].tradable.title,
                     this.marketRequest.trade_items[group1][this.$root.config("trade_structure.efp_switch.expiration_date")],
-                    'Switch'
+                    'EFP Switch'
                 ].join(' ');
             },
         },
