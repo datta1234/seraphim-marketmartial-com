@@ -142,7 +142,7 @@ class ActivityControlller extends Controller
             });
         }
 
-        $trade_confirmations = $trade_confirmations->paginate(10);
+        $trade_confirmations = $trade_confirmations->paginate(25);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
             return $trade_confirmation->preFormatStats($user, $is_Admin);
@@ -225,7 +225,7 @@ class ActivityControlller extends Controller
                 "filter_expiration" => $request->input('filter_expiration'),
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
-        )->paginate(10);
+        )->paginate(25);
     }
 
     /**
