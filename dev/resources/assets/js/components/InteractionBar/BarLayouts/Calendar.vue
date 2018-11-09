@@ -3,7 +3,10 @@
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
-        <ibar-market-requested class="mb-2" :market-request="marketRequest" :trade-structure="'calendar'"></ibar-market-requested>
+        <ibar-market-requested class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_columns">
+        </ibar-market-requested>
 
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
@@ -222,6 +225,12 @@
                     "market_request_delete",
                     "market_negotiation_store"
                 ],
+                market_requested_columns: [
+                    'quantity',
+                    'expiration_date',
+                    'strike',
+                    'status'
+                ]
             };
         },
 
@@ -237,7 +246,6 @@
             'market_title': function() {
                 return [
                     this.marketRequest.trade_items.default.tradable.title,
-                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.calendar.expiration_date")],
                     this.marketRequest.trade_structure
                 ].join(' ');
             },

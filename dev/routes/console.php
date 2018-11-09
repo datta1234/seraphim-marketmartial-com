@@ -50,10 +50,12 @@ Artisan::command('mm:reset', function() {
 
         // Clear Market Negoting
         \App\Models\Market\MarketNegotiation::truncate();
+        \App\Models\Market\UserMarketVolatility::truncate();
         \App\Models\Market\UserMarket::truncate();
         \App\Models\Market\UserMarketSubscription::truncate();
 
         // Clear Market Requesting
+        \App\Models\MarketRequest\UserMarketRequestTradable::truncate();
         \App\Models\MarketRequest\UserMarketRequest::truncate();
         \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
         \App\Models\MarketRequest\UserMarketRequestItem::truncate();

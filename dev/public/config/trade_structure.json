@@ -36,6 +36,30 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "group_1": "default",
+        "group_2": "Switch Options"
+    },
+    "efp_switch": {
+        "title": "EFP Switch",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike",
+        "quantity": "Quantity",
+        "group_1": "default",
+        "group_2": "Switch Options"
+    },
+    "efp": {
+        "title": "EFP",
+        "expiration_date": "Expiration Date",
+        "strike": "Strike",
+        "quantity": "Quantity",
+        "group_1": "default"
+    },
+    "rolls": {
+        "title": "Rolls",
+        "expiration_date_1": "Expiration Date 1",
+        "expiration_date_2": "Expiration Date 2",
+        "strike": "Strike",
+        "quantity": "Quantity",
         "group_1": "default"
     }
 }

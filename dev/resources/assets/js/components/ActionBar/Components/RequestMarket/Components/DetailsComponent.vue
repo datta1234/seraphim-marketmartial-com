@@ -105,12 +105,9 @@
                                             :state="inputState(index, 'Quantity')"
             								required>
             	      					</b-form-input>
-                                        <p  v-if="data.market_object.stock && field.quantity < 50"
+                                        <p  v-if="field.quantity < field.quantity_default"
                                             class="modal-warning-text text-danger text-center">
-                                            *Warning: The recommended minimum quantity is 50.
-                                        </p>
-                                        <p v-else-if="!data.market_object.stock && field.quantity < 500" class="modal-warning-text text-danger text-center">
-                                            *Warning: The recommended minimum quantity is 500.
+                                            *Warning: The recommended minimum quantity is {{ field.quantity_default }}.
                                         </p>
             	      				</b-col>
                                 </b-row>
@@ -179,6 +176,12 @@
             	chosen_option: null,
                 form_data: {
                 	fields: []
+                },
+                quantity_default: {
+                    TOP40: 500,
+                    DTOP: 2500,
+                    DCAP: 1500,
+                    stock: 50,
                 }
             };
         },
@@ -212,51 +215,81 @@
              */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
+            },
+            setDefaultQuantity() {
+                switch(this.data.market_object.trade_structure) {
+                    case 'Outright':
+                    case 'Risky':
+                    case 'Fly':
+                    case 'Calendar':
+                        return this.data.market_object.stock ? this.quantity_default.stock
+                            : this.quantity_default[this.data.market_object.market.title];
+                        break;
+                    case 'EFP':
+                    case 'Rolls':
+                        return this.quantity_default[this.data.market_object.market.title];
+                        break;
+                    case 'EFP Switch':
+                        return this.data.market_object.markets.map( market => this.quantity_default[market.title] );
+                    default:
+                        return 500;
+                }
             }
         },
         created() {
-    		let quantity_default = this.data.market_object.stock ? 50 : 500;
+    		let size_default =  this.setDefaultQuantity();
             this.display.has_strike = true;
             this.display.versus = false;
             this.display.is_ratio = false;
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    });
             		this.display.disable_choice = true,
             		this.chosen_option = null;
             		break;
             	case 'Risky':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    });
+            		this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    });
                     this.display.is_ratio = true;
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    });
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    });
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    });
             		this.display.disable_choice = true,
                     this.display.is_ratio = true;
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: quantity_default});
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    });
+                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    });
             		this.display.show_expiry = true,
                     this.display.is_ratio = true;
             		this.chosen_option = 0;
             		break;
                 case 'EFP':
                 case 'Rolls':
-                    this.form_data.fields.push({is_selected:true,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,quantity: size_default, quantity_default: size_default
+                    });
                     this.display.disable_choice = true,
                     this.display.has_strike = false;
                     this.chosen_option = null;
                     break;
                 case 'EFP Switch':
-                    this.form_data.fields.push({is_selected:true,quantity: quantity_default});
-                    this.form_data.fields.push({is_selected:false,quantity: quantity_default});
+                    this.form_data.fields.push({is_selected:true,quantity: size_default[0], quantity_default: size_default[0]
+                    });
+                    this.form_data.fields.push({is_selected:false,quantity: size_default[1], quantity_default: size_default[1]
+                    });
                     this.display.disable_choice = false,
                     this.display.has_strike = false;
                     this.display.versus = true;
