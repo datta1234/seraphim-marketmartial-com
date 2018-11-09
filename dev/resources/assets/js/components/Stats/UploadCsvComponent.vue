@@ -56,8 +56,8 @@
             <div slot="modal-footer" class="w-100">
                 <b-row align-v="center">
                     <b-col cols="12">
-                        <b-button :disabled="modal_data.file == null" class="mm-modal-button ml-2 w-25" @click="uploadFile()">Upload</b-button>
-                        <b-button class="mm-modal-button ml-2 w-25" @click="clearFiles()">Clear</b-button>
+                        <b-button v-active-request :disabled="modal_data.file == null" class="mm-modal-button ml-2 w-25" @click="uploadFile()">Upload</b-button>
+                        <b-button v-active-request class="mm-modal-button ml-2 w-25" @click="clearFiles()">Clear</b-button>
                         <b-button dis class="mm-modal-button ml-2 w-25" @click="hideModal()">Cancel</b-button>
                     </b-col>
                 </b-row>
@@ -121,7 +121,8 @@
                 }, err => {
                     console.error(err);
                     this.$toasted.error(err.message);
-                    if(err.errors && err.errors.length > 0) {
+                    console.log("ERORORORORORR ",err.errors);
+                    if(err.errors) {
                         Object.keys(err.errors).forEach(error => {
                             let section_array = error.split('.');
                             this.upload_errors.push({
