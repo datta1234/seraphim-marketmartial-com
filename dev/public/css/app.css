@@ -96,6 +96,10 @@
 */
 
 /*
+*   market tabs
+*/
+
+/*
 *   Chat Bar
 */
 
@@ -151,6 +155,10 @@ a.mm-base {
 
 /*
 *   Interaction Bar
+*/
+
+/*
+*   market tabs
 */
 
 /*
@@ -11358,13 +11366,13 @@ table.table {
   margin-bottom: 0px;
 }
 
+#trade_body #trade-footer {
+  position: fixed;
+}
+
 #trade_app {
   position: relative;
   height: 100%;
-}
-
-#trade_app #trade-footer {
-  position: fixed;
 }
 
 #trade_app .trade-screen-wrapper {
@@ -17184,6 +17192,12 @@ input:checked + .slider:before {
   font-size: 1.1rem;
 }
 
+.trade-section.light-theme .market-tab-group-title,
+.trade-section.dark-theme .market-tab-group-title {
+  max-width: 310px;
+  margin: auto;
+}
+
 .trade-section.light-theme .market-tab,
 .trade-section.dark-theme .market-tab {
   background-color: #071a22;
@@ -17193,7 +17207,7 @@ input:checked + .slider:before {
           box-shadow: 4px 4px 8px -1px #000000;
   cursor: pointer;
   /* max-width: 350px; */
-  max-width: 297.5px;
+  max-width: 300px;
   margin: auto;
 }
 

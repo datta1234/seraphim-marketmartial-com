@@ -372,7 +372,7 @@ export default class UserMarketRequest extends BaseModel {
                 return 'efp_switch';
             break;
             case 'EFP':
-                return 'EFP';
+                return 'efp';
             break;
             case 'Rolls':
                 return 'rolls';

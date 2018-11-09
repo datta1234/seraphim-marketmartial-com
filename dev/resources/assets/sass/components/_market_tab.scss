@@ -2,6 +2,10 @@
 	.market-group-title {
 		font-size: 1.1rem;
 	}
+	.market-tab-group-title {
+		max-width: $mm-market-tab-group-title-max-width;
+		margin: auto;
+	}
 	.market-tab {
 		background-color: $mm-market-tab;
 		color: $mm-text-white;
@@ -11,7 +15,7 @@
 		cursor: pointer;
 
 		/* max-width: 350px; */
-		max-width: 297.5px;
+		max-width: $mm-market-tab-max-width;
 		margin: auto;
 
 		&.active {
