@@ -630,6 +630,10 @@ table.table {
     font-size: 1.2em;
 }
 
+.table tbody td, .table thead th {
+	padding-bottom: 0.4rem;
+    padding-top: 0.4rem;
+}
 
 //Progress Bar
 .progress {
