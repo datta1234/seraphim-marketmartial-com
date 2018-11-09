@@ -136,8 +136,7 @@ export default class TradeConfirmation extends BaseModel {
             resolve();
         })
            .catch(err => {
-            console.log(err);
-            reject(new Errors(err.response.data));
+            reject(err);
         }); 
        });
     }
@@ -155,8 +154,7 @@ export default class TradeConfirmation extends BaseModel {
             resolve();
         })
            .catch(err => {
-            console.log(err);
-            reject(new Errors(err.response.data));
+            reject(err);
         }); 
        });
     }
@@ -174,7 +172,7 @@ export default class TradeConfirmation extends BaseModel {
             resolve();
         })
            .catch(err => {
-            reject(new Errors(err.response.data));
+            reject(err);
         }); 
        });
     }
@@ -194,7 +192,7 @@ export default class TradeConfirmation extends BaseModel {
         })
            .catch(err => {
             console.log(err);
-            reject(new Errors(err.response.data));
+            reject(err);
         }); 
        });
     }

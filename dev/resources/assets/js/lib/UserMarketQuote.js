@@ -98,7 +98,7 @@ export default class UserMarketQuote extends BaseModel {
         // catch not assigned to a user market request yet!
         if(this._user_market_request == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -108,7 +108,7 @@ export default class UserMarketQuote extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             }); 
         });
     }
@@ -117,7 +117,7 @@ export default class UserMarketQuote extends BaseModel {
         // catch not assigned to a user market request yet!
         if(this._user_market_request == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -127,7 +127,7 @@ export default class UserMarketQuote extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             }); 
         });
     }
@@ -140,7 +140,7 @@ export default class UserMarketQuote extends BaseModel {
         // catch not assigned to a market request yet!
         if(this._user_market_request == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -149,7 +149,7 @@ export default class UserMarketQuote extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }

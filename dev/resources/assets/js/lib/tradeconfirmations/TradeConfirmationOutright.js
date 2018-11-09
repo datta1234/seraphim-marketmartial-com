@@ -126,7 +126,7 @@ const TradeConfirmationOutright = {
                     resolve();
                 })
                  .catch(err => {
-                    reject(new Errors(err.response.data));
+                    reject(err);
                 }); 
              });
 

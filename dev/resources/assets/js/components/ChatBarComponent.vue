@@ -113,8 +113,7 @@
                         });
                     })
                     .catch(err => {
-                        console.log("TEST ERRORS ", err.response.data);
-                        reject(new Errors(err.response.data));
+                        reject(err);
                     });
                 } else {
                     this.new_message = "";
