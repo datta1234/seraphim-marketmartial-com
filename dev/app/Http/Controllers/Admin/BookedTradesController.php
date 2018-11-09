@@ -98,17 +98,15 @@ class BookedTradesController extends Controller
             ]);
 
             if($booked_trade_update_result){
-                return [
-                    'success' => true,
+                return response()->json([
                     'data' => $booked_trade->preFormatAdmin(),
                     'message' => 'Booked Trade status successfully changed.'
-                ];
+                ]);
             }
-            return [
-                'success' => false,
+            return response()->json([
                 'data' => null,
                 'message' => 'Failed to change Booked Trade status.'
-            ];
+            ],500);
         }
     }
 

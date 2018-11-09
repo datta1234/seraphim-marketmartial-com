@@ -25,9 +25,9 @@ class ChatController extends Controller
         $message_history = $user->organisation->channelMessageHistory($user);
 
         if( $message_history === false ) {
-            return response()->json(['success'=>false,'data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'], 500);
+            return response()->json(['data'=> null,'message'=>'An error occured retrieving the chat history, if the problem persists contact the admin.'], 500);
         }
-        return response()->json(['success' => true,'data' => $message_history,'message' => 'Message sent.'], 200);
+        return response()->json(['data' => $message_history,'message' => 'Message sent.'], 200);
     }
 
     /**
@@ -46,10 +46,9 @@ class ChatController extends Controller
             $response = $user->organisation->sendMessage("<@".env('SLACK_ADMIN_ID')."> ".$request->input('quick_message'), $user->full_name, $user->organisation);
         }
         if($response === false) {
-            return response()->json(['success'=>false,'data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'], 500);
+            return response()->json(['data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'], 500);
         } else {
             return response()->json([
-                'success' => true,
                 'data' => [
                     "user_name" => $response->message->username, 
                     "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'),$response->message->text), 

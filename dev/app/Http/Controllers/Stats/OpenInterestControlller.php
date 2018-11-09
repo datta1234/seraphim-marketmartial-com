@@ -125,6 +125,6 @@ class OpenInterestControlller extends Controller
             return response()->json(['message' => 'Failed to upload Open Interest data.', 'errors'=>[]], 500);
         }
 
-        return response()->json(['message' => 'Open Interest data successfully uploaded.']);
+        return response()->json(['data' => null,'message' => 'Open Interest data successfully uploaded.']);
     }
 }
