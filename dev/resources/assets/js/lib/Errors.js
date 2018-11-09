@@ -3,13 +3,18 @@ module.exports =  class Errors {
      * Create a new Errors instance.
      */
     constructor(errors) {
+        this.errors = [];
+        this.message = "";
+        console.log(errors, errors.constructor);
         if(errors && errors.constructor == String) {
             this.errors = [];
             this.message = message;
         } else {
-            // @TODO: test if axios
-
-            // @TODO: handle if not axios
+            Object.assign(this, errors);
+            if(errors.response && errors.response.data) {
+                this.errors = errors.response.data.errors ? errors.response.data.errors : [];
+                this.message = errors.response.data.message ? errors.response.data.message : [];
+            }
         }
     }
 
