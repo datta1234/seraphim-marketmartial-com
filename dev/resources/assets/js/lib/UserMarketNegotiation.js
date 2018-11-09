@@ -157,7 +157,7 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
  
@@ -169,8 +169,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                console.log("here");
-               // reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -182,7 +181,7 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
      
@@ -193,7 +192,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -206,14 +205,14 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.getUserMarket().id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
 
         // catch not created yet
         if(this.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Negotiation"]));
+                reject(new Errors("Invalid Negotiation"));
             });
         }
         // set to proposal by default (happens on server too hint type)
@@ -222,7 +221,7 @@ export default class UserMarketNegotiation extends BaseModel {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/counter", counter_market_negotiation.prepareStore())
             .then(resolve)
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -236,14 +235,14 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.getUserMarket().id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
 
         // catch not created yet
         if(this.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Negotiation"]));
+                reject(new Errors("Invalid Negotiation"));
             });
         }
         // set to proposal by default (happens on server too hint type)
@@ -252,7 +251,7 @@ export default class UserMarketNegotiation extends BaseModel {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/improve", counter_market_negotiation.prepareStore())
             .then(resolve)
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -270,7 +269,7 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(user_market == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
         
@@ -280,7 +279,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -293,13 +292,13 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(!this._user_market || this._user_market.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
 
         if(!this.id) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Negotiation"]));
+                reject(new Errors("Invalid Negotiation"));
             });
         }
         
@@ -309,7 +308,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -322,7 +321,7 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
         
@@ -332,7 +331,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -348,7 +347,7 @@ export default class UserMarketNegotiation extends BaseModel {
             // catch not assigned to a market request yet!
             if(this._user_market.id == null) {
                 return new Promise((resolve, reject) => {
-                    reject(new Errors(["Invalid Market"]));
+                    reject(new Errors("Invalid Market"));
                 });
             }
         }
@@ -366,7 +365,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -434,7 +433,7 @@ export default class UserMarketNegotiation extends BaseModel {
         // catch not assigned to a market request yet!
         if(this._user_market.id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market"]));
+                reject(new Errors("Invalid Market"));
             });
         }
 
@@ -448,7 +447,7 @@ export default class UserMarketNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }

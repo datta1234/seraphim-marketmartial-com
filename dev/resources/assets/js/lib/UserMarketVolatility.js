@@ -1,5 +1,4 @@
 import BaseModel from './BaseModel';
-import Errors from './Errors';
 import UserMarket from './UserMarket';
 
 export default class UserMarketVolatility extends BaseModel {

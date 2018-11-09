@@ -228,7 +228,7 @@ export default class UserMarketRequest extends BaseModel {
     actionTaken() {
         if(!this.attributes.action_needed) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["No actions needed"]));
+                reject(new Errors("No actions needed"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -247,11 +247,7 @@ export default class UserMarketRequest extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                if(err.response) {
-                    reject(new Errors(err.response.data));
-                } else {
-                    reject(err);
-                }
+                reject(err);
             }); 
         });
     }

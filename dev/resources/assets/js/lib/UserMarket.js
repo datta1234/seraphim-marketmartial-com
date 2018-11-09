@@ -253,7 +253,7 @@ export default class UserMarket extends BaseModel {
         if(market_request.id == null) {
             return new Promise((resolve, reject) => {
                 console.log("error man",market_request);
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
 
@@ -263,7 +263,7 @@ export default class UserMarket extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -275,8 +275,7 @@ export default class UserMarket extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.user_market_request_id == null) {
             return new Promise((resolve, reject) => {
-                console.log("error man",this.user_market_request_id);
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
 
@@ -286,7 +285,7 @@ export default class UserMarket extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         }); 
     }
@@ -300,7 +299,7 @@ export default class UserMarket extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.user_market_request_id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -309,7 +308,7 @@ export default class UserMarket extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
 
@@ -327,13 +326,10 @@ export default class UserMarket extends BaseModel {
         return new Promise((resolve, reject) => {
             return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
             .then(response => {
-                if(response.data.success) {
-                    this.setActivity(response.data.activity);
-                }
-                resolve(response.data);
+                this.setActivity(response.data.activity);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
