@@ -50,7 +50,9 @@
              * @event /lib/EventBus#pageLoaded
              */
             rebateListener() {
+                console.log("got to the rebate Listens");
                 EventBus.$on("rebateUpdate",(data)=>{
+                    console.log("got into the Listens",data);
                     this.displayRebate = data.total;
                 });
             },
