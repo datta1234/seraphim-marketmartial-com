@@ -1018,7 +1018,7 @@ return [
                 // __user_market_request_group__
                 "id" => 10,
                 "title"=> "default",
-                "force_select" => true,
+                "force_select" => false,
                 "trade_structure_group_type_id" => 1,
                 "items"=>
                 [
@@ -1117,7 +1117,7 @@ return [
             [
                 // __user_market_request_group__
                 "id" => 11,
-                "force_select" => true,
+                "force_select" => false,
                 "trade_structure_group_type_id" => 1,
                 "title"=> "default",
                 "items"=>

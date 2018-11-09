@@ -18,7 +18,6 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 Artisan::command('gen:fok', function () {
-    
     $id = 1;
     
     $n = \App\Models\Market\MarketNegotiation::find($id);
@@ -27,6 +26,17 @@ Artisan::command('gen:fok', function () {
 
 })->describe('Debug FOK');
 
+Artisan::command('mm:populate', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'OrganisationTableSeeder'
+    ]);
+});
+
+Artisan::command('mm:sample', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'SampleSeeder'
+    ]);
+});
 
 Artisan::command('mm:reset', function() {
     // fail if 
