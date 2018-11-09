@@ -116,28 +116,21 @@
 
                 axios.post(axios.defaults.baseUrl + '/admin/stats/' + this.modal_data.csv_choice, formData)
                 .then(csvUploadResponse => {
-                    if(csvUploadResponse.status == 200) {
-                        if(csvUploadResponse.data.success) {
-                            this.hideModal();
-                            this.$toasted.success(csvUploadResponse.data.message);
-                        } else {
-                            this.upload_errors = [];
-                            // pushes csv validation errors to error object for display
-                            Object.keys(csvUploadResponse.data.data.messages).forEach(error => {
-                                let section_array = error.split('.');
-                                this.upload_errors.push({
-                                        line: section_array[0],
-                                        field: section_array[1], 
-                                        errors: csvUploadResponse.data.data.messages[error]
-                                    });
-                            });
-                            this.$toasted.error(csvUploadResponse.data.message);      
-                        }
-                    } else {
-                        this.$toasted.error(csvUploadResponse.data.message);  
-                    }
+                    this.hideModal();
+                    this.$toasted.success(csvUploadResponse.data.message);
                 }, err => {
                     console.error(err);
+                    this.$toasted.error(err.message);
+                    if(err.errors && err.errors.length > 0) {
+                        Object.keys(err.errors).forEach(error => {
+                            let section_array = error.split('.');
+                            this.upload_errors.push({
+                                    line: section_array[0],
+                                    field: section_array[1], 
+                                    errors: err.errors[error]
+                                });
+                        });
+                    }
                 });
             },
         },
