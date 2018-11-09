@@ -77,26 +77,7 @@
                 opened: false,
                 new_message: "",
                 quick_message: "",
-                display_messages: [
-                    {
-                        message: "@MM No cares, thanks",
-                        status: "received",
-                        time_stamp: "1541689780.000200",
-                        user_name: "Bradley Johnson",
-                    },
-                    {
-                        message: "Test message",
-                        status: "received",
-                        time_stamp: "1541689610.000100",
-                        user_name: "Bradley Johnson",
-                    },
-                    {
-                    message: "I bet you care a little",
-                    status: null,
-                    time_stamp: "1541689932.000400",
-                    user_name: "Market Martial",
-                    }
-                ],
+                display_messages: [],
                 quick_message_options: [
                     {
                         title: 'No cares, thanks',
