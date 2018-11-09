@@ -14,6 +14,7 @@ class TradeConfirmation extends Model
 {
     use \App\Traits\ResolvesUser;
     use \App\Traits\CalcuatesForPhases;
+    use \App\Traits\CalcuatesForOutright;
 
 	/**
 	 * @property integer $id
