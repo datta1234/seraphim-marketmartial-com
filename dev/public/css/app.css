@@ -17194,8 +17194,13 @@ input:checked + .slider:before {
 
 .trade-section.light-theme .market-tab-group-title,
 .trade-section.dark-theme .market-tab-group-title {
-  max-width: 310px;
+  max-width: 320px;
   margin: auto;
+}
+
+.trade-section.light-theme .market-tab-wrapper,
+.trade-section.dark-theme .market-tab-wrapper {
+  max-width: 310px;
 }
 
 .trade-section.light-theme .market-tab,
@@ -17207,8 +17212,7 @@ input:checked + .slider:before {
           box-shadow: 4px 4px 8px -1px #000000;
   cursor: pointer;
   /* max-width: 350px; */
-  max-width: 300px;
-  margin: auto;
+  max-width: 100%;
 }
 
 .trade-section.light-theme .market-tab.active,
@@ -17216,6 +17220,24 @@ input:checked + .slider:before {
   -webkit-box-shadow: 0px 0px 10px 5px #EBC300;
           box-shadow: 0px 0px 10px 5px #EBC300;
   border: 0.15em solid #EBC300;
+}
+
+.trade-section.light-theme .market-tab-ratio,
+.trade-section.dark-theme .market-tab-ratio {
+  padding-left: 1.5em;
+}
+
+.trade-section.light-theme .market-tab-ratio.has-ratio:before,
+.trade-section.dark-theme .market-tab-ratio.has-ratio:before {
+  content: "R";
+  color: red;
+  font-size: 1.5em;
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 .trade-section.light-theme .market-tab.market-alert,

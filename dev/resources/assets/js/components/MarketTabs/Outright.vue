@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
+    <div dusk="market-tab-outright"  class="market-tab-outright" v-bind:class="marketState" @click="loadInteractionBar()">
         <b-row class="justify-content-md-center">
             <b-col class="market-tab-name market-tab-name">
                 <b-row no-gutters align-v="center" align-h="center">

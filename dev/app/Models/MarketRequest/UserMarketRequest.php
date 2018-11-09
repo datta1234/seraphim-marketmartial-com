@@ -143,15 +143,18 @@ class UserMarketRequest extends Model
 
 
     public function getRatioAttribute() {
-        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) {
-            if($out == null) {
-                $out = $item;
-            } else {
-                $out = $out / $item;
+        $first = null;
+        \Log::info([" Items: ", $this->id, $this->getDynamicItems('Quantity')]);
+        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) use (&$first) {
+            if($first == null) {
+                $first = floatval($item);
             }
-            \Log::info([$out, $item]);
+            \Log::info([" Ratio: ", $this->id, $first, $item]);
+            if($first != $item) {
+                $out = true;
+            }
             return $out;
-        }, null);
+        }, false);
     }
 
 
@@ -728,7 +731,7 @@ class UserMarketRequest extends Model
        {
             $query = $query->whereIn('title',$attr); 
        }
-        return $query ->get()
+        return $query->get()
         ->map(function($item){
             return $item->value;
         });
