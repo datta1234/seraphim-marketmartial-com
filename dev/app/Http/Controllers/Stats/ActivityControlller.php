@@ -142,7 +142,7 @@ class ActivityControlller extends Controller
             });
         }
 
-        $trade_confirmations = $trade_confirmations->paginate(10);
+        $trade_confirmations = $trade_confirmations->paginate(25);
 
         $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
             return $trade_confirmation->preFormatStats($user, $is_Admin);
@@ -209,7 +209,7 @@ class ActivityControlller extends Controller
             return response()->json(['message' => 'Failed to upload Safex data.', 'errors'=>[]], 500);
         }
 
-        return response()->json(['message' => 'Safex data successfully uploaded.']);
+        return response()->json(['data' => null,'message' => 'Safex data successfully uploaded.']);
     }
 
     public function safexRollingData(Request $request)
@@ -225,7 +225,7 @@ class ActivityControlller extends Controller
                 "filter_expiration" => $request->input('filter_expiration'),
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
-        )->paginate(10);
+        )->paginate(25);
     }
 
     /**
