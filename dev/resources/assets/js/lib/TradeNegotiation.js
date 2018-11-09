@@ -95,25 +95,23 @@ export default class TradeNegotiation extends BaseModel {
         let text;
         
         
+        console.log("get trading text",this);
 
         if(this.sent_by_me)
         {
+            // console.log("one");
             text =  this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid ;
 
         }else if(this.sent_to_me)
         {
+            // console.log("two");
+
             text = this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer :"You bought @ "+this.getUserMarketNegotiation().bid;
         }else
         {
-            if(this.traded)
-            {
-                text =   this.getUserMarketNegotiation().getFirstTradeNegotiation().is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid;
-                return text + " (" + this.quantity + ") ";
-            }else
-            {
-                text = "Trading at "; 
-                text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid; 
-            }
+            text = "Trading at "; 
+            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid; 
+        
         }
         return text;
     }
