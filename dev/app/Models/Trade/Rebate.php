@@ -147,11 +147,14 @@ class Rebate extends Model
         return $data;
     }
 
+    public  function scopeNoTrade()
+    {
+        return Rebate::doesntHave('bookedTrade');
+    }
+
     public static function notifyOrganisationUpdate($organisation)
     {
-        \Log::info(['this is the notifyOrganisationUpdate',["total"=>Rebate::where('organisation_id',$organisation->id)->sum('amount')]]);
-
-        $data = ["total"=>Rebate::where('organisation_id',$organisation->id)->sum('amount')];
+        $data = ["total"=> $organisation->rebates()->noTrade()->sum('amount')];
         event(new RebateEvent($data,$organisation));
     }
 

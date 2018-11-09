@@ -67,20 +67,20 @@ class TradeConfirmationController extends Controller
         $user = $request->user();
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
         $tradeConfirmation->save();
-        // if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
-        // {
-        //     $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
-        //     $tradeConfirmation->trade_confirmation_status_id = 4;
-        //     $tradeConfirmation->save();
-        //     $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
+        {
+            $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 4;
+            $tradeConfirmation->save();
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
 
-        // }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
-        // {
-        //     $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
-        //     $tradeConfirmation->trade_confirmation_status_id = 4;
-        //     $tradeConfirmation->save();
-        //     $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
-        // }
+        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        {
+            $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmation->trade_confirmation_status_id = 4;
+            $tradeConfirmation->save();
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
+        }
 
         /*
         *   

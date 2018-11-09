@@ -99,7 +99,7 @@ trait CalcuatesForPhases {
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
     }
 
-
+    
     public function feesCalc($isOffer,$gross_prem,$is_sender)
     {
          

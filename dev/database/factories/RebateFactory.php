@@ -19,6 +19,6 @@ $factory->define(App\Models\Trade\Rebate::class, function (Faker $faker) {
         "amount" => rand(1,100000),
 		"is_paid" => rand(0,1) == 1,
 		"trade_date" => $faker->date(),
-		"booked_trade_id" => null
+		"booked_trade_id" => null,
 	];
 });

@@ -226,9 +226,9 @@ class TradeConfirmation extends Model
         
         if($is_sender)
         {
-           return  in_array($this->trade_confirmation_status_id,$senderStatuses);
-       }else if($is_reciever)
-       {
+         return  in_array($this->trade_confirmation_status_id,$senderStatuses);
+     }else if($is_reciever)
+     {
         return in_array($this->trade_confirmation_status_id,$receiverStatuses);
     }
 
@@ -302,7 +302,7 @@ class TradeConfirmation extends Model
 
 public function scopeMarketType($query, $market_type_id)
 {
-   return $query->where(function ($q)  use ($market_type_id) {
+ return $query->where(function ($q)  use ($market_type_id) {
     $q->whereHas('market', function ($qq) use ($market_type_id) {
         $qq->where('market_type_id', $market_type_id);
     });
@@ -312,7 +312,7 @@ public function scopeMarketType($query, $market_type_id)
 
 public function scopeSentByMyOrganisation($query, $organisation_id)
 {
-   return $query->where(function ($q)  use ($organisation_id) {
+ return $query->where(function ($q)  use ($organisation_id) {
     $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
         $qq->where('organisation_id', $organisation_id);
     });
@@ -322,7 +322,7 @@ public function scopeSentByMyOrganisation($query, $organisation_id)
 
 public function scopeSentToMyOrganisation($query, $organisation_id)
 {
-   return $query->where(function ($q)  use ($organisation_id) {
+ return $query->where(function ($q)  use ($organisation_id) {
     $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
         $qq->where('organisation_id', $organisation_id);
     });
@@ -628,35 +628,33 @@ public function preFormatStats($user = null, $is_Admin = false)
      */
      private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
      {
+         foreach($tradeStructureGroup->items as $item) {
 
+            $value = null;
+            switch ($item->title) {
+                case 'is_offer':
+                $value = $tradeNegotiation->is_offer ? 1 : 0;
+                break;
+                case 'Put':
+                $value = null;
+                break;
+                case 'Call':
+                $value = null;
+                break;
+                case 'Volatility':
+                $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                break;
+                case 'Gross Premiums':
+                $value = null;
+                break;
+                case 'Net Premiums':
+                $value = null;
+                break;
+                case 'Future':
+                $value = null;
+                break;
+                case 'Contract':
 
-       foreach($tradeStructureGroup->items as $item) {
-
-        $value = null;
-        switch ($item->title) {
-            case 'is_offer':
-            $value = $tradeNegotiation->is_offer ? 1 : 0;
-            break;
-            case 'Put':
-            $value = null;
-            break;
-            case 'Call':
-            $value = null;
-            break;
-            case 'Volatility':
-            $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-            break;
-            case 'Gross Premiums':
-            $value = null;
-            break;
-            case 'Net Premiums':
-            $value = null;
-            break;
-            case 'Future':
-            $value = null;
-            break;
-            case 'Contract':
-            
                 if($isOption)
                 {
                     $value = $tradeNegotiation->quantity; //quantity   
@@ -667,41 +665,40 @@ public function preFormatStats($user = null, $is_Admin = false)
                 break;
             }
 
-                if($item->title =="Net Premiums" || $item->title =="is_offer")
-                {
+            if($item->title =="Net Premiums" || $item->title =="is_offer")
+            {
 
-                    $tradeGroup->tradeConfirmationItems()->create([
-                        'item_id' => $item->id,
-                        'title' => $item->title,
-                        'value' =>  $value,
-                        "is_seller" => false,
-                        'trade_confirmation_group_id' => $tradeStructureGroup->id
-                    ]);
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
 
-                    $tradeGroup->tradeConfirmationItems()->create([
-                        'item_id' => $item->id,
-                        'title' => $item->title,
-                        'value' =>  $value,
-                        "is_seller" => true,
-                        'trade_confirmation_group_id' => $tradeStructureGroup->id
-                    ]);
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
 
-                }else
-                {
-                 $tradeGroup->tradeConfirmationItems()->create([
+            }else
+            {
+               $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
                     "is_seller" => null,
                     'value' =>  $value,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-             }
+           }         
+       }
+   }
 
-         }         
-     }
-
-     public function updateGroups($groups)
-     {
+    public function updateGroups($groups)
+    {
         foreach ($groups as $group) 
         {
             $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
@@ -718,77 +715,112 @@ public function preFormatStats($user = null, $is_Admin = false)
             );
           }
       }
-  }
-
-  public function setAccount($user,$trading_account)
-  {
-    if($user->organisation_id == $this->sendUser->organisation_id)
-    {
-        $this->send_trading_account_id = $trading_account;
     }
-    else if($user->organisation_id == $this->recievingUser->organisation_id)
+
+    public function setAccount($user,$trading_account)
     {
-        $this->receiving_trading_account_id = $trading_account;
+        if($user->organisation_id == $this->sendUser->organisation_id)
+        {
+            $this->send_trading_account_id = $trading_account;
+        }
+        else if($user->organisation_id == $this->recievingUser->organisation_id)
+        {
+            $this->receiving_trading_account_id = $trading_account;
+        }
     }
-  }
 
-  public function bookTheTrades()
-  {
-    $userMarket = $this->marketRequest->chosenUserMarket;
+    public function bookTheTrades()
+    {
+        $userMarket = $this->marketRequest->chosenUserMarket;
 
-     try {
-         DB::beginTransaction();
-            // trade trade for sender
-            $sendisOffer = $this->resolveItem("is_offer",true);
-            $this->bookedTrades()->create([
-                "trading_account_id"        => $this->send_trading_account_id,
-                "is_sale"                   => !$sendisOffer,
-                "is_purchase"               => $sendisOffer,
-                "is_rebate"                 => false,
-                "is_confirmed"              => false,
-                "amount"                    => $this->resolveItem("Net Premiums",true),
-                "user_id"                   => $this->send_user_id,
-                "trade_confirmation_id"     => $this->id,
-                "market_request_id"         => $this->user_market_request_id
+        //need to update for other tradesctruvtures
+        $sendIsOffer = $this->resolveItem("is_offer",true);
+        $recieverIsOffer = $this->resolveItem("is_offer",false);
+        $senderNetPremium = $this->resolveItem("Net Premiums",true);
+        $recieverNetPremium = $this->resolveItem("Net Premiums",false);
+
+
+        $rebatetotal =  config('marketmartial.confirmation_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
+
+        //outright part of the optionGroup
+        try {
+           DB::beginTransaction();
+                // trade trade for sender
+           $this->bookedTrades()->create([
+            "trading_account_id"        => $this->send_trading_account_id,
+            "is_sale"                   => !$sendIsOffer,
+            "is_purchase"               => $sendIsOffer,
+            "is_rebate"                 => false,
+            "is_confirmed"              => false,
+            "amount"                    => $senderNetPremium,
+            "user_id"                   => $this->send_user_id,
+            "trade_confirmation_id"     => $this->id,
+            "market_request_id"         => $this->user_market_request_id
+        ]);
+
+
+           $this->bookedTrades()->create([
+            "trading_account_id"        => $this->receiving_trading_account_id,
+            "is_sale"                   => !$recieverIsOffer ,
+            "is_purchase"               => $recieverIsOffer ,
+            "is_rebate"                 => false,
+            "is_confirmed"              => false,
+            "amount"                    => $this->resolveItem("Net Premiums",false),
+            "user_id"                   => $this->receiving_user_id,
+            "trade_confirmation_id"     => $this->id,
+            "market_request_id"         => $this->user_market_request_id
+        ]);
+
+           Rebate::create([
+            "user_market_request_id"    => $this->user_market_request_id,
+            "user_market_id"            => $userMarket->id,
+            "organisation_id"           => $userMarket->user->organisation_id,
+            "user_id"                   => $userMarket->user_id,
+            "is_paid"                   => false,
+            "trade_confirmation_id"     => $this->id,
+            "trade_date"                => Carbon::now(),
+            "amount"                    => $rebatetotal
             ]);
+                //book the trade
 
-            //trade trade for reciever
-            $sendisOffer = $this->resolveItem("is_offer",false);
-            $this->bookedTrades()->create([
-                "trading_account_id"        => $this->receiving_trading_account_id,
-                "is_sale"                   => !$sendisOffer ,
-                "is_purchase"               => $sendisOffer ,
-                "is_rebate"                 => false,
-                "is_confirmed"              => false,
-                "amount"                    => $this->resolveItem("Net Premiums",false),
-                "user_id"                   => $this->receiving_user_id,
-                "trade_confirmation_id"     => $this->id,
-                "market_request_id"         => $this->user_market_request_id
-            ]);
+           DB::commit();
 
-            Rebate::create([
-                "user_market_request_id"    => $this->user_market_request_id,
-                "user_market_id"            => $userMarket->id,
-                "organisation_id"           => $userMarket->user->organisation_id,
-                "user_id"                   => $userMarket->user_id,
-                "is_paid"                   => false,
-                "trade_confirmation_id"     => $this->id,
-                "trade_date"                => Carbon::now(),
-                "amount"                    => 6777//@todo add real commision
-            ]);
-            //book the trade
-
-        DB::commit();
-     
-        } catch (\Illuminate\Database\QueryException $e) {
-            DB::rollBack();
+       } catch (\Illuminate\Database\QueryException $e) {
+        DB::rollBack();
             \Log::error($e);
         }
-         \Log::info(['after we booked our trades']);
+
         $organisation = $userMarket->user->organisation;
         $organisation->notify("rebate_earned","You earned a commission",true);
-         \Log::info(['calling notifyOrganisationUpdate']);
         Rebate::notifyOrganisationUpdate($organisation);
+    }
+
+    public function getBrokerageTotal($is_sender)
+    {
+        $brokerFee = 0;
+        foreach ($this->optionGroups as $group) 
+        {
+            $isOffer = $group->getOpVal("is_offer",$is_sender);  
+            $grossPremium = $group->getOpVal("Gross Premiums");
+            $netPremium = $group->getOpVal("Net Premiums",$is_sender);
+            $contracts = $group->getOpVal("Contract");
+            $brokerFee += abs($this->calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts));
+        }
+
+        return  $brokerFee;
+    }
+
+    public function calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts)
+    {
+            //isOffer is Buy
+        if($isOffer)
+        {
+            return ($netPremium - $grossPremium) * $contracts;
+        }else
+        {
+            return ($grossPremium - $netPremium) * $contracts;
+        }
+
     }
 
     public function resolveItem($title,$isSeller)
