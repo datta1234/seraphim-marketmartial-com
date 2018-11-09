@@ -202,7 +202,7 @@
                 EventBus.$emit('loading', 'confirmationSubmission');
                 this.confirmationLoaded = false;
 
-                this.trade_confirmation.postPhaseTwo().then(response => {
+                this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
                     this.errors = [];
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');

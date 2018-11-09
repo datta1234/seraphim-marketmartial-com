@@ -1,39 +1,51 @@
 <template>
     <div dusk="rebates-year-tables" class="rebates-year-tables">
-        <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
-            <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="accordion_base_id+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
-            </b-card-header>
-            <b-collapse :id="accordion_base_id+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                    <!-- Main table element -->
-                    <b-table v-if="table_data_loaded && table_data[index].data != null"
-                             class="mt-2 stats-table"
-                             stacked="md"
-                             :items="table_data[index].data"
-                             :fields="table_fields"
-                             :sort-by.sync="table_data[index].order_by"
-                             :sort-desc.sync="table_data[index].order_ascending"
-                             :no-local-sorting="true"
-                             @sort-changed="(e) => sortingChanged(index, e)">
-                        <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
-                            {{ formatItem(row.item, field.key) }}
-                        </template>
-                    </b-table>
+        <template v-if="table_years.length > 0">
+            <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
+                <b-card-header header-tag="header" class="p-1" role="tab">
+                    <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="accordion_base_id+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
+                </b-card-header>
+                <b-collapse :id="accordion_base_id+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
+                    <b-card-body>
+                        <!-- Main table element -->
+                        <b-table v-if="table_data_loaded && table_data[index].data != null"
+                                 class="mt-2 stats-table"
+                                 stacked="md"
+                                 :items="table_data[index].data"
+                                 :fields="table_fields"
+                                 :sort-by.sync="table_data[index].order_by"
+                                 :sort-desc.sync="table_data[index].order_ascending"
+                                 :no-local-sorting="true"
+                                 @sort-changed="(e) => sortingChanged(index, e)">
+                            <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
+                                {{ formatItem(row.item, field.key) }}
+                            </template>
+                        </b-table>
 
-                    <b-row v-if="table_data[index].data != null" class="justify-content-md-center">
-                        <b-col md="auto" class="my-1">
-                            <b-pagination @change="changePage($event, index)"
-                                          :total-rows="table_data[index].total" 
-                                          :per-page="table_data[index].per_page"
-                                          :hide-ellipsis="true"
-                                          v-model="table_data[index].current_page" 
-                                          align="center"/>
-                        </b-col>
-                    </b-row>   
-                </b-card-body>
-            </b-collapse>
-        </b-card>
+                        <b-row v-if="table_data[index].data != null" class="justify-content-md-center">
+                            <b-col md="auto" class="my-1">
+                                <b-pagination @change="changePage($event, index)"
+                                              :total-rows="table_data[index].total" 
+                                              :per-page="table_data[index].per_page"
+                                              :hide-ellipsis="true"
+                                              v-model="table_data[index].current_page" 
+                                              align="center"/>
+                            </b-col>
+                        </b-row>   
+                    </b-card-body>
+                </b-collapse>
+            </b-card>
+        </template>
+        <template v-else>
+            <div class="card mt-5">
+                <div class="card-header text-center">
+                    <h2 class="mt-2 mb-2">Yearly Data</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">No Yearly Data to display</p>
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 

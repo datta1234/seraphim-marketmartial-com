@@ -69,16 +69,16 @@
           storeWorkBalance(){
                 this.server_loading = true;
                 let userMarket = this.marketRequest.chosen_user_market;
-                this.marketNegotiation.storeWorkBalance(userMarket,this.quantity)
+                this.marketNegotiation.storeWorkBalance(this.marketRequest,userMarket,this.quantity)
                 .then(response => {
                     this.server_loading = false;
                     this.errors = [];
                 })
                 .catch(err => {
                     this.server_loading = false;
-
-                    this.history_message = err.errors.message;
-                    this.errors = err.errors.errors;
+                    console.log(err);
+                    //this.history_message = err.errors.message;
+                    //this.errors = err.errors.errors;
                 });
            },
           noFutherCares(){

@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Models\Trade;
-
+use App\Helpers\Broadcast\Stream;
+use App\Events\RebateEvent;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 
@@ -39,7 +40,20 @@ class Rebate extends Model
         'organisation_id',
         'is_paid',
         'trade_date',
-        'booked_trade_id'
+        'booked_trade_id',
+        "trade_confirmation_id",
+        "amount"
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'trade_date'
     ];
 
     /**
@@ -131,6 +145,12 @@ class Rebate extends Model
         }
 
         return $data;
+    }
+
+    public static function notifyOrganisationUpdate($organisation)
+    {
+        $data = ["total"=>Rebate::all()->where('organisation',$organisation->id)->sum('amount')];
+        event(new RebateEvent($data,$organisation));
     }
 
     public function preFormatAdmin($is_csv = false)

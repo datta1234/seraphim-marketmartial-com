@@ -113,6 +113,30 @@ export default class UserMarketNegotiation extends BaseModel {
         };
     }
 
+    prepareAmend(user_market) {
+        return {
+            id: this.id,
+            bid: this.bid,
+            offer: this.offer,
+            bid_qty: this.bid_qty,
+            offer_qty: this.offer_qty,
+            is_repeat: !!this.is_repeat,
+            has_premium_calc: !!this.has_premium_calc,
+            bid_premium: this.bid_premium,
+            offer_premium: this.offer_premium,
+            is_private: this.is_private,
+            cond_is_repeat_atw: this.cond_is_repeat_atw,
+            cond_fok_apply_bid: this.cond_fok_apply_bid,
+            cond_fok_spin: this.cond_fok_spin,
+            cond_timeout: this.cond_timeout,
+            cond_is_oco: this.cond_is_oco,
+            cond_is_subject: this.cond_is_subject,
+            cond_buy_mid: this.cond_buy_mid,
+            cond_buy_best: this.cond_buy_best,
+            volatilities: user_market.volatilities.map(x => x.prepareStore())
+        };
+    }
+
     getTimeoutRemaining() {
         let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
         // ensure its not shown if its timed out
@@ -129,39 +153,24 @@ export default class UserMarketNegotiation extends BaseModel {
         return diff > 0;
     }
 
-    storeWorkBalance(user_market,quantity) {
+    storeWorkBalance(user_market_request,user_market,quantity) {
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
                 reject(new Errors(["Invalid Market"]));
             });
         }
-        //calculate weather you setting the bid or the offer, alwys the opposite of what the last person di, if its a bid make an offer
-        if(!user_market.getLastNegotiation().getLastTradeNegotiation().isOffer)
-        {
-            this.offer_qty = quantity;
-            this.offer = user_market.getLastNegotiation().offer;
-
-            this.bid_qty = null;
-            this.bid = null;
-
-        }else
-        {
-            this.bid_qty = quantity;
-            this.bid = user_market.getLastNegotiation().bid;
-
-            this.offer_qty = null;
-            this.offer = null;
-        }
-
+ 
         return new Promise((resolve, reject) => {
-             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
+
+             axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id+"/work-the-balance", {quantity:quantity})
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                console.log("here");
+               // reject(new Errors(err.response.data));
             });
         });
     }
@@ -348,7 +357,7 @@ export default class UserMarketNegotiation extends BaseModel {
 
         return new Promise((resolve, reject) => {
 
-             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareStore())
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareAmend(user_market))
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 // link now that we are saved
@@ -371,7 +380,7 @@ export default class UserMarketNegotiation extends BaseModel {
             prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
         }
         
-        if(typeof prevItem !== "undefined" &&  prevItem != null  && ( prevItem[attr] == this[attr] || (this[attr] == null || this[attr] == '') ) )
+        if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
         {
             return prevItem.getAmountSource(attr);   
         }else
@@ -444,6 +453,9 @@ export default class UserMarketNegotiation extends BaseModel {
         });
     }
 
+    get ratio() {
+        return this.bid_qty / this.offer_qty;
+    }
     
 
 }

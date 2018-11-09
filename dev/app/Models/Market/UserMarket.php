@@ -291,8 +291,23 @@ class UserMarket extends Model
             });
         })->first();
         $this->update(['is_on_hold'=>false]);
-      
-      return  $marketNegotiation->update($data);
+
+        \Log::info(["here1: ", $data['volatilities']]);
+        if(isset($data['volatilities']) && !empty($data['volatilities'])) {
+            $vols = collect($data['volatilities'])->keyBy('group_id');
+            \Log::info(["here2: ", $vols]);
+            $groups = $this->volatilities;
+            \Log::info(["here3: ", $groups]);
+            foreach($groups as $group) {
+                if(isset($vols[$group->user_market_request_group_id])) {
+                    $group->volatility = $vols[$group->user_market_request_group_id]['value'];
+                    $done = $group->save();
+                    \Log::info(["here4: ", $done, $vols[$group->user_market_request_group_id]['value']]);
+                }
+            }
+        }
+
+        return  $marketNegotiation->update($data);
     }
 
 
@@ -358,28 +373,6 @@ class UserMarket extends Model
     }
 
 
-    public function noFurthercares()
-    {
-        $lastUserMarket = $this->marketNegotiations()->latest()->first();
-        $newMarketNegotiation = $lastUserMarket->replicate();
-        $lastTradeNegotiation = $lastUserMarket->tradeNegotiations()->latest()->first();
-
-        $newMarketNegotiation->counter_user_id = null;
-        $newMarketNegotiation->market_negotiation_id = null;
-
-        if($lastTradeNegotiation->is_offer)
-        {   
-            $newMarketNegotiation->bid = null;
-            $newMarketNegotiation->bid_qty = null;
-
-        }else
-        {
-            $newMarketNegotiation->offer = null;
-            $newMarketNegotiation->offer_qty = null;
-        }
-        return $newMarketNegotiation->save();
-    }
-
 
     public function addNegotiation($user,$data)
     {
@@ -404,6 +397,16 @@ class UserMarket extends Model
                 if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
                     $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
                 }
+
+                // add missing values (prior data)
+                if($marketNegotiation->bid == null) {
+                    $marketNegotiation->bid = $counterNegotiation->bid;
+                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+                }
+                if($marketNegotiation->offer == null) {
+                    $marketNegotiation->offer = $counterNegotiation->offer;
+                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+                }
             }
             // @TODO, this fails when you send new negotiation after you already have, need to stop this?
 
@@ -427,6 +430,39 @@ class UserMarket extends Model
                 return false;
             }
     }
+
+
+    public function workTheBalance($user,$quantity)
+    {
+        
+        $lastMarketNegotiation = $this->lastNegotiation;
+        $newMarketNegotiation = new MarketNegotiation();
+
+        $newMarketNegotiation->user_market_id = $this->id;
+        $newMarketNegotiation->market_negotiation_id = $lastMarketNegotiation->id;
+
+        $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->latest()->first();
+        
+        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
+        $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
+        $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
+
+        if($lastTradeNegotiation->is_offer)
+        {   
+            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->offer_qty = $quantity;
+        }else
+        {
+            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->bid_qty = $quantity;
+        }
+
+        $newMarketNegotiation->save();
+        return $newMarketNegotiation;
+    }
+
+
+
 
     public function isMaker($user = null) {
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
@@ -595,5 +631,7 @@ class UserMarket extends Model
         }
         return $data;
     }
+
+
 
 }

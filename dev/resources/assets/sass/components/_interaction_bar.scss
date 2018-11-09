@@ -98,6 +98,9 @@
         .market-requested-info {
             border-bottom:1px solid $mm-light-grey;
             padding-bottom: .5em;
+            .info-col {
+                font-size: .8em;
+            }
         }
 
     }
@@ -172,11 +175,11 @@
      // 
     .ibar-negotiation-history-contracts, .negotiation-history
     {
-        .is-interest{
-            color: $mm-blue;
-        }
         .is-maker{
             color: $mm-market-maker;
+        }
+        .is-interest{
+            color: $mm-blue;
         }
         .is-my-org{
             color: $mm-yellow;

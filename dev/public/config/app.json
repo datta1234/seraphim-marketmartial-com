@@ -1,7 +1,15 @@
 {
     "ajax": {
         "headers": {
-            "ignore": "mm-background-load"
+            "ignore": "mm-background-load",
+            "active-maker": "active-market-makers"
         }
+    },
+    "market_ids": {
+        "top40": 1,
+        "dtop": 2,
+        "dcap": 3,
+        "singles": 4,
+        "delta_one": 5
     }
 }

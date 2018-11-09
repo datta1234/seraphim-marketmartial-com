@@ -5,8 +5,18 @@
                 <div class="col-12">
                     <h2 class="text-center market-group-title">{{ market.title }}</h2> 
                 </div>
-                <div class="user-market-group col-12">
+                
+                <div v-if="this.is_delta" class="user-market-group col-12">
+                    <!-- Date collection section -->
+                    <div class="row mt-3 pr-3 pl-3" v-for="group in market_delta_groups_order">
+                        <div class="col-12">
+                            <p class="mb-1">{{ group }}</p>
+                        </div>
+                        <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_delta_groups[group]" :no_cares="no_cares"></market-tab>
+                    </div><!-- END Date collection section -->
+                </div>
 
+                <div v-else class="user-market-group col-12">
                     <!-- Date collection section -->
                     <div class="row mt-3 pr-3 pl-3" v-for="date in market_date_groups_order">
                         <div class="col-12">
@@ -14,8 +24,8 @@
                         </div>
                         <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
-                    
                 </div>
+
                 <div>
                 </div>
             </div>
@@ -44,45 +54,101 @@
         },
         data() {
             return {
+                market_delta_groups: {},
+                market_delta_groups_order: [
+                    this.$root.config("trade_structure.efp_switch.title"),
+                    this.$root.config("trade_structure.efp.title"),
+                    this.$root.config("trade_structure.rolls.title"),
+                ],
+
                 market_date_groups: {},
-                market_date_groups_order: []
+                market_date_groups_order: [],
+
+                groupings: {
+                    default: 'trade_items.default.expiration_date',
+                    delta: 'trade_structure'
+                }
             };
         },
+        computed: {
+            'is_delta':function() {
+                return this.market.id == this.$root.config('app.market_ids.delta_one');
+            }
+        },
         methods: {
-            mapMarketRequestGroups: function(markets) {
-                // map markets to dates
-                return markets.reduce((x,y) => {
-                    let date = y.trade_items.default ? y.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")] : '';
-                    if(!x[date]) { 
-                        x[date] = [];
+            /*
+            * General
+            */
+            getAttr(obj, key) {
+                return key.split('.').reduce((acc, cur) => {
+                    if(acc && typeof acc[cur] !== 'undefined') {
+                        return acc[cur];
                     }
-                    x[date].push(y);
+                    return undefined;
+                }, obj);
+            },
+            mapGroups: function(markets, grouping) {
+                // map markets to dates
+                let market_requests = markets.reduce((x,y) => {
+                    let key = this.getAttr(y, grouping) ? this.getAttr(y, grouping) : '';
+                    if(!x[key]) { 
+                        x[key] = [];
+                    }
+                    x[key].push(y);
                     return x;
                 }, {});
+                // sort by strike
+                Object.keys(market_requests).forEach( (date) => {
+                    market_requests[date].sort( (a, b) => {
+                        return a.trade_items.default.Strike - b.trade_items.default.Strike;
+                    });
+                });
+                return market_requests;
             },
-            sortMarketRequestGroups: function(unsorted_date_groups) {
+            /*
+            *   Default Group Methods
+            */
+            sortDefaultGroups: function(unsorted_date_groups) {
                 let dates = [];
                 Object.keys(unsorted_date_groups).forEach( (date) => {
                     dates.push(date);
                 });
-
                 if(dates.length > 0) {
                     this.$root.dateStringArraySort(dates, 'MMMYY');
                 }
                 return dates;
             },
-            reorderMarketRequestStrike: function(date_groups) {
-                Object.keys(date_groups).forEach( (date) => {
-                    date_groups[date].sort( (a, b) => {
-                        return a.trade_items.default.Strike - b.trade_items.default.Strike;
-                    });
+            /*
+            *   Delta Group Methods
+            */
+            sortDeltaGroups: function(unsorted_delta_groups) {
+                let dates = [];
+                Object.keys(unsorted_delta_groups).forEach( (date) => {
+                    dates.push(date);
                 });
+                if(dates.length > 0) {
+                    this.$root.dateStringArraySort(dates, 'MMMYY');
+                }
+                return dates;
+            },
+            /*
+            *   Update Methods
+            */
+            updateDeltaRequests(reqs) {
+                this.market_delta_groups = this.mapGroups(reqs, this.groupings.delta);
+            },
+            updateDefaultRequests(reqs) {
+                this.market_date_groups = this.mapGroups(reqs, this.groupings.default);
+                this.market_date_groups_order = this.sortDefaultGroups(this.market_date_groups);
             },
             updateRequests(reqs) {
-                this.market_date_groups = this.mapMarketRequestGroups(reqs);
-                this.reorderMarketRequestStrike(this.market_date_groups);
-                this.market_date_groups_order = this.sortMarketRequestGroups(this.market_date_groups);
-                console.log("Group State: ", this.market_date_groups, this.market_date_groups_order);
+                switch(this.market.id) {
+                    case this.$root.config('app.market_ids.delta_one'):
+                        return this.updateDeltaRequests(reqs);
+                    break;
+                    default:
+                        return this.updateDefaultRequests(reqs);
+                }
             }
         },
         mounted() {

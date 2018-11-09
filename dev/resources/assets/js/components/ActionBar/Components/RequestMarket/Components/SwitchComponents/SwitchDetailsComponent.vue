@@ -244,6 +244,12 @@
                 expiry_dates: [
                     {text: "Select Expiry", value: null}
                 ],
+                quantity_default: {
+                    TOP40: 500,
+                    DTOP: 2500,
+                    DCAP: 1500,
+                    stock: 50,
+                }
             };
         },
         methods: {
@@ -309,17 +315,19 @@
             this.loadExpiryDate();
             // Sets up the view and object data defaults
             this.data.market_object.switch_options.forEach( (element, index) => {
-              this.form_data.fields.push({
+                let default_size = element.is_index ? this.quantity_default[element.index_market.title]
+                    : this.quantity_default.stock;
+                this.form_data.fields.push({
                     is_index: element.is_index,
                     expiration:null,
                     is_selected: index == 0 ? true : false,
                     strike: null,
-                    quantity: element.is_index ? 500 : 50,
-                    quantity_default: element.is_index ? 500 : 50,
+                    quantity: default_size,
+                    quantity_default: default_size,
                 });
             });
             this.chosen_option = 0;
-            console.log("Detail errors: ", this.errors.fields);
+            console.log("You want this: ", this.data.market_object.switch_options);
         }
     }
 </script>

@@ -587,6 +587,10 @@ class MarketNegotiation extends Model
 
     public function getLatestBid()
     {
+        if($this->isTraded())
+        {
+            return null;
+        }
         if($this->bid != null) {
             return $this->bid;
         }
@@ -598,6 +602,10 @@ class MarketNegotiation extends Model
 
     public function getLatestOffer()
     {
+        if($this->isTraded())
+        {
+            return null;
+        }
         if($this->offer != null) {
             return $this->offer;
         }
@@ -629,10 +637,20 @@ class MarketNegotiation extends Model
         return null;
     }
 
+    public function isTraded()
+    {
+        return $this->tradeNegotiations()->where(function($q){
+            return $q->where('traded',true);  
+        })->exists();
+    }
+
     public function getLatest($side)
     {
         $side = ( $side == 'bid' ? 'bid' : 'offer' );
-
+        if($this->isTraded())
+        {
+            return null;
+        }
         if($this->{$side} != null) {
             return $this->{$side};
         }
@@ -802,6 +820,9 @@ class MarketNegotiation extends Model
             {
 
                 $counterNegotiation = $this->tradeNegotiations->last();
+
+
+                
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
@@ -876,7 +897,7 @@ class MarketNegotiation extends Model
                 return false;
             }
     }
-
+    
 
     public function setMarketNegotiationAfterTrade()
     {
@@ -884,7 +905,7 @@ class MarketNegotiation extends Model
             $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
 
             $newMarketNegotiation->counter_user_id = null;
-            $newMarketNegotiation->market_negotiation_id = null;
+            $newMarketNegotiation->market_negotiation_id = $this->id;
 
             if(!$requestedNegotiation->is_offer)
             {   

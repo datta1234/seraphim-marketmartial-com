@@ -4,7 +4,7 @@
             <b-row align-v="end">
                 <b-col cols="10">
                     <b-row no-gutters v-for="(item, index) in tradings" :key="index">
-                        <b-col cols="3" class="text-left">
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('quantity') != -1">
                             <span v-if="item.is_stock">
                                 ({{ formatRandQty(item.quantity, '&nbsp;', 3) }}m)
                             </span>
@@ -12,8 +12,18 @@
                                 ({{ splitValHelper(item.quantity, '&nbsp;', 3) }})
                             </span>
                         </b-col>
-                        <b-col cols="3" class="text-left" v-if="tradeStructure == 'calendar'">{{ item.expiry }}</b-col>
-                        <b-col cols="3" class="text-left">
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('tradable') != -1">
+                            <span v-if="item.is_stock">
+                                {{ item.tradable }}
+                            </span>
+                            <span v-else>
+                                {{ item.tradable }}
+                            </span>
+                        </b-col>
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('expiration_date') != -1">
+                            {{ item.expiry }}
+                        </b-col>
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('strike') != -1">
                             <span v-if="item.is_stock">
                                 {{ formatRandQty(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
                             </span>
@@ -21,7 +31,9 @@
                                 {{ splitValHelper(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
                             </span>
                         </b-col>
-                        <b-col cols="3" class="text-center">{{ (item.choice ? ( item.vol ? item.vol : 'choice' )  : 'bid&nbsp;/&nbsp;offer') }}</b-col>
+                        <b-col cols="3" class="info-col text-center" v-if="columns.indexOf('status') != -1">
+                            {{ (item.choice ? ( item.vol ? item.vol : 'choice' )  : 'bid&nbsp;/&nbsp;offer') }}
+                        </b-col>
                     </b-row>
                 </b-col>
                 <b-col cols="2">
@@ -37,7 +49,7 @@ import UserMarketRequest from '~/lib/UserMarketRequest';
 export default {
     props: {
         marketRequest: UserMarketRequest,
-        tradeStructure: String,
+        columns: Array,
     },
     data() {
         return {
@@ -58,7 +70,10 @@ export default {
                 let row = {
                     group: this.keys['group_'+itt],
                     quantity: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.quantity],
-                    expiry: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.expiration_date],
+                    expiry: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.expiration_date] 
+                            ? this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.expiration_date] 
+                            : this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys['expiration_date_'+itt]],
+                    tradable: this.marketRequest.trade_items[this.keys['group_'+itt]].tradable.title,
                     strike: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.strike],
                     is_stock: this.marketRequest.trade_items[this.keys['group_'+itt]].tradable.is_stock,
                     choice: this.marketRequest.trade_items[this.keys['group_'+itt]]['choice'], // this one is static
@@ -78,7 +93,7 @@ export default {
         }
     },
     mounted() {
-        this.keys = this.$root.config('trade_structure.'+this.tradeStructure);
+        this.keys = this.$root.config('trade_structure.'+this.marketRequest.trade_structure_slug);
     }
 }
 </script>

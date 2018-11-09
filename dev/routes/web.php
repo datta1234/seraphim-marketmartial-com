@@ -99,6 +99,12 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowP
     Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     
     Route::post('user-market-request/{user_market_request}/user-market/{user_market}/no-further-cares', 'TradeScreen\MarketRequest\UserMarketController@noFurtherCares');
+
+    Route::post(
+    	'user-market-request/{user_market_request}/user-market/{user_market}/work-the-balance', 
+    	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
+    );
+
     Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
     Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
     

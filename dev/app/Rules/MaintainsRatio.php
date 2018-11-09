@@ -61,7 +61,7 @@ class MaintainsRatio implements Rule
         }
 
         $ratio = (floatval($bid_qty) / floatval($offer_qty));
-        \Log::info([$ratio, $this->ratio]);
+        // \Log::info([$ratio, $this->ratio]);
         // ratio same
         return $ratio === $this->ratio;
     }

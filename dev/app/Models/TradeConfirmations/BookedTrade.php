@@ -34,14 +34,15 @@ class BookedTrade extends Model
      * @var array
      */
     protected $fillable = [
-        'is_sale',
         'is_confirmed',
         'amount',
         'user_id',
         'trade_confirmation_id',
         'trading_account_id',
-        'market_id',
-        'stock_id',
+        "user_market_request_id",
+        "is_sale",
+        "is_purchase",
+        "is_rebate"
     ];
 
     /**
@@ -86,7 +87,7 @@ class BookedTrade extends Model
     */
     public function rebate()
     {
-        return $this->hasOne('App\Models\Trade\Rebate','booked_trade_id');
+        return $this->hasMany('App\Models\Trade\Rebate','booked_trade_id');
     }
 
     /**
@@ -109,6 +110,10 @@ class BookedTrade extends Model
 
     public function resolveMarketStock() {
         // Resolve stock / market
+        /*
+        *@TODO modify as stock will be removed 
+        *
+        */
         if($this->stock) {
             return $this->stock->code;
         } else {
@@ -120,7 +125,6 @@ class BookedTrade extends Model
     {
         $trade_confirmation = $this->tradeConfirmation;
         $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
-
         $data = [
             "id"            => $this->id,
             "date"          => $this->created_at->format('Y-m-d H:i:s'),

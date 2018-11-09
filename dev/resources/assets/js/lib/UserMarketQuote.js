@@ -1,11 +1,18 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
+import UserMarketVolatility from '~/lib/UserMarketVolatility';
 
 export default class UserMarketQuote extends BaseModel {
 
     constructor(options) {
         super({
-            _used_model_list: []
+            _used_model_list: [],
+            _relations:{
+                volatilities: {
+                    addMethod: (volatility) => { this.addVolatility(volatility) },
+                    setMethod: (volatility) => { this.setVolatility(volatility) },
+                }
+            }
         });
 
         // default internal
@@ -36,6 +43,11 @@ export default class UserMarketQuote extends BaseModel {
                 this[key] = defaults[key];
             }
         });
+
+        this.volatilities = [];
+        if(options && options.volatilities) {
+            this.setVolatilities(options.volatilities);
+        }
     }
 
     /**
@@ -52,6 +64,34 @@ export default class UserMarketQuote extends BaseModel {
     */
     getMarketRequest() {
         return this._user_market_request;
+    }
+
+    /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    addVolatility(volatility) {
+        if(!(volatility instanceof UserMarketVolatility)) {
+            volatility = new UserMarketVolatility(volatility);
+        }
+        volatility.setUserMarket(this);
+        this.volatilities.push(volatility);
+        console.log("Added Volatility", volatility);
+    }
+
+    /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    setVolatilities(volatilities) {
+        this.volatilities.splice(0, this.volatilities.length);
+        volatilities.forEach(vol => {
+            this.addVolatility(vol);
+        });
+    }
+
+    volatilityForGroup(group_id) {
+        return this.volatilities.find(x => x.group_id == group_id);
     }
 
     putOnHold() {
