@@ -169,7 +169,7 @@ export default class TradeNegotiation extends BaseModel {
             // catch not assigned to a market request yet!
             if(this._user_market.id == null) {
                 return new Promise((resolve, reject) => {
-                    reject(new Errors(["Invalid Market"]));
+                    reject(new Errors("Invalid Market"));
                 });
             }
         }
@@ -186,7 +186,7 @@ export default class TradeNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -206,7 +206,7 @@ export default class TradeNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }

@@ -10,7 +10,7 @@
                     <!-- Date collection section -->
                     <div class="row mt-3 pr-3 pl-3" v-for="group in market_delta_groups_order">
                         <div class="col-12" v-if="market_delta_groups[group] && market_delta_groups[group].length > 0">
-                            <p class="mb-1">{{ group }}</p>
+                            <p class="mb-1 market-tab-group-title">{{ group }}</p>
                         </div>
                         <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_delta_groups[group]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
@@ -20,7 +20,7 @@
                     <!-- Date collection section -->
                     <div class="row mt-3 pr-3 pl-3" v-for="date in market_date_groups_order">
                         <div class="col-12">
-                            <p class="mb-1">{{ date }}</p>
+                            <p class="mb-1 market-tab-group-title">{{ date }}</p>
                         </div>
                         <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->

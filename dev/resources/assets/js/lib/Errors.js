@@ -2,9 +2,15 @@ module.exports =  class Errors {
     /**
      * Create a new Errors instance.
      */
-    constructor(errors, message) {
-        this.errors = errors.errors || errors || {};
-        this.message = errors.message || message || "";
+    constructor(errors) {
+        if(errors && errors.constructor == String) {
+            this.errors = [];
+            this.message = message;
+        } else {
+            // @TODO: test if axios
+
+            // @TODO: handle if not axios
+        }
     }
 
 

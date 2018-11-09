@@ -24,6 +24,9 @@
 			</div>
 			<div v-else class="card-body">
 				<p class="text-center">No Data for this market to display</p>
+                <b-form-checkbox class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
+                    Show only my trades
+                </b-form-checkbox>
 			</div>
 		</div>
     </div>
