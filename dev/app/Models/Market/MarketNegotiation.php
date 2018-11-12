@@ -470,11 +470,13 @@ class MarketNegotiation extends Model
                             : $tradeNegotiation->initiateUser->organisation;
                 $tradable   =   implode(',', $marketRequest->tradables->map(function($item){
                                     return $item->title;
-                                }));
+                                })->toArray());
                 // $strike =   $this->;
                 // $expiry =   $this->;
                 // $qty    =   $this->;
-                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable." ".$strike." ".$expiry." in ".$qty.".";
+                //return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable." ".$strike." ".$expiry." in ".$qty.".";
+                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable;
+
             break;
             case 'fok_timeout':
                 $marketReq = $this->userMarket->userMarketRequest;
