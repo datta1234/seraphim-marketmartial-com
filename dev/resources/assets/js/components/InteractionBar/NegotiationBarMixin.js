@@ -101,6 +101,9 @@ export default {
             this.check_invalid = check_invalid;
         },
         updateMessage: function(messageData) {
+            console.log("The message and the data",messageData);
+            this.history_message = null;
+
             if(messageData.user_market_request_id == this.marketRequest.id)
             {
                 let message = messageData.message;
@@ -261,6 +264,7 @@ export default {
 
         },
         reset(ignore = []) {
+            console.log("i got called");
             let defaults = {
                 state_premium_calc: false,
 
