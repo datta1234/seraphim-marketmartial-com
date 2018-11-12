@@ -92,7 +92,7 @@ export default {
 
                     axios.get(this.route, {params: this.params})
                     .then((response)=>{
-                        this.dataList = response.data;
+                        this.dataList = response.data.data;
                         if(this.dataList.length < 1) {
                             this.callback(this.params, false);
                         }

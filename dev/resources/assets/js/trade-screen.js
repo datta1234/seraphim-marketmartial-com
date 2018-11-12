@@ -255,20 +255,13 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-
-                if(tradeConfirmationResponse.status == 200) {
-                    // set the available market types
-                    tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
-                                          
-                       self.trade_confirmations.push(new TradeConfirmation(x));   
-                        return x;
-                    });
-                   
-                } else {
-                
-                    console.error(err);    
-                
-                }
+                console.log("Trarde confirmations: ", tradeConfirmationResponse);
+                // set the available market types
+                tradeConfirmationResponse.data.data = tradeConfirmationResponse.data.data.map(x => {
+                                      
+                   self.trade_confirmations.push(new TradeConfirmation(x));   
+                    return x;
+                });
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);

@@ -17,7 +17,7 @@ class TradeConfirmationController extends Controller
     public function index(Request $request,MarketType $marketType)
     {       
         $user = $request->user();
-    	return TradeConfirmation::where(function($q) use($user,$marketType)
+    	$trade_confirmations = TradeConfirmation::where(function($q) use($user,$marketType)
         {
             $q->sentByMyOrganisation($user->organisation_id)
                 ->marketType($marketType->id)
@@ -33,5 +33,10 @@ class TradeConfirmationController extends Controller
         ->map(function($item){
             return $item->preFormatted();
         });
+
+        return response()->json([
+            'data'=> $trade_confirmations,
+            'message'=>"Trade Confirmations loaded successfully.", 
+        ]);
     }
 }
