@@ -272,6 +272,9 @@
                 }
             },
             formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
                 let formatted_array = '';
                 array_item.forEach(element => {
                     switch (key) {
