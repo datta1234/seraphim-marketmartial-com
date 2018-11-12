@@ -293,20 +293,17 @@
                     }
                 })
                 .then(expiryDateResponse => {
-                    if(expiryDateResponse.status == 200) {
-                        Object.keys(expiryDateResponse.data).forEach(key => {
-                            this.expiry_dates.push({
-                                text: moment(expiryDateResponse.data[key].date, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'),
-                                value: expiryDateResponse.data[key].date,
-                            });
+                    Object.keys(expiryDateResponse.data.data).forEach(key => {
+                        this.expiry_dates.push({
+                            text: moment(expiryDateResponse.data.data[key].date, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'),
+                            value: expiryDateResponse.data.data[key].date,
                         });
-                        EventBus.$emit('loading', 'requestDates');
-                        this.dates_loaded = true;
-                    } else {
-                        console.error(err);    
-                    }
+                    });
+                    EventBus.$emit('loading', 'requestDates');
+                    this.dates_loaded = true;
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
         },

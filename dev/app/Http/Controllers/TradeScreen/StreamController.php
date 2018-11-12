@@ -14,6 +14,7 @@ class StreamController extends Controller
      */
     public function index(StreamRequest $request)
     {
+    	//@TODO - format return to standard in readme
         return Stream::getChunks($request->input('checksum'),$request->input('missing_packets'));
     }
   
