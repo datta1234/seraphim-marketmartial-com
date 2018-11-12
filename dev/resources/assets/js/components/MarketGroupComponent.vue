@@ -65,7 +65,7 @@
                 market_date_groups_order: [],
 
                 groupings: {
-                    default: 'trade_items.default.expiration_date',
+                    default: this.getDateGrouping,
                     delta: 'trade_structure'
                 }
             };
@@ -90,7 +90,8 @@
             mapGroups: function(markets, grouping) {
                 // map markets to dates
                 let market_requests = markets.reduce((x,y) => {
-                    let key = this.getAttr(y, grouping) ? this.getAttr(y, grouping) : '';
+                    let group = grouping.constructor == Function ? grouping(y) : grouping;
+                    let key = this.getAttr(y, group) ? this.getAttr(y, group) : '';
                     if(!x[key]) { 
                         x[key] = [];
                     }
@@ -119,23 +120,16 @@
                 return dates;
             },
             /*
-            *   Delta Group Methods
-            */
-            sortDeltaGroups: function(unsorted_delta_groups) {
-                let dates = [];
-                Object.keys(unsorted_delta_groups).forEach( (date) => {
-                    dates.push(date);
-                });
-                if(dates.length > 0) {
-                    this.$root.dateStringArraySort(dates, 'MMMYY');
-                }
-                return dates;
-            },
-            /*
             *   Update Methods
             */
             updateDeltaRequests(reqs) {
                 this.market_delta_groups = this.mapGroups(reqs, this.groupings.delta);
+            },
+            getDateGrouping(req) {
+                let struct = this.$root.config('trade_structure.'+req.trade_structure_slug);
+                let group = struct.group_1;
+                let exp = struct['expiration_date'] ? struct['expiration_date'] : struct['expiration_date_1'];
+                return 'trade_items.'+group+'.'+exp;
             },
             updateDefaultRequests(reqs) {
                 this.market_date_groups = this.mapGroups(reqs, this.groupings.default);
@@ -144,10 +138,10 @@
             updateRequests(reqs) {
                 switch(this.market.id) {
                     case this.$root.config('app.market_ids.delta_one'):
-                        return this.updateDeltaRequests(reqs);
+                        this.updateDeltaRequests(reqs);
                     break;
                     default:
-                        return this.updateDefaultRequests(reqs);
+                        this.updateDefaultRequests(reqs);
                 }
             }
         },
