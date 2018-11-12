@@ -143,15 +143,18 @@ class UserMarketRequest extends Model
 
 
     public function getRatioAttribute() {
-        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) {
-            if($out == null) {
-                $out = $item;
-            } else {
-                $out = $out / $item;
+        $first = null;
+        \Log::info([" Items: ", $this->id, $this->getDynamicItems('Quantity')]);
+        return $this->getDynamicItems('Quantity')->reduce(function($out, $item) use (&$first) {
+            if($first == null) {
+                $first = floatval($item);
             }
-            \Log::info([$out, $item]);
+            \Log::info([" Ratio: ", $this->id, $first, $item]);
+            if($first != $item) {
+                $out = true;
+            }
             return $out;
-        }, null);
+        }, false);
     }
 
 
@@ -728,7 +731,7 @@ class UserMarketRequest extends Model
        {
             $query = $query->whereIn('title',$attr); 
        }
-        return $query ->get()
+        return $query->get()
         ->map(function($item){
             return $item->value;
         });
@@ -739,6 +742,35 @@ class UserMarketRequest extends Model
     {
         //@TODO for sigle stock set up the relations and update method with tradeables
         return $this->market;
+    }
+
+    public function getTradeStructureSlugAttribute() {
+        switch($this->trade_structure_id) {
+            case 1:
+                return 'outright';
+            break;
+            case 2:
+                return 'risky';
+            break;
+            case 3:
+                return 'calendar';
+            break;
+            case 4:
+                return 'fly';
+            break;
+            case 5:
+                return 'option_switch';
+            break;
+            case 6:
+                return 'efp_switch';
+            break;
+            case 7:
+                return 'efp';
+            break;
+            case 8:
+                return 'rolls';
+            break;
+        };
     }
 
 }

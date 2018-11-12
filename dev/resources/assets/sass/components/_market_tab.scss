@@ -6,6 +6,9 @@
 		max-width: $mm-market-tab-group-title-max-width;
 		margin: auto;
 	}
+	.market-tab-wrapper {
+		max-width: $mm-market-tab-max-width;
+	}
 	.market-tab {
 		background-color: $mm-market-tab;
 		color: $mm-text-white;
@@ -15,8 +18,7 @@
 		cursor: pointer;
 
 		/* max-width: 350px; */
-		max-width: $mm-market-tab-max-width;
-		margin: auto;
+		max-width: 100%;
 
 		&.active {
 			box-shadow: 0px 0px 10px 5px #EBC300;
@@ -24,6 +26,20 @@
 		}
 	}
 
+	.market-tab-ratio {
+		padding-left:1.5em;
+		&.has-ratio:before {
+			content: "R";
+			color: red;
+			font-size: 1.5em;
+			font-weight: bold;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			-webkit-transform: translateY(-50%);
+			transform: translateY(-50%);
+		}
+	}
 
 	.market-tab
 	{

@@ -840,4 +840,33 @@ public function preFormatStats($user = null, $is_Admin = false)
             return $netPremium->value;
         }
     }
+
+    public function getTradeStructureSlugAttribute() {
+        switch($this->trade_structure_id) {
+            case 1:
+                return 'outright';
+            break;
+            case 2:
+                return 'risky';
+            break;
+            case 3:
+                return 'calendar';
+            break;
+            case 4:
+                return 'fly';
+            break;
+            case 5:
+                return 'option_switch';
+            break;
+            case 6:
+                return 'efp_switch';
+            break;
+            case 7:
+                return 'efp';
+            break;
+            case 8:
+                return 'rolls';
+            break;
+        };
+    }
 }

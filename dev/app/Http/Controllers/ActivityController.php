@@ -19,9 +19,10 @@ class ActivityController extends Controller
         $org_id = \Auth::user()->organisation_id;
         $done = $user_market->dismissActivity("organisation.".$org_id.".".$activity);
         return response()->json([
-            'success'   => true,
             'message'   => "Activity Dismissed",
-            'activity'  => $user_market->getActivity("organisation.".$org_id, true)
+            'data' => [
+                'activity'  => $user_market->getActivity("organisation.".$org_id, true)
+            ],
         ]);
     }
 }

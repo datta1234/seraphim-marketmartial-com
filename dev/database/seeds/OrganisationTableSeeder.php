@@ -13,7 +13,7 @@ class OrganisationTableSeeder extends Seeder
     {
         $orgs = 1;
         factory(App\Models\UserManagement\Organisation::class,8)->create([
-            'verified'  =>  true,
+            // 'verified'  =>  true,
         ])->each(function($organisation) use (&$orgs) {
                // dd($organisation);
     	        factory(App\Models\UserManagement\User::class, 4)->create([
@@ -29,8 +29,8 @@ class OrganisationTableSeeder extends Seeder
                 });
 
                 factory(App\Models\UserManagement\User::class)->create([
-                    'verified'  =>  true,
-                    'active'  =>  true,
+                    // 'verified'  =>  true,
+                    // 'active'  =>  true,
                     'email' =>  'org'.$orgs.'@example.net',
                     'organisation_id' =>  $organisation->id,
                 ])->each(function($user){
