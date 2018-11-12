@@ -282,6 +282,9 @@
                         case 'nominal':
                             formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
                             break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
+                            break;
                         default:
                             formatted_array += element + ' / ';
                     }
