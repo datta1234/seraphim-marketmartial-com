@@ -376,7 +376,7 @@ public function resolveUserMarketRequestItems()
         "nominal" => array(),
     ];
 
-        // Get the user market request items
+    // Get the user market request items
     $user_market_request_items = array();
     $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
     foreach ($user_market_request_groups as $key => $user_market_request_group) {
@@ -413,13 +413,16 @@ public function resolveUserMarketRequestItems()
     return $resolved_items;
 }
 
-public function resolveMarketStock() {
-        // Resolve stock / market
-    if($this->stock) {
-        return $this->stock->code;
-    } else {
-        return $this->market->title;
+public function resolveUnderlying() {
+    // Get the user market request items
+    $underlyings = array();
+    $user_market_request_tradables = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestTradables;
+    foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
+        $underlyings[] = $user_market_request_tradable->stock_id === null ?
+            $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
     }
+
+    return $underlyings;
 }
 
 public function preFormatStats($user = null, $is_Admin = false)
@@ -429,7 +432,7 @@ public function preFormatStats($user = null, $is_Admin = false)
     $data = [
         "id" => $this->id,
         "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-        "market" => $this->resolveMarketStock(),
+        "market" => $this->resolveUnderlying(),
         "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
         "nominal" =>  $user_market_request_items["nominal"],
         "strike" =>  $user_market_request_items["strike"],

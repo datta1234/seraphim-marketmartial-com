@@ -272,6 +272,9 @@
                 }
             },
             formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
                 let formatted_array = '';
                 array_item.forEach(element => {
                     switch (key) {
@@ -281,6 +284,9 @@
                         case 'strike':
                         case 'nominal':
                             formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
+                            break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
                             break;
                         default:
                             formatted_array += element + ' / ';
