@@ -55,9 +55,9 @@ class MarketNegotiationController extends Controller
         //broadCast new market request;
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
-            $message = "Your levels have been sent.";
-            $request->user()->organisation->notify("market_negotiation_store",$message,true);
-            return ['success'=>true,'data'=>$marketNegotiation ,'message'=>$message];
+
+           return ['success'=>true,'data'=>$marketNegotiation ,'message'=>""];
+
         } else {
             return response()->json(['success'=>false,'data'=>$marketNegotiation ,'message'=>'There was a problem adding your levels'], 500);
         }

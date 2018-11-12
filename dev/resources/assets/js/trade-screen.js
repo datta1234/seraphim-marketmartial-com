@@ -255,7 +255,6 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-                console.log("Trarde confirmations: ", tradeConfirmationResponse);
                 // set the available market types
                 tradeConfirmationResponse.data.data = tradeConfirmationResponse.data.data.map(x => {
                                       
@@ -375,7 +374,6 @@ const app = new Vue({
             }
         },
         updateTradeConfirmation(tradeConfirmationData){
-        console.log("update the tradeconfirmation data",tradeConfirmationData)
 
          let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
         
@@ -629,8 +627,8 @@ const app = new Vue({
                 .listen('.UserMarketRequested', (userMarketRequest) => {
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
-                        console.log("Got Event 'UserMarketRequested'", packet_data);
                         this.updateUserMarketRequest(packet_data.data);
+                        console.log(packet_data.message);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
                 })
@@ -639,7 +637,6 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
 
-                        console.log("Got Event 'TradeConfirmationEvent'", packet_data);
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)
                         {
