@@ -87,7 +87,8 @@ class UserController extends Controller
     public function termsOfConditions(Request $request)
     {
         $user = $request->user();
-        return view('users.terms_and_conditions')->with(compact('user'));
+        $is_admin_update = $user->isAdmin();
+        return view('users.terms_and_conditions')->with(compact('user', 'is_admin_update'));
     }
 
     public function storeTermsAndConditions(TermsofUseRequest $request)

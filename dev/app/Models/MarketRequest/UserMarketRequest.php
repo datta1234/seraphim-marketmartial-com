@@ -110,6 +110,14 @@ class UserMarketRequest extends Model
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradables()
+    {
+        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_id');
+    }
 
     /**
     * Scope for active markets today
@@ -742,6 +750,10 @@ class UserMarketRequest extends Model
     {
         //@TODO for sigle stock set up the relations and update method with tradeables
         return $this->market;
+    }
+
+    public function getSummary() {
+        return $this->trade_structure->title;
     }
 
     public function getTradeStructureSlugAttribute() {
