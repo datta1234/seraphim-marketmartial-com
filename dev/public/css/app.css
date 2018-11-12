@@ -18112,6 +18112,10 @@ input:checked + .slider:before {
   background-color: #E17428;
 }
 
+.mm-blue-bg.form-control {
+  background: rgba(35, 88, 189, 0.1);
+}
+
 @font-face {
   font-family: 'Muli-Bold';
   src: url("/fonts/Muli-Bold.ttf") format("truetype");

@@ -639,6 +639,8 @@ class MarketNegotiation extends Model
 
     public function isTraded()
     {
+        \Log::info(["here we are",$this->id,$this->tradeNegotiations]);
+
         return $this->tradeNegotiations()->where(function($q){
             return $q->where('traded',true);  
         })->exists();

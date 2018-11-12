@@ -34,6 +34,16 @@ class ItemRule implements Rule
                         return false;
                     }
                 break;
+            case 'Contract':
+                if($value['value'] !== null)
+                {
+                    if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                    {
+                        $this->message = "please enter a valid Contracts value";
+                        return false;     
+                    }  
+                }
+            break;
             default:
                 $this->message = "Invalid field";
                 return false;
