@@ -186,5 +186,6 @@ class UserMarketController extends Controller
         $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
         $userMarketRequest->notifyRequested();
         return response()->json(['data' => null,'message'=>""]);
+
     }
 }

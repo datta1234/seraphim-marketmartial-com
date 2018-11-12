@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    const Form = require('../../../lib/Form.js');
+    const Form = require('~/lib/Form.js');
     export default {
         props:{
             'emailSettings': {
@@ -76,7 +76,7 @@
         },
         data() { 
             return {          
-                email : new Form({
+                email: new Form({
                     email: '',
                     title: ''
                 }),

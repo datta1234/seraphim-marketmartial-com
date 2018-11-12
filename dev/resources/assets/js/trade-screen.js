@@ -255,7 +255,6 @@ const app = new Vue({
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-                console.log("Trarde confirmations: ", tradeConfirmationResponse);
                 // set the available market types
                 tradeConfirmationResponse.data.data = tradeConfirmationResponse.data.data.map(x => {
                                       
