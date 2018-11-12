@@ -227,16 +227,12 @@
                     }
                 })
                 .then(expirationsResponse => {
-                    if(expirationsResponse.status == 200) {
-                        Object.keys(expirationsResponse.data).forEach(key => {
-                            this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
-                        });
-                        //
-                    } else {
-                        console.error(err); 
-                    }
+                    Object.keys(expirationsResponse.data.data).forEach(key => {
+                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
+                    });
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
         },
