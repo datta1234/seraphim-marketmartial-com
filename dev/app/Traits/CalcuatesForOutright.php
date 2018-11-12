@@ -24,6 +24,14 @@ trait CalcuatesForOutright {
 
 
         $singleStock = false;
+        
+//         dd(
+// $future1,
+// $contracts1,
+// $expiry1,
+// $strike1 ,
+// $volatility1
+//         );
 
         //determine weather put or call
  
@@ -32,8 +40,8 @@ trait CalcuatesForOutright {
         
         if($is_offer == 1)
         {
-            $putDirection1  = -1;
-            $callDirection1 = -1; 
+            $putDirection1  = 1;
+            $callDirection1 = 1; 
         }
         $startDate = Carbon::now()->startOfDay();
 
@@ -51,12 +59,13 @@ trait CalcuatesForOutright {
             $contracts = $POD1;
         }else
         {
-           $this->optionGroups[0]->setOpVal('is_put',true);
+           $this->optionGroups[0]->setOpVal('is_put',false);
            $gross_prem = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
            $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem,$is_sender);
           $contracts/*cell(21,6)*/ = $COD1;
         }
 
+        // dd( $POD1, $COD1,$gross_prem);
         // futures and deltas buy/sell
         if($contracts < 0)
         {

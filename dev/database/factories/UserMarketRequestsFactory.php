@@ -10,9 +10,9 @@ $factory->define(App\Models\MarketRequest\UserMarketRequest::class, function (Fa
 		"trade_structure_id" => function(){
             return factory(App\Models\StructureItems\TradeStructure::class,'Outright')->create()->id;
         },
-		"user_market_request_statuses_id" => function(){
-            return factory(App\Models\MarketRequest\UserMarketRequestStatus::class)->create()->id;
-        },
+		// "user_market_request_statuses_id" => function(){
+  //           return factory(App\Models\MarketRequest\UserMarketRequestStatus::class)->create()->id;
+  //       },
         "market_id" =>  function(){
             return factory(App\Models\StructureItems\Market::class)->create()->id;
         },

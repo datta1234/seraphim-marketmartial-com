@@ -114,18 +114,15 @@
             loadExpiryDate() {
                 axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page='+this.current_page)
                 .then(expiryDateResponse => {
-                    if(expiryDateResponse.status == 200) {
-                        this.current_page = expiryDateResponse.data.current_page;
-                        this.per_page = expiryDateResponse.data.per_page;
-                        this.total = expiryDateResponse.data.total;
-                        this.expiry_dates = expiryDateResponse.data.data;
-                        EventBus.$emit('loading', 'requestDates');
-                        this.dates_loaded = true;
-                    } else {
-                        console.error(err);    
-                    }
+                    this.current_page = expiryDateResponse.data.current_page;
+                    this.per_page = expiryDateResponse.data.per_page;
+                    this.total = expiryDateResponse.data.total;
+                    this.expiry_dates = expiryDateResponse.data.data;
+                    EventBus.$emit('loading', 'requestDates');
+                    this.dates_loaded = true;
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
         },

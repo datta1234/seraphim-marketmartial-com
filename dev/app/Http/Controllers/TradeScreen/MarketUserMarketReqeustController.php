@@ -180,7 +180,6 @@ class MarketUserMarketReqeustController extends Controller
             DB::rollBack();
             Log::error($e);
             return response()->json([
-                'success'=>false,
                 'data'=> null,
                 'message'=>'Could not create market request.', 
             ], 500);
@@ -218,7 +217,6 @@ class MarketUserMarketReqeustController extends Controller
         //broadCast new market request;
         $userMarketRequest->notifyRequested();
         return response()->json([
-            'success'=>true,
             'data'=> $responseData,
             'message'=>"Market Request created successfully.", 
         ], 201);

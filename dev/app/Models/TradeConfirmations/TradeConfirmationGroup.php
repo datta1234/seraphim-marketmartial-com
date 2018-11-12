@@ -114,6 +114,7 @@ class TradeConfirmationGroup extends Model
             $can_see = $item->is_seller === null || $item->is_seller == $is_sender;
             return strcasecmp($item->title,$title) == 0 && $can_see;
         });  
+        
 
         if($op)
         {

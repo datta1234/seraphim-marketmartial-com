@@ -18,6 +18,9 @@ class TradeStructureController extends Controller
      */
    	public function index(MarketType $marketType)
    	{
-   		return $marketType->tradeStructures()->with('tradeStructureGroups.items')->get();
+      return response()->json([
+            'data'=> $marketType->tradeStructures()->with('tradeStructureGroups.items')->get(),
+            'message'=>"Trade Structures loaded successfully.", 
+        ]);
    	}
 }

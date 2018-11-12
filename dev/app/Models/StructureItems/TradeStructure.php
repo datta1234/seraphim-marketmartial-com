@@ -85,33 +85,4 @@ class TradeStructure extends Model
         return $this->belongsToMany('App\Models\StructureItems\MarketType', 'market_types_trade_structures', 'trade_structure_id', 'market_type_id');
     }
 
-    public function getTradeStructureSlugAttribute() {
-        switch($this.id) {
-            case 1:
-                return 'outright';
-            break;
-            case 2:
-                return 'risky';
-            break;
-            case 3:
-                return 'calendar';
-            break;
-            case 4:
-                return 'fly';
-            break;
-            case 5:
-                return 'option_switch';
-            break;
-            case 6:
-                return 'efp_switch';
-            break;
-            case 7:
-                return 'efp';
-            break;
-            case 8:
-                return 'rolls';
-            break;
-        };
-    }
-
 }
