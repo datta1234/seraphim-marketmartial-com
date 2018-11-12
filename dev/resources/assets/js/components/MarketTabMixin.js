@@ -78,20 +78,20 @@ export default {
                 case "NEGOTIATION-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
                 break;
                 case "NEGOTIATION-VOL-PENDING":
                         this.market_request_state = 'negotiation-vol-pending';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
                 break;
                 case "NEGOTIATION-OPEN-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
+                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
                 break;
                 case "TRADE-NEGOTIATION-SENDER":
                 case "TRADE-NEGOTIATION-COUNTER":
@@ -100,8 +100,8 @@ export default {
                     
                         if(this.marketRequest.chosen_user_market && this.marketRequest.chosen_user_market.isTradingAtBest()) {
                             this.market_request_state_label = "";
-                            this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid_display: '-';
-                            this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer_display : '-';
+                            this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                            this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
                         } else {
 
                             if(this.current_user_market_negotiation) {
@@ -158,10 +158,10 @@ export default {
         {
             let source = item.getAmountSource(attr);
             if(source.id != item.id && item.is_repeat)
-            {
-                return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
-            }
-            return "100";//item[attr];
+            // {
+            //     return item.is_interest == source.is_interest || item.is_marker == source.is_maker ? "SPIN" : item[attr];
+            // }
+            return item[attr];
         },
         getStateClass(item,attr)
         {

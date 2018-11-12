@@ -12,9 +12,9 @@ class BookedTrade extends Model
 	 * @property integer $user_id
 	 * @property integer $trade_confirmation_id
 	 * @property integer $trading_account_id
-	 * @property integer $market_id
-	 * @property integer $stock_id
 	 * @property boolean $is_sale
+     * @property boolean $is_purchase
+     * @property boolean $is_rebate
 	 * @property boolean $is_confirmed
 	 * @property double $amount
 	 * @property \Carbon\Carbon $created_at
@@ -67,24 +67,6 @@ class BookedTrade extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function stock()
-    {
-        return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function market()
-    {
-        return $this->belongsTo('App\Models\StructureItems\Market','market_id');
-    }
-
-    /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
     public function rebate()
     {
         return $this->hasMany('App\Models\Trade\Rebate','booked_trade_id');
@@ -108,30 +90,16 @@ class BookedTrade extends Model
         return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
     }
 
-    public function resolveMarketStock() {
-        // Resolve stock / market
-        /*
-        *@TODO modify as stock will be removed 
-        *
-        */
-        if($this->stock) {
-            return $this->stock->code;
-        } else {
-            return $this->market->title;
-        }
-    }
-
     public function preFormatAdmin($is_csv = false)
     {
-        $trade_confirmation = $this->tradeConfirmation;
-        $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
+        $user_market_request_items = $this->tradeConfirmation->resolveUserMarketRequestItems();
         $data = [
             "id"            => $this->id,
             "date"          => $this->created_at->format('Y-m-d H:i:s'),
             "user"          => $this->user->full_name,
             "organisation"  => $this->user->organisation->title,
-            "market"        => $this->resolveMarketStock(),
-            "is_put"        => $trade_confirmation->is_put,
+            "market"        => $this->tradeConfirmation->resolveUnderlying(),
+            "is_put"        => $this->tradeConfirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],
@@ -185,12 +153,12 @@ class BookedTrade extends Model
                     $q->where('title','like',"%$term%");
                 });
             })
-            ->whereHas('stock',function($q) use ($term){
+            /*->whereHas('stock',function($q) use ($term){
                 $q->where('code','like',"%$term%");
             })
             ->orWhereHas('market',function($q) use ($term){
                 $q->where('title','like',"%$term%");
-            });
+            })*/;
             if(strtolower($term) === 'put' || strtolower($term) === 'call'){
                 $q->orWhereHas('tradeConfirmation',function($q) use ($term){
                     if(strtolower($term) === 'put'){

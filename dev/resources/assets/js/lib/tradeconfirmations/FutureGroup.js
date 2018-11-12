@@ -51,6 +51,10 @@ export default class FutureGroup {
                 {
                     "title": "Future",
                     "value": this.future
+                },
+                {
+                    "title": "Contract",
+                    "value": this.contracts
                 }
             ]
         };

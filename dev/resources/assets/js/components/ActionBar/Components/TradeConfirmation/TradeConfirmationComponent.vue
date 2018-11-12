@@ -100,7 +100,7 @@
                     </span>
                 </td>
                 <td>
-                    <b-form-input :disabled="true" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
+                    <b-form-input class="mm-blue-bg" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
                 </td>
                 <td>
                     {{ future_group.expires_at }}     

@@ -110,6 +110,14 @@ class UserMarketRequest extends Model
         return $this->belongsTo('App\Models\StructureItems\Market','market_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradables()
+    {
+        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_id');
+    }
 
     /**
     * Scope for active markets today
@@ -149,7 +157,7 @@ class UserMarketRequest extends Model
             if($first == null) {
                 $first = floatval($item);
             }
-            \Log::info([" Ratio: ", $this->id, $first, $item]);
+            // \Log::info([" Ratio: ", $this->id, $first, $item]);
             if($first != $item) {
                 $out = true;
             }
@@ -391,16 +399,21 @@ class UserMarketRequest extends Model
 
             if(!is_null($lastNegotiation))
             {
+
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
                     // open if the last one is killed but isnt a fill
                     if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
                         return true;
                     }
-                    if($lastNegotiation->isTraded())
-                    {
-                        return true;
-                    }
+
+                    \Log::info(["last negotiation",$lastNegotiation->marketNegotiationParent]);
+
+
+                    // if($lastNegotiation->isTraded() || $lastNegotiation->marketNegotiationParent->isTraded())
+                    // {
+                    //     return true;
+                    // }
 
                     return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
@@ -437,14 +450,14 @@ class UserMarketRequest extends Model
         if(!is_null($this->chosenUserMarket))
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            if($lastNegotiation->lastTradeNegotiation)
-            {
-                \Log::info(["the last negotiation",$lastNegotiation->lastTradeNegotiation->id]);
-            }else
-            {
-                \Log::info(["no last lastTradeNegotiation",$lastNegotiation->id]);
+            // if($lastNegotiation->lastTradeNegotiation)
+            // {
+            //     \Log::info(["the last negotiation",$lastNegotiation->lastTradeNegotiation->id]);
+            // }else
+            // {
+            //     \Log::info(["no last lastTradeNegotiation",$lastNegotiation->id]);
 
-            }
+            // }
 
             return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->traded;  
         }
@@ -456,6 +469,9 @@ class UserMarketRequest extends Model
         $hasQuotes          =  $this->userMarkets != null;
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
+        
+        \Log::info(["market open",$marketOpen]);
+
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
         $is_killed          =  $is_private ? $this->chosenUserMarket->lastNegotiation->is_killed == true : false;
@@ -742,6 +758,10 @@ class UserMarketRequest extends Model
     {
         //@TODO for sigle stock set up the relations and update method with tradeables
         return $this->market;
+    }
+
+    public function getSummary() {
+        return $this->trade_structure->title;
     }
 
     public function getTradeStructureSlugAttribute() {

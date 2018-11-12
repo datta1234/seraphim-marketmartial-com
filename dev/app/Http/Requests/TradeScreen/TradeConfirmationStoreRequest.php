@@ -44,8 +44,6 @@ class TradeConfirmationStoreRequest extends FormRequest
             $futureValue = "trade_confirmation_data.structure_groups.{$i}.items.*.value";
             
             $rules[$item] = [new ItemRule()];
-            $rules[$futureLabel] = "required:required";
-            $rules[$futureValue] = "required:required";
         }
 
         return $rules;

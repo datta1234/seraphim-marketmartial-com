@@ -66,6 +66,7 @@ class UserMarketUpdateRequest extends FormRequest
 
         // Risky / Calendar / Fly
         $validator->sometimes(['volatilities'], ['required_without:accept', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
+            \Log::info([ "Market Struct Id: ", $userMarketRequest->trade_structure_id ]);
             return in_array($userMarketRequest->trade_structure_id, [2, 3, 4, 5, 8]);
         });
     }
