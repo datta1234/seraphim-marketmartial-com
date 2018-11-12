@@ -376,6 +376,7 @@ class UserMarket extends Model
     {
            
 
+            \Log::info(["conditions: ", $data]);
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
 

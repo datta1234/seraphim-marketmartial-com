@@ -261,6 +261,9 @@
                     return '-';
                 }
                 if( Array.isArray(item[key]) ) {
+                    return this.formatArrayItem(item[key], key); 
+                }
+                if( Array.isArray(item[key]) ) {
                     let formatted = '';
                     item[key].forEach(element => {
                         formatted += (key == 'expiration' ? this.castToMoment(element) : element) + ' / ';
@@ -268,7 +271,36 @@
                     return formatted.substring(0, formatted.length - 3);
                 }
 
-                return key == 'updated_at' ? this.castToMoment(item[key]) : item[key];
+                switch (key) {
+                    case 'updated_at':
+                        return this.castToMoment(item[key]);
+                        break;
+                    default:
+                        return item[key];
+                }
+            },
+            formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
+                let formatted_array = '';
+                array_item.forEach(element => {
+                    switch (key) {
+                        case 'expiration':
+                            formatted_array += this.castToMoment(element) + ' / ';
+                            break;
+                        case 'strike':
+                        case 'nominal':
+                            formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
+                            break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
+                            break;
+                        default:
+                            formatted_array += element + ' / ';
+                    }
+                });
+                return formatted_array.substring(0, formatted_array.length - 3);
             },
             /**
              * Casting a passed string to moment with a new format

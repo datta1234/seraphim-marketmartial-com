@@ -64,6 +64,15 @@ class UserMarketRequestTradable extends Model
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function getTitleAttribute()
+    {
+        return $this->market_id != null ? $this->market->title : $this->stock->code;
+    }
+
     public function preFormatted()
     {
         if($this->market_id != null)

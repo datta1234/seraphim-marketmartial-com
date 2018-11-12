@@ -266,6 +266,15 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function lastTradeNegotiation()
+    {
+        return $this->hasOne('App\Models\Trade\TradeNegotiation','market_negotiation_id')->latest();
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
@@ -449,6 +458,24 @@ class MarketNegotiation extends Model
 
     public function getMessage($scenario) {
         switch($scenario) {
+            case 'market_traded':
+                $tradeNegotiation = $this->lastTradeNegotiation;
+                $marketRequest = $this->userMarket->userMarketRequest;
+                
+                $buyer  =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->recievingUser->organisation 
+                            : $tradeNegotiation->initiateUser->organisation;
+                $seller =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->recievingUser->organisation 
+                            : $tradeNegotiation->initiateUser->organisation;
+                $tradable   =   implode(',', $marketRequest->tradables->map(function($item){
+                                    return $item->title;
+                                }));
+                // $strike =   $this->;
+                // $expiry =   $this->;
+                // $qty    =   $this->;
+                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable." ".$strike." ".$expiry." in ".$qty.".";
+            break;
             case 'fok_timeout':
                 $marketReq = $this->userMarket->userMarketRequest;
                 $exp = (new \Carbon\Carbon($marketReq->getDynamicItem('Expiration Date')))->format("My");
@@ -849,6 +876,15 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
+                if($tradeNegotiation->traded) {
+                    \Slack::postMessage([
+                        "as_user"   => false,
+                        "icon_emoji"=> ":alarm_clock:",
+                        "username"  => "Trade-BOT",
+                        "text"      => $this->getMessage('market_traded'),
+                        "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
+                    ]);
+                }
                
                 if($newMarketNegotiation )
                 {

@@ -34,7 +34,9 @@ class QuotesVolatilities implements Rule
             if(!isset($vols[$group->id])) {
                 return false;
             }
-            // @TODO: update rule to ensure they are present
+            if( !isset($vols[$group->id]['value']) || empty($vols[$group->id]['value']) ) {
+                return false;
+            }
         }
         return true;
     }
@@ -46,6 +48,6 @@ class QuotesVolatilities implements Rule
      */
     public function message()
     {
-        return 'Must Provide a volatility for choice';
+        return 'Must Provide choice volatility';
     }
 }

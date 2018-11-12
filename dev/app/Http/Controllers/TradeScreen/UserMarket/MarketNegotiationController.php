@@ -45,7 +45,8 @@ class MarketNegotiationController extends Controller
         {
             $this->authorize('spinNegotiation',$userMarket); 
             $marketNegotiation = $userMarket->spinNegotiation($request->user());  
-        }else
+        }
+        else
         {
             $this->authorize('addNegotiation',$userMarket);
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
