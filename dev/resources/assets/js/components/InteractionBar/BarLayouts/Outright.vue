@@ -19,7 +19,7 @@
 
     <template v-if="last_is_self">
         <p class="text-center">
-            Levels Sent, Awaiting response
+            Your levels have been sent.
         </p>
     </template>
     <template v-if="!is_trading && !last_is_self">

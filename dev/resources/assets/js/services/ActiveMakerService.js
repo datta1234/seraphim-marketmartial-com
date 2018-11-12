@@ -34,12 +34,13 @@ const ping = () => {
 
 const init = (app) => {
     state._ignore_header = app.$root.config('app.ajax.headers.ignore');
+    state._active_maker_header = app.$root.config('app.ajax.headers.active-maker');
     
     // ensure it happens only once
     if(state.keepalive == null) {
         axios.interceptors.response.use((response) => {
-            if(response.headers && typeof response.headers['active-market-makers'] != 'undefined') {
-                state.total = response.headers['active-market-makers'];
+            if(response.headers && typeof response.headers[state._active_maker_header] != 'undefined') {
+                state.total = response.headers[state._active_maker_header];
                 emitter.emit(state.total);
             }
             return response;
