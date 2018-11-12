@@ -12,7 +12,7 @@
         <table class="table table-sm">
           <thead>
             <tr>
-                <th scope="col">Bank</th>
+                <th scope="col">{{ trade_confirmation.organisation }}</th>
                 <th scope="col">Underlying</th>
                 <th scope="col">Strike</th>
                 <th scope="col">Put/Call</th>
@@ -28,7 +28,7 @@
 
             <tr v-for="option_group in trade_confirmation.option_groups">
                 <td>
-                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Sell" : "Buy"):'') }}
+                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buy" : "sell"):'') }}
                 </td>
                 <td>
                     {{ option_group.underlying_title }}
@@ -67,7 +67,7 @@
           <table class="table table-sm">
           <thead>
             <tr>
-                <th scope="col">Bank</th>
+                <th scope="col">{{ trade_confirmation.organisation }}</th>
                 <th scope="col">Underlying</th>
                 <th scope="col">Spot</th>
                 <th scope="col">Future</th>
@@ -78,7 +78,7 @@
           <tbody>
             <tr v-for="(future_group, key) in trade_confirmation.future_groups">
                 <td>
-                  {{ (future_group.is_offer != null ? (future_group.is_offer ? "Sell" : "Buy"):'') }}
+                  {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buy" : "Sell"):'') }}
                 </td>
                 <td>
                   {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
