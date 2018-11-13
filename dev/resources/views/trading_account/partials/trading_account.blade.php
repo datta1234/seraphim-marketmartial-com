@@ -17,7 +17,7 @@
 		@endif
 	</div>
 	<div class="col-md-4">
-		{{ Form::text("trading_accounts[{$index}][sub_account]",$trading_account->sub_account,['class' => ($errors->has("trading_accounts.{$index}.sub_account") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'safex member code']) }}
+		{{ Form::text("trading_accounts[{$index}][sub_account]",$trading_account->sub_account,['class' => ($errors->has("trading_accounts.{$index}.sub_account") ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'sub-account']) }}
 
 		@if ($errors->has("trading_accounts.{$index}.sub_account"))
 		        <strong class="text-danger">{{ $errors->first("trading_accounts.{$index}.sub_account") }}</strong>

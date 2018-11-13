@@ -239,7 +239,7 @@
                 if(this.data.market_object.details) {
                     this.form_data.fields.forEach( (field,index) => {
                         Object.keys(field).forEach(element => {
-                            if(this.data.market_object.details.fields[index][element]) {
+                            if(this.data.market_object.details.fields[index].hasOwnProperty(element)) {
                                 field[element] = this.data.market_object.details.fields[index][element];
                                 this.chosen_option = (element == 'is_selected' && this.data.market_object.details.fields[index][element])? index : this.chosen_option;
                             }

@@ -306,6 +306,16 @@
                     this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
+            setPreviousData() {
+                this.data.market_object.switch_options.forEach( (switch_option,index) => {
+                    Object.keys(switch_option).forEach(element => {
+                        if(this.form_data.fields[index].hasOwnProperty(element)){
+                            this.form_data.fields[index][element] = switch_option[element];
+                            this.chosen_option = (element == 'is_selected' && switch_option[element])? index : this.chosen_option;
+                        }
+                    });
+                });
+            }
         },
         mounted() {
             this.dates_loaded = false;
@@ -324,7 +334,7 @@
                 });
             });
             this.chosen_option = 0;
-            console.log("You want this: ", this.data.market_object.switch_options);
+            this.setPreviousData();
         }
     }
 </script>

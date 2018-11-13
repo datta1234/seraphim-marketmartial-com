@@ -14,7 +14,7 @@
             <a class="user-nav-link nav-link" href="{{ route('admin.user.interest.edit',['user'=>$user->id]) }}">Interests</a>
         </li>
     </ul>  
-@else  
+@else 
     <ul class="list-group list-group-flush mm-menu">
         <li class="list-group-item {{ Request::is('my-profile') ? 'active' : '' }}">
             <a class="user-nav-link nav-link  " href="{{ route('user.edit') }}">Profile</a>
