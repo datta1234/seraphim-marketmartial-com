@@ -31,7 +31,27 @@ Route::get('/ping', function() {
 
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
 
-	Route::get('/trade', 'TradeScreenController@index')->name('trade');
+	Route::group(['middleware' => ['verified']], function () {
+		Route::get('/trade', 'TradeScreenController@index')->name('trade');
+
+		Route::resource('user-pref', 'UserPrefController');
+
+		Route::group(['prefix' => 'stats'], function() {
+			Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
+			Route::get('/my-activity/year', 'Stats\ActivityControlller@yearActivity')
+				->name('my_activity.year');
+			Route::get('/my-activity/markets', 'Stats\MarketController@index')
+				->name('my_activity.markets');
+			
+			Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
+			Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
+			
+			Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
+		});
+
+		Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+		Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
+	});
 
 	Route::get('/my-profile', 'UserController@edit')->name('user.edit');
 	Route::post('/my-profile','UserController@update')->name('user.update');
@@ -54,31 +74,13 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 	Route::get('/interest-settings', 'InterestController@edit')->name('interest.edit');
 	Route::put('/interest-settings','InterestController@update')->name('interest.update');
 
-	Route::resource('user-pref', 'UserPrefController');
-
-	Route::group(['prefix' => 'stats'], function() {
-		Route::get('/my-activity', 'Stats\ActivityControlller@show')->name('activity.show');
-		Route::get('/my-activity/year', 'Stats\ActivityControlller@yearActivity')
-			->name('my_activity.year');
-		Route::get('/my-activity/markets', 'Stats\MarketController@index')
-			->name('my_activity.markets');
-		
-		Route::get('/market-activity', 'Stats\ActivityControlller@index')->name('activity.index');
-		Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
-		
-		Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
-	});
-
-	Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
-	Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
-
 	Route::impersonate();
 
 });
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','timeWindowPreventAction']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction']], function() {
 
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');

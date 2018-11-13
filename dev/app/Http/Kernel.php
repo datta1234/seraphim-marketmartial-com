@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
         '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
+        'verified' =>\App\Http\Middleware\CheckVerified::class,
     ];
 }
