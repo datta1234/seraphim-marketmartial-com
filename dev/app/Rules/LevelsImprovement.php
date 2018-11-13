@@ -11,6 +11,8 @@ class LevelsImprovement implements Rule
     private $request; 
     private $lastNegotiation;
 
+    private $message = 'Either improve the bid or the offer';
+
     /**
      * Create a new rule instance.
      *
@@ -52,6 +54,13 @@ class LevelsImprovement implements Rule
                 }
             }
 
+            if($this->request->input($attribute) != null && $this->request->input($inverse) != null) {
+                if($this->request->input('offer') < $this->request->input('bid')) {
+                    $this->message = "Bid value cannot be higher than offer value.";
+                    return false;
+                }
+            }
+
             $valid = ($attribute == 'bid');
             /*
                 both 'bid' & 'offer' follow same process, only change is comparisson '<' vs '>' 
@@ -70,7 +79,6 @@ class LevelsImprovement implements Rule
                         if bid improved
                             return true
             */
-
             // ensure its set
             if($this->request->input($attribute) != null) {
                 /*
@@ -171,6 +179,6 @@ class LevelsImprovement implements Rule
      */
     public function message()
     {
-        return 'Either improve the bid or the offer';
+        return $this->message;
     }
 }

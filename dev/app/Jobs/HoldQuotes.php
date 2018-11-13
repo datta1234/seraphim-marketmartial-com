@@ -30,7 +30,6 @@ class HoldQuotes implements ShouldQueue
      */
     public function handle()
     {
-        \Log::info('hold_quotes called job');
         UserMarket::placeOldQuotesOnHold();
     }
 }

@@ -473,6 +473,16 @@ export default class UserMarketNegotiation extends BaseModel {
     get ratio() {
         return this.bid_qty / this.offer_qty;
     }
+
+    get parent_negotiation() {
+        return this._user_market.market_negotiations.find(x => x.id == this.market_negotiation_id);
+    }
     
+    /**
+    *   test if the parents are spun
+    */
+    isSpun() {
+        return this.is_repeat && this.parent_negotiation && this.parent_negotiation.is_repeat;
+    }
 
 }

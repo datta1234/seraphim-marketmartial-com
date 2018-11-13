@@ -7,6 +7,7 @@
         <ibar-negotiation-history-market 
          :message="history_message"
          :history="marketRequest.quotes" 
+         :market-request="marketRequest"
          v-if="marketRequest.quotes && !marketRequest.chosen_user_market" 
          class="mb-3"
          @update-on-hold="setUpProposal" 
@@ -18,9 +19,13 @@
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
     <template v-if="last_is_self">
-        <p class="text-center">
-            Your levels have been sent.
-        </p>
+        <b-row>
+            <b-col cols="10">
+                <p class="text-center">
+                    Your levels have been sent.
+                </p>
+            </b-col>
+        </b-row>
     </template>
     <template v-if="!is_trading && !last_is_self">
         
