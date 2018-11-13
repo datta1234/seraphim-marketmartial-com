@@ -42,6 +42,9 @@ export default {
         'callback': {
             type: Function
         },
+        'oldValue': {
+            type: String
+        }
     },
     data()
     {
@@ -128,6 +131,7 @@ export default {
     },
 
     mounted() {
+        this.params.code = this.oldValue ? this.oldValue : '';
     }
 }
 
