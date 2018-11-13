@@ -410,10 +410,10 @@ class UserMarketRequest extends Model
                     \Log::info(["last negotiation",$lastNegotiation->marketNegotiationParent]);
 
 
-                    // if($lastNegotiation->isTraded() || $lastNegotiation->marketNegotiationParent->isTraded())
-                    // {
-                    //     return true;
-                    // }
+                    if($lastNegotiation->isTraded() || $lastNegotiation->marketNegotiationParent->isTraded())
+                    {
+                        return true;
+                    }
 
                     return $lastNegotiation->is_repeat  && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {

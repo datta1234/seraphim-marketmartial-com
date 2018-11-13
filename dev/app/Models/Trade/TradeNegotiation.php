@@ -135,8 +135,19 @@ class TradeNegotiation extends Model
        return $tradeConfirmation->setUp($this);
     }
 
+    public function getIsOfferForOrg($org_id)
+    {
+        if($this->initiateUser->organisation_id == $org_id)
+        {
+            return $this->is_offer;
+        }elseif ($this->recievingUser->organisation_id == $org_id) {
+            return !$this->is_offer;
+        }
+        return null;
+    }
 
 
+  
 
     public function preFormatted()
     {
@@ -145,13 +156,14 @@ class TradeNegotiation extends Model
         $sentToMe = $this->recievingUser->organisation_id == $loggedInUserOrganisationId;
 
         $data = [
+            "user_market_id"        => $this->user_market_id,
             "id"                    => $this->id,
             "traded"                => $this->traded,
             "trade_negotiation_id"  => $this->trade_negotiation_id,
             "is_offer"              => $this->is_offer,
             "is_distpute"           => $this->is_distpute,
             "sent_by_me"            => $sentByMe,
-            'sent_to_me'            => $sentToMe,
+            'sent_to_me'            => $sentToMe
         ];
 
         if($sentByMe || $sentToMe || $this->traded)

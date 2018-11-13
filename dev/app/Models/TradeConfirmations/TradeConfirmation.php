@@ -44,16 +44,16 @@ class TradeConfirmation extends Model
      * @var array
      */
     protected $fillable = [
-        "send_user_id",
-        "receiving_user_id",
-        "trade_negotiation_id",
-        "stock_id",
-        "market_id",
-        "send_trading_account_id",
-        "receiving_trading_account_id",
-        "trade_confirmation_status_id",
-        "trade_structure_id",
-        "user_market_request_id"
+        'send_user_id',
+        'receiving_user_id',
+        'trade_negotiation_id',
+        'stock_id',
+        'market_id',
+        'trade_structure_id',
+        'user_market_request_id',
+        'send_trading_account_id',
+        'receiving_trading_account_id',
+        'trade_confirmation_status_id'
     ];
 
 
@@ -220,8 +220,8 @@ class TradeConfirmation extends Model
     public function canInteract()
     {
         $current_org_id =  $this->resolveOrganisationId();
-        $is_sender =   $current_org_id == $this->sendUser->organisation->id;
-        $is_reciever = $current_org_id == $this->recievingUser->organisation->id;
+        $is_sender =   $current_org_id == $this->sendUser->organisation_id;
+        $is_reciever = $current_org_id == $this->recievingUser->organisation_id;
         $senderStatuses = [1,3];
         $receiverStatuses = [2,5];
         
@@ -586,8 +586,7 @@ public function preFormatStats($user = null, $is_Admin = false)
 
             $marketNegotiation = $tradeNegotiation->marketNegotiation;
             $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
-
-            $tradeConfirmation = self::create([
+            $this->fill([
                 'send_user_id' => $tradeNegotiation->initiate_user_id,
                 'receiving_user_id' => $tradeNegotiation->recieving_user_id,
                 'trade_negotiation_id' => $tradeNegotiation->id,
@@ -599,6 +598,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 'receiving_trading_account_id' => null,
                 'trade_confirmation_status_id' =>1,
             ]);
+            $this->save();
 
 
 
@@ -607,9 +607,9 @@ public function preFormatStats($user = null, $is_Admin = false)
             $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
             foreach($groups as $tradeStructureGroup) {
 
-                $tradeGroup = $tradeConfirmation->tradeConfirmationGroups()->create([
+                $tradeGroup = $this->tradeConfirmationGroups()->create([
                     'trade_structure_group_id'  =>  $tradeStructureGroup->id,
-                    'trade_confirmation_id'     =>  $tradeConfirmation->id,
+                    'trade_confirmation_id'     =>  $this->id,
                     "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
                     'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
                 ]);
@@ -617,7 +617,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
             }
 
-            return $tradeConfirmation;
+            return $this;
         } 
 
      /**
@@ -636,13 +636,7 @@ public function preFormatStats($user = null, $is_Admin = false)
 
             $value = null;
             switch ($item->title) {
-                case 'is_offer':
-                $value = $tradeNegotiation->is_offer ? 1 : 0;
-                break;
-                case 'Put':
-                $value = null;
-                break;
-                case 'Call':
+                case 'is_put':
                 $value = null;
                 break;
                 case 'Volatility':
@@ -659,6 +653,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 break;
                 case 'Contract':
 
+
                 if($isOption)
                 {
                     $value = $tradeNegotiation->quantity; //quantity   
@@ -669,7 +664,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 break;
             }
 
-            if($item->title =="Net Premiums" || $item->title =="is_offer")
+            if($item->title =="Net Premiums")
             {
 
                 $tradeGroup->tradeConfirmationItems()->create([
@@ -685,6 +680,23 @@ public function preFormatStats($user = null, $is_Admin = false)
                     'title' => $item->title,
                     'value' =>  $value,
                     "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+            }else if($item->title == "is_offer")
+            {
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id),
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id),
+                    "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
 
