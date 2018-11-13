@@ -50,19 +50,16 @@
     <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
     <b-col cols="12">
+
         <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
                     <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
                         <template v-if="index == 0">
                             {{ tradeNegotiation.getTradingText() }}
                         </template>
-
                         <ul class="text-my-org">
                             <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
                         </ul>
-                        <template v-if="tradeNegotiation.sent_by_me && lastTradeNegotiation.id == tradeNegotiation.id">
-                            With counterparty. Awaiting response
-                        </template>
                     </template>
                     <div v-else class="text-my-org text-center">
                         {{ tradeNegotiation.getTradingText() }}
@@ -70,7 +67,7 @@
                 </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ lastTradeNegotiation.getTradingText() }}
+                {{ firstTradeNegotiation.getTradingText() }}
         </div>
     </b-col> 
 
@@ -107,6 +104,9 @@
         },
         lastTradeNegotiation: function(){
             return this.marketNegotiation.getLastTradeNegotiation();
+        },
+        firstTradeNegotiation: function(){
+            return this.marketNegotiation.getFirstTradeNegotiation();
         },
         canBid: function(){
             let source = this.marketNegotiation.getAmountSource("bid");
@@ -176,7 +176,7 @@
         }
     },
     mounted() {
-         this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
+        this.conditionAttr = Object.keys(this.$root.config("condition_titles"));
     }
  }
 </script>

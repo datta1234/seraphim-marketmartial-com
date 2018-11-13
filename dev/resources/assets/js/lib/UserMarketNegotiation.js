@@ -390,13 +390,31 @@ export default class UserMarketNegotiation extends BaseModel {
 
     getLastTradeNegotiation()
     {
-        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[this.trade_negotiations.length - 1] : null;
+        if(this.trade_negotiations.length > 0)
+        {
+         let lastNegotiation = this.trade_negotiations[this.trade_negotiations.length - 1];
+         lastNegotiation.setUserMarket(this);
+         return lastNegotiation;
+        }
+        else
+        {
+            return null;
+        } 
     }
 
 
     getFirstTradeNegotiation()
     {
-        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[0] : null;
+        if(this.trade_negotiations.length > 0)
+        {
+         let lastNegotiation = this.trade_negotiations[0];
+         lastNegotiation.setUserMarket(this);
+         return lastNegotiation;
+        }
+        else
+        {
+            return null;
+        }
     }
 
    /**
