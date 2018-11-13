@@ -35,7 +35,7 @@ class TradeConfirmationController extends Controller
     }
 
     public function update(TradeConfirmation $tradeConfirmation,Request $request)
-    {   
+    {
         $user = $request->user();
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
      
@@ -45,7 +45,8 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
 
-        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 2)
+        }
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 2)
         {
             $tradeConfirmation->trade_confirmation_status_id = 3;
             $tradeConfirmation->save();
@@ -74,7 +75,8 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
 
-        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        }
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 4;
@@ -110,13 +112,19 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
 
-        }else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        }
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 3;
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
         }
+
+        \Slack::postMessage([
+            "text"      => $tradeConfirmation->getMessage('confirmation_disputed'),
+            "channel"   => env("SLACK_ADMIN_DISPUTES_CHANNEL")
+        ], 'dispute');
 
         $data = $tradeConfirmation->fresh()->load([
             'tradeConfirmationGroups'=>function($q)

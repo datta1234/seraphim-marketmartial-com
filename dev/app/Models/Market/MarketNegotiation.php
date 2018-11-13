@@ -463,19 +463,12 @@ class MarketNegotiation extends Model
                 $marketRequest = $this->userMarket->userMarketRequest;
                 
                 $buyer  =   $tradeNegotiation->is_offer 
-                            ? $tradeNegotiation->recievingUser->organisation 
-                            : $tradeNegotiation->initiateUser->organisation;
+                            ? $tradeNegotiation->recievingUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->initiateUser->organisation()->pluck('title')[0];
                 $seller =   $tradeNegotiation->is_offer 
-                            ? $tradeNegotiation->recievingUser->organisation 
-                            : $tradeNegotiation->initiateUser->organisation;
-                $tradable   =   implode(',', $marketRequest->tradables->map(function($item){
-                                    return $item->title;
-                                })->toArray());
-                // $strike =   $this->;
-                // $expiry =   $this->;
-                // $qty    =   $this->;
-                //return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable." ".$strike." ".$expiry." in ".$qty.".";
-                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable;
+                            ? $tradeNegotiation->initiateUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->recievingUser->organisation()->pluck('title')[0];
+                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$marketRequest->getSummary();
 
             break;
             case 'fok_timeout':
@@ -880,12 +873,9 @@ class MarketNegotiation extends Model
                 $this->tradeNegotiations()->save($tradeNegotiation);
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
-                        "as_user"   => false,
-                        "icon_emoji"=> ":alarm_clock:",
-                        "username"  => "Trade-BOT",
                         "text"      => $this->getMessage('market_traded'),
                         "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
-                    ]);
+                    ], 'trade');
                 }
                
                 if($newMarketNegotiation )
@@ -1157,12 +1147,9 @@ class MarketNegotiation extends Model
                 // notify admin
                 $title_initiator = $this->user->organisation->title;
                 \Slack::postMessage([
-                    "as_user"   => false,
-                    "icon_emoji"=> ":alarm_clock:",
-                    "username"  => "Timeout-BOT",
                     "text"      => $this->getMessage('fok_timeout'),
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-                ]);
+                ], 'timeout');
             }
         }
     }
@@ -1237,12 +1224,9 @@ class MarketNegotiation extends Model
             $this->userMarket->userMarketRequest->notifyRequested();
 
             \Slack::postMessage([
-                "as_user"   => false,
-                "icon_emoji"=> ":alarm_clock:",
-                "username"  => "Timeout-BOT",
                 "text"      => $this->getMessage('trade_at_best_timeout'),
                 "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-            ]);
+            ], "timeout");
 
         } else {
             $this->is_private = false; // ensure it stays open if its the responses

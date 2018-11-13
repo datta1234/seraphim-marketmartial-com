@@ -163,6 +163,20 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
     }
 
+    /**
+    * Return string message
+    * @return String
+    */
+    public function getMessage($scenario) {
+        switch($scenario) {
+            case 'confirmation_disputed':
+                $user = ( $this->trade_confirmation_status_id == 3 ? $this->recievingUser : $this->sendUser );
+                $marketRequest = $this->marketRequest;
+                return "Dispute by ".$user->full_name." ".$user->cell_phone." for ".$marketRequest->getSummary().".";
+            break;
+        }
+    }
+
     public function notifyConfirmation($organisation,$message)
     {
         $sendOrg = $this->sendUser->organisation;
