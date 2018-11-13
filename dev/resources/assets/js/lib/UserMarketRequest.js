@@ -374,6 +374,7 @@ export default class UserMarketRequest extends BaseModel {
                 return 'rolls';
             break;
         };
+        return null;
     }
 
     defaultQuantity()

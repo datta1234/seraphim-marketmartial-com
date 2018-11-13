@@ -52,10 +52,10 @@
                     </p>
                 </b-col>
             </b-row>
-               <b-row class="justify-content-md-center" v-if="vm_message">
-                <b-col class="mt-2">
+            <b-row class="justify-content-md-center" v-if="vm_message">
+                <b-col cols="10" class="mt-2">
                     <p class="text-center">
-                        <small >{{ vm_message }}</small>
+                        {{ vm_message }}
                     </p>
                 </b-col>
             </b-row>
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+
     export default {
         props: {
             history: {
@@ -71,12 +73,23 @@
             },
             message:{
                 type: String
+            },
+            marketRequest: {
+                type: UserMarketRequest
             }
         },
         computed: {
             vm_message: function()
             {
                 return (this.history_message == null) ? this.message : this.history_message;
+            },
+            spread_message: function() {
+                let ts = this.marketRequest.trade_structure_slug;
+                console.log("Trade Structure: ", ts);
+                if(['efp', 'efp_switch', 'rolls'].indexOf(ts) > -1) {
+                    return "POINT SPREAD";
+                }
+                return "VOL SPREAD";
             }
         },
         data() {
@@ -93,7 +106,7 @@
                     return "OFFER ONLY";
                 }
                 if(item.vol_spread != null) {
-                    return item.vol_spread+" VOL SPREAD";
+                    return item.vol_spread+' '+this.spread_message;
                 }
                 return "";
             },

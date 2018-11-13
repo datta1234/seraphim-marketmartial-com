@@ -152,12 +152,10 @@ class UserMarketRequest extends Model
 
     public function getRatioAttribute() {
         $first = null;
-        \Log::info([" Items: ", $this->id, $this->getDynamicItems('Quantity')]);
         return $this->getDynamicItems('Quantity')->reduce(function($out, $item) use (&$first) {
             if($first == null) {
                 $first = floatval($item);
             }
-            // \Log::info([" Ratio: ", $this->id, $first, $item]);
             if($first != $item) {
                 $out = true;
             }
@@ -449,10 +447,8 @@ class UserMarketRequest extends Model
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             // if($lastNegotiation->lastTradeNegotiation)
             // {
-            //     \Log::info(["the last negotiation",$lastNegotiation->lastTradeNegotiation->id]);
             // }else
             // {
-            //     \Log::info(["no last lastTradeNegotiation",$lastNegotiation->id]);
 
             // }
 
@@ -467,7 +463,6 @@ class UserMarketRequest extends Model
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
         
-        \Log::info(["market open",$marketOpen]);
 
         // conditions
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
@@ -556,12 +551,14 @@ class UserMarketRequest extends Model
                  $negotiator =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
                         $query->organisationInvolved($current_org_id);
                 })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+                 // $negotiator = $lastNegotiation->user->organisation_id == $current_org_id;
 
                 $counter =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
                         $query->whereHas('marketNegotiationParent',function($q) use ($current_org_id){
                             $q->organisationInvolved($current_org_id);
                         });
                 })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+                // $counter = $lastNegotiation->counterUser->organisation_id == $current_org_id;
 
                 if( $negotiator )
                 {

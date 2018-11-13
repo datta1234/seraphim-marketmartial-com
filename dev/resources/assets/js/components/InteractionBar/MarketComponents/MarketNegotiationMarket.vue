@@ -5,16 +5,16 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
                         </div>
                     </b-form>
                 </b-col>
@@ -62,6 +62,26 @@
                     this.marketNegotiation.bid = this.old.bid;
                     this.marketNegotiation.offer = this.old.offer;
                 }
+            },
+            'disabled_bid'(nv, ov) {
+                if(nv) {
+                    if(this.marketNegotiation.bid_qty) {
+                        this.old.bid_qty = this.marketNegotiation.bid_qty;
+                        this.marketNegotiation.bid_qty = null;
+                    }
+                } else {
+                    this.marketNegotiation.bid_qty = this.old.bid_qty;
+                }
+            },
+            'disabled_offer'(nv, ov) {
+                if(nv) {
+                    if(this.marketNegotiation.offer_qty) {
+                        this.old.offer_qty = this.marketNegotiation.offer_qty;
+                        this.marketNegotiation.offer_qty = null;
+                    }
+                } else {
+                    this.marketNegotiation.offer_qty = this.old.offer_qty;
+                }
             }
         },
         data() {
@@ -69,8 +89,30 @@
                 old: {
                     bid: 0,
                     offer: 0,
+                    bid_qty: 0,
+                    offer_qty: 0
                 }
             };
+        },
+        computed: {
+            disabled_bid: function() {
+                // if both parents are spin and offer has value disabled
+                let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
+                let value = this.marketNegotiation.offer;
+                if(spun && value) {
+                    return true;
+                }
+                return false;
+            },
+            disabled_offer: function() {
+                // if both parents are spin and bid has value disabled
+                let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
+                let value = this.marketNegotiation.bid;
+                if(spun && value) {
+                    return true;
+                }
+                return false;
+            },
         },
         methods: {
             'is_empty': function(value) {
@@ -132,6 +174,8 @@
             }
         },
         mounted() {
+            this.old.offer_qty = this.marketNegotiation.offer_qty;
+            this.old.bid_qty = this.marketNegotiation.bid_qty;
             console.log(this.disabled);
         }
     }

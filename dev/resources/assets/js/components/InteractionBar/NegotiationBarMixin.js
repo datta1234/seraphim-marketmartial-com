@@ -321,9 +321,11 @@ export default {
             {
                 this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
                 this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
+                if(!this.last_negotiation.isSpun()) {
 
-                this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
-                this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+                    this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
+                    this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+                }
 
             }
             else if(this.maker_quote != null && (this.maker_quote.offer_qty != null || this.maker_quote.bid_qty != null) )
