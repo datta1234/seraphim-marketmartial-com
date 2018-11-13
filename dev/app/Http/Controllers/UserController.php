@@ -21,7 +21,25 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $user = $request->user();
-        
+
+        switch (\Auth::user()->setRequiredProfileStep()) {
+            case 'password':
+                return redirect()->route('user.edit_password');
+                break;
+            case 'email':
+                return redirect()->route('email.edit');
+                break;
+            case 'trade settings':
+                return redirect()->route('trade_settings.edit');
+                break;
+            case 'interest':
+                return redirect()->route('interest.edit');
+                break;
+            case 'profile':
+            default:
+                break;
+        }
+
         $organisations = Organisation::where('verified',true)
         ->orWhere(function($query) use ($user) {
             $query->whereHas('users',function($query) use ($user){
@@ -86,6 +104,11 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->update(['password'=>bcrypt($request->input('password'))]);
+
+        if(!$user->verifiedActiveUser() && !$user->completeProfile()) {
+            \Cache::put('user_password_complete_'.$user->id, true,1440);
+        }
+
         return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Password updated!') : redirect()->route('email.edit')->with('success', 'Password updated!');
     }
 

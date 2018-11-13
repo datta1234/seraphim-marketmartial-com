@@ -292,6 +292,54 @@ class User extends Authenticatable
     }
 
     /**
+     * Sets user's profile completion route
+     *
+     * @return String Route name to redirect
+     */
+    public function setRequiredProfileStep()
+    {
+        // Profile Check
+        if(!isset($this->work_phone)) {
+            //'work_phone' => 'required'
+            return 'user.edit';
+        }
+        
+        $has_defaults = true;
+        $default_label_ids = \App\Models\UserManagement\DefaultLabel::pluck('id');
+        //Loop through default_labels and check if account has emails with those id's
+        foreach ($default_label_ids as $key => $default_label_id) {
+            $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id);
+        }
+        // Emails Check
+        if(!$has_defaults) {
+            return 'email.edit';
+        }
+
+        //Interests Check
+        if(!isset($this->birthdate) && !isset($this->is_married) 
+            && !isset($this->has_children) && !isset($this->hobbies)) {
+            /*'birthdate'   => 'required',
+            'is_married'    => 'required',
+            'has_children'  => 'required',
+            'hobbies'       => 'required',*/
+            return 'interest.edit';
+        }
+
+        // Password Check
+        if(\Cache::has('user_password_complete_'.$this->id)) {
+            return 'user.edit_password';
+        }
+
+        // Trade Settings Check
+        if(\Cache::has('user_trade_settings_complete_'.$this->id)) {
+            return 'trade_settings.edit';
+        }
+
+        // Default to null if there is no required step
+        return null;
+    }
+
+    /**
      * Return a simple or query object based on the search term
      *
      * @param string $term

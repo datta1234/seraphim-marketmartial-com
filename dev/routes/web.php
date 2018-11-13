@@ -29,7 +29,7 @@ Route::get('/ping', function() {
     return response("pong");
 });
 
-Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','timeWindowPreventAction']], function () {
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
 
 	Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
