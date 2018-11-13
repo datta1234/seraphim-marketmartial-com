@@ -67,7 +67,12 @@ class UserController extends Controller
       
 
         $user->update($data);
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Profile updated!') : redirect()->route('user.edit_password')->with('success', 'Profile updated!');
+
+        if( $user->completeProfile() ) {
+            return redirect()->back()->with('success', 'Profile updated!');    
+        }
+        return redirect()->route($user->is_invited ? 'user.edit_password': 'email.edit')
+            ->with('success', 'Profile updated!');
     }
 
     public function editPassword(Request $request)
