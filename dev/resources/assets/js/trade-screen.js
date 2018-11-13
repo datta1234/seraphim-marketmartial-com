@@ -111,7 +111,7 @@ Vue.mixin({
          */
         formatRandQty(val) {
             let sbl = "R";
-            let calcVal = ( typeof val === 'number' ? val : parseInt(val) );
+            let calcVal = ( typeof val === 'number' ? val : parseFloat(val).toFixed(2) );
             //currently they want the format the same for all values
             switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
                 case 3: // 1 000 000 < x
