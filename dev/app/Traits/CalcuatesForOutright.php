@@ -25,13 +25,13 @@ trait CalcuatesForOutright {
 
         $singleStock = false;
         
-//         dd(
-// $future1,
-// $contracts1,
-// $expiry1,
-// $strike1 ,
-// $volatility1
-//         );
+        Log::info(
+            $future1,
+            $contracts1,
+            $expiry1,
+            $strike1 ,
+            $volatility1
+        );
 
         //determine weather put or call
  
