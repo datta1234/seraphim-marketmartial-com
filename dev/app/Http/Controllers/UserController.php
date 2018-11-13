@@ -22,24 +22,6 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        switch (\Auth::user()->setRequiredProfileStep()) {
-            case 'password':
-                return redirect()->route('user.edit_password');
-                break;
-            case 'email':
-                return redirect()->route('email.edit');
-                break;
-            case 'trade settings':
-                return redirect()->route('trade_settings.edit');
-                break;
-            case 'interest':
-                return redirect()->route('interest.edit');
-                break;
-            case 'profile':
-            default:
-                break;
-        }
-
         $organisations = Organisation::where('verified',true)
         ->orWhere(function($query) use ($user) {
             $query->whereHas('users',function($query) use ($user){
