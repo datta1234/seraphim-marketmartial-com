@@ -96,8 +96,7 @@ class TradeConfirmationGroup extends Model
             'user_market_request_group'     => $this->userMarketRequestGroup->preFormatted(),
             'trade_confirmation_items'      => 
             $this->tradeConfirmationItems()
-            ->where(function($query) use ($is_sender) {
-
+            ->where(function($query) use ($is_sender) {                
                 $query->whereNull('is_seller')
                 ->orWhere('is_seller',$is_sender);
             })

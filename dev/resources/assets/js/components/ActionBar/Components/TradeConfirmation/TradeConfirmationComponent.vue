@@ -28,7 +28,7 @@
 
             <tr v-for="option_group in trade_confirmation.option_groups">
                 <td>
-                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buy" : "sell"):'') }}
+                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buy" : "Sell"):'') }}
                 </td>
                 <td>
                     {{ option_group.underlying_title }}
@@ -37,7 +37,7 @@
                     {{ option_group.strike }} 
                 </td>
                 <td>
-                    {{ option_group.is_put ? "Put" : "call" }} 
+                    {{ option_group.is_put ? "Put" : "Call" }} 
                 </td>
                 <td>
                     -   
