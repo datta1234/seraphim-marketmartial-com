@@ -53,8 +53,16 @@ class Slack
      *
      * @return void
      */
-    public function postMessage($content)
+    public function postMessage($content, $preset_as = null)
     {
+        if($preset_as) {
+            $presets = config('slack.preset_users');
+            if( isset($presets[$preset_as]) ) {
+                $content["as_user"] = false;
+                $content = array_merge($content, $presets[$preset_as]);
+            }
+        }
+
         $response = $this->sendHttp('POST',[
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
