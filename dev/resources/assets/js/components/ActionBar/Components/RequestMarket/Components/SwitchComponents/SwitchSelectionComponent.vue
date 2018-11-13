@@ -35,7 +35,8 @@
                         </b-col>
                         <b-col cols="6">
                             <type-head-input-component  route="/trade/stock" 
-                                                        :callback="(stock, is_listed) => setSelectedStock(stock, is_listed, index)" 
+                                                        :callback="(stock, is_listed) => setSelectedStock(stock, is_listed, index)"
+                                                        :oldValue="previous_stock_values[index]"
                                                         class="w-75">
                             </type-head-input-component>
                             <p  v-if="stockFound(index)" 
@@ -110,6 +111,7 @@
                 stock_selection: null,
                 stock_listed: false,
                 markets_loaded: false,
+                previous_stock_values: [],
             };
         },
         methods: {
@@ -117,7 +119,6 @@
              * Sets the selected stock and calls the component callback method
              */
             selectStock() {
-                console.log("Options: ",this.switch_options);
                 let is_complete = false;
 
                 this.switch_options.forEach(switch_option => {
@@ -179,9 +180,34 @@
                 });
                 // Joins the Selected Underlying into title with format: Underlying vs. Underlying
                 return title.join(' vs. ');
+            },
+            setPreviousData() {
+                //Sets the previous values for an Option Switch
+                if(this.data.market_object.switch_options) {
+                    this.previous_stock_values = [];
+                    this.data.market_object.switch_options.forEach( (switch_option,index) => {
+                        Object.keys(switch_option).forEach(element => {
+                            if(this.switch_options[index].hasOwnProperty(element)){
+                                this.switch_options[index][element] = switch_option[element];
+                            }
+                        });
+                        //Sets the typeheads previous values
+                        this.previous_stock_values.push(
+                            switch_option.stock_selection ? 
+                                switch_option.stock_selection.code : null
+                        );
+                    });
+                } else {
+                    //Sets the previous values for an EFP Switch
+                    if(this.data.market_object.markets){
+                        this.data.market_object.markets.forEach( (market,index) => {
+                            this.switch_options[index].index_market = market;
+                        });
+                    }
+                }
             }
         },
-        mounted() {
+        created() {
             let options = {};
             this.data.market_types.forEach( element => {
                 switch(element.title) {
@@ -197,7 +223,6 @@
             });
             this.switch_options.push(Object.assign({}, options));
             this.switch_options.push(Object.assign({}, options));
-
             if(this.data.market_types.length > 1) {
                 this.switch_options[0].is_index = true;
             } else {
@@ -207,6 +232,7 @@
             }
             this.markets_loaded = false,
             this.loadIndexMarkets();
+            this.setPreviousData();
         }
     }
 </script>

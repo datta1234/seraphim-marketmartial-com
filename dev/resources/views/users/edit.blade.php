@@ -18,7 +18,7 @@
 				@slot('body')
 
 	<div class="row">
-		<div class="col-md-8 offset-md-2">
+		<div class="col-md-10 offset-md-1">
 			@if($is_admin_update)
 				{!! Form::model($user,['route' => ['admin.user.profile.update', $user->id]]) !!}
 			@else
@@ -40,7 +40,7 @@
 			            </div>
 
 			              <div class="form-group row">
-			                    {{ Form::label('cell_phone','Cell Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                    {{ Form::label('cell_phone','Phone Number', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
 			                  {{ Form::text('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Cell Phone here here...']) }}
 
@@ -54,7 +54,7 @@
 			            </div>
 
 			             <div class="form-group row">
-			                    {{ Form::label('work_phone','Work Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                    {{ Form::label('work_phone','Alternative Phone Number', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
 			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Work Phone here here...']) }}
 

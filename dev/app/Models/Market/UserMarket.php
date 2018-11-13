@@ -290,17 +290,13 @@ class UserMarket extends Model
         })->first();
         $this->update(['is_on_hold'=>false]);
 
-        \Log::info(["here1: ", $data['volatilities']]);
         if(isset($data['volatilities']) && !empty($data['volatilities'])) {
             $vols = collect($data['volatilities'])->keyBy('group_id');
-            \Log::info(["here2: ", $vols]);
             $groups = $this->volatilities;
-            \Log::info(["here3: ", $groups]);
             foreach($groups as $group) {
                 if(isset($vols[$group->user_market_request_group_id])) {
                     $group->volatility = $vols[$group->user_market_request_group_id]['value'];
                     $done = $group->save();
-                    \Log::info(["here4: ", $done, $vols[$group->user_market_request_group_id]['value']]);
                 }
             }
         }
@@ -376,12 +372,12 @@ class UserMarket extends Model
     {
            
 
-            \Log::info(["conditions: ", $data]);
             $marketNegotiation = new MarketNegotiation($data);
             $marketNegotiation->user_id = $user->id;
 
             $counterNegotiation = $this->findCounterNegotiation($user);
 
+            // trade at best get improved
             if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
             {
                 $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
@@ -390,7 +386,27 @@ class UserMarket extends Model
             if($counterNegotiation)
             {
                 $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
-                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+
+                //if parents are repeat
+                if($counterNegotiation->is_repeat 
+                    && $counterNegotiation->marketNegotiationParent 
+                    && $counterNegotiation->marketNegotiationParent->is_repeat
+                ) {
+                    if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
+                        // @TODO: well shit
+                        throw Exception("Can Only Improve One Side On SPIN");
+                    }
+                    elseif ($marketNegotiation->bid != null) {
+                        // improved bid
+                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
+                    }
+                    elseif($marketNegotiation->offer != null) {
+                        // improved offer
+                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
+                    }
+                } else {
+                    $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
+                }
 
                 // enforce responses to have the same condition
                 if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
@@ -530,12 +546,9 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
-                                            \Log::info("counter: $active");
                                             if($active === null) {
                                                 $active = $this->isInterest();
-                                                \Log::info("interest: $active");
                                             }
-                                            \Log::info("active: $active");
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
                                             return [

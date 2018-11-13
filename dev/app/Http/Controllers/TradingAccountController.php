@@ -89,7 +89,11 @@ class TradingAccountController extends Controller
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
+        if($user->completeProfile()) {
+            \Cache::put('user_trade_settings_complete_'.$user->id, true,1440);
+        }
+
+        return $user->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
         
     }
 }
