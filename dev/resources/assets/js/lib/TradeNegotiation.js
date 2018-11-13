@@ -20,6 +20,7 @@ export default class TradeNegotiation extends BaseModel {
 		    id: "",
 		    quantity: "",
             trade_negotiation_id: "",
+            user_market_id: "",
 		    traded: false,
 		    is_offer: null,
 		    is_distpute: false,
@@ -90,29 +91,29 @@ export default class TradeNegotiation extends BaseModel {
         };
     }
 
+
     getTradingText()
     {
-        let text;
-        
-        
-        console.log("get trading text",this);
 
+        console.log(this.id,this.is_offer);
+
+        let text;
         if(this.sent_by_me)
         {
-            // console.log("one");
             text =  this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid ;
-
         }else if(this.sent_to_me)
         {
-            // console.log("two");
-
             text = this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer :"You bought @ "+this.getUserMarketNegotiation().bid;
+        }else if(this.traded)
+        {
+            text = "Traded at "; 
+            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid; 
         }else
         {
             text = "Trading at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid; 
-        
+            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;  
         }
+
         return text;
     }
 

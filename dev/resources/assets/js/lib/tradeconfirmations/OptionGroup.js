@@ -14,7 +14,7 @@ export default class OptionGroup {
     setByStructure(structureGroup)
     {
         this.contracts = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Contract' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Contract' }).value) : null;
-        this.is_offer = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }) ? !!structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }).value : null; 
+        this.is_offer = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }) ? structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }).value == 1 : null; 
         this.volatility = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Volatility' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Volatility' }).value) : null;
         this.expires_at = structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Expiration Date' }) ? this.setUpDate(structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Expiration Date' }).value) : null;
         this.strike = structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }) ? this.setUpNumbers(structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }).value) : null;

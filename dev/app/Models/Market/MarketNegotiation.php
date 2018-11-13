@@ -463,18 +463,13 @@ class MarketNegotiation extends Model
                 $marketRequest = $this->userMarket->userMarketRequest;
                 
                 $buyer  =   $tradeNegotiation->is_offer 
-                            ? $tradeNegotiation->recievingUser->organisation 
-                            : $tradeNegotiation->initiateUser->organisation;
+                            ? $tradeNegotiation->recievingUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->initiateUser->organisation()->pluck('title')[0];
                 $seller =   $tradeNegotiation->is_offer 
-                            ? $tradeNegotiation->recievingUser->organisation 
-                            : $tradeNegotiation->initiateUser->organisation;
-                $tradable   =   implode(',', $marketRequest->tradables->map(function($item){
-                                    return $item->title;
-                                }));
-                // $strike =   $this->;
-                // $expiry =   $this->;
-                // $qty    =   $this->;
-                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$tradable." ".$strike." ".$expiry." in ".$qty.".";
+                            ? $tradeNegotiation->initiateUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->recievingUser->organisation()->pluck('title')[0];
+                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$marketRequest->getSummary();
+
             break;
             case 'fok_timeout':
                 $marketReq = $this->userMarket->userMarketRequest;
@@ -666,6 +661,8 @@ class MarketNegotiation extends Model
 
     public function isTraded()
     {
+        \Log::info(["here we are",$this->id,$this->tradeNegotiations]);
+
         return $this->tradeNegotiations()->where(function($q){
             return $q->where('traded',true);  
         })->exists();
@@ -876,12 +873,9 @@ class MarketNegotiation extends Model
                 $this->tradeNegotiations()->save($tradeNegotiation);
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
-                        "as_user"   => false,
-                        "icon_emoji"=> ":alarm_clock:",
-                        "username"  => "Trade-BOT",
                         "text"      => $this->getMessage('market_traded'),
                         "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
-                    ]);
+                    ], 'trade');
                 }
                
                 if($newMarketNegotiation )
@@ -976,26 +970,6 @@ class MarketNegotiation extends Model
         $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
         $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
 
-        // // not needed
-        // $bid_source = $this->marketNegotiationSource('bid')->user->organisation_id;
-        // $bid_source = ( 
-        //     $bid_source == $currentUserOrganisationId ? 'my_org' :
-        //     (   $bid_source == $marketMakerUserOrganisationId ? 'maker' : 
-        //         (   $bid_source == $interestUserOrganisationId ? 'interest' : 
-        //             'other'
-        //         )
-        //     )
-        // );
-        // $offer_source = $this->marketNegotiationSource('offer')->user->organisation_id;
-        // $offer_source = ( 
-        //     $offer_source == $currentUserOrganisationId ? 'my-org' :
-        //     (   $offer_source == $marketMakerUserOrganisationId ? 'maker' : 
-        //         (   $offer_source == $interestUserOrganisationId ? 'interest' : 
-        //             'other'
-        //         )
-        //     )
-        // );
-
         $data = [
             'id'                    => $this->id,
             "market_negotiation_id" => $this->market_negotiation_id,
@@ -1047,64 +1021,10 @@ class MarketNegotiation extends Model
         return $this->tradeNegotiations()->first()->is_offer ? $this->offer : $this->bid;
     }
 
-
-    //     /**
-    // * Return pre formatted request for frontend
-    // * @return \App\Models\Market\UserMarket
-    // */
-    // public function preFormattedQuote()
-    // {
-
-    //     $currentUserOrganisationId = $this->user->organisation_id;
-    //     $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
-    //     $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
-    //     $loggedInUserOrganisationId = $this->resolveOrganisationId();
-
-
-    //     //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
-
-    //      $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
-    //      $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
-
-    //     $data = [
-    //         'id'                    => $this->id,
-    //         "market_negotiation_id" => $this->market_negotiation_id,
-    //         "user_market_id"        => $this->user_market_id,
-    //         "bid"                   => $this->bid,
-    //         "offer"                 => $this->offer,
-    //         "bid_display"           => $this->bid,
-    //         "offer_display"         => $this->offer,
-    //         "offer_qty"             => $this->offer_qty,
-    //         "bid_qty"               => $this->bid_qty,
-    //         "bid_premium"           => $this->bid_premium,
-    //         "offer_premium"         => $this->offer_premium,
-    //         "future_reference"      => $this->future_reference,
-    //         "has_premium_calc"      => $this->has_premium_calc,
-    //         "is_repeat"             => $this->is_repeat,
-    //         "is_accepted"           => $this->is_accepted,
-    //         "is_private"            => $this->is_private,
-    //         "is_killed"             => $this->is_killed,
-    //         "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
-    //         "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
-    //         "cond_fok_spin"         => $this->cond_fok_spin,
-    //         "cond_timeout"          => $this->cond_timeout,
-    //         "cond_is_oco"           => $this->cond_is_oco,
-    //         "cond_is_subject"       => $this->cond_is_subject,
-    //         "cond_buy_mid"          => $this->cond_buy_mid,
-    //         "cond_buy_best"         => $this->cond_buy_best,
-    //         "is_interest"           => $is_interest,
-    //         "is_maker"              => $is_maker,
-    //         "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
-    //         "time"                  => $this->time,
-    //         "created_at"            => $this->created_at->toIso8601String(),
-    //         "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
-    //             return $tradeNegotiation->preFormatted();
-    //         })
-
-    //     ];
-
-    //     return $data;
-    // }
+      public function getvolatilitySpredAttribute()
+    {
+        return $this->tradeNegotiations()->first()->is_offer ? $this->offer : $this->bid;
+    }
 
 
     /* ============================== Conditions Start ============================== */
@@ -1153,12 +1073,9 @@ class MarketNegotiation extends Model
                 // notify admin
                 $title_initiator = $this->user->organisation->title;
                 \Slack::postMessage([
-                    "as_user"   => false,
-                    "icon_emoji"=> ":alarm_clock:",
-                    "username"  => "Timeout-BOT",
                     "text"      => $this->getMessage('fok_timeout'),
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-                ]);
+                ], 'timeout');
             }
         }
     }
@@ -1233,12 +1150,9 @@ class MarketNegotiation extends Model
             $this->userMarket->userMarketRequest->notifyRequested();
 
             \Slack::postMessage([
-                "as_user"   => false,
-                "icon_emoji"=> ":alarm_clock:",
-                "username"  => "Timeout-BOT",
                 "text"      => $this->getMessage('trade_at_best_timeout'),
                 "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-            ]);
+            ], "timeout");
 
         } else {
             $this->is_private = false; // ensure it stays open if its the responses

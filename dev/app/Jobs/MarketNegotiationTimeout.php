@@ -53,12 +53,9 @@ class MarketNegotiationTimeout implements ShouldQueue
                 if($marketNegotiation->cond_fok_spin == true) {
                     // Notify The Admin 
                     \Slack::postMessage([
-                        "as_user"   => false,
-                        "icon_emoji"=> ":alarm_clock:",
-                        "username"  => "Timeout-BOT",
                         "text"      => $marketNegotiation->getMessage('fok_timeout'),
                         "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-                    ]);
+                    ], 'timeout');
                 }
             }
 
@@ -80,12 +77,9 @@ class MarketNegotiationTimeout implements ShouldQueue
                 $title_responder = $marketNegotiation->user->organisation->title;
                 $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
                 \Slack::postMessage([
-                    "as_user"   => false,
-                    "icon_emoji"=> ":alarm_clock:",
-                    "username"  => "Timeout-BOT",
                     "text"      => "A $term at Best Timeout has occured, Trading Between _$title_initiator_ and _$title_responder_ @ *$level*",
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-                ]);
+                ], 'timeout');
             }
         }
         return true;

@@ -54,7 +54,9 @@ class TradeConfirmationItem extends Model
     {
          return [
             'title' => $this->title,
-            'value' => $this->value
+            'value' => $this->value,
+            'is_seller' => $this->is_seller
+
         ];
     }
 }
