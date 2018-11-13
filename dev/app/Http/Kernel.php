@@ -60,9 +60,11 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'redirectOnFirstLogin' => \App\Http\Middleware\RedirectOnFirstLogin::class,
+        'RedirectProfileStep' => \App\Http\Middleware\RedirectProfileStep::class,
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
         '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
+        'verified' =>\App\Http\Middleware\CheckVerified::class,
     ];
 }

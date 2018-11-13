@@ -8,7 +8,7 @@
                     </b-col>
                     <b-col cols="auto">
                         <div class="market-tab-strikes">
-                            {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}
+                           <span v-html="strike"></span>
                         </div>
                     </b-col>
                 </b-row>
@@ -57,6 +57,11 @@
             };
         },
         computed: {
+            strike: function() {
+                let group = 'default';
+                let func = this.marketRequest.trade_items[group].tradable.is_stock ? 'formatRandQty' : 'splitValHelper';
+                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3)
+            },
             marketState: function() {
                 return {
                     'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',

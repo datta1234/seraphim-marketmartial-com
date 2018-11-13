@@ -5,9 +5,9 @@
                 <ibar-trade-request :market-negotiation="item" :selectable="isLast(item) && !item.is_killed" ></ibar-trade-request>
             </template>
             <b-row class="justify-content-md-center" v-if="message">
-                <b-col class="mt-2">
+                <b-col cols="10" class="mt-2">
                     <p class="text-center">
-                        <small >{{ message }}</small>
+                        {{ message }}
                     </p>
                 </b-col>
             </b-row>

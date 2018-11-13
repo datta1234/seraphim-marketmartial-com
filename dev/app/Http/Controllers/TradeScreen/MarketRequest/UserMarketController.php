@@ -137,7 +137,7 @@ class UserMarketController extends Controller
         {
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
-            $organisations[] = $myOrganisation = $request->user()->organisation;
+            $myOrganisation = $request->user()->organisation;
             $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);

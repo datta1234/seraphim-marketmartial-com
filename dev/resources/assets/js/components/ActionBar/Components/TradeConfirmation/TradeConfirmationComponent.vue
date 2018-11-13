@@ -28,7 +28,7 @@
 
             <tr v-for="option_group in trade_confirmation.option_groups">
                 <td>
-                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buy" : "sell"):'') }}
+                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sell"):'') }}
                 </td>
                 <td>
                     {{ option_group.underlying_title }}
@@ -37,7 +37,7 @@
                     {{ option_group.strike }} 
                 </td>
                 <td>
-                    {{ option_group.is_put ? "Put" : "call" }} 
+                    {{ option_group.is_put ? "Put" : "Call" }} 
                 </td>
                 <td>
                     -   
@@ -49,7 +49,7 @@
                     {{ option_group.expires_at }}                            
                 </td>
                 <td>
-                    {{ option_group.volatility }}
+                    {{ option_group.volatility }} %
                 </td>
                 <td>
                     {{ option_group.gross_prem }}
@@ -78,7 +78,7 @@
           <tbody>
             <tr v-for="(future_group, key) in trade_confirmation.future_groups">
                 <td>
-                  {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buy" : "Sell"):'') }}
+                  {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
                 </td>
                 <td>
                   {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}

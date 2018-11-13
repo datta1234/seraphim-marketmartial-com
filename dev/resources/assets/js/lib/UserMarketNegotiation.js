@@ -390,13 +390,31 @@ export default class UserMarketNegotiation extends BaseModel {
 
     getLastTradeNegotiation()
     {
-        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[this.trade_negotiations.length - 1] : null;
+        if(this.trade_negotiations.length > 0)
+        {
+         let lastNegotiation = this.trade_negotiations[this.trade_negotiations.length - 1];
+         lastNegotiation.setUserMarket(this);
+         return lastNegotiation;
+        }
+        else
+        {
+            return null;
+        } 
     }
 
 
     getFirstTradeNegotiation()
     {
-        return  this.trade_negotiations.length > 0 ? this.trade_negotiations[0] : null;
+        if(this.trade_negotiations.length > 0)
+        {
+         let lastNegotiation = this.trade_negotiations[0];
+         lastNegotiation.setUserMarket(this);
+         return lastNegotiation;
+        }
+        else
+        {
+            return null;
+        }
     }
 
    /**
@@ -455,6 +473,16 @@ export default class UserMarketNegotiation extends BaseModel {
     get ratio() {
         return this.bid_qty / this.offer_qty;
     }
+
+    get parent_negotiation() {
+        return this._user_market.market_negotiations.find(x => x.id == this.market_negotiation_id);
+    }
     
+    /**
+    *   test if the parents are spun
+    */
+    isSpun() {
+        return this.is_repeat && this.parent_negotiation && this.parent_negotiation.is_repeat;
+    }
 
 }
