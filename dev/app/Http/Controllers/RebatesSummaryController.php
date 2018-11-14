@@ -32,12 +32,12 @@ class RebatesSummaryController extends Controller
         foreach ($date_grouped_rebates as $date => $rebate) {
             // Calculate the total organisation rebate amount for the year
             $total_rebates += $rebate->sum(function ($single) {
-                return $single->bookedTrade->amount;
+                return $single->amount;
             });
 
             // group market
             $date_grouped_rebates[$date] = $rebate->groupBy(function ($item, $key) {
-                return $item->bookedTrade->market->title;
+                return $item->userMarketRequest->market->title;
             });
         }
 
@@ -50,7 +50,7 @@ class RebatesSummaryController extends Controller
                 foreach ($market_rebates[$maket] as $key => $rebate) {
                     //dd($rebates);
                     $market_rebates[$maket][$key] = $rebates->sum(function ($single) {
-                        return $single->bookedTrade->amount;
+                        return $single->amount;
                     });
                 }
             }

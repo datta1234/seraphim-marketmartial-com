@@ -153,6 +153,7 @@ class BookedTrade extends Model
                     $q->where('title','like',"%$term%");
                 });
             })
+            // @TODO - Rework logic to check tradables for stock and market
             /*->whereHas('stock',function($q) use ($term){
                 $q->where('code','like',"%$term%");
             })

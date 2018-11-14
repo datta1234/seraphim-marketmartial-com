@@ -17651,7 +17651,7 @@ input:checked + .slider:before {
   color: #fff;
   overflow: hidden;
   position: fixed;
-  z-index: 1030;
+  z-index: 1015;
   width: 325px;
   padding-bottom: 150px;
   margin-bottom: 150px;

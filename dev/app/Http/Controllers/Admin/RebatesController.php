@@ -93,9 +93,9 @@ class RebatesController extends Controller
     public function update(RebateUpdateRequest $request, Rebate $rebate)
     {
         if( $request->has('is_paid') ) {
-            // deactivate and reactivate logic
+            
             $rebate_update_result = $rebate->update([
-                'is_paid' => $request->input('is_paid'),
+                'is_paid' => $request->input('is_paid')
             ]);
 
             if($rebate_update_result){
@@ -107,6 +107,24 @@ class RebatesController extends Controller
             return response()->json([
                 'data' => null,
                 'message' => 'Failed to change rebate Paid status.'
+            ],500);
+        }
+
+        if( $request->has('new_amount') ) {
+            // deactivate and reactivate logic
+            $rebate_update_result = $rebate->update([
+                'amount' => $request->input('new_amount'),
+            ]);
+
+            if($rebate_update_result){
+                return response()->json([
+                    'data' => $rebate->preFormatAdmin(),
+                    'message' => 'Rebate Amount successfully updated.'
+                ]);
+            }
+            return response()->json([
+                'data' => null,
+                'message' => 'Failed to update rebate amount.'
             ],500);
         }
     }
@@ -178,7 +196,7 @@ class RebatesController extends Controller
         $rebates = Rebate::where('is_paid', true)->whereYear('trade_date', Carbon::now()->year)->get();
        
         $total_rebates = $rebates->sum(function ($rebate) {
-            return $rebate->bookedTrade->amount;
+            return $rebate->amount;
         });
 
         $graph_data = $rebates->reduce(function ($carry, $item) use ($markets){
@@ -186,7 +204,7 @@ class RebatesController extends Controller
                 $carry[$item->user->organisation->title] = array_fill_keys( $markets->values()->toArray() , 0);
             }
 
-            $carry[$item->user->organisation->title][$item->bookedTrade->market->title] +=  $item->bookedTrade->amount;
+            $carry[$item->user->organisation->title][$item->userMarketRequest->market->title] +=  $item->amount;
             
             return $carry;
         });
