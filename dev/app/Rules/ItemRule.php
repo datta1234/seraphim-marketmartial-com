@@ -37,6 +37,12 @@ class ItemRule implements Rule
             case 'Contract':
                 if($value['value'] !== null)
                 {
+
+                    if($value['value'] == 0)
+                    {
+                        return true;
+                    }
+
                     if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
                     {
                         $this->message = "please enter a valid Contracts value";

@@ -7,11 +7,11 @@ trait CalcuatesForOutright {
 	
     public function outrightTwo()
     {
+        $this->load(['futureGroups','optionGroups']);
+
         $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
-
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
-
         $contracts1 =  floatval($this->optionGroups[0]->getOpVal('Contract'));
         $expiry1 = Carbon::createFromFormat("Y-m-d",$this->optionGroups[0]->getOpVal('Expiration Date'));
 
@@ -25,18 +25,8 @@ trait CalcuatesForOutright {
 
         $singleStock = false;
         
-//         dd(
-// $future1,
-// $contracts1,
-// $expiry1,
-// $strike1 ,
-// $volatility1
-//         );
-
-        //determine weather put or call
  
-        //can reduce this logic
-        $is_offer = $this->futureGroups[0]->getOpVal('is_offer');
+        $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
         
         if($is_offer == 1)
         {
@@ -78,6 +68,10 @@ trait CalcuatesForOutright {
         }
 
         $this->futureGroups[0]->setOpVal('Contract', round($contracts));
+
+        $this->load(['futureGroups','optionGroups']);
+
+
         $this->feesCalc($isOffer,$gross_prem,$is_sender);
     }
 
@@ -85,6 +79,7 @@ trait CalcuatesForOutright {
     {     
        //get the spot price ref.
         $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');
+
         $SpotReferencePrice1 = $this->market->spot_price_ref;
         $Brodirection1 = 1;
        
