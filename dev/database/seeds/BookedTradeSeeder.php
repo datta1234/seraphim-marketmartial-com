@@ -84,7 +84,8 @@ class BookedTradeSeeder extends Seeder
 					"is_paid" => 1,
 					/*"trade_date" => Carbon::now()->addMonths(rand(0,12)),*/
 					"trade_date" => Carbon::now()->addMonths(rand(0,2)), //@TODO temp remove
-					"booked_trade_id" => $rebateBookedTrade->id,
+					"booked_trade_id" => null,
+					"trade_confirmation_id" => $tradeConfirmation->id,
 	            ]);
 
 	            

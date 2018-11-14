@@ -160,7 +160,7 @@
 
                 switch (key) {
                     case 'date':
-                        return this.castToMoment(item[key])
+                        return this.castToMoment(item[key].date)
                         break;
                     case 'rebate':
                         return this.$root.splitValHelper(item[key], ' ', 3);
@@ -173,6 +173,9 @@
                 }
             },
             formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
                 let formatted_array = '';
                 array_item.forEach(element => {
                     switch (key) {
@@ -183,11 +186,14 @@
                         case 'nominal':
                             formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
                             break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
+                            break;
                         default:
                             formatted_array += element + ' / ';
                     }
                 });
-                return formatted_array.substring(0, formatted_array.length - 3);
+                return formatted_array.substring(0, formatted_array.length - (key == 'market' ? 5 : 3));
             },
             /**
              * Casting a passed string to moment with a new format

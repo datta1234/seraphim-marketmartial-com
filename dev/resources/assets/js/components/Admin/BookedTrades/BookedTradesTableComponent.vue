@@ -1,6 +1,6 @@
 <template>
     <div dusk="booked-trades-table" class="booked-trades-table" >
-    	<b-form v-on:submit.prevent="" id="chat-message-form">
+    	<b-form v-on:submit.prevent="" id="booked-trades-filter-form">
             <b-row class="mt-2">
                 <b-col cols="1">
                     <label class="mr-sm-2" for="admin-filter-paid">Filter Status:</label>
@@ -292,7 +292,7 @@
                             formatted_array += element + ' / ';
                     }
                 });
-                return formatted_array.substring(0, formatted_array.length - 3);
+                return formatted_array.substring(0, formatted_array.length - (key == 'market' ? 5 : 3));
             },
             /**
              * Casting a passed string to moment with a new format
