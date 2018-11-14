@@ -51,7 +51,7 @@ export default class UserMarketNegotiation extends BaseModel {
             is_maker:false,
             is_my_org:false,
             market_negotiation_id: null,
-            time:null,
+            time: null,
             created_at: moment(),
         }
         // assign options with defaults

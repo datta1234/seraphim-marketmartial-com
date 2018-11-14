@@ -370,80 +370,79 @@ class UserMarket extends Model
 
     public function addNegotiation($user,$data)
     {
-           
+        
+        $marketNegotiation = new MarketNegotiation($data);
+        $marketNegotiation->user_id = $user->id;
 
-            $marketNegotiation = new MarketNegotiation($data);
-            $marketNegotiation->user_id = $user->id;
+        $counterNegotiation = $this->findCounterNegotiation($user);
 
-            $counterNegotiation = $this->findCounterNegotiation($user);
+        // trade at best get improved
+        if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+        {
+            $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+        }
 
-            // trade at best get improved
-            if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
-            {
-                $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+        if($counterNegotiation)
+        {
+            $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+
+            //if parents are repeat
+            if($counterNegotiation->is_repeat 
+                && $counterNegotiation->marketNegotiationParent 
+                && $counterNegotiation->marketNegotiationParent->is_repeat
+            ) {
+                if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
+                    // @TODO: well shit
+                    throw Exception("Can Only Improve One Side On SPIN");
+                }
+                elseif ($marketNegotiation->bid != null) {
+                    // improved bid
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
+                }
+                elseif($marketNegotiation->offer != null) {
+                    // improved offer
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
+                }
+            } else {
+                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
             }
 
+            // enforce responses to have the same condition
+            if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
+                $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+            }
+
+            // add missing values (prior data)
+            if($marketNegotiation->bid == null) {
+                $marketNegotiation->bid = $counterNegotiation->bid;
+                $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+            }
+            if($marketNegotiation->offer == null) {
+                $marketNegotiation->offer = $counterNegotiation->offer;
+                $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+            }
+        }
+        // @TODO, this fails when you send new negotiation after you already have, need to stop this?
+
+        try {
+            DB::beginTransaction();
+
+            $this->marketNegotiations()->save($marketNegotiation);
+            if($marketNegotiation->is_private) {
+                $this->current_market_negotiation_id = $marketNegotiation->id;
+            }
+            $this->save();
             if($counterNegotiation)
             {
-                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
-
-                //if parents are repeat
-                if($counterNegotiation->is_repeat 
-                    && $counterNegotiation->marketNegotiationParent 
-                    && $counterNegotiation->marketNegotiationParent->is_repeat
-                ) {
-                    if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                        // @TODO: well shit
-                        throw Exception("Can Only Improve One Side On SPIN");
-                    }
-                    elseif ($marketNegotiation->bid != null) {
-                        // improved bid
-                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
-                    }
-                    elseif($marketNegotiation->offer != null) {
-                        // improved offer
-                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
-                    }
-                } else {
-                    $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-                }
-
-                // enforce responses to have the same condition
-                if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
-                    $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
-                }
-
-                // add missing values (prior data)
-                if($marketNegotiation->bid == null) {
-                    $marketNegotiation->bid = $counterNegotiation->bid;
-                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
-                }
-                if($marketNegotiation->offer == null) {
-                    $marketNegotiation->offer = $counterNegotiation->offer;
-                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
-                }
+                 $this->setCounterAction($counterNegotiation);
             }
-            // @TODO, this fails when you send new negotiation after you already have, need to stop this?
-
-            try {
-                DB::beginTransaction();
-
-                $this->marketNegotiations()->save($marketNegotiation);
-                if($marketNegotiation->is_private) {
-                    $this->current_market_negotiation_id = $marketNegotiation->id;
-                }
-                $this->save();
-                if($counterNegotiation)
-                {
-                     $this->setCounterAction($counterNegotiation);
-                }
-                DB::commit();
-                return $marketNegotiation;
-            } catch (\Illuminate\Database\QueryException $e) {
-                \Log::error($e);
-                DB::rollBack();
-                return false;
-            }
+            DB::commit();
+            return $marketNegotiation;
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error($e);
+            DB::rollBack();
+            return false;
+        }
     }
 
 

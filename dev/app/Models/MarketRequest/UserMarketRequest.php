@@ -407,7 +407,7 @@ class UserMarketRequest extends Model
                         return true;
                     }
 
-                    if($lastNegotiation->marketNegotiationParent->isTraded())
+                    if($lastNegotiation->isTraded())
                     {
                         return true;
                     }

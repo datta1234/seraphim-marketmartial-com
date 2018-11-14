@@ -61,6 +61,10 @@ class LevelsImprovement implements Rule
                 }
             }
 
+            if($this->lastNegotiation->isTraded()) {
+                return true;
+            }
+
             $valid = ($attribute == 'bid');
             /*
                 both 'bid' & 'offer' follow same process, only change is comparisson '<' vs '>' 

@@ -97,10 +97,11 @@ class UserMarketPolicy
             return $userMarket->lastNegotiation->is_killed == true;
         }
 
-        // if the last one was an Repeat ATW
-        if($userMarket->lastNegotiation->isRepeatATW()) {
-            return false;
-        }
+        // Removed Per [MM-618]
+        // if the last one was an Repeat ATW 
+        // if($userMarket->lastNegotiation->isRepeatATW()) {
+        //     return false;
+        // }
         
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
             in_array(
