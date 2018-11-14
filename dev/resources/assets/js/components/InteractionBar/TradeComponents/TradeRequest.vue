@@ -198,6 +198,9 @@
             return null;
         },
         getStateClass(attr) {
+            if(this.marketNegotiation[attr] == null) {
+                return "";
+            }
             let source = this.marketNegotiation.getAmountSource(attr);
             return {
                 "text": source[attr],

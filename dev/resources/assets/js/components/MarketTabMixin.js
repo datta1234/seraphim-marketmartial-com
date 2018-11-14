@@ -114,6 +114,9 @@ export default {
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
                         if(this.current_user_market_negotiation.isTraded()) {
+                            this.user_market_bid = '-';
+                            this.user_market_offer = '-';
+                        } else {
                             this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
                             this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
                         }
@@ -190,6 +193,9 @@ export default {
         },
         getStateClass(item,attr)
         {
+            if(item[attr] == null) {
+                return "";
+            }
             let source = item.getAmountSource(attr);
              return {
                 "is-interest":source.is_interest && !source.is_my_org,

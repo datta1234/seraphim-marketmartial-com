@@ -308,7 +308,7 @@ class UserMarket extends Model
     private function setCounterOrgnisationAction($organisation_id)
     {
         $this->userMarketRequest->setAction(
-            $rganisation_id,
+            $organisation_id,
             $this->userMarketRequest->id,
             true
         );
@@ -413,14 +413,14 @@ class UserMarket extends Model
     public function addNegotiation($user,$data)
     {
 
-        $marketNegotiation->user_id = $user->id;
-        $counterNegotiation = $this->findCounterNegotiation($user);
         $marketNegotiation = new MarketNegotiation($data);
+        $counterNegotiation = $this->findCounterNegotiation($user);
+        $marketNegotiation->user_id = $user->id;
 
-        // if(counterNegotiation->isTraded())
-        // {
-        //     return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data)   
-        // }
+        if($counterNegotiation->isTraded())
+        {
+            return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
+        }
 
         // trade at best get improved
         if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")

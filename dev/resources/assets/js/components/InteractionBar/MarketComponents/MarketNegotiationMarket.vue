@@ -98,10 +98,10 @@
             disabled_bid: function() {
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
-               // let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
 
                 let value = this.marketNegotiation.offer;
-                if(spun && value) {
+                if((traded || spun) && value) {
                     return true;
                 }
                 return false;
@@ -109,10 +109,10 @@
             disabled_offer: function() {
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
-              //  let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
 
                 let value = this.marketNegotiation.bid;
-                if(spun && value) {
+                if((traded || spun) && value) {
                     return true;
                 }
                 return false;
@@ -130,6 +130,11 @@
                     previous: false
                 };
 
+                let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                if(traded) {
+                    return false;
+                }
+
                 //new
                 invalid_states.all_empty = 
                         this.is_empty(this.marketNegotiation.bid)
@@ -138,22 +143,26 @@
                     &&  this.is_empty(this.marketNegotiation.offer_qty);
 
                 // Check that bid and bid_qty are present together
-                invalid_states.bid_pair = (
+                invalid_states.bid_pair = this.currentNegotiation.bid != null && (
+                    (
                         !this.is_empty(this.marketNegotiation.bid)  
-                        &&  this.is_empty(this.marketNegotiation.bid_qty)) 
-                    || (
+                        &&  this.is_empty(this.marketNegotiation.bid_qty)
+                    ) || (
                         this.is_empty(this.marketNegotiation.bid)  
                         && !this.is_empty(this.marketNegotiation.bid_qty)
-                    );
+                    )
+                );
              
                 // Check bid offer and offer_qty are present together
-                invalid_states.offer_pair = ( 
+                invalid_states.offer_pair = this.currentNegotiation.offer != null && (
+                    ( 
                         !this.is_empty(this.marketNegotiation.offer)  
-                        && this.is_empty(this.marketNegotiation.offer_qty)) 
-                    || (
+                        && this.is_empty(this.marketNegotiation.offer_qty)
+                    ) || (
                         this.is_empty(this.marketNegotiation.offer)  
                         && !this.is_empty(this.marketNegotiation.offer_qty)
-                    );
+                    )
+                );
                 
                 // Check for previous quote
                 if(typeof this.currentNegotiation !== 'undefined' && this.currentNegotiation != null && this.currentNegotiation.is_killed != true) {
@@ -162,12 +171,14 @@
                     // Check new currentNegotiation is valid
                     invalid_states.previous = 
                             (
-                                !this.is_empty(this.marketNegotiation.bid)
+                                this.currentNegotiation.bid != null
+                                && !this.is_empty(this.marketNegotiation.bid)
                                 && this.marketNegotiation.bid < currentBid.bid
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
-                                !this.is_empty(this.marketNegotiation.offer)
+                                this.currentNegotiation.offer != null
+                                && !this.is_empty(this.marketNegotiation.offer)
                                 && this.marketNegotiation.offer > currentOffer.offer
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
