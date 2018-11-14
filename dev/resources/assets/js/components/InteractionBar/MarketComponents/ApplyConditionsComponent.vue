@@ -38,7 +38,7 @@
                                                         v-model="defaults[child.alias]"
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
-                                                        v-on:change="e => setCondition(child.alias, e, c_group)"
+                                                        v-on:change="e => setCondition(child, e, c_group)"
                                                         name="">
                                     </b-form-radio-group>
                                 </div>
@@ -51,7 +51,7 @@
                                                 v-model="defaults[condition.alias]"
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
-                                                v-on:change="e => setCondition(condition.alias, e, c_group)"
+                                                v-on:change="e => setCondition(condition, e, c_group)"
                                                 name="">
                             </b-form-radio-group>
                         </div>
@@ -226,23 +226,37 @@
             setCondition(condition, value, group) {
                 console.log("SetCondition: ", condition, value, group);
                 this.resetConditions(group, value.ignores);
-                switch(value.constructor) {
-                    case Object:
-                        if(value.value.constructor == Object) {
-                            this.setCondition(condition, value.value, group);
-                        } else {
-                            this.marketNegotiation[condition.alias] = value.value;
-                            if(value.sets) {
-                                value.sets.forEach(v => {
-                                    this.marketNegotiation[v.alias] = v.value;
-                                });
+                if(value === null) {
+                    this.marketNegotiation[condition.alias] = value;
+                } else {
+                    switch(value.constructor) {
+                        case Object:
+                            if(value.value === null) {
+                                this.marketNegotiation[condition.alias] = value.value;
+                                if(value.sets) {
+                                    value.sets.forEach(v => {
+                                        this.marketNegotiation[v.alias] = v.value;
+                                    });
+                                }
+                            } else {
+                                if(value.value.constructor == Object) {
+                                    this.setCondition(condition, value.value, group);
+                                } else {
+                                    this.marketNegotiation[condition.alias] = value.value;
+                                    if(value.sets) {
+                                        value.sets.forEach(v => {
+                                            this.marketNegotiation[v.alias] = v.value;
+                                        });
+                                    }
+                                }
                             }
-                        }
-                    break;
-                    case Boolean:
-                    default:
-                        this.marketNegotiation[condition.alias] = value;
+                        break;
+                        case Boolean:
+                        default:
+                            this.marketNegotiation[condition.alias] = value;
+                    }
                 }
+                console.log("Set: ", this.marketNegotiation[condition.alias]);
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {

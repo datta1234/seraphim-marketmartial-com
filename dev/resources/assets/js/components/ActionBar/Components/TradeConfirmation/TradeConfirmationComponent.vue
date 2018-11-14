@@ -1,7 +1,7 @@
 <template>
 <div>
     <mm-loader theme="light" :default_state="false" event_name="confirmationSubmissionLoaded" width="200" height="200"></mm-loader>
-    <div v-if="confirmationLoaded">  
+    <div v-if="confirmationLoaded && trade_confirmation">  
         <p>Thank you for your trade! Please check before accepting.</p>
         <p>Date: {{ trade_confirmation.date }} </p>
         <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
@@ -34,7 +34,7 @@
                     {{ option_group.underlying_title }}
                 </td>
                   <td>
-                    {{ option_group.strike }} 
+                    {{ splitValHelper(option_group.strike,' ',3) }} 
                 </td>
                 <td>
                     {{ option_group.is_put ? "Put" : "Call" }} 
@@ -52,10 +52,10 @@
                     {{ option_group.volatility }} %
                 </td>
                 <td>
-                    {{ option_group.gross_prem }}
+                    {{  splitValHelper(option_group.gross_prem,' ',3) }}
                 </td>
                 <td>
-                    {{ option_group.net_prem }}
+                    {{  splitValHelper(option_group.net_prem,' ',3)   }}
                 </td>
             </tr>
           </tbody>
@@ -108,33 +108,35 @@
             </tr>
           </tbody>
         </table>
-       
          <b-row>
             <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
-                <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
-                <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
+                <button type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+                <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                  <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
-                    <b-form-select :disabled="!can_proceed" v-model="selected_trading_account">
+                    <b-form-select :disabled="can_send" v-model="selected_trading_account">
                             <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                             </option>
                       </b-form-select>
                   </div>
             </b-col>
            <b-col md="5" offset-md="7" v-else>
-                <button type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                 <button  type="button" :disabled="!can_proceed" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
+                <button  type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                 <button  type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
                  <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
-                    <b-form-select :disabled="!can_proceed" v-model="selected_trading_account">
+                    <b-form-select v-model="selected_trading_account">
                             <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                             </option>
                       </b-form-select>
                   </div>
             </b-col>
         </b-row> 
+
+      
+
     </div>
 </div>
 </template>
@@ -146,39 +148,44 @@
     export default {
       name: 'TradeConfirmationComponent',
         computed: {
-            can_proceed:function (val) {
-
-            let confirmation = this.trade_confirmation;
-            let future_groups = confirmation.future_groups;            
-            return future_groups.reduce((out, group)=>{
-                if(group.future.length == 0)
-                {
-                    out = false;
-                }
-                return out;
-            }, true);
-        },
+            can_send:function (val) {
+                return  this.trade_confirmation.hasFutures() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore());
+            },
+            can_calc:function (val) {
+                return this.trade_confirmation.hasFutures() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
+            }
     },
       data() {
         return {
                 trading_accounts:[],
                 selected_trading_account:null,
                 errors:{},
-                confirmationLoaded: true
+                confirmationLoaded: true,
+                oldConfirmationData: null,
+                trade_confirmation: null,
+                can_dispute: false
             }
         },
-      props:{
-          'trade_confirmation': {
-            type: Object
-          }
-        },
         methods: {
+            loadConfirmation(tradeConfirmation)
+            {
+                this.trade_confirmation = tradeConfirmation;
+                this.updateOldData(this.trade_confirmation)
+            },
+            clearConfirmation()
+            {
+                this.trade_confirmation = null; 
+            },
             getError(field)
             {
                 if(this.errors && this.errors.hasOwnProperty(field))
                 {
                     return this.errors[field][0];
                 }
+            },
+            updateOldData(TradeConfirmation)
+            {
+                this.oldConfirmationData = this.trade_confirmation.prepareStore();
             },
             getTradingAccounts: function()
             {
@@ -205,6 +212,13 @@
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
                     this.errors = [];
                     this.confirmationLoaded = true;
+                    this.updateOldData();
+                   
+                    if(trade_confirmation.status_id != 1)
+                    {
+                       this.can_dispute = true; 
+                    }
+
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
                 .catch(err => {
@@ -221,6 +235,7 @@
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
                     this.errors = [];
                     this.confirmationLoaded = true;
+                    this.updateOldData();
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.$emit('close');
                 })
@@ -236,7 +251,7 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-
+                    this.updateOldData();
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.$emit('close');
@@ -253,8 +268,8 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
-                    this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
+                    this.updateOldData();
                     this.errors = [];
                     this.$emit('close');
                 })
@@ -266,7 +281,6 @@
             }  
         },
         mounted() {
-            console.log(this.trade_confirmation);
             this.getTradingAccounts();
         }
     }

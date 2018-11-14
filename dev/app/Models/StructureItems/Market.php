@@ -42,6 +42,10 @@ class Market extends Model
         'spot_price_ref',
     ];
 
+    protected $casts = [
+        'is_seldom'             => 'Boolean',
+    ];
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

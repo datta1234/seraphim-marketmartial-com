@@ -131,8 +131,7 @@ export default class TradeConfirmation extends BaseModel {
            })
            .then(response => {
 
-            this.update(response.data.trade_confirmation);
-            console.log(this);
+            this.update(response.data.data);
             resolve();
         })
            .catch(err => {
@@ -150,7 +149,7 @@ export default class TradeConfirmation extends BaseModel {
            })
            .then(response => {
 
-            this.update(response.data.trade_confirmation);
+            this.update(response.data.data);
             resolve();
         })
            .catch(err => {
@@ -168,7 +167,7 @@ export default class TradeConfirmation extends BaseModel {
            })
            .then(response => {
 
-            this.update(response.data.trade_confirmation);
+            this.update(response.data.data);
             resolve();
         })
            .catch(err => {
@@ -177,7 +176,17 @@ export default class TradeConfirmation extends BaseModel {
        });
     }
 
+    hasFutures()
+    {
+        return this.future_groups.reduce((out, group)=>{
+                if(group.future.length == 0)
+                {
+                    out = false;
+                }
+                return out;
+            }, true);
 
+    }
     dispute(trading_account)
     {
       return new Promise((resolve, reject) => {
@@ -186,8 +195,7 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation": this.prepareStore()
            })
            .then(response => {
-
-            this.update(response.data.trade_confirmation);
+            this.update(response.data.data);
             resolve();
         })
            .catch(err => {

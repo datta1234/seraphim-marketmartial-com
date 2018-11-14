@@ -319,12 +319,14 @@ export default {
             //if we have a chosen negotiation use that else its still dealing with quotes
             if(this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null) )
             {
-                this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
-                this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
-                if(!this.last_negotiation.isSpun()) {
+                if(!this.last_negotiation.isTraded()) {
+                    this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
+                    this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
+                    if(!this.last_negotiation.isSpun()) {
 
-                    this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
-                    this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+                        this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
+                        this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+                    }
                 }
 
             }

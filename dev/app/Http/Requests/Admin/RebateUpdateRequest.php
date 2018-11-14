@@ -24,7 +24,8 @@ class RebateUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'is_paid' => 'required|boolean',
+            'is_paid' => 'required_without:new_amount|boolean',
+            'new_amount' => 'required_without:is_paid|numeric',
         ];
     }
 }

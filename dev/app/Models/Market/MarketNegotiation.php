@@ -769,6 +769,16 @@ class MarketNegotiation extends Model
         });   
     }
 
+    public function scopeOrganisationInvolvedOrCounters($query,$organisation_id)
+    {
+       return $query->whereHas('user',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        })->orWhereHas('counterUser',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        });   
+    }
+
+
     public function scopeLastNegotiation($query)
     {
         return $query->latest()->limit(1);
@@ -824,7 +834,6 @@ class MarketNegotiation extends Model
     public function addTradeNegotiation($user,$data)
     {
            
-
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
@@ -854,7 +863,11 @@ class MarketNegotiation extends Model
                 {
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
-                    $newMarketNegotiation =  $this->setMarketNegotiationAfterTrade($user);
+                    
+                    /*
+                    * once a trade has happend no need for the new record
+                    */
+                    //$newMarketNegotiation =  $this->setMarketNegotiationAfterTrade($user);
 
                 }else if ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
                 {
@@ -927,29 +940,7 @@ class MarketNegotiation extends Model
     }
     
 
-    public function setMarketNegotiationAfterTrade()
-    {
-            $newMarketNegotiation = $this->replicate();
-            $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
-
-            $newMarketNegotiation->counter_user_id = null;
-            $newMarketNegotiation->market_negotiation_id = $this->id;
-
-            if(!$requestedNegotiation->is_offer)
-            {   
-                $newMarketNegotiation->bid = null;
-                $newMarketNegotiation->bid_qty = null;
-                $newMarketNegotiation->offer_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
-
-            }else
-            {
-                $newMarketNegotiation->offer = null;
-                $newMarketNegotiation->offer_qty = null;
-                $newMarketNegotiation->bid_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
-            }
-
-            return $newMarketNegotiation;
-    }
+   
 
 
 

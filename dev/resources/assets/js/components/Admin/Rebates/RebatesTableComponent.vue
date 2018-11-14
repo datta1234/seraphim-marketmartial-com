@@ -1,6 +1,6 @@
 <template>
     <div dusk="rebates-table" class="rebates-table" >
-    	<b-form v-on:submit.prevent="" id="chat-message-form">
+    	<b-form v-on:submit.prevent="" id="rebates-filter-form">
             <b-row class="mt-2">
                 <b-col cols="1">
                     <label class="mr-sm-2" for="admin-filter-paid">Filter Status:</label>
@@ -55,18 +55,28 @@
                 {{ formatItem(row.item, field.key) }}
             </template>
             <template slot="action" slot-scope="data">
-                <button v-if="data.item.is_paid" 
-                        type="button" 
-                        class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'is_paid': false}, data.index, 'Mark this Rebate as Not Paid')">
-                    Unmark Paid
-                </button>
-                <button v-else 
-                        type="button" 
-                        class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'is_paid': true}, data.index, 'Mark this Rebate as Paid')">
-                    Mark as Paid
-                </button>
+                <b-row>
+                    <b-col cols="6" class="pr-1">
+                        <button v-if="data.item.is_paid" 
+                                type="button" 
+                                class="btn mm-generic-trade-button w-100"
+                                @click="showModal(data.item, {'is_paid': false}, data.index, 'Mark this Rebate as Not Paid')">
+                            Unmark Paid
+                        </button>
+                        <button v-else 
+                                type="button" 
+                                class="btn mm-generic-trade-button w-100"
+                                @click="showModal(data.item, {'is_paid': true}, data.index, 'Mark this Rebate as Paid')">
+                            Mark as Paid
+                        </button>
+                    </b-col>
+                    <b-col cols="6" class="pl-1">
+                        <edit-rebate :item_data="data.item" 
+                                     :item_index="data.index" 
+                                     :callback="updateRebateAmount">
+                        </edit-rebate>
+                    </b-col>
+                </b-row>
             </template>
         </b-table>
 
@@ -109,7 +119,12 @@
 </template>
 
 <script>
+    // Components
+    import EditRebate from './EditRebateComponent.vue';
     export default {
+        components: {
+            EditRebate,
+        },
     	props: [
             'rebate_data',
         ],
@@ -217,6 +232,9 @@
                     console.error(err);
                 });
             },
+            updateRebateAmount(new_amount, index) {
+                this.items[index].rebate = new_amount;
+            },
             /**
              * Loads the Confirmation Modal 
              */
@@ -226,6 +244,7 @@
                 this.modal_data.rebate_action = action;
                 this.modal_data.rebate_index = index;
                 this.modal_data.show_modal = true;
+                this.$refs[this.modal_data.modal_ref].$on('hidden', this.hideModal);
             },
             /**
              * Closes the Confirmation Modal 
@@ -236,6 +255,7 @@
                 this.modal_data.rebate_index = null;
                 this.modal_data.confirm_message = '';
                 this.modal_data.show_modal = false;
+                this.$refs[this.modal_data.modal_ref].$off('hidden', this.hideModal);
             },
             sortingChanged(ctx) {
                 this.sort_options.order_by = ctx.sortBy;
@@ -256,7 +276,8 @@
 
                 switch (key) {
                     case 'date':
-                        return this.castToMoment(item[key]);
+                    console.log("Should be date",item[key]);
+                        return this.castToMoment(item[key].date);
                         break;
                     case 'rebate':
                         return this.$root.splitValHelper(item[key], ' ', 3);
@@ -272,6 +293,9 @@
                 }
             },
             formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
                 let formatted_array = '';
                 array_item.forEach(element => {
                     switch (key) {
@@ -282,11 +306,14 @@
                         case 'nominal':
                             formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
                             break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
+                            break;
                         default:
                             formatted_array += element + ' / ';
                     }
                 });
-                return formatted_array.substring(0, formatted_array.length - 3);
+                return formatted_array.substring(0, formatted_array.length - (key == 'market' ? 5 : 3));
             },
             /**
              * Casting a passed string to moment with a new format

@@ -305,10 +305,10 @@ class UserMarket extends Model
     }
 
 
-    private function setCounterAction($counterNegotiation)
+    private function setCounterOrgnisationAction($organisation_id)
     {
         $this->userMarketRequest->setAction(
-            $counterNegotiation->user->organisation_id,
+            $organisation_id,
             $this->userMarketRequest->id,
             true
         );
@@ -354,7 +354,7 @@ class UserMarket extends Model
 
             if($counterNegotiation)
             {
-                $this->setCounterAction($counterNegotiation);
+                $this->setCounterOrgnisationAction($counterNegotiation->user->organisation_id);
             }
             DB::commit();
             return $marketNegotiation;
@@ -366,54 +366,105 @@ class UserMarket extends Model
        
     }
 
+    public function startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data)
+    {
+            //ensure that a new tree is started
+            $marketNegotiation->market_negotiation_id = null;
 
+            if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
+                // @TODO: well shit
+                throw Exception("Can Only Improve One Side On New Negotian tree.");
+            }
+            elseif ($marketNegotiation->bid != null) {
+                // improved bid
+                $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
+            }
+            elseif($marketNegotiation->offer != null) {
+                // improved offer
+                $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
+            }
+
+
+        try {
+
+            DB::beginTransaction();
+
+            $this->marketNegotiations()->save($marketNegotiation);
+            
+            if($marketNegotiation->is_private) {
+                $this->current_market_negotiation_id = $marketNegotiation->id;
+            }
+            
+            $this->save();
+
+            if($counterNegotiation) {
+                 $this->setCounterOrgnisationAction($marketNegotiation->counterUser->organisation_id);
+            }
+
+            DB::commit();
+            return $marketNegotiation;
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error($e);
+            DB::rollBack();
+            return false;
+        }
+    }
 
     public function addNegotiation($user,$data)
     {
-           
 
-            $marketNegotiation = new MarketNegotiation($data);
-            $marketNegotiation->user_id = $user->id;
+        $marketNegotiation = new MarketNegotiation($data);
+        $counterNegotiation = $this->findCounterNegotiation($user);
+        $marketNegotiation->user_id = $user->id;
 
-            $counterNegotiation = $this->findCounterNegotiation($user);
+        if($counterNegotiation->isTraded())
+        {
+            return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
+        }
 
-            // trade at best get improved
-            if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
-            {
-                $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+        // trade at best get improved
+        if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+        {
+            $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
+        }
+
+        if($counterNegotiation)
+        {
+            $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+
+            //if parents are repeat
+            if($counterNegotiation->is_repeat 
+                && $counterNegotiation->marketNegotiationParent 
+                && $counterNegotiation->marketNegotiationParent->is_repeat
+            ) {
+                if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
+                    // @TODO: well shit
+                    throw Exception("Can Only Improve One Side On SPIN");
+                }
+                elseif ($marketNegotiation->bid != null) {
+                    // improved bid
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
+                }
+                elseif($marketNegotiation->offer != null) {
+                    // improved offer
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
+                }
+            } else {
+                $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
             }
 
-            if($counterNegotiation)
-            {
-                $marketNegotiation->market_negotiation_id = $counterNegotiation->id;
+            // enforce responses to have the same condition
+            if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
+                $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+            }
 
-                //if parents are repeat
-                if($counterNegotiation->is_repeat 
-                    && $counterNegotiation->marketNegotiationParent 
-                    && $counterNegotiation->marketNegotiationParent->is_repeat
-                ) {
-                    if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                        // @TODO: well shit
-                        throw Exception("Can Only Improve One Side On SPIN");
-                    }
-                    elseif ($marketNegotiation->bid != null) {
-                        // improved bid
-                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
-                    }
-                    elseif($marketNegotiation->offer != null) {
-                        // improved offer
-                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
-                    }
-                } else {
-                    $marketNegotiation->counter_user_id = $counterNegotiation->user_id;
-                }
+            // responding to RepeatATW will open to market automatically
+            if($counterNegotiation->isRepeatATW()) {
+                $marketNegotiation->is_repeat = true;
+            }
 
-                // enforce responses to have the same condition
-                if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
-                    $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
-                }
-
-                // add missing values (prior data)
+            // add missing values (prior data), however if traded keep them as null
+            
                 if($marketNegotiation->bid == null) {
                     $marketNegotiation->bid = $counterNegotiation->bid;
                     $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
@@ -421,35 +472,35 @@ class UserMarket extends Model
                 if($marketNegotiation->offer == null) {
                     $marketNegotiation->offer = $counterNegotiation->offer;
                     $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
-                }
-            }
-            // @TODO, this fails when you send new negotiation after you already have, need to stop this?
+                }  
+        }
+        // @TODO, this fails when you send new negotiation after you already have, need to stop this?
+        try {
+            DB::beginTransaction();
 
-            try {
-                DB::beginTransaction();
-
-                $this->marketNegotiations()->save($marketNegotiation);
-                if($marketNegotiation->is_private) {
-                    $this->current_market_negotiation_id = $marketNegotiation->id;
-                }
-                $this->save();
-                if($counterNegotiation)
-                {
-                     $this->setCounterAction($counterNegotiation);
-                }
-                DB::commit();
-                return $marketNegotiation;
-            } catch (\Illuminate\Database\QueryException $e) {
-                \Log::error($e);
-                DB::rollBack();
-                return false;
+            $this->marketNegotiations()->save($marketNegotiation);
+            if($marketNegotiation->is_private) {
+                $this->current_market_negotiation_id = $marketNegotiation->id;
             }
+            $this->save();
+           
+            if($counterNegotiation)
+            {
+                 $this->setCounterOrgnisationAction($counterNegotiation->user->organisation_id);
+            }
+            DB::commit();
+            return $marketNegotiation;
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::error($e);
+            DB::rollBack();
+            return false;
+        }
     }
 
 
+    //when they need to work the balance
     public function workTheBalance($user,$quantity)
     {
-        
         $lastMarketNegotiation = $this->lastNegotiation;
         $newMarketNegotiation = new MarketNegotiation();
 
@@ -476,8 +527,6 @@ class UserMarket extends Model
         $newMarketNegotiation->save();
         return $newMarketNegotiation;
     }
-
-
 
 
     public function isMaker($user = null) {

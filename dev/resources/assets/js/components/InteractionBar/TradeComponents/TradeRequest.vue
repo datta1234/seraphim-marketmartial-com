@@ -67,10 +67,35 @@
                 </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ firstTradeNegotiation.getTradingText() }}
+                {{ firstTradeNegotiation.getTradingText(true) }}
         </div>
     </b-col> 
-
+    
+    <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
+        <b-row dusk="ibar-trade-request-open">
+            <b-col cols="10">
+                <b-row>
+                    <b-col cols="3" class="text-center">
+                        -
+                    </b-col>
+                    <b-col  cols="3" class="text-center">
+                        -
+                    </b-col>
+                    <b-col cols="3" class="text-center">
+                        -
+                    </b-col>
+                    <b-col cols="3" class="text-center">
+                        -
+                    </b-col>
+                </b-row>
+            </b-col>
+            <b-col cols="2">
+                <p class="text-center">
+                    <small></small>
+                </p>
+            </b-col>
+        </b-row>
+    </b-col>
 </b-row>
 </template>
 <script>
@@ -85,7 +110,8 @@
             selectable: {
                 type: Boolean,
                 default: null
-            }
+            },
+            isCurrent: Boolean
         },
         data() {
            return {
@@ -159,13 +185,18 @@
             for(let k in this.$root.config("condition_titles")) {
                 let cond = this.$root.config("condition_titles")[k];
                 let text = getConditionText(cond, marketNegotiation, field);
-                if(text != null) {
+                let source = marketNegotiation.getAmountSource(field);
+                // text exists and source of side(bid/offer) is self
+                if(text != null && source.id == marketNegotiation.id) {
                     return text;
                 }
             }
             return null;
         },
         getStateClass(attr) {
+            if(this.marketNegotiation[attr] == null) {
+                return "";
+            }
             let source = this.marketNegotiation.getAmountSource(attr);
             return {
                 "text": source[attr],

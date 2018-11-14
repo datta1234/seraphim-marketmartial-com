@@ -94,29 +94,6 @@
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
                 }
-            },
-            bidState: function() {
-                if(this.marketRequest.chosen_user_market)
-                {
-                    return this.getStateClass(this.current_user_market_negotiation,'bid');
-                }else
-                {
-                    return {
-                       'user-action': this.marketRequest.attributes.bid_state == 'action',
-                    }   
-                }
-               
-            },
-            offerState: function() {
-                if(this.marketRequest.chosen_user_market)
-                {
-                    return this.getStateClass(this.current_user_market_negotiation,'offer');
-                }else
-                {
-                    return {
-                       'user-action': this.marketRequest.attributes.offer_state == 'action',
-                    }   
-                }
             }
         },
         methods: {

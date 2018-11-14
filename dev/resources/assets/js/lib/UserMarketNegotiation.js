@@ -51,7 +51,7 @@ export default class UserMarketNegotiation extends BaseModel {
             is_maker:false,
             is_my_org:false,
             market_negotiation_id: null,
-            time:null,
+            time: null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -483,6 +483,14 @@ export default class UserMarketNegotiation extends BaseModel {
     */
     isSpun() {
         return this.is_repeat && this.parent_negotiation && this.parent_negotiation.is_repeat;
+    }
+
+    /**
+    *   test if the negotiation has been traded
+    */
+    isTraded() {
+        let lastTrade = this.getLastTradeNegotiation();
+        return lastTrade && lastTrade.traded;
     }
 
 }
