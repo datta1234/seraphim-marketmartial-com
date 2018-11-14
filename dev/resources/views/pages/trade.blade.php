@@ -20,10 +20,12 @@
 			<action-bar :trade_confirmations="trade_confirmations" :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
 			<!-- Markets sections -->
+			<!-- <VuePerfectScrollbar ref="barContent" :options="scroll_settings" class="interaction-scrollable"> -->
 			<b-row class="user-markets mt-3">
 				<mm-loader :default_state="true" event_name="pageLoaded" width="200" height="200"></mm-loader>
 				<market-group v-if="page_loaded" v-for="(market, market_index) in display_markets" :market="market" :no_cares="no_cares" class="col"></market-group>
 			</b-row>
+			<!-- </VuePerfectScrollbar> -->
 
 			<b-row align-v="end" class="mt-5">
 				<div class="col col-lg-3 offset-lg-9">

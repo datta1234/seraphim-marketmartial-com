@@ -405,7 +405,7 @@ class UserMarketRequest extends Model
                         return true;
                     }
 
-                    if($lastNegotiation->marketNegotiationParent->isTraded())
+                    if($lastNegotiation->isTraded())
                     {
                         return true;
                     }
@@ -463,7 +463,6 @@ class UserMarketRequest extends Model
         $acceptedState      =  $hasQuotes ?  $this->isAcceptedState($current_org_id) : false;
         $marketOpen         =  $acceptedState ? $this->openToMarket() : false;
         
-
         // conditions
         $is_fok             =  $acceptedState ? $this->chosenUserMarket->lastNegotiation->isFoK() : false;
         $is_private         =  $is_fok ? $this->chosenUserMarket->lastNegotiation->is_private : false;
