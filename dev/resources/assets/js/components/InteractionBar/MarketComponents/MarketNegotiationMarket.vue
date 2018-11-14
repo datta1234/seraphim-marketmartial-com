@@ -98,6 +98,8 @@
             disabled_bid: function() {
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
+               // let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+
                 let value = this.marketNegotiation.offer;
                 if(spun && value) {
                     return true;
@@ -107,6 +109,8 @@
             disabled_offer: function() {
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
+              //  let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+
                 let value = this.marketNegotiation.bid;
                 if(spun && value) {
                     return true;
