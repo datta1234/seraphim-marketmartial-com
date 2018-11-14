@@ -205,8 +205,8 @@ class TradeConfirmation extends Model
             'option_groups'             => $this->optionGroups->map(function($item) use ($is_sender){
                 return $item->preFormatted($is_sender);
             })->toArray(),
-            'future_groups'           => $this->futureGroups->map(function($item){
-                return $item->preFormatted();
+            'future_groups'           => $this->futureGroups->map(function($item) use ($is_sender){
+                return $item->preFormatted($is_sender);
             })->toArray(),
             'market_request_id'         => $this->marketRequest->id,
             'market_request_title'      => $this->marketRequest->title,
@@ -227,7 +227,6 @@ class TradeConfirmation extends Model
             'date'                      => Carbon::now()->format("Y-m-d"),
             
             'traded_at'                 => $this->tradeNegotiation->updated_at,
-            'is_offer'                  => $this->tradeNegotiation->isOffer(),
         ];
     }
 

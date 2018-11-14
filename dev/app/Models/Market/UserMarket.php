@@ -447,6 +447,7 @@ class UserMarket extends Model
     }
 
 
+    //when they need to work the balance
     public function workTheBalance($user,$quantity)
     {
         
@@ -475,6 +476,32 @@ class UserMarket extends Model
 
         $newMarketNegotiation->save();
         return $newMarketNegotiation;
+    }
+
+
+
+     public function setMarketNegotiationAfterTrade($marketNegotiation)
+    {
+            $newMarketNegotiation = $this->replicate();
+            $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
+
+            $newMarketNegotiation->counter_user_id = null;
+            $newMarketNegotiation->market_negotiation_id = $this->id;
+
+            if(!$requestedNegotiation->is_offer)
+            {   
+                $newMarketNegotiation->bid = null;
+                $newMarketNegotiation->bid_qty = null;
+                $newMarketNegotiation->offer_qty = $userMarket->userMarketRequest->getDynamicItem("Quantity");
+
+            }else
+            {
+                $newMarketNegotiation->offer = null;
+                $newMarketNegotiation->offer_qty = null;
+                $newMarketNegotiation->bid_qty = $userMarket->userMarketRequest->getDynamicItem("Quantity");
+            }
+
+            return $newMarketNegotiation;
     }
 
 
