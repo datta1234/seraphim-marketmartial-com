@@ -175,13 +175,10 @@
                 // ensure the value exists in both object and condition test
                 if(typeof object[cond.condition] !== 'undefined' && typeof cond[String(object[cond.condition])] !== 'undefined') {
                     if(cond[String(object[cond.condition])].constructor === Object && typeof cond[String(object[cond.condition])].condition !== 'undefined') {
-                        console.log("cond1: ", String(object[cond.condition]), object[cond.condition]);
                         return getConditionText(cond[String(object[cond.condition])], object, field)
                     }
-                    console.log("cond2: ", String(object[cond.condition]), object[cond.condition]);
                     return cond[String(object[cond.condition])][field]
                 }
-                console.log("cond3: ", String(object[cond.condition]), object[cond.condition]);
                 return null
             };
 
@@ -189,7 +186,6 @@
                 let cond = this.$root.config("condition_titles")[k];
                 let text = getConditionText(cond, marketNegotiation, field);
                 let source = marketNegotiation.getAmountSource(field);
-                console.log(field, text, source.id,  marketNegotiation.id);
                 // text exists and source of side(bid/offer) is self
                 if(text != null && source.id == marketNegotiation.id) {
                     return text;

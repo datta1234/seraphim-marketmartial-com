@@ -56,10 +56,10 @@ class MarketNegotiationController extends Controller
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
 
-           return ['success'=>true,'data'=>$marketNegotiation ,'message'=>""];
+            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormatted() ,'message'=>'']);
 
         } else {
-            return response()->json(['success'=>false,'data'=>$marketNegotiation ,'message'=>'There was a problem adding your levels'], 500);
+            return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
         }
     }
 

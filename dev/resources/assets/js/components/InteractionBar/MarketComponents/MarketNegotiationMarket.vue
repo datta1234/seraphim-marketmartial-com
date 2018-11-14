@@ -142,27 +142,7 @@
                     &&  this.is_empty(this.marketNegotiation.offer)
                     &&  this.is_empty(this.marketNegotiation.offer_qty);
 
-                // Check that bid and bid_qty are present together
-                invalid_states.bid_pair = this.currentNegotiation.bid != null && (
-                    (
-                        !this.is_empty(this.marketNegotiation.bid)  
-                        &&  this.is_empty(this.marketNegotiation.bid_qty)
-                    ) || (
-                        this.is_empty(this.marketNegotiation.bid)  
-                        && !this.is_empty(this.marketNegotiation.bid_qty)
-                    )
-                );
-             
-                // Check bid offer and offer_qty are present together
-                invalid_states.offer_pair = this.currentNegotiation.offer != null && (
-                    ( 
-                        !this.is_empty(this.marketNegotiation.offer)  
-                        && this.is_empty(this.marketNegotiation.offer_qty)
-                    ) || (
-                        this.is_empty(this.marketNegotiation.offer)  
-                        && !this.is_empty(this.marketNegotiation.offer_qty)
-                    )
-                );
+                
                 
                 // Check for previous quote
                 if(typeof this.currentNegotiation !== 'undefined' && this.currentNegotiation != null && this.currentNegotiation.is_killed != true) {
@@ -182,6 +162,52 @@
                                 && this.marketNegotiation.offer > currentOffer.offer
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
+
+                    // Check that bid and bid_qty are present together
+                    invalid_states.bid_pair = this.currentNegotiation.bid != null && (
+                        (
+                            !this.is_empty(this.marketNegotiation.bid)  
+                            &&  this.is_empty(this.marketNegotiation.bid_qty)
+                        ) || (
+                            this.is_empty(this.marketNegotiation.bid)  
+                            && !this.is_empty(this.marketNegotiation.bid_qty)
+                        )
+                    );
+                 
+                    // Check bid offer and offer_qty are present together
+                    invalid_states.offer_pair = this.currentNegotiation.offer != null && (
+                        ( 
+                            !this.is_empty(this.marketNegotiation.offer)  
+                            && this.is_empty(this.marketNegotiation.offer_qty)
+                        ) || (
+                            this.is_empty(this.marketNegotiation.offer)  
+                            && !this.is_empty(this.marketNegotiation.offer_qty)
+                        )
+                    );
+
+                } else {
+                    // Quote
+                    // Check that bid and bid_qty are present together
+                    invalid_states.bid_pair = (
+                        (
+                            !this.is_empty(this.marketNegotiation.bid)  
+                            &&  this.is_empty(this.marketNegotiation.bid_qty)
+                        ) || (
+                            this.is_empty(this.marketNegotiation.bid)  
+                            && !this.is_empty(this.marketNegotiation.bid_qty)
+                        )
+                    );
+                 
+                    // Check bid offer and offer_qty are present together
+                    invalid_states.offer_pair = (
+                        ( 
+                            !this.is_empty(this.marketNegotiation.offer)  
+                            && this.is_empty(this.marketNegotiation.offer_qty)
+                        ) || (
+                            this.is_empty(this.marketNegotiation.offer)  
+                            && !this.is_empty(this.marketNegotiation.offer_qty)
+                        )
+                    );
                 }
                 console.log(invalid_states);
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
