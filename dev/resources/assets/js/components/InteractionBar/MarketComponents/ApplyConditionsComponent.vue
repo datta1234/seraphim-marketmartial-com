@@ -38,7 +38,7 @@
                                                         v-model="defaults[child.alias]"
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
-                                                        v-on:change="e => setCondition(child.alias, e, c_group)"
+                                                        v-on:change="e => setCondition(child, e, c_group)"
                                                         name="">
                                     </b-form-radio-group>
                                 </div>
@@ -51,7 +51,7 @@
                                                 v-model="defaults[condition.alias]"
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
-                                                v-on:change="e => setCondition(condition.alias, e, c_group)"
+                                                v-on:change="e => setCondition(condition, e, c_group)"
                                                 name="">
                             </b-form-radio-group>
                         </div>
@@ -243,6 +243,7 @@
                     default:
                         this.marketNegotiation[condition.alias] = value;
                 }
+                console.log("Set: ", this.marketNegotiation[condition.alias]);
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {
