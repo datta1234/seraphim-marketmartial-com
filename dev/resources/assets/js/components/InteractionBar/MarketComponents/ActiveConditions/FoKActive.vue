@@ -14,16 +14,8 @@
                     <b-col>
                         <span id="fok-popover-hit">
                             <a  href="" 
-                                @click.prevent.stop="doBuy" 
-                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false">
-                                    Buy
-                            </a>
-                        </span>
-                        <span id="fok-popover-lift">
-                            <a  href="" 
-                                @click.prevent.stop="doSell" 
-                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true">
-                                    Sell
+                                @click.prevent.stop="doTrade">
+                                    Trade
                             </a>
                         </span>
                         <span>
@@ -34,25 +26,13 @@
             </div>
 
             <ibar-trade-desired-quantity 
-                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false" 
                 ref="fokPopoverHit" 
                 target="fok-popover-hit" 
                 :market-negotiation="negotiation" 
-                :open="bid_sell" 
-                :is-offer="false" 
-                @close="bid_sell = false" 
-                parent="fok-container">
-            </ibar-trade-desired-quantity>
-
-            <ibar-trade-desired-quantity 
-                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true" 
-                ref="fokPopoverLift" 
-                target="fok-popover-lift" 
-                :market-negotiation="negotiation" 
-                :open="offer_buy" 
-                :is-offer="true" 
-                @close="offer_buy = false" 
-                parent="fok-container">
+                :open="do_trade" 
+                :is-offer="null" 
+                @close="do_trade = false"
+                parent="cond-container">
             </ibar-trade-desired-quantity>
 
         </b-col>
@@ -72,8 +52,7 @@
             return {
                 timer: null,
                 timer_value: null,
-                bid_sell: false,
-                offer_buy: false,
+                do_trade: false,
             }
         },
         computed: {
@@ -100,13 +79,9 @@
             }
         },
         methods: {
-            doBuy() {
+            doTrade() {
                 // this.negotiation.fokBuy();
-                this.bid_sell = true;
-            },
-            doSell() {
-                // this.negotiation.sell();
-                this.offer_buy = true;
+                this.do_trade = true;
             },
             doKill() {
                 this.negotiation.killNegotiation()
