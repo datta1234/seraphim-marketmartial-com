@@ -38,11 +38,9 @@ const init = (app) => {
     
     // ensure it happens only once
     if(state.keepalive == null) {
-        console.log("Setup");
         axios.interceptors.response.use((response) => {
             if(response.headers && typeof response.headers[state._active_maker_header] !== 'undefined') {
                 state.total = response.headers[state._active_maker_header];
-                console.log("Set Active To : ", response.headers[state._active_maker_header]);
                 emitter.emit(state.total);
             }
             return response;

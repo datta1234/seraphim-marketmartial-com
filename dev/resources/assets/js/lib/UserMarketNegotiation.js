@@ -485,4 +485,12 @@ export default class UserMarketNegotiation extends BaseModel {
         return this.is_repeat && this.parent_negotiation && this.parent_negotiation.is_repeat;
     }
 
+    /**
+    *   test if the negotiation has been traded
+    */
+    isTraded() {
+        let lastTrade = this.getLastTradeNegotiation();
+        return lastTrade && lastTrade.traded;
+    }
+
 }

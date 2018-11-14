@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-group" class="user-market">
+    <div dusk="market-group" v-bind:class="{ 'user-market': true, 'd-none': show_group }">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">
@@ -67,7 +67,9 @@
                 groupings: {
                     default: this.getDateGrouping,
                     delta: 'trade_structure'
-                }
+                },
+
+                show_group: true,
             };
         },
         computed: {
@@ -143,6 +145,7 @@
                     default:
                         this.updateDefaultRequests(reqs);
                 }
+                this.show_group = ( this.market.is_seldom == true && reqs.length == 0 );
             }
         },
         mounted() {

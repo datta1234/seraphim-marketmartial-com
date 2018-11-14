@@ -20,6 +20,7 @@ export default class Market extends BaseModel {
             market_type_id: "",
             parent_id: "",
             is_displayed: true,
+            is_seldom: false,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
