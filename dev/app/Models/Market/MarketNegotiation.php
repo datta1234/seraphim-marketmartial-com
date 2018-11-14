@@ -864,7 +864,11 @@ class MarketNegotiation extends Model
                 {
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
-                    $newMarketNegotiation =  $this->setMarketNegotiationAfterTrade($user);
+                    
+                    /*
+                    * once a trade has happend no need for the new record
+                    */
+                    //$newMarketNegotiation =  $this->setMarketNegotiationAfterTrade($user);
 
                 }else if ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
                 {

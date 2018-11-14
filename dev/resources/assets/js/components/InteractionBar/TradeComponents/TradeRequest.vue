@@ -67,13 +67,13 @@
                 </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ firstTradeNegotiation.getTradingText() }}
+                {{ firstTradeNegotiation.getTradingText(true) }}
         </div>
     </b-col> 
     
     <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
         <b-row dusk="ibar-trade-request-open">
-            <b-col cols="10" >
+            <b-col cols="10">
                 <b-row>
                     <b-col cols="3" class="text-center">
                         -
