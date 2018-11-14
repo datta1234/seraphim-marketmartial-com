@@ -1,84 +1,84 @@
 <template>
     <div dusk="confirm-market-request" class="step-selections">
         <b-container fluid>
-            <b-row v-if="display.is_versus_market" align-h="start">
+            <b-row v-if="display.is_versus_market" align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>INDEX:</p>
+                    <p class="m-0">INDEX:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>
+                    <p class="m-0">
                         {{ data.market_object.markets[0].title }}
                         <span v-if="data.market_object.details.fields[0].is_selected && display.show_choice"> (CH)</span>
                     </p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>VS.</p>
+                    <p class="m-0">VS.</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>
+                    <p class="m-0">
                         {{ data.market_object.markets[1].title }}
                         <span v-if="data.market_object.details.fields[1].is_selected && display.show_choice"> (CH)</span>
                     </p>
                 </b-col>
             </b-row>
-            <b-row v-else-if="display.is_stock_only" align-h="start">
+            <b-row v-else-if="display.is_stock_only" align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>STOCK NAME:</p>
+                    <p class="m-0">STOCK NAME:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.stock.code }}</p>
-                </b-col>
-            </b-row>
-            <b-row v-else align-h="start">
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_type.title.toUpperCase() }}:</p>
-                </b-col>
-                <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.market.title }}</p>
+                    <p class="m-0">{{ data.market_object.stock.code }}</p>
                 </b-col>
             </b-row>
-            <b-row align-h="start">
+            <b-row v-else align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>EXPIRY:</p>
+                    <p class="m-0">{{ data.market_type.title.toUpperCase() }}:</p>
+                </b-col>
+                <b-col cols="3" class="mt-2">
+                    <p class="m-0">{{ data.market_object.market.title }}</p>
+                </b-col>
+            </b-row>
+            <b-row align-h="start" class="mt-0 mb-0">
+                <b-col cols="3" class="mt-2">
+                    <p class="m-0">EXPIRY:</p>
                 </b-col>
                 <b-col v-if="display.is_versus_date" cols="3" class="mt-2">
-                    <p>{{ data.market_object.expiry_dates.map(x => this.castToMoment(x)).join(' vs ') }}</p>
+                    <p class="m-0">{{ data.market_object.expiry_dates.map(x => this.castToMoment(x)).join(' vs ') }}</p>
                 </b-col>
                 <b-col  v-else :key="index" v-for="(expiry_date, index) in data.market_object.expiry_dates"  
                         cols="3" 
                         class="mt-2">
-                    <p>{{ castToMoment(expiry_date) }}</p>
+                    <p class="m-0">{{ castToMoment(expiry_date) }}</p>
                 </b-col>
             </b-row>
-            <b-row v-if="display.has_strike" align-h="start">
+            <b-row v-if="display.has_strike" align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>STRIKE:</p>
+                    <p class="m-0">STRIKE:</p>
                 </b-col>
                 <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
-                	<p>
+                	<p class="m-0">
                         {{ (data.market_object.stock ? "R" : "") + splitValHelper(field.strike,' ',3) }}
                         <span v-if="field.is_selected && display.show_choice"> (CH)</span>
                     </p>
                 </b-col>
             </b-row>
-            <b-row align-h="start">
+            <b-row align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>QUANTITY:</p>
+                    <p class="m-0">QUANTITY:</p>
                 </b-col>
                 <b-col  :key="index" v-for="(field, index) in data.market_object.details.fields"
                         cols="3"
                         :offset="(display.is_versus_market && index != 0) ? 3 : 0" 
                         class="mt-2">
-                	<p>{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
+                	<p class="m-0">{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
                         : splitValHelper(field.quantity,' ',3) }}</p>
                 </b-col>
             </b-row>
-            <b-row align-h="start">
+            <b-row align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p>STRUCTURE:</p>
+                    <p class="m-0">STRUCTURE:</p>
                 </b-col>
                 <b-col cols="3" class="mt-2">
-                    <p>{{ data.market_object.trade_structure }}</p>
+                    <p class="m-0">{{ data.market_object.trade_structure }}</p>
                 </b-col>
             </b-row>
             <b-row v-if="errors.messages.length > 0" class="text-center mt-3">
@@ -87,7 +87,7 @@
                 </b-col>
             </b-row>
             <b-row align-h="center">
-                <b-col cols="6" class="mt-2">
+                <b-col cols="6" class="mt-4">
                     <b-button id="confirm-request-market" class="mm-modal-market-button-alt w-100" @click="confirmDetails()">
                         Send Request
                     </b-button>
