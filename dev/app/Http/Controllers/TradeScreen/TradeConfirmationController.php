@@ -31,7 +31,7 @@ class TradeConfirmationController extends Controller
         ])->preFormatted();
 
 
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['data' => $data]);
     }
 
     public function update(TradeConfirmation $tradeConfirmation,Request $request)
@@ -99,7 +99,7 @@ class TradeConfirmationController extends Controller
 
          //perform the booked trades
 
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['data' => $data]);
     } 
 
     public function dispute(TradeConfirmation $tradeConfirmation,Request $request)
@@ -133,6 +133,6 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
          
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['data' => $data]);
     }    
 }

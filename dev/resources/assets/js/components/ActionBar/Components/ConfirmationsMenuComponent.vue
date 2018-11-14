@@ -27,7 +27,7 @@
                 <div class="mm-modal-title" slot="modal-title">
                     Confirmation
                 </div>
-                <trade-confirmation-component @close="hideModal()" v-if="selected_trade_confirmation != null" :trade_confirmation="selected_trade_confirmation"></trade-confirmation-component>
+                <trade-confirmation-component ref="tradeConfirmationRef" @close="hideModal()"></trade-confirmation-component>
             </b-modal>
 
         </div>
@@ -59,16 +59,18 @@
         methods: {
             loadModal(trade_confirmation)
             {
-                this.selected_trade_confirmation = trade_confirmation;
+                this.$refs.tradeConfirmationRef.loadConfirmation(trade_confirmation);
                 this.$refs.confirmationModelRef.show();
             },
             hideModal()
             {
                 this.$refs.confirmationModelRef.hide()  ;
-                this.selected_trade_confirmation = null;
+                this.$refs.tradeConfirmationRef.clearConfirmation();
+
             }
         },
         mounted() {
+
         }
     }
 </script>

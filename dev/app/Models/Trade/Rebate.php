@@ -13,7 +13,8 @@ class Rebate extends Model
 	 * @property integer $user_id - The user to determine put or call from the trade confirmation
 	 * @property integer $user_market_request_id
 	 * @property integer $user_market_id
-     * @property integer $booked_trade_id 
+     * @property integer $booked_trade_id
+     * @property integer $trade_confirmation_id
 	 * @property integer $organisation_id - The Market Maker organisation id
 	 * @property boolean $is_paid
 	 * @property \Carbon\Carbon $trade_date
@@ -87,6 +88,15 @@ class Rebate extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function tradeConfirmation()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function userMarket()
     {
         return $this->belongsTo('App\Models\Market\UserMarket','user_market_id');
@@ -112,18 +122,17 @@ class Rebate extends Model
 
     public function preFormat()
     {
-        $trade_confirmation = $this->bookedTrade->tradeConfirmation;
-        $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
+        $user_market_request_items = $this->tradeConfirmation->resolveUserMarketRequestItems();
 
         $data = [
             "date"          => $this->trade_date,
-            "market"        => $this->bookedTrade->resolveMarketStock(),
-            "is_put"        => $trade_confirmation->is_put,
+            "market"        => $this->tradeConfirmation->resolveUnderlying(),
+            "is_put"        => $this->tradeConfirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],
             "role"          => null,
-            "rebate"        => $this->bookedTrade->amount,
+            "rebate"        => $this->amount,
         ];
 
         if(\Auth::user()->role_id == 1){
@@ -132,11 +141,11 @@ class Rebate extends Model
 
         // Resolve role
         switch (true) {
-            case ($trade_confirmation->sendUser->organisation->id == $this->organisation->id):
-            case ($trade_confirmation->recievingUser->organisation->id == $this->organisation->id):
+            case ($this->tradeConfirmation->sendUser->organisation->id == $this->organisation->id):
+            case ($this->tradeConfirmation->recievingUser->organisation->id == $this->organisation->id):
                 $data["role"] = 'Traded';
                 break;
-            case ($trade_confirmation->tradeNegotiation->userMarket->user->organisation->id == $this->organisation->id):
+            case ($this->tradeConfirmation->tradeNegotiation->userMarket->user->organisation->id == $this->organisation->id):
                 $data["role"] = 'Market Maker (traded away)';
                 break;
             default:
@@ -160,20 +169,19 @@ class Rebate extends Model
 
     public function preFormatAdmin($is_csv = false)
     {
-        $trade_confirmation = $this->bookedTrade->tradeConfirmation;
-        $user_market_request_items = $trade_confirmation->resolveUserMarketRequestItems();
+        $user_market_request_items = $this->tradeConfirmation->resolveUserMarketRequestItems();
 
         $data = [
             "id"            => $this->id,
             "date"          => $this->trade_date,
             "user"          => $this->user->full_name,
             "organisation"  => $this->organisation->title,
-            "market"        => $this->bookedTrade->resolveMarketStock(),
-            "is_put"        => $trade_confirmation->is_put,
+            "market"        => $this->tradeConfirmation->resolveUnderlying(),
+            "is_put"        => $this->tradeConfirmation->is_put,
             "strike"        => $user_market_request_items["strike"],
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],
-            "rebate"        => $this->bookedTrade->amount,
+            "rebate"        => $this->amount,
             "is_paid"       => $this->is_paid,
         ];
 
@@ -223,21 +231,20 @@ class Rebate extends Model
                     $q->where('title','like',"%$term%");
                 });
             })
-            ->orWhereHas('bookedTrade',function($q) use ($term){
-                $q->whereHas('stock',function($q) use ($term){
+            ->orWhereHas('tradeConfirmation',function($q) use ($term){
+                // @TODO - Rework logic to check tradables for stock and market
+                /*$q->whereHas('stock',function($q) use ($term){
                     $q->where('code','like',"%$term%");
                 })
                 ->orWhereHas('market',function($q) use ($term){
                     $q->where('title','like',"%$term%");
-                });
+                });*/
                 if(strtolower($term) === 'put' || strtolower($term) === 'call'){
-                    $q->orWhereHas('tradeConfirmation',function($q) use ($term){
-                        if(strtolower($term) === 'put'){
-                            $q->where('is_put','1');
-                        } else {
-                            $q->where('is_put','0');
-                        }
-                    });
+                    if(strtolower($term) === 'put'){
+                        $q->where('is_put','1');
+                    } else {
+                        $q->where('is_put','0');
+                    }
                 }
             });
         });

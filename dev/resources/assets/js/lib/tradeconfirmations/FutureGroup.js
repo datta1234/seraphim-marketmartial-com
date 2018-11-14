@@ -50,11 +50,11 @@ export default class FutureGroup {
             items: [
                 {
                     "title": "Future",
-                    "value": this.future
+                    "value": parseFloat(this.future)
                 },
                 {
                     "title": "Contract",
-                    "value": this.contracts
+                    "value": parseFloat(this.contracts)
                 }
             ]
         };

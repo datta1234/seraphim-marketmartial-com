@@ -25,7 +25,7 @@
             overflow: hidden;
 
             position: fixed;
-            z-index: 1030; //also houses a modal and its hidden if the position is fixed
+            z-index: 1015;
             width: $chat-bar-width + $chat-toggle-width;
             
             padding-bottom: 150px;

@@ -34,6 +34,7 @@ class TradeConfirmationController extends Controller
             return $item->preFormatted();
         });
 
+
         return response()->json([
             'data'=> $trade_confirmations,
             'message'=>"Trade Confirmations loaded successfully.", 
