@@ -370,7 +370,7 @@ class UserMarket extends Model
 
     public function addNegotiation($user,$data)
     {
-        
+
         $marketNegotiation = new MarketNegotiation($data);
         $marketNegotiation->user_id = $user->id;
 
@@ -410,6 +410,11 @@ class UserMarket extends Model
             // enforce responses to have the same condition
             if($counterNegotiation->isTradeAtBestOpen() && !$counterNegotiation->isTrading()) {
                 $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
+            }
+
+            // responding to RepeatATW will open to market automatically
+            if($counterNegotiation->isRepeatATW()) {
+                $marketNegotiation->is_repeat = true;
             }
 
             // add missing values (prior data)
