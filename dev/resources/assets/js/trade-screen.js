@@ -539,6 +539,9 @@ const app = new Vue({
         theme_toggle: false,
         pusher_messages: [],
         completed_messages: [],
+        scroll_settings: {
+            suppressScrollY: true
+        },
     },
     mounted: function() {
         Config.configs = this.configs;
