@@ -256,7 +256,7 @@ class Rebate extends Model
             }
 
             if(!empty($filter["filter_date"])) {
-                $booked_trade_query->whereDate('created_at', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
+                $rebateQuery->whereDate('created_at', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
             }
 
             if(!empty($filter["filter_start_date"]) && !empty($filter["filter_end_date"])) {
