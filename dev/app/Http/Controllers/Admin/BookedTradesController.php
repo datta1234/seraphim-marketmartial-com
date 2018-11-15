@@ -130,7 +130,6 @@ class BookedTradesController extends Controller
                     'filter_end_date' => $request->input('end_date'),
                     'filter_expiration' => $request->input('expiration')
                     ]);
-        dd($booked_trades_query->get()->toArray());
         // Filter booked_trades by organisation if passed
         if(!empty($request->input('organisation'))) {
             $booked_trades_query->whereHas('user',function($q) use ($request){
