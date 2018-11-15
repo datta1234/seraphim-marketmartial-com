@@ -75,6 +75,35 @@ class MarketNegotiationPolicy
         );
     }
 
+    public function amend(User $user, MarketNegotiation $marketNegotiation)
+    {
+        $userMarket = $marketNegotiation->userMarket;
+        $current_org_id = $user->organisation_id;
+        $lastNegotiation = $userMarket->lastNegotiation;
+
+        // not valid user
+        if($current_org_id != $lastNegotiation->user->organisation_id) {
+            return false;
+        }
+        
+        // Cant respond to negotiation if FoK
+        if($lastNegotiation->id != $marketNegotiation->id) {
+            // only if its killed
+            return false;
+        }
+
+        // cant amend if its traded or spun
+        if($lastNegotiation->isTraded() || $lastNegotiation->isSpun()) {
+            return false;
+        }
+
+        return $userMarket->userMarketRequest->isAcceptedState($current_org_id) && 
+            in_array(
+                $userMarket->userMarketRequest->getStatus($current_org_id), 
+                ["negotiation-pending", "negotiation-open", "trade-negotiation-open","trade-negotiation-balance"]
+            );
+    }
+
 
     /**
      * Determine whether the user can improve the market negotiation

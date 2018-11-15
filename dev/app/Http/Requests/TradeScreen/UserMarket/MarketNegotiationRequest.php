@@ -5,6 +5,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\LevelsImprovement;
 use App\Rules\MaintainsRatio;
+use App\Rules\AmendOwnLevels;
 
 class MarketNegotiationRequest extends FormRequest
 {
@@ -61,6 +62,7 @@ class MarketNegotiationRequest extends FormRequest
     public function withValidator(Validator $validator)
     {
         $negotiation = $this->user_market->lastNegotiation()->notPrivate()->first();
+        $lastNegotiation = $this->user_market->lastNegotiation;
         /*$ratio = $this->user_market->firstNegotiation->ratio;*/
 
         $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $negotiation)], 
@@ -82,5 +84,11 @@ class MarketNegotiationRequest extends FormRequest
             function ($input) {
                 return !is_null($input->offer) && !$input->is_repeat;
         }); 
+
+        $is_put = $this->method == "PUT";
+        $org_id = $this->user() ? $this->user()->organisation_id : null;
+        $validator->sometimes(['bid', 'offer'], [new AmendOwnLevels($lastNegotiation, $org_id)], function($input) use ($is_put) {
+            return $is_put;
+        });
     }
 }
