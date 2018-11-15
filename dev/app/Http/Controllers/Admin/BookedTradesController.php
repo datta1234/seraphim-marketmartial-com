@@ -126,7 +126,8 @@ class BookedTradesController extends Controller
         // Get the booked_trades according to the passed filters
         $booked_trades_query = BookedTrade::basicSearch(null,null,null, [
                     'filter_status' => $request->input('is_confirmed'),
-                    'filter_date' => $request->input('date'),
+                    'filter_start_date' => $request->input('start_date'),
+                    'filter_end_date' => $request->input('end_date'),
                     'filter_expiration' => $request->input('expiration')
                     ]);
         // Filter booked_trades by organisation if passed

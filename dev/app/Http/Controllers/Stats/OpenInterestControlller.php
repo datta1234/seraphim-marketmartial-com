@@ -119,7 +119,7 @@ class OpenInterestControlller extends Controller
             // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\OpenInterest::createFromCSV', $csv);
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             \Log::error($e);
             DB::rollBack();
             return response()->json(['message' => 'Failed to upload Open Interest data.', 'errors'=>[]], 500);

@@ -50,7 +50,9 @@ class ResolveUuid
         foreach ($organisations as $organisation) 
         {
             // let the clients know their UUID has been updated
-            event(new UUIDUpdated($organisation, $old_uuids[$organisation->id]));
+            if(isset($old_uuids[$organisation->id])) {
+                event(new UUIDUpdated($organisation, $old_uuids[$organisation->id]));
+            }
         }
 
         return $orgUuid;

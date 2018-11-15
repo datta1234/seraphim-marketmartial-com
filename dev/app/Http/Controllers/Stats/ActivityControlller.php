@@ -203,7 +203,7 @@ class ActivityControlller extends Controller
             // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             \Log::error($e);
             DB::rollBack();
             return response()->json(['message' => 'Failed to upload Safex data.', 'errors'=>[]], 500);

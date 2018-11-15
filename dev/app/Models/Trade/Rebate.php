@@ -259,22 +259,16 @@ class Rebate extends Model
                 $rebateQuery->whereDate('trade_date', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
             }
 
+            if(!empty($filter["filter_start_date"]) && !empty($filter["filter_end_date"])) {
+                $start_date = Carbon::parse($filter["filter_start_date"])->format('Y-m-d');
+                $end_date = Carbon::parse($filter["filter_end_date"])->format('Y-m-d');
+                $rebateQuery->whereBetween('trade_date', [$start_date,$end_date]);
+            }
+
             if(!empty($filter["filter_expiration"])) {
-                $rebateQuery->whereHas('bookedTrade', function ($query) use ($filter) {
-                    $query->whereHas('tradeConfirmation', function ($query) use ($filter) {
-                        $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
-                            $query->whereHas('userMarket', function ($query) use ($filter) {
-                                $query->whereHas('userMarketRequest', function ($query) use ($filter) {
-                                    $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
-                                        $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
-                                            $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
-                                                  ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
-                                        });
-                                    });
-                                });
-                            });
-                        });
-                    });
+                $rebateQuery->whereHas('userMarketRequest.userMarketRequestGroups.userMarketRequestItems', function ($query) use ($filter) {
+                    $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                          ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
                 });
             }
         }
