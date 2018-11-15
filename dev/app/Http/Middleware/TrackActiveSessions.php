@@ -39,8 +39,9 @@ class TrackActiveSessions
         }
         \Cache::put('active_market_makers', $active_market_makers, now()->endOfDay());
 
-
-        $response->header('active-market-makers', count($active_market_makers));
+        if ($request->wantsJson()) {
+            $response->header('active-market-makers', count($active_market_makers));
+        }
         return $response;
     }
 }

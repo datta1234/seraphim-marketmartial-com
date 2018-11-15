@@ -145,7 +145,8 @@ class RebatesController extends Controller
         // Get the rebates according to the passed filters
         $rebates_query = Rebate::basicSearch(null,null,null, [
                     'filter_paid' => $request->input('is_paid'),
-                    'filter_date' => $request->input('date'),
+                    'filter_start_date' => $request->input('start_date'),
+                    'filter_end_date' => $request->input('end_date'),
                     'filter_expiration' => $request->input('expiration')
                     ]);
         // Filter Rebates by organisation if passed

@@ -12,6 +12,7 @@ class BookedTrade extends Model
 	 * @property integer $user_id
 	 * @property integer $trade_confirmation_id
 	 * @property integer $trading_account_id
+     * @property integer $user_market_request_id
 	 * @property boolean $is_sale
      * @property boolean $is_purchase
      * @property boolean $is_rebate
@@ -61,6 +62,15 @@ class BookedTrade extends Model
     public function tradeConfirmation()
     {
         return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequest()
+    {
+        return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
     }
 
     /**
@@ -181,20 +191,16 @@ class BookedTrade extends Model
                 $booked_trade_query->whereDate('created_at', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
             }
 
+            if(!empty($filter["filter_start_date"]) && !empty($filter["filter_end_date"])) {
+                $start_date = Carbon::parse($filter["filter_start_date"])->format('Y-m-d');
+                $end_date = Carbon::parse($filter["filter_end_date"])->format('Y-m-d');
+                $booked_trade_query->whereBetween('created_at', [$start_date,$end_date]);
+            }
+
             if(!empty($filter["filter_expiration"])) {
-                $booked_trade_query->whereHas('tradeConfirmation', function ($query) use ($filter) {
-                    $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
-                        $query->whereHas('userMarket', function ($query) use ($filter) {
-                            $query->whereHas('userMarketRequest', function ($query) use ($filter) {
-                                $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
-                                    $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
-                                        $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
-                                              ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
-                                    });
-                                });
-                            });
-                        });
-                    });
+                $booked_trade_query->whereHas('userMarketRequest.userMarketRequestGroups.userMarketRequestItems', function ($query) use ($filter) {
+                        $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                              ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
                 });
             }
         }

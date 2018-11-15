@@ -72,16 +72,36 @@
                 </b-row>
                 <b-row class="mt-2">
                     <b-col cols="4">
-                        <label class="mr-sm-2" for="admin-download-date-filter">
-                            Date:
+                        <label class="mr-sm-2" for="admin-download-start-date-filter">
+                            Start Date:
                         </label>
                     </b-col>
                     <b-col cols="8">
-                        <datepicker id="admin-download-date-filter"
-                                    v-model="modal_data.date_filter"
+                        <datepicker id="admin-download-start-date-filter"
+                                    v-model="modal_data.start_date_filter"
                                     class="filter-date-picker"
-                                    name="date"
-                                    placeholder="Select a date"
+                                    name="start_date"
+                                    placeholder="Select start date"
+                                    :bootstrap-styling="true"
+                                    :calendar-button="true"
+                                    calendar-button-icon="fas fa-calendar-alt"
+                                    :clear-button="true"
+                                    clear-button-icon="fas fa-trash-alt">    
+                        </datepicker>
+                    </b-col>
+                </b-row>
+                <b-row class="mt-2">
+                    <b-col cols="4">
+                        <label class="mr-sm-2" for="admin-download-start-date-filter">
+                            End Date:
+                        </label>
+                    </b-col>
+                    <b-col cols="8">
+                        <datepicker id="admin-download-end-date-filter"
+                                    v-model="modal_data.end_date_filter"
+                                    class="filter-date-picker"
+                                    name="end_date"
+                                    placeholder="Select end date"
                                     :bootstrap-styling="true"
                                     :calendar-button="true"
                                     calendar-button-icon="fas fa-calendar-alt"
@@ -133,7 +153,8 @@
                 modal_data: {
                     expiration: null,
                     organisation: null,
-                    date_filter: null,
+                    start_date_filter: null,
+                    end_date_filter: null,
                     paid_filter: null,
                     status_filter: null,
                     show_modal: false,
