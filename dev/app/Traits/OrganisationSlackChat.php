@@ -33,7 +33,71 @@ trait OrganisationSlackChat {
                     'headers' => $header,
                     'body'  =>  json_encode($body)
             ]);
-            return json_decode($response->getBody());
+            $body = json_decode($response->getBody());
+            
+            if(isset($body->ok)) {
+                return $body;
+            }
+            
+            // Handle failure and get channel id if error is the following
+            /*[2018-11-15 07:35:04] staging.INFO: array (
+              'ok' => false,
+              'error' => 'name_taken',
+              'detail' => '`name` is already taken.',
+              'warning' => 'missing_charset',
+              'response_metadata' =>
+              stdClass::__set_state(array(
+                 'warnings' =>
+                array (
+                  0 => 'missing_charset',
+                ),
+              )),
+            )*/
+            if(isset($body->error) && $body->error == 'name_taken') {
+                $channel = $this->findChannel($channel_name);
+                if($channel != false) {
+                    return ['ok' => true,'group' => $channel];
+                }
+                \Log::error(["Failed to find Oganisation Channel: ", (array)$body]);
+            }
+
+            \Log::error(["Oganisation Channel Failed to create: ", (array)$body]);
+            return false;
+
+        } catch(RequestException $e) {
+            \Log::error($e);
+            $error_data = array("Request" => Psr7\str($e->getRequest()));
+            if ($e->hasResponse()) {
+                $error_data["Response"] = Psr7\str($e->getResponse());
+            }
+            \Log::error(array( "Errors" => $error_data));
+            return false;
+        }
+    }
+
+    public function findChannel($channel_name)
+    {
+        $header = [
+            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            'Content-Type' =>'application/json', 
+            'Accept' => 'application/json'
+        ];
+        try {
+            $client = new Client();
+            $response = $client->request('GET', env('SLACK_API_URL').'/groups.list', [
+                    'headers' => $header,
+            ]);
+            $body = json_decode($response->getBody());
+            
+            if(isset($body->ok)) {
+                if($body->ok == true) {
+                    if(isset($body->groups) && is_array($body->groups)) {
+                        $index = array_search($channel_name, array_column($body->groups, 'name'));
+                        return $body->groups[$index];
+                    }
+                }
+                return false;
+            }
 
         } catch(RequestException $e) {
             \Log::error($e);
