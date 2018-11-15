@@ -16,6 +16,29 @@ export default {
                     return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
                 }
                 return null;
+            },
+            bidState: function() {
+                if(this.marketRequest.chosen_user_market)
+                {
+                    return this.getStateClass(this.current_user_market_negotiation,'bid');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.bid_state == 'action',
+                    }   
+                }
+               
+            },
+            offerState: function() {
+                if(this.marketRequest.chosen_user_market)
+                {
+                    return this.getStateClass(this.current_user_market_negotiation,'offer');
+                }else
+                {
+                    return {
+                       'user-action': this.marketRequest.attributes.offer_state == 'action',
+                    }   
+                }
             }
     },
     methods: {
@@ -90,8 +113,13 @@ export default {
                 case "NEGOTIATION-OPEN-VOL":
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
-                        this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
-                        this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
+                        if(this.current_user_market_negotiation.isTraded()) {
+                            this.user_market_bid = '-';
+                            this.user_market_offer = '-';
+                        } else {
+                            this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                            this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
+                        }
                 break;
                 case "TRADE-NEGOTIATION-SENDER":
                 case "TRADE-NEGOTIATION-COUNTER":
@@ -165,6 +193,9 @@ export default {
         },
         getStateClass(item,attr)
         {
+            if(item[attr] == null) {
+                return "";
+            }
             let source = item.getAmountSource(attr);
              return {
                 "is-interest":source.is_interest && !source.is_my_org,

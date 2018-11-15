@@ -374,11 +374,13 @@ class UserMarketRequest extends Model
                                 ->lastNegotiation()
                                 ->where(function($q) use ($current_org_id){
                                         $q->organisationInvolved($current_org_id);
-                                        $q->orWhere(function($q) use ($current_org_id){
-                                            $q->whereHas('marketNegotiationParent',function($q) use ($current_org_id) {
-                                                $q->organisationInvolved($current_org_id);  
-                                            });
-                                        });
+                                        // $q->orWhere(function($q) use ($current_org_id){
+                                        //     $q->whereHas('marketNegotiationParent',function($q) use ($current_org_id) {
+                                        //         $q->organisationInvolved($current_org_id);  
+                                        //     });
+                                        // });
+
+                                    $q->organisationInvolvedOrCounters($current_org_id);
                     })->where('market_negotiations.id',$lastNegotiation->id)->exists();   
             } 
         } 
@@ -537,6 +539,9 @@ class UserMarketRequest extends Model
 
     public function getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id)
     {
+
+
+
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
@@ -550,11 +555,13 @@ class UserMarketRequest extends Model
                  $negotiator =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
                         $query->organisationInvolved($current_org_id);
                 })->where('market_negotiations.id',$lastNegotiation->id)->exists();
+
+
                  // $negotiator = $lastNegotiation->user->organisation_id == $current_org_id;
 
                 $counter =  $this->chosenUserMarket->marketNegotiations()->where(function($query) use ($current_org_id){
-                        $query->whereHas('marketNegotiationParent',function($q) use ($current_org_id){
-                            $q->organisationInvolved($current_org_id);
+                        $query->whereHas('counterUser',function($q) use ($current_org_id){
+                            $q->where("organisation_id",$current_org_id);
                         });
                 })->where('market_negotiations.id',$lastNegotiation->id)->exists();
                 // $counter = $lastNegotiation->counterUser->organisation_id == $current_org_id;
@@ -569,7 +576,10 @@ class UserMarketRequest extends Model
                     $marketNegotiationRoles = ["counter"];
                 }
             }           
-
+                // if($this->id == 3)
+                // {
+                //     \Log::info($marketNegotiationRoles);
+                // }
             return $marketNegotiationRoles;  
         }
     }
@@ -610,9 +620,15 @@ class UserMarketRequest extends Model
         $interest_org_id = $this->user->organisation->id;
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
+        
+
+
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
+        
         $tradeNegotiationRoles = $this->getCurrentUserRoleInTradeNegotiation($current_org_id);
+
+
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first

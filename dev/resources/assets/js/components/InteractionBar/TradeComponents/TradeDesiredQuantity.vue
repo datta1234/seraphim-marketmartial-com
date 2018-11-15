@@ -22,11 +22,6 @@
               </b-row>
             </template>
             <template v-if="is_offer != null && !confirmed">
-              <b-row>
-                 <b-col cols="12" class="text-center">
-                      Confirm {{ btnText }}
-                 </b-col>
-               </b-row>
                <b-row>
                  <b-col cols="12">
                        <b-btn v-active-request variant="primary" block @click="confirmed = true">{{ btnText }}</b-btn>

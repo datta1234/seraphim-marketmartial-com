@@ -97,7 +97,8 @@ class TradeConfirmationGroup extends Model
             'trade_confirmation_items'      => 
             $this->tradeConfirmationItems()
             ->where(function($query) use ($is_sender) {                
-                $query->whereNull('is_seller')
+                $query
+                ->whereNull('is_seller')
                 ->orWhere('is_seller',$is_sender);
             })
             ->get()

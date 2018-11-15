@@ -86,6 +86,12 @@ class LevelsImprovement implements Rule
             // ensure its set
             if($this->request->input($attribute) != null) {
                 /*
+                    Last negotiation Unset -- allow any value
+                */
+                if($this->lastNegotiation->{$attribute} === null) {
+                    return true;
+                }
+                /*
                     Ensure the value is improved
 
                     if 'bid'
@@ -103,8 +109,6 @@ class LevelsImprovement implements Rule
                         [10, 5] = false && false
 
                 */
-        
-
                 if(
                     ($this->request->input($attribute) > $this->lastNegotiation->getLatest($attribute)) == $valid &&
                     ($this->request->input($attribute) < $this->lastNegotiation->getLatest($attribute)) == !$valid
@@ -119,6 +123,18 @@ class LevelsImprovement implements Rule
                         if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->getLatest($attribute))) {
                             return true;
                         }
+                    }
+                    /*
+                        Only Proceed if its the same as the prior value
+                    */
+                    if(floatval($this->request->input($attribute)) !== floatval($this->lastNegotiation->getLatest($attribute))) {
+                        return false;
+                    }
+                    /*
+                        Last negotiation Unset -- allow any value
+                    */
+                    if($this->lastNegotiation->{$inverse} === null) {
+                        return true;
                     }
                     /*
                         If Value not improved, Ensure the Inverse value is improved ONLY if attribute equal
@@ -139,13 +155,14 @@ class LevelsImprovement implements Rule
 
                     */
                     if(
-                        floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->getLatest($attribute)) &&
                         ($this->request->input($inverse) > $this->lastNegotiation->getLatest($inverse)) == !$valid &&
                         ($this->request->input($inverse) < $this->lastNegotiation->getLatest($inverse)) == $valid
                     ) {
                         return true;
                     }
                 }
+            } else {
+                return $this->request->input($inverse) != null;
             }
             /*
                 If Value not present, Ensure the Inverse value is Present && improved

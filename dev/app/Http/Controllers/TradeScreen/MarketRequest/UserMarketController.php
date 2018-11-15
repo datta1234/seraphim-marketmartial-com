@@ -63,7 +63,7 @@ class UserMarketController extends Controller
         $user->organisation->notify("market_request_store","Response sent to interest.",true);
         $userMarketRequest->notifyRequested();
 
-        return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
+        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "Response sent to interest."]);
     }
 
     public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
@@ -74,7 +74,7 @@ class UserMarketController extends Controller
       $user->organisation->notify("market_request_store","You have worked the balance",true);
       $userMarketRequest->notifyRequested();
 
-      return response()->json(['data' => $userMarket, 'message' => "You have worked the balance"]);
+      return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
     }
 
 
@@ -139,12 +139,12 @@ class UserMarketController extends Controller
             $success = $userMarket->accept();
             $myOrganisation = $request->user()->organisation;
             $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
+
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
        
         }else
         {
-           // dd("here it is");
             $this->authorize('updateNegotiation',$userMarket);
             //the market maker allowed responses
             if($request->has('is_repeat') && $request->input('is_repeat'))
