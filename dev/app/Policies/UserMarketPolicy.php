@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\UserManagement\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Market\UserMarket;
+use App\Models\Market\MarketNegotiation;
 
 class UserMarketPolicy
 {

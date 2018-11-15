@@ -497,6 +497,41 @@ class UserMarket extends Model
         }
     }
 
+    public function updateNegotiation($marketNegotiation, $data)
+    {
+        if($data['bid'] == null) {
+            $data['bid'] = $this->lastNegotiation->bid;
+            $data['bid_qty'] = $this->lastNegotiation->bid_qty;
+        }
+        if($data['offer'] == null) {
+            $data['offer'] = $this->lastNegotiation->offer;
+            $data['offer_qty'] = $this->lastNegotiation->offer_qty;
+        }
+        return $marketNegotiation->update(
+            collect($data)->only([
+                "bid",
+                "offer",
+                "offer_qty",
+                "bid_qty",
+                
+                "bid_premium",
+                "offer_premium",
+                
+                "has_premium_calc",
+                "is_repeat",
+
+                "cond_is_repeat_atw",
+                "cond_fok_apply_bid",
+                "cond_fok_spin",
+                "cond_timeout",
+                "cond_is_oco",
+                "cond_is_subject",
+                "cond_buy_mid",
+                "cond_buy_best",
+            ])->toArray()
+        );
+    }
+
 
     //when they need to work the balance
     public function workTheBalance($user,$quantity)

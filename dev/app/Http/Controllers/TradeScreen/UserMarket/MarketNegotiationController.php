@@ -55,8 +55,7 @@ class MarketNegotiationController extends Controller
         //broadCast new market request;
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
-
-            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormatted() ,'message'=>'']);
+            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
 
         } else {
             return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
@@ -92,9 +91,22 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(MarketNegotiationRequest $request,UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function update(MarketNegotiationRequest $request,UserMarket $userMarket, MarketNegotiation $marketNegotiation)
     {
-        // $request->has('')
+        $this->authorize('amend', $marketNegotiation);
+        try {
+            \DB::beginTransaction();
+
+            $userMarket->updateNegotiation($marketNegotiation, $request->all());
+            $userMarket->fresh()->userMarketRequest->notifyRequested();
+
+            \DB::commit();
+            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
+        } catch(\Illuminate\Database\QueryException $e) {
+            \Log::error($e);
+            \DB::rollback();
+            return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
+        }
     }
 
     /**

@@ -666,6 +666,11 @@ class MarketNegotiation extends Model
         })->exists();
     }
 
+    public function isSpun()
+    {
+        return $this->is_repeat && $this->marketNegotiationParent && $this->marketNegotiationParent->is_repeat;
+    }
+
     public function getLatest($side)
     {
         $side = ( $side == 'bid' ? 'bid' : 'offer' );
@@ -948,9 +953,14 @@ class MarketNegotiation extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedMarketNegotiation($uneditedmarketNegotiations)
+    public function preFormattedMarketNegotiation($uneditedmarketNegotiations = null)
     {
-
+        if($uneditedmarketNegotiations == null) {
+            $uneditedmarketNegotiations = $this->userMarket->marketNegotiations()
+            ->notPrivate($this->resolveOrganisationId())
+            ->with('user')
+            ->get();
+        }
         $currentUserOrganisationId = $this->user->organisation_id;
         $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
         $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;

@@ -18,16 +18,16 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-    <template v-if="last_is_self">
+    <template v-if="!negotiation_available && cant_amend">
         <b-row>
             <b-col cols="10">
                 <p class="text-center">
-                    Your levels have been sent.
+                    Cannot Amend Levels
                 </p>
             </b-col>
         </b-row>
     </template>
-    <template v-if="!is_trading && !last_is_self">
+    <template v-if="!is_trading && negotiation_available">
         <ibar-market-negotiation-contracts 
             class="mb-1" v-if="can_negotiate" 
             @validate-proposal="validateProposal" 
@@ -112,7 +112,7 @@
                          dusk="ibar-action-send" 
                          variant="primary" 
                          @click="sendNegotiation()">
-                                Send
+                                 {{ ( proposed_user_market_negotiation.id != null ? 'Amend' : 'Send' ) }}
                         </b-button>
                         <b-button v-active-request class="w-100 mt-1" 
                          :disabled="conditionActive('fok')" 

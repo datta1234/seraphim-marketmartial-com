@@ -21,7 +21,7 @@ export default class UserMarketNegotiation extends BaseModel {
         this.trade_negotiations = [];
 
         const defaults = {
-            id: "",
+            id: null,
             bid: "",
             offer: "",
             bid_source: "",
@@ -178,6 +178,7 @@ export default class UserMarketNegotiation extends BaseModel {
     *  store
     */
     storeNegotiation(user_market) {
+        console.log("Store");
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
@@ -187,6 +188,36 @@ export default class UserMarketNegotiation extends BaseModel {
      
         return new Promise((resolve, reject) => {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+    /**
+    *  amend
+    */
+    amendNegotiation(user_market) {
+        console.log("Amending "+this.id, this);
+        // catch not assigned to a market request yet!
+        if(user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Market"));
+            });
+        }
+
+        if(this.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Negotiation"));
+            });   
+        }
+     
+        return new Promise((resolve, reject) => {
+             axios.put(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
