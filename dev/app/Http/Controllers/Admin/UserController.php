@@ -139,6 +139,19 @@ class UserController extends Controller
                 ]);
 
                 $slack_channel_data = $user->organisation->createChannel($user->organisation->channelName());
+                // Failed to create slack channel
+                if($slack_channel_data == false) {
+                    if($request->ajax()) {
+                        return response()->json(['data' => null, 'message' => 'Failed to create organisation slack channel.'],500);
+                    }
+                    return redirect()->back()->with('error', 'Failed to create organisation slack channel.'); 
+                }
+
+                if($slack_channel_data->ok == false) {
+                    DB::commit();
+                    throw new \App\Exceptions\SlackException("Failed to create organisation slack");
+                }
+
                 $slack_integration = new SlackIntegration([
                     "type"  => "string",
                     "field" => "channel",
@@ -150,14 +163,23 @@ class UserController extends Controller
                 Organisation::purgeCached();
             }
             DB::commit();
-        } catch (Exception $e) {
+
+        } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             Log::error($e);
             if($request->ajax()) {
                 return response()->json(['data' => null, 'message' => 'Failed to verify the user.'],500);
             }
             return redirect()->back()->with('error', 'Failed to verify the user.');
+
+        } catch (\App\Exceptions\SlackException $e) {
+            Log::error($e);
+            if($request->ajax()) {
+                return response()->json(['data' => null, 'message' => $e->getMessage()],500);
+            }
+            return redirect()->back()->with('error', $e->getMessage());
         }
+
         if($request->ajax()) {
             return response()->json(['data' => $user, 'message' => 'User has been verified.']);
         }
