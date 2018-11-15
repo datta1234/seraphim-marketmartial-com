@@ -181,6 +181,12 @@ class BookedTrade extends Model
                 $booked_trade_query->whereDate('created_at', Carbon::parse($filter["filter_date"])->format('Y-m-d'));
             }
 
+            if(!empty($filter["filter_start_date"]) && !empty($filter["filter_end_date"])) {
+                $start_date = Carbon::parse($filter["filter_start_date"])->format('Y-m-d');
+                $end_date = Carbon::parse($filter["filter_end_date"])->format('Y-m-d');
+                $booked_trade_query->whereBetween('created_at', [$start_date,$end_date]);
+            }
+
             if(!empty($filter["filter_expiration"])) {
                 $booked_trade_query->whereHas('tradeConfirmation', function ($query) use ($filter) {
                     $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
