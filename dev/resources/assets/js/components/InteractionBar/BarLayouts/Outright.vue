@@ -45,10 +45,9 @@
          :market-negotiation="proposed_user_market_negotiation"
          :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
         </ibar-trade-at-best-negotiation>
-   
-        <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
-            Alert me when cleared
-        </b-form-checkbox>
+        
+        <!-- Alert me when cleared -->
+        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
         
         <b-row class="mb-1">
             <b-col cols="10">
@@ -121,7 +120,7 @@
                          dusk="ibar-action-send" 
                          variant="primary" 
                          @click="spinNegotiation()">
-                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
+                            Spin
                         </b-button>
                     </b-col>
                 </b-row>
@@ -182,6 +181,8 @@
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
     
+    import AlertCleared from '../Components/AlertClearedComponent.vue';
+    
     import NegotiationBarMixin from '../NegotiationBarMixin';
 
     export default {
@@ -190,7 +191,8 @@
             IbarApplyConditions,
             IbarRemoveConditions,
             IbarActiveConditions,
-            IbarTradeAtBestNegotiation
+            IbarTradeAtBestNegotiation,
+            AlertCleared
         },
         props: {
             

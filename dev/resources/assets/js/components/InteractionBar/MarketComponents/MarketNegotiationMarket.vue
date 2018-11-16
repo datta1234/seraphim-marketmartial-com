@@ -57,7 +57,7 @@
                         this.old.bid = this.marketNegotiation.bid;
                         this.old.offer = this.marketNegotiation.offer;
                     }
-                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.old.bid + this.old.offer ) / 2;
+                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
                 } else {
                     this.marketNegotiation.bid = this.old.bid;
                     this.marketNegotiation.offer = this.old.offer;

@@ -77,7 +77,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                 $title_responder = $marketNegotiation->user->organisation->title;
                 $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
                 \Slack::postMessage([
-                    "text"      => "A $term at Best Timeout has occured, Trading Between _$title_initiator_ and _$title_responder_ @ *$level*",
+                    "text"      => "A ".$term." at Best Timeout has occured, Trading Between _".$title_initiator."_ and _".$title_responder."_ @ *".$level."*",
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
                 ], 'timeout');
             }

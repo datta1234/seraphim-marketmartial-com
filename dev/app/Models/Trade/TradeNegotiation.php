@@ -58,6 +58,17 @@ class TradeNegotiation extends Model
         'traded' => 'boolean',
         'is_offer' => 'boolean'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $user_market_request = $model->userMarket->userMarketRequest;
+            if($user_market_request->openToMarket()) {
+                $user_market_request->notifySubscribedUsers();
+            }
+        });
+    }
     
     /**
     * Return relation based of _id_foreign index

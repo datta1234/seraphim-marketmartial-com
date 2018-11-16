@@ -78,10 +78,15 @@ class OpenInterestControlller extends Controller
         $csv = array_map('str_getcsv', file($path));
 
         // Create a new array of csv file lines
-        array_walk($csv, function(&$row) {
-            array_walk($row, function(&$col) {
-                $col = trim($col);
-            });
+        array_walk($csv, function(&$row,$index) {
+            //@TODO - Code here not working, need to remove empty rows from the array.
+            /*if(empty($row)) {
+                unset($csv[$index]);
+            } else {*/
+                array_walk($row, function(&$col) {
+                    $col = trim($col);
+                });
+            /*}*/
         });
 
         // Replace the imported fields with the data base fields
@@ -91,12 +96,14 @@ class OpenInterestControlller extends Controller
 
         // remove headings field and map each value to the heading as key value pair
         array_walk($csv, function(&$a) use ($csv) {
-            $a = array_combine($csv[0], $a);
-            // removing white space before validation
-            $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
-            $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
-            $a['delta'] = str_replace(" ", "", $a['delta']);
-            $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+            if(count($a) == count($csv[0])) {
+                $a = array_combine($csv[0], $a);
+                // removing white space before validation
+                $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
+                $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
+                $a['delta'] = str_replace(" ", "", $a['delta']);
+                $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+            }
         });
         array_shift($csv);
 

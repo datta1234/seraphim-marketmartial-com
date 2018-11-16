@@ -125,6 +125,17 @@ class MarketNegotiation extends Model
         return $this->id;
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $user_market_request = $model->userMarket->userMarketRequest;
+            if($user_market_request->openToMarket()) {
+                $user_market_request->notifySubscribedUsers();
+            }
+        });
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
@@ -539,6 +550,12 @@ class MarketNegotiation extends Model
 
     public function counter($user, $data)
     {
+        if($data['bid'] == null) {
+            $data['bid'] = $this->bid;
+        }
+        if($data['offer'] == null) {
+            $data['offer'] = $this->offer;
+        }
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -576,8 +593,11 @@ class MarketNegotiation extends Model
     public function repeat($user)
     {
         $newNegotiation = $this->replicate();
-        $newNegotiation->user_id = $user->id;
-        $newNegotiation->counter_user_id = $this->user_id;
+        // dont re-own a trade at best
+        if(!$newNegotiation->isTradeAtBest()) {
+            $newNegotiation->user_id = $user->id;
+            $newNegotiation->counter_user_id = $this->user_id;
+        }
         $newNegotiation->market_negotiation_id = $this->id;
 
         return $newNegotiation->save();
@@ -599,12 +619,15 @@ class MarketNegotiation extends Model
     public function resolvePrivateHistory()
     {
         // update history tree
-        $history = $this->getConditionHistory();
-        $history->each(function($item){
-            $item->update([
-                'is_private' => false
-            ]);
-        });
+        // $history = $this->getConditionHistory();
+        // $history->each(function($item){
+        //     $item->update([
+        //         'is_private' => false
+        //     ]);
+        // });
+        $this->update([
+            "is_private" => false
+        ]);
     }
 
     public function getLatestBid()
@@ -728,19 +751,19 @@ class MarketNegotiation extends Model
             $q->where('is_private', false);
 
             // also show the private ones for certain situations (owned / traded)
-            $q->orWhere(function($qq) use ($organisation_id) {
-                $qq->where('is_private', true);
-                $qq->whereHas('user', function($qqq) use ($organisation_id) {
-                    $qqq->where('organisation_id', $organisation_id);
-                });
-                // $qq->where(function($qqq) use ($organisation_id) {
-                //     // if it was created by the organisaiton viewing, we show it
-                //     // OR If this has been traded, we show it
-                //     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
-                //         $qqqq->where('traded', true);
-                //     }*/);
-                // });
-            });
+            // $q->orWhere(function($qq) use ($organisation_id) {
+            //     $qq->where('is_private', true);
+            //     $qq->whereHas('user', function($qqq) use ($organisation_id) {
+            //         $qqq->where('organisation_id', $organisation_id);
+            //     });
+            //     // $qq->where(function($qqq) use ($organisation_id) {
+            //     //     // if it was created by the organisaiton viewing, we show it
+            //     //     // OR If this has been traded, we show it
+            //     //     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
+            //     //         $qqqq->where('traded', true);
+            //     //     }*/);
+            //     // });
+            // });
         });
     }
 
@@ -808,7 +831,6 @@ class MarketNegotiation extends Model
                 && !$this->isTradeAtBest() 
                 && !$this->isTradeAtBestOpen() 
                 && !$this->isRepeatATW()
-                && !$this->isRepeatATWRepeat()
                 && !$this->isFoK()
             ) {
                 return "SPIN";
@@ -893,10 +915,6 @@ class MarketNegotiation extends Model
                         "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
                     ], 'trade');
                 }
-                // if($this->is_private == true) {
-                //     $this->is_private = false;
-                //     $this->save();
-                // }
                
                 if($newMarketNegotiation )
                 {

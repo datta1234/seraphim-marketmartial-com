@@ -21,7 +21,7 @@
                             <span id="tab-popover">
                                 <a  href="" 
                                     @click.prevent.stop="doTrade">
-                                        {{ term }}
+                                        {{ action }}
                                 </a>
                             </span>
                             <span>
@@ -37,7 +37,7 @@
                 target="tab-popover" 
                 :market-negotiation="negotiation" 
                 :open="trade_open" 
-                :is-offer="negotiation.cond_buy_best == true" 
+                :is-offer="negotiation.cond_buy_best == false" 
                 @close="trade_open = false" 
                 parent="cond-container">
             </ibar-trade-desired-quantity>
@@ -67,11 +67,14 @@
             term() {
                 return this.condition.condition.cond_buy_best ? 'Buy' : 'Sell' ;
             },
+            action() {
+                return this.condition.condition.cond_buy_best ? 'Sell' : 'Buy' ;
+            },
             negotiation() {
                 return this.condition.condition;
             },
             trade_value() {
-                return this.condition.condition.cond_buy_best ? this.condition.condition.offer : this.condition.condition.bid ;  
+                return this.condition.condition.cond_buy_best ? this.condition.condition.bid : this.condition.condition.offer ;  
             }
         },
         methods: {

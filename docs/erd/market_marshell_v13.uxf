@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="14.2">
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="13.3">
   <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
@@ -2212,12 +2211,11 @@ m2=0..n</panel_attributes>
       <w>231</w>
       <h>119</h>
     </coordinates>
-    <panel_attributes>user_market_requests_user
+    <panel_attributes>user_market_request_user
 --
 id: int(11)
 user_id: int(11)
 user_market_request_id: nt(11)
-market_id: int(11)
 created_at:timestamp
 updated_at:timestamp
 
