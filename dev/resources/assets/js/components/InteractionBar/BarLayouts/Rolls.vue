@@ -122,7 +122,7 @@
                          dusk="ibar-action-send" 
                          variant="primary" 
                          @click="spinNegotiation()">
-                            {{ ( conditionActive('repeat-atw') ? 'Repeat' : 'Spin' ) }}
+                            Spin
                         </b-button>
                     </b-col>
                 </b-row>

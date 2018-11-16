@@ -9,7 +9,7 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable" class="pointer" @click="selectOption(false)" id="popover-hit">
+                <span v-if="selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
                 <span v-else>
@@ -19,7 +19,7 @@
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable" class="pointer" @click="selectOption(true)" id="popover-lift">
+                <span v-if="selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
                 <span v-else>
@@ -45,9 +45,9 @@
             <small>{{ marketNegotiation.time }}</small>
         </p>
     </b-col>
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" target="popover-hit" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"  parent="last-negotiation"></ibar-trade-desired-quantity>
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" :target="'popover-hit-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" target="popover-lift" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
+    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" :target="'popover-lift-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
     <b-col cols="12">
 
@@ -187,7 +187,7 @@
                 let text = getConditionText(cond, marketNegotiation, field);
                 let source = marketNegotiation.getAmountSource(field);
                 // text exists and source of side(bid/offer) is self
-                if(text != null && source.id == marketNegotiation.id) {
+                if(text != null && source.creation_idx == marketNegotiation.creation_idx) {
                     return text;
                 }
             }

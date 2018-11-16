@@ -55,6 +55,7 @@ export default class UserMarketNegotiation extends BaseModel {
             is_my_org:false,
             market_negotiation_id: null,
             time: null,
+            creation_idx: null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -446,7 +447,7 @@ export default class UserMarketNegotiation extends BaseModel {
         else
         {
             return null;
-        } 
+        }
     }
 
 

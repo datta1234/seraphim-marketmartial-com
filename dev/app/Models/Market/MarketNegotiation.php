@@ -582,8 +582,11 @@ class MarketNegotiation extends Model
     public function repeat($user)
     {
         $newNegotiation = $this->replicate();
-        $newNegotiation->user_id = $user->id;
-        $newNegotiation->counter_user_id = $this->user_id;
+        // dont re-own a trade at best
+        if(!$newNegotiation->isTradeAtBest()) {
+            $newNegotiation->user_id = $user->id;
+            $newNegotiation->counter_user_id = $this->user_id;
+        }
         $newNegotiation->market_negotiation_id = $this->id;
 
         return $newNegotiation->save();
@@ -737,19 +740,19 @@ class MarketNegotiation extends Model
             $q->where('is_private', false);
 
             // also show the private ones for certain situations (owned / traded)
-            $q->orWhere(function($qq) use ($organisation_id) {
-                $qq->where('is_private', true);
-                $qq->whereHas('user', function($qqq) use ($organisation_id) {
-                    $qqq->where('organisation_id', $organisation_id);
-                });
-                // $qq->where(function($qqq) use ($organisation_id) {
-                //     // if it was created by the organisaiton viewing, we show it
-                //     // OR If this has been traded, we show it
-                //     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
-                //         $qqqq->where('traded', true);
-                //     }*/);
-                // });
-            });
+            // $q->orWhere(function($qq) use ($organisation_id) {
+            //     $qq->where('is_private', true);
+            //     $qq->whereHas('user', function($qqq) use ($organisation_id) {
+            //         $qqq->where('organisation_id', $organisation_id);
+            //     });
+            //     // $qq->where(function($qqq) use ($organisation_id) {
+            //     //     // if it was created by the organisaiton viewing, we show it
+            //     //     // OR If this has been traded, we show it
+            //     //     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
+            //     //         $qqqq->where('traded', true);
+            //     //     }*/);
+            //     // });
+            // });
         });
     }
 
@@ -817,7 +820,6 @@ class MarketNegotiation extends Model
                 && !$this->isTradeAtBest() 
                 && !$this->isTradeAtBestOpen() 
                 && !$this->isRepeatATW()
-                && !$this->isRepeatATWRepeat()
                 && !$this->isFoK()
             ) {
                 return "SPIN";
@@ -902,10 +904,6 @@ class MarketNegotiation extends Model
                         "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
                     ], 'trade');
                 }
-                // if($this->is_private == true) {
-                //     $this->is_private = false;
-                //     $this->save();
-                // }
                
                 if($newMarketNegotiation )
                 {

@@ -50,6 +50,14 @@ class MarketNegotiationController extends Controller
         {
             $this->authorize('addNegotiation',$userMarket);
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
+            if($marketNegotiation->isProposal()) {
+                $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".proposed",
+                    "Private Negotiation Sent", 
+                    10
+                );
+            }
         }
 
         //broadCast new market request;
@@ -203,13 +211,13 @@ class MarketNegotiationController extends Controller
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".repeated",
-                "Proposal repeated by counter", 
+                "Repeateded by counter", 
                 10
             );
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".repeat",
-                "Proposal repeated", 
+                "Repeateded", 
                 10
             );
         
