@@ -539,6 +539,12 @@ class MarketNegotiation extends Model
 
     public function counter($user, $data)
     {
+        if($data['bid'] == null) {
+            $data['bid'] = $this->bid;
+        }
+        if($data['offer'] == null) {
+            $data['offer'] = $this->offer;
+        }
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -599,12 +605,15 @@ class MarketNegotiation extends Model
     public function resolvePrivateHistory()
     {
         // update history tree
-        $history = $this->getConditionHistory();
-        $history->each(function($item){
-            $item->update([
-                'is_private' => false
-            ]);
-        });
+        // $history = $this->getConditionHistory();
+        // $history->each(function($item){
+        //     $item->update([
+        //         'is_private' => false
+        //     ]);
+        // });
+        $this->update([
+            "is_private" => false
+        ]);
     }
 
     public function getLatestBid()

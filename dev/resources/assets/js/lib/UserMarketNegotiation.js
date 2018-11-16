@@ -10,7 +10,10 @@ export default class UserMarketNegotiation extends BaseModel {
             _relations:{
                trade_negotiations:{
                     addMethod: (trade_negotiation) => { this.addTradeNegotiation(trade_negotiation) },
-               } 
+               },
+               condition: {
+                    setMethod: (cond) => { this.setActiveCondition(cond) },
+               }
             }
         });
 
@@ -72,6 +75,15 @@ export default class UserMarketNegotiation extends BaseModel {
             this.addTradeNegotiations(options.trade_negotiations);
         }
 
+        this._active_condition = null;
+        if(options && options['active_condition']) {
+            this.setActiveCondition(options['active_condition']);
+        }
+    }
+
+
+    setActiveCondition(cond) {
+        this._active_condition = cond;
     }
 
     /**
@@ -407,7 +419,11 @@ export default class UserMarketNegotiation extends BaseModel {
         let prevItem = null;
         if(this.market_negotiation_id != null)
         {
-            prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
+            if(this._active_condition != null) {
+                prevItem = this._active_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
+            } else {
+                prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
+            }
         }
         
         if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])

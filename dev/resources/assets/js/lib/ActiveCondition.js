@@ -53,6 +53,7 @@ export default class ActiveCondition extends BaseModel  {
             condition = new UserMarketNegotiation(condition);
         }
         condition.setUserMarket(this._user_market);
+        condition.setActiveCondition(this);
         this.condition = condition;
     }
 
@@ -67,6 +68,7 @@ export default class ActiveCondition extends BaseModel  {
                 negotiation = new UserMarketNegotiation(negotiation);
             }
             negotiation.setUserMarket(this._user_market);
+            negotiation.setActiveCondition(this);
             this.history.push(negotiation);
         });
     }

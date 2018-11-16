@@ -326,7 +326,8 @@ export default class UserMarket extends BaseModel {
         return new Promise((resolve, reject) => {
             return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
             .then(response => {
-                this.setActivity(response.data.activity);
+                console.log("ACT:", response);
+                this.setActivity(response.data.data.activity);
             })
             .catch(err => {
                 reject(err);
