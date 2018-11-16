@@ -484,8 +484,6 @@ class UserMarket extends Model
                 $this->current_market_negotiation_id = $marketNegotiation->id;
             }
             $this->save();
-            // @TODO - check if I am spinning and parent has spun then
-                // @TODO - market has cleared notify subscribed user
            
             if($counterNegotiation)
             {
