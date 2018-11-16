@@ -893,6 +893,10 @@ class MarketNegotiation extends Model
                         "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
                     ], 'trade');
                 }
+                // if($this->is_private == true) {
+                //     $this->is_private = false;
+                //     $this->save();
+                // }
                
                 if($newMarketNegotiation )
                 {
