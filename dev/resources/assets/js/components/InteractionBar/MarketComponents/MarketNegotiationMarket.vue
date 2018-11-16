@@ -106,7 +106,7 @@
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
 
-                let amending = this.currentNegotiation.id == this.marketNegotiation.id;
+                let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('bid').is_my_org;
                 }
@@ -122,7 +122,7 @@
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
 
-                let amending = this.currentNegotiation.id == this.marketNegotiation.id;
+                let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('offer').is_my_org;
                 }
