@@ -125,7 +125,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     Route::post('stream','TradeScreen\StreamController@index');
     Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
 
-
+    Route::post('market-request-subscribe/{user_market_request}','TradeScreen\UserMarketRequestSubscritionController@ToggleAlertCleared');
 
     /*
     *	Activity Routes

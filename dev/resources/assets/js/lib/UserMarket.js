@@ -37,6 +37,7 @@ export default class UserMarket extends BaseModel {
         const defaults = {
             id: "",
             status: "",
+            is_watched: false,
             user_market_request_id: null,
             current_market_negotiation: null,
             created_at: moment(),

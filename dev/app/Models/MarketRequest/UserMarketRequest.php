@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Events\UserMarketRequested;
 use App\Helpers\Broadcast\Stream;
+use App\Notifications\NotifyUserMarketRequestCleared;
 use DB;
 
 class UserMarketRequest extends Model
@@ -81,6 +82,15 @@ class UserMarketRequest extends Model
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
+    }
+
+    /**
+     * Return relation based of jse_intergration_id_foreign index
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function userSubscriptions()
+    {
+        return $this->belongsToMany('App\Models\UserManagement\User', 'user_market_request_user', 'user_market_request_id', 'user_id');
     }
 
     /**
@@ -829,6 +839,34 @@ class UserMarketRequest extends Model
                 return 'rolls';
             break;
         };
+    }
+    /**
+     * Notify subscribed users and removes subscription,
+     *
+     * @return void
+     */
+    public function notifySubscribedUsers() {
+        // market has cleared notify subscribed user
+        // 1. Get all the users subscribed to the user_market_request.
+        $users = $this->userSubscriptions;
+        if(count($users) > 0) {
+            $user_market_request_id = $this->id;
+            // 2. Fire Notification for each user's organisation.
+            $users->each(function ($item, $key) use ($user_market_request_id) {
+                $this->setAction(
+                    $item->organisation->id,
+                    $user_market_request_id,
+                    true
+                );
+            });
+            // 3. Send User email of market cleared.
+            try {
+                \Notification::send($users, new NotifyUserMarketRequestCleared($this));
+                $this->userSubscriptions()->detach($this->userSubscriptions->pluck("id"));
+            } catch(\Swift_TransportException $e) {
+                Log::error($e);
+            }
+        }
     }
 
 }

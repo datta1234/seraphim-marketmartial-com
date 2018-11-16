@@ -596,6 +596,10 @@ class UserMarket extends Model
         return $org == $negotiation->marketNegotiationParent->user->organisation_id;
     }
 
+    public function isWatched() {
+        $organisation_id = $this->resolveOrganisationId();
+        return $this->userMarketRequest->userSubscriptions()->where('organisation_id', $organisation_id)->exists();
+    }
 
     public function isTradeAtBestOpen() {
         return  $this->lastNegotiation
@@ -612,6 +616,7 @@ class UserMarket extends Model
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
+        $is_watched = $this->isWatched();
         
         $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()
             ->notPrivate($this->resolveOrganisationId())
@@ -623,6 +628,7 @@ class UserMarket extends Model
             "id"                    =>  $this->id,
             "is_interest"           =>  $is_interest,
             "is_maker"              =>  $is_maker,
+            "is_watched"            =>  $is_watched,
             "time"                  =>  $this->created_at->format("H:i"),
             "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations, &$creation_idx_map){
                                             $data = $item->setOrgContext($this->resolveOrganisation())

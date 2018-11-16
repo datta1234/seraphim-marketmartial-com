@@ -54,9 +54,8 @@
          :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
         </ibar-trade-at-best-negotiation>
    
-        <b-form-checkbox id="market-request-subscribe" v-model="market_request_subscribe" value="true" unchecked-value="false" v-if="!can_negotiate">
-            Alert me when cleared
-        </b-form-checkbox>
+        <!-- Alert me when cleared -->
+        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
         
         <b-row class="mb-1">
             <b-col cols="10">
@@ -192,6 +191,8 @@
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
 
+    import AlertCleared from '../Components/AlertClearedComponent.vue';
+
     import NegotiationBarMixin from '../NegotiationBarMixin';
 
     export default {
@@ -202,7 +203,8 @@
             IbarActiveConditions,
             IbarVolatilityField,
             IbarMarketRequested,
-            IbarTradeAtBestNegotiation
+            IbarTradeAtBestNegotiation,
+            AlertCleared
         },
         props: {
             

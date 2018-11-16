@@ -175,6 +175,15 @@ class User extends Authenticatable
     }
 
     /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequestSubscriptions()
+    {
+        return $this->belongsToMany('App\Models\MarketRequest\UserMarketRequest', 'user_market_request_user', 'user_id', 'user_market_request_id');
+    }
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */

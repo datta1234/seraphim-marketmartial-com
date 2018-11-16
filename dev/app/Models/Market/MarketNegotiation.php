@@ -125,6 +125,17 @@ class MarketNegotiation extends Model
         return $this->id;
     }
 
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $user_market_request = $model->userMarket->userMarketRequest;
+            if($user_market_request->openToMarket()) {
+                $user_market_request->notifySubscribedUsers();
+            }
+        });
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
