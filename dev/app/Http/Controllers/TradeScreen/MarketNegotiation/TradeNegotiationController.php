@@ -28,7 +28,8 @@ class TradeNegotiationController extends Controller
         {
             $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
             return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to counterparty."]);    
-        }else
+        }
+        else
         {
             return response()->json(['data' => false, 'message' => "Response failed to be sent."],500);
         }

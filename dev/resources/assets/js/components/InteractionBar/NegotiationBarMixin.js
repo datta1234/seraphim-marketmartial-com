@@ -28,9 +28,21 @@ export default {
             }
         },
     computed: {
-        'last_is_self': function() {
+        'negotiation_available': function(){
+            // if(this.last_negotiation.is_my_org) {
+            //     if(this.cant_amend) {
+            //         return this.last_negotiation.isSpun() || this.last_negotiation.isTraded();
+            //     }
+            // }
+            return true;
+        },
+        'cant_amend': function() {
             if(this.last_negotiation) {
-                return this.last_negotiation.is_my_org;
+                return !this.last_negotiation.is_my_org 
+                    ||  (
+                        this.last_negotiation.is_my_org &&
+                        ( this.last_negotiation.isSpun() || this.last_negotiation.isTraded() )
+                    )
             }
             return false;
         },
@@ -75,7 +87,7 @@ export default {
             return this.marketRequest.canApplyNoCares();
         },
         'can_spin':function(){
-            return this.marketRequest.canSpin();
+            return this.marketRequest.canSpin() && this.proposed_user_market_negotiation.id == null;
         },
         'in_no_cares':function(){
             return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
@@ -154,7 +166,8 @@ export default {
             this.proposed_user_market.setMarketRequest(this.marketRequest);
             // this.user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
             this.server_loading = true;
-            this.proposed_user_market_negotiation.storeNegotiation(this.user_market)
+            let method = (this.proposed_user_market_negotiation.id != null ? 'amendNegotiation' : 'storeNegotiation' );
+            this.proposed_user_market_negotiation[method](this.user_market)
             .then(response => {
                 this.server_loading = false;
                 this.errors = [];
@@ -273,7 +286,7 @@ export default {
 
                 proposed_user_market: new UserMarket(),
                 proposed_user_market_negotiation: new UserMarketNegotiation(),
-                default_user_market_negotiation:new UserMarketNegotiation(),
+                default_user_market_negotiation: new UserMarketNegotiation(),
                 history_message: null,
                 removable_conditions: [],
                 server_loading: false,
@@ -282,16 +295,17 @@ export default {
             };
 
             Object.keys(defaults).forEach(k => {
-                if(ignore.indexOf(k) == -1)
-                {
-                   this[k] = defaults[k]; 
+                console.log("Try Set: ", k);
+                if(ignore.indexOf(k) == -1) {
+                    console.log("Setting: ", k, defaults[k]);
+                    this.$set(this.$data, k, defaults[k]); 
                 }
             });
             
             this.$forceUpdate();
         },
         setUpProposal(){
-
+            console.log("Proposal1");
             // set up the new UserMarket as quote to be sent
             
             /*
@@ -301,14 +315,25 @@ export default {
             let chosen_user_market =  this.marketRequest.chosen_user_market;
             if(chosen_user_market)
             {
-               this.user_market = this.marketRequest.chosen_user_market;
-            }else
+                console.log("Proposal2");
+                this.user_market = this.marketRequest.chosen_user_market;
+                if(this.last_negotiation) {
+                    console.log("Proposal3", this.last_negotiation);
+                    if(this.last_negotiation.is_my_org == true) {
+                        // its my org... can i ammend?
+                        if(!this.cant_amend) {
+                            this.proposed_user_market_negotiation.id = this.last_negotiation.id;
+                            console.log("Proposal Set", this.proposed_user_market_negotiation.id, this.proposed_user_market_negotiation);
+                        }
+                    }
+                }
+            }
+            else
             {
                 if(this.marketRequest.sent_quote != null)//already have my quote
                 {
                     this.proposed_user_market.id = this.marketRequest.sent_quote.id;
                 }
-
             }
 
         },
@@ -345,11 +370,12 @@ export default {
             }
         },
         setUpData() {
+            console.log("Setup Started");
             // set up up data
             if(this.marketRequest) {
-                console.log(this.marketRequest);
+                console.log("Seting Up:", this.marketRequest);
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
-                
+
                 this.setUpProposal();
                 this.setDefaultQuantities();
                 this.calcUserMessages();

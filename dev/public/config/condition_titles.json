@@ -79,12 +79,12 @@
     {
         "condition": "cond_buy_best",
         "true": {
-            "bid": "",
-            "offer": "Buy at best"  
+            "bid": "Buy at best",
+            "offer": ""  
         },
         "false": {
-            "bid": "Sell at best",
-            "offer": ""  
+            "bid": "",
+            "offer": "Sell at best"  
         }
     },
     {

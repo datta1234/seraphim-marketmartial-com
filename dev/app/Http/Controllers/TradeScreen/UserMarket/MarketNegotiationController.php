@@ -50,13 +50,20 @@ class MarketNegotiationController extends Controller
         {
             $this->authorize('addNegotiation',$userMarket);
             $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
+            if($marketNegotiation->isProposal()) {
+                $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".proposed",
+                    "Private Negotiation Sent", 
+                    10
+                );
+            }
         }
 
         //broadCast new market request;
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
-
-            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormatted() ,'message'=>'']);
+            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
 
         } else {
             return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
@@ -92,9 +99,22 @@ class MarketNegotiationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(MarketNegotiationRequest $request,UserMarket $userMarket,MarketNegotiation $marketNegotiation)
+    public function update(MarketNegotiationRequest $request,UserMarket $userMarket, MarketNegotiation $marketNegotiation)
     {
-        // $request->has('')
+        $this->authorize('amend', $marketNegotiation);
+        try {
+            \DB::beginTransaction();
+
+            $userMarket->updateNegotiation($marketNegotiation, $request->all());
+            $userMarket->fresh()->userMarketRequest->notifyRequested();
+
+            \DB::commit();
+            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
+        } catch(\Illuminate\Database\QueryException $e) {
+            \Log::error($e);
+            \DB::rollback();
+            return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
+        }
     }
 
     /**
@@ -191,13 +211,13 @@ class MarketNegotiationController extends Controller
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".repeated",
-                "Proposal repeated by counter", 
+                "Repeateded by counter", 
                 10
             );
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".repeat",
-                "Proposal repeated", 
+                "Repeateded", 
                 10
             );
         

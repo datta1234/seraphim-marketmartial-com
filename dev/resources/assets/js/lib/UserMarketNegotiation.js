@@ -10,7 +10,10 @@ export default class UserMarketNegotiation extends BaseModel {
             _relations:{
                trade_negotiations:{
                     addMethod: (trade_negotiation) => { this.addTradeNegotiation(trade_negotiation) },
-               } 
+               },
+               condition: {
+                    setMethod: (cond) => { this.setActiveCondition(cond) },
+               }
             }
         });
 
@@ -21,7 +24,7 @@ export default class UserMarketNegotiation extends BaseModel {
         this.trade_negotiations = [];
 
         const defaults = {
-            id: "",
+            id: null,
             bid: "",
             offer: "",
             bid_source: "",
@@ -52,6 +55,7 @@ export default class UserMarketNegotiation extends BaseModel {
             is_my_org:false,
             market_negotiation_id: null,
             time: null,
+            creation_idx: null,
             created_at: moment(),
         }
         // assign options with defaults
@@ -72,6 +76,15 @@ export default class UserMarketNegotiation extends BaseModel {
             this.addTradeNegotiations(options.trade_negotiations);
         }
 
+        this._active_condition = null;
+        if(options && options['active_condition']) {
+            this.setActiveCondition(options['active_condition']);
+        }
+    }
+
+
+    setActiveCondition(cond) {
+        this._active_condition = cond;
     }
 
     /**
@@ -178,6 +191,7 @@ export default class UserMarketNegotiation extends BaseModel {
     *  store
     */
     storeNegotiation(user_market) {
+        console.log("Store");
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
@@ -187,6 +201,36 @@ export default class UserMarketNegotiation extends BaseModel {
      
         return new Promise((resolve, reject) => {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+    /**
+    *  amend
+    */
+    amendNegotiation(user_market) {
+        console.log("Amending "+this.id, this);
+        // catch not assigned to a market request yet!
+        if(user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Market"));
+            });
+        }
+
+        if(this.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Negotiation"));
+            });   
+        }
+     
+        return new Promise((resolve, reject) => {
+             axios.put(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
                 resolve(response);
@@ -376,7 +420,11 @@ export default class UserMarketNegotiation extends BaseModel {
         let prevItem = null;
         if(this.market_negotiation_id != null)
         {
-            prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
+            if(this._active_condition != null) {
+                prevItem = this._active_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
+            } else {
+                prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
+            }
         }
         
         if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
@@ -399,7 +447,7 @@ export default class UserMarketNegotiation extends BaseModel {
         else
         {
             return null;
-        } 
+        }
     }
 
 

@@ -108,6 +108,7 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
                     ->conditions()
                     ->whereDoesntHave('marketNegotiationChildren')
+                    ->whereDoesntHave('tradeNegotiations')
                     ->orderBy('created_at',"DESC")
                     ->orderBy('id',"DESC");
     }
@@ -458,10 +459,10 @@ class UserMarket extends Model
                 $marketNegotiation->cond_buy_best = $counterNegotiation->cond_buy_best;
             }
 
-            // responding to RepeatATW will open to market automatically
-            if($counterNegotiation->isRepeatATW()) {
-                $marketNegotiation->is_repeat = true;
-            }
+            // responding to RepeatATW will open to market automatically - no longer happens
+            // if($counterNegotiation->isRepeatATW()) {
+            //     $marketNegotiation->is_repeat = true;
+            // }
 
             // add missing values (prior data), however if traded keep them as null
             
@@ -497,6 +498,41 @@ class UserMarket extends Model
             DB::rollBack();
             return false;
         }
+    }
+
+    public function updateNegotiation($marketNegotiation, $data)
+    {
+        if($data['bid'] == null) {
+            $data['bid'] = $this->lastNegotiation->bid;
+            $data['bid_qty'] = $this->lastNegotiation->bid_qty;
+        }
+        if($data['offer'] == null) {
+            $data['offer'] = $this->lastNegotiation->offer;
+            $data['offer_qty'] = $this->lastNegotiation->offer_qty;
+        }
+        return $marketNegotiation->update(
+            collect($data)->only([
+                "bid",
+                "offer",
+                "offer_qty",
+                "bid_qty",
+                
+                "bid_premium",
+                "offer_premium",
+                
+                "has_premium_calc",
+                "is_repeat",
+
+                "cond_is_repeat_atw",
+                "cond_fok_apply_bid",
+                "cond_fok_spin",
+                "cond_timeout",
+                "cond_is_oco",
+                "cond_is_subject",
+                "cond_buy_mid",
+                "cond_buy_best",
+            ])->toArray()
+        );
     }
 
 
@@ -589,16 +625,22 @@ class UserMarket extends Model
             ->with('user')
             ->get();
         // @TODO addd back excludeFoKs but filter to only killed ones
-
+        $creation_idx_map = [];
         $data = [
             "id"                    =>  $this->id,
             "is_interest"           =>  $is_interest,
             "is_maker"              =>  $is_maker,
             "is_watched"            =>  $is_watched,
             "time"                  =>  $this->created_at->format("H:i"),
-            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations){
-                                            return $item->setOrgContext($this->resolveOrganisation())
+            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations, &$creation_idx_map){
+                                            $data = $item->setOrgContext($this->resolveOrganisation())
                                                         ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
+                                            $org_id = $item->user->organisation_id;
+                                            if(!in_array($org_id, $creation_idx_map)) {
+                                                $creation_idx_map[] = $org_id;
+                                            }
+                                            $data['creation_idx'] = array_search($org_id, $creation_idx_map);
+                                            return $data;
                                         }),
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
@@ -611,7 +653,8 @@ class UserMarket extends Model
                                             return [
                                                 'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
                                                 'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
-                                                    return $item->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
                                                 })->values(),
                                                 'type'      => $cond->activeConditionType
                                             ];

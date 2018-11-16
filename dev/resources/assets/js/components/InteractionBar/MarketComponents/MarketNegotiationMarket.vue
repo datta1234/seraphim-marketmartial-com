@@ -57,7 +57,7 @@
                         this.old.bid = this.marketNegotiation.bid;
                         this.old.offer = this.marketNegotiation.offer;
                     }
-                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.old.bid + this.old.offer ) / 2;
+                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
                 } else {
                     this.marketNegotiation.bid = this.old.bid;
                     this.marketNegotiation.offer = this.old.offer;
@@ -66,21 +66,27 @@
             'disabled_bid'(nv, ov) {
                 if(nv) {
                     if(this.marketNegotiation.bid_qty) {
+                        this.old.bid = this.marketNegotiation.bid;
                         this.old.bid_qty = this.marketNegotiation.bid_qty;
+                        this.marketNegotiation.bid = null;
                         this.marketNegotiation.bid_qty = null;
                     }
                 } else {
                     this.marketNegotiation.bid_qty = this.old.bid_qty;
+                    this.marketNegotiation.bid = this.old.bid;
                 }
             },
             'disabled_offer'(nv, ov) {
                 if(nv) {
                     if(this.marketNegotiation.offer_qty) {
+                        this.old.offer = this.marketNegotiation.offer;
                         this.old.offer_qty = this.marketNegotiation.offer_qty;
+                        this.marketNegotiation.offer = null;
                         this.marketNegotiation.offer_qty = null;
                     }
                 } else {
                     this.marketNegotiation.offer_qty = this.old.offer_qty;
+                    this.marketNegotiation.offer = this.old.offer;
                 }
             }
         },
@@ -100,6 +106,11 @@
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
 
+                let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                if(amending) {
+                    return !this.currentNegotiation.getAmountSource('bid').is_my_org;
+                }
+
                 let value = this.marketNegotiation.offer;
                 if((traded || spun) && value) {
                     return true;
@@ -110,6 +121,11 @@
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+
+                let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                if(amending) {
+                    return !this.currentNegotiation.getAmountSource('offer').is_my_org;
+                }
 
                 let value = this.marketNegotiation.bid;
                 if((traded || spun) && value) {
