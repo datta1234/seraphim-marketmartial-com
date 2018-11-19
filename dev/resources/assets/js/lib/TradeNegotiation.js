@@ -193,8 +193,6 @@ export default class TradeNegotiation extends BaseModel {
         });
     }
 
-
-
     counter(tradeNegotiation)
     {
         return new Promise((resolve, reject) => {

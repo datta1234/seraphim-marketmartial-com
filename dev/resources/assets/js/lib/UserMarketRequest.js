@@ -381,10 +381,16 @@ export default class UserMarketRequest extends BaseModel {
     {
         let group = Object.values(this.trade_items).find(item => item.choice == false);
         let ts = this.trade_structure_slug;
-        console.log(ts);
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
-        console.log(conf);
         let val = group[conf];
         return val;
+    }
+
+    getQuantityType()
+    {        
+       if(this.getMarket())
+        {
+            return this.getMarket().title == "SINGLES" ? "Rm" : "Contracts";
+        }
     }
 }

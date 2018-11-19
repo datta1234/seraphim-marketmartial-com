@@ -372,17 +372,29 @@ class UserMarket extends Model
             //ensure that a new tree is started
             $marketNegotiation->market_negotiation_id = null;
 
+
+            //quantity set to the default market request qunatity
+            $qty = $this->userMarketRequest->getDynamicItem("quantity");
+
             if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
                 // @TODO: well shit
                 throw Exception("Can Only Improve One Side On New Negotian tree.");
             }
             elseif ($marketNegotiation->bid != null) {
-                // improved bid
-                $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('offer')->user_id;
+                // improved bidw
+                $source = $counterNegotiation->marketNegotiationSource('offer');
+                $marketNegotiation->counter_user_id = $source->user_id;
+                
+                $marketNegotiation->offer = $source->offer;
+                $marketNegotiation->offer_qty =  $qty;
+
             }
             elseif($marketNegotiation->offer != null) {
                 // improved offer
-                $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource('bid')->user_id;
+                $source = $counterNegotiation->marketNegotiationSource('bid');
+                $marketNegotiation->counter_user_id = $source->user_id;
+                $marketNegotiation->bid = $source->bid;
+                $marketNegotiation->bid_qty =  $qty ;
             }
 
 
@@ -546,18 +558,26 @@ class UserMarket extends Model
         //see what the trade negotiation was started
         $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->first();
         
+       
         $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
         $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
         $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
 
+        // $newMarketNegotiation->user_id = $user->id;
+
+        /*
+        * bid over → opens offer side
+        * offered over → opens bid side
+        */
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
-            $newMarketNegotiation->offer_qty = $quantity;
-        }else
-        {
             $newMarketNegotiation->bid = $lastMarketNegotiation->bid;
             $newMarketNegotiation->bid_qty = $quantity;
+            
+        }else
+        {
+            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->offer_qty = $quantity;
         }
 
         $newMarketNegotiation->save();

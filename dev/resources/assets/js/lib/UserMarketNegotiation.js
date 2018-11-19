@@ -299,6 +299,15 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         });
     }
+    
+    
+    getQuantityType()
+    {
+       if(this.getUserMarket() && this.getUserMarket().getMarketRequest() && this.getUserMarket().getMarketRequest().getMarket())
+        {
+            return this.getUserMarket().getMarketRequest().getMarket().title == "SINGLES" ? "Rm" : "Contracts";
+        }
+    }
 
     getDisplayCondition()
     {
