@@ -19,7 +19,7 @@
   <div class="row">
     <div class="col-md-12">
         <b-button id="update-btn" class="mm-button mm-base float-right ml-2" @click="update">
-         {{ (profileCompleteData == false && isAdmin == false) ? "Next" : "Update"  }}
+         {{ (profileComplete == false && isAdmin == false) ? "Next" : "Update"  }}
       </b-button>
 
       <b-button  class="mm-button mm-base float-right" @click="showModal">
@@ -64,7 +64,7 @@
             'defaultLabels':{
                 type: String
             },
-            'profileCompleteData':{
+            'profileComplete':{
                 type: Boolean
             },
             'isAdmin':{
@@ -96,7 +96,7 @@
                     console.log(response.data);
                     this.$toasted.success(response.message);
                     
-                    if(this.isAdmin == false && this.profileCompleteData == false)
+                    if(this.isAdmin == false && this.profileComplete == false)
                     {
                         window.location.href = response.data.redirect;
                     }

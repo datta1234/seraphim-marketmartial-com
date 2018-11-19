@@ -18,12 +18,12 @@ class UserMarketRequestSubscritionController extends Controller
     {
         if($request->input('market_request_subscribe')) {
         	\Auth::user()->userMarketRequestSubscriptions()->attach($userMarketRequest->id);
-            return response()->json(['data'=>null, 'message'=>'Successfully subscribed to Market Request']);
+            return response()->json(['data'=>null, 'message'=>'You will be alerted once this market clears']);
         } else {
             \Auth::user()->userMarketRequestSubscriptions()->detach($userMarketRequest->id);
-            return response()->json(['data'=>null, 'message'=>'Successfully unsubscribed to Market Request']);
+            return response()->json(['data'=>null, 'message'=>'You will no longer be alerted once this market clears']);
         }
 
-        return response()->json(["errors"=> null, 'message'=>'Failed to update Market Request subscription'], 500);
+        return response()->json(["errors"=> null, 'message'=>'Failed to update alert status'], 500);
     }
 }
