@@ -89,7 +89,7 @@ class TradingAccountController extends Controller
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
         
-        if($user->completeProfile()) {
+        if(!$user->completeProfile()) {
             \Cache::put('user_trade_settings_complete_'.$user->id, true,1440);
         }
 

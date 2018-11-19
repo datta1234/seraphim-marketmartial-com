@@ -313,6 +313,11 @@ class User extends Authenticatable
             return 'user.edit';
         }
         
+        // Password Check
+        if(!\Cache::has('user_password_complete_'.$this->id) && $this->is_invited) {
+            return 'user.edit_password';
+        }
+        
         $has_defaults = true;
         $default_label_ids = \App\Models\UserManagement\DefaultLabel::pluck('id');
         //Loop through default_labels and check if account has emails with those id's
@@ -322,6 +327,11 @@ class User extends Authenticatable
         // Emails Check
         if(!$has_defaults) {
             return 'email.edit';
+        }
+        
+        // Trade Settings Check
+        if(!\Cache::has('user_trade_settings_complete_'.$this->id)) {
+            return 'trade_settings.edit';
         }
 
         //Interests Check
@@ -334,15 +344,7 @@ class User extends Authenticatable
             return 'interest.edit';
         }
 
-        // Password Check
-        if(\Cache::has('user_password_complete_'.$this->id)) {
-            return 'user.edit_password';
-        }
 
-        // Trade Settings Check
-        if(\Cache::has('user_trade_settings_complete_'.$this->id)) {
-            return 'trade_settings.edit';
-        }
 
         // Default to null if there is no required step
         return null;
