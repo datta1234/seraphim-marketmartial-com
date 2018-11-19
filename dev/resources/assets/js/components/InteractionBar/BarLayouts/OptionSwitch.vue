@@ -122,7 +122,7 @@
                                  {{ ( proposed_user_market_negotiation.id != null ? 'Amend' : 'Send' ) }}
                         </b-button>
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="conditionActive('fok')" 
+                         :disabled="conditionActive('fok') || !can_click_spin" 
                          v-if="can_spin" 
                          size="sm" 
                          dusk="ibar-action-send" 

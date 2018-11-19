@@ -137,9 +137,18 @@ class MarketNegotiationController extends Controller
                     "FoK killed by counter", 
                     10
                 );
+                
+            if($marketNegotiation->counterUser)
+            {
+                $counter_org_id = $marketNegotiation->counterUser->organisation_id;
+            }else
+            {
+                $counter_org_id = $marketNegotiation->userMarket->user->organisation_id;
+            }
+
             $marketNegotiation->userMarket
                 ->trackActivity(
-                    "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".kill",
+                    "organisation.".$counter_org_id.".proposal.".$marketNegotiation->id.".kill",
                     "FoK killed", 
                     10
                 );
@@ -155,9 +164,16 @@ class MarketNegotiationController extends Controller
                     "Proposal rejected by counter", 
                     10
                 );
+                if($marketNegotiation->counterUser)
+                {
+                    $counter_org_id = $marketNegotiation->counterUser->organisation_id;
+                }else
+                {
+                    $counter_org_id = $marketNegotiation->userMarket->user->organisation_id;
+                }
             $marketNegotiation->userMarket
                 ->trackActivity(
-                    "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".reject",
+                    "organisation.".$counter_org_id.".proposal.".$marketNegotiation->id.".reject",
                     "Proposal rejected", 
                     10
                 );
@@ -186,9 +202,17 @@ class MarketNegotiationController extends Controller
                 "Counter Proposal received", 
                 10
             );
+        if($marketNegotiation->counterUser)
+        {
+            $counter_org_id = $marketNegotiation->counterUser->organisation_id;
+        }else
+        {
+            $counter_org_id = $marketNegotiation->userMarket->user->organisation_id;
+        }
+
         $marketNegotiation->userMarket
             ->trackActivity(
-                "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".counter",
+                "organisation.".$counter_org_id.".proposal.".$marketNegotiation->id.".counter",
                 "Proposal countered", 
                 10
             );
@@ -214,9 +238,18 @@ class MarketNegotiationController extends Controller
                 "Repeateded by counter", 
                 10
             );
+        
+        if($marketNegotiation->counterUser)
+        {
+            $counter_org_id = $marketNegotiation->counterUser->organisation_id;
+        }else
+        {
+            $counter_org_id = $marketNegotiation->userMarket->user->organisation_id;
+        }
+
         $marketNegotiation->userMarket
             ->trackActivity(
-                "organisation.".$marketNegotiation->counterUser->organisation_id.".proposal.".$marketNegotiation->id.".repeat",
+                "organisation.".$counter_org_id.".proposal.".$marketNegotiation->id.".repeat",
                 "Repeateded", 
                 10
             );

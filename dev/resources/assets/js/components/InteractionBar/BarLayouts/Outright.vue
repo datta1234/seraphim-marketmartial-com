@@ -114,7 +114,7 @@
                                  {{ ( proposed_user_market_negotiation.id != null ? 'Amend' : 'Send' ) }}
                         </b-button>
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="conditionActive('fok')" 
+                         :disabled="conditionActive('fok') || !can_click_spin" 
                          v-if="can_spin" 
                          size="sm" 
                          dusk="ibar-action-send" 
@@ -124,6 +124,8 @@
                         </b-button>
                     </b-col>
                 </b-row>
+
+
                 
                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
                     <b-col cols="6">
@@ -164,7 +166,12 @@
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
         
-        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" 
+        :user-market="marketRequest.chosen_user_market" 
+        :conditions="marketRequest.chosen_user_market.active_conditions"
+        :sent_conditions="marketRequest.chosen_user_market.sent_conditions"
+
+        ></ibar-active-conditions>
 
     </b-container>
 </template>

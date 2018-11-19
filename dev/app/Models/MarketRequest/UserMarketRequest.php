@@ -405,10 +405,27 @@ class UserMarketRequest extends Model
         if($this->chosenUserMarket != null)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
-            // dd($lastNegotiation);
 
             if(!is_null($lastNegotiation))
-            {
+            {       
+               //after working the balance and the market negotiation is stuck at self have the market open
+                if(
+                    $lastNegotiation->marketNegotiationParent &&
+                    $lastNegotiation->marketNegotiationParent->isTraded() && 
+                    $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id)
+                {
+                    return true;
+                }
+          
+                if($lastNegotiation->isTraded())
+                {
+                    return true;
+                }
+
+                if($lastNegotiation->isTraded())
+                {
+                    return true;
+                }
 
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
@@ -422,6 +439,7 @@ class UserMarketRequest extends Model
                         return true;
                     }
 
+                    //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
 

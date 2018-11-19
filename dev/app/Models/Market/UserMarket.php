@@ -472,9 +472,9 @@ class UserMarket extends Model
             }
 
             // responding to RepeatATW will open to market automatically - no longer happens
-            // if($counterNegotiation->isRepeatATW()) {
-            //     $marketNegotiation->is_repeat = true;
-            // }
+            if($counterNegotiation->isRepeatATW()) {
+                $marketNegotiation->is_repeat = true;
+            }
 
             // add missing values (prior data), however if traded keep them as null
             
@@ -616,6 +616,17 @@ class UserMarket extends Model
         return $org == $negotiation->marketNegotiationParent->user->organisation_id;
     }
 
+
+    public function isSent($user = null, $negotiation = null) {
+        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
+        $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
+        if($org == null) {
+            return false;
+        }
+      
+        return $org == $negotiation->user->organisation_id;
+    }
+
     public function isWatched() {
         $organisation_id = $this->resolveOrganisationId();
         return $this->userMarketRequest->userSubscriptions()->where('organisation_id', $organisation_id)->exists();
@@ -644,6 +655,8 @@ class UserMarket extends Model
             ->get();
         // @TODO addd back excludeFoKs but filter to only killed ones
         $creation_idx_map = [];
+
+
         $data = [
             "id"                    =>  $this->id,
             "is_interest"           =>  $is_interest,
@@ -677,6 +690,21 @@ class UserMarket extends Model
                                                 'type'      => $cond->activeConditionType
                                             ];
                                         })->values(),
+            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isSent(null, $cond);
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
+
             "volatilities"          =>  $this->volatilities->map(function($vol){
                                             return $vol->preFormatted();
                                         }),
@@ -690,6 +718,7 @@ class UserMarket extends Model
             $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
             null 
         );
+
 
         return $data;
     }

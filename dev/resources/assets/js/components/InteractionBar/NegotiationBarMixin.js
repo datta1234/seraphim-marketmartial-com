@@ -89,6 +89,20 @@ export default {
         'can_spin':function(){
             return this.marketRequest.canSpin() && this.proposed_user_market_negotiation.id == null;
         },
+        'can_click_spin':function(){
+            
+            if(this.marketRequest.chosen_user_market && this.marketRequest.chosen_user_market.getLastNegotiation())
+            {
+                let lastNegotiation = this.marketRequest.chosen_user_market.getLastNegotiation();
+
+                return lastNegotiation.bid == this.proposed_user_market_negotiation.bid && 
+                lastNegotiation.bid_qty == this.proposed_user_market_negotiation.bid_qty &&
+                lastNegotiation.offer == this.proposed_user_market_negotiation.offer &&
+                lastNegotiation.offer_qty == this.proposed_user_market_negotiation.offer_qty
+            }
+            //for cases where thers no chosen user market dont have the button deactivated
+            return true;
+        },
         'in_no_cares':function(){
             return this.$root.no_cares.indexOf(this.marketRequest.id) > -1;
         },
@@ -113,7 +127,6 @@ export default {
             this.check_invalid = check_invalid;
         },
         updateMessage: function(messageData) {
-            console.log("The message and the data",messageData);
             this.history_message = null;
 
             if(messageData.user_market_request_id == this.marketRequest.id)
@@ -277,7 +290,6 @@ export default {
 
         },
         reset(ignore = []) {
-            console.log("i got called");
             let defaults = {
                 state_premium_calc: false,
 
@@ -295,7 +307,6 @@ export default {
             };
 
             Object.keys(defaults).forEach(k => {
-                console.log("Try Set: ", k);
                 if(ignore.indexOf(k) == -1) {
                     console.log("Setting: ", k, defaults[k]);
                     this.$set(this.$data, k, defaults[k]); 
@@ -305,7 +316,6 @@ export default {
             this.$forceUpdate();
         },
         setUpProposal(){
-            console.log("Proposal1");
             // set up the new UserMarket as quote to be sent
             
             /*

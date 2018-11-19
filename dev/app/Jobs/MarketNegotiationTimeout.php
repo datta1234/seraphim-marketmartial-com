@@ -63,6 +63,7 @@ class MarketNegotiationTimeout implements ShouldQueue
             if(($marketNegotiation->isTradeAtBest() || $marketNegotiation->isTradeAtBestOpen()) && !$marketNegotiation->isTrading()) {
 
                 $sourceNegotiation = $marketNegotiation->tradeAtBestSource();
+                
                 $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
                     "quantity"      =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
                     "is_offer"      =>  $marketNegotiation->cond_buy_best,
