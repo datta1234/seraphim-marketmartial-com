@@ -228,7 +228,7 @@
                 });
 
                 // Create Data Sets
-                Object.keys(date_data).forEach(strike => {
+                this.active_data_set.labels.forEach(strike => {
                     let obj = {
                         'Put': null,
                         'Put Delta': null,

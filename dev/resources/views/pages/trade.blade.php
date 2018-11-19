@@ -27,7 +27,7 @@
 			</b-row>
 			<!-- </VuePerfectScrollbar> -->
 
-			<b-row align-v="end" class="mt-5">
+			<b-row align-v="end" class="mt-5 mb-5">
 				<div class="col col-lg-3 offset-lg-9">
 					<div class="float-right">
 						<p id="active-markets-indicator">Active Market Makers Online: <strong><active-makers></active-makers></strong></p>

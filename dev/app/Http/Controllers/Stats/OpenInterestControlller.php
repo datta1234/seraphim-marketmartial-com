@@ -78,15 +78,14 @@ class OpenInterestControlller extends Controller
         $csv = array_map('str_getcsv', file($path));
 
         // Create a new array of csv file lines
-        array_walk($csv, function(&$row,$index) {
-            //@TODO - Code here not working, need to remove empty rows from the array.
-            /*if(empty($row)) {
-                unset($csv[$index]);
-            } else {*/
-                array_walk($row, function(&$col) {
+        array_walk($csv, function(&$row,$row_index) use (&$csv) {
+            array_walk($row, function(&$col) use (&$csv,$row,$row_index) {
+                if(count($row) <= 1 && $col == null) {
+                    unset($csv[$row_index]);
+                } else {
                     $col = trim($col);
-                });
-            /*}*/
+                }
+            });
         });
 
         // Replace the imported fields with the data base fields

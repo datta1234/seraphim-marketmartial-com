@@ -71,7 +71,8 @@
         },
         computed: {
             perspective() {
-                return this.rootNegotiation.is_my_org ? "You are" : "Counter is";
+                return this.rootNegotiation.is_my_org ? "You are"
+                    : (this.rootNegotiation.cond_buy_best ? "The Bid is" : "The Offer is");
             },
             term() {
                 return this.rootNegotiation.cond_buy_best ? 'Buying' : 'Selling' ;
