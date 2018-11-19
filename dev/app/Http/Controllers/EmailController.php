@@ -67,12 +67,12 @@ class EmailController extends Controller
     	}
         $user->emails()->saveMany($emailModels);
         
-       return response()->json([
-       'data'=>[
+        return response()->json([
+        'data'=>[
             'email' => $user->emails()->with('defaultLabel')->get(),
             'redirect' => route('trade_settings.edit')
         ],
-       'message'=>'Emails updated.']);
+        'message'=>'Emails updated.']);
 
     }
 }

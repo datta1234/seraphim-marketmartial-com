@@ -46,7 +46,8 @@ class UserController extends Controller
         $data = $request->all();
         $user = $request->user();
 
-        if(!$request->user()->completeProfile())
+        // Removed - Users are never able to change their organisations
+        /*if(!$request->user()->completeProfile())
         {
             if( $request->has('new_organisation')) 
             {
@@ -57,13 +58,13 @@ class UserController extends Controller
             }
  
         }else
-        {
+        {*/
             //dont allow organisation_id to be editable 
             if(array_key_exists('organisation_id',$data))
             {
                 unset($data['organisation_id']);
             }
-        }
+        //}
       
 
         $user->update($data);

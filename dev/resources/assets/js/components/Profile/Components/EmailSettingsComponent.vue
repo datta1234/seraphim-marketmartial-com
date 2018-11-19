@@ -96,7 +96,7 @@
                     console.log(response.data);
                     this.$toasted.success(response.message);
                     
-                    if(this.isAdmin == false && this.profileCompleteData == false)
+                    if(this.isAdmin == false && this.profileComplete == false)
                     {
                         window.location.href = response.data.redirect;
                     }
