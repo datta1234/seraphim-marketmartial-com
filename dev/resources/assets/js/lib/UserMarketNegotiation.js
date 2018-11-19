@@ -75,6 +75,7 @@ export default class UserMarketNegotiation extends BaseModel {
         if(options && options.trade_negotiations) {
             this.addTradeNegotiations(options.trade_negotiations);
         }
+        console.log("options in the user_market_negotiation",options);
 
         this._active_condition = null;
         if(options && options['active_condition']) {

@@ -23,7 +23,9 @@
                 axios.post(axios.defaults.baseUrl + 'trade/market-request-subscribe/' + this.market_request.id,
                     {'market_request_subscribe': checked ? "1" : "0"})
                 .then(subscriptionResponse => {
-                    this.$toasted.success(subscriptionResponse.data.message);
+                    this.$toasted.success(subscriptionResponse.data.message, { 
+                         duration : 3000
+                    });
                 }, err => {
                     this.$toasted.error(subscriptionResponse.data.message);
                     console.error(err);
@@ -32,7 +34,6 @@
         },
         mounted() {
             this.market_request_subscribe = this.market_request.chosen_user_market.is_watched;
-            console.log("This is what you are: ", this.market_request);
         }
     }
 </script>

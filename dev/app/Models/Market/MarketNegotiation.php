@@ -556,6 +556,12 @@ class MarketNegotiation extends Model
         if($data['offer'] == null) {
             $data['offer'] = $this->offer;
         }
+
+        $this->userMarket->userMarketRequest->setAction(
+            $this->user->organisation_id,
+            $this->userMarket->userMarketRequest->id,
+            true
+        ); 
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -831,6 +837,7 @@ class MarketNegotiation extends Model
                 && !$this->isTradeAtBest() 
                 && !$this->isTradeAtBestOpen() 
                 && !$this->isRepeatATW()
+                && ($this->marketNegotiationParent &&  !$this->marketNegotiationParent->isRepeatATW())  //repeat all the way hide if parent isRepeatATW() as it still counts as a rtw
                 && !$this->isFoK()
             ) {
                 return "SPIN";

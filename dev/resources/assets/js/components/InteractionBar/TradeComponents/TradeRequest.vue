@@ -67,7 +67,7 @@
                 </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ firstTradeNegotiation.getTradingText(true) }}
+                {{ lastTradeNegotiation.getTradingText() }}
         </div>
     </b-col> 
     
@@ -194,6 +194,8 @@
             return null;
         },
         getStateClass(attr) {
+            console.log("market negotiation",this.marketNegotiation);
+
             if(this.marketNegotiation[attr] == null) {
                 return "";
             }
