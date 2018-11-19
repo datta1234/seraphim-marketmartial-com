@@ -40,7 +40,7 @@
                   <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
                 </div>
                 <label class="col-sm-4">
-                  Contracts
+                    {{ quantityType }}
                 </label>
             </div>
                 <b-row>
@@ -48,7 +48,7 @@
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       
-                        <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired SIze</b-btn>
+                        <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired Size</b-btn>
                     </b-col>
 
                 </b-row>
@@ -135,6 +135,9 @@
             }
 
            },
+          quantityType: function(){
+              return this.marketNegotiation.getQuantityType();
+          },
            btnText(){
                 return this.is_offer ? "Buy" : "Sell";
            }            
