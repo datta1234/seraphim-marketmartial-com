@@ -451,7 +451,11 @@ class UserMarketRequest extends Model
                     }
 
                     //@TODO @alex not sure why this has to be done
-                    if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
+                    if($lastNegotiation->isFok() && 
+                        $lastNegotiation->is_killed == true && 
+                        $lastNegotiation->is_repeat == false &&
+                        $lastNegotiation->is_private == false
+                    ) {
                         return true;
                     }
                     
