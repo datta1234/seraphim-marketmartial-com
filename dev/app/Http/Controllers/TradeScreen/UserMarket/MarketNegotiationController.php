@@ -58,6 +58,24 @@ class MarketNegotiationController extends Controller
                     10
                 );
             }
+
+            if($marketNegotiation->isMeetInMiddle()) {
+                $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".meet-in-middle.".$marketNegotiation->id.".proposed",
+                    "Meet in Middle Sent", 
+                    10
+                );
+            }
+
+            if($marketNegotiation->isTradeAtBest()) {
+                $marketNegotiation->userMarket
+                ->trackActivity(
+                    "organisation.".$marketNegotiation->user->organisation_id.".condition.".$marketNegotiation->id.".proposed",
+                    ($marketNegotiation->cond_buy_best ? "Buy" : "Sell")." at Best Sent",
+                    10
+                );
+            }
         }
 
         //broadCast new market request;
