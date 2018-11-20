@@ -225,7 +225,6 @@
                         )
                     );
                 }
-                console.log(invalid_states);
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
             }
