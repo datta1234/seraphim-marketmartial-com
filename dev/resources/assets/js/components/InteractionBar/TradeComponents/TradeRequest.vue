@@ -9,7 +9,7 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.bid" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
                 <span v-else>
@@ -19,7 +19,7 @@
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.offer" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
                 <span v-else>

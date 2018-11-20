@@ -416,13 +416,11 @@ class UserMarketRequest extends Model
                     !$lastNegotiation->isTrading()
                 )
                 {
-                    \Log::info(["if closed to self"]);
                     return true;
                 }
           
                 if($lastNegotiation->isTraded())
                 {
-                    \Log::info(["is trading"]);
                     return true;
                 }
 
@@ -439,14 +437,12 @@ class UserMarketRequest extends Model
                         $lastNegotiation->is_private == false
                     ) 
                     {
-                        \Log::info(["if its a spin"]);
                         return true;
                     }
 
                     //if the last market has been traded open the whole market
                     if($lastNegotiation->isTraded())
                     {
-                        \Log::info(["its traded"]);
                         return true;
                     }
 
