@@ -65,7 +65,7 @@ class UserMarketUpdateRequest extends FormRequest
         }); 
 
         // Risky / Calendar / Fly
-        $validator->sometimes(['volatilities'], ['required_without:accept', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
+        $validator->sometimes(['volatilities'], ['required_without_all:accept,is_on_hold', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
             return in_array($userMarketRequest->trade_structure_id, [2, 3, 4, 5, 8]);
         });
     }

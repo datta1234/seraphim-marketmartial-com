@@ -235,7 +235,7 @@ class MarketNegotiationController extends Controller
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".repeated",
-                "Repeateded by counter", 
+                "Repeated by counter", 
                 10
             );
         
@@ -250,7 +250,7 @@ class MarketNegotiationController extends Controller
         $marketNegotiation->userMarket
             ->trackActivity(
                 "organisation.".$counter_org_id.".proposal.".$marketNegotiation->id.".repeat",
-                "Repeateded", 
+                "Repeated", 
                 10
             );
         

@@ -17,12 +17,12 @@
   </form>
 
   <div class="row">
-    <div class="col-md-12">
-        <b-button id="update-btn" class="mm-button mm-base float-right ml-2" @click="update">
+    <div class="col col-sm-12 col-md-12 col-lg-10 offset-lg-2">
+        <b-button id="update-btn" class="mm-button mm-base float-right w-25 ml-2" @click="update">
          {{ (profileComplete == false && isAdmin == false) ? "Next" : "Update"  }}
       </b-button>
 
-      <b-button  class="mm-button mm-base float-right" @click="showModal">
+      <b-button  class="mm-button mm-base float-right w-25" @click="showModal">
        Add E-mail
       </b-button>
     </div>

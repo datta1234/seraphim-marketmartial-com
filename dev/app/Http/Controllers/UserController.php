@@ -59,13 +59,12 @@ class UserController extends Controller
  
         }else
         {*/
-            //dont allow organisation_id to be editable 
-            if(array_key_exists('organisation_id',$data))
+            //dont allow organisation to be editable 
+            if(array_key_exists('organisation',$data))
             {
-                unset($data['organisation_id']);
+                unset($data['organisation']);
             }
         //}
-      
 
         $user->update($data);
 

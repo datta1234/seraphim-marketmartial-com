@@ -158,7 +158,7 @@ export default class TradeNegotiation extends BaseModel {
     getTextOver()
     {   
 
-        return this.is_offer ? "You have been offerd over " : "You have been bid over "; 
+        return this.is_offer ? "You are Offered Over " : "You are Bid over, "; 
     }
 
     /**

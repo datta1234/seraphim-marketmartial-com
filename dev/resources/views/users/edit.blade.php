@@ -84,15 +84,15 @@
 				<div class="form-group row">
 				        {{ Form::label('organisation_id','Organisation', ['class' => 'col-sm-4 col-form-label']) }}
 				    <div class="col-sm-8">
-				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['readonly'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
+		    			{{ Form::text('organisation',$user->organisation->title,['readonly'=>true,'class' => 'form-control']) }}
 				    </div>
 				</div>
 
 
             
 				<div class="form-group row mb-0">
-					<div class="col-md-12">
-						{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+					<div class="col col-sm-12 col-md-6 offset-md-6 col-lg-3 offset-lg-9">
+						{{ Form::submit($profileIsComplete?'Update':'Next',['class'=>'btn mm-button w-100 float-right']) }}
 					</div>
 				</div>
 

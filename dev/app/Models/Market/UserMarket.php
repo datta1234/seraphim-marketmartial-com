@@ -571,12 +571,12 @@ class UserMarket extends Model
         */
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->bid = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
             $newMarketNegotiation->bid_qty = $quantity;
             
         }else
         {
-            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
             $newMarketNegotiation->offer_qty = $quantity;
         }
 
