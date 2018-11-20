@@ -308,7 +308,6 @@ export default {
 
             Object.keys(defaults).forEach(k => {
                 if(ignore.indexOf(k) == -1) {
-                    console.log("Setting: ", k, defaults[k]);
                     this.$set(this.$data, k, defaults[k]); 
                 }
             });
