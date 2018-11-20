@@ -416,30 +416,46 @@ class UserMarketRequest extends Model
                     !$lastNegotiation->isTrading()
                 )
                 {
+                    \Log::info(["if closed to self"]);
                     return true;
                 }
           
                 if($lastNegotiation->isTraded())
                 {
+                    \Log::info(["is trading"]);
                     return true;
                 }
 
-                if($lastNegotiation->isTraded())
-                {
-                    return true;
-                }
 
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
                     // open if the last one is killed but isnt a fill
-                    if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
+
+                    //@TODO @alex market should be open if current is killled and 
+                    if($lastNegotiation->isFok() && 
+                        $lastNegotiation->is_killed == true && 
+                        $lastNegotiation->cond_fok_spin == true && 
+                        $lastNegotiation->is_repeat == true &&
+                        $lastNegotiation->is_private == false
+                    ) 
+                    {
+                        \Log::info(["if its a spin"]);
                         return true;
                     }
 
+                    //if the last market has been traded open the whole market
                     if($lastNegotiation->isTraded())
                     {
+                        \Log::info(["its traded"]);
                         return true;
                     }
+
+                    //@TODO @alex not sure why this has to be done
+                    if($lastNegotiation->isFok() && $lastNegotiation->is_killed == true && $lastNegotiation->is_repeat == false) {
+                        return true;
+                    }
+                    
+                   
 
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
@@ -528,7 +544,6 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        // @TODO - add work the balance no cares here - ($marketOpen && ( nocares | $is_trade_at_best ) )
         elseif($marketOpen && $is_trade_at_best)
         {
             return 'trade-negotiation-open';
@@ -614,10 +629,6 @@ class UserMarketRequest extends Model
                     $marketNegotiationRoles = ["counter"];
                 }
             }           
-                // if($this->id == 3)
-                // {
-                //     \Log::info($marketNegotiationRoles);
-                // }
             return $marketNegotiationRoles;  
         }
     }
@@ -659,7 +670,6 @@ class UserMarketRequest extends Model
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
         
-        \Log::info([$state]);
 
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);

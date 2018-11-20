@@ -510,6 +510,11 @@ class MarketNegotiation extends Model
 
     public function kill($user = null)
     {
+        \Log::info(
+        [
+            $this->toArray()
+        ]);
+
         $this->is_killed = true; // && with_fire = true ;)
         // if its a fill
         if($this->cond_fok_spin == true) {
@@ -517,9 +522,37 @@ class MarketNegotiation extends Model
         }
         $this->save();
 
+        //if its a kill        
+        if($this->cond_fok_spin !== null && $this->cond_fok_spin == false) 
+        {
+   
+            //@TODO @alex removed this and going to have the market open not pending 
+            $newNegotiation = $this->replicate();
+            
+            $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
+            $newNegotiation->market_negotiation_id = $this->id;
+
+            $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+            // $inverse = $att == 'bid' ? 'offer' : 'bid';
+            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+            $newNegotiation->{$att} = null;
+
+
+            $newNegotiation->cond_timeout = false; // dont apply on this one
+            // Override the condition application
+            $newNegotiation->fok_applied = true;
+            $newNegotiation->is_private = false; //dont make it private
+            return $newNegotiation->save();
+        }
+
         // prefer fill
         if($this->cond_fok_spin == true) {
-            $newNegotiation = $this->replicate();
+
+            
+            //@TODO @alex removed this and going to have the market open not pending 
+          /*  $newNegotiation = $this->replicate();
             
             $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
             $newNegotiation->market_negotiation_id = $this->id;
@@ -536,7 +569,10 @@ class MarketNegotiation extends Model
             $newNegotiation->cond_timeout = false; // dont apply on this one
             // Override the condition application
             $newNegotiation->fok_applied = true;
-            return $newNegotiation->save();
+            return $newNegotiation->save();*/
+
+
+
         } else {
             // prefer kill
             // if this is the first one... send back to quote phase
