@@ -16,14 +16,18 @@ class UserMarketRequestSubscritionController extends Controller
      */
     public function ToggleAlertCleared(UserMarketRequest $userMarketRequest,ToggleAlertClearedRequest $request)
     {
+        $user = \Auth::user();
+        $message = '';
+        // Checks subcribtion request - subscribe / unsubscribe
         if($request->input('market_request_subscribe')) {
-        	\Auth::user()->userMarketRequestSubscriptions()->attach($userMarketRequest->id);
-            return response()->json(['data'=>null, 'message'=>'You will be alerted once this market clears']);
+            $user->userMarketRequestSubscriptions()->attach($userMarketRequest->id);
+            $message = 'You will be alerted once this market clears';
         } else {
-            \Auth::user()->userMarketRequestSubscriptions()->detach($userMarketRequest->id);
-            return response()->json(['data'=>null, 'message'=>'You will no longer be alerted once this market clears']);
+            $user->userMarketRequestSubscriptions()->detach($userMarketRequest->id);
+            $message = 'You will no longer be alerted once this market clears';
         }
 
-        return response()->json(["errors"=> null, 'message'=>'Failed to update alert status'], 500);
+        $userMarketRequest->notifyRequested([$user->organisation]);
+        return response()->json(['data' => null, 'message' => $message]);
     }
 }
