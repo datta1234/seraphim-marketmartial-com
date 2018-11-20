@@ -506,17 +506,10 @@ class UserMarketRequest extends Model
         $is_trading         =  $this->chosenUserMarket ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $this->lastTradeNegotiationIsTraded();
 
-        // \Log::info(["<<<<<<<THE STATUS>>>>>"]);
-        // \Log::info([
-        //     $hasQuotes,
-        //     $acceptedState,
-        //     $marketOpen,
-        //     $needsBalanceWorked,
-        //     $is_trading,
-        //     $lastTraded
-        // ]);
-        // \Log::info(['trade-negotiation-pending',!$marketOpen,$is_trading,!$lastTraded]);
-                
+        $balance_worked_no_cares = ($this->chosenUserMarket 
+            && $this->chosenUserMarket->lastNegotiation
+            && $this->chosenUserMarket->lastNegotiation->lastTradeNegotiation) ? $this->chosenUserMarket->lastNegotiation->lastTradeNegotiation->no_cares : false;
+        
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
@@ -525,11 +518,17 @@ class UserMarketRequest extends Model
         {
             return "request";
         }
+        // needsBalanceWorked but no cares applied
+        elseif($needsBalanceWorked && $balance_worked_no_cares)
+        {
+            return 'negotiation-open';
+        }
         // trading
         elseif($lastTraded && $needsBalanceWorked)
         {
             return 'trade-negotiation-balance';
         }
+        // @TODO - add work the balance no cares here - ($marketOpen && ( nocares | $is_trade_at_best ) )
         elseif($marketOpen && $is_trade_at_best)
         {
             return 'trade-negotiation-open';

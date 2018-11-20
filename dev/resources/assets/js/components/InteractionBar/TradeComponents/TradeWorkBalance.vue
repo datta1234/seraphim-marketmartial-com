@@ -19,7 +19,7 @@
                                       Work the balance
                       </b-button>
                        <b-button v-active-request  class="w-100 mt-1" 
-                                   :disabled="server_loading || quantity > 0" 
+                                   :disabled="server_loading" 
                                    size="sm" 
                                    dusk="ibar-no-further-balance" 
                                    variant="danger" 
@@ -33,6 +33,7 @@
 <script>
     import UserMarketRequest from '~/lib/UserMarketRequest';
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import { EventBus } from '~/lib/EventBus.js';
 
     export default {
         name: 'ibar-trade-work-balance',
@@ -85,6 +86,8 @@
                 this.server_loading = true;
                 this.marketRequest.chosen_user_market.noFutherCares()
                 .then(response => {
+                    EventBus.$emit('addToNoCares',this.marketRequest.id);
+                    EventBus.$emit('interactionToggle', false);
                     this.server_loading = false;
                     this.errors = [];
                 })

@@ -20,6 +20,7 @@ class TradeNegotiation extends Model
 	 * @property double $traded
 	 * @property boolean $is_offer
 	 * @property boolean $is_distpute
+     * @property boolean $no_cares
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -37,7 +38,7 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity','is_offer', 'is_distpute',
+        'quantity','is_offer', 'is_distpute', 'no_cares',
     ];
 
     /**
@@ -56,7 +57,8 @@ class TradeNegotiation extends Model
      */
     protected $casts = [
         'traded' => 'boolean',
-        'is_offer' => 'boolean'
+        'is_offer' => 'boolean',
+        'no_cares' => 'boolean'
     ];
 
     public static function boot()
