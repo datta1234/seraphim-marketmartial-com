@@ -148,8 +148,7 @@ export default {
             {
                 this.history_message = "Interest has placed your market on hold. Would you like to improve your spread?";
             }
-            else 
-            if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
+            else if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
             {
                 this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
             }

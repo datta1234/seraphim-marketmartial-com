@@ -33,7 +33,6 @@ class LevelsImprovement implements Rule
      */
     public function passes($attribute, $value)
     {
-
         $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
 
         if(!in_array($attribute, ['bid', 'offer'])) {
@@ -42,9 +41,28 @@ class LevelsImprovement implements Rule
         $this->request->user_market->load('userMarketRequest');
 
         $org_status = $this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id);
+
+
+
         //check to see if the bid is improved or the offer
         if(in_array($org_status, ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
+           
+
+            //if source is me i'm allowed to updated it need to re-check
+            if($this->lastNegotiation->user->organisation_id == $this->request->user()->organisation_id)
+            {
+                $source = $this->lastNegotiation->marketNegotiationSource($attribute);
+                
+                if($source)
+                {
+                    if($this->request->user()->organisation_id == $source->user->organisation_id)
+                    {
+                        return true;
+                    }
+                }
+            }
+
             // if the last one was an FOK & killed
             if($this->lastNegotiation->is_killed) {
                 $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
