@@ -102,12 +102,14 @@ class UserMarketController extends Controller
     }
 
 
-  public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
+    public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
         $user = $request->user();
-        $userMarket->noFurtherCares($user);
+        $last_trade_negotiation = $userMarketRequest->chosenUserMarket->lastNegotiation->lastTradeNegotiation;
+        $last_trade_negotiation->no_cares = true;
+        $last_trade_negotiation->update();
         $userMarket->fresh()->userMarketRequest->notifyRequested();
-        return response()->json(['data' => $tradeNegotiation, 'message' => ""]);
+        return response()->json(['data' => null, 'message' => "No further cares applied"]);
     }
 
     /**
