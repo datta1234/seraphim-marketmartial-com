@@ -412,7 +412,9 @@ class UserMarketRequest extends Model
                 if(
                     $lastNegotiation->marketNegotiationParent &&
                     $lastNegotiation->marketNegotiationParent->isTraded() && 
-                    $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id)
+                    $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id &&
+                    !$lastNegotiation->isTrading()
+                )
                 {
                     return true;
                 }
@@ -504,8 +506,17 @@ class UserMarketRequest extends Model
         $is_trading         =  $this->chosenUserMarket ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $this->lastTradeNegotiationIsTraded();
 
-
-        
+        // \Log::info(["<<<<<<<THE STATUS>>>>>"]);
+        // \Log::info([
+        //     $hasQuotes,
+        //     $acceptedState,
+        //     $marketOpen,
+        //     $needsBalanceWorked,
+        //     $is_trading,
+        //     $lastTraded
+        // ]);
+        // \Log::info(['trade-negotiation-pending',!$marketOpen,$is_trading,!$lastTraded]);
+                
         /*
         * check if the current is true and next is false to create a cascading virtual state effect
         */
@@ -649,7 +660,7 @@ class UserMarketRequest extends Model
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
         
-
+        \Log::info([$state]);
 
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
