@@ -41,8 +41,8 @@
 
 							
 						<div class="form-group row mb-0">
-							<div class="col-md-12">
-								{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+							<div class="col col-sm-12 col-md-6 offset-md-6 col-lg-3 offset-lg-9">
+								{{ Form::submit($profileIsComplete?'Update':'Next',['class'=>'btn mm-button float-right w-100']) }}
 							</div>
 						</div>
 
