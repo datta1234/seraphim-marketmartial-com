@@ -428,7 +428,7 @@ class MarketNegotiation extends Model
     }
 
     /**
-    * test if is MeetInMiddle
+    * test if is TradeAtBest
     * @return Boolean
     */
     public function isTradeAtBest()
