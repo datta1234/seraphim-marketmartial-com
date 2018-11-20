@@ -111,7 +111,8 @@ Vue.mixin({
          */
         formatRandQty(val) {
             let sbl = "R";
-            let calcVal = ( typeof val === 'number' ? val : parseFloat(val).toFixed(2) );
+            let calcVal = ( typeof val === 'number' ? val : parseFloat(val) );
+            calcVal = calcVal % 1 != 0 ? calcVal.toFixed(2) : calcVal;
             //currently they want the format the same for all values
             switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
                 case 3: // 1 000 000 < x
@@ -544,6 +545,10 @@ const app = new Vue({
         },
     },
     mounted: function() {
+        // @TODO - remove test code
+        console.log("TESTING: ",this.formatRandQty("258557.2389"), " AND this: ", this.formatRandQty("259557"));
+
+
         Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();
