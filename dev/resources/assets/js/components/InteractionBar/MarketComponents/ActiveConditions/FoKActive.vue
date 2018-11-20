@@ -9,7 +9,7 @@
             <div class="cond-bar">
                 <b-row id="cond-container" class="trade-popover">
                     <b-col>
-                        FoK: {{ fok_value }}
+                        {{ fok_value }}
                     </b-col>
                     <b-col>
                         <span id="fok-popover-hit">
@@ -63,16 +63,16 @@
                 let bid     = this.negotiation.bid,
                     offer   = this.negotiation.offer,
                     cond    = this.negotiation.cond_fok_apply_bid;
-                console.log('fok_value', bid, offer, cond);
+
                 switch(cond) {
                     case true:
-                        return bid;
+                        return "Bid - FoK:"+ bid ;
                     break;
                     case false:
-                        return offer;
+                        return "Offer - FoK:"+offer;
                     break;
                     case null:
-                        return bid+' / '+offer;
+                        return "Bid/Offer - FoK:"+bid+' / '+offer;
                     break;
                 }
                 return '';
