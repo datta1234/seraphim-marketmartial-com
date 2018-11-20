@@ -48,14 +48,14 @@
             <b-row class="justify-content-md-center" v-if="history.reduce((x,y) => x = y.is_interest, false)">
                 <b-col class="mt-2">
                     <p>
-                        <small>Note: Quotes will default to HOLD after 30 minutes.</small>
+                        <small>Quotes will default to HOLD after 30 minutes.</small>
                     </p>
                 </b-col>
             </b-row>
             <b-row class="justify-content-md-center">
                 <b-col class="mt-2">
                     <p>
-                        <small>Note: To show a One Way, clear the quantity of the level NOT being shown only.</small>
+                        <small>To show a One Way, clear the quantity of the level NOT being shown only.</small>
                     </p>
                 </b-col>
             </b-row>
