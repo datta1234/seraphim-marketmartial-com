@@ -412,7 +412,7 @@ class UserMarketRequest extends Model
                 if(
                     $lastNegotiation->marketNegotiationParent &&
                     $lastNegotiation->marketNegotiationParent->isTraded() && 
-                    $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id &&
+                    // $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id &&
                     !$lastNegotiation->isTrading()
                 )
                 {
