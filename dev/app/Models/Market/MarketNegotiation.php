@@ -392,6 +392,21 @@ class MarketNegotiation extends Model
     }
 
     /**
+    * Test if source is RepeatATW and opposite side is not the same record ie. is improved
+    * @return Boolean
+    */
+    public function isImprovedRepeatATW()
+    {
+        $source_bid = $this->marketNegotiationSource('bid');
+        $source_offer = $this->marketNegotiationSource('offer');
+
+        return ($source_bid->isRepeatATW() && $source_offer->id === $this->id 
+            && $source_offer->id !==$source_bid->id) 
+            || ($source_offer->isRepeatATW() && $source_bid->id === $this->id
+            && $source_bid->id !==$source_offer->id);
+    }    
+
+    /**
     * test if is FoK
     * @return Boolean
     */

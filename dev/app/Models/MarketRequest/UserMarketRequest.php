@@ -455,7 +455,14 @@ class UserMarketRequest extends Model
                         return true;
                     }
                     
-                   
+                    /*  @TODO - add open state when: 
+                     *      1. RATW is still applied on bid/offer and other side (ie value has not changed) 
+                     *      2. NOT RATW side (bid/offer) - has been improved
+                     */
+                    if($lastNegotiation->isImprovedRepeatATW()) {
+                        return true;
+                    }
+
 
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
