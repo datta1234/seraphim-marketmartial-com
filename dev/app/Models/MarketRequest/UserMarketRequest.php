@@ -455,7 +455,10 @@ class UserMarketRequest extends Model
                         return true;
                     }
                     
-                   
+                    if($lastNegotiation->isImprovedRepeatATW()) {
+                        return true;
+                    }
+
 
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;

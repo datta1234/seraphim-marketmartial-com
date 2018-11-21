@@ -24,7 +24,7 @@
                                    dusk="ibar-no-further-balance" 
                                    variant="danger" 
                                    @click="noFutherCares()">
-                                      No Further cares
+                                      No further cares
                       </b-button>
               </b-col>
           </b-row>
