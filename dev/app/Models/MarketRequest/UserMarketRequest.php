@@ -408,11 +408,11 @@ class UserMarketRequest extends Model
 
             if(!is_null($lastNegotiation))
             {       
-               //after working the balance and the market negotiation is stuck at self have the market open
+               //after working the balance and the market negotiation,
                 if(
                     $lastNegotiation->marketNegotiationParent &&
                     $lastNegotiation->marketNegotiationParent->isTraded() && 
-                    $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id &&
+                    // $lastNegotiation->marketNegotiationParent->user->organisation_id == $lastNegotiation->user->organisation_id &&
                     !$lastNegotiation->isTrading()
                 )
                 {
@@ -502,6 +502,17 @@ class UserMarketRequest extends Model
 
             return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->traded;  
         }
+    }
+
+
+    //need a method for trade at best
+    public function isTradeAtBestOpen()
+    {
+        if($this->chosenUserMarket && $this->chosenUserMarket->lastNegotiation)
+        {
+            return $this->chosenUserMarket->lastNegotiation->isTradeAtBestOpen();   
+        }
+        return false;
     }
 
     public function getStatus($current_org_id)

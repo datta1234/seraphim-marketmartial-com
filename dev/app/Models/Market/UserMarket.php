@@ -428,6 +428,8 @@ class UserMarket extends Model
 
         $marketNegotiation = new MarketNegotiation($data);
         $counterNegotiation = $this->findCounterNegotiation($user);
+
+
         $marketNegotiation->user_id = $user->id;
 
         if($counterNegotiation->isTraded())
@@ -435,11 +437,14 @@ class UserMarket extends Model
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
+
         // trade at best get improved
-        if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+        //$this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open"
+        if($this->userMarketRequest->isTradeAtBestOpen() && $this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
         {
             $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
         }
+
 
         if($counterNegotiation)
         {
@@ -559,9 +564,6 @@ class UserMarket extends Model
         $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->first();
         
        
-        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
-        $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
-        $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
 
         // $newMarketNegotiation->user_id = $user->id;
 
@@ -569,6 +571,10 @@ class UserMarket extends Model
         * bid over → opens offer side
         * offered over → opens bid side
         */
+        $attr = $lastTradeNegotiation->is_offer ? 'bid' : 'offer';
+        $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
+        $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
+
         if($lastTradeNegotiation->is_offer)
         {   
             $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
