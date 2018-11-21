@@ -428,6 +428,8 @@ class UserMarket extends Model
 
         $marketNegotiation = new MarketNegotiation($data);
         $counterNegotiation = $this->findCounterNegotiation($user);
+
+
         $marketNegotiation->user_id = $user->id;
 
         if($counterNegotiation->isTraded())
@@ -435,11 +437,14 @@ class UserMarket extends Model
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
+
         // trade at best get improved
-        if($this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
+        //$this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open"
+        if($this->userMarketRequest->isTradeAtBestOpen() && $this->userMarketRequest->getStatus($user->organisation_id) == "negotiation-open")
         {
             $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
         }
+
 
         if($counterNegotiation)
         {
