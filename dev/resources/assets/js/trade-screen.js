@@ -545,10 +545,6 @@ const app = new Vue({
         },
     },
     mounted: function() {
-        // @TODO - remove test code
-        console.log("TESTING: ",this.formatRandQty("258557.2389"), " AND this: ", this.formatRandQty("259557"));
-
-
         Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();
