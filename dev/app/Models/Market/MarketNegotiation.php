@@ -918,13 +918,15 @@ class MarketNegotiation extends Model
 
     public function addTradeNegotiation($user,$data)
     {
+            //dd([$data,$user, $this, $this->tradeNegotiations->last()]);
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
             $counterNegotiation = null;   
             $newMarketNegotiation = null;
 
-            if(count($this->tradeNegotiations) == 0)
+            // @TODO - || $this->tradeNegotiations->last()->traded for new trade check on already traded market?
+            if(count($this->tradeNegotiations) == 0 || $this->tradeNegotiations->last()->traded)
             {
                  // find out who the the negotiation is sent to based of who set the level last
                 $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
