@@ -567,9 +567,10 @@ class UserMarketRequest extends Model
             return 'trade-negotiation-pending';
         }
         // @TODO - state when new trade happens on a market that has already traded 
-        elseif(false) // Checks to check if new trade is happening
+        elseif($marketOpen && $is_trading && !$lastTraded) // Checks to check if new trade is happening
         {
             // @TODO - figure out what state if not a new one is required.
+            return 'trade-negotiation-pending';
         }
         // negotiation
         elseif($hasQuotes && !$acceptedState)
