@@ -570,7 +570,7 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        elseif($marketOpen && $is_trade_at_best)
+        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded)
         {
             return 'trade-negotiation-open';
         }
@@ -593,7 +593,7 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading )
+        elseif($acceptedState && $marketOpen && !$is_trading )
         {
             return 'negotiation-open';
         }
@@ -701,7 +701,7 @@ class UserMarketRequest extends Model
         $interest_org_id = $this->user->organisation->id;
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
-        
+        \Log::info("STATE: ".$state);
 
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);

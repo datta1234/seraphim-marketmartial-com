@@ -10,13 +10,13 @@
         <b-row v-if="message">
             <p class="text-center">{{ message }}&nbsp;&nbsp;<span @click="message = null">X</span></p>
         </b-row>
-        <template v-if="conditions.length > 0">
+        <template v-if="conditions_active.length > 0">
             <b-row>
                 <b-col class="text-center">
                     <strong>Received</strong>
                 </b-col>
             </b-row>
-            <b-row v-for="cond in conditions" :key="cond.condition.id">
+            <b-row v-for="cond in conditions_active" :key="cond.condition.id">
                 <b-col>
                     <component
                         :is="condition_components[cond.type]" 
@@ -26,13 +26,13 @@
                 </b-col>
             </b-row>
         </template>
-        <template v-if="sent_conditions.length > 0">
+        <template v-if="conditions_sent.length > 0">
             <b-row>
                 <b-col class="text-center">
                     <strong>Sent</strong>
                 </b-col>
             </b-row>
-            <b-row v-for="cond in sent_conditions" :key="cond.condition.id">
+            <b-row v-for="cond in conditions_sent" :key="cond.condition.id">
                 <b-col>
                     <component
                         :is="condition_components[cond.type]" 
@@ -74,6 +74,14 @@
             ConditionTradeAtBestActive
         },
         computed: {
+            conditions_active: function() {
+                let keys = Object.keys(this.condition_components);
+                return this.conditions.filter(item => keys.indexOf(item.type) > -1);
+            },
+            conditions_sent: function() {
+                let keys = Object.keys(this.condition_components);
+                return this.sent_conditions.filter(item => keys.indexOf(item.type) > -1);
+            },
             activity() {
                 let valid = [
                     'proposal',
@@ -105,7 +113,6 @@
             }
         },
         mounted() {
-            console.log("Seriously wtf ", this.conditions.length > 0, this.sent_conditions.length > 0);
             EventBus.$on('notifyUser', (data) => {
                 if(data.message && data.message.key == 'condition_action') {
                     this.message = data.message.data
