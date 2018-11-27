@@ -71,6 +71,7 @@
             ConditionFoKActive,
             ConditionProposalActive,
             ConditionMeetInMiddleActive,
+            ConditionTradeAtBestActive
         },
         computed: {
             activity() {

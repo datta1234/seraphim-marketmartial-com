@@ -1199,6 +1199,18 @@ class MarketNegotiation extends Model
         $bid = doubleval($parent->getLatestBid());
         $offer = doubleval($parent->getLatestOffer());
 
+        // set the counter_user to the counter on the oposite side
+        // buy middle - lock with org on the offer
+        if($this->cond_buy_mid == true) {
+            $source = $parent->marketNegotiationSource('offer');
+            $this->counter_user_id = $source->user_id;
+        } 
+        // sell middle - lock with org on the bid
+        else {
+            $source = $parent->marketNegotiationSource('bid');
+            $this->counter_user_id = $source->user_id;
+        }
+
         // set to private
         $this->is_private = true;
 
@@ -1213,6 +1225,7 @@ class MarketNegotiation extends Model
 
         $this->bid = $value;
         $this->offer = $value;
+
         return true;
     }
 
