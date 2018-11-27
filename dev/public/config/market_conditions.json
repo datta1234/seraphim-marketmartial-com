@@ -32,6 +32,7 @@
                 "title": "Apply To",
                 "alias": "cond_fok_apply_bid",
                 "default": null,
+                "default_value": true,
                 "value": [
                     {
                         "value": {
@@ -40,7 +41,8 @@
                                 "cond_timeout"
                             ]
                         }, 
-                        "text": "My Bid"
+                        "text": "My Bid",
+                        "title": "Bid - "
                     },
                     {
                         "value": {
@@ -49,7 +51,8 @@
                                 "cond_timeout"
                             ]
                         }, 
-                        "text": "My Offer"
+                        "text": "My Offer",
+                        "title": "Offer - "
                     },
                     {
                         "value": {
@@ -59,7 +62,8 @@
                             ]
                         }, 
                         "text": "Both Bid & Offer",
-                        "only": "quote"
+                        "only": "quote",
+                        "title": "Bid & Offer - "
                     }
                 ]
             },
@@ -67,6 +71,7 @@
                 "title": "Fill or kill",
                 "alias": "cond_fok_spin",
                 "default": null,
+                "default_value": true,
                 "value": [
                     {
                         "value": { 
@@ -78,11 +83,13 @@
                                 }
                             ]
                         }, 
-                        "text": "Prefer to kill (20min FoK)"
+                        "text": "Prefer to kill (20min FoK)",
+                        "title": "FoK: Kill"
                     },
                     {
                         "value": true, 
-                        "text": "Happy to Spin"
+                        "text": "Happy to Spin",
+                        "title": "FoK: Fill"
                     }
                 ]
             }
@@ -97,14 +104,17 @@
         "title": "Meet in the Middle",
         "alias": "cond_buy_mid",
         "default": null,
+        "default_value": true,
         "value": [
             {
                 "value": true,
-                "text": "Buy in the middle"
+                "text": "Buy in the middle",
+                "title": "Buy in Middle"
             },
             {
                 "value": false,
-                "text": "Sell in the middle"
+                "text": "Sell in the middle",
+                "title": "Sell in Middle"
             }
         ],
         "only": "market"
@@ -113,14 +123,17 @@
         "title": "Buy/Sell at Best",
         "alias": "cond_buy_best",
         "default": null,
+        "default_value": true,
         "value": [
             {
                 "value": true,
-                "text": "Buy at best"
+                "text": "Buy at best",
+                "title": "Buy at best"
             },
             {
                 "value": false,
-                "text": "Sell at best"
+                "text": "Sell at best",
+                "title": "Sell at best"
             }
         ],
         "only": "market"

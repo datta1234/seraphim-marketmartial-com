@@ -11,7 +11,7 @@
     <title>Market Martial</title>
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 
     <!-- Scripts -->
     <script>
@@ -20,8 +20,8 @@
         ]) !!};
     </script>
     </head>
-    <body id="trade_body" class="canvas-body">
-        <div id="trade_app">
+    <body id="canvas_body" class="canvas-body">
+        <div id="canvas_app">
             @include('layouts.elements.navigation', [ 'layout' => [ 'fluid' => true ] ])
             
             @yield('content')
@@ -30,7 +30,7 @@
     @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
     
      <!-- JavaScripts -->
-    <script src="{{ asset('js/canvas.js') }}"></script>
+    <script src="{{ mix('js/canvas.js') }}"></script>
     @include('partials.toast_messsage')
     @yield('footer-scripts')
 </body>

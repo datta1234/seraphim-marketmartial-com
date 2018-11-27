@@ -18,7 +18,7 @@
 				@slot('body')
 
 	<div class="row">
-		<div class="col-md-8 offset-md-2">
+		<div class="col-md-10 offset-md-1">
 			@if($is_admin_update)
 				{!! Form::model($user,['route' => ['admin.user.profile.update', $user->id]]) !!}
 			@else
@@ -40,7 +40,7 @@
 			            </div>
 
 			              <div class="form-group row">
-			                    {{ Form::label('cell_phone','Cell Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                    {{ Form::label('cell_phone','Phone Number', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
 			                  {{ Form::text('cell_phone',null,['class' => ($errors->has('cell_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Cell Phone here here...']) }}
 
@@ -54,7 +54,7 @@
 			            </div>
 
 			             <div class="form-group row">
-			                    {{ Form::label('work_phone','Work Phone', ['class' => 'col-sm-4 col-form-label']) }}
+			                    {{ Form::label('work_phone','Alternative Phone Number', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
 			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Work Phone here here...']) }}
 
@@ -80,66 +80,19 @@
 			                    @endif
 			                </div>
 			            </div>
-				@if(!$profileIsComplete)
-
-              <div class="form-group row">
-                <label for="organisation_id" class="col-sm-4 col-form-label">Your Organisation</label>
-
-
-                <div class="col-sm-8">
-
-                 
-	                
-					<toggle-input :show-if="true" name="not_listed" label="My Organisation is not listed" :checked="{{ old('not_listed') ? 'true' : 'false'}}">
-						<div slot="standard">
-						   <div class="form-group">
-
-		                      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['class' => ($errors->has('organisation_id') ? 'form-control is-invalid' : 'form-control'),'id'=>'organisation_id'] ) }}
-
-		                        @if ($errors->has('organisation_id'))
-		                            <span class="invalid-feedback">
-		                                <strong>{{ $errors->first('organisation_id') }}</strong>
-		                            </span>
-		                        @endif
-		                    </div>
-						</div>
-						<div slot="alt">
-							{{ Form::text('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...']) }}
-		                    
-		                    @if ($errors->has('new_organisation'))
-		                        <span class="invalid-feedback">
-		                            <strong>{{ $errors->first('new_organisation') }}</strong>
-		                        </span>
-		                    @endif
-						</div>
-					
-					</toggle-input>
-
-
-                 {{ Form::hidden('new_organisation',null,['class' => ($errors->has('new_organisation') ? 'form-control is-invalid' : 'form-control'),'id'=>'new_organisation','placeholder'=>'Enter your organisation here...','disabled'=>true]) }}
-                    
-                    @if ($errors->has('new_organisation'))
-                        <span class="invalid-feedback">
-                            <strong>{{ $errors->first('new_organisation') }}</strong>
-                        </span>
-                    @endif
-                </div>
-            </div>
-			@else
 
 				<div class="form-group row">
 				        {{ Form::label('organisation_id','Organisation', ['class' => 'col-sm-4 col-form-label']) }}
 				    <div class="col-sm-8">
-				      {{ Form::select('organisation_id', [''=>'Select Organisation'] + $organisations, null,['readonly'=>true,'class'=>'form-control','id'=>'organisation_id'] ) }}
+		    			{{ Form::text('organisation',$user->organisation->title,['readonly'=>true,'class' => 'form-control']) }}
 				    </div>
 				</div>
-              
-			@endif
+
 
             
 				<div class="form-group row mb-0">
-					<div class="col-md-12">
-						{{ Form::submit($profileIsComplete?'Update':'next',['class'=>'btn mm-button float-right']) }}
+					<div class="col col-sm-12 col-md-6 offset-md-6 col-lg-3 offset-lg-9">
+						{{ Form::submit($profileIsComplete?'Update':'Next',['class'=>'btn mm-button w-100 float-right']) }}
 					</div>
 				</div>
 

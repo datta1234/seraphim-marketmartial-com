@@ -41,7 +41,7 @@ class EmailController extends Controller
         $email->user_id = $request->user()->id;
         $email->notifiable = false;
         $email->save();
-       return ['success'=>'true','data'=>$email,'message'=>'Email added.'];
+       return response()->json(['data'=>$email,'message'=>'Email added.']);
     }
 
     /**
@@ -67,13 +67,12 @@ class EmailController extends Controller
     	}
         $user->emails()->saveMany($emailModels);
         
-       return [
-       'success'=>'true',
-       'data'=>[
+        return response()->json([
+        'data'=>[
             'email' => $user->emails()->with('defaultLabel')->get(),
             'redirect' => route('trade_settings.edit')
         ],
-       'message'=>'Emails updated.'];
+        'message'=>'Emails updated.']);
 
     }
 }

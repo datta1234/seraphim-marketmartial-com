@@ -1,29 +1,21 @@
 <template>
     <b-row dusk="ibar-fok-active" class="active-cond-bar">
         <b-col cols="11" offset="1">
-            <div class="text-right negotiation">
-                <strong>20:00</strong>
+            <div class="text-right negotiation condition-timer">
+                <strong>{{ timer_value }}</strong>
             </div>
         </b-col>
         <b-col cols="12">
             <div class="cond-bar">
                 <b-row id="cond-container" class="trade-popover">
                     <b-col>
-                        FoK: {{ fok_value }}
+                        {{ fok_value }}
                     </b-col>
                     <b-col>
                         <span id="fok-popover-hit">
                             <a  href="" 
-                                @click.prevent.stop="doBuy" 
-                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false">
-                                    Buy
-                            </a>
-                        </span>
-                        <span id="fok-popover-lift">
-                            <a  href="" 
-                                @click.prevent.stop="doSell" 
-                                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true">
-                                    Sell
+                                @click.prevent.stop="doTrade">
+                                    Trade
                             </a>
                         </span>
                         <span>
@@ -34,25 +26,13 @@
             </div>
 
             <ibar-trade-desired-quantity 
-                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===false" 
                 ref="fokPopoverHit" 
                 target="fok-popover-hit" 
                 :market-negotiation="negotiation" 
-                :open="bid_sell" 
-                :is-offer="false" 
-                @close="bid_sell = false" 
-                parent="fok-container">
-            </ibar-trade-desired-quantity>
-
-            <ibar-trade-desired-quantity 
-                v-if="negotiation.cond_fok_apply_bid===null || negotiation.cond_fok_apply_bid===true" 
-                ref="fokPopoverLift" 
-                target="fok-popover-lift" 
-                :market-negotiation="negotiation" 
-                :open="offer_buy" 
-                :is-offer="true" 
-                @close="offer_buy = false" 
-                parent="fok-container">
+                :open="do_trade" 
+                :is-offer="null" 
+                @close="do_trade = false"
+                parent="cond-container">
             </ibar-trade-desired-quantity>
 
         </b-col>
@@ -70,8 +50,9 @@
         },
         data() {
             return {
-                bid_sell: false,
-                offer_buy: false,
+                timer: null,
+                timer_value: null,
+                do_trade: false,
             }
         },
         computed: {
@@ -82,42 +63,59 @@
                 let bid     = this.negotiation.bid,
                     offer   = this.negotiation.offer,
                     cond    = this.negotiation.cond_fok_apply_bid;
-                console.log('fok_value', bid, offer, cond);
+
                 switch(cond) {
                     case true:
-                        return bid;
+                        return "Bid - FoK:"+ bid ;
                     break;
                     case false:
-                        return offer;
+                        return "Offer - FoK:"+offer;
                     break;
                     case null:
-                        return bid+' / '+offer;
+                        return "Bid/Offer - FoK:"+bid+' / '+offer;
                     break;
                 }
                 return '';
             }
         },
         methods: {
-            doBuy() {
+            doTrade() {
                 // this.negotiation.fokBuy();
-                this.bid_sell = true;
-            },
-            doSell() {
-                // this.negotiation.sell();
-                this.offer_buy = true;
+                this.do_trade = true;
             },
             doKill() {
                 this.negotiation.killNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {
                     this.errors = err.errors.errors;
                 });
             },
+            startTimer() {
+                if(this.timer != null) {
+                    this.stopTimer();
+                }
+                this.timer = setInterval(this.runTimer, 1000);
+            },
+            runTimer() {
+                this.timer_value = this.negotiation.getTimeoutRemaining();
+                if(this.timer_value == "00:00") {
+                    this.timed_out = true;
+                    this.stopTimer();
+                }
+            },
+            stopTimer() {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
         },
         mounted() {
+            this.startTimer();
+            this.runTimer(); // force initial setting
+        },
+        beforeDestroy() {
+            this.stopTimer();
         }
     }
 </script>

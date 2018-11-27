@@ -18,6 +18,6 @@
 		    @endslot
 		@endcomponent
 		
-		<activity-year-tables :is_my_activity="true" :years="{{ json_encode($years) }}"></activity-year-tables>
+		<activity-year-tables :is_bank_level="false" :is_my_activity="true" :years="{{ json_encode($years) }}"></activity-year-tables>
 	</div>
 @endsection

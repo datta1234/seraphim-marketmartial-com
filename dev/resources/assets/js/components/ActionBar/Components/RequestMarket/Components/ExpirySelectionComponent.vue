@@ -1,5 +1,5 @@
 <template>
-    <div dusk="expiry-selection" class="step-selections">
+    <div dusk="expiry-selection" class="expiry-selections">
         <b-container fluid>
             <mm-loader theme="light" :default_state="true" event_name="requestDatesLoaded" width="200" height="200"></mm-loader>
             <b-row v-if="dates_loaded && data.number_of_dates > 1" class="justify-content-md-center">
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-    import { EventBus } from '../../../../../lib/EventBus.js';
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'ExpirySelection',
         props:{
@@ -79,11 +79,11 @@
                 }
                 if(this.selected_dates.length == this.data.number_of_dates) {
                     this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
-                    this.data.index_market_object.expiry_dates = this.selected_dates;
+                    /*this.data.index_market_object.expiry_dates = this.selected_dates;*/
                     
                     this.callback(this.selected_dates.map( (current) => {
                         return this.castToMoment(current);
-                    }).join(' / '));
+                    }).join( this.data.market_object.trade_structure == 'Rolls' ? ' vs ' : ' / ' ), this.selected_dates);
                 }
             },
             /**
@@ -114,18 +114,15 @@
             loadExpiryDate() {
                 axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date?page='+this.current_page)
                 .then(expiryDateResponse => {
-                    if(expiryDateResponse.status == 200) {
-                        this.current_page = expiryDateResponse.data.current_page;
-                        this.per_page = expiryDateResponse.data.per_page;
-                        this.total = expiryDateResponse.data.total;
-                        this.expiry_dates = expiryDateResponse.data.data;
-                        EventBus.$emit('loading', 'requestDates');
-                        this.dates_loaded = true;
-                    } else {
-                        console.error(err);    
-                    }
+                    this.current_page = expiryDateResponse.data.current_page;
+                    this.per_page = expiryDateResponse.data.per_page;
+                    this.total = expiryDateResponse.data.total;
+                    this.expiry_dates = expiryDateResponse.data.data;
+                    EventBus.$emit('loading', 'requestDates');
+                    this.dates_loaded = true;
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
         },

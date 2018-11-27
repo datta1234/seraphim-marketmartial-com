@@ -17,7 +17,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserMarketRequested implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels,SoftDeletes;
+    use Dispatchable, InteractsWithSockets, SerializesModels,SoftDeletes,\App\Traits\ResolvesUser;
+
 
     public $userMarketRequest;
     private $organisation;
@@ -36,7 +37,7 @@ class UserMarketRequested implements ShouldBroadcast
      */
     public function __construct(UserMarketRequest $userMarketRequest, $organisation, $message = null)
     {
-        $this->userMarketRequest = $userMarketRequest; 
+        $this->userMarketRequest = $userMarketRequest;
         $this->organisation = $organisation;
     }
 

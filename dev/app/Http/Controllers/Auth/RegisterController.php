@@ -39,7 +39,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/my-profile';
 
     /**
      * Create a new controller instance.
@@ -65,6 +65,7 @@ class RegisterController extends Controller
             'role_id.exists' => 'Please select a role that is valid',
             'organisation_id.required_without' => 'Please select your organisation.',
             'cell_phone.required' => 'The phone field is required',
+            'new_organisation.unique' => 'The organisation already exists in the system',
         ];
 
 
@@ -81,7 +82,7 @@ class RegisterController extends Controller
             ],
             'market_types' => 'required',
             'organisation_id' => 'required_without:not_listed',
-            'new_organisation' => 'required_with:not_listed|string|max:255'
+            'new_organisation' => 'required_with:not_listed|unique:organisations,title|string|max:255',
         ], $messages);
     }
 

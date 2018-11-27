@@ -4,13 +4,15 @@
 	}
 }
 
-.trade-section.dark-theme, .trade-section.light-theme, .interaction-content {
-	.mm-modal .modal-body
-	{
-		color: $mm-market-important;
-
-		p {
-			color: $mm-market-important !important;
+#trade_app {
+	.trade-section.dark-theme, .trade-section.light-theme, .interaction-content {
+		.mm-modal .modal-body
+		{
+			color: $mm-market-important;
+			
+			p,h2,h4 {
+				color: $mm-market-important;
+			}
 		}
 	}
 }
@@ -123,4 +125,11 @@
 		color: $mm-text-white;
 		background-color: $mm-modal-header;
 	}
+}
+
+@media (min-width: 768px) {
+  .modal-xl .modal-md{
+    width: 90%;
+   max-width:1200px;
+  }
 }

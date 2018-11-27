@@ -1,12 +1,37 @@
+#trade_html {
+	position: relative;
+    height: 100%;
+	&.light{
+		background-color: $mm-background;
+	}
+	&.dark {
+		background-color: $mm-background-alt;
+	}
+}
 #trade_body {
+	position: relative;
+	height: 100%;
+	padding-bottom: $trade-footer-height;
+	margin-bottom: 0px;
 
+	#trade-footer  {
+		position:fixed;
+	}
 }
 
 #trade_app {
 	position: relative;
+	height: 100%;
 
 	.trade-screen-wrapper {
-		position: relative;
+		position: absolute;
+		height: 100%;
+		top: $main-nav-header-height;
+		bottom: $trade-footer-height;
+    	margin: 0px;
+	}
+	.trade-section {
+		overflow-y: auto;
 	}
 	.trade-section.light-theme {
 		background-color: $mm-background;
@@ -35,8 +60,28 @@
 		.toggle {
 			color: $mm-text-white;
 		}
+	} 
+	
+	.user-markets {
+		min-height: 40%;
 	}
 
+	.user-market {
+		padding:0px;
+
+		.user-market-group {
+			border-right: 0.15em solid $mm-light-grey;
+			height:100%;
+		}
+		&:last-child {
+			.user-market-group {
+				border-right: none;
+			}
+		}
+	}
+}
+
+#trade_app, #canvas_app {
 	.sub-nav {
 		box-shadow: 0px 1px 6px 0px black;
 
@@ -51,20 +96,6 @@
 
 	p, span, .market-tab {
 		font-family: $mm-font-sub-head;
-	} 
-
-	.user-market {
-		padding:0px;
-
-		.user-market-group {
-			border-right: 0.15em solid $mm-light-grey;
-			height:100%;
-		}
-		&:last-child {
-			.user-market-group {
-				border-right: none;
-			}
-		}
 	}
 }
 

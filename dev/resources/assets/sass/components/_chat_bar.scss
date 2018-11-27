@@ -25,7 +25,7 @@
             overflow: hidden;
 
             position: fixed;
-            z-index: 1030; //also houses a modal and its hidden if the position is fixed
+            z-index: 1015;
             width: $chat-bar-width + $chat-toggle-width;
             
             padding-bottom: 150px;
@@ -129,6 +129,41 @@
         .chat-block {
             color: $mm-chat-own-text;
             background-color: $mm-chat-block-own;
+        }
+    }
+
+    .chat-header {
+        .new-message-alert {
+            color: rgba(243, 147, 28, 1);
+            border-radius: 15px;
+            box-shadow: 0 0 0 rgba(204,169,44, 0.4);
+            animation: pulse 2s 5;
+        }
+
+        @-webkit-keyframes pulse {
+            0% {
+                -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+            }
+            70% {
+                -webkit-box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+            }
+            100% {
+                -webkit-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+            }
+        }
+        @keyframes pulse {
+            0% {
+                -moz-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+                box-shadow: 0 0 0 0 rgba(243, 147, 28, 0.4);
+            }
+            70% {
+                -moz-box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+                box-shadow: 0 0 0 10px rgba(243, 147, 28, 0);
+            }
+            100% {
+                -moz-box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+                box-shadow: 0 0 0 0 rgba(243, 147, 28, 0);
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ class Stream
     public $chunks = [];
     public $experation;
     public $checkSum;
+    public $nonce;
     private $overHead = [];
 
     function __construct($event) 
@@ -20,6 +21,7 @@ class Stream
         $this->channel = $event->broadcastOn();
         $this->data =   json_encode($event->broadcastWith());
         $this->expires_at = Carbon::now()->addMinutes(config('marketmartial.stream_settings.expiration'));
+        $this->nonce = str_random(16);
         $this->setupChunks();
         $this->storeData();
     }
@@ -28,7 +30,6 @@ class Stream
     {
         return substr($str,($pointer * $prev_limit_bytes),$limit_in_bytes);
     }
-
 
     public function setupChunks()
     {
@@ -39,7 +40,8 @@ class Stream
         $pointer = 0;
         $prev_limit_bytes = 0;
         $compiledData = '';
-        $this->checkSum = hash("sha256",$encoded);
+        
+        $this->checkSum = hash("sha256",$encoded.$this->nonce);
         $this->chunks = [];
 
         while($encoded != $compiledData)
@@ -47,14 +49,15 @@ class Stream
             $chunk = [
                  "checksum"     => $this->checkSum,
                  "packet"       => $pointer + 1,
-                 "expires"      => $this->expires_at->format("d-m-y H:i:s"),
+                 "expires"      => $this->expires_at->toIso8601String(),
+                 "token"        => $this->nonce,
             ];
 
 
             $usedBytes = $this->calcUsedOverHead($chunk);
             $limit_in_bytes = $limit - $usedBytes;
             $chunk["data"]  = $this->getChunkAtPointer($encoded,$pointer,$prev_limit_bytes, $limit_in_bytes);
-           $compiledData   = $compiledData .$chunk["data"];
+            $compiledData   = $compiledData .$chunk["data"];
             $this->chunks[] = $chunk; 
             $prev_limit_bytes = $limit_in_bytes;
             $pointer++;
@@ -72,6 +75,14 @@ class Stream
 
     public function storeData()
     {
+        $active_requests = Cache::get('activeStreamData', []);
+        $channel  = $this->channel->name;
+        if(!isset($active_requests[$channel])) {
+            $active_requests[$channel] = [];
+        }
+        $active_requests[$channel][$this->checkSum] = $this->expires_at;
+        Cache::forever('activeStreamData', $active_requests);
+
         Cache::put('streamData_'.$this->checkSum,$this->chunks,$this->expires_at);  
     }
 
@@ -83,8 +94,6 @@ class Stream
 
     public function run($idx = null)
     {
- 
-
         foreach ($this->chunks as $k => $chunk) 
         {
             event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));

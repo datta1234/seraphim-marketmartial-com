@@ -80,22 +80,11 @@
         "condition": "cond_buy_best",
         "true": {
             "bid": "Buy at best",
-            "offer": "Buy at best"  
+            "offer": ""  
         },
         "false": {
-            "bid": "Sell at best",
+            "bid": "",
             "offer": "Sell at best"  
-        }
-    },
-    {
-        "condition": "cond_timeout",
-        "true": {
-            "bid": "",
-            "offer": ""  
-        },
-        "false": {
-            "bid": "",
-            "offer": ""  
         }
     },
     {

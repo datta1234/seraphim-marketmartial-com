@@ -1,28 +1,28 @@
 <template>
     <div dusk="users-table" class="users-table">
-            <b-form v-on:submit.prevent="" id="chat-message-form">
-                <b-row>
-                    <b-col cols="8">
-                        <label class="mr-sm-2" for="admin-filter-users">Filter by Status:</label>
-                        <b-form-select id="admin-filter-users"
-                                       class="w-25"
-                                       :options="filter_options"
-                                       v-model="sort_options.filter"
-                                       @change="filterChanged">
-                        </b-form-select>
-                    </b-col>
-                    <b-col cols="4">
-                        <!-- <create-user></create-user> -->
-                        <slot></slot>
-                        <button type="submit" 
-                                class="btn mm-generic-trade-button float-right ml-0 mr-2" 
-                                @click="searchTerm">
-                            <i class="fas fa-search"></i>
-                        </button>
-                        <b-input v-model="sort_options.search" class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
-                    </b-col>
-                </b-row>
-            </b-form>
+        <b-form v-on:submit.prevent="" id="chat-message-form">
+            <b-row>
+                <b-col cols="8">
+                    <label class="mr-sm-2" for="admin-filter-users">Filter by Status:</label>
+                    <b-form-select id="admin-filter-users"
+                                   class="w-25"
+                                   :options="filter_options"
+                                   v-model="sort_options.filter"
+                                   @change="filterChanged">
+                    </b-form-select>
+                </b-col>
+                <b-col cols="4">
+                    <!-- <create-user></create-user> -->
+                    <slot></slot>
+                    <button type="submit" 
+                            class="btn mm-generic-trade-button float-right ml-0 mr-2" 
+                            @click="searchTerm">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <b-input v-model="sort_options.search" class="w-50 float-right mr-0" id="admin-users-search" placeholder="Search" />
+                </b-col>
+            </b-row>
+        </b-form>
         <!-- Main table element -->
         <b-table v-if="users_loaded && items != null"
                  class="mt-2 admin-users-table"
@@ -49,12 +49,13 @@
                 <a :href="base_url + '/admin/user/'+ row.item.id" class="btn mm-generic-trade-button w-100">View</a>
             </template>
             <template slot="action" slot-scope="data">
-                <button v-if="data.item.active && data.item.verified" 
-                        type="button" 
-                        class="btn mm-generic-trade-button w-100"
-                        @click="showModal(data.item, {'active': false}, data.index, 'Deactivate')">
-                    Deactivate
-                </button>
+                <b-form-select  v-if="data.item.active && data.item.verified" 
+                        class="form-control" 
+                        @change="actionChanged(data.item, data.index, $event)"
+                        v-model="action_selected">
+                        <option selected disabled value="select">Select</option>
+                        <option v-for="option in action_options" v-bind:value="option.value">{{ option.text }}</option>
+                </b-form-select >
                 <button v-else-if="!data.item.active && data.item.verified" 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
@@ -144,6 +145,7 @@ export default {
             path: '',
             users_loaded: true,
             initial_load: 0,
+            action_selected: 'select',
             filter_options: [
                 {text: "All", value: null},
                 {text: "Active", value: 'active'},
@@ -164,6 +166,10 @@ export default {
                 show_modal: false,
                 modal_ref: 'confirm-action-modal',
             },
+            action_options: [
+                {text: "Impersonate", value: 'impersonate'},
+                {text: "Deactivate", value: 'deactivate'},
+            ],            
         }
     },
     methods: {
@@ -254,7 +260,15 @@ export default {
         filterChanged(value) {
             this.sort_options.filter = value;
             this.loadUsers();
+        },
+        actionChanged(user, index, action) {
+            if (action == 'deactivate') {
+                this.showModal(user,{'active': false},index,'Deactivate');
+            } else if (action == 'impersonate') {
+                window.location = '/impersonate/take/'+user.id;
+            }
         }
+
     },
     mounted() {
         let parsed_data = JSON.parse(this.user_data);

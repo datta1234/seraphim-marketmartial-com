@@ -15,6 +15,7 @@ class Market extends Model
 	 * @property boolean $has_deadline
 	 * @property boolean $has_negotiation
 	 * @property boolean $has_rebate
+     * @property double spot_price_ref
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -38,6 +39,11 @@ class Market extends Model
 		'has_deadline',
 		'has_negotiation',
 		'has_rebate',
+        'spot_price_ref',
+    ];
+
+    protected $casts = [
+        'is_seldom'             => 'Boolean',
     ];
 
     /**

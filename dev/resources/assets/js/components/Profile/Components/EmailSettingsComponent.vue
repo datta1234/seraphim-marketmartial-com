@@ -17,12 +17,12 @@
   </form>
 
   <div class="row">
-    <div class="col-md-12">
-        <b-button id="update-btn" class="mm-button mm-base float-right ml-2" @click="update">
-         {{ (profileCompleteData == false && isAdmin == false) ? "Next" : "Update"  }}
+    <div class="col col-sm-12 col-md-12 col-lg-10 offset-lg-2">
+        <b-button id="update-btn" class="mm-button mm-base float-right w-25 ml-2" @click="update">
+         {{ (profileComplete == false && isAdmin == false) ? "Next" : "Update"  }}
       </b-button>
 
-      <b-button  class="mm-button mm-base float-right" @click="showModal">
+      <b-button  class="mm-button mm-base float-right w-25" @click="showModal">
        Add E-mail
       </b-button>
     </div>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-    const Form = require('../../../lib/Form.js');
+    const Form = require('~/lib/Form.js');
     export default {
         props:{
             'emailSettings': {
@@ -64,7 +64,7 @@
             'defaultLabels':{
                 type: String
             },
-            'profileCompleteData':{
+            'profileComplete':{
                 type: Boolean
             },
             'isAdmin':{
@@ -76,7 +76,7 @@
         },
         data() { 
             return {          
-                email : new Form({
+                email: new Form({
                     email: '',
                     title: ''
                 }),
@@ -96,7 +96,7 @@
                     console.log(response.data);
                     this.$toasted.success(response.message);
                     
-                    if(this.isAdmin == false && this.profileCompleteData == false)
+                    if(this.isAdmin == false && this.profileComplete == false)
                     {
                         window.location.href = response.data.redirect;
                     }

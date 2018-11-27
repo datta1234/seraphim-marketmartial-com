@@ -22,9 +22,9 @@ window.Echo = new Echo({
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
 
-import Datepicker from 'vuejs-datepicker'
-import BootstrapVue from 'bootstrap-vue'
-import Toasted from 'vue-toasted'
+import Datepicker from 'vuejs-datepicker';
+import BootstrapVue from 'bootstrap-vue';
+import Toasted from 'vue-toasted';
 Vue.use(BootstrapVue)
 Vue.use(Toasted, {
     position: 'top-center',
@@ -37,15 +37,15 @@ Vue.use(Toasted, {
     },
     theme: 'primary'
 })
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
-
+import Config from './lib/Config';
 import Market from './lib/Market';
 import UserMarketRequest from './lib/UserMarketRequest';
 import UserMarket from './lib/UserMarket';
@@ -91,6 +91,15 @@ Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 
+
+// directives
+import ActiveRequestDirective from './directives/active-request.js';
+Vue.directive('active-request', ActiveRequestDirective);
+
+import ActiveMakerService from '~/services/ActiveMakerService';
+import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
+Vue.component('active-makers', ActiveMarketMakers);
+
 Vue.mixin({
     methods: {
         /**
@@ -102,7 +111,8 @@ Vue.mixin({
          */
         formatRandQty(val) {
             let sbl = "R";
-            let calcVal = ( typeof val === 'number' ? val : parseInt(val) );
+            let calcVal = ( typeof val === 'number' ? val : parseFloat(val) );
+            calcVal = calcVal % 1 != 0 ? calcVal.toFixed(2) : calcVal;
             //currently they want the format the same for all values
             switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
                 case 3: // 1 000 000 < x
@@ -128,14 +138,21 @@ Vue.mixin({
         splitValHelper (val, splitter, frequency) {
             let tempVal = ('' + val);
             let floatVal = '';
+            let sign = '';
+            //Check if our passed value is negative signed
+            if( ("" + val).indexOf('-') !== -1 ) 
+            {
+                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
+                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
+            }
             //Check if our passed value is a float
-            if( ("" + val).indexOf('.') !== -1 ) 
+            if( ("" + tempVal).indexOf('.') !== -1 ) 
             {
                 floatVal = tempVal.slice(tempVal.indexOf('.'));
                 tempVal = tempVal.slice(0,tempVal.indexOf('.'));
             }
             //Creates an array of chars reverses and itterates through it
-            return tempVal.split('').reverse().reduce(function(x,y) {
+            return sign + tempVal.split('').reverse().reduce(function(x,y) {
                 //adds a space on the spesified frequency position
                 if(x[x.length-1].length == frequency)
                 {
@@ -170,13 +187,18 @@ const app = new Vue({
     el: '#trade_app',
     computed: {
         tradeTheme: function() {
+            
+            // toggle on html tag too
+            document.documentElement.classList.remove( this.theme_toggle ? 'dark' : 'light' );
+            document.documentElement.classList.add( this.theme_toggle ? 'light' : 'dark' );
+
             return this.theme_toggle ? 'light-theme' : 'dark-theme';
         }
     },
     watch: {
         'display_markets': function(nv, ov) {
             this.reorderDisplayMarkets(nv);
-        },
+        }
     },
     methods: {
         /**
@@ -221,25 +243,25 @@ const app = new Vue({
                 console.error(err);
             });
         },
+        removeTradeConfirmations(marketType){
+                let self = this;
+                let index = self.trade_confirmations.findIndex((item) => {
+                    return item.market_type_id == marketType.id;
+                });
+                if(index != -1) {
+                    
+                }
+        },
         loadTradeConfirmations(marketType) {
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
-                if(tradeConfirmationResponse.status == 200) {
-                    // set the available market types
-                  
-
-                    tradeConfirmationResponse.data = tradeConfirmationResponse.data.map(x => {
-                        x = new TradeConfirmation(x);
-                        self.trade_confirmations.push(x);   
-                        return x;
-                    });                
-
-                } else {
-                
-                    console.error(err);    
-                
-                }
+                // set the available market types
+                tradeConfirmationResponse.data.data = tradeConfirmationResponse.data.data.map(x => {
+                                      
+                   self.trade_confirmations.push(new TradeConfirmation(x));   
+                    return x;
+                });
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);
@@ -250,12 +272,8 @@ const app = new Vue({
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/market')
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
-                    if(!marketType.markets) {
-                        marketType.markets = [];
-                    }
                     marketResponse.data = marketResponse.data.map(x => {
-                        x = new Market(x);
-                        marketType.markets.push(x);   
+                        x = new Market(x);   
                         self.display_markets.push(x);
                         return x;
                     });
@@ -272,6 +290,7 @@ const app = new Vue({
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
+                    console.log("Retrieved Market Requests: ", market.id, marketResponse.data);
                     market.addMarketRequests(marketResponse.data);
                     return marketResponse.data;
                 } else {
@@ -341,19 +360,52 @@ const app = new Vue({
          * 
          * @todo - Add logic to display market if not already displaying
          */
-        updateUserMarketRequest(UserMarketRequestData) {
-            let index = this.display_markets.findIndex( display_market => display_market.id == UserMarketRequestData.market_id);
+        updateUserMarketRequest(userMarketRequestData) {
+            let index = this.display_markets.findIndex( display_market => display_market.id == userMarketRequestData.market_id);
             if(index !== -1)
             {
-                let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == UserMarketRequestData.id);
+                let request_index = this.display_markets[index].market_requests.findIndex( market_request => market_request.id == userMarketRequestData.id);
                 if(request_index !== -1) {
-                    this.display_markets[index].updateMarketRequest(UserMarketRequestData, request_index);
+                    this.display_markets[index].updateMarketRequest(userMarketRequestData, request_index);
                 } else {
-                    this.display_markets[index].addMarketRequest(new UserMarketRequest(UserMarketRequestData));
+                    this.display_markets[index].addMarketRequest(new UserMarketRequest(userMarketRequestData));
                 }
             } else {
                 //@TODO: Add logic to display market if not already displaying
             }
+        },
+        updateTradeConfirmation(tradeConfirmationData){
+
+         let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
+        
+            if(index !== -1)
+            {
+                let trade_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.id);
+                
+                if(trade_confirmation_index !== -1) {
+                    
+                    if(!tradeConfirmationData.can_interact)
+                    {
+                        this.trade_confirmations.splice(trade_confirmation_index,1);
+
+                    }else
+                    {
+                        this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
+                    }
+
+                } else {
+                    console.log(tradeConfirmationData)
+                    //only keep the interaction if the user can interact with it
+                    if(tradeConfirmationData.can_interact)
+                    {
+                        this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));    
+                    }
+                }
+
+            } else {
+                //@TODO: Add logic to display market if not already displaying
+            }
+
         },
         /**
          * Loads user prefered theme setting base on local storage variable         
@@ -426,10 +478,12 @@ const app = new Vue({
 
             // Check if the message has already been completed in this.completed_messages
             let message = this.completed_messages.find( (msg_val) => {
-                return ( msg_val.checksum == chunk_data.checksum);
+                console.log("Checksum Compare: ", msg_val.checksum, chunk_data.checksum);
+                return ( msg_val.checksum == chunk_data.checksum );
             });
             if(typeof message !== 'undefined') {
                 // Break if there is already a completed message for this checksum
+                console.log("Found Existing Message", message);
                 return;
             }
 
@@ -440,7 +494,7 @@ const app = new Vue({
             });
             if(typeof message === 'undefined') {
                 // if its not being tracked, track a new one
-                message = new Message({'checksum': chunk_data.checksum, 'total': chunk_data.total, 'expires': chunk_data.expires}, (err, output_message) => {
+                message = new Message(chunk_data, (err, output_message) => {
                     // if the message is complete, attempt completion callback
                     if(!err) {
                         // pull the message out of current and into completed
@@ -486,8 +540,12 @@ const app = new Vue({
         theme_toggle: false,
         pusher_messages: [],
         completed_messages: [],
+        scroll_settings: {
+            suppressScrollY: true
+        },
     },
     mounted: function() {
+        Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();
         // load config files
@@ -495,62 +553,120 @@ const app = new Vue({
             ["trade_structure","trade_structure.json"],     // [ <namespace> , <file_path> ]
             ["condition_titles"],                           // [ <namespace> ] ( assumes fileanme == <namespace>.json )
             "market_conditions",                            //   <namespace> ( same assumption as above )
+            "fees",                                         // [ <namespace> , <file_path> ]
+            "app",
         ])
         .catch(err => {
             console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
-        .then(this.loadUserConfig)
         .then(configs => {
-            // load the trade data
-            this.loadMarketTypes();
-
-            this.loadUserConfig()
-            .then(user_preferences => {
-                let promises = [];
-                if(user_preferences !== null) {
-                    user_preferences.prefered_market_types.forEach(market_type => {
-                        promises.push(this.loadTradeConfirmations(market_type));
-
-                        promises.push(
-                            this.loadMarkets(market_type)
-                            .then(markets => {
-                                markets.forEach(market => {
-                                    promises.push(
-                                        this.loadMarketRequests(market)
-                                    );
-                                });
-                            })
-                        );
+            // Initialise Hooks
+            ActiveRequestDirective.init(app);
+            ActiveMakerService.init(app);
+            return configs;
+        })
+        .then(this.loadUserConfig)
+        .then(this.loadMarketTypes)
+        .then(market_types => {
+            let promises = [];
+            if(this.configs["user_preferences"] !== null) {
+                this.configs["user_preferences"].prefered_market_types.forEach(market_type_id => {
+                    let market_type = this.market_types.find(element => {
+                        return element.id == market_type_id;
                     });
-                }
-                //
-                return Promise.all(promises);
-            })
-            .then(all_loaded => {
-                EventBus.$emit('loading', 'page');
-                this.page_loaded = true;
-                //load the no cares from storage
-                this.loadNoCares();
-            });
+                    promises.push(this.loadTradeConfirmations(market_type));
+
+                    promises.push(
+                        this.loadMarkets(market_type)
+                        .then(markets => {
+                            markets.forEach(market => {
+                                promises.push(
+                                    this.loadMarketRequests(market)
+                                );
+                            });
+                        })
+                    );
+                });
+            }
+            //
+            return Promise.all(promises);
+        })
+        .then(all_loaded => {
+            EventBus.$emit('loading', 'page');
+            this.page_loaded = true;
+            //load the no cares from storage
+            this.loadNoCares();
         });
 
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
         if(organisationUuid && organisationUuid.content)
         {
-            window.Echo.private('organisation.'+organisationUuid.content)
-            .listen('.UserMarketRequested', (userMarketRequest) => {
-                console.log("Fired '.UserMarketRequested'", userMarketRequest);
-                //this should be the market thats created
-                this.handlePacket(userMarketRequest, (packet_data) => {
-                    console.log("publish Callback", packet_data);
-                    this.updateUserMarketRequest(packet_data.data);
-                    EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+            let handlePusherDisconnect = function(event) {
+                console.error("Pusher failed Event: ", event);
+                let re = confirm("Live update stream disconnected!\n\nIf problem persists, please contact an administrator\nReload Now?");
+                if(re) {
+                    location.reload();
+                }
+            };
+
+            let connectStream = (subCb) => {
+                console.log("Org UUID: ", organisationUuid.content);
+                // possibly let us cath what happens when pusher dc's
+                window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
+                let channel = window.Echo.private('organisation.'+organisationUuid.content)
+                .listen('.UUIDUpdated', (newIdentity) => {
+                    console.log("New ID", newIdentity);
+                    // remove bindings
+                    window.Echo.connector.pusher.connection.unbind('disconnected', handlePusherDisconnect);
+                    // leave old channel
+                    window.Echo.leave('organisation.'+organisationUuid.content);
+                    // set new UUID and re-connect
+                    organisationUuid.setAttribute('content', newIdentity.data);
+                    connectStream();
+
+                    // reload markets that may have been missed.
+                    this.reloadMarketRequests();
+                })
+                .listen('.UserMarketRequested', (userMarketRequest) => {
+                    //this should be the market thats created
+                    this.handlePacket(userMarketRequest, (packet_data) => {
+                        this.updateUserMarketRequest(packet_data.data);
+                        console.log(packet_data.message);
+                        EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
+                    });
+                })
+                .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
+                    console.log(".TradeConfirmationEvent triggerd");
+                    //this should be the market thats created
+                    this.handlePacket(tradeConfirmationPackets, (packet_data) => {
+
+                        this.updateTradeConfirmation(packet_data.data);
+                        if(packet_data.message)
+                        {
+                             this.$toasted.show(packet_data.message.data,{
+                                'className':"mm-confirm-toast"
+                            }); 
+                        }
+                    });
+                })
+                .listen('RebateEvent', (rebate) => {
+                    if(rebate.message)
+                    {
+                         this.$toasted.show(rebate.message.data); 
+                    }
+                    EventBus.$emit('rebateUpdate', rebate.data);
+                })
+                .listen('ChatMessageReceived', (received_org_message) => {
+                    this.$emit('chatMessageReceived', received_org_message);
                 });
-            })
-            .listen('ChatMessageReceived', (received_org_message) => {
-                this.$emit('chatMessageReceived', received_org_message);
-            }); 
+                // bind sub success to subCb if present
+                if(subCb && subCb.constructor == Function) {
+                    channel.on('pusher:subscription_succeeded', subCb);
+                }
+            }
+            connectStream();
+            
         } else {
             console.error("Missing Organisation UUID");
             let re = confirm("Failed to load Organisation Credentials\nPlease reload your page\n\nIf problem persists, please contact an administrator\nReload Now?");
@@ -566,9 +682,6 @@ const app = new Vue({
         EventBus.$on('toggleTheme', this.setThemeState);
     }
 });
-
-
-
 
 // test code
 // import emulation from './emulate';

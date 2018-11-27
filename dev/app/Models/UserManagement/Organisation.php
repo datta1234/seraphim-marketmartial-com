@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Helpers\Misc\ResolveUuid;
 use App\Traits\ModelCache;
 use App\Traits\OrganisationSlackChat;
+use App\Traits\HasDismissibleActivity;
 use App\Observers\OrganisationObserver;
 use App\Helpers\Broadcast\Channel;
 use App\Helpers\Broadcast\Message;
@@ -24,6 +25,7 @@ class Organisation extends Model
     
     use ModelCache;//if you going to use this remember to write the observer for the mode
     use OrganisationSlackChat;// used for slack chats between organisation members
+    use HasDismissibleActivity; // activity tracked and dismissible
     
     /**
      * The table associated with the model.
@@ -40,6 +42,13 @@ class Organisation extends Model
     protected $fillable = [
         'title', 'verified', 'description',
     ];
+
+    /**
+    *   activityKey - identity for cached data
+    */
+    protected function activityKey() {
+        return $this->id;
+    }
 
     public $message;
 

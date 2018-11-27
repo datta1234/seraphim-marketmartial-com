@@ -45,7 +45,7 @@
                     'Fly': BarLayoutFly,
                     'Option Switch': BarLayoutOptionSwitch,
                     'EFP': BarLayoutEFP,
-                    'EFPSwitch': BarLayoutEFPSwitch,
+                    'EFP Switch': BarLayoutEFPSwitch,
                     'Rolls': BarLayoutRolls,
                 }
             };

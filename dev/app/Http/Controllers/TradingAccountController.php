@@ -9,6 +9,13 @@ use App\Http\Requests\TradingAccountRequest;
 
 class TradingAccountController extends Controller
 {
+
+
+    public function index(Request $request)
+    {
+        return response()->json(["trading_accounts"=>$request->user()->tradingAccounts],200);
+    }
+
 	/**
 	* load the email fields that can be completed
 	*
@@ -82,7 +89,11 @@ class TradingAccountController extends Controller
         $user->emails()->saveMany($emailModels);
         $user->tradingAccounts()->saveMany($tradingAccountModels);
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
+        if(!$user->completeProfile()) {
+            \Cache::put('user_trade_settings_complete_'.$user->id, true,1440);
+        }
+
+        return $user->completeProfile() ? redirect()->back()->with('success', 'Trading account settings updated!') : redirect()->route('interest.edit')->with('success', 'Trading account settings updated!');
         
     }
 }

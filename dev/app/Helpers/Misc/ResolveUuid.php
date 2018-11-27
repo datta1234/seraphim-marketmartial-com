@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
 use Carbon\Carbon;
+use App\Events\UUIDUpdated;
 
 class ResolveUuid
 {
@@ -31,20 +32,29 @@ class ResolveUuid
 
     public static function generateOrganisationUuid()
     {
+        $old_uuids = Cache::get('organisationsMap');
         $organisations = Organisation::all();
         $orgUuid = [];
 
         foreach ($organisations as $organisation) 
         {
-            $key = self::genUuid();
-            while(!in_array($key, $orgUuid))
-            {
-                 $orgUuid[$organisation->id] = $key; 
-            }
+            do {
+                $key = self::genUuid();
+            } while(in_array($key, $orgUuid));
+            $orgUuid[$organisation->id] = $key; 
         }
 
 		$expiresAt = now()->addHours(24);
     	Cache::put('organisationsMap',$orgUuid,$expiresAt);
+
+        foreach ($organisations as $organisation) 
+        {
+            // let the clients know their UUID has been updated
+            if(isset($old_uuids[$organisation->id])) {
+                event(new UUIDUpdated($organisation, $old_uuids[$organisation->id]));
+            }
+        }
+
         return $orgUuid;
     }
 
@@ -55,11 +65,10 @@ class ResolveUuid
 
         foreach ($users as $user) 
         {
-            $key = self::genUuid();
-            while(!in_array($key, $userUuid))
-            {
-                $userUuid[$user->id] = $key; 
-            }
+            do {
+                $key = self::genUuid();
+            } while(in_array($key, $userUuid));
+            $userUuid[$user->id] = $key; 
         }
 
 		$expiresAt = now()->addHours(24);

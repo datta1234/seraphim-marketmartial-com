@@ -20,6 +20,7 @@ export default class TradeNegotiation extends BaseModel {
 		    id: "",
 		    quantity: "",
             trade_negotiation_id: "",
+            user_market_id: "",
 		    traded: false,
 		    is_offer: null,
 		    is_distpute: false,
@@ -90,28 +91,32 @@ export default class TradeNegotiation extends BaseModel {
         };
     }
 
-    getTradingText()
+    getSortedTradingText(fromTraded)
     {
-        let text;
-        
-        if(this.traded)
-        {
-            text =   this.getUserMarketNegotiation().getFirstTradeNegotiation().is_offer ? "Bought @ " +this.getUserMarketNegotiation().offer : "Sold @ " +  this.getUserMarketNegotiation().bid;
-            return text + " (" + this.quantity + ") ";
-        }
-
+        let text = "";
         if(this.sent_by_me)
         {
-            text =  this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid ;
-
+            text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
         }else if(this.sent_to_me)
         {
-            text = this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer :"You bought @ "+this.getUserMarketNegotiation().bid;
+            text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
+
+        }else if(this.traded || fromTraded)
+        {
+            text = "Traded Away at "; 
+            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
         }else
         {
             text = "Trading at "; 
             text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
         }
+        return text;
+    }
+
+    getTradingText()
+    {
+        let text = this.getUserMarketNegotiation().getFirstTradeNegotiation().getSortedTradingText(this.traded );
+        text += this.traded ? " ("+this.quantity+")" : "";
         return text;
     }
 
@@ -153,7 +158,7 @@ export default class TradeNegotiation extends BaseModel {
     getTextOver()
     {   
 
-        return this.is_offer ? "You have been offerd over " : "You have been bid over "; 
+        return this.is_offer ? "You are Offered Over " : "You are Bid over, "; 
     }
 
     /**
@@ -166,7 +171,7 @@ export default class TradeNegotiation extends BaseModel {
             // catch not assigned to a market request yet!
             if(this._user_market.id == null) {
                 return new Promise((resolve, reject) => {
-                    reject(new Errors(["Invalid Market"]));
+                    reject(new Errors("Invalid Market"));
                 });
             }
         }
@@ -183,12 +188,10 @@ export default class TradeNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
-
-
 
     counter(tradeNegotiation)
     {
@@ -203,7 +206,7 @@ export default class TradeNegotiation extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }

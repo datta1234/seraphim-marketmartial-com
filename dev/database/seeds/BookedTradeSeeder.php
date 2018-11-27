@@ -31,8 +31,10 @@ class BookedTradeSeeder extends Seeder
 				"user_id" => $sellingUser,
 				"trade_confirmation_id" => $tradeConfirmation->id, 
 				"trading_account_id" => App\Models\UserManagement\TradingAccount::where("user_id", $sellingUser)->where("market_id", $tradeConfirmation->market_id)->first()->id,
-				"market_id" => $tradeConfirmation->market_id,
-				"stock_id" => $tradeConfirmation->stock_id,
+				// "market_id" => $tradeConfirmation->market_id,
+				// "stock_id" => $tradeConfirmation->stock_id,
+				"user_market_request_id" => $tradeConfirmation->user_market_request_id,
+				"is_purchase" => 0,
 				"is_sale" => 1,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
@@ -44,9 +46,11 @@ class BookedTradeSeeder extends Seeder
 				"user_id" => $buyingUser,
 				"trade_confirmation_id" => $tradeConfirmation->id, 
 				"trading_account_id" => App\Models\UserManagement\TradingAccount::where("user_id", $buyingUser)->where("market_id", $tradeConfirmation->market_id)->first()->id,
-				"market_id" => $tradeConfirmation->market_id,
-				"stock_id" => $tradeConfirmation->stock_id,
+				// "market_id" => $tradeConfirmation->market_id,
+				// "stock_id" => $tradeConfirmation->stock_id,
+				"user_market_request_id" => $tradeConfirmation->user_market_request_id,
 				"is_sale" => 0,
+				"is_purchase" => 1,
 				"is_confirmed" => 1,
 				"is_rebate" => 0,
 				"amount" => rand(10000,20000)//$tradeConfirmation->net_premiums, @TODO get the amount from trade_confirmations
@@ -60,9 +64,13 @@ class BookedTradeSeeder extends Seeder
 					"user_id" => $marketMaker->id,
 					"trade_confirmation_id" => $tradeConfirmation->id, 
 					"trading_account_id" => $market_make_trading_account,
-					"market_id" => $tradeConfirmation->market_id,
-					"stock_id" => $tradeConfirmation->stock_id,
+					// /*"market_id" => $tradeConfirmation->market_id,*/
+					// "market_id" => rand(1,4), //@TODO temp remove
+					// "stock_id" => $tradeConfirmation->stock_id,
+					"user_market_request_id" => $tradeConfirmation->user_market_request_id,
 					"is_sale" => 0,
+					"is_purchase" => 0,
+					"is_rebate" => true,
 					"is_confirmed" => 1,
 					"is_rebate" => 1,
 					"amount" => rand(10000,20000),//$tradeConfirmation->future_reference,
@@ -74,8 +82,10 @@ class BookedTradeSeeder extends Seeder
 					"organisation_id" => $marketMaker->organisation->id,
 					"user_market_request_id" => $tradeConfirmation->tradeNegotiation->userMarket->userMarketRequest->id,
 					"is_paid" => 1,
-					"trade_date" => Carbon::now()->addMonths(rand(0,12)),
-					"booked_trade_id" => $rebateBookedTrade->id,
+					/*"trade_date" => Carbon::now()->addMonths(rand(0,12)),*/
+					"trade_date" => Carbon::now()->addMonths(rand(0,2)), //@TODO temp remove
+					"booked_trade_id" => null,
+					"trade_confirmation_id" => $tradeConfirmation->id,
 	            ]);
 
 	            

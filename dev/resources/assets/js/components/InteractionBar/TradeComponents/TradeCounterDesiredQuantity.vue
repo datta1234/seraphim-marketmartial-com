@@ -2,14 +2,14 @@
     <div v-if="canCounterTrade">
         <b-row class="justify-content-md-center">
             <div cols="4">
-                <b-form-input v-model="tradeNegotiation.quantity" class="mb-5" type="text" placeholder="Contracts"></b-form-input>
+                <b-form-input v-active-request v-model="tradeNegotiation.quantity" class="mb-5" type="text" :placeholder="quantityType"></b-form-input>
             </div>
-            <label class="col-4 col-form-label">Contracts</label>
+            <label class="col-4 col-form-label">{{ quantityType }}</label>
         </b-row>
         <b-row class="justify-content-md-center">
             <b-col cols="6">
 
-                  <b-button  class="w-100 mt-1" 
+                  <b-button v-active-request  class="w-100 mt-1" 
                                  :disabled="server_loading || amendInput()" 
                                  size="sm" 
                                  dusk="ibar-send-counter" 
@@ -17,7 +17,7 @@
                                  @click="storeTradeNegotiation()">
                                     Trade requested size
                     </b-button>
-                     <b-button  class="w-100 mt-1" 
+                     <b-button v-active-request  class="w-100 mt-1" 
                                  :disabled="server_loading || !amendInput()" 
                                  size="sm" 
                                  dusk="ibar-send-amend" 
@@ -65,6 +65,9 @@
             },
            lastTradeNegotiation(){
              return this.marketRequest.chosen_user_market.getLastNegotiation().getLastTradeNegotiation();
+           },
+           quantityType(){
+            return this.marketRequest.getQuantityType();
            }     
         },
         methods: {

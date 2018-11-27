@@ -28,9 +28,11 @@ class OpenInterestControlller extends Controller
                     return ["ALSI" => $item];
                     break;
                 case 'DTOP':
+                case 'DTOX':
                     return ["DTOP" => $item];
                     break;
                 case 'DCAP':
+                case 'DCAX':
                     return ["DCAP" => $item];
                     break;
                 default:
@@ -76,9 +78,13 @@ class OpenInterestControlller extends Controller
         $csv = array_map('str_getcsv', file($path));
 
         // Create a new array of csv file lines
-        array_walk($csv, function(&$row) {
-            array_walk($row, function(&$col) {
-                $col = trim($col);
+        array_walk($csv, function(&$row,$row_index) use (&$csv) {
+            array_walk($row, function(&$col) use (&$csv,$row,$row_index) {
+                if(count($row) <= 1 && $col == null) {
+                    unset($csv[$row_index]);
+                } else {
+                    $col = trim($col);
+                }
             });
         });
 
@@ -89,12 +95,14 @@ class OpenInterestControlller extends Controller
 
         // remove headings field and map each value to the heading as key value pair
         array_walk($csv, function(&$a) use ($csv) {
-            $a = array_combine($csv[0], $a);
-            // removing white space before validation
-            $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
-            $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
-            $a['delta'] = str_replace(" ", "", $a['delta']);
-            $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+            if(count($a) == count($csv[0])) {
+                $a = array_combine($csv[0], $a);
+                // removing white space before validation
+                $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
+                $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
+                $a['delta'] = str_replace(" ", "", $a['delta']);
+                $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+            }
         });
         array_shift($csv);
 
@@ -104,11 +112,10 @@ class OpenInterestControlller extends Controller
             config('marketmartial.import_csv_field_mapping.open_interest_validation.messages')
         );
         if ($validator->fails()) {
-            return [
-                'success' => false,
-                'data' => ['messages' => $validator->messages()],
+            return response()->json([
+                'errors' => $validator->messages(),
                 'message' => 'Failed to upload Open Interest data.'
-            ];
+            ], 422);
         }
 
         // removes all previous open interest records
@@ -118,12 +125,12 @@ class OpenInterestControlller extends Controller
             // create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\OpenInterest::createFromCSV', $csv);
             DB::commit();
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             \Log::error($e);
             DB::rollBack();
-            return ['success' => false,'data' => null, 'message' => 'Failed to upload Open Interest data.'];
+            return response()->json(['message' => 'Failed to upload Open Interest data.', 'errors'=>[]], 500);
         }
 
-        return ['success' => true,'data' => null,'message' => 'Open Interest data successfully uploaded.'];
+        return response()->json(['data' => null,'message' => 'Open Interest data successfully uploaded.']);
     }
 }

@@ -18,7 +18,6 @@ Artisan::command('inspire', function () {
 })->describe('Display an inspiring quote');
 
 Artisan::command('gen:fok', function () {
-    
     $id = 1;
     
     $n = \App\Models\Market\MarketNegotiation::find($id);
@@ -27,33 +26,56 @@ Artisan::command('gen:fok', function () {
 
 })->describe('Debug FOK');
 
+Artisan::command('mm:populate', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'OrganisationTableSeeder'
+    ]);
+});
+
+Artisan::command('mm:sample', function() {
+    Artisan::call('db:seed', [
+        '--class' => 'SampleSeeder'
+    ]);
+});
 
 Artisan::command('mm:reset', function() {
     // fail if 
-        if(env('APP_ENV') !== 'local') {
-            echo "Can only run this command in 'local' Environments";
-            return false;
-        }
-        //disable foreign key check for this connection before running seeders
-        \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+    \Artisan::call('config:clear'); // force clear
+    echo "ENV: ".env('APP_ENV').PHP_EOL;
+    if(env('APP_ENV') !== 'local') {
+        echo "Can only run this command in 'local' Environments".PHP_EOL;
+        return false;
+    }
+    //disable foreign key check for this connection before running seeders
+    \DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        // Clear Trading
-        \App\Models\TradeConfirmations\Distpute::truncate();
-        \App\Models\TradeConfirmations\BookedTrade::truncate();
-        \App\Models\TradeConfirmations\TradeConfirmation::truncate();
-        \App\Models\Trade\TradeNegotiation::truncate();
+    // Clear Trading
+    \App\Models\Trade\Rebate::truncate();
+    \App\Models\TradeConfirmations\Distpute::truncate();
+    \App\Models\TradeConfirmations\BookedTrade::truncate();
+    \App\Models\TradeConfirmations\TradeConfirmation::truncate();
+    \App\Models\TradeConfirmations\TradeConfirmationGroup::truncate();
+    \App\Models\TradeConfirmations\TradeConfirmationItem::truncate();
 
-        // Clear Market Negoting
-        \App\Models\Market\MarketNegotiation::truncate();
-        \App\Models\Market\UserMarket::truncate();
-        \App\Models\Market\UserMarketSubscription::truncate();
 
-        // Clear Market Requesting
-        \App\Models\MarketRequest\UserMarketRequest::truncate();
-        \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
-        \App\Models\MarketRequest\UserMarketRequestItem::truncate();
-        
-        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+    \App\Models\Trade\TradeNegotiation::truncate();
 
-        \Artisan::call('cache:clear');
+    // Clear Market Negoting
+    \App\Models\Market\MarketNegotiation::truncate();
+    \App\Models\Market\UserMarketVolatility::truncate();
+    \App\Models\Market\UserMarket::truncate();
+    \App\Models\Market\UserMarketSubscription::truncate();
+
+    // Clear Market Requesting
+    \App\Models\MarketRequest\UserMarketRequestTradable::truncate();
+    \App\Models\MarketRequest\UserMarketRequest::truncate();
+    \App\Models\MarketRequest\UserMarketRequestGroup::truncate();
+    \App\Models\MarketRequest\UserMarketRequestItem::truncate();
+    
+    // empty the jobs
+    \DB::table('jobs')->truncate();
+
+    \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+    \Artisan::call('cache:clear');
 });

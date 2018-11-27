@@ -49,6 +49,10 @@ class UserMarketController extends Controller
         $data['current_market_negotiation']['user_id'] = $request->user()->id;
         $userMarket = $userMarketRequest->createQuote($data);
 
+        if(!$userMarket) {
+            return response()->json(['error' => "Failed to store quote", 'message' => "Failed to store quote."], 500);
+        }
+
         // Set action that needs to be taken for the org related to this userMarketRequest
         $userMarket->userMarketRequest->setAction(
             $userMarket->userMarketRequest->user->organisation->id,
@@ -59,8 +63,18 @@ class UserMarketController extends Controller
         $user->organisation->notify("market_request_store","Response sent to interest.",true);
         $userMarketRequest->notifyRequested();
 
-        return response()->json(['data' => $userMarket, 'message' => "Response sent to interest."]);
+        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "Response sent to interest."]);
+    }
 
+    public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
+    {
+      $user = $request->user();   
+      $userMarket->workTheBalance($user,$request->input('quantity'));
+      
+      $user->organisation->notify("market_request_store","You have worked the balance",true);
+      $userMarketRequest->notifyRequested();
+
+      return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
     }
 
 
@@ -88,12 +102,14 @@ class UserMarketController extends Controller
     }
 
 
-  public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
+    public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
         $user = $request->user();
-        $userMarket->noFurtherCares($user);
+        $last_trade_negotiation = $userMarketRequest->chosenUserMarket->lastNegotiation->lastTradeNegotiation;
+        $last_trade_negotiation->no_cares = true;
+        $last_trade_negotiation->update();
         $userMarket->fresh()->userMarketRequest->notifyRequested();
-        return response()->json(['data' => $tradeNegotiation, 'message' => ""]);
+        return response()->json(['data' => null, 'message' => "No further cares applied"]);
     }
 
     /**
@@ -123,14 +139,14 @@ class UserMarketController extends Controller
         {
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
-            $organisations[] = $myOrganisation = $request->user()->organisation;
+            $myOrganisation = $request->user()->organisation;
             $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
+
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
        
         }else
         {
-           // dd("here it is");
             $this->authorize('updateNegotiation',$userMarket);
             //the market maker allowed responses
             if($request->has('is_repeat') && $request->input('is_repeat'))
@@ -171,6 +187,7 @@ class UserMarketController extends Controller
         $userMarket->delete();
         $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
         $userMarketRequest->notifyRequested();
-        return response()->json(['data' => null]);
+        
+        return response()->json(['data' => null,'message'=> ""]);
     }
 }

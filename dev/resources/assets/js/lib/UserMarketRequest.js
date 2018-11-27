@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
+import Config from './Config';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -42,6 +43,7 @@ export default class UserMarketRequest extends BaseModel {
                 is_interest: false
             },
             quote: null,
+            ratio: null,
             chosen_user_market: null,
             created_at: moment(),
             updated_at: moment(),
@@ -77,6 +79,8 @@ export default class UserMarketRequest extends BaseModel {
         if(options && options.user_market) {
             this.setUserMarket(options.user_market);
         }
+        
+        this.stage(); // refresh state 
     }
 
     /**
@@ -106,12 +110,13 @@ export default class UserMarketRequest extends BaseModel {
     *   @param {UserMarket} user_market - UserMarket object
     */
     setChosenUserMarket(user_market) {   
-     
+    
      if(!(user_market instanceof UserMarket)) {
             user_market = new UserMarket(user_market);
         }
         user_market.setMarketRequest(this);
         this.chosen_user_market = user_market;
+        this.stage(); // refresh state
     }
 
     /**
@@ -212,6 +217,10 @@ export default class UserMarketRequest extends BaseModel {
         return this._market;
     }
 
+    get market() {
+        return this._market;
+    }
+
     /**
     *   actionTaken - Alerts the server that an action has been taken on a Market Request
     *   @return response from the request or the error
@@ -219,17 +228,26 @@ export default class UserMarketRequest extends BaseModel {
     actionTaken() {
         if(!this.attributes.action_needed) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["No actions needed"]));
+                reject(new Errors("No actions needed"));
             });
         }
         return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', {'action_needed': false})
+            axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', 
+                {
+                    'action_needed': false
+                },
+                {
+                    headers: {
+                        [Config.get('app.ajax.headers.ignore')]: true
+                    }
+                }
+            )
             .then(response => {
                 this.attributes.action_needed = response.data.data.action_needed;
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             }); 
         });
     }
@@ -250,7 +268,7 @@ export default class UserMarketRequest extends BaseModel {
                 "TRADE-NEGOTIATION-OPEN"
             ];
         
-        // console.log("this should be shown",this.attributes.state);
+        console.log("this should be shown",this.attributes.state);
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 
@@ -280,13 +298,27 @@ export default class UserMarketRequest extends BaseModel {
 
     isTrading()
     {
-        let isTrading = [
+        let tradingStates = [
             "TRADE-NEGOTIATION-SENDER",
             "TRADE-NEGOTIATION-COUNTER",
             "TRADE-NEGOTIATION-PENDING",
             "TRADE-NEGOTIATION-BALANCER"
         ];
-        return isTrading.indexOf(this.attributes.state) > -1; 
+
+        console.log("is trading got called",tradingStates.indexOf(this.attributes.state) > -1,this.is_trading_at_best == false,this.is_trading_at_best,this.is_trading_at_best_closed);
+
+        return tradingStates.indexOf(this.attributes.state) > -1 
+            && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
+    }
+
+    get is_trading_at_best() {
+        // console.log("is_trading_at_best ",this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
+        return (this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
+    }
+
+    get is_trading_at_best_closed() {
+        // console.log("is_trading_at_best_closed()",(this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining()));
+        return (this.chosen_user_market !=null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining());
     }
 
     canCounterTrade()
@@ -305,12 +337,60 @@ export default class UserMarketRequest extends BaseModel {
         return mustWorkBalance.indexOf(this.attributes.state) > -1;
     }
 
-    state() 
+    stage() 
     {
         if(this.chosen_user_market == null) {
-            return "quote";
+            this._stage = "quote";
+            return this._stage;
         }
-        return "market";
+        this._stage = "market";
+        return this._stage;
     }
 
+    get trade_structure_slug() {
+        switch(this.trade_structure) {
+            case 'Outright':
+                return 'outright';
+            break;
+            case 'Risky':
+                return 'risky';
+            break;
+            case 'Calendar':
+                return 'calendar';
+            break;
+            case 'Fly':
+                return 'fly';
+            break;
+            case 'Option Switch':
+                return 'option_switch';
+            break;
+            case 'EFP Switch':
+                return 'efp_switch';
+            break;
+            case 'EFP':
+                return 'efp';
+            break;
+            case 'Rolls':
+                return 'rolls';
+            break;
+        };
+        return null;
+    }
+
+    defaultQuantity()
+    {
+        let group = Object.values(this.trade_items).find(item => item.choice == false);
+        let ts = this.trade_structure_slug;
+        let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
+        let val = group[conf];
+        return val;
+    }
+
+    getQuantityType()
+    {        
+       if(this.getMarket())
+        {
+            return this.getMarket().title == "SINGLES" ? "Rm" : "Contracts";
+        }
+    }
 }

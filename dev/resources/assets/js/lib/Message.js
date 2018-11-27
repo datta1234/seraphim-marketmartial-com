@@ -1,7 +1,12 @@
 const message_timeout = 5000;
 const missing_packet_path = '/trade/stream';
+const state = {
+    recieved: [],
+    expected: []
+};
 import Sha256 from './Char256Hash/sha256';
 import crypto from 'crypto';
+import Stream from '~/services/Stream';
 export default class Message {
 
     /**
@@ -19,6 +24,7 @@ export default class Message {
         const defaults = {
             checksum: '',
             total: 0,
+            token: '',
             expires: moment(),
         }
         // assign options with defaults
@@ -113,6 +119,7 @@ export default class Message {
         if(this.is_complete) {
             this.doCompletion()
             .then((data) => {
+                Stream.recieve(this.checksum);
                 this.callback(null, this);
             })
             .catch(err => {
@@ -175,7 +182,7 @@ export default class Message {
             }
 
             // handle corrupt message
-            if( this.validateChecksum(this.full_message) ) {
+            if( this.validateChecksum(this.full_message+this.token) ) {
                 try {
                     resolve(JSON.parse(atob(this.full_message)));
                 } catch(err) {

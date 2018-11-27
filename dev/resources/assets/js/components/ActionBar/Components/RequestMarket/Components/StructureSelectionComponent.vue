@@ -19,7 +19,7 @@
 </template>
 
 <script>
-    import { EventBus } from '../../../../../lib/EventBus.js';
+    import { EventBus } from '~/lib/EventBus.js';
     export default {
         name: 'StructureSelection',
         props:{
@@ -44,8 +44,8 @@
              * Sets the selected structure and calls the component call back method
              */
             selectStructure(trade_structure) {
-                this.data.index_market_object.trade_structure = trade_structure;
-                this.callback(trade_structure);
+                /*this.data.index_market_object.trade_structure = trade_structure;*/
+                this.callback(trade_structure,trade_structure);
             },
             /**
              * Loads Market Structure
@@ -53,15 +53,12 @@
             loadStructures() {
                 axios.get(axios.defaults.baseUrl + '/trade/market-type/'+this.data.market_type.id+'/trade-structure')
                 .then(tradeStructureResponse => {
-                    if(tradeStructureResponse.status == 200) {
-                        this.trade_structures = tradeStructureResponse.data;
-                        EventBus.$emit('loading', 'requestStructure');
-                        this.structures_loaded = true;
-                    } else {
-                        console.error(err);    
-                    }
+                    this.trade_structures = tradeStructureResponse.data.data;
+                    EventBus.$emit('loading', 'requestStructure');
+                    this.structures_loaded = true;
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load trade structures");
                 });
             },
         },

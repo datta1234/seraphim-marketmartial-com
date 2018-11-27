@@ -3,9 +3,19 @@
 namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helpers\Broadcast\Stream;
+use App\Models\Trade\Rebate;
+use App\Events\TradeConfirmationEvent;
+use App\Models\TradeConfirmations\TradeConfirmationItem;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class TradeConfirmation extends Model
 {
+    use \App\Traits\ResolvesUser;
+    use \App\Traits\CalcuatesForPhases;
+    use \App\Traits\CalcuatesForOutright;
+
 	/**
 	 * @property integer $id
 	 * @property integer $send_user_id
@@ -15,7 +25,8 @@ class TradeConfirmation extends Model
 	 * @property integer $trade_confirmation_id
 	 * @property integer $stock_id
 	 * @property integer $market_id
-	 * @property integer $trading_account_id
+	 * @property integer $send_trading_account_id
+     * @property integer $receiving_trading_account_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -32,7 +43,18 @@ class TradeConfirmation extends Model
      *
      * @var array
      */
-    protected $fillable = [];
+    protected $fillable = [
+        'send_user_id',
+        'receiving_user_id',
+        'trade_negotiation_id',
+        'stock_id',
+        'market_id',
+        'trade_structure_id',
+        'user_market_request_id',
+        'send_trading_account_id',
+        'receiving_trading_account_id',
+        'trade_confirmation_status_id'
+    ];
 
 
     /**
@@ -121,38 +143,110 @@ class TradeConfirmation extends Model
         return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function TradeStructure()
+    {
+        return $this->belongsTo('App\Models\StructureItems\TradeStructure','trade_structure_id');
+    }
+
+
+
+     /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+     public function marketRequest()
+     {
+        return $this->belongsTo('App\Models\MarketRequest\UserMarketRequest','user_market_request_id');
+    }
+
+    /**
+    * Return string message
+    * @return String
+    */
+    public function getMessage($scenario) {
+        switch($scenario) {
+            case 'confirmation_disputed':
+                $user = ( $this->trade_confirmation_status_id == 3 ? $this->recievingUser : $this->sendUser );
+                $marketRequest = $this->marketRequest;
+                return "Dispute by ".$user->full_name." ".$user->cell_phone." for ".$marketRequest->getSummary().".";
+            break;
+        }
+    }
+
+    public function notifyConfirmation($organisation,$message)
+    {
+        $sendOrg = $this->sendUser->organisation;
+        $receiveOrg = $this->recievingUser->organisation;
+
+        $organisation->notify("trade_confirmation_store",$message,true);
+        
+        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this,$sendOrg));
+        $stream->run();
+
+        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this, $receiveOrg));
+        $stream->run();        
+    }
+
     public function preFormatted()
     {
-        $marketRequest = $this->tradeNegotiation->userMarket->userMarketRequest;
+        $organisation = $this->resolveOrganisation();
+        $is_sender  = $organisation->id == $this->sendUser->organisation_id;
+
         return [
             'id'                        => $this->id,
-            'organisation'              => "BANK ABC",
-            'spot_price'                => $this->spot_price,
-            'future_reference'          => $this->future_reference,
-            'near_expiery_reference'    => $this->near_expiery_reference,
-            'contracts'                 => $this->contracts,
-            'puts'                      => $this->puts,
-            'calls'                     => $this->calls,
-            'delta'                     => $this->delta,
-            'gross_premiums'            => $this->gross_premiums,
-            'net_premiums'              => $this->net_premiums,
-            'is_confirmed'              => $this->is_confirmed,
-            'trade_structure_title'     => $marketRequest->tradeStructure->title,
-            'expiration'                => $marketRequest->getDynamicItems(['Expiration Date','Expiration Date 1','Expiration Date 2']),
-            'strike'                    => $marketRequest->getDynamicItems(['Strike']),
-            'quantity'                  => $marketRequest->getDynamicItems(['Quantity']),
+            'organisation'              =>  $organisation ? $organisation->title : null,
+
+            'trade_structure_title'     => $this->tradeStructure->title,
             'volatility'                => $this->tradeNegotiation->marketNegotiation->volatility,
-            'market_request_id'         => $marketRequest->id,
-            'label'                     => $marketRequest->title,
-            'underlying_id'             => $marketRequest->underlying->id,
-            'underlying_title'          => $marketRequest->underlying->title,
-            'is_single_stock'           => false,//@todo when doing single stock ensure to update this method;
+            'option_groups'             => $this->optionGroups->map(function($item) use ($is_sender){
+                return $item->preFormatted($is_sender);
+            })->toArray(),
+            'future_groups'           => $this->futureGroups->map(function($item) use ($is_sender){
+                return $item->preFormatted($is_sender);
+            })->toArray(),
+            'market_request_id'         => $this->marketRequest->id,
+            'market_request_title'      => $this->marketRequest->title,
+            
+            'market_id'                 => $this->market_id,
+
+            'market_type_id'            => $this->market->market_type_id,
+
+            'status_id'                 => $this->trade_confirmation_status_id,
+
+            'can_interact'              => $this->canInteract(),
+
+            'underlying_id'             => $this->marketRequest->underlying->id,
+            'underlying_title'          => $this->marketRequest->underlying->title,
+
+            'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
+
+            'date'                      => Carbon::now()->format("Y-m-d"),
+            
             'traded_at'                 => $this->tradeNegotiation->updated_at,
-            'is_offer'                  => $this->tradeNegotiation->isOffer(),
-
-
         ];
     }
+
+    public function canInteract()
+    {
+        $current_org_id =  $this->resolveOrganisationId();
+        $is_sender =   $current_org_id == $this->sendUser->organisation_id;
+        $is_reciever = $current_org_id == $this->recievingUser->organisation_id;
+        $senderStatuses = [1,3];
+        $receiverStatuses = [2,5];
+        
+        if($is_sender)
+        {
+         return  in_array($this->trade_confirmation_status_id,$senderStatuses);
+     }else if($is_reciever)
+     {
+        return in_array($this->trade_confirmation_status_id,$receiverStatuses);
+    }
+
+}
 
     /**
     * Return relation based of _id_foreign index
@@ -176,192 +270,247 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradingAccount()
+    public function sendTradingAccount()
     {
-        return $this->belongsTo('App\Models\UserManagement\TradingAccount','trading_account_id');
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','send_trading_account_id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function receivingTradingAccount()
+    {
+        return $this->belongsTo('App\Models\UserManagement\TradingAccount','receiving_trading_account_id');
     }
 
     /**
     * Return relation based of trade_confirmation_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmationGroups()
+    public function optionGroups()
     {
         return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
-            'trade_confirmation_id');
+            'trade_confirmation_id')->where('is_options',true);
     }
 
-    public function scopeSentByMyOrganisation($query, $organisation_id)
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function futureGroups()
     {
-       return $query->where(function ($q)  use ($organisation_id) {
-                $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
-                    $qq->where('organisation_id', $organisation_id);
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id')->where('is_options',false);
+    }
+
+   /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+   public function tradeConfirmationGroups()
+   {
+    return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+        'trade_confirmation_id');
+}
+
+public function scopeMarketType($query, $market_type_id)
+{
+ return $query->where(function ($q)  use ($market_type_id) {
+    $q->whereHas('market', function ($qq) use ($market_type_id) {
+        $qq->where('market_type_id', $market_type_id);
+    });
+}
+);
+}
+
+public function scopeSentByMyOrganisation($query, $organisation_id)
+{
+ return $query->where(function ($q)  use ($organisation_id) {
+    $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
+        $qq->where('organisation_id', $organisation_id);
+    });
+}
+);
+}
+
+public function scopeSentToMyOrganisation($query, $organisation_id)
+{
+ return $query->where(function ($q)  use ($organisation_id) {
+    $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
+        $qq->where('organisation_id', $organisation_id);
+    });
+}
+);
+}
+
+
+
+public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
+{
+    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
+        $tlq->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
+            $query->where('organisation_id', $operator,$organistation_id);
+        })
+        ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
+            $query->where('organisation_id', $operator,$organistation_id);
+        });
+    });
+
+}
+
+public function scopeUserInvolved($query, $user_id, $operator, $or = false)
+{
+    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($user_id,$operator) {
+        $tlq->where('send_user_id', $operator,$user_id)
+        ->orWhere('receiving_user_id', $operator,$user_id);
+    });
+}    
+
+public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = false)
+{
+    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organistation_id) {
+        $tlq->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
+            $query->whereHas('userMarket', function ($query) use ($organistation_id) {
+                $query->whereHas('user', function ($query) use ($organistation_id) {
+                    $query->where('organisation_id', $organistation_id);
                 });
-            }
-        );
-    }
-
-    public function scopeSentToMyOrganisation($query, $organisation_id)
-    {
-       return $query->where(function ($q)  use ($organisation_id) {
-                $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
-                    $qq->where('organisation_id', $organisation_id);
-                });
-            }
-        );
-    }
-
-
-
-    public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
-    {
-        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
-            $tlq->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
-                $query->where('organisation_id', $operator,$organistation_id);
-            })
-            ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
-                $query->where('organisation_id', $operator,$organistation_id);
             });
         });
+    });
+}
 
-    }
+public function resolveUserMarketRequestItems()
+{
+    $resolved_items = [
+        "expiration" => array(),
+        "strike" => array(),
+        "strike_percentage" => array(),
+        "nominal" => array(),
+    ];
 
-    public function scopeUserInvolved($query, $user_id, $operator, $or = false)
-    {
-        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($user_id,$operator) {
-            $tlq->where('send_user_id', $operator,$user_id)
-                ->orWhere('receiving_user_id', $operator,$user_id);
-        });
-    }    
-
-    public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = false)
-    {
-        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organistation_id) {
-            $tlq->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
-                $query->whereHas('userMarket', function ($query) use ($organistation_id) {
-                    $query->whereHas('user', function ($query) use ($organistation_id) {
-                        $query->where('organisation_id', $organistation_id);
-                    });
-                });
-            });
+    // Get the user market request items
+    $user_market_request_items = array();
+    $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+    foreach ($user_market_request_groups as $key => $user_market_request_group) {
+        $user_market_request_items[] = $user_market_request_group->userMarketRequestItems->groupBy(function ($item, $key) {
+            return $item->user_market_request_group_id;
         });
     }
-
-    public function resolveUserMarketRequestItems()
-    {
-        $resolved_items = [
-            "expiration" => array(),
-            "strike" => array(),
-            "strike_percentage" => array(),
-            "nominal" => array(),
-        ];
-
-        // Get the user market request items
-        $user_market_request_items = array();
-        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
-        foreach ($user_market_request_groups as $key => $user_market_request_group) {
-            $user_market_request_items[] = $user_market_request_group->userMarketRequestItems->groupBy(function ($item, $key) {
-                return $item->user_market_request_group_id;
-            });
-        }
 
         // Set Strike, Strike percentage, expiration dates and nominals
-        foreach ($user_market_request_items as $item_groups) {
-            foreach ($item_groups as $item_group) {
-                foreach ($item_group as $item) {
-                    switch ($item->title) {
-                        case 'Expiration Date':
-                        case 'Expiration Date 1':
-                        case 'Expiration Date 2':
-                                $resolved_items["expiration"][] = $item->value;
-                            break;
-                        case 'Strike':
-                            $resolved_items["strike"][] = $item->value;
-                            if($this->spot_price !== null) {
-                                $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
-                            } else {
-                                $resolved_items["strike_percentage"] = null;
-                            }
-                            break;
-                        case 'Quantity':
-                                $resolved_items["nominal"][] = $item->value;
-                            break;
+    foreach ($user_market_request_items as $item_groups) {
+        foreach ($item_groups as $item_group) {
+            foreach ($item_group as $item) {
+                switch ($item->title) {
+                    case 'Expiration Date':
+                    case 'Expiration Date 1':
+                    case 'Expiration Date 2':
+                    $resolved_items["expiration"][] = $item->value;
+                    break;
+                    case 'Strike':
+                    $resolved_items["strike"][] = $item->value;
+                    if($this->spot_price !== null) {
+                        $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
+                    } else {
+                        $resolved_items["strike_percentage"] = null;
                     }
-                }    
-            }   
-        }
-        return $resolved_items;
+                    break;
+                    case 'Quantity':
+                    $resolved_items["nominal"][] = $item->value;
+                    break;
+                }
+            }    
+        }   
+    }
+    return $resolved_items;
+}
+
+public function resolveUnderlying() {
+    // Get the user market request items
+    $underlyings = array();
+    $user_market_request_tradables = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestTradables;
+    foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
+        $underlyings[] = $user_market_request_tradable->stock_id === null ?
+            $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
     }
 
-    public function preFormatStats($user = null)
-    {   
-        // @TODO - Add logic for market to be a single stock name if applicable
-        
-        $user_market_request_items = $this->resolveUserMarketRequestItems();
-        
-        $data = [
-            "id" => $this->id,
-            "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-            "market" => $this->market->title,
-            "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
-            "nominal" =>  $user_market_request_items["nominal"],
-            "strike" =>  $user_market_request_items["strike"],
-            "expiration" =>  $user_market_request_items["expiration"],
-            "strike_percentage" =>  $user_market_request_items["strike_percentage"],
-            "volatility" => array(),
-        ];
-        
-        $market_negotiation = $this->tradeNegotiation->marketNegotiation;
+    return $underlyings;
+}
+
+public function preFormatStats($user = null, $is_Admin = false)
+{   
+    $user_market_request_items = $this->resolveUserMarketRequestItems();
+
+    $data = [
+        "id" => $this->id,
+        "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
+        "market" => $this->resolveUnderlying(),
+        "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
+        "nominal" =>  $user_market_request_items["nominal"],
+        "strike" =>  $user_market_request_items["strike"],
+        "expiration" =>  $user_market_request_items["expiration"],
+        "strike_percentage" =>  $user_market_request_items["strike_percentage"],
+        "volatility" => array(),
+    ];
+
+    $market_negotiation = $this->tradeNegotiation->marketNegotiation;
         // volatility
-        if($market_negotiation->bid_qty) {
-            $data["volatility"][] = $market_negotiation->bid_qty;
-        }
+    if($market_negotiation->bid_qty) {
+        $data["volatility"][] = $market_negotiation->bid_qty;
+    }
 
-        if($market_negotiation->offer_qty) {
-            $data["volatility"][] = $market_negotiation->offer_qty;
-        }        
+    if($market_negotiation->offer_qty) {
+        $data["volatility"][] = $market_negotiation->offer_qty;
+    }
 
-        if($user === null) {
-            $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
-            return $data; 
-        }
-
-        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
-        switch (true) {
-            case ($this->send_user_id == $user->id):
-                $data["status"] = 'My Trade';
-                $data["trader"] = $user->full_name;
-                $data["direction"] = 'Sell';
-                break;
-            case ($this->receiving_user_id == $user->id):
-                $data["status"] = 'My Trade';
-                $data["trader"] = $user->full_name;
-                $data["direction"] = 'Buy';
-                break;
-            case ($this->sendUser->organisation->id == $user->organisation->id):
-                $data["status"] = 'Trade';
-                $data["trader"] = $this->sendUser->full_name;
-                $data["direction"] = 'Sell';
-                break;
-            case ($this->recievingUser->organisation->id == $user->organisation->id):
-                $data["status"] = 'Trade';
-                $data["trader"] = $this->recievingUser->full_name;
-                $data["direction"] = 'Buy';
-                break;
-            case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
-                $data["status"] = 'Market Maker Traded Away';
-                $data["trader"] = null;
-                $data["direction"] = null;
-                break;
-            default:
-                $data["status"] = null;
-                $data["trader"] = null;
-                $data["direction"] = null;
-                break;
-        }
-
+    if($is_Admin) {
+        $data["seller"] = $this->sendUser->organisation->title;
+        $data["buyer"] = $this->recievingUser->organisation->title;
         return $data;
     }
+
+    if($user === null) {
+        $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
+        return $data; 
+    }
+
+        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
+    switch (true) {
+        case ($this->send_user_id == $user->id):
+        $data["status"] = 'My Trade';
+        $data["trader"] = $user->full_name;
+        $data["direction"] = 'Sell';
+        break;
+        case ($this->receiving_user_id == $user->id):
+        $data["status"] = 'My Trade';
+        $data["trader"] = $user->full_name;
+        $data["direction"] = 'Buy';
+        break;
+        case ($this->sendUser->organisation->id == $user->organisation->id):
+        $data["status"] = 'Trade';
+        $data["trader"] = $this->sendUser->full_name;
+        $data["direction"] = 'Sell';
+        break;
+        case ($this->recievingUser->organisation->id == $user->organisation->id):
+        $data["status"] = 'Trade';
+        $data["trader"] = $this->recievingUser->full_name;
+        $data["direction"] = 'Buy';
+        break;
+        case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+        $data["status"] = 'Market Maker Traded Away';
+        $data["trader"] = null;
+        $data["direction"] = null;
+        break;
+        default:
+        $data["status"] = null;
+        $data["trader"] = null;
+        $data["direction"] = null;
+        break;
+    }
+
+    return $data;
+}
 
     /**
      * Return a simple or query object based on the search term
@@ -402,7 +551,7 @@ class TradeConfirmation extends Model
                             $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
                                 $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
                                     $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
-                                          ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                                    ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
                                 });
                             });
                         });
@@ -439,8 +588,313 @@ class TradeConfirmation extends Model
             default:
                 $trade_confirmations_query->orderBy("updated_at", "ASC");
                 break;
-        }*/
+            }*/
 
-      return $trade_confirmations_query;
+            return $trade_confirmations_query;
+        }
+
+
+        public function setUp($tradeNegotiation)
+        {
+
+            $marketNegotiation = $tradeNegotiation->marketNegotiation;
+            $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
+            $this->fill([
+                'send_user_id' => $tradeNegotiation->initiate_user_id,
+                'receiving_user_id' => $tradeNegotiation->recieving_user_id,
+                'trade_negotiation_id' => $tradeNegotiation->id,
+                'stock_id' => null,
+                'market_id' => $marketRequest->market_id,
+                'trade_structure_id' =>  $marketRequest->trade_structure_id,
+                'user_market_request_id' => $marketRequest->id,
+                'send_trading_account_id' => null,
+                'receiving_trading_account_id' => null,
+                'trade_confirmation_status_id' =>1,
+            ]);
+            $this->save();
+
+
+
+        //3 index
+        //4 single 
+            $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
+            foreach($groups as $tradeStructureGroup) {
+
+                $tradeGroup = $this->tradeConfirmationGroups()->create([
+                    'trade_structure_group_id'  =>  $tradeStructureGroup->id,
+                    'trade_confirmation_id'     =>  $this->id,
+                    "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
+                    'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
+                ]);
+
+                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+            }
+
+            return $this;
+        } 
+
+     /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param array  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+     {
+         foreach($tradeStructureGroup->items as $item) {
+
+            $value = null;
+            switch ($item->title) {
+                case 'is_put':
+                $value = null;
+                break;
+                case 'Volatility':
+                $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                break;
+                case 'Gross Premiums':
+                $value = null;
+                break;
+                case 'Net Premiums':
+                $value = null;
+                break;
+                case 'Future':
+                $value = null;
+                break;
+                case 'Contract':
+
+
+                if($isOption)
+                {
+                    $value = $tradeNegotiation->quantity; //quantity   
+                }else
+                {
+                    $value = null;
+                }
+                break;
+            }
+
+            if($item->title =="Net Premiums")
+            {
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+            }else if($item->title == "is_offer")
+            {
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id),
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id),
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+            }else
+            {
+               $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    "is_seller" => null,
+                    'value' =>  $value,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+           }         
+       }
+   }
+
+    public function updateGroups($groups)
+    {
+        foreach ($groups as $group) 
+        {
+            $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
+            foreach ($group['items'] as $item) 
+            {
+              $itemModel = $groupModel->tradeConfirmationItems()
+              ->where([
+                'trade_confirmation_group_id' => $groupModel->id,
+                'title'=>$item['title']
+            ])->first();
+              $itemModel->update(
+
+                ['value'=>$item['value']]
+            );
+          }
+      }
+    }
+
+    public function setAccount($user,$trading_account)
+    {
+        if($user->organisation_id == $this->sendUser->organisation_id)
+        {
+            $this->send_trading_account_id = $trading_account;
+        }
+        else if($user->organisation_id == $this->recievingUser->organisation_id)
+        {
+            $this->receiving_trading_account_id = $trading_account;
+        }
+    }
+
+    public function bookTheTrades()
+    {
+        $userMarket = $this->marketRequest->chosenUserMarket;
+
+        //need to update for other tradesctruvtures
+        $sendIsOffer = $this->resolveItem("is_offer",true);
+        $recieverIsOffer = $this->resolveItem("is_offer",false);
+        $senderNetPremium = $this->resolveItem("Net Premiums",true);
+        $recieverNetPremium = $this->resolveItem("Net Premiums",false);
+
+
+        $rebatetotal =  config('marketmartial.confirmation_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
+
+        //outright part of the optionGroup
+        try {
+           DB::beginTransaction();
+                // trade trade for sender
+           $this->bookedTrades()->create([
+            "trading_account_id"        => $this->send_trading_account_id,
+            "is_sale"                   => !$sendIsOffer,
+            "is_purchase"               => $sendIsOffer,
+            "is_rebate"                 => false,
+            "is_confirmed"              => false,
+            "amount"                    => $senderNetPremium,
+            "user_id"                   => $this->send_user_id,
+            "trade_confirmation_id"     => $this->id,
+            "market_request_id"         => $this->user_market_request_id
+        ]);
+
+
+           $this->bookedTrades()->create([
+            "trading_account_id"        => $this->receiving_trading_account_id,
+            "is_sale"                   => !$recieverIsOffer ,
+            "is_purchase"               => $recieverIsOffer ,
+            "is_rebate"                 => false,
+            "is_confirmed"              => false,
+            "amount"                    => $this->resolveItem("Net Premiums",false),
+            "user_id"                   => $this->receiving_user_id,
+            "trade_confirmation_id"     => $this->id,
+            "market_request_id"         => $this->user_market_request_id
+        ]);
+
+           Rebate::create([
+            "user_market_request_id"    => $this->user_market_request_id,
+            "user_market_id"            => $userMarket->id,
+            "organisation_id"           => $userMarket->user->organisation_id,
+            "user_id"                   => $userMarket->user_id,
+            "is_paid"                   => false,
+            "trade_confirmation_id"     => $this->id,
+            "trade_date"                => Carbon::now(),
+            "amount"                    => $rebatetotal
+            ]);
+                //book the trade
+
+           DB::commit();
+
+       } catch (\Illuminate\Database\QueryException $e) {
+        DB::rollBack();
+            \Log::error($e);
+        }
+
+        $organisation = $userMarket->user->organisation;
+        $organisation->notify("rebate_earned","You earned a commission",true);
+        Rebate::notifyOrganisationUpdate($organisation);
+    }
+
+    public function getBrokerageTotal($is_sender)
+    {
+        $brokerFee = 0;
+        foreach ($this->optionGroups as $group) 
+        {
+            $isOffer = $group->getOpVal("is_offer",$is_sender);  
+            $grossPremium = $group->getOpVal("Gross Premiums");
+            $netPremium = $group->getOpVal("Net Premiums",$is_sender);
+            $contracts = $group->getOpVal("Contract");
+            $brokerFee += abs($this->calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts));
+        }
+
+        return  $brokerFee;
+    }
+
+    public function calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts)
+    {
+            //isOffer is Buy
+        if($isOffer)
+        {
+            return ($netPremium - $grossPremium) * $contracts;
+        }else
+        {
+            return ($grossPremium - $netPremium) * $contracts;
+        }
+
+    }
+
+    public function resolveItem($title,$isSeller)
+    {
+        $netPremium = TradeConfirmationItem::whereHas('tradeConfirmationGroup', function ($q) {
+            $q->whereHas('tradeConfirmation',function($qq){
+                $qq->where('id',$this->id);
+            });
+        })
+        ->where('title',$title)
+        ->where('is_seller',$isSeller)
+        ->first();
+
+        if($netPremium)
+        {
+            return $netPremium->value;
+        }
+    }
+
+    public function getTradeStructureSlugAttribute() {
+        switch($this->trade_structure_id) {
+            case 1:
+                return 'outright';
+            break;
+            case 2:
+                return 'risky';
+            break;
+            case 3:
+                return 'calendar';
+            break;
+            case 4:
+                return 'fly';
+            break;
+            case 5:
+                return 'option_switch';
+            break;
+            case 6:
+                return 'efp_switch';
+            break;
+            case 7:
+                return 'efp';
+            break;
+            case 8:
+                return 'rolls';
+            break;
+        };
     }
 }

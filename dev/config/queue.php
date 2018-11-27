@@ -16,7 +16,7 @@ return [
     */
 
     'default' => env('QUEUE_DRIVER', 'sync'),
-    'timeout' => env('TIMEOUT_QUEUE_DRIVER', 'sync'),
+    'timeout' => env('TIMEOUT_QUEUE_DRIVER', 'db_timeout'),
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
         'db_timeout' => [
             'driver' => 'database',
             'table' => 'jobs',
-            'queue' => 'default',
+            'queue' => 'timeout',
             'retry_after' => 90,
         ],
 

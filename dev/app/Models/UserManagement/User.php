@@ -4,6 +4,7 @@ namespace App\Models\UserManagement;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Lab404\Impersonate\Models\Impersonate;
 
 class User extends Authenticatable
 {
@@ -32,6 +33,7 @@ class User extends Authenticatable
      */
 
     use Notifiable;
+    use Impersonate;
 
     /**
      * The table associated with the model.
@@ -60,6 +62,7 @@ class User extends Authenticatable
         'organisation_id',
         'verified',
         'is_invited',
+        'google2fa_secret',
     ];
 
     /**
@@ -68,7 +71,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'google2fa_secret'
     ];
 
     /**
@@ -169,6 +172,15 @@ class User extends Authenticatable
     public function userMarketRequests()
     {
         return $this->hasMany('App\Models\MarketRequest\UserMarketRequest','user_id');
+    }
+
+    /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function userMarketRequestSubscriptions()
+    {
+        return $this->belongsToMany('App\Models\MarketRequest\UserMarketRequest', 'user_market_request_user', 'user_id', 'user_market_request_id');
     }
 
     /**
@@ -289,6 +301,56 @@ class User extends Authenticatable
     }
 
     /**
+     * Sets user's profile completion route
+     *
+     * @return String Route name to redirect
+     */
+    public function setRequiredProfileStep()
+    {
+        // Profile Check
+        if(!isset($this->work_phone)) {
+            //'work_phone' => 'required'
+            return 'user.edit';
+        }
+        
+        // Password Check
+        if(!\Cache::has('user_password_complete_'.$this->id) && $this->is_invited) {
+            return 'user.edit_password';
+        }
+        
+        $has_defaults = true;
+        $default_label_ids = \App\Models\UserManagement\DefaultLabel::pluck('id');
+        //Loop through default_labels and check if account has emails with those id's
+        foreach ($default_label_ids as $key => $default_label_id) {
+            $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id);
+        }
+        // Emails Check
+        if(!$has_defaults) {
+            return 'email.edit';
+        }
+        
+        // Trade Settings Check
+        if(!\Cache::has('user_trade_settings_complete_'.$this->id)) {
+            return 'trade_settings.edit';
+        }
+
+        //Interests Check
+        if(!isset($this->birthdate) && !isset($this->is_married) 
+            && !isset($this->has_children) && !isset($this->hobbies)) {
+            /*'birthdate'   => 'required',
+            'is_married'    => 'required',
+            'has_children'  => 'required',
+            'hobbies'       => 'required',*/
+            return 'interest.edit';
+        }
+
+
+
+        // Default to null if there is no required step
+        return null;
+    }
+
+    /**
      * Return a simple or query object based on the search term
      *
      * @param string $term
@@ -340,8 +402,8 @@ class User extends Authenticatable
 
         $UserQuery->orderBy($orderBy,$order);
 
-      return $UserQuery;
-  }
+        return $UserQuery;
+    }
 
     /**
      * Determines if a user has been verified and is active
@@ -352,4 +414,60 @@ class User extends Authenticatable
     {
         return (bool)$this->verified ? (bool)$this->active : null;
     }
+
+    /**
+     * Only admins can impersonate
+     * 
+     * @return bool
+     */
+    public function canImpersonate()
+    {
+        // For example
+        return $this->role->title == 'Admin';
+    }
+
+    /**
+     * Only traders can be impersonated
+     * 
+     * @return bool
+     */
+    public function canBeImpersonated()
+    {
+        // For example
+        return $this->role->title == 'Trader';
+    }    
+
+    /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->role_id == 1;
+    }
+
+    /**
+     * Ecrypt the user's google_2fa secret.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setGoogle2faSecretAttribute($value)
+    {
+         $this->attributes['google2fa_secret'] = encrypt($value);
+    }
+
+    /**
+     * Decrypt the user's google_2fa secret.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getGoogle2faSecretAttribute($value)
+    {
+        if ($value === NULL) 
+            return NULL;
+        return decrypt($value);
+    }    
 }

@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Trade\TradeNegotiation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+use App\Traits\HasDismissibleActivity;
 
 class MarketNegotiation extends Model
 {
     use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
+    use HasDismissibleActivity; // activity tracked and dismissible
+
 	/**
 	 * @property integer $id
 	 * @property integer $user_id
@@ -116,6 +118,23 @@ class MarketNegotiation extends Model
         'deleted_at'
     ];
 
+    /**
+    *   activityKey - identity for cached data
+    */
+    protected function activityKey() {
+        return $this->id;
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $user_market_request = $model->userMarket->userMarketRequest;
+            if($user_market_request->openToMarket()) {
+                $user_market_request->notifySubscribedUsers();
+            }
+        });
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -147,6 +166,74 @@ class MarketNegotiation extends Model
                 JOIN $table outcome ON parent_struct._id = outcome.id
         ");
         return self::hydrate($history)->sortBy('id');
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationSource($attr)
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $att = ($attr == 'bid' ? 'bid' : 'offer');
+        $value = ($attr == 'bid' ? floatval($this->bid) : floatval($this->offer));
+        $source = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @attr as _attr, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @attr := $att FROM $table WHERE id = _id
+                    ) as parent_attr
+                    FROM (
+                        SELECT @id := $id, @attr := $value
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @attr = $value
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+                ORDER BY _id ASC
+                LIMIT 1
+        ");
+        return self::hydrate($source)->first();
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeAtBestSource()
+    {
+        $table = $this->table;
+        $parentKey = $this->marketNegotiationParent()->getForeignKey();
+        
+        $id = (int)$this->id;
+        $value = $this->cond_buy_best == true ? 1 : 0;
+
+        $source = DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, @cond as _cond, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id, (
+                        SELECT @cond := cond_buy_best FROM $table WHERE id = _id
+                    ) as parent_cond
+                    FROM (
+                        SELECT @id := ?, @cond := ?
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL AND @cond = ?
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+                ORDER BY _id ASC
+                LIMIT 1
+        ",[
+            $id,
+            $value,
+            $value,
+        ]);
+
+        return self::hydrate($source)->first();
     }
 
     /**
@@ -190,6 +277,15 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function lastTradeNegotiation()
+    {
+        return $this->hasOne('App\Models\Trade\TradeNegotiation','market_negotiation_id')->latest();
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
@@ -209,6 +305,10 @@ class MarketNegotiation extends Model
         return $this->created_at->format("H:i");
     }
 
+    public function getRatioAttribute() {
+        return $this->getLatestBidQty() / $this->getLatestOfferQty();
+    }
+
     public function getActiveConditionTypeAttribute()
     {
         // FoK (can also be private... needs to be first)
@@ -223,10 +323,14 @@ class MarketNegotiation extends Model
             }
             // Meet At Best
             if($this->cond_buy_best !== null) {
-                return 'meet-at-best';
+                return 'trade-at-best';
             }
             // Proposal
             return 'proposal';
+        }
+        // Meet At Best - OPEN to market
+        if($this->cond_buy_best !== null) {
+            return 'trade-at-best-open';
         }
         // Repeat ATW
         if($this->cond_is_repeat_atw !== null) {
@@ -245,21 +349,62 @@ class MarketNegotiation extends Model
 
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
-        return $query->when(!$private, function($q){
-            $q->where('is_private', false);
-        })->whereHas('user',function($q) use ($user) {
-            $q->where('id','!=',$user->id);
+        return $query->where(function($q) use ($private, $user) {
+            $q->where('is_private', $private);
+            $q->whereHas('user',function($q) use ($user) {
+                $q->where('organisation_id','!=',$user->organisation_id);
+            });
         })->orderBy('created_at', 'DESC');
     }
 
-    public function scopeConditions($query)
+    public function scopeConditions($query, $active = true)
     {
         return $query->where(function($q){
             foreach($this->applicableConditions as $key => $default) {
-                $q->orWhere($key, '!=', $default);
+                if($key != 'cond_timeout') {
+                    $q->orWhere($key, '!=', $default);
+                }
             }
-        });
+        })
+        ->when($active, function($q) {
+            // only active
+            $q->where('is_killed', '=', false);
+        })
+        ->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
     }
+
+    /**
+    * test if is RepeatATW
+    * @return Boolean
+    */
+    public function isRepeatATW()
+    {
+        return $this->cond_is_repeat_atw !== null; 
+    }
+
+    /**
+    * test if is RepeatATW
+    * @return Boolean
+    */
+    public function isRepeatATWRepeat()
+    {
+        return $this->marketNegotiationParent &&  $this->marketNegotiationParent->cond_is_repeat_atw !== null; 
+    }
+
+    /**
+    * Test if source is RepeatATW and opposite side is not the same record ie. is improved
+    * @return Boolean
+    */
+    public function isImprovedRepeatATW()
+    {
+        $source_bid = $this->marketNegotiationSource('bid');
+        $source_offer = $this->marketNegotiationSource('offer');
+
+        return ($source_bid->isRepeatATW() && $source_offer->id === $this->id 
+            && $source_offer->id !==$source_bid->id) 
+            || ($source_offer->isRepeatATW() && $source_bid->id === $this->id
+            && $source_bid->id !==$source_offer->id);
+    }    
 
     /**
     * test if is FoK
@@ -297,14 +442,177 @@ class MarketNegotiation extends Model
         ); 
     }
 
-    public function kill()
+    /**
+    * test if is TradeAtBest
+    * @return Boolean
+    */
+    public function isTradeAtBest()
     {
+        return (
+            $this->is_private == true &&
+            $this->cond_buy_best !== null
+        ); 
+    }
+
+
+    public function isTrading() {
+        return $this->tradeNegotiations->count() > 0;
+    }
+
+    /**
+    * test if is MeetInMiddle
+    * @return Boolean
+    */
+    public function isTradeAtBestOpen()
+    {
+        return (
+            $this->is_private == false &&
+            $this->cond_buy_best !== null
+        ); 
+    }
+
+    public function doTradeAtBest($user, $quantity, $is_offer) {
+        // @TODO: rework to get latest
+        // $tradeNegotiation = $this->addTradeNegotiation($user,[
+        //     "quantity"  =>  $quantity,
+        //     "is_offer"  =>  $is_offer
+        // ]);
+
+        // $this->fresh()->userMarket->userMarketRequest->notifyRequested();
+    }
+
+
+    public function getMessage($scenario) {
+        switch($scenario) {
+            case 'market_traded':
+                $tradeNegotiation = $this->lastTradeNegotiation;
+                $marketRequest = $this->userMarket->userMarketRequest;
+                
+                $buyer  =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->recievingUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->initiateUser->organisation()->pluck('title')[0];
+                $seller =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->initiateUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->recievingUser->organisation()->pluck('title')[0];
+                return "Bank ".$buyer." (buyer) and ".$seller." (seller) traded a ".$marketRequest->getSummary();
+
+            break;
+            case 'fok_timeout':
+                $marketReq = $this->userMarket->userMarketRequest;
+                $exp = (new \Carbon\Carbon($marketReq->getDynamicItem('Expiration Date')))->format("My");
+                $message = $marketReq->market_title." ".$exp." ".$marketReq->getDynamicItem('Strike');
+                $state = $this->is_killed ? "Timeout Occured" : "Timeout Started";
+
+                return "FoK:".($this->cond_fok_spin ? 'Fill': 'Kill')." ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+            case 'trade_at_best_timeout':
+                $marketReq = $this->userMarket->userMarketRequest;
+                
+                $state = $this->isTrading() ? "Timeout Occured" : "Timeout Started";
+                $term = $this->cond_buy_best ? 'Buy' : 'Sell';
+                $level = $this->cond_buy_best ? $this->offer : $this->bid;
+                
+                $exp = (new \Carbon\Carbon($marketReq->getDynamicItem('Expiration Date')))->format("My");
+                $message = $marketReq->market_title." ".$exp." ".$marketReq->getDynamicItem('Strike');
+                if($this->isTrading()) {
+                    $message .= " - Trading @ ".$level;
+                }
+                
+                return $term." At Best: ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+        }
+    }
+
+    public function kill($user = null)
+    {
+        \Log::info(
+        [
+            $this->toArray()
+        ]);
+
         $this->is_killed = true; // && with_fire = true ;)
-        return $this->save();
+        // if its a fill
+        if($this->cond_fok_spin == true) {
+            $this->is_repeat = true;
+        }
+        $this->save();
+
+        //if its a kill        
+        if($this->cond_fok_spin !== null && $this->cond_fok_spin == false) 
+        {
+   
+            //@TODO @alex removed this and going to have the market open not pending 
+            $newNegotiation = $this->replicate();
+            
+            $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
+            $newNegotiation->market_negotiation_id = $this->id;
+
+            $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+            // $inverse = $att == 'bid' ? 'offer' : 'bid';
+            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+            $newNegotiation->{$att} = null;
+
+
+            $newNegotiation->cond_timeout = false; // dont apply on this one
+            // Override the condition application
+            $newNegotiation->fok_applied = true;
+            $newNegotiation->is_private = false; //dont make it private
+            return $newNegotiation->save();
+        }
+
+        // prefer fill
+        if($this->cond_fok_spin == true) {
+
+            
+            //@TODO @alex removed this and going to have the market open not pending 
+          /*  $newNegotiation = $this->replicate();
+            
+            $newNegotiation->is_private = !$this->cond_fok_spin; // show or not
+            $newNegotiation->market_negotiation_id = $this->id;
+
+            $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
+
+            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+            // $inverse = $att == 'bid' ? 'offer' : 'bid';
+            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+            $newNegotiation->{$att} = null;
+
+
+            $newNegotiation->cond_timeout = false; // dont apply on this one
+            // Override the condition application
+            $newNegotiation->fok_applied = true;
+            return $newNegotiation->save();*/
+
+
+
+        } else {
+            // prefer kill
+            // if this is the first one... send back to quote phase
+            if($this->marketNegotiationParent == null) {
+                $request = $this->userMarket->userMarketRequest;
+                $request->chosen_user_market_id = null;
+                $request->save();
+            }
+        }
     }
 
     public function counter($user, $data)
     {
+        if($data['bid'] == null) {
+            $data['bid'] = $this->bid;
+        }
+        if($data['offer'] == null) {
+            $data['offer'] = $this->offer;
+        }
+
+        $this->userMarket->userMarketRequest->setAction(
+            $this->user->organisation_id,
+            $this->userMarket->userMarketRequest->id,
+            true
+        ); 
         return $this->marketNegotiationChildren()->create([
             'user_id'       =>  $user->id,
             'counter_user_id'   =>  $this->user_id,
@@ -324,7 +632,7 @@ class MarketNegotiation extends Model
         
         // delete history
         $history = $this->getConditionHistory();
-        $history->each(function($item){
+        $history->each(function($item) {
             $item->delete();
         });
         
@@ -339,19 +647,52 @@ class MarketNegotiation extends Model
         return $success ? true : false;
     }
 
+    public function repeat($user)
+    {
+        $newNegotiation = $this->replicate();
+        // dont re-own a trade at best
+        if(!$newNegotiation->isTradeAtBest()) {
+            $newNegotiation->user_id = $user->id;
+            $newNegotiation->counter_user_id = $this->user_id;
+        }
+        $newNegotiation->market_negotiation_id = $this->id;
+
+        return $newNegotiation->save();
+    }
+
+    public function improveBest($user, $data)
+    {
+        $newNegotiation = $this->replicate();
+        $newNegotiation->user_id = $user->id;
+        $newNegotiation->counter_user_id = $this->user_id;
+        $newNegotiation->market_negotiation_id = $this->id;
+
+        // set bid/offer new values
+        $att = $this->cond_buy_best == true ? 'offer' : 'bid';
+        $newNegotiation->$att = $data[$att];
+        return $newNegotiation->save();
+    }
+
     public function resolvePrivateHistory()
     {
         // update history tree
-        $history = $this->getConditionHistory();
-        $history->each(function($item){
-            $item->update([
-                'is_private' => false
-            ]);
-        });
+        // $history = $this->getConditionHistory();
+        // $history->each(function($item){
+        //     $item->update([
+        //         'is_private' => false
+        //     ]);
+        // });
+        $this->update([
+            "is_private" => false
+        ]);
     }
 
     public function getLatestBid()
     {
+        if($this->isTraded())
+        {
+            return null;
+        }
         if($this->bid != null) {
             return $this->bid;
         }
@@ -363,6 +704,10 @@ class MarketNegotiation extends Model
 
     public function getLatestOffer()
     {
+        if($this->isTraded())
+        {
+            return null;
+        }
         if($this->offer != null) {
             return $this->offer;
         }
@@ -370,6 +715,74 @@ class MarketNegotiation extends Model
             return $this->marketNegotiationParent->getLatestOffer();
         }
         return null;
+    }
+
+    public function getLatestBidQty()
+    {
+        if($this->bid_qty != null) {
+            return $this->bid_qty;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestBidQty();
+        }
+        return null;
+    }
+
+    public function getLatestOfferQty()
+    {
+        if($this->offer_qty != null) {
+            return $this->offer_qty;
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatestOfferQty();
+        }
+        return null;
+    }
+
+    public function isTraded()
+    {
+        return $this->tradeNegotiations()->where(function($q){
+            return $q->where('traded',true);  
+        })->exists();
+    }
+
+    public function isSpun()
+    {
+        return $this->is_repeat && $this->marketNegotiationParent && $this->marketNegotiationParent->is_repeat;
+    }
+
+    public function getLatest($side)
+    {
+        $side = ( $side == 'bid' ? 'bid' : 'offer' );
+        if($this->isTraded())
+        {
+            return null;
+        }
+        if($this->{$side} != null) {
+            return $this->{$side};
+        }
+        if($this->market_negotiation_id != null) {
+            return $this->marketNegotiationParent->getLatest($side);
+        }
+        return null;
+    }
+
+
+    public function repeatNegotiation($user)
+    {
+        $marketNegotiation = $this->replicate();
+        $marketNegotiation->is_repeat = true;
+        $marketNegotiation->user_id = $user->id;
+        $marketNegotiation->market_negotiation_id = $this->id;
+        $marketNegotiation->counter_user_id = $this->user_id;
+        $marketNegotiation->save();
+
+        /*
+        *   Handle if this is a trade at best condition
+        */
+        if($this->isTradeAtBest()) {
+
+        }
     }
 
     /**
@@ -388,40 +801,48 @@ class MarketNegotiation extends Model
     * Filter Scope on not private
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeNotPrivate($query, $organisation_id)
+    public function scopeNotPrivate($query, $organisation_id = null)
     {
         return $query->where(function($q) use ($organisation_id) {
             // show only the non private ones by default
             $q->where('is_private', false);
 
             // also show the private ones for certain situations (owned / traded)
-            $q->orWhere(function($qq) use ($organisation_id) {
-                $qq->where('is_private', true);
-                $qq->where(function($qqq) use ($organisation_id) {
-                    // if it was created by the organisaiton viewing, we show it
-                    // $qqq->whereHas('user', function($qqqq) use ($organisation_id) {
-                    //     $qqqq->where('organisation_id', $organisation_id);
-                    // });
-                    // OR If this has been traded, we show it
-                    $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
-                        $qqqq->where('traded', true);
-                    }*/);
-                });
-            });
+            // $q->orWhere(function($qq) use ($organisation_id) {
+            //     $qq->where('is_private', true);
+            //     $qq->whereHas('user', function($qqq) use ($organisation_id) {
+            //         $qqq->where('organisation_id', $organisation_id);
+            //     });
+            //     // $qq->where(function($qqq) use ($organisation_id) {
+            //     //     // if it was created by the organisaiton viewing, we show it
+            //     //     // OR If this has been traded, we show it
+            //     //     $qqq->orWhereHas('tradeNegotiations'/*, function($qqqq) {
+            //     //         $qqqq->where('traded', true);
+            //     //     }*/);
+            //     // });
+            // });
         });
     }
 
     /*
-    For markets that have been SPUN: When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. If I improve the OFFER then it goes between me and the last party on the BID.
+    For markets that have been SPUN: 
+        When I as a third party improve the BID, then the market goes into pending state between me and the person who was last on the OFFER. 
+        If I improve the OFFER then it goes between me and the last party on the BID.
     */
     public function getImprovedNegotiation($market_negotiation)
     {
        if($this->bid != $market_negotiation->bid)
        {
             return $this;
-       }else
+       }
+       else
        {
-            return $this->marketNegotiationParent; 
+            // failing on first quote
+            if($this->marketNegotiationParent == null)
+            {
+                return $this;
+            }
+            return $this->marketNegotiationParent;
        }
     }
 
@@ -432,6 +853,16 @@ class MarketNegotiation extends Model
             $q->where('organisation_id',$organisation_id);
         });   
     }
+
+    public function scopeOrganisationInvolvedOrCounters($query,$organisation_id)
+    {
+       return $query->whereHas('user',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        })->orWhereHas('counterUser',function($q) use ($organisation_id){
+            $q->where('organisation_id',$organisation_id);
+        });   
+    }
+
 
     public function scopeLastNegotiation($query)
     {
@@ -446,13 +877,20 @@ class MarketNegotiation extends Model
 
     public function setAmount($marketNegotiations,$attr)
     {
-        $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
+        // $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
+        $source = $this->marketNegotiationSource($attr);
         if($this->is_killed && $this->getAttribute($attr) == null) {
             return "";
         }
         if($this->is_repeat && $this->id != $source->id)
         {
-            if($this->user->organisation_id == $source->user->organisation_id) {
+            if($this->user->organisation_id == $source->user->organisation_id 
+                && !$this->isTradeAtBest() 
+                && !$this->isTradeAtBestOpen() 
+                && !$this->isRepeatATW()
+                && ($this->marketNegotiationParent &&  !$this->marketNegotiationParent->isRepeatATW())  //repeat all the way hide if parent isRepeatATW() as it still counts as a rtw
+                && !$this->isFoK()
+            ) {
                 return "SPIN";
             }
         }
@@ -480,26 +918,26 @@ class MarketNegotiation extends Model
 
     public function addTradeNegotiation($user,$data)
     {
-           
-
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
             $counterNegotiation = null;   
             $newMarketNegotiation = null;
+
             if(count($this->tradeNegotiations) == 0)
             {
                  // find out who the the negotiation is sent to based of who set the level last
-                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid'; 
-                $sourceMarketNegotiation = $this->userMarket->marketNegotiations()
-                ->where($attr, $this->getAttribute($attr))
-                ->orderBy("id","ASC")
-                ->first();
+                $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
+                $sourceMarketNegotiation = $this->marketNegotiationSource($attr);
                 $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
                 $tradeNegotiation->traded = false;
             }else
             {
+
                 $counterNegotiation = $this->tradeNegotiations->last();
+
+
+                
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
@@ -509,45 +947,53 @@ class MarketNegotiation extends Model
                 {
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
-                    $newMarketNegotiation = $this->replicate();
-                    $requestedNegotiation = $this->tradeNegotiations()->latest()->first();
-                    $newMarketNegotiation->counter_user_id = null;
-                    $newMarketNegotiation->market_negotiation_id = null;
+                    
+                    /*
+                    * once a trade has happend no need for the new record
+                    */
+                    //$newMarketNegotiation =  $this->setMarketNegotiationAfterTrade($user);
 
-                    if(!$requestedNegotiation->is_offer)
-                    {   
-                        $newMarketNegotiation->bid = null;
-                        $newMarketNegotiation->bid_qty = null;
-                        $newMarketNegotiation->offer_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
-
-                    }else
-                    {
-                        $newMarketNegotiation->offer = null;
-                        $newMarketNegotiation->offer_qty = null;
-                        $newMarketNegotiation->bid_qty = $this->userMarket->userMarketRequest->getDynamicItem("Quantity");
-                    }
-
-
-                }elseif ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
+                }else if ($tradeNegotiation->quantity < $counterNegotiation->quantity) 
                 {
+                    //work the balance first
                     $tradeNegotiation->traded = true;
+                }else if ($tradeNegotiation->quantity > $counterNegotiation->quantity) 
+                {
+                    $tradeNegotiation->traded = false;
                 }
             }            
  
             try {
                 DB::beginTransaction();
-
                 $this->tradeNegotiations()->save($tradeNegotiation);
+                if($tradeNegotiation->traded) {
+                    \Slack::postMessage([
+                        "text"      => $this->getMessage('market_traded'),
+                        "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
+                    ], 'trade');
+                }
                
                 if($newMarketNegotiation )
                 {
                     $newMarketNegotiation->save();
                 }
 
+                /*
+                * a trade has occured so generate the required trade confirmation
+                */
+                if($tradeNegotiation->traded)
+                {
+                   $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
+                   $message = "Congrats on the trade! Complete the booking in the confirmation tab";
+                   $organisation = $tradeConfirmation->sendUser->organisation;
+                   $tradeConfirmation->notifyConfirmation($organisation,$message);
+                }
+
                 // if this was a private proposal, cascade public update to history 
                 if($this->is_private == true) {
                     $this->resolvePrivateHistory();
                 }
+
                 DB::commit();
 
                 if(!is_null($counterNegotiation))
@@ -562,7 +1008,8 @@ class MarketNegotiation extends Model
                 if(!is_null($counterNegotiation))
                 {
                     $this->setCounterAction($counterNegotiation);
-                }else
+                }
+                else
                 {
                     $this->setMarketNegotiationAction();
                 }
@@ -575,7 +1022,9 @@ class MarketNegotiation extends Model
                 return false;
             }
     }
+    
 
+   
 
 
 
@@ -583,19 +1032,21 @@ class MarketNegotiation extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedMarketNegotiation($uneditedmarketNegotiations)
+    public function preFormattedMarketNegotiation($uneditedmarketNegotiations = null)
     {
-
+        if($uneditedmarketNegotiations == null) {
+            $uneditedmarketNegotiations = $this->userMarket->marketNegotiations()
+            ->notPrivate($this->resolveOrganisationId())
+            ->with('user')
+            ->get();
+        }
         $currentUserOrganisationId = $this->user->organisation_id;
         $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
         $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
         $loggedInUserOrganisationId = $this->resolveOrganisationId();
 
-
-        //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
-
-         $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
-         $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
+        $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
+        $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
 
         $data = [
             'id'                    => $this->id,
@@ -603,6 +1054,8 @@ class MarketNegotiation extends Model
             "user_market_id"        => $this->user_market_id,
             "bid"                   => $this->bid,
             "offer"                 => $this->offer,
+            // "bid_source"            => $bid_source,
+            // "offer_source"          => $offer_source,
             "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
             "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
             "offer_qty"             => $this->offer_qty,
@@ -628,13 +1081,15 @@ class MarketNegotiation extends Model
             "is_maker"              => $is_maker,
             "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
             "time"                  => $this->time,
-            "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
+            "created_at"            => $this->created_at->toIso8601String(),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
                 
                 return $tradeNegotiation->setOrgContext($this->resolveOrganisation())->preFormatted();
             })
 
         ];
+
+        $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
 
         return $data;
     }
@@ -644,64 +1099,10 @@ class MarketNegotiation extends Model
         return $this->tradeNegotiations()->first()->is_offer ? $this->offer : $this->bid;
     }
 
-
-    //     /**
-    // * Return pre formatted request for frontend
-    // * @return \App\Models\Market\UserMarket
-    // */
-    // public function preFormattedQuote()
-    // {
-
-    //     $currentUserOrganisationId = $this->user->organisation_id;
-    //     $interestUserOrganisationId = $this->userMarket->userMarketRequest->user->organisation_id;
-    //     $marketMakerUserOrganisationId = $this->userMarket->user->organisation_id;
-    //     $loggedInUserOrganisationId = $this->resolveOrganisationId();
-
-
-    //     //dd($currentUserOrganisationId,$interestUserOrganisationId,$marketMakerUserOrganisationId,$loggedInUserOrganisationId);
-
-    //      $is_maker = is_null($marketMakerUserOrganisationId) ? false : $currentUserOrganisationId == $marketMakerUserOrganisationId;
-    //      $is_interest = is_null($interestUserOrganisationId) ? false : $currentUserOrganisationId == $interestUserOrganisationId;
-
-    //     $data = [
-    //         'id'                    => $this->id,
-    //         "market_negotiation_id" => $this->market_negotiation_id,
-    //         "user_market_id"        => $this->user_market_id,
-    //         "bid"                   => $this->bid,
-    //         "offer"                 => $this->offer,
-    //         "bid_display"           => $this->bid,
-    //         "offer_display"         => $this->offer,
-    //         "offer_qty"             => $this->offer_qty,
-    //         "bid_qty"               => $this->bid_qty,
-    //         "bid_premium"           => $this->bid_premium,
-    //         "offer_premium"         => $this->offer_premium,
-    //         "future_reference"      => $this->future_reference,
-    //         "has_premium_calc"      => $this->has_premium_calc,
-    //         "is_repeat"             => $this->is_repeat,
-    //         "is_accepted"           => $this->is_accepted,
-    //         "is_private"            => $this->is_private,
-    //         "is_killed"             => $this->is_killed,
-    //         "cond_is_repeat_atw"    => $this->cond_is_repeat_atw,
-    //         "cond_fok_apply_bid"    => $this->cond_fok_apply_bid,
-    //         "cond_fok_spin"         => $this->cond_fok_spin,
-    //         "cond_timeout"          => $this->cond_timeout,
-    //         "cond_is_oco"           => $this->cond_is_oco,
-    //         "cond_is_subject"       => $this->cond_is_subject,
-    //         "cond_buy_mid"          => $this->cond_buy_mid,
-    //         "cond_buy_best"         => $this->cond_buy_best,
-    //         "is_interest"           => $is_interest,
-    //         "is_maker"              => $is_maker,
-    //         "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
-    //         "time"                  => $this->time,
-    //         "created_at"            => $this->created_at->format("d-m-Y H:i:s"),
-    //         "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
-    //             return $tradeNegotiation->preFormatted();
-    //         })
-
-    //     ];
-
-    //     return $data;
-    // }
+      public function getvolatilitySpredAttribute()
+    {
+        return $this->tradeNegotiations()->first()->is_offer ? $this->offer : $this->bid;
+    }
 
 
     /* ============================== Conditions Start ============================== */
@@ -743,6 +1144,16 @@ class MarketNegotiation extends Model
             else {
                 // cond_fok_apply_bid
                 $this->is_private = true;
+
+                $this->cond_timeout = true;
+                $this->applyCondTimeoutCondition(); // force it
+
+                // notify admin
+                $title_initiator = $this->user->organisation->title;
+                \Slack::postMessage([
+                    "text"      => $this->getMessage('fok_timeout'),
+                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                ], 'timeout');
             }
         }
     }
@@ -750,9 +1161,17 @@ class MarketNegotiation extends Model
     /**
     * Apply cond_timeout
     */
+    private $timeout_cond_applied = false;
     public function applyCondTimeoutCondition() {
-        $job = new \App\Jobs\MarketNegotiationTimeout($this);
-        dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
+        if(!$this->timeout_cond_applied) {
+            $this->timeout_cond_applied = true;
+        }
+    }
+    public function applyCondTimeoutPostCondition() {
+        if($this->timeout_cond_applied) {
+            $job = new \App\Jobs\MarketNegotiationTimeout($this);
+            dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
+        }
     }
 
     /**
@@ -799,7 +1218,23 @@ class MarketNegotiation extends Model
     * Apply cond_buy_best
     */
     public function applyCondBuyBestCondition() {
+        if($this->marketNegotiationParent && $this->marketNegotiationParent->cond_buy_best === null) {
+            $this->is_private = true; // initial is private
+            $this->is_repeat = true; // starts as a repeat
+            
+            $this->cond_timeout = true;
+            $this->applyCondTimeoutCondition(); // force it
 
+            $this->userMarket->userMarketRequest->notifyRequested();
+
+            \Slack::postMessage([
+                "text"      => $this->getMessage('trade_at_best_timeout'),
+                "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+            ], "timeout");
+
+        } else {
+            $this->is_private = false; // ensure it stays open if its the responses
+        }
     }
 
     /* ============================== Conditions End ============================== */

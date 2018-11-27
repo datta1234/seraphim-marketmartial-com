@@ -21,7 +21,7 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $user = $request->user();
-        
+
         $organisations = Organisation::where('verified',true)
         ->orWhere(function($query) use ($user) {
             $query->whereHas('users',function($query) use ($user){
@@ -46,7 +46,8 @@ class UserController extends Controller
         $data = $request->all();
         $user = $request->user();
 
-        if(!$request->user()->completeProfile())
+        // Removed - Users are never able to change their organisations
+        /*if(!$request->user()->completeProfile())
         {
             if( $request->has('new_organisation')) 
             {
@@ -57,17 +58,21 @@ class UserController extends Controller
             }
  
         }else
-        {
-            //dont allow organisation_id to be editable 
-            if(array_key_exists('organisation_id',$data))
+        {*/
+            //dont allow organisation to be editable 
+            if(array_key_exists('organisation',$data))
             {
-                unset($data['organisation_id']);
+                unset($data['organisation']);
             }
-        }
-      
+        //}
 
         $user->update($data);
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Profile updated!') : redirect()->route('user.edit_password')->with('success', 'Profile updated!');
+
+        if( $user->completeProfile() ) {
+            return redirect()->back()->with('success', 'Profile updated!');    
+        }
+        return redirect()->route($user->is_invited ? 'user.edit_password': 'email.edit')
+            ->with('success', 'Profile updated!');
     }
 
     public function editPassword(Request $request)
@@ -81,13 +86,19 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->update(['password'=>bcrypt($request->input('password'))]);
+
+        if(!$user->verifiedActiveUser() && !$user->completeProfile()) {
+            \Cache::put('user_password_complete_'.$user->id, true,1440);
+        }
+
         return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Password updated!') : redirect()->route('email.edit')->with('success', 'Password updated!');
     }
 
     public function termsOfConditions(Request $request)
     {
         $user = $request->user();
-        return view('users.terms_and_conditions')->with(compact('user'));
+        $is_admin_update = $user->isAdmin();
+        return view('users.terms_and_conditions')->with(compact('user', 'is_admin_update'));
     }
 
     public function storeTermsAndConditions(TermsofUseRequest $request)

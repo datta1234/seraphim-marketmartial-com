@@ -2,13 +2,13 @@
     <b-row dusk="ibar-negotiation-history-contracts" class="ibar-negotiation-history-contracts">
         <b-col>
             <template v-for="item in history" v-if="item.id != ''">   
-                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item)" ></ibar-trade-request>
+                <!-- && !item.is_killed"  -->
+                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item)" :is-current="isLast(item)"></ibar-trade-request>
             </template>
             <b-row class="justify-content-md-center" v-if="message">
-                <b-col class="mt-2">
+                <b-col cols="10" class="mt-2">
                     <p class="text-center">
-                        <small >{{ message }}</small>
-                        here
+                        {{ message }}
                     </p>
                 </b-col>
             </b-row>

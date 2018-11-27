@@ -83,6 +83,6 @@ class TradeStructure extends Model
     public function marketTypes()
     {
         return $this->belongsToMany('App\Models\StructureItems\MarketType', 'market_types_trade_structures', 'trade_structure_id', 'market_type_id');
-    } 
+    }
 
 }

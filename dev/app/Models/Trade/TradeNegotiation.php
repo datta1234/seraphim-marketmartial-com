@@ -3,11 +3,12 @@
 namespace App\Models\Trade;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TradeConfirmations\TradeConfirmation;
 
 class TradeNegotiation extends Model
 {
     use \App\Traits\ResolvesUser;
-	
+
     /**
 	 * @property integer $id
 	 * @property integer $user_market_id
@@ -19,6 +20,7 @@ class TradeNegotiation extends Model
 	 * @property double $traded
 	 * @property boolean $is_offer
 	 * @property boolean $is_distpute
+     * @property boolean $no_cares
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -36,7 +38,7 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity','is_offer', 'is_distpute',
+        'quantity','is_offer', 'is_distpute', 'no_cares',
     ];
 
     /**
@@ -55,15 +57,29 @@ class TradeNegotiation extends Model
      */
     protected $casts = [
         'traded' => 'boolean',
-        'is_offer' => 'boolean'
+        'is_offer' => 'boolean',
+        'no_cares' => 'boolean'
     ];
+
+    public static function boot()
+    {
+        parent::boot();
+        static::saved(function ($model) {
+            $user_market_request = $model->userMarket->userMarketRequest;
+            if($user_market_request->openToMarket()) {
+                $user_market_request->notifySubscribedUsers();
+            }
+        });
+    }
+    
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeNegotiationParents()
+    public function tradeNegotiationParent()
     {
-        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+
     }
 
     /**
@@ -72,7 +88,7 @@ class TradeNegotiation extends Model
     */
     public function tradeNegotiationChildren()
     {
-        return $this->belongsTo('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
+        return $this->hasMany('App\Models\Trade\TradeNegotiation','trade_negotiation_id');
     }
 
     /**
@@ -126,6 +142,26 @@ class TradeNegotiation extends Model
         return $this->marketNegotiation->TradeNegotiations()->first();
     }
 
+    public function setUpConfirmation()
+    {
+       $tradeConfirmation = new TradeConfirmation();
+       return $tradeConfirmation->setUp($this);
+    }
+
+    public function getIsOfferForOrg($org_id)
+    {
+        if($this->initiateUser->organisation_id == $org_id)
+        {
+            return $this->is_offer;
+        }elseif ($this->recievingUser->organisation_id == $org_id) {
+            return !$this->is_offer;
+        }
+        return null;
+    }
+
+
+  
+
     public function preFormatted()
     {
         $loggedInUserOrganisationId = $this->resolveOrganisationId();
@@ -133,13 +169,14 @@ class TradeNegotiation extends Model
         $sentToMe = $this->recievingUser->organisation_id == $loggedInUserOrganisationId;
 
         $data = [
+            "user_market_id"        => $this->user_market_id,
             "id"                    => $this->id,
             "traded"                => $this->traded,
             "trade_negotiation_id"  => $this->trade_negotiation_id,
             "is_offer"              => $this->is_offer,
             "is_distpute"           => $this->is_distpute,
             "sent_by_me"            => $sentByMe,
-            'sent_to_me'            => $sentToMe,
+            'sent_to_me'            => $sentToMe
         ];
 
         if($sentByMe || $sentToMe || $this->traded)

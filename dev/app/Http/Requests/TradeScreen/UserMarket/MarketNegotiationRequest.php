@@ -4,6 +4,8 @@ namespace App\Http\Requests\TradeScreen\UserMarket;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\LevelsImprovement;
+use App\Rules\MaintainsRatio;
+use App\Rules\AmendOwnLevels;
 
 class MarketNegotiationRequest extends FormRequest
 {
@@ -59,20 +61,34 @@ class MarketNegotiationRequest extends FormRequest
     */
     public function withValidator(Validator $validator)
     {
-        $validator->sometimes(['bid'], ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this)], function ($input) {
-            return !is_null($input->bid_qty) && !$input->is_repeat;
+        $negotiation = $this->user_market->lastNegotiation()->notPrivate()->first();
+        $lastNegotiation = $this->user_market->lastNegotiation;
+        /*$ratio = $this->user_market->firstNegotiation->ratio;*/
+
+        $validator->sometimes('bid', ['required_with:bid_qty','required_without_all:is_repeat,offer','nullable','numeric',new LevelsImprovement($this, $negotiation)], 
+            function ($input) {
+                return !is_null($input->bid_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 
 
-        $validator->sometimes(['offer'], ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this)], function ($input) {
-            return !is_null($input->offer_qty) && !$input->is_repeat;
+        $validator->sometimes('offer', ['required_with:offer_qty','required_without_all:is_repeat,bid','nullable','numeric',new LevelsImprovement($this, $negotiation)], 
+            function ($input) {
+                return !is_null($input->offer_qty) && !$input->is_repeat && is_null($input->cond_buy_mid);
         }); 
 
-        $validator->sometimes(['bid_qty'], 'required|numeric', function ($input) {
-            return !is_null($input->bid) && !$input->is_repeat;
+        $validator->sometimes('bid_qty', ['required','numeric', /*new MaintainsRatio($this, $ratio, $negotiation)*/], 
+            function ($input) {
+                return !is_null($input->bid) && !$input->is_repeat;
         }); 
 
-        $validator->sometimes(['offer_qty'], 'required_with:offer|numeric', function ($input) {
-            return !is_null($input->offer) && !$input->is_repeat;
+        $validator->sometimes('offer_qty', ['required_with:offer','numeric', /*new MaintainsRatio($this, $ratio, $negotiation)*/], 
+            function ($input) {
+                return !is_null($input->offer) && !$input->is_repeat;
         }); 
+
+        $is_put = $this->method == "PUT";
+        $org_id = $this->user() ? $this->user()->organisation_id : null;
+        $validator->sometimes(['bid', 'offer'], [new AmendOwnLevels($lastNegotiation, $org_id)], function($input) use ($is_put) {
+            return $is_put;
+        });
     }
 }

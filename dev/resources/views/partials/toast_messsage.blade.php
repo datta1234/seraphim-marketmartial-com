@@ -6,11 +6,23 @@
 @endif
 @if(Session::has('info'))
 	<script type="text/javascript">
-		Vue.toasted.success({!!json_encode(Session::get('info'))!!});
+		Vue.toasted.info({!!json_encode(Session::get('info'))!!});
     </script>
 @endif
 @if(Session::has('error'))
 	<script type="text/javascript">
-		Vue.toasted.success({!!json_encode(Session::get('error'))!!});
+		Vue.toasted.error({!!json_encode(Session::get('error'))!!});
+    </script>
+@endif
+@if(Session::has('warning'))
+	<script type="text/javascript">
+		Vue.toasted.show({!!json_encode(Session::get('warning'))!!});
+    </script>
+@endif
+@if(Session::has('market_errors'))
+	<script type="text/javascript">
+		@foreach(Session::get('market_errors') as $market_error)
+			Vue.toasted.error({!! json_encode($market_error) !!});
+		@endforeach
     </script>
 @endif

@@ -1,6 +1,7 @@
 import BaseModel from './BaseModel';
 import Errors from './Errors';
 import UserMarketNegotiation from './UserMarketNegotiation';
+import UserMarketVolatility from '~/lib/UserMarketVolatility';
 import ActiveCondition from './ActiveCondition';
 
 export default class UserMarket extends BaseModel {
@@ -15,6 +16,16 @@ export default class UserMarket extends BaseModel {
                 },
                 active_conditions: {
                     setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
+                },
+                activity: {
+                    setMethod: (activity) => { this.setActivity(activity) },
+                },
+                trading_at_best: {
+                    setMethod: (negotiation) => { this.setTradingAtBest(negotiation) },
+                },
+                volatilities: {
+                    addMethod: (volatility) => { this.addVolatility(volatility) },
+                    setMethod: (volatility) => { this.setVolatility(volatility) },
                 }
             }
         });
@@ -26,6 +37,7 @@ export default class UserMarket extends BaseModel {
         const defaults = {
             id: "",
             status: "",
+            is_watched: false,
             user_market_request_id: null,
             current_market_negotiation: null,
             created_at: moment(),
@@ -50,11 +62,25 @@ export default class UserMarket extends BaseModel {
             this.addNegotiations(options.market_negotiations);
         }
 
+        this.volatilities = [];
+        if(options && options.volatilities) {
+            this.setVolatilities(options.volatilities);
+        }
+
         this.active_conditions = [];
-        
         if(options && options.active_conditions) {
             this.setActiveConditions(options.active_conditions);
         }
+
+        this.activity = {};
+        if(options && options.activity) {
+            this.setActivity(options.activity);
+        }
+
+        this.trading_at_best = null;
+        if(options && options.trading_at_best) {
+            this.setTradingAtBest(options.trading_at_best);
+        }   
 
     }
 
@@ -73,6 +99,27 @@ export default class UserMarket extends BaseModel {
     */
     getMarketRequest() {
         return this._user_market_request;
+    }
+
+    /**
+    *   setTradingAtBest - Set the TradeAtBestOpenRequest
+    *   @param {UserMarket} user_market - UserMarket object
+    */
+    setTradingAtBest(negotiation) {
+     
+        if(!(negotiation instanceof UserMarketNegotiation)) {
+            negotiation = new UserMarketNegotiation(negotiation);
+        }
+        negotiation.setUserMarket(this);
+        this.trading_at_best = negotiation;
+    }
+
+    /**
+    *   isTradeAtBestOpen - get the chosen user market
+    *   @return {UserMarket}
+    */
+    isTradingAtBest() {
+        return typeof this.trading_at_best != undefined && this.trading_at_best != null;
     }
 
     /**
@@ -95,10 +142,37 @@ export default class UserMarket extends BaseModel {
     */
     setActiveConditions(active_conditions) {
         this.active_conditions.splice(0, this.active_conditions.length);
-        console.log("HERE 123: ", active_conditions);
         active_conditions.forEach(cond => {
             this.addActiveCondition(cond);
         });
+    }
+
+    /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    addVolatility(volatility) {
+        if(!(volatility instanceof UserMarketVolatility)) {
+            volatility = new UserMarketVolatility(volatility);
+        }
+        volatility.setUserMarket(this);
+        this.volatilities.push(volatility);
+        console.log("Added Volatility", volatility);
+    }
+
+    /**
+    *   setVolatility - set the volatility colelction
+    *   @param {Object} volatility - Volatility object
+    */
+    setVolatilities(volatilities) {
+        this.volatilities.splice(0, this.volatilities.length);
+        volatilities.forEach(vol => {
+            this.addVolatility(vol);
+        });
+    }
+
+    volatilityForGroup(group_id) {
+        return this.volatilities.find(x => x.group_id == group_id);
     }
 
     /**
@@ -112,6 +186,14 @@ export default class UserMarket extends BaseModel {
         }
 
         this.active_conditions.push(active_condition);
+    }
+
+    /**
+    *   setActivity - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setActivity(activity) {
+        this.activity = activity;
     }
 
     /**
@@ -159,6 +241,7 @@ export default class UserMarket extends BaseModel {
         return {
             user_market_request_id: this.user_market_request_id,
             current_market_negotiation: this.current_market_negotiation.prepareStore(),
+            volatilities: this.volatilities.map(x => x.prepareStore())
         };
     }
 
@@ -171,7 +254,7 @@ export default class UserMarket extends BaseModel {
         if(market_request.id == null) {
             return new Promise((resolve, reject) => {
                 console.log("error man",market_request);
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
 
@@ -181,7 +264,7 @@ export default class UserMarket extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
     }
@@ -193,8 +276,7 @@ export default class UserMarket extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.user_market_request_id == null) {
             return new Promise((resolve, reject) => {
-                console.log("error man",this.user_market_request_id);
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
 
@@ -204,7 +286,7 @@ export default class UserMarket extends BaseModel {
                 resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         }); 
     }
@@ -218,7 +300,7 @@ export default class UserMarket extends BaseModel {
         // catch not assigned to a market request yet!
         if(this.user_market_request_id == null) {
             return new Promise((resolve, reject) => {
-                reject(new Errors(["Invalid Market Request"]));
+                reject(new Errors("Invalid Market Request"));
             });
         }
         return new Promise((resolve, reject) => {
@@ -227,9 +309,30 @@ export default class UserMarket extends BaseModel {
                resolve(response);
             })
             .catch(err => {
-                reject(new Errors(err.response.data));
+                reject(err);
             });
         });
 
+    }
+
+
+    /**
+    * Dismiss this organisation activity
+    */
+    dismissActivity(activity) {
+        // make a . notation string
+        activity = activity instanceof Array ? activity.join('.') : activity;
+        console.log(activity);
+
+        return new Promise((resolve, reject) => {
+            return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
+            .then(response => {
+                console.log("ACT:", response);
+                this.setActivity(response.data.data.activity);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        });
     }
 }

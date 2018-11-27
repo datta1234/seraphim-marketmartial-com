@@ -28,8 +28,8 @@ class UserRequest extends FormRequest
                 'email' => 'required|string|email|max:255',
                 'cell_phone' => 'required|numeric',
                 'work_phone' => 'required|numeric',
-                'organisation_id' => 'required_without:not_listed',
-                'new_organisation' => 'required_with:not_listed|string|max:255'
+                /*'organisation_id' => 'required_without:not_listed',
+                'new_organisation' => 'required_with:not_listed|string|max:255'*/
 
         ];
     }

@@ -17,13 +17,16 @@
 			</div>
 			<div v-else class="card-body">
 				<p class="text-center">No Data for this market to display</p>
+                <b-form-checkbox class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
+                    Show only my trades
+                </b-form-checkbox>
 			</div>
 		</div>
     </div>
 </template>
 
 <script>
-	import BarGraph from './Components/BarGraph.js';
+	import BarGraph from '~/components/BarGraph.js';
     export default {
     	components: {
 	      	BarGraph
@@ -65,7 +68,8 @@
 				        yAxes: [{
 				            display: true,
 				            ticks: {
-				                beginAtZero: true   // minimum value will be 0.
+				                beginAtZero: true,   // minimum value will be 0.
+                                stepSize: 1,
 				            }
 				        }]
 				    },
@@ -108,7 +112,6 @@
 				      	data: this.setData(set, data),
             		});
 		        });
-                console.log(this.active_data_set);
             },
             setData(set, data) {
             	let count_array = [];
@@ -132,7 +135,6 @@
 	        	})
 	            .then(activityResponse => {
 	                if(activityResponse.status == 200) {
-	                    console.log(activityResponse);
 	                    this.graph_data = activityResponse.data;
 	        			this.setChartData(activityResponse.data[this.active_market],this.active_market);    
 	                } else {

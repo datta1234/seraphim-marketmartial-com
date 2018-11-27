@@ -28,13 +28,15 @@
     import AlertsMenu from './ActionBar/Components/AlertsMenuComponent.vue';
     import ConfirmationsMenu from './ActionBar/Components/ConfirmationsMenuComponent.vue';
     import RequestMarketMenu from './ActionBar/Components/RequestMarket/RequestMarketMenuComponent.vue';
+   
+
     //lib imports
-    import { EventBus } from '../lib/EventBus.js';
-    import Market from '../lib/Market';
-    import UserMarket from '../lib/UserMarket';
-    import UserMarketRequest from '../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../lib/UserMarketNegotiation';
-    import TradeConfirmation from '../lib/TradeConfirmation'
+    import { EventBus } from '~/lib/EventBus.js';
+    import Market from '~/lib/Market';
+    import UserMarket from '~/lib/UserMarket';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import TradeConfirmation from '~/lib/TradeConfirmation'
 
     export default {
         components: {
@@ -42,7 +44,8 @@
             ImportantMenu,
             AlertsMenu,
             ConfirmationsMenu,
-            RequestMarketMenu
+            RequestMarketMenu,
+
         },
         props:{
           'markets': {

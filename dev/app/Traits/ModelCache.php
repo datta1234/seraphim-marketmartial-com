@@ -14,4 +14,9 @@ trait ModelCache {
             return self::all();
         });
     }
+
+    public static function purgeCached()
+    {
+        return Cache::forget((new self)->getTable());
+    }
 }

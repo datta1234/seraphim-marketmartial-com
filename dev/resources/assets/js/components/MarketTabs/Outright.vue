@@ -1,19 +1,29 @@
 <template>
-    <div dusk="market-tab-outright"  class="col market-tab p-3 mb-2 mt-2" v-bind:class="marketState" @click="loadInteractionBar()">
-        <div class="row justify-content-md-center">
-            <div class="col market-tab-name market-tab-name">
-                    {{ splitValHelper( marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3) }}  
-            </div>
-            <div class="col market-tab-state">
-                
-                <span v-if="market_request_state_label != ''">
-                    <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
-                </span>
-                <span v-else>
-                    <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
-                </span>
-            </div>
-        </div>
+    <div dusk="market-tab-outright"  class="market-tab-outright" v-bind:class="marketState" @click="loadInteractionBar()">
+        <b-row class="justify-content-md-center">
+            <b-col class="market-tab-name market-tab-name">
+                <b-row no-gutters align-v="center" align-h="center">
+                    <b-col v-if="marketRequest.market.is('singles')">
+                        {{ marketRequest.trade_items.default.tradable.title }}&nbsp;
+                    </b-col>
+                    <b-col cols="auto">
+                        <div class="market-tab-strikes">
+                           <span v-html="strike"></span>
+                        </div>
+                    </b-col>
+                </b-row>
+            </b-col>
+            <b-col class="market-tab-state">
+                <b-row align-v="center" align-h="center" class="h-100">
+                    <b-col v-if="market_request_state_label != ''">
+                        <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
+                    </b-col>
+                    <b-col v-else>
+                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                    </b-col>
+                </b-row>
+            </b-col>
+        </b-row>
     </div>
 </template>
 
@@ -47,6 +57,11 @@
             };
         },
         computed: {
+            strike: function() {
+                let group = 'default';
+                let func = this.marketRequest.trade_items[group].tradable.is_stock ? 'formatRandQty' : 'splitValHelper';
+                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.outright.strike")], '&nbsp;', 3)
+            },
             marketState: function() {
                 return {
                     'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',
@@ -60,34 +75,11 @@
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
                 }
-            },
-            bidState: function() {
-                if(this.marketRequest.chosen_user_market)
-                {
-                    return this.getStateClass(this.current_user_market_negotiation,'bid');
-                }else
-                {
-                    return {
-                       'user-action': this.marketRequest.attributes.bid_state == 'action',
-                    }   
-                }
-               
-            },
-            offerState: function() {
-                if(this.marketRequest.chosen_user_market)
-                {
-                    return this.getStateClass(this.current_user_market_negotiation,'offer');
-                }else
-                {
-                    return {
-                       'user-action': this.marketRequest.attributes.offer_state == 'action',
-                    }   
-                }
             }
         },
         methods: {
             loadInteractionBar() {
-               this.toggleActionTaken();
+                this.toggleActionTaken();
                 this.isActive = true;
                 EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }

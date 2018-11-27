@@ -11,18 +11,18 @@
               <b-row>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input class="input-small" v-model="proposed_market_negotiation.bid" type="text" placeholder="Bid"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.bid" :disabled="disabled_bid" type="text" placeholder="Bid"></b-form-input>
                     </p>
                 </b-col>
                 <b-col class="text-center">
                     <p>
-                        <b-form-input class="input-small" v-model="proposed_market_negotiation.offer" type="text" placeholder="Offer"></b-form-input>
+                        <b-form-input v-active-request class="input-small" v-model="proposed_market_negotiation.offer" :disabled="disabled_offer" type="text" placeholder="Offer"></b-form-input>
                     </p>
                 </b-col>
               </b-row>
               <b-row>
                     <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
-                        {{ error[0] }}
+                        {{ error }}
                     </b-col>
                     <b-col cols="12">       
                         <b-btn variant="primary" class="btn-block mt-2" :disabled="server_loading" @click="storeCounter()">Send Counter</b-btn>
@@ -70,7 +70,14 @@
             };
         },
         computed: {
-         
+          disabled_bid() {
+            let val = !!this.proposed_market_negotiation.offer;
+            return val;
+          },
+          disabled_offer() {
+            let val = !!this.proposed_market_negotiation.bid;
+            return val;
+          },
         },
         methods: {
           addCustomClass(evt) {
@@ -83,6 +90,12 @@
           },
           storeCounter() {
             this.server_loading = true;
+            if(this.disabled_bid) {
+              this.proposed_market_negotiation.bid_qty = null;
+            }
+            if(this.disabled_offer) {
+              this.proposed_market_negotiation.offer_qty = null;
+            }
             this.marketNegotiation.counterNegotiation(this.proposed_market_negotiation)
             .then(data => {
               this.server_loading = false;
@@ -90,7 +103,8 @@
             })
             .catch(err => {
               this.server_loading = false;
-              console.log(err);
+              this.errors = err.list(true);
+              console.log(this.errors);
             });
           }
         },

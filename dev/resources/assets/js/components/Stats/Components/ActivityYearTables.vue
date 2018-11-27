@@ -1,96 +1,108 @@
 <template>
     <div dusk="activity-year-tables" class="activity-year-tables">
-        <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
-            <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="accordion_base_id+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
-            </b-card-header>
-            <b-collapse :id="accordion_base_id+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                    <b-row>
-                        <b-col cols="12">
-                            <b-form v-on:submit.prevent="" id="chat-message-form">
-                                <b-row class="mt-4">
-                                    <b-col cols="1">
-                                        <label class="mr-sm-2" :for="'stats-table-markets'+index">Markets:</label>
-                                    </b-col>
-                                    <b-col cols="3">
-                                        <b-form-select :id="'stats-table-markets'+index"
-                                                   class="w-100"
-                                                   :options="markets_filter"
-                                                   v-model="table_data[index].filter_market">
-                                        </b-form-select>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="mt-2">
-                                    <b-col cols="1">
-                                        <label class="mr-sm-2" :for="'stats-table-expiration'+index">Expiration:</label>
-                                    </b-col>
-                                    <b-col cols="3">
-                                        <b-form-select :id="'stats-table-expiration'+index"
+        <template v-if="table_years.length > 0">
+            <b-card v-bind:class="{ 'mt-5': index == 0 }" :key="index" v-for="(year, index) in table_years" no-body class="mb-5">
+                <b-card-header header-tag="header" class="p-1" role="tab">
+                    <b-btn class="mt-2 mb-2" block href="#" v-b-toggle="accordion_base_id+index" variant="mm-button"><h2>{{ year }}</h2></b-btn>
+                </b-card-header>
+                <b-collapse :id="accordion_base_id+index" :visible="active_collapse.index == index" accordion="my-accordion" role="tabpanel">
+                    <b-card-body>
+                        <b-row>
+                            <b-col cols="12">
+                                <b-form v-on:submit.prevent="" id="chat-message-form">
+                                    <b-row class="mt-4">
+                                        <b-col cols="1">
+                                            <label class="mr-sm-2" :for="'stats-table-markets'+index">Markets:</label>
+                                        </b-col>
+                                        <b-col cols="3">
+                                            <b-form-select :id="'stats-table-markets'+index"
                                                        class="w-100"
-                                                       :options="expiration_filter"
-                                                       v-model="table_data[index].filter_expiration">
-                                        </b-form-select>
-                                    </b-col>
-                                </b-row>
-                                <b-row class="mt-2">
-                                    <b-col cols="1">
-                                        <label class="mr-sm-2" :for="'stats-table-search'+index">Underlying:</label>
-                                    </b-col>
-                                    <b-col cols="3">
-                                        <b-input v-model="table_data[index].search" class="w-100 mr-0" :id="'stats-table-search'+index" placeholder="e.g. NPN" />
-                                    </b-col>
-                                    <b-col cols="2">
-                                        <button type="submit" 
-                                                class="btn mm-button w-100 float-right ml-0 mr-2" 
-                                                @click="loadTableData(index, false)">
-                                            Filter
-                                        </button>
-                                    </b-col>
-                                    <b-col cols="4" offset="2">
-                                        <datepicker v-model="table_data[index].filter_date"
-                                                    class="float-right filter-date-picker"
-                                                    :name="year+'-table-datepicker'"
-                                                    placeholder="Select a date"
-                                                    :bootstrap-styling="true"
-                                                    :calendar-button="true"
-                                                    calendar-button-icon="fas fa-calendar-alt"
-                                                    :clear-button="true"
-                                                    clear-button-icon="fas fa-trash-alt">    
-                                        </datepicker>
-                                    </b-col>
-                                </b-row>
-                            </b-form>
-                        </b-col>
-                    </b-row>
-                    <!-- Main table element -->
-                    <b-table v-if="table_data_loaded && table_data[index].data != null"
-                             class="mt-2 stats-table"
-                             stacked="md"
-                             :items="table_data[index].data"
-                             :fields="table_fields"
-                             :sort-by.sync="table_data[index].order_by"
-                             :sort-desc.sync="table_data[index].order_ascending"
-                             :no-local-sorting="true"
-                             @sort-changed="(e) => sortingChanged(index, e)">
-                        <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
-                            {{ formatItem(row.item, field.key) }}
-                        </template>
-                    </b-table>
+                                                       :options="markets_filter"
+                                                       v-model="table_data[index].filter_market">
+                                            </b-form-select>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row class="mt-2">
+                                        <b-col cols="1">
+                                            <label class="mr-sm-2" :for="'stats-table-expiration'+index">Expiration:</label>
+                                        </b-col>
+                                        <b-col cols="3">
+                                            <b-form-select :id="'stats-table-expiration'+index"
+                                                           class="w-100"
+                                                           :options="expiration_filter"
+                                                           v-model="table_data[index].filter_expiration">
+                                            </b-form-select>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row class="mt-2">
+                                        <b-col cols="1">
+                                            <label class="mr-sm-2" :for="'stats-table-search'+index">Underlying:</label>
+                                        </b-col>
+                                        <b-col cols="3">
+                                            <b-input v-model="table_data[index].search" class="w-100 mr-0" :id="'stats-table-search'+index" placeholder="e.g. NPN" />
+                                        </b-col>
+                                        <b-col cols="2">
+                                            <button type="submit" 
+                                                    class="btn mm-button w-100 float-right ml-0 mr-2" 
+                                                    @click="loadTableData(index, false)">
+                                                Filter
+                                            </button>
+                                        </b-col>
+                                        <b-col cols="4" offset="2">
+                                            <datepicker v-model="table_data[index].filter_date"
+                                                        class="float-right filter-date-picker"
+                                                        :name="year+'-table-datepicker'"
+                                                        placeholder="Select a date"
+                                                        :bootstrap-styling="true"
+                                                        :calendar-button="true"
+                                                        calendar-button-icon="fas fa-calendar-alt"
+                                                        :clear-button="true"
+                                                        clear-button-icon="fas fa-trash-alt">    
+                                            </datepicker>
+                                        </b-col>
+                                    </b-row>
+                                </b-form>
+                            </b-col>
+                        </b-row>
+                        <!-- Main table element -->
+                        <b-table v-if="table_data_loaded && table_data[index].data != null"
+                                 class="mt-2 stats-table"
+                                 stacked="md"
+                                 :items="table_data[index].data"
+                                 :fields="table_fields"
+                                 :sort-by.sync="table_data[index].order_by"
+                                 :sort-desc.sync="table_data[index].order_ascending"
+                                 :no-local-sorting="true"
+                                 @sort-changed="(e) => sortingChanged(index, e)">
+                            <template v-for="(field,key) in table_fields" :slot="field.key" slot-scope="row">
+                                {{ formatItem(row.item, field.key) }}
+                            </template>
+                        </b-table>
 
-                    <b-row v-if="table_data[index].data != null" class="justify-content-md-center">
-                        <b-col md="auto" class="my-1">
-                            <b-pagination @change="changePage($event, index)"
-                                          :total-rows="table_data[index].total" 
-                                          :per-page="table_data[index].per_page"
-                                          :hide-ellipsis="true"
-                                          v-model="table_data[index].current_page" 
-                                          align="center"/>
-                        </b-col>
-                    </b-row>   
-                </b-card-body>
-            </b-collapse>
-        </b-card>
+                        <b-row v-if="table_data[index].data != null" class="justify-content-md-center">
+                            <b-col md="auto" class="my-1">
+                                <b-pagination @change="changePage($event, index)"
+                                              :total-rows="table_data[index].total" 
+                                              :per-page="table_data[index].per_page"
+                                              :hide-ellipsis="true"
+                                              v-model="table_data[index].current_page" 
+                                              align="center"/>
+                            </b-col>
+                        </b-row>   
+                    </b-card-body>
+                </b-collapse>
+            </b-card>
+        </template>
+        <template v-else>
+            <div class="card mt-5">
+                <div class="card-header text-center">
+                    <h2 class="mt-2 mb-2">Yearly Data</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">No Yearly Data to display</p>
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -102,6 +114,9 @@
                 type: Array
             },
             'is_my_activity': {
+                type: Boolean
+            },
+            'is_bank_level': {
                 type: Boolean
             },
         },
@@ -124,8 +139,6 @@
                     { key: 'strike', label: 'Strike' },
                     { key: 'volatility', label: 'Volatility' },
                     { key: 'expiration', label: 'Expiration' },
-                    { key: 'status', label: 'Status'/*, sortable: true, sortDirection: 'desc'*/ },
-                    (this.is_my_activity ? { key: 'trader', label: 'Trader'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
                 ],
                 table_data:{},
                 markets_filter: [
@@ -157,6 +170,7 @@
                 } else {
                     axios.get(axios.defaults.baseUrl + '/stats/my-activity/year', {
                         params:{
+                            'is_bank_level': (this.is_bank_level ? 1 : 0),
                             'is_my_activity': (this.is_my_activity ? 1 : 0),
                             'page': this.table_data[index].current_page,
                             'year': this.table_years[index],
@@ -211,16 +225,12 @@
                     }
                 })
                 .then(expirationsResponse => {
-                    if(expirationsResponse.status == 200) {
-                        Object.keys(expirationsResponse.data).forEach(key => {
-                            this.expiration_filter.push(moment(expirationsResponse.data[key].date).format('DD MMM YYYY'));
-                        });
-                        //
-                    } else {
-                        console.error(err); 
-                    }
+                    Object.keys(expirationsResponse.data.data).forEach(key => {
+                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
+                    });
                 }, err => {
                     console.error(err);
+                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
             initTableData() {
@@ -251,6 +261,9 @@
                     return '-';
                 }
                 if( Array.isArray(item[key]) ) {
+                    return this.formatArrayItem(item[key], key); 
+                }
+                if( Array.isArray(item[key]) ) {
                     let formatted = '';
                     item[key].forEach(element => {
                         formatted += (key == 'expiration' ? this.castToMoment(element) : element) + ' / ';
@@ -258,7 +271,36 @@
                     return formatted.substring(0, formatted.length - 3);
                 }
 
-                return key == 'updated_at' ? this.castToMoment(item[key]) : item[key];
+                switch (key) {
+                    case 'updated_at':
+                        return this.castToMoment(item[key]);
+                        break;
+                    default:
+                        return item[key];
+                }
+            },
+            formatArrayItem(array_item, key) {
+                if(array_item.length < 1) {
+                    return '-';
+                }
+                let formatted_array = '';
+                array_item.forEach(element => {
+                    switch (key) {
+                        case 'expiration':
+                            formatted_array += this.castToMoment(element) + ' / ';
+                            break;
+                        case 'strike':
+                        case 'nominal':
+                            formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
+                            break;
+                        case 'market':
+                            formatted_array += element + ' vs. ';
+                            break;
+                        default:
+                            formatted_array += element + ' / ';
+                    }
+                });
+                return formatted_array.substring(0, formatted_array.length - 3);
             },
             /**
              * Casting a passed string to moment with a new format
@@ -272,18 +314,37 @@
                 this.table_data[index].current_page = $event;
                 this.loadTableData(index, false);
             },
+            setTableFields() {
+                if(this.is_bank_level) {
+                    this.table_fields.push({ key: 'seller', label: 'Seller' });
+                    this.table_fields.push({ key: 'buyer', label: 'Buyer' });
+                } else {
+                    this.table_fields.push(
+                        { key: 'status', label: 'Status' },
+                    );
+                    if(this.is_my_activity) {
+                        this.table_fields.push(
+                            { key: 'trader', label: 'Trader' },
+                        );
+                    }
+                }
+            }
         },
         mounted() {
-            let unordered_years = [];
-            this.years.forEach(element => {
-                unordered_years.push(element.year);
-            });
-            this.$root.dateStringArraySort(unordered_years, 'YYYY');
-            this.table_years = unordered_years.reverse();
-            this.$root.$on('bv::toggle::collapse',this.toggleState);
-            this.loadMarkets();
-            this.loadExpirations();
-            this.initTableData();
+            this.table_years = [];
+            if(this.years.length > 0) {
+                let unordered_years = [];
+                this.setTableFields();
+                this.years.forEach(element => {
+                    unordered_years.push(element.year);
+                });
+                this.$root.dateStringArraySort(unordered_years, 'YYYY');
+                this.table_years = unordered_years.reverse();
+                this.$root.$on('bv::toggle::collapse',this.toggleState);
+                this.loadMarkets();
+                this.loadExpirations();
+                this.initTableData();
+            }
         }
     }
 </script>

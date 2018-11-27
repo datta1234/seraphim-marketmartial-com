@@ -1,6 +1,7 @@
 .interaction-bar-wrapper {
     font-family: $mm-font-int-bar;
     height:100%;
+    
     .interaction-bar, .interaction-bar-content-pane, .interaction-bar > .interaction-content, .interaction-bar > .interaction-content > .interaction-bar-toggle {
         -webkit-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
         -o-transition: width .25s ease-in-out, opacity .25s ease-in-out .25s;
@@ -11,22 +12,27 @@
         padding:0px;
         position:relative;
         width: 0px;
-
+        .interaction-scrollable {
+            height:100%;
+        }
         .interaction-content {
             width:0px;
             opacity: 0;
-            height:100%;
+            height:auto;
             padding:0px;
             margin:0px;
             padding:0px;
             float:left;
             color:#fff;
 
+            background-color: $mm-background-dark;
+
             // overflow-y: auto;
             position: relative;
 
-            padding-bottom: 150px;
-            margin-bottom: 150px;
+            top: $main-nav-header-height;
+            bottom: $trade-footer-height;
+
             // background: red;
             
             .ibar-negotiation-content {
@@ -88,6 +94,13 @@
                 background: $mm-red;
             }
 
+        }
+        .market-requested-info {
+            border-bottom:1px solid $mm-light-grey;
+            padding-bottom: .5em;
+            .info-col {
+                font-size: .8em;
+            }
         }
 
     }
@@ -162,14 +175,22 @@
      // 
     .ibar-negotiation-history-contracts, .negotiation-history
     {
-        .is-interest{
-            color: $mm-blue;
-        }
         .is-maker{
             color: $mm-market-maker;
         }
+        .is-interest{
+            color: $mm-blue;
+        }
         .is-my-org{
             color: $mm-yellow;
+        }
+    }
+
+
+    input[type="text"] {
+        &:disabled {
+            background-color: #afafaf;
+            border-color: #8e8e8e;
         }
     }
 }
@@ -211,4 +232,25 @@
             border-left: 0.3em solid transparent;
         }
     }
+}
+
+
+.activity-block {
+    background: $ibar-btn-background-secondary;
+    border-radius: 3px;
+    padding: .25em .3em;
+
+
+    .dismiss {
+        &:hover {
+            cursor: pointer;
+        }
+        color: $mm-red;
+        float: right;
+        margin-right: .3em;
+    }
+}
+
+.condition-timer {
+    color: $mm-yellow;
 }

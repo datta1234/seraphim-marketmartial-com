@@ -1,6 +1,6 @@
 <template>
     <div dusk="filter-markets-menu" class="filter-markets-menu">
-        <button id="action-filter-market-button" type="button" class="btn mm-transparent-button mr-2">
+        <button v-active-request id="action-filter-market-button" type="button" class="btn mm-transparent-button mr-2">
             <span class="icon icon-add"></span> Markets
         </button>
         <!-- Filter market popover -->
@@ -9,17 +9,22 @@
                 <div class="col-12">
                     <div v-for="(obj,key) in availableSelectedMarketTypes" class="row mt-1">
                         <div class="col-6 text-center pt-2 pb-2">
-                            <h5 class="w-100 m-0 popover-over-text">{{ key }}</h5>
+                            <h5 class="w-1d00 m-0 popover-over-text">{{ key }}</h5>
                         </div>
                         <div class="col-6">
                             <button v-if="obj.state" 
-                            <button id="" v-if="obj.state" :data-remove-market="key"
-                                type="button" class="btn mm-generic-trade-button w-100"
-                                @click="filterMarketTypes(key, false)">Remove
+                                    :data-remove-market="key"
+                                    type="button" class="btn mm-generic-trade-button w-100"
+                                    @click="filterMarketTypes(key, false)"
+                                    v-active-request>
+                                Remove
                             </button>
-                            <button v-else :data-add-market="key"
-                                type="button" class="btn mm-generic-trade-button w-100"
-                                @click="filterMarketTypes(key, true)">Add
+                            <button v-else 
+                                    :data-add-market="key"
+                                    type="button" class="btn mm-generic-trade-button w-100"
+                                    @click="filterMarketTypes(key, true)"
+                                    v-active-request>
+                                Add
                             </button>
                         </div>
                     </div>
@@ -38,10 +43,10 @@
 </template>
 
 <script>
-	import Market from '../../../lib/Market';
-    import UserMarket from '../../../lib/UserMarket';
-    import UserMarketRequest from '../../../lib/UserMarketRequest';
-    import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
+	import Market from '~/lib/Market';
+    import UserMarket from '~/lib/UserMarket';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     export default {
         name: 'FilterMarketsMenu',
     	props:{
@@ -105,7 +110,7 @@
                 
                 Object.keys(this.availableSelectedMarketTypes).forEach(key=>{
                     this.$root.config("user_preferences.prefered_market_types").forEach( (prefered_market_type) => {
-                        if(this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type.id) {
+                        if(this.availableSelectedMarketTypes[key].marketType.id == prefered_market_type) {
                             this.availableSelectedMarketTypes[key].state = true;
                         }
                     });
@@ -114,20 +119,26 @@
             /**
              * Filters the user's Market Type preference 
              */
-            filterMarketTypes(market_type, actionCheck) {
-                if(actionCheck) {
-                    this.addUserPreferenceMarketType(market_type)
-                    .then( (market_type) => {
+            filterMarketTypes(type_key, is_add) {
+                if(is_add) {
+                    this.addUserPreferenceMarketType(type_key)
+                    .then( (market_type_id) => {
+                        let market_type = this.$root.market_types.find(element => {
+                            return element.id == market_type_id;
+                        });
                         this.addMarket(market_type);
                     });
                 } else {
-                    this.removeUserPreferenceMarketType(market_type)
-                    .then( () => {
-                        this.availableSelectedMarketTypes[market_type].marketType.markets.forEach((market) => {
-                            this.removeMarket(market);
+                    this.removeUserPreferenceMarketType(type_key)
+                    .then( (market_type_id) => {
+                        let market_type = this.$root.market_types.find(element => {
+                            return element.id == market_type_id;
                         });
+                        this.$root.removeTradeConfirmations(market_type);
+                        this.removeMarket(type_key);
                     });
                 }
+                console.log("Filter: ",this.$root.market_types);
             },
             /**
              * Adds a selected Market to Display Markets
@@ -135,6 +146,7 @@
              * @param {string} $market a string detailing a Market.title to be added
              */
             addMarket(market_type) {
+                this.$root.loadTradeConfirmations(market_type);
                 this.$root.loadMarkets(market_type)
                 .then(markets => {
                     let promises = [];
@@ -153,7 +165,7 @@
              * @param {string} $market_type a string detailing a MarketType.title to be added
              */
             addUserPreferenceMarketType(market_type) {
-                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id, this.$root.config("user_preferences"))
+                return axios.patch(axios.defaults.baseUrl + '/user-pref/'+ this.availableSelectedMarketTypes[market_type].marketType.id)
                 .then(response => {
                     if(response.status == 200) {
                         this.$root.configs["user_preferences"].prefered_market_types.push(response.data.data);
@@ -169,16 +181,15 @@
             /**
              * Removes a selected Market from Display Markets
              * 
-             * @param {string} $market a string detailing a Market.title to be removed
+             * @param {string} $market_type_key a string detailing a Type to be removed
              */
-            removeMarket(market) {
-                let index = this.markets.findIndex(function(element) {
-                    return element.id == market.id;
+            removeMarket(market_type_key) {
+                let list = this.markets.filter( (market) => {
+                    return market.market_type_id == this.availableSelectedMarketTypes[market_type_key].marketType.id;
                 });
-                if(index !== -1) {
-                    this.markets.splice(index , 1);
-                }
-                // make api call to amend user pref for market types
+                list.forEach(market => {
+                    this.markets.splice(this.markets.indexOf(market), 1);
+                });
                 this.checkSelected();
             },
             /**
@@ -192,12 +203,12 @@
                 .then(response => {
                     if(response.status == 200) {
                         let index = this.$root.configs["user_preferences"].prefered_market_types.findIndex(function(element) {
-                            return element.id == response.data.data;
+                            return element == response.data.data;
                         });
                         if(index !== -1) {
                             return this.$root.configs["user_preferences"].prefered_market_types.splice(index , 1);
                         }
-                        return null;
+                        return response.data.data;
                     } else {
                         console.error(err);
                     }
