@@ -540,7 +540,6 @@ class MarketNegotiation extends Model
         //if its a kill        
         if($this->cond_fok_spin !== null && $this->cond_fok_spin == false) 
         {
-   
             //@TODO @alex removed this and going to have the market open not pending 
             $newNegotiation = $this->replicate();
             
@@ -548,12 +547,17 @@ class MarketNegotiation extends Model
             $newNegotiation->market_negotiation_id = $this->id;
 
             $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
-            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
-            // $inverse = $att == 'bid' ? 'offer' : 'bid';
-            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
-            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
-            $newNegotiation->{$att} = null;
-
+   
+            if($this->cond_fok_apply_bid === null) {
+                $newNegotiation->bid = null;
+                $newNegotiation->offer = null;
+            } else {
+                $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+                // $inverse = $att == 'bid' ? 'offer' : 'bid';
+                $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+                $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+                $newNegotiation->{$att} = null;
+            }
 
             $newNegotiation->cond_timeout = false; // dont apply on this one
             // Override the condition application
