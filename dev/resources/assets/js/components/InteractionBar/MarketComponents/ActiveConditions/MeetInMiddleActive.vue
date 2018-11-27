@@ -8,7 +8,7 @@
         <b-col cols="12" class="mb-1">
             <div v-bind:class="[ isActive ? 'cond-bar-alert' : 'cond-bar-sent' ]">
                 <b-row id="cond-container" class="trade-popover" no-gutters>
-                    <b-col :cols=" isActive ? '6' : '12'">
+                    <b-col :cols=" isActive ? '5' : '12'">
                         <span>
                             Trade At {{ value }}
                         </span>
@@ -18,7 +18,7 @@
                             <a href="" @click.prevent.stop="doTrade">{{ type }}</a>
                         </span>
                     </b-col>
-                    <b-col v-if="isActive" cols="4">
+                    <b-col v-if="isActive" cols="5">
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
@@ -80,6 +80,10 @@
         },
         computed: {
             'type': function() {
+                // sent context
+                if(this.isActive == false) {
+                    return this.negotiation.cond_buy_mid ? "Buy": "Sell";
+                }
                 return this.negotiation.cond_buy_mid ? "Sell" : "Buy";
             },
             'value': function() {

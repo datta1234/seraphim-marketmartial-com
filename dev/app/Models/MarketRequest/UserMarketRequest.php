@@ -460,6 +460,18 @@ class UserMarketRequest extends Model
                     }
 
 
+                    // @TODO: THis is pending discussion with MM around how to handle 'open' markets where private conditions are applied
+                    // if there is a private condition applied when the market is open, it should stay open
+                    // if(
+                    //     $lastNegotiation->isMeetInMiddle()
+                    // ) {
+                    //     if($lastNegotiation->marketNegotiationParent->marketNegotiationParent) {
+                    //         // parent and parents parent
+                    //         return $lastNegotiation->marketNegotiationParent->is_repeat 
+                    //             && $lastNegotiation->marketNegotiationParent->marketNegotiationParent->is_repeat
+                    //     }
+                    // }
+
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
