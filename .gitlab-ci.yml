@@ -16,7 +16,7 @@ image: lorisleiva/laravel-docker:latest
     - ssh -p22 $DEPLOYENY_USER@$SERVER_IP "source ~/.bashrc && cd $DEPLOYMENT_ROOT && rm -rf $DIR_OLD && mv -f $DIR_CURRENT $DIR_OLD && mv -f $DIR_NEW $DIR_CURRENT && cd $DIR_CURRENT && composer dump-autoload && php artisan migrate && php artisan optimize && supervisorctl restart all" # move new to current & current to old
 
 deploy_staging:
-  stage: Staging
+  stage: deploy
   only:
     - develop # Run only on develop branch
   variables:
@@ -29,7 +29,7 @@ deploy_staging:
   <<: *deploy_script
 
 deploy_demo:
-  stage: Demo
+  stage: deploy
   only:
     - master # Run only on develop branch
   variables:
