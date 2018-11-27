@@ -424,21 +424,21 @@ class UserMarketRequest extends Model
                     return true;
                 }
 
+                //@TODO @alex market should be open if current is killled and 
+                if($lastNegotiation->isFok() && 
+                    $lastNegotiation->is_killed == true && 
+                    $lastNegotiation->cond_fok_spin == true && 
+                    $lastNegotiation->is_repeat == true &&
+                    $lastNegotiation->is_private == false
+                ) 
+                {
+                    return true;
+                }
 
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
                     // open if the last one is killed but isnt a fill
 
-                    //@TODO @alex market should be open if current is killled and 
-                    if($lastNegotiation->isFok() && 
-                        $lastNegotiation->is_killed == true && 
-                        $lastNegotiation->cond_fok_spin == true && 
-                        $lastNegotiation->is_repeat == true &&
-                        $lastNegotiation->is_private == false
-                    ) 
-                    {
-                        return true;
-                    }
 
                     //if the last market has been traded open the whole market
                     if($lastNegotiation->isTraded())
