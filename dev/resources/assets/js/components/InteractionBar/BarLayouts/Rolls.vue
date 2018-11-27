@@ -32,7 +32,7 @@
         <ibar-market-negotiation-contracts 
             class="mb-1" v-if="can_negotiate" 
             @validate-proposal="validateProposal" 
-            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
+            :disabled="conditionActive('fok') || meet_in_the_middle_proposed" 
             :check-invalid="check_invalid" 
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
@@ -107,7 +107,7 @@
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 

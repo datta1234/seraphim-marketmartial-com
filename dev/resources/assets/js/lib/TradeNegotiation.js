@@ -94,19 +94,17 @@ export default class TradeNegotiation extends BaseModel {
     getSortedTradingText(fromTraded)
     {
         let text = "";
-        if(this.sent_by_me)
-        {
+        if(this.sent_by_me) {
             text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
-        }else if(this.sent_to_me)
-        {
+        
+        } else if(this.sent_to_me) {
             text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
-
-        }else if(this.traded || fromTraded)
-        {
+        
+        } else if(this.traded || fromTraded) {
             text = "Traded Away at "; 
             text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
-        }else
-        {
+        
+        } else {
             text = "Trading at "; 
             text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
         }
@@ -115,9 +113,14 @@ export default class TradeNegotiation extends BaseModel {
 
     getTradingText()
     {
+        let textArray = this.getUserMarketNegotiation().getFirstTradeNegotiations().map(trade_negotiation => {
+            return trade_negotiation.getSortedTradingText(this.traded) + (this.traded ? " ("+this.quantity+")" : "");
+        });
         let text = this.getUserMarketNegotiation().getFirstTradeNegotiation().getSortedTradingText(this.traded );
+
         text += this.traded ? " ("+this.quantity+")" : "";
-        return text;
+        //return text;
+        return textArray;
     }
 
     getSizeText()

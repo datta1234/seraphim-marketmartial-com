@@ -93,8 +93,6 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
     Route::get('stock', 'TradeScreen\StockController@index');
-
-    Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     
     Route::post('user-market-request/{user_market_request}/user-market/{user_market}/no-further-cares', 'TradeScreen\MarketRequest\UserMarketController@noFurtherCares');
 

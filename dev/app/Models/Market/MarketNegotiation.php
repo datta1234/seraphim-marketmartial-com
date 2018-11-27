@@ -540,7 +540,6 @@ class MarketNegotiation extends Model
         //if its a kill        
         if($this->cond_fok_spin !== null && $this->cond_fok_spin == false) 
         {
-   
             //@TODO @alex removed this and going to have the market open not pending 
             $newNegotiation = $this->replicate();
             
@@ -548,12 +547,17 @@ class MarketNegotiation extends Model
             $newNegotiation->market_negotiation_id = $this->id;
 
             $newNegotiation->user_id = $user ? $user->id : $this->counter_user_id; // for timeouts, the initiating counter user will be default
-            $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
-            // $inverse = $att == 'bid' ? 'offer' : 'bid';
-            $sourceMarketNegotiation = $this->marketNegotiationSource($att);
-            $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
-            $newNegotiation->{$att} = null;
-
+   
+            if($this->cond_fok_apply_bid === null) {
+                $newNegotiation->bid = null;
+                $newNegotiation->offer = null;
+            } else {
+                $att = $this->cond_fok_apply_bid ? 'bid' : 'offer';
+                // $inverse = $att == 'bid' ? 'offer' : 'bid';
+                $sourceMarketNegotiation = $this->marketNegotiationSource($att);
+                $newNegotiation->counter_user_id = $sourceMarketNegotiation->user_id;
+                $newNegotiation->{$att} = null;
+            }
 
             $newNegotiation->cond_timeout = false; // dont apply on this one
             // Override the condition application
@@ -918,13 +922,15 @@ class MarketNegotiation extends Model
 
     public function addTradeNegotiation($user,$data)
     {
+            //dd([$data,$user, $this, $this->tradeNegotiations->last()]);
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
             $counterNegotiation = null;   
             $newMarketNegotiation = null;
 
-            if(count($this->tradeNegotiations) == 0)
+            // @TODO - || $this->tradeNegotiations->last()->traded for new trade check on already traded market?
+            if(count($this->tradeNegotiations) == 0 || $this->tradeNegotiations->last()->traded)
             {
                  // find out who the the negotiation is sent to based of who set the level last
                 $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
@@ -1197,6 +1203,18 @@ class MarketNegotiation extends Model
         $bid = doubleval($parent->getLatestBid());
         $offer = doubleval($parent->getLatestOffer());
 
+        // set the counter_user to the counter on the oposite side
+        // buy middle - lock with org on the offer
+        if($this->cond_buy_mid == true) {
+            $source = $parent->marketNegotiationSource('offer');
+            $this->counter_user_id = $source->user_id;
+        } 
+        // sell middle - lock with org on the bid
+        else {
+            $source = $parent->marketNegotiationSource('bid');
+            $this->counter_user_id = $source->user_id;
+        }
+
         // set to private
         $this->is_private = true;
 
@@ -1211,6 +1229,7 @@ class MarketNegotiation extends Model
 
         $this->bid = $value;
         $this->offer = $value;
+
         return true;
     }
 

@@ -81,12 +81,22 @@ export default class UserMarketNegotiation extends BaseModel {
         if(options && options['active_condition']) {
             this.setActiveCondition(options['active_condition']);
         }
+
+        this._sent_condition = null;
+        if(options && options['sent_condition']) {
+            this.setSentCondition(options['sent_condition']);
+        }
     }
 
 
     setActiveCondition(cond) {
         this._active_condition = cond;
     }
+
+    setSentCondition(cond) {
+        this._sent_condition = cond;
+    }
+
 
     /**
     *   setUserMarket - Sets the negotiations UserMarket
@@ -432,6 +442,8 @@ export default class UserMarketNegotiation extends BaseModel {
         {
             if(this._active_condition != null) {
                 prevItem = this._active_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
+            } else if (this._sent_condition != null) {
+                prevItem = this._sent_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
             } else {
                 prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
             }
@@ -465,14 +477,33 @@ export default class UserMarketNegotiation extends BaseModel {
     {
         if(this.trade_negotiations.length > 0)
         {
-         let lastNegotiation = this.trade_negotiations[0];
-         lastNegotiation.setUserMarket(this);
-         return lastNegotiation;
+         let firstNegotiation = this.trade_negotiations[0];
+         firstNegotiation.setUserMarket(this);
+         return firstNegotiation;
         }
         else
         {
             return null;
         }
+    }
+
+    getFirstTradeNegotiations()
+    {
+        if(this.trade_negotiations.length > 0)
+        {
+         let firstNegotiations = [];
+         this.trade_negotiations.forEach(trade_negotiation => {
+            if(trade_negotiation.trade_negotiation_id == null) {
+                trade_negotiation.setUserMarket(this);
+                firstNegotiations.push(trade_negotiation);
+            }
+         });
+         return firstNegotiations;
+        }
+        else
+        {
+            return null;
+        }    
     }
 
    /**

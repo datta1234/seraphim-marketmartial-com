@@ -611,7 +611,6 @@ class UserMarket extends Model
     }
 
     public function isCounter($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -619,12 +618,12 @@ class UserMarket extends Model
         if($negotiation->marketNegotiationParent == null) {
             return null;
         }
-        return $org == $negotiation->marketNegotiationParent->user->organisation_id;
+        // deprecated logic, need to look at who is on the bid/offer as counter - use only as backup
+        return $org == $negotiation->counterUser->organisation_id;
     }
 
 
     public function isSent($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -682,8 +681,10 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
+                                            \Log::info(["ORG IS Counter: ", $this->resolveOrganisation()->id, $active]);
                                             if($active === null) {
-                                                $active = $this->isInterest();
+                                                $active = $this->isInterest(null);
+                                                \Log::info(["ORG IS Interest: ", $this->resolveOrganisation()->id, $active]);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {

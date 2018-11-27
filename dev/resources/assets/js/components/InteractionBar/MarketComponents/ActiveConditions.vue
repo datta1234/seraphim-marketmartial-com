@@ -10,14 +10,38 @@
         <b-row v-if="message">
             <p class="text-center">{{ message }}&nbsp;&nbsp;<span @click="message = null">X</span></p>
         </b-row>
-        <b-row v-for="cond in conditions" :key="cond.condition.id">
-            <b-col>
-                <component
-                    :is="condition_components[cond.type]" 
-                    :condition="cond">        
-                </component>
-            </b-col>
-        </b-row>
+        <template v-if="conditions_active.length > 0">
+            <b-row>
+                <b-col class="text-center">
+                    <strong>Received</strong>
+                </b-col>
+            </b-row>
+            <b-row v-for="cond in conditions_active" :key="cond.condition.id">
+                <b-col>
+                    <component
+                        :is="condition_components[cond.type]" 
+                        :condition="cond"
+                        :is-active="true">        
+                    </component>
+                </b-col>
+            </b-row>
+        </template>
+        <template v-if="conditions_sent.length > 0">
+            <b-row>
+                <b-col class="text-center">
+                    <strong>Sent</strong>
+                </b-col>
+            </b-row>
+            <b-row v-for="cond in conditions_sent" :key="cond.condition.id">
+                <b-col>
+                    <component
+                        :is="condition_components[cond.type]" 
+                        :condition="cond"
+                        :is-active="false">        
+                    </component>
+                </b-col>
+            </b-row>
+        </template>
     </b-container>
 </template>
 <script>
@@ -39,13 +63,25 @@
             conditions: {
                 type: Array
             },
+            sent_conditions: {
+                type: Array
+            },
         },
         components: {
             ConditionFoKActive,
             ConditionProposalActive,
             ConditionMeetInMiddleActive,
+            ConditionTradeAtBestActive
         },
         computed: {
+            conditions_active: function() {
+                let keys = Object.keys(this.condition_components);
+                return this.conditions.filter(item => keys.indexOf(item.type) > -1);
+            },
+            conditions_sent: function() {
+                let keys = Object.keys(this.condition_components);
+                return this.sent_conditions.filter(item => keys.indexOf(item.type) > -1);
+            },
             activity() {
                 let valid = [
                     'proposal',
