@@ -17470,9 +17470,15 @@ input:checked + .slider:before {
   font-size: 0.9em;
 }
 
-.interaction-bar-wrapper .interaction-bar .active-cond-bar .cond-bar {
-  padding: 10px 10px;
+.interaction-bar-wrapper .interaction-bar .active-cond-bar .cond-bar-alert {
   background: #BB1D1D;
+  padding: 10px 10px;
+}
+
+.interaction-bar-wrapper .interaction-bar .active-cond-bar .cond-bar-sent {
+  background: #EBC300;
+  color: #000000;
+  padding: 10px 10px;
 }
 
 .interaction-bar-wrapper .interaction-bar .market-requested-info {

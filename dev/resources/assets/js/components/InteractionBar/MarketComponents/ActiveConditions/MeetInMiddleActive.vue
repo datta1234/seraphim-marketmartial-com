@@ -6,19 +6,19 @@
             </div>
         </b-col>
         <b-col cols="12" class="mb-1">
-            <div class="cond-bar">
+            <div v-bind:class="[ isActive ? 'cond-bar-alert' : 'cond-bar-sent' ]">
                 <b-row id="cond-container" class="trade-popover" no-gutters>
-                    <b-col cols="6">
+                    <b-col :cols=" isActive ? '6' : '12'">
                         <span>
                             Trade At {{ value }}
                         </span>
                     </b-col>
-                    <b-col cols="2">
+                    <b-col v-if="isActive" cols="2">
                         <span id="meet-in-middle-do-trade">
                             <a href="" @click.prevent.stop="doTrade">{{ type }}</a>
                         </span>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col v-if="isActive" cols="4">
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>
@@ -56,6 +56,7 @@
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import ActiveCondition from '~/lib/ActiveCondition';
+    import SentCondition from '~/lib/SentCondition';
     /*
         cond_buy_mid:
          true  = buy
@@ -64,7 +65,11 @@
     export default {
         props: {
             condition: {
-                type: ActiveCondition
+                type: [ActiveCondition,SentCondition]
+            },
+            isActive: {
+                type: Boolean,
+                default: true,
             },
         },
         data() {
