@@ -1,7 +1,16 @@
 <template>
     <b-row dusk="ibar-market-negotiation-market" class="ibar market-negotiation">
         <b-col v-if="timed_out" class="text-center">
-            The Negoitations have timed out, trade imminent.
+            <trade-at-best-desired-quantity 
+                v-if="rootNegotiation.is_my_org"
+                :market-negotiation="currentNegotiation">
+            </trade-at-best-desired-quantity>
+            <span v-else>
+                <div class="text-my-org text-center">
+                    {{ tradeAtBestText }}
+                </div>
+                The Negoitations have timed out, trade imminent.
+            </span>
         </b-col>
         <b-col v-if="!timed_out">
             <b-row class="">
@@ -44,6 +53,7 @@
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     import UserMarketQuote from '../../../lib/UserMarketQuote';
 
+    import TradeAtBestDesiredQuantity from '../TradeComponents/TradeAtBestDesiredQuantity.vue';
     
     export default {
         props: {
@@ -61,6 +71,9 @@
                 default: false
             }
         },
+        components: {
+            TradeAtBestDesiredQuantity
+        },  
         watch: {
             marketNegotiation: {
                 handler() {
@@ -70,6 +83,11 @@
             }
         },
         computed: {
+            tradeAtBestText() {
+                let side = this.rootNegotiation.cond_buy_best ? "offer" : "bid";
+                let level = this.currentNegotiation[side];
+                return "Trading @ "+level;
+            },
             perspective() {
                 return this.rootNegotiation.is_my_org ? "You are"
                     : (this.rootNegotiation.cond_buy_best ? "The Bid is" : "The Offer is");

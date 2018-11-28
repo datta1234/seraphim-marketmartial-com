@@ -681,10 +681,8 @@ class UserMarket extends Model
             "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
-                                            \Log::info(["ORG IS Counter: ", $this->resolveOrganisation()->id, $active]);
                                             if($active === null) {
                                                 $active = $this->isInterest(null);
-                                                \Log::info(["ORG IS Interest: ", $this->resolveOrganisation()->id, $active]);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
@@ -722,7 +720,7 @@ class UserMarket extends Model
         // if its trading at best
         $data['trading_at_best'] = (
             $this->isTradeAtBestOpen() ? 
-            $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            $this->lastNegotiation->tradeAtBestSource()->setOrgContext($this->resolveOrganisation())->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
             null 
         );
 
