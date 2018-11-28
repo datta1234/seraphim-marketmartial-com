@@ -70,14 +70,7 @@
 			              <div class="form-group row">
 			                    {{ Form::label('email','E - Mail', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
-			                  {{ Form::text('email',null,['class' => ($errors->has('email') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your E - Mail here here...']) }}
-
-
-			                    @if ($errors->has('email'))
-			                        <span class="invalid-feedback">
-			                            <strong>{{ $errors->first('email') }}</strong>
-			                        </span>
-			                    @endif
+			                  {{ Form::text('email',null,['readonly'=>true,'class' => 'form-control']) }}
 			                </div>
 			            </div>
 

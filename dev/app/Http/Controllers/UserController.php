@@ -66,6 +66,12 @@ class UserController extends Controller
             }
         //}
 
+        //dont allow account email to be editable 
+        if(array_key_exists('email',$data))
+        {
+            unset($data['email']);
+        }
+
         $user->update($data);
 
         if( $user->completeProfile() ) {

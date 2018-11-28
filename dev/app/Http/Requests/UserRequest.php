@@ -25,7 +25,7 @@ class UserRequest extends FormRequest
     {        
         return [
                 'full_name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255',
+                //'email' => 'required|string|email|max:255',
                 'cell_phone' => 'required|numeric',
                 'work_phone' => 'required|numeric',
                 /*'organisation_id' => 'required_without:not_listed',
