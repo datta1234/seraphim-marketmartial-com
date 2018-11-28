@@ -308,10 +308,10 @@ class User extends Authenticatable
     public function setRequiredProfileStep()
     {
         // Profile Check
-        if(!isset($this->work_phone)) {
+        /*if(!isset($this->work_phone)) {
             //'work_phone' => 'required'
             return 'user.edit';
-        }
+        }*/
         
         // Password Check
         if(!\Cache::has('user_password_complete_'.$this->id) && $this->is_invited) {

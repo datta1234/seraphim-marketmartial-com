@@ -93,7 +93,7 @@ class UserController extends Controller
         $user = $request->user();
         $user->update(['password'=>bcrypt($request->input('password'))]);
 
-        if(!$user->verifiedActiveUser() && !$user->completeProfile()) {
+        if($user->verifiedActiveUser() && !$user->completeProfile()) {
             \Cache::put('user_password_complete_'.$user->id, true,1440);
         }
 
