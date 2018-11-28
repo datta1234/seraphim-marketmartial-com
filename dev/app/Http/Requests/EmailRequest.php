@@ -24,7 +24,8 @@ class EmailRequest extends FormRequest
     public function rules()
     {
         return [
-            'email.*.email' => 'required|email',
+            'email.0.email' => 'required',
+            'email.*.email' => 'nullable|email',
             'email.*.notifiable' => 'required|boolean',
         ];
     }

@@ -27,6 +27,10 @@ class DefaultLabelTableSeeder extends Seeder
             [
                 'id' => 4,
                 'title' => 'Compliance'
+            ],
+            [
+                'id' => 5,
+                'title' => 'Invoices'
             ]
         ]);
     }

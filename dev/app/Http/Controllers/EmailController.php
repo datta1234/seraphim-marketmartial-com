@@ -54,7 +54,8 @@ class EmailController extends Controller
         $user = $request->user();
     	$emails = $request->input('email');
     	$emailModels = [];
-    	//create or save the fields based on wether they have an ID 
+        $defaultLabels = [];
+    	//create or save the fields based on weather they have an ID 
     	//get the already saved emails prevously
 
         $savedModels = $user->emails()->with('defaultLabel')->get();//get once that have alread been stored
@@ -63,13 +64,20 @@ class EmailController extends Controller
     		$emailModel = array_key_exists('id', $email) ? $savedModels->firstWhere('id',$email['id']) : New Email(); 
     		$emailModel->fill($email);
             $emailModel->notifiable = in_array($emailModel->title, config('marketmartial.AutoSetTradeAccounts'));
-    		$emailModels[] = $emailModel;
+            
+            if(empty($emailModel->email)) {
+                $defaultLabels[] = $emailModel;
+                $emailModel->delete();
+            } else {
+        		$emailModels[] = $emailModel;
+            }
     	}
         $user->emails()->saveMany($emailModels);
         
         return response()->json([
         'data'=>[
             'email' => $user->emails()->with('defaultLabel')->get(),
+            'defaultLabels' => $defaultLabels,
             'redirect' => route('trade_settings.edit')
         ],
         'message'=>'Emails updated.']);

@@ -7,7 +7,8 @@ return [
             "Direct",
             "Group",
             "Clearer",
-            "Compliance"
+            "Compliance",
+            "Invoices"
         ],
         "AutoSetTradeAccounts" => [
             "Direct"
