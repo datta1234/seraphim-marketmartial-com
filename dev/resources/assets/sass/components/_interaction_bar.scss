@@ -110,6 +110,10 @@
             }
         }
 
+        .trade-at-best-deisred-qty {
+            background-color: $mm-main-header-alt;
+        }
+
     }
     .interaction-bar-content-pane {
         @extend .col;
