@@ -17490,6 +17490,10 @@ input:checked + .slider:before {
   font-size: .8em;
 }
 
+.interaction-bar-wrapper .interaction-bar .trade-at-best-deisred-qty {
+  background-color: #282828;
+}
+
 .interaction-bar-wrapper .interaction-bar-toggle {
   width: 0px;
   height: 100%;

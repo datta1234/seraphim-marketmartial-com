@@ -27,6 +27,15 @@
             </b-col>
         </b-row>
     </template>
+     <template v-if="negotiation_available">
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
+    </template>
     <template v-if="!is_trading && negotiation_available">
         
         <ibar-market-negotiation-contracts 
@@ -38,19 +47,11 @@
             :market-negotiation="proposed_user_market_negotiation"
         >
         </ibar-market-negotiation-contracts>
-
-        <ibar-trade-at-best-negotiation 
-         v-if="!can_negotiate && is_trading_at_best"
-         :check-invalid="check_invalid" 
-         :current-negotiation="last_negotiation" 
-         :market-negotiation="proposed_user_market_negotiation"
-         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
-        </ibar-trade-at-best-negotiation>
    
         <!-- Alert me when cleared -->
         <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
         
-        <b-row class="mb-1">
+        <b-row class="mb-1" v-if="can_negotiate">
             <b-col cols="10">
                 <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
                     {{ error[0] }}
