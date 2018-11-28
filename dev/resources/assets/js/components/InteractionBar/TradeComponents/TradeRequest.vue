@@ -55,19 +55,25 @@
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
                     <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
                         <template v-if="index == 0">
-                            {{ tradeNegotiation.getTradingText() }}
+                            <div v-for="tradingText in tradeNegotiation.getTradingText()">
+                                {{ tradingText }} 
+                            </div>
                         </template>
                         <ul class="text-my-org">
                             <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
                         </ul>
                     </template>
                     <div v-else class="text-my-org text-center">
-                        {{ tradeNegotiation.getTradingText() }}
+                        <div v-for="tradingText in tradeNegotiation.getTradingText()">
+                            {{ tradingText }} 
+                        </div>
                     </div>
                 </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ lastTradeNegotiation.getTradingText() }}
+                <div v-for="tradingText in lastTradeNegotiation.getTradingText()">
+                    {{ tradingText }} 
+                </div>
         </div>
     </b-col> 
     

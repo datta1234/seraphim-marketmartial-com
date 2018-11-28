@@ -424,21 +424,21 @@ class UserMarketRequest extends Model
                     return true;
                 }
 
+                //@TODO @alex market should be open if current is killled and 
+                if($lastNegotiation->isFok() && 
+                    $lastNegotiation->is_killed == true && 
+                    $lastNegotiation->cond_fok_spin == true && 
+                    $lastNegotiation->is_repeat == true &&
+                    $lastNegotiation->is_private == false
+                ) 
+                {
+                    return true;
+                }
 
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
                     // open if the last one is killed but isnt a fill
 
-                    //@TODO @alex market should be open if current is killled and 
-                    if($lastNegotiation->isFok() && 
-                        $lastNegotiation->is_killed == true && 
-                        $lastNegotiation->cond_fok_spin == true && 
-                        $lastNegotiation->is_repeat == true &&
-                        $lastNegotiation->is_private == false
-                    ) 
-                    {
-                        return true;
-                    }
 
                     //if the last market has been traded open the whole market
                     if($lastNegotiation->isTraded())
@@ -459,6 +459,18 @@ class UserMarketRequest extends Model
                         return true;
                     }
 
+
+                    // @TODO: THis is pending discussion with MM around how to handle 'open' markets where private conditions are applied
+                    // if there is a private condition applied when the market is open, it should stay open
+                    // if(
+                    //     $lastNegotiation->isMeetInMiddle()
+                    // ) {
+                    //     if($lastNegotiation->marketNegotiationParent->marketNegotiationParent) {
+                    //         // parent and parents parent
+                    //         return $lastNegotiation->marketNegotiationParent->is_repeat 
+                    //             && $lastNegotiation->marketNegotiationParent->marketNegotiationParent->is_repeat
+                    //     }
+                    // }
 
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
@@ -558,12 +570,18 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        elseif($marketOpen && $is_trade_at_best)
+        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded)
         {
             return 'trade-negotiation-open';
         }
         elseif(!$marketOpen && $is_trading && !$lastTraded)
         {
+            return 'trade-negotiation-pending';
+        }
+        // @TODO - state when new trade happens on a market that has already traded 
+        elseif($marketOpen && $is_trading && !$lastTraded) // Checks to check if new trade is happening
+        {
+            // @TODO - figure out what state if not a new one is required.
             return 'trade-negotiation-pending';
         }
         // negotiation
@@ -575,7 +593,7 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading )
+        elseif($acceptedState && $marketOpen && !$is_trading )
         {
             return 'negotiation-open';
         }
@@ -683,7 +701,7 @@ class UserMarketRequest extends Model
         $interest_org_id = $this->user->organisation->id;
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
-        
+        \Log::info("STATE: ".$state);
 
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);

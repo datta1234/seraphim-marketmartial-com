@@ -162,6 +162,14 @@
 					  					<p>{{ $user->has_children == 1 ? 'Yes' : 'No' }}</p>
 					  				</div>
 				  				</div>
+				  				<div class="row">
+					  				<div class="col col-lg-3">
+					  					<p>Hobbies:</p>
+					  				</div>
+					  				<div class="col col-lg-9">
+					  					<p>{{ $user->hobbies }}</p>
+					  				</div>
+				  				</div>
 					  			@foreach($user->interests as $interest)
 					  				<div class="row">
 						  				<div class="col col-lg-3">

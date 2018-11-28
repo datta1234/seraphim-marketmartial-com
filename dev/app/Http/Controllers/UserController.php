@@ -66,6 +66,12 @@ class UserController extends Controller
             }
         //}
 
+        //dont allow account email to be editable 
+        if(array_key_exists('email',$data))
+        {
+            unset($data['email']);
+        }
+
         $user->update($data);
 
         if( $user->completeProfile() ) {
@@ -87,7 +93,7 @@ class UserController extends Controller
         $user = $request->user();
         $user->update(['password'=>bcrypt($request->input('password'))]);
 
-        if(!$user->verifiedActiveUser() && !$user->completeProfile()) {
+        if($user->verifiedActiveUser() && !$user->completeProfile()) {
             \Cache::put('user_password_complete_'.$user->id, true,1440);
         }
 
@@ -106,6 +112,6 @@ class UserController extends Controller
         $user = $request->user();
         $user->tc_accepted = $request->input('tc_accepted');
         $user->update();
-        return redirect()->back()->with('success', 'Terms and Conditions updated!');
+        return redirect()->back()->with('success', 'Terms and conditions have been accepted');
     }
 }

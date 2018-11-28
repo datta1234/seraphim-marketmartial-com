@@ -308,10 +308,10 @@ class User extends Authenticatable
     public function setRequiredProfileStep()
     {
         // Profile Check
-        if(!isset($this->work_phone)) {
+        /*if(!isset($this->work_phone)) {
             //'work_phone' => 'required'
             return 'user.edit';
-        }
+        }*/
         
         // Password Check
         if(!\Cache::has('user_password_complete_'.$this->id) && $this->is_invited) {
@@ -319,11 +319,8 @@ class User extends Authenticatable
         }
         
         $has_defaults = true;
-        $default_label_ids = \App\Models\UserManagement\DefaultLabel::pluck('id');
-        //Loop through default_labels and check if account has emails with those id's
-        foreach ($default_label_ids as $key => $default_label_id) {
-            $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id);
-        }
+        $default_label_id = \App\Models\UserManagement\DefaultLabel::where('title', config('marketmartial.default_email_labels.0'))->pluck('id');
+        $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id[0]);
         // Emails Check
         if(!$has_defaults) {
             return 'email.edit';

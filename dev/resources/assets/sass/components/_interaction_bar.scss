@@ -89,9 +89,16 @@
         .active-cond-bar {
             margin-bottom: 10px;
             font-size: 0.9em;
-            .cond-bar {
-                padding: 10px 10px;
+
+            .cond-bar-alert {
                 background: $mm-red;
+                padding: 10px 10px;
+            }
+
+            .cond-bar-sent {
+                background: $mm-yellow;
+                color: $mm-black;
+                padding: 10px 10px;   
             }
 
         }
@@ -101,6 +108,10 @@
             .info-col {
                 font-size: .8em;
             }
+        }
+
+        .trade-at-best-deisred-qty {
+            background-color: $mm-main-header-alt;
         }
 
     }

@@ -611,7 +611,6 @@ class UserMarket extends Model
     }
 
     public function isCounter($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -619,12 +618,12 @@ class UserMarket extends Model
         if($negotiation->marketNegotiationParent == null) {
             return null;
         }
-        return $org == $negotiation->marketNegotiationParent->user->organisation_id;
+        // deprecated logic, need to look at who is on the bid/offer as counter - use only as backup
+        return $org == $negotiation->counterUser->organisation_id;
     }
 
 
     public function isSent($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -683,7 +682,7 @@ class UserMarket extends Model
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
                                             if($active === null) {
-                                                $active = $this->isInterest();
+                                                $active = $this->isInterest(null);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
@@ -721,7 +720,7 @@ class UserMarket extends Model
         // if its trading at best
         $data['trading_at_best'] = (
             $this->isTradeAtBestOpen() ? 
-            $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            $this->lastNegotiation->tradeAtBestSource()->setOrgContext($this->resolveOrganisation())->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
             null 
         );
 
