@@ -12,7 +12,7 @@
 			@component('partials.content_card')
 			@slot('header')
 			<h2 class="mt-1 mb-1">
-				My profile
+				My Profile
 			</h2>
 			@endslot
 				@slot('body')

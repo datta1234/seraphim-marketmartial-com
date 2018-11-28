@@ -24,10 +24,10 @@ class InterestRequest extends FormRequest
     public function rules()
     {
         return [
-            'birthdate' => 'required|date',
-            'is_married' => 'required|boolean',
-            'has_children'=>'required|boolean',
-            'hobbies'=>'required|string',
+            'birthdate' => 'nullable|date',
+            'is_married' => 'nullable|boolean',
+            'has_children'=>'nullable|boolean',
+            'hobbies'=>'nullable|string',
             'interest.*.value'=>'required|string'
         ];
     }

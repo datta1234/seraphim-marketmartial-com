@@ -4,7 +4,7 @@ return [
 		"default_role" => "Trader",//pull and use this role for testing as the default role
         "auto_on_hold_minutes" => 20,
         "default_email_labels" => [
-            "Direct",
+            "Direct", // Label that is required at index == 0
             "Group",
             "Clearer",
             "Compliance",
