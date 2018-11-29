@@ -283,6 +283,15 @@ class User extends Authenticatable
     }
 
     /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sessions()
+    {
+        return $this->hasMany('App\Models\UserManagement\Session', 'user_id');
+    }
+
+    /**
     * Return total rebate amount of user on monthly basis
     * @return int sum
     */
@@ -466,5 +475,5 @@ class User extends Authenticatable
         if ($value === NULL) 
             return NULL;
         return decrypt($value);
-    }    
+    }
 }

@@ -33,6 +33,10 @@
                  :sort-desc.sync="sort_options.order_ascending"
                  :no-local-sorting="true"
                  @sort-changed="sortingChanged">
+            <template slot="is_online" slot-scope="row">
+                <span v-bind:class="[ row.item.is_online ? 'online-status' : 'offline-status']" class="icon icon-mm-logo-v2"></span>
+                <!-- <span v-bind:class="[ row.item.is_online ? 'status-dot online-dot' : 'status-dot offline-dot']"></span> -->
+            </template>     
             <template slot="organisation_title" slot-scope="row">
                 {{ row.item.organisation.title }}
             </template>
@@ -128,6 +132,7 @@ export default {
         return {
             items:  null,
             fields: [
+                { key: 'is_online', label: 'Online' },
                 { key: 'status', label: 'Status' },
                 { key: 'full_name', label: 'Username', sortable: true, sortDirection: 'desc' },
                 { key: 'organisation_title', label: 'Organisation', sortable: true, sortDirection: 'desc' },

@@ -4,6 +4,28 @@
 			color: $mm-text-white;
 		}
 	}
+
+	/* .status-dot {
+		height: 0.6rem;
+	    width: 0.6rem;
+	    margin-bottom: 0.1rem;
+	    	margin-left: 1.5rem;
+		background-color: green;
+		border-radius: 50%;
+		display: inline-block;
+	} */
+
+	.online-status {
+		color: green;
+		font-size: 2rem;
+	    margin-left: 0.8rem;
+	}
+
+	.offline-status {
+		color: maroon;
+		font-size: 2rem;
+	    margin-left: 0.8rem;
+	}
 }
 
 .create-user {
