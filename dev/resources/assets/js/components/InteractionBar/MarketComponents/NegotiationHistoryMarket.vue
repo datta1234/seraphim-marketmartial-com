@@ -8,7 +8,8 @@
                             {{ getState(item) }}
                         </b-col>
                         <b-col cols="3" class="text-center">
-                            <button v-active-request v-bind:class="{'btn-primary': item.is_on_hold,'btn-secondary': !item.is_on_hold}" 
+                            <button v-active-request v-bind:class="{'btn-secondary': item.is_on_hold,'btn-primary': !item.is_on_hold}"
+                                :disabled="item.is_on_hold"
                                 class="w-100 btn btn-sm" 
                                 @click="putQuoteOnHold(item)"
                                 >

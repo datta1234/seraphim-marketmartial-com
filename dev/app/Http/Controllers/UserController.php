@@ -76,7 +76,10 @@ class UserController extends Controller
 
         if( $user->completeProfile() ) {
             return redirect()->back()->with('success', 'Profile updated!');    
+        } else {
+            \Cache::put('user_profile_complete_'.$user->id, true,1440);
         }
+
         return redirect()->route($user->is_invited ? 'user.edit_password': 'email.edit')
             ->with('success', 'Profile updated!');
     }
