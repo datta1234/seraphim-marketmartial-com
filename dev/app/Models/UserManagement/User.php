@@ -317,10 +317,9 @@ class User extends Authenticatable
     public function setRequiredProfileStep()
     {
         // Profile Check
-        /*if(!isset($this->work_phone)) {
-            //'work_phone' => 'required'
+        if(!\Cache::has('user_profile_complete_'.$this->id)) {
             return 'user.edit';
-        }*/
+        }
         
         // Password Check
         if(!\Cache::has('user_password_complete_'.$this->id) && $this->is_invited) {
@@ -341,12 +340,7 @@ class User extends Authenticatable
         }
 
         //Interests Check
-        if(!isset($this->birthdate) && !isset($this->is_married) 
-            && !isset($this->has_children) && !isset($this->hobbies)) {
-            /*'birthdate'   => 'required',
-            'is_married'    => 'required',
-            'has_children'  => 'required',
-            'hobbies'       => 'required',*/
+        if(!\Cache::has('user_interests_complete_'.$this->id)) {
             return 'interest.edit';
         }
 
