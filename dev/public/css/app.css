@@ -11638,8 +11638,8 @@ table.table {
 
 @font-face {
   font-family: 'icomoon';
-  src: url("/fonts/vendor/icomoon/icomoon.eot?wzrmtz");
-  src: url("/fonts/vendor/icomoon/icomoon.eot?wzrmtz#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?wzrmtz") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?wzrmtz") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?wzrmtz#icomoon") format("svg");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?ux4yi5");
+  src: url("/fonts/vendor/icomoon/icomoon.eot?ux4yi5#iefix") format("embedded-opentype"), url("/fonts/vendor/icomoon/icomoon.ttf?ux4yi5") format("truetype"), url("/fonts/vendor/icomoon/icomoon.woff?ux4yi5") format("woff"), url("/fonts/vendor/icomoon/icomoon.svg?ux4yi5#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -11659,7 +11659,7 @@ table.table {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-mm-offline-logo:before {
+.icon-sitting-bird:before {
   content: "\E921";
 }
 
