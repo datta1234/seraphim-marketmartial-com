@@ -488,25 +488,6 @@ export default class UserMarketNegotiation extends BaseModel {
         }
     }
 
-    getFirstTradeNegotiations()
-    {
-        if(this.trade_negotiations.length > 0)
-        {
-         let firstNegotiations = [];
-         this.trade_negotiations.forEach(trade_negotiation => {
-            if(trade_negotiation.trade_negotiation_id == null) {
-                trade_negotiation.setUserMarket(this);
-                firstNegotiations.push(trade_negotiation);
-            }
-         });
-         return firstNegotiations;
-        }
-        else
-        {
-            return null;
-        }    
-    }
-
    /**
     *   addNegotiation - add user trade_negotiation
     *   @param {UserMarketNegotiation} trade_negotiation - UserMarketNegotiation objects
