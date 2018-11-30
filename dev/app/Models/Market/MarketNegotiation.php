@@ -495,7 +495,7 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function isTrading() {
-        return $this->tradeNegotiations->count() > 0;
+        return $this->tradeNegotiations->count() > 0 && $this->lastTradeNegotiation->traded == false;
     }
 
     /**

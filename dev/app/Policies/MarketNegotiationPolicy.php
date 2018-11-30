@@ -30,9 +30,9 @@ class MarketNegotiationPolicy
      * @return bool
      * @return mixed
      */
-    public function addTradeNegotiation(User $user)
+    public function addTradeNegotiation(User $user, MarketNegotiation $marketNegotiation)
     {
-        return true;
+        return !$marketNegotiation->isTrading();
     }
 
     /**
