@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserManagement\User;
 use App\Models\UserManagement\Organisation;
 use App\Models\UserManagement\Role;
+use App\Models\UserManagement\Session;
 use App\Models\ApiIntegration\SlackIntegration;
 use App\Http\Requests\Admin\UserStatusRequest;
 use Illuminate\Support\Facades\DB;
@@ -31,6 +32,17 @@ class UserController extends Controller
                 ->join((new Organisation)->getTable(), (new Organisation)->getTable().'.id', '=', (new User)->getTable().'.organisation_id')
                 ->with('organisation','role')
                 ->paginate(10);
+
+        $sessions = Session::whereIn('user_id', $users->pluck('id'))->get();
+
+        $users->getCollection()->transform(function($user) use($sessions) {
+            if( in_array($user->id,$sessions->pluck('user_id')->toArray()) ) {
+                $user['is_online'] = true;
+            } else {
+                $user['is_online'] = false;
+            }
+            return $user;
+        });
 
         if($request->ajax()) {
             return $users;
