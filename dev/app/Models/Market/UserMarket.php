@@ -525,19 +525,21 @@ class UserMarket extends Model
             $data['offer'] = $this->lastNegotiation->offer;
             $data['offer_qty'] = $this->lastNegotiation->offer_qty;
         }
-        return $marketNegotiation->update(
-            collect($data)->only([
-                "bid",
-                "offer",
-                "offer_qty",
-                "bid_qty",
-                
-                "bid_premium",
-                "offer_premium",
-                
-                "has_premium_calc",
-                "is_repeat",
-
+        $fields = [
+            "bid",
+            "offer",
+            "offer_qty",
+            "bid_qty",
+            
+            "bid_premium",
+            "offer_premium",
+            
+            "has_premium_calc",
+            // "is_repeat",
+        ];
+        // only let a condition be applied when one does not exist already
+        if(!$marketNegotiation->hasCondition()) {
+            $fields = array_merge($fields, [
                 "cond_is_repeat_atw",
                 "cond_fok_apply_bid",
                 "cond_fok_spin",
@@ -546,7 +548,10 @@ class UserMarket extends Model
                 "cond_is_subject",
                 "cond_buy_mid",
                 "cond_buy_best",
-            ])->toArray()
+            ]);
+        }
+        return $marketNegotiation->update(
+            collect($data)->only($fields)->toArray()
         );
     }
 
@@ -571,9 +576,10 @@ class UserMarket extends Model
         * bid over → opens offer side
         * offered over → opens bid side
         */
-        $attr = $lastTradeNegotiation->is_offer ? 'bid' : 'offer';
+        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
         $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
-        $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
+        // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
+        $newMarketNegotiation->user_id = $user->id;
 
         if($lastTradeNegotiation->is_offer)
         {   

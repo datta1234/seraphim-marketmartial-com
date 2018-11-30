@@ -64,3 +64,20 @@ reset_staging:
     - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
     - ssh -p22 $DEPLOYENY_USER@$SERVER_IP "cd $DEPLOYMENT_ROOT && cd $DIR_CURRENT && php artisan mm:reset" # run reset
   when: manual
+
+reset_demo:
+  stage: manual
+  only:
+    - develop # Run only on develop branch
+  variables:
+    DEPLOYMENT_ROOT: '/var/www'
+    DEPLOYENY_USER: 'deploy'
+    DIR_CURRENT: 'html'
+    DIR_OLD: 'html_previous'
+    DIR_NEW: 'deployment'
+    SERVER_IP: $DEMO_IP
+  <<: *ssh_script
+  script:
+    - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
+    - ssh -p22 $DEPLOYENY_USER@$SERVER_IP "cd $DEPLOYMENT_ROOT && cd $DIR_CURRENT && php artisan mm:reset" # run reset
+  when: manual

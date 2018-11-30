@@ -33,6 +33,10 @@
                  :sort-desc.sync="sort_options.order_ascending"
                  :no-local-sorting="true"
                  @sort-changed="sortingChanged">
+            <template slot="is_online" slot-scope="row">
+                <span v-bind:class="[ row.item.is_online ? 'online-status icon-mm-logo-v2' : 'offline-status icon-sitting-bird']" class="icon"></span>
+                <!-- <span v-bind:class="[ row.item.is_online ? 'status-dot online-dot' : 'status-dot offline-dot']"></span> -->
+            </template>     
             <template slot="organisation_title" slot-scope="row">
                 {{ row.item.organisation.title }}
             </template>
@@ -128,6 +132,8 @@ export default {
         return {
             items:  null,
             fields: [
+                { key: 'is_online', label: 'Online' },
+                { key: 'status', label: 'Status' },
                 { key: 'full_name', label: 'Username', sortable: true, sortDirection: 'desc' },
                 { key: 'organisation_title', label: 'Organisation', sortable: true, sortDirection: 'desc' },
                 { key: 'email', label: 'Email', sortable: true, sortDirection: 'desc' },
@@ -135,7 +141,6 @@ export default {
                 { key: 'cell_phone', label: 'Mobile', sortable: true, sortDirection: 'desc' },
                 { key: 'is_invited', label: 'Type', sortable: true, sortDirection: 'desc' },
                 { key: 'role_id', label: 'Role', sortable: true, sortDirection: 'desc' },
-                { key: 'status', label: 'Status' },
                 { key: 'view', label: 'View' },
                 { key: 'action', label: 'Action' },
             ],
