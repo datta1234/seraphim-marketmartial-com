@@ -108,19 +108,24 @@ export default class TradeNegotiation extends BaseModel {
             text = "Trading at "; 
             text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
         }
+
         return text;
     }
 
     getTradingText()
     {
-        let textArray = this.getUserMarketNegotiation().getFirstTradeNegotiations().map(trade_negotiation => {
-            return trade_negotiation.getSortedTradingText(this.traded) + (this.traded ? " ("+this.quantity+")" : "");
+        let ChildTradeNegotiationIndex = this.getUserMarketNegotiation().trade_negotiations.findIndex((trade_negotiation)=>{
+           return trade_negotiation.trade_negotiation_id == this.id;
         });
-        let text = this.getUserMarketNegotiation().getFirstTradeNegotiation().getSortedTradingText(this.traded );
 
+        let text = this.getSortedTradingText(this.traded);
         text += this.traded ? " ("+this.quantity+")" : "";
-        //return text;
-        return textArray;
+
+        if(ChildTradeNegotiationIndex === -1) {
+            return text;
+        }
+
+        return null
     }
 
     getSizeText()
@@ -148,10 +153,10 @@ export default class TradeNegotiation extends BaseModel {
     {
         if(this.trade_negotiation_id)
         {
-            let relatedTradeNehotiation = this.getUserMarketNegotiation().trade_negotiations.find((trade_negotiation)=>{
+            let relatedTradeNegotiation = this.getUserMarketNegotiation().trade_negotiations.find((trade_negotiation)=>{
                return trade_negotiation.id == this.trade_negotiation_id;
             });
-            return  relatedTradeNehotiation.quantity - this.quantity;
+            return  relatedTradeNegotiation.quantity - this.quantity;
         }else
         {
             return null;

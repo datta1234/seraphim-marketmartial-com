@@ -52,28 +52,27 @@
     <b-col cols="12">
 
         <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
-                <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
-                    <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
-                        <template v-if="index == 0">
-                            <div v-for="tradingText in tradeNegotiation.getTradingText()">
-                                {{ tradingText }} 
-                            </div>
-                        </template>
-                        <ul class="text-my-org">
-                            <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
-                        </ul>
-                    </template>
-                    <div v-else class="text-my-org text-center">
-                        <div v-for="tradingText in tradeNegotiation.getTradingText()">
-                            {{ tradingText }} 
-                        </div>
+            <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
+                <template v-if="(tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me) 
+                                && index == (marketNegotiation.trade_negotiations.length - 1)">
+                    <div v-if="tradeNegotiation.getTradingText() !== null">
+                        {{ tradeNegotiation.getTradingText() }} 
+                    </div>
+                    <ul class="text-my-org">
+                        <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
+                    </ul>
+                </template>
+                <div v-else-if="tradeNegotiation.getTradingText() !== null" class="text-my-org text-center">
+                    <div v-if="tradeNegotiation.getTradingText() !== null">
+                        {{ tradeNegotiation.getTradingText() }} 
                     </div>
                 </div>
+            </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                <div v-for="tradingText in lastTradeNegotiation.getTradingText()">
-                    {{ tradingText }} 
-                </div>
+            <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
+                {{ tradeNegotiation.getTradingText() }}
+            </div>
         </div>
     </b-col> 
     
