@@ -383,6 +383,21 @@ class MarketNegotiation extends Model
     }
 
     /**
+    * test if this negotiation has conditions applied
+    * @return Boolean
+    */
+    public function hasCondition()
+    {
+        foreach($this->applicableConditions as $cond => $default) {
+            // if not default its applied
+            if($this->{$cond} !== $default) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
     * test if is RepeatATW
     * @return Boolean
     */
