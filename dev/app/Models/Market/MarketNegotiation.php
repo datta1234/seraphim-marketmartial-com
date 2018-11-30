@@ -193,7 +193,7 @@ class MarketNegotiation extends Model
                     JOIN $table ON @id IS NOT NULL AND @attr = $value
                 ) parent_struct
                 JOIN $table outcome ON parent_struct._id = outcome.id
-                ORDER BY _id ASC
+                ORDER BY id ASC
                 LIMIT 1
         ");
         $source = self::hydrate($source)->first();
@@ -234,7 +234,7 @@ class MarketNegotiation extends Model
                     JOIN $table ON @id IS NOT NULL AND @cond = ?
                 ) parent_struct
                 JOIN $table outcome ON parent_struct._id = outcome.id
-                ORDER BY _id ASC
+                ORDER BY id ASC
                 LIMIT 1
         ",[
             $id,
@@ -368,18 +368,30 @@ class MarketNegotiation extends Model
 
     public function scopeConditions($query, $active = true)
     {
-        return $query->where(function($q){
+        return $query->where(function($q) {
+            $timeouts = config('marketmartial.thresholds.condition_timeouts');
             foreach($this->applicableConditions as $key => $default) {
                 if($key != 'cond_timeout') {
-                    $q->orWhere($key, '!=', $default);
+                    // with applicable timeouts
+                    if(isset($timeouts[$key])) {
+                        $q->orWhere(function($qq) use ($key, $default, $timeouts) {
+                            $qq->where($key, '!=', $default);
+                            $qq->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes($timeouts[$key])]);      
+                        });
+                    } 
+                    // others
+                    else
+                    {
+                        $q->orWhere($key, '!=', $default);
+                    }
                 }
             }
         })
         ->when($active, function($q) {
             // only active
             $q->where('is_killed', '=', false);
-        })
-        ->whereRaw('IF( `cond_timeout` IS NOT NULL, IF(`created_at` > ?, 1, 0), 1 ) = 1', [\Carbon\Carbon::now()->subMinutes(20)]);
+        });
+        
     }
 
     /**
@@ -491,7 +503,23 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function timeoutExpired() {
-        return $this->created_at > \Carbon\Carbon::now()->subMinutes(20);
+        $timeout = $this->getApplicableTimeout();
+        return $this->created_at > \Carbon\Carbon::now()->subMinutes($timeout);
+    }
+
+    public function getApplicableTimeout() {
+        $timeouts = config('marketmartial.thresholds.condition_timeouts');
+        foreach($this->applicableConditions as $cond => $default) {
+            // is applied
+            if($this->{$cond} !== $default) { // strict .. there are nulls/falses
+                // has a timeout
+                if(isset($timeouts[$cond])) {
+                    return $timeouts[$cond];
+                }
+            }
+        }
+        // no timeout
+        return 0;
     }
 
 
@@ -561,10 +589,6 @@ class MarketNegotiation extends Model
 
     public function kill($user = null)
     {
-        \Log::info(
-        [
-            $this->toArray()
-        ]);
 
         $this->is_killed = true; // && with_fire = true ;)
         // if its a fill
@@ -1130,7 +1154,7 @@ class MarketNegotiation extends Model
         }
 
         // If its a Trade@Best then we need to spoof the frontend into seeing the parent as the negotiation prior to the private one. (Only if its the initial open one)
-        if($this->isTradeAtBestOpen() && $this->marketNegotiationParent->isTradeAtBest()) {
+        if($this->isTradeAtBestOpen() && $this->marketNegotiationParent && $this->marketNegotiationParent->isTradeAtBest()) {
             $market_negotiation_parent_id = $this->marketNegotiationParent->market_negotiation_id;
         }
 
@@ -1167,6 +1191,7 @@ class MarketNegotiation extends Model
             "is_maker"              => $is_maker,
             "is_my_org"             => $currentUserOrganisationId == $loggedInUserOrganisationId,
             "time"                  => $this->time,
+            "applicable_timeout"    => $this->getApplicableTimeout(),
             "created_at"            => $this->created_at->toIso8601String(),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
                 
@@ -1256,7 +1281,8 @@ class MarketNegotiation extends Model
     public function applyCondTimeoutPostCondition() {
         if($this->timeout_cond_applied) {
             $job = new \App\Jobs\MarketNegotiationTimeout($this);
-            dispatch($job->delay(config('marketmartial.thresholds.timeout', 1200)));
+            $timeout = $this->getApplicableTimeout(); // mins
+            dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
         }
     }
 

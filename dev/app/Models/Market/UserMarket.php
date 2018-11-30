@@ -218,7 +218,7 @@ class UserMarket extends Model
     public static function placeOldQuotesOnHold()
     {
         //get all the user market that have no chosen market on market request the last 20 min
-        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'),20);
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes',20));
         $updatedMarketsId = self::where('created_at','<=',$date)
         ->where('is_on_hold',false)
         ->whereDoesntHave('marketNegotiations',function($q){
