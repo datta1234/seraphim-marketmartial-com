@@ -582,4 +582,28 @@ export default class UserMarketNegotiation extends BaseModel {
         return lastTrade && lastTrade.traded;
     }
 
+    /**
+    * determine if there is a condition applied
+    */
+    hasCondition() {
+        let conds = {
+            is_private: false,
+            cond_is_repeat_atw: null,
+            cond_fok: null, // alias
+            cond_fok_apply_bid: null,
+            cond_fok_spin: null,
+            cond_timeout: null,
+            cond_is_oco: null,
+            cond_is_subject: null,
+            cond_buy_mid: null,
+            cond_buy_best: null,
+        };
+        for(let key in conds) {
+            if(this[key] != conds[key]) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
