@@ -54,13 +54,11 @@
                 if(!found) {
                     if(available.length > 0) {
                         this.defaults[this.condition.alias] = available[0].value;
+                        this.$emit('change', available[0]);
                     } else {
                         this.defaults[this.condition.alias] = null;
                     }
-                } else {
-                    this.defaults[this.condition.alias] = found.value;
                 }
-                this.$emit('change', this.defaults[this.condition.alias]);
                 return available;
             }
         }

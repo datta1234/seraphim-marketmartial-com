@@ -27,13 +27,14 @@
                                 role="tabpanel">
                         
                         <div class="ibar-condition-panel-content text-left" v-if="condition.component">
-                            <component  :is="components[condition.component]" :condition="condition" :market-negotiation="marketNegotiation"></component>
+                            <component  v-if="shown_groups[c_group]" :is="components[condition.component]" :condition="condition" :market-negotiation="marketNegotiation"></component>
                         </div>
                         <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
                             <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
                                 <label class="title">{{ child.title }}</label>
                                 <div class="content" v-if="child.component">
-                                    <component  :is="components[child.component]" 
+                                    <component v-if="shown_groups[c_group]"
+                                        :is="components[child.component]" 
                                         :condition="child" 
                                         :market-negotiation="marketNegotiation"
                                         :parser="parseRadioGroup"
