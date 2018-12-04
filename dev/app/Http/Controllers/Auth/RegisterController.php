@@ -147,7 +147,7 @@ class RegisterController extends Controller
                 $slack_integration->save();
                 $user->organisation->slackIntegrations()->attach($slack_integration->id);
             }
-
+            
             $user->marketInterests()->attach($data['market_types']);
             DB::commit();
         } catch (Exception $e) {
@@ -155,6 +155,12 @@ class RegisterController extends Controller
             Log::error($e);
             return null;
         }
+
+        // Notify Admin Of User Creation
+        \Slack::postMessage([
+            "text"      => "New user registered: ".$user->full_name." (".$user->organisation->title.")",
+        ], 'notify');
+
         return $user;
     }
 
