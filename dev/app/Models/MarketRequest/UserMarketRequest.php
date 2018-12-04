@@ -735,7 +735,7 @@ class UserMarketRequest extends Model
             case "negotiation-pending":
                 if(in_array('negotiator',$marketNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.negotiator');
-               
+                
                 }else if(in_array('counter', $marketNegotiationRoles)){
                     $attributes['state'] = config('marketmartial.market_request_states.negotiation-pending.counter');
                

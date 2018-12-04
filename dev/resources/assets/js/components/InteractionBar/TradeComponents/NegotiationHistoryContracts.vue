@@ -45,7 +45,7 @@
                 return item.id == this.lastItem.id; 
             }
         },
-        mounted() {       
+        mounted() { 
         }
     }
 </script>
