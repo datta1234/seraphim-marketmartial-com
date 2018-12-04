@@ -81,7 +81,7 @@ export default {
             return this.marketRequest.chosen_user_market.isTradingAtBest();
         },
         is_trading_at_best_closed: function() {
-            return !this.last_negotiation.hasTimeoutRemaining();
+            return !this.last_negotiation.hasTimeoutRemaining() || this.last_negotiation.isTraded();
         },
         is_trading_at_best_source: function() {
             return this.marketRequest.chosen_user_market.isTradingAtBest() && this.marketRequest.trading_at_best.is_my_org;

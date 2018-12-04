@@ -548,6 +548,20 @@ export default class UserMarketNegotiation extends BaseModel {
     get parent_negotiation() {
         return this._user_market.market_negotiations.find(x => x.id == this.market_negotiation_id);
     }
+
+    get level_sides() {
+        let bid_source = this.getAmountSource('bid');
+        let offer_source = this.getAmountSource('offer');
+        let sides = [];
+        // im on the bid
+        if(bid_source.is_my_org) {
+            sides.push('bid');
+        }
+        if(offer_source.is_my_org) {
+            sides.push('offer');
+        }
+        return sides;
+    }
     
     /**
     *   test if the parents are spun

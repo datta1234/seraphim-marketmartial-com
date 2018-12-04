@@ -32,7 +32,11 @@ class MarketNegotiationPolicy
      */
     public function addTradeNegotiation(User $user, MarketNegotiation $marketNegotiation)
     {
-        return !$marketNegotiation->isTrading();
+        if($marketNegotiation->isTrading()) {
+            // only involved
+            return $marketNegotiation->lastTradeNegotiation->isOrganisationInvolved($user->organisation_id);
+        }
+        return true;
     }
 
     /**
