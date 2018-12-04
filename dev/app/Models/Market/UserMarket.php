@@ -550,9 +550,13 @@ class UserMarket extends Model
                 "cond_buy_best",
             ]);
         }
-        return $marketNegotiation->update(
+        $ret = $marketNegotiation->update(
             collect($data)->only($fields)->toArray()
         );
+        if($marketNegotiation->counterUser)
+        {
+             $this->setCounterOrgnisationAction($marketNegotiation->counterUser->organisation_id);
+        }
     }
 
 
