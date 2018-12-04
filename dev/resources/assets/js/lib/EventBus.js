@@ -58,3 +58,10 @@ EventBus.$on('theme', (state) => {
 EventBus.$on('force-display-update', (val) => {
     EventBus.$emit('display-update-forced', val);
 });
+
+EventBus.$on('startReset', (val) => {
+    EventBus.$emit('resetStarted', val);
+});
+EventBus.$on('completeReset', (val) => {
+    EventBus.$emit('resetComplete', val);
+});

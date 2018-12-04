@@ -14,6 +14,11 @@ return [
         "timeout"   =>  [
             "icon_emoji"=> ":alarm_clock:",
             "username"  => "Timeout-BOT",
+        ],
+        "notify"    =>  [
+            "icon_emoji"=> ":grey_exclamation:",
+            "username"  => "Notification-BOT",
+            "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
         ]
     ]
 ];

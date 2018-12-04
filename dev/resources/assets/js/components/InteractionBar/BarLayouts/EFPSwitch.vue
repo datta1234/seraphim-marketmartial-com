@@ -41,7 +41,7 @@
          :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
         </ibar-trade-at-best-negotiation>
     </template>
-    <template v-if="!is_trading && negotiation_available">
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
         <ibar-market-negotiation-contracts 
@@ -58,7 +58,7 @@
         <!-- Alert me when cleared -->
         <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
         
-        <b-row class="mb-1" v-if="can_negotiate">
+        <b-row class="mb-1">
             <b-col cols="10">
                 <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
                     {{ error[0] }}
@@ -157,7 +157,7 @@
                 </b-row>
             </b-col>
         </b-row>
-        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
     </template>
     
             

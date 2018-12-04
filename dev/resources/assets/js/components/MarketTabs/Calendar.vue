@@ -62,13 +62,17 @@
             strike_1: function() {
                 let group = 'default';
                 let func = this.marketRequest.trade_items[group].tradable.is_stock ? 'formatRandQty' : 'splitValHelper';
-                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.strike")], '&nbsp;', 3)
+                return this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.expiration_date")]
+                    + '&nbsp;'
+                    + this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.strike")], '&nbsp;', 3)
                     + ( this.marketRequest.trade_items[group].choice ? 'ch' : '  ' )
             },
             strike_2: function() {
                 let group = this.$root.config("trade_structure.calendar.group_2");
                 let func = this.marketRequest.trade_items[group].tradable.is_stock ? 'formatRandQty' : 'splitValHelper';
-                return this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.strike")], '&nbsp;', 3)
+                return this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.expiration_date")]
+                    + '&nbsp;'
+                    + this.$root[func]( this.marketRequest.trade_items[group][this.$root.config("trade_structure.calendar.strike")], '&nbsp;', 3)
                     + ( this.marketRequest.trade_items[group].choice ? 'ch' : '  ' )
             },
             marketState: function() {

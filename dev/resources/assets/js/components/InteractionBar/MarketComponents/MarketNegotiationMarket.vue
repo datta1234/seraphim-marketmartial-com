@@ -28,7 +28,7 @@
 <script>
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     import UserMarketQuote from '../../../lib/UserMarketQuote';
-
+    import { EventBus } from '~/lib/EventBus.js';
     
     export default {
         props: {
@@ -51,52 +51,64 @@
                 deep: true
             },
             'marketNegotiation.cond_buy_mid'(nv, ov) {
-                console.log("Changed: ", nv)
-                if(nv !== null) {
-                    if(ov === null) {
-                        this.old.bid = this.marketNegotiation.bid;
-                        this.old.offer = this.marketNegotiation.offer;
+                this.$nextTick(() => {
+                    if(this.resetting) { return }; // break early
+                    console.log("Changed: ", nv)
+                    if(nv !== null) {
+                        if(ov === null) {
+                            this.old.bid = this.marketNegotiation.bid;
+                            this.old.offer = this.marketNegotiation.offer;
+                        }
+                        this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
+                    } else {
+                        this.marketNegotiation.bid = this.old.bid;
+                        this.marketNegotiation.offer = this.old.offer;
                     }
-                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
-                } else {
-                    this.marketNegotiation.bid = this.old.bid;
-                    this.marketNegotiation.offer = this.old.offer;
-                }
+                });
             },
             'disabled_bid'(nv, ov) {
-                if(nv) {
-                    if(this.marketNegotiation.bid_qty) {
-                        this.old.bid = this.marketNegotiation.bid;
-                        this.old.bid_qty = this.marketNegotiation.bid_qty;
-                        this.marketNegotiation.bid = null;
-                        this.marketNegotiation.bid_qty = null;
+                this.$nextTick(() => {
+                    if(this.resetting) { return }; // break early
+                    console.log("Changed 2: ", nv)
+                    if(nv) {
+                        if(this.marketNegotiation.bid_qty) {
+                            this.old.bid = this.marketNegotiation.bid;
+                            this.old.bid_qty = this.marketNegotiation.bid_qty;
+                            this.marketNegotiation.bid = null;
+                            this.marketNegotiation.bid_qty = null;
+                        }
+                    } else {
+                        this.marketNegotiation.bid_qty = this.old.bid_qty;
+                        this.marketNegotiation.bid = this.old.bid;
                     }
-                } else {
-                    this.marketNegotiation.bid_qty = this.old.bid_qty;
-                    this.marketNegotiation.bid = this.old.bid;
-                }
+                });
             },
             'disabled_offer'(nv, ov) {
-                if(nv) {
-                    if(this.marketNegotiation.offer_qty) {
-                        this.old.offer = this.marketNegotiation.offer;
-                        this.old.offer_qty = this.marketNegotiation.offer_qty;
-                        this.marketNegotiation.offer = null;
-                        this.marketNegotiation.offer_qty = null;
+                this.$nextTick(() => {
+                    if(this.resetting) { return }; // break early
+                    console.log("Changed 3: ", nv)
+                    if(nv) {
+                        if(this.marketNegotiation.offer_qty) {
+                            this.old.offer = this.marketNegotiation.offer;
+                            this.old.offer_qty = this.marketNegotiation.offer_qty;
+                            this.marketNegotiation.offer = null;
+                            this.marketNegotiation.offer_qty = null;
+                        }
+                    } else {
+                        this.marketNegotiation.offer_qty = this.old.offer_qty;
+                        this.marketNegotiation.offer = this.old.offer;
                     }
-                } else {
-                    this.marketNegotiation.offer_qty = this.old.offer_qty;
-                    this.marketNegotiation.offer = this.old.offer;
-                }
+                });
             }
         },
         data() {
             return {
                 old: {
-                    bid: 0,
-                    offer: 0,
-                    bid_qty: 0,
-                    offer_qty: 0
+                    resetting: false,
+                    bid: null,
+                    offer: null,
+                    bid_qty: null,
+                    offer_qty: null
                 }
             };
         },
@@ -169,13 +181,13 @@
                             (
                                 this.currentNegotiation.bid != null
                                 && !this.is_empty(this.marketNegotiation.bid)
-                                && this.marketNegotiation.bid < currentBid.bid
+                                && parseFloat(this.marketNegotiation.bid) < parseFloat(currentBid.bid)
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
                                 this.currentNegotiation.offer != null
                                 && !this.is_empty(this.marketNegotiation.offer)
-                                && this.marketNegotiation.offer > currentOffer.offer
+                                && parseFloat(this.marketNegotiation.offer) > parseFloat(currentOffer.offer)
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
 
@@ -227,12 +239,23 @@
                 }
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
+            },
+            reset() {
+                this.old.bid = null;
+                this.old.offer = null;
+                this.old.offer_qty = this.marketNegotiation.offer_qty;
+                this.old.bid_qty = this.marketNegotiation.bid_qty;
+                this.resetting = false;
+                console.log("DONE RESET!!!")
             }
         },
         mounted() {
-            this.old.offer_qty = this.marketNegotiation.offer_qty;
-            this.old.bid_qty = this.marketNegotiation.bid_qty;
-            console.log(this.disabled);
+            this.reset();
+            EventBus.$on('resetStarted', () => {
+                this.resetting = true;
+                console.log("ReSETTING!");
+            });
+            EventBus.$on('resetComplete', this.reset);
         }
     }
 </script>

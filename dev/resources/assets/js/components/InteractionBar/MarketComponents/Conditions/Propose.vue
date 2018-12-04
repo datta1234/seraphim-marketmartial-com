@@ -27,6 +27,9 @@
             marketNegotiation: {
                 type: UserMarketNegotiation,
                 default: null
+            },
+            condition: {
+                default: null
             }
         }
     }

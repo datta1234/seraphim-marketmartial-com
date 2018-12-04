@@ -61,10 +61,12 @@
                 type: UserMarket
             },
             conditions: {
-                type: Array
+                type: Array,
+                default: () => []
             },
             sent_conditions: {
-                type: Array
+                type: Array,
+                default: () => []
             },
         },
         components: {

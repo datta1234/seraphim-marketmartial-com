@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if($errors->any())
-    {{ var_dump($errors->all()) }}
-@endif
 {{-- Register Card --}}
 @component('partials.content_card')
     @slot('header')

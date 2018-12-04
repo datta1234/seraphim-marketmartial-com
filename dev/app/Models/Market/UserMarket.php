@@ -218,7 +218,7 @@ class UserMarket extends Model
     public static function placeOldQuotesOnHold()
     {
         //get all the user market that have no chosen market on market request the last 20 min
-        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'),20);
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes',20));
         $updatedMarketsId = self::where('created_at','<=',$date)
         ->where('is_on_hold',false)
         ->whereDoesntHave('marketNegotiations',function($q){
@@ -432,7 +432,7 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        if($counterNegotiation->isTraded())
+        if($counterNegotiation && $counterNegotiation->isTraded())
         {
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
@@ -550,9 +550,13 @@ class UserMarket extends Model
                 "cond_buy_best",
             ]);
         }
-        return $marketNegotiation->update(
+        $ret = $marketNegotiation->update(
             collect($data)->only($fields)->toArray()
         );
+        if($marketNegotiation->counterUser)
+        {
+             $this->setCounterOrgnisationAction($marketNegotiation->counterUser->organisation_id);
+        }
     }
 
 

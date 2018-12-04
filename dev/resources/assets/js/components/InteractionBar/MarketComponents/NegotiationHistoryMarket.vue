@@ -73,7 +73,7 @@
 
 <script>
     import UserMarketRequest from '~/lib/UserMarketRequest';
-
+    
     export default {
         props: {
             history: {

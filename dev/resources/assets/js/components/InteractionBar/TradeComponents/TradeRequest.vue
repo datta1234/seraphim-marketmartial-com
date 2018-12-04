@@ -9,7 +9,7 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable && marketNegotiation.bid" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.bid && bid_selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
                 <span v-else>
@@ -19,7 +19,7 @@
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable && marketNegotiation.offer" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.offer && offer_selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
                 <span v-else>
@@ -52,28 +52,27 @@
     <b-col cols="12">
 
         <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
-                <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
-                    <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
-                        <template v-if="index == 0">
-                            <div v-for="tradingText in tradeNegotiation.getTradingText()">
-                                {{ tradingText }} 
-                            </div>
-                        </template>
-                        <ul class="text-my-org">
-                            <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
-                        </ul>
-                    </template>
-                    <div v-else class="text-my-org text-center">
-                        <div v-for="tradingText in tradeNegotiation.getTradingText()">
-                            {{ tradingText }} 
-                        </div>
+            <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
+                <template v-if="(tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me) 
+                                && index == (marketNegotiation.trade_negotiations.length - 1)">
+                    <div v-if="tradeNegotiation.getTradingText() !== null">
+                        {{ tradeNegotiation.getTradingText() }} 
+                    </div>
+                    <ul class="text-my-org">
+                        <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
+                    </ul>
+                </template>
+                <div v-else-if="tradeNegotiation.getTradingText() !== null" class="text-my-org text-center">
+                    <div v-if="tradeNegotiation.getTradingText() !== null">
+                        {{ tradeNegotiation.getTradingText() }} 
                     </div>
                 </div>
+            </div>
         </template>
         <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                <div v-for="tradingText in lastTradeNegotiation.getTradingText()">
-                    {{ tradingText }} 
-                </div>
+            <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
+                {{ tradeNegotiation.getTradingText() }}
+            </div>
         </div>
     </b-col> 
     
@@ -120,12 +119,12 @@
             isCurrent: Boolean
         },
         data() {
-           return {
-               conditionAttr:[],
-               dialogText: '',
-               liftOpen: false,
-               hitOpen: false,
-           };
+            return {
+                conditionAttr:[],
+                dialogText: '',
+                liftOpen: false,
+                hitOpen: false
+            };
        },
        watch: {
 
@@ -147,7 +146,19 @@
         canOffer: function(){
             let source = this.marketNegotiation.getAmountSource("offer");
             return !source.is_my_org;
-        }
+        },
+        bid_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === false) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;   
+        },
+        offer_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === true) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;
+        },
     },
     watch: {
         'marketNegotiation': function() {
