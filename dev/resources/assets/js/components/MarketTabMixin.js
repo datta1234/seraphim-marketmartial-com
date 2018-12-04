@@ -114,8 +114,15 @@ export default {
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
                         if(this.current_user_market_negotiation.isTraded()) {
-                            this.user_market_bid = '-';
-                            this.user_market_offer = '-';
+                            this.market_request_state = 'trade-negotiation-pending';
+                            // replaced per [MM-723] - "The tab should display the traded level until a new bid or offer is shown." + only show traded level
+                            if(this.current_user_market_negotiation.getLastTradeNegotiation.is_offer) {
+                                this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                                this.user_market_offer = '-';
+                            } else {
+                                this.user_market_bid = '-';
+                                this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
+                            }
                         } else {
                             this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
                             this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
