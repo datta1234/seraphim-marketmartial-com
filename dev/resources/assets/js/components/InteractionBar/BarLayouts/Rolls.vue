@@ -235,9 +235,9 @@
         
         computed: {
             'market_title': function() {
-                let group1 = this.$root.config("trade_structure.efp_switch.group_1");
-                let expiry_1 = this.$root.config("trade_structure.efp_switch.expiration_date_1");
-                let expiry_2 = this.$root.config("trade_structure.efp_switch.expiration_date_2");
+                let group1 = this.$root.config("trade_structure.rolls.group_1");
+                let expiry_1 = this.$root.config("trade_structure.rolls.expiration_date_1");
+                let expiry_2 = this.$root.config("trade_structure.rolls.expiration_date_2");
                 return [
                     this.marketRequest.trade_items[group1].tradable.title,
                     this.marketRequest.trade_items[group1][expiry_1],
