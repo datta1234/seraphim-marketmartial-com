@@ -105,7 +105,7 @@
         "hidden": true
     },
     {
-        "title": "Meet in the Middle",
+        "title": "Meet in the Middle (Private)",
         "alias": "cond_buy_mid",
         "default": null,
         "default_value": true,
@@ -113,12 +113,12 @@
             {
                 "value": true,
                 "text": "Buy in the middle",
-                "title": "Buy in Middle"
+                "title": "Buy in Middle (Private)"
             },
             {
                 "value": false,
                 "text": "Sell in the middle",
-                "title": "Sell in Middle"
+                "title": "Sell in Middle (Private)"
             }
         ],
         "only": "market"
