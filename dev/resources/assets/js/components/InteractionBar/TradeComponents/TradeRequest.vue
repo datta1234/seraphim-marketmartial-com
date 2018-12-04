@@ -9,7 +9,7 @@
 
             <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-                <span v-if="selectable && marketNegotiation.bid" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.bid && bid_selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
                     {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
                 </span>
                 <span v-else>
@@ -19,7 +19,7 @@
             </b-col>
 
             <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable && marketNegotiation.offer" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
+                <span v-if="selectable && marketNegotiation.offer && offer_selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
                     {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
                 </span>
                 <span v-else>
@@ -119,12 +119,12 @@
             isCurrent: Boolean
         },
         data() {
-           return {
-               conditionAttr:[],
-               dialogText: '',
-               liftOpen: false,
-               hitOpen: false,
-           };
+            return {
+                conditionAttr:[],
+                dialogText: '',
+                liftOpen: false,
+                hitOpen: false
+            };
        },
        watch: {
 
@@ -146,7 +146,19 @@
         canOffer: function(){
             let source = this.marketNegotiation.getAmountSource("offer");
             return !source.is_my_org;
-        }
+        },
+        bid_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === false) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;   
+        },
+        offer_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === true) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;
+        },
     },
     watch: {
         'marketNegotiation': function() {

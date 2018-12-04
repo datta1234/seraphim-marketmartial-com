@@ -42,4 +42,31 @@ class TradeNegotiationStoreRequest extends FormRequest
         ];
     }
 
+    /**
+    * 
+    *
+    * @param \Illuminate\Contracts\Validation\Validator $validator
+    * @return void
+    */
+    public function withValidator(Validator $validator)
+    {
+        $negotiation = $this->market_negotiation;
+        $isOffer = $this->get('is_offer');
+        $validator->after(function ($validator) use ($negotiation, $isOffer) {
+            if($negotiation->isTradeAtBestOpen()) {
+                if($negotiation->cond_buy_best == true) {
+                    // if BUY @ best && OFFER
+                    if($isOffer == true) {
+                        $validator->errors()->add('offer', "Only the initiator can trade this level");
+                    }
+                } else {
+                    // if SELL @ best && BID
+                    if($isOffer == false) {
+                        $validator->errors()->add('bid', "Only the initiator can trade this level");
+                    }
+                }
+            }
+        });
+    }
+
 }

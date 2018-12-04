@@ -114,7 +114,7 @@ export default {
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
                         if(this.current_user_market_negotiation.isTraded()) {
-                            this.market_request_state = 'trade-negotiation-pending';
+                            this.market_request_state = 'trade-negotiation-open';
                             // replaced per [MM-723] - "The tab should display the traded level until a new bid or offer is shown." + only show traded level
                             if(this.current_user_market_negotiation.getLastTradeNegotiation.is_offer) {
                                 this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
