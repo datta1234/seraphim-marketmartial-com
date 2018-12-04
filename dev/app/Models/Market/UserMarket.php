@@ -432,7 +432,7 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        if($counterNegotiation->isTraded())
+        if($counterNegotiation && $counterNegotiation->isTraded())
         {
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
