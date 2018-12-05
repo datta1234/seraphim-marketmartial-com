@@ -54,6 +54,9 @@ export default {
         },
     computed: {
         'negotiation_available': function(){
+            // admins cant negotiate
+            if(this.$root.is_admin) { return false; }
+
             // if(this.last_negotiation.is_my_org) {
             //     if(this.cant_amend) {
             //         return this.last_negotiation.isSpun() || this.last_negotiation.isTraded();
@@ -178,7 +181,7 @@ export default {
             }
             else if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
             {
-                this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
+                this.history_message = "Market is pending.";
             }
         },
         subscribeToMarketRequest() {

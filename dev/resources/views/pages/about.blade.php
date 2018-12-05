@@ -37,15 +37,13 @@
             <p class="card-text text-justify">
                 With you, the derivatives traders, being the core focus of the Market Martial platform, we encourage you to provide us with your comments and critiques that could further improve your trading experience.
             </p>
-            <div class="float-left">
-                <img src="http://via.placeholder.com/200x75">
+            <div class="float-left mt-5">
                 <p class="card-text">
                     Brendan Harcourt-Wood, CFA<br>
                     Standard Bank Group (2004 - 2018)
                 </p>
             </div>
-            <div class="float-right">
-                <img src="http://via.placeholder.com/200x75">
+            <div class="float-right mt-5">
                 <p class="card-text text-right ">
                     Wade Bothwell, CFA<br>
                     Investec Bank Ltd (2009 - 2018)

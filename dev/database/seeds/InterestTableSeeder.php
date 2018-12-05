@@ -25,7 +25,7 @@ class InterestTableSeeder extends Seeder
                 'title' => "Cricket"
         ],
         [
-                'title' => "Tennise"
+                'title' => "Tennis"
         ],
         [
                 'title' => "Cycling"

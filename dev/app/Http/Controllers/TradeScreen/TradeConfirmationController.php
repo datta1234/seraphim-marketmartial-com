@@ -122,8 +122,7 @@ class TradeConfirmationController extends Controller
         }
 
         \Slack::postMessage([
-            "text"      => $tradeConfirmation->getMessage('confirmation_disputed'),
-            "channel"   => env("SLACK_ADMIN_DISPUTES_CHANNEL")
+            "text"      => $tradeConfirmation->getMessage('confirmation_disputed')
         ], 'dispute');
 
         $data = $tradeConfirmation->fresh()->load([

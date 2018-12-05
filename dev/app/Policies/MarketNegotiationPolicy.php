@@ -36,7 +36,7 @@ class MarketNegotiationPolicy
             // only involved
             return $marketNegotiation->lastTradeNegotiation->isOrganisationInvolved($user->organisation_id);
         }
-        return true;
+        return $user->isTrader();
     }
 
     /**
@@ -48,6 +48,10 @@ class MarketNegotiationPolicy
      */
     public function delete(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isAdmin()) {
+            return true;
+        }
+        
         // FoK
         if($marketNegotiation->isFoK()) {
             if($marketNegotiation->id !== $marketNegotiation->userMarket->current_market_negotiation_id) {

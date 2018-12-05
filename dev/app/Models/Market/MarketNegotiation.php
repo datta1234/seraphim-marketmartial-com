@@ -598,8 +598,16 @@ class MarketNegotiation extends Model
         $this->save();
 
         //if its a kill        
-        if($this->cond_fok_spin !== null && $this->cond_fok_spin == false) 
+        if($this->cond_fok_spin === false) 
         {
+            // prefer kill
+            // if this is the first one... send back to quote phase
+            if($this->marketNegotiationParent == null && $this->userMarket->marketNegotiations()->count() == 1) {
+                $request = $this->userMarket->userMarketRequest;
+                $request->chosen_user_market_id = null;
+                return $request->save();
+            }
+
             //@TODO @alex removed this and going to have the market open not pending 
             $newNegotiation = $this->replicate();
             
@@ -625,9 +633,8 @@ class MarketNegotiation extends Model
             $newNegotiation->is_private = false; //dont make it private
             return $newNegotiation->save();
         }
-
         // prefer fill
-        if($this->cond_fok_spin == true) {
+        elseif($this->cond_fok_spin === true) {
 
             
             //@TODO @alex removed this and going to have the market open not pending 
@@ -652,14 +659,6 @@ class MarketNegotiation extends Model
 
 
 
-        } else {
-            // prefer kill
-            // if this is the first one... send back to quote phase
-            if($this->marketNegotiationParent == null) {
-                $request = $this->userMarket->userMarketRequest;
-                $request->chosen_user_market_id = null;
-                $request->save();
-            }
         }
     }
 
@@ -1201,6 +1200,15 @@ class MarketNegotiation extends Model
         ];
 
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $bid_source = $this->marketNegotiationSource('bid');
+            $offer_source = $this->marketNegotiationSource('offer');
+
+            $data['bid_org'] = ( $bid_source && $bid_source->user ? $bid_source->user->organisation->title : null );
+            $data['offer_org'] = ( $offer_source && $offer_source->user ? $offer_source->user->organisation->title : null );
+        }
 
         return $data;
     }

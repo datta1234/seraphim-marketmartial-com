@@ -120,4 +120,33 @@ class UserMarketRequestGroup extends Model
             })
         ];
     }
+
+    /**
+     * return a trade item singleton by key
+     *
+     * @return Mixed
+     */
+    public function getDynamicItem($attr, $return_object = false)
+    {
+        $item = $this->userMarketRequestItems()
+        ->where('title',$attr)
+        ->first();
+        if($item)
+        {
+            if($return_object == true) {
+                return $item;
+            }
+            switch ($item->type) {
+                case 'double':
+                    return floatval($item->value);
+                    break;
+                default:
+                    return $item->value;
+                    break;
+            }
+        }else
+        {
+            return null;
+        }
+    }
 }

@@ -448,6 +448,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isTrader()
+    {
+        return $this->role_id == 2;
+    }
+
+    /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isViewer()
+    {
+        return $this->role_id == 3;
+    }    
+
+    /**
      * Ecrypt the user's google_2fa secret.
      *
      * @param  string  $value

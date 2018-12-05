@@ -35,7 +35,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 })
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -361,6 +362,19 @@ const app = new Vue({
          * @todo - Add logic to display market if not already displaying
          */
         updateUserMarketRequest(userMarketRequestData) {
+            // handle removal of market requests
+            if(typeof userMarketRequestData.inactive !== 'undefined' && userMarketRequestData.inactive == true) {
+                let market = this.display_markets.find(display_market => display_market.id == userMarketRequestData.market_id);
+                if(market) {
+                    let market_request_index = market.market_requests.findIndex( market_request => market_request.id == userMarketRequestData.id);
+                    if(market_request_index !== -1) {
+                        market.market_requests.splice(market_request_index, 1); // remove
+                        EventBus.$emit('removeMarketRequest', userMarketRequestData.id);
+                    }
+                }
+                return; // return early
+            }
+            //handle adding/updating
             let index = this.display_markets.findIndex( display_market => display_market.id == userMarketRequestData.market_id);
             if(index !== -1)
             {
@@ -543,6 +557,7 @@ const app = new Vue({
         scroll_settings: {
             suppressScrollY: true
         },
+        is_admin: false,
     },
     mounted: function() {
         Config.configs = this.configs;
@@ -612,6 +627,10 @@ const app = new Vue({
 
             let connectStream = (subCb) => {
                 console.log("Org UUID: ", organisationUuid.content);
+                // test if admin is viewing the page, then disable some send features across the frontend
+                if(organisationUuid.content == "admin") {
+                    this.is_admin = true;
+                }
                 // possibly let us cath what happens when pusher dc's
                 window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
                 let channel = window.Echo.private('organisation.'+organisationUuid.content)
@@ -632,7 +651,7 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
                         this.updateUserMarketRequest(packet_data.data);
-                        console.log(packet_data.message);
+                        console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
                 })

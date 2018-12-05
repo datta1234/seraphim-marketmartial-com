@@ -59,11 +59,11 @@ class UserMarketController extends Controller
             $userMarket->userMarketRequest->id,
             true
         );
-        
-        $user->organisation->notify("market_request_store","Response sent to interest.",true);
+        // Removed as specified in task MM-741
+        //$user->organisation->notify("market_request_store","Response sent to interest.",true);
         $userMarketRequest->notifyRequested();
 
-        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "Response sent to interest."]);
+        return response()->json(['data' => $userMarket->preFormatted()/*, 'message' => "Response sent to interest."*/]);
     }
 
     public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
@@ -157,8 +157,8 @@ class UserMarketController extends Controller
                 $success = $userMarket->updateQuote($request->user(),$request->all());
             }
 
-
-            $request->user()->organisation->notify("market_request_update","Response sent to interest.",true);
+            // Removed as specified in task MM-741
+            //$request->user()->organisation->notify("market_request_update","Response sent to interest.",true);
 
             // Set action that needs to be taken for the org related to this userMarketRequest
             $userMarket->userMarketRequest->setAction(
@@ -184,8 +184,12 @@ class UserMarketController extends Controller
     public function destroy(Request $request, UserMarketRequest $userMarketRequest, UserMarket $userMarket)
     {
         $this->authorize('delete',$userMarket);
+
+        $org = $userMarket->user->organisation;
+        
         $userMarket->delete();
-        $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
+        $org->notify("market_request_delete","Your quote has been pulled.",true);
+
         $userMarketRequest->notifyRequested();
         
         return response()->json(['data' => null,'message'=> ""]);

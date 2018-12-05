@@ -163,7 +163,7 @@
                 confirmationLoaded: true,
                 oldConfirmationData: null,
                 trade_confirmation: null,
-                can_dispute: false
+                can_dispute: true
             }
         },
         methods: {
@@ -247,10 +247,13 @@
             },
             dispute: function()
             {
+                console.log("h1");
                 EventBus.$emit('loading', 'confirmationSubmission');
                 this.confirmationLoaded = false;
 
+                console.log("h2");
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
+                    console.log("h5");
                     this.updateOldData();
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');

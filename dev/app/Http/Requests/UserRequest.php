@@ -33,4 +33,12 @@ class UserRequest extends FormRequest
 
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'cell_phone.numeric' => 'The phone number needs to only include numbers',
+            'work_phone.numeric' => 'The phone number needs to only include numbers',
+        ];  
+    }
 }

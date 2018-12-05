@@ -697,3 +697,14 @@ table.table {
 		background-color: #afafaf;
 	}
 }
+
+.admin-label {
+	font-size: .9em;
+    color: #d9d9d9 !important;
+    &.is-interest {
+		color: #81acfc !important
+    }
+	&.is-maker {
+		color: #98f89b !important;
+	}
+}

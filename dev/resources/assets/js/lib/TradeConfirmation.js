@@ -189,20 +189,14 @@ export default class TradeConfirmation extends BaseModel {
     }
     dispute(trading_account)
     {
-      return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
+        return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
             "trading_account_id":trading_account.id,
             "trade_confirmation": this.prepareStore()
-           })
-           .then(response => {
-            this.update(response.data.data);
-            resolve();
         })
-           .catch(err => {
-            console.log(err);
-            reject(err);
-        }); 
-       });
+        .then(response => {
+            this.update(response.data.data);
+            return response;
+        });
     }
 
     prepareStore() {
