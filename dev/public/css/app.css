@@ -17959,12 +17959,35 @@ input:checked + .slider:before {
 }
 
 .mm-modal-market-button:focus,
-.mm-modal-market-button.focus {
+.mm-modal-market-button.focus,
+.mm-modal-market-button.selected {
   color: #FFFFFF;
   background-color: #1c7c74;
 }
 
 .mm-modal-market-button:hover {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-toggle {
+  color: #FFFFFF;
+  background-color: #1D3641;
+  border-radius: 2rem;
+}
+
+.mm-modal-market-button-toggle:focus,
+.mm-modal-market-button-toggle.focus {
+  color: #FFFFFF;
+  background-color: #1D3641;
+}
+
+.mm-modal-market-button-toggle.selected {
+  color: #FFFFFF;
+  background-color: #1c7c74;
+}
+
+.mm-modal-market-button-toggle:hover {
   color: #FFFFFF;
   background-color: #1c7c74;
 }
