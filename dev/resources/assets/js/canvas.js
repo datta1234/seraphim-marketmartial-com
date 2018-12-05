@@ -24,7 +24,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 })
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { Bar } from 'vue-chartjs';
