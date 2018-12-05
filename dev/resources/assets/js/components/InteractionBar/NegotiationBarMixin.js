@@ -150,7 +150,7 @@ export default {
             }
             else if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
             {
-                this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
+                this.history_message = "Market is pending.";
             }
         },
         subscribeToMarketRequest() {
