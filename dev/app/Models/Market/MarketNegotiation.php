@@ -1201,6 +1201,15 @@ class MarketNegotiation extends Model
 
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
 
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $bid_source = $this->marketNegotiationSource('bid');
+            $offer_source = $this->marketNegotiationSource('offer');
+
+            $data['bid_org'] = ( $bid_source && $bid_source->user ? $bid_source->user->organisation->title : null );
+            $data['offer_org'] = ( $offer_source && $offer_source->user ? $offer_source->user->organisation->title : null );
+        }
+
         return $data;
     }
 

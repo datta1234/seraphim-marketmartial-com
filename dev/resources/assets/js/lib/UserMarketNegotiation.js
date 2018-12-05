@@ -58,6 +58,8 @@ export default class UserMarketNegotiation extends BaseModel {
             applicable_timeout: 0,
             creation_idx: null,
             created_at: moment(),
+            bid_org: null,
+            offer_org: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

@@ -11356,6 +11356,19 @@ table.table {
   background-color: #afafaf;
 }
 
+.admin-label {
+  font-size: .9em;
+  color: #d9d9d9 !important;
+}
+
+.admin-label.is-interest {
+  color: #81acfc !important;
+}
+
+.admin-label.is-maker {
+  color: #98f89b !important;
+}
+
 #trade_html {
   position: relative;
   height: 100%;

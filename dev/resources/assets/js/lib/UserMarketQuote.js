@@ -32,8 +32,8 @@ export default class UserMarketQuote extends BaseModel {
             offer: null,
             offer_qty: null,
             is_on_hold: false,
-            is_repeat: false
-
+            is_repeat: false,
+            org: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

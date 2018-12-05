@@ -34,15 +34,16 @@ class UserMarketRequestPolicy
     }
 
     /**
-     * Determine whether the user can update the userMarketRequest.
+     * Determine whether the user can deactivate the userMarketRequest.
      *
      * @param  \App\Models\UserManagement\User  $user
      * @param  \App\UserMarketRequest  $userMarketRequest
      * @return mixed
      */
-    public function update(User $user, UserMarketRequest $userMarketRequest)
+    public function deactivate(User $user, UserMarketRequest $userMarketRequest)
     {
-        //
+        // only admins can pull a market request
+        return $user->isAdmin();
     }
 
     /**
@@ -58,6 +59,18 @@ class UserMarketRequestPolicy
     }
 
     /**
+     * Determine whether the user can update the userMarketRequest.
+     *
+     * @param  \App\Models\UserManagement\User  $user
+     * @param  \App\UserMarketRequest  $userMarketRequest
+     * @return mixed
+     */
+    public function update(User $user, UserMarketRequest $userMarketRequest)
+    {
+        //
+    }
+
+    /**
      * Determine whether the user can delete the userMarketRequest.
      *
      * @param  \App\Models\UserManagement\User  $user
@@ -66,9 +79,9 @@ class UserMarketRequestPolicy
      */
     public function addQoute(User $user, UserMarketRequest $userMarketRequest)
     {
-        return !$userMarketRequest->userMarkets()->activeQuotes()->whereHas('user',function($query) use ($user){
-                $query->where('organisation_id',$user->organisation_id);
-            })->exists();
+        return !$userMarketRequest->userMarkets()->activeQuotes()->whereHas('user',function($query) use ($user) {
+            $query->where('organisation_id',$user->organisation_id);
+        })->exists();
     }
 
 
