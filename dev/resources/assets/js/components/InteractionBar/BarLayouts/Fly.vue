@@ -55,8 +55,10 @@
         </ibar-market-negotiation-contracts>
         <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
 
-        <!-- Alert me when cleared -->
-        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    </template>
+    <!-- Alert me when cleared -->
+    <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <b-row class="mb-1">
             <b-col cols="10">
