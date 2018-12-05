@@ -13,12 +13,19 @@ class TradeScreenController extends Controller
     {
     	$user = Auth::user();
     	$organisation = $user->organisation;
-    	$total_rebate = $organisation->rebates()->noTrade()->sum('amount');
+        $total_rebate = 0;
+        if($organisation) {
+    	   $total_rebate = $organisation->rebates()->noTrade()->sum('amount');
+        }
         
-        return view('pages.trade')->with([
-        	'user' => $user, 
-        	'organisation' => $organisation, 
-        	'total_rebate' => $total_rebate
-        ]);
+        $data = [
+            'user' => $user, 
+            'organisation' => $organisation, 
+            'total_rebate' => $total_rebate
+        ];
+        if($user->isAdmin()) {
+            $data['is_admin'] = true;
+        }
+        return view('pages.trade')->with($data);
     }
 }
