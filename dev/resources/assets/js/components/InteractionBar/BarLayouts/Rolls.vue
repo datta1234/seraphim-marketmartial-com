@@ -240,10 +240,10 @@
                 let expiry_2 = this.$root.config("trade_structure.rolls.expiration_date_2");
                 return [
                     this.marketRequest.trade_items[group1].tradable.title,
+                    'ROLL',
                     this.marketRequest.trade_items[group1][expiry_1],
-                    'vs',
+                    '-',
                     this.marketRequest.trade_items[group1][expiry_2],
-                    'ROLL'
                 ].join(' ');
             },
         },
