@@ -12,18 +12,13 @@
                     <b-row :key="index" v-for="(expiry_date, index) in expiry_date_arr" class="mt-2">
                         <b-col>
                             <b-button :disabled="checkPastDate(expiry_date)" 
-                                      class="mm-modal-market-button w-100" 
+                                      class="mm-modal-market-button-toggle w-100"
+                                      v-bind:class="{'selected': selected_dates.indexOf(expiry_date) > -1}"
                                       @click="selectExpiryDates(expiry_date)">
                                 {{ castToMoment(expiry_date) }}
                             </b-button>
                         </b-col>
                     </b-row>
-                </b-col>
-            </b-row>
-
-            <b-row v-if="duplicate_date" class="text-center mt-3">
-                <b-col cols="12">
-                    <p class="text-danger mb-0">Cannot select duplicate dates.</p>
                 </b-col>
             </b-row>
             <b-row v-if="dates_loaded" class="justify-content-md-center">
@@ -42,6 +37,15 @@
                     <p class="text-danger mb-0">{{ error }}</p>
                 </b-col>
             </b-row>
+
+            <b-row v-if="this.selected_dates.length == this.data.number_of_dates" class="justify-content-md-center mt-3">
+                <b-col cols="6">
+                    <b-button class="mm-modal-market-button-alt w-100" @click="submitDetails()">
+                        Next
+                    </b-button>
+                </b-col>
+            </b-row>
+
         </b-container>
     </div>
 </template>
@@ -68,22 +72,31 @@
                 per_page:12,
                 total:null,
                 selected_dates:[],
-                duplicate_date: false,
                 dates_loaded: false,
             };
         },
         methods: {
             /**
-             * Passes selected expiry date then sorts the dates and calls the component
-             *  callback when the number of selected dates reach the total number of dates.
+             * Adds or removes chosen date based on wether it has been selected already
+             *  then calls submitDetails.
              *
              * @param {string} date
              */
             selectExpiryDates(date) {
-                this.duplicate_date = this.selected_dates.indexOf(date) == -1 ? false : true;
-                if(!this.duplicate_date) {
+                let date_index = this.selected_dates.indexOf(date);
+                if(date_index > -1) {
+                    this.selected_dates.splice(date_index, 1);
+                } else {
                     this.selected_dates.push(date);
                 }
+
+                this.submitDetails();
+            },
+            /**
+             * Sorts the dates and calls the component
+             *  callback when the number of selected dates reach the total number of dates.
+             */
+            submitDetails() {
                 if(this.selected_dates.length == this.data.number_of_dates) {
                     this.$root.dateStringArraySort(this.selected_dates, 'YYYY-MM-DD HH:mm:ss');
                     /*this.data.index_market_object.expiry_dates = this.selected_dates;*/
@@ -91,7 +104,7 @@
                     this.callback(this.selected_dates.map( (current) => {
                         return this.castToMoment(current);
                     }).join( this.data.market_object.trade_structure == 'Rolls' ? ' vs ' : ' / ' ), this.selected_dates);
-                }
+                }    
             },
             /**
              * Casting a passed string to moment with a new format
@@ -151,6 +164,10 @@
         mounted() {
             this.dates_loaded = false;
             this.loadExpiryDate();
+            if(this.data.market_object.expiry_dates.length <= this.data.number_of_dates && this.data.market_object && this.data.market_object.expiry_dates) {
+                this.selected_dates = this.data.market_object.expiry_dates;
+            }
+            console.log("Dates: ",this.selected_dates);
         }
     }
 </script>

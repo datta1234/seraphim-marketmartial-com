@@ -137,6 +137,14 @@
                 return a.default_id - b.default_id;
             });
 
+            let directIndex = this.mutableEmailSettingsData.findIndex(element => {
+                return element.title == "Direct";
+            });
+
+            if(directIndex !== -1 && this.mutableEmailSettingsData[directIndex].email == null) {
+                this.mutableEmailSettingsData[directIndex].email = this.user.email;
+            }
+
             this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
         }
     }

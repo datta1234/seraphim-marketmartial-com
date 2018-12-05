@@ -93,10 +93,32 @@
 	border-radius: 2rem;
 	
 	&:focus,
-	&.focus {
+	&.focus, &.selected {
 		color: $mm-text-white;
 		background-color: $mm-modal-header;
 	}
+	&:hover {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+}
+
+.mm-modal-market-button-toggle {
+	color: $mm-text-white;
+	background-color: $mm-market-important;
+	border-radius: 2rem;
+	
+	&:focus,
+	&.focus {
+		color: $mm-text-white;
+		background-color: $mm-market-important;
+	}
+
+	&.selected {
+		color: $mm-text-white;
+		background-color: $mm-modal-header;
+	}
+
 	&:hover {
 		color: $mm-text-white;
 		background-color: $mm-modal-header;

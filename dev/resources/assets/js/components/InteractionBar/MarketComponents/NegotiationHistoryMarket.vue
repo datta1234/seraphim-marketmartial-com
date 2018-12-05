@@ -60,13 +60,14 @@
                     </p>
                 </b-col>
             </b-row>
-            <b-row class="justify-content-md-center" v-if="history.reduce((x,y) => x = y.is_interest, false)">
+            <!-- Removed as specified in task MM-739 -->             
+            <!-- <b-row class="justify-content-md-center" v-if="history.reduce((x,y) => x = y.is_interest, false)">
                 <b-col class="mt-2">
                     <p>
                         <small>Quotes will default to HOLD after 30 minutes.</small>
                     </p>
                 </b-col>
-            </b-row>
+            </b-row> -->
             <b-row class="justify-content-md-center">
                 <b-col class="mt-2">
                     <p>
