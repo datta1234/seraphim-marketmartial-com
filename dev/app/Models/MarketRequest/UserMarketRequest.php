@@ -490,12 +490,13 @@ class UserMarketRequest extends Model
                 // @TODO: this is breaking the initial levels being set.
                 return is_null($lastNegotiation->marketNegotiationParent);
             }
+            
+            // closed to self prevention
+            if($lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id) {
+                return true;
+            }
         }
 
-        // closed to self prevention
-        if($lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id) {
-            return true;
-        }
         return false;
     }
 
