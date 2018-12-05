@@ -9,6 +9,7 @@ return [
         "dispute" =>  [
             "icon_emoji"=> ":warning:",
             "username"  => "Dispute-BOT",
+            "channel"   => env("SLACK_ADMIN_DISPUTES_CHANNEL")
             
         ],
         "timeout"   =>  [
