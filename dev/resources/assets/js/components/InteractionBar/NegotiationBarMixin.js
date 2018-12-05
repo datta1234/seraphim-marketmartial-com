@@ -54,6 +54,9 @@ export default {
         },
     computed: {
         'negotiation_available': function(){
+            // admins cant negotiate
+            if(this.$root.is_admin) { return false; }
+
             // if(this.last_negotiation.is_my_org) {
             //     if(this.cant_amend) {
             //         return this.last_negotiation.isSpun() || this.last_negotiation.isTraded();

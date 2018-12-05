@@ -54,6 +54,11 @@
         },
         mounted() {
             EventBus.$on('interactionToggle', this.toggleBar);
+            EventBus.$on('marketRequestRemoved', (id) => {
+                if(this.opened && this.market_request && this.market_request.id == id) {
+                    this.toggleBar(false, null);
+                }
+            });
         }
     }
 </script>

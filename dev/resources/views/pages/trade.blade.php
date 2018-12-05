@@ -39,7 +39,9 @@
 			</b-row>
 
 		</b-col>
-		<chat-bar></chat-bar>
+		@if(Auth::user()->isAdmin() == false)
+			<chat-bar></chat-bar>
+		@endif
 	</b-row>
 </div>
 @endsection

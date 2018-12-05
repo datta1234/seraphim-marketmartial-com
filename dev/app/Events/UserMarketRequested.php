@@ -58,7 +58,10 @@ class UserMarketRequested implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('organisation.'.$this->organisation->uuid);    
+        if($this->organisation === "admin") {
+            return new PrivateChannel('organisation.admin');
+        }
+        return new PrivateChannel('organisation.'.$this->organisation->uuid);
     }
 
     /**
@@ -68,6 +71,10 @@ class UserMarketRequested implements ShouldBroadcast
     */
     public function broadcastWith()
     {
-        return ["message"=>$this->organisation->getNotification(),'data'=>$this->userMarketRequest->setOrgContext($this->organisation)->preFormatted()];
+        return [
+            // default message for admin
+            "message"=> ( $this->organisation === "admin" ? "" : $this->organisation->getNotification() ),
+            "data"=>$this->userMarketRequest->setOrgContext($this->organisation)->preFormatted()
+        ];
     }
 }

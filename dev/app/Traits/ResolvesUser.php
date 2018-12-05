@@ -8,6 +8,9 @@ trait ResolvesUser {
 
     protected function resolveOrganisationId() {
         if($this->org_context) {
+            if($this->org_context === "admin") {
+                return null;   
+            }
             return $this->org_context->id;
         }
         if(\Auth::user() && \Auth::user()->organisation_id) {

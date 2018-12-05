@@ -734,7 +734,6 @@ class UserMarket extends Model
             null 
         );
 
-
         return $data;
     }
 
@@ -746,7 +745,6 @@ class UserMarket extends Model
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
-
 
         $data = [
             "id"            => $this->id,
