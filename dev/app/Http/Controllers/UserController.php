@@ -115,6 +115,6 @@ class UserController extends Controller
         $user = $request->user();
         $user->tc_accepted = $request->input('tc_accepted');
         $user->update();
-        return redirect()->back()->with('success', 'Terms and conditions have been accepted');
+        return redirect()->back()->with('success', 'Profile completed.');
     }
 }
