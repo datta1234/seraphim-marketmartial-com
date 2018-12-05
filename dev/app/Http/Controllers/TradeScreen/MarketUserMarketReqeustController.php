@@ -215,7 +215,7 @@ class MarketUserMarketReqeustController extends Controller
 
 
         //broadCast new market request;
-        $userMarketRequest->notifyRequested();
+        $userMarketRequest->fresh()->notifyRequested();
         return response()->json([
             'data'=> $responseData,
             'message'=>"Market Request created successfully.", 
