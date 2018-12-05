@@ -60,7 +60,22 @@ class MarketNegotiationTimeout implements ShouldQueue
             }
 
             // Trade @ best
-            if(($marketNegotiation->isTradeAtBest() || $marketNegotiation->isTradeAtBestOpen()) && !$marketNegotiation->isTrading()) {
+            if($marketNegotiation->isTradeAtBest() && !$marketNegotiation->isTrading()) {
+
+                // auto repeat after timeout
+                $marketNegotiation->repeat($marketNegotiation->counterUser);
+
+                // notify users with updated data
+                $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
+
+                // Notify The Admin 
+                \Slack::postMessage([
+                    "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
+                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                ], "timeout");
+            }
+
+            if($marketNegotiation->isTradeAtBestOpen() && !$marketNegotiation->isTrading()) {
 
                 // DEPRECATED per MM-639 - no longer auto trade - require initiate user to enter desired quantity first
                 // $sourceNegotiation = $marketNegotiation->tradeAtBestSource();

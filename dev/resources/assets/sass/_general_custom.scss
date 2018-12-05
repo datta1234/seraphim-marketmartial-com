@@ -581,19 +581,22 @@ input.input-small {
 
 
 
-#trade_app .popover.popover-meet-in-middle {
+#trade_app {
+	font-size: $mm-font-size;
+	.popover.popover-meet-in-middle {
 
-	.popover-header
-	{
-		background: $mm-modal-header;
-		color: $mm-text-white;
-	}
+		.popover-header
+		{
+			background: $mm-modal-header;
+			color: $mm-text-white;
+		}
 
-	.popover-body {
-		.btn-primary {
-            background-color: $ibar-btn-background-primary;
-            color: $ibar-btn-color-primary;
-        }
+		.popover-body {
+			.btn-primary {
+	            background-color: $ibar-btn-background-primary;
+	            color: $ibar-btn-color-primary;
+	        }
+		}
 	}
 }
 

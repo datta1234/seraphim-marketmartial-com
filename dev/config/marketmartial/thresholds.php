@@ -7,5 +7,9 @@ return [
     	'3' 	=> env('DCAP_THRESHOLD_QUANTITY',1500),
     ],
     'stock_quantity' 	=> env('STOCK_THRESHOLD_QUANTITY',50),
-    'timeout'   		=> env('THRESHOLD_TIMEOUT',1200),
+    'condition_timeouts'    =>  [
+        // Timeouts In Mins
+        'cond_fok_spin'   =>  20,
+        'cond_buy_best'   =>  15,
+    ]
 ];

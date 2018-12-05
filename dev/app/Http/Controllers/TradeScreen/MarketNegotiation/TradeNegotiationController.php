@@ -9,7 +9,15 @@ use App\Http\Requests\TradeScreen\MarketNegotiation\TradeNegotiationStoreRequest
 
 class TradeNegotiationController extends Controller
 {
-
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('lock-model:market_negotiation,trade')->only('store');
+    }
 
     /**
      * Store a newly created resource in storage.

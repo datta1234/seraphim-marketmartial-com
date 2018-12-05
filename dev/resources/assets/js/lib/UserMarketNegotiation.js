@@ -55,6 +55,7 @@ export default class UserMarketNegotiation extends BaseModel {
             is_my_org:false,
             market_negotiation_id: null,
             time: null,
+            applicable_timeout: 0,
             creation_idx: null,
             created_at: moment(),
         }
@@ -162,7 +163,7 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     getTimeoutRemaining() {
-        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         if(diff < 0) {
             return "00:00";
@@ -172,7 +173,7 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     hasTimeoutRemaining() {
-        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         return diff > 0;
     }
@@ -546,6 +547,20 @@ export default class UserMarketNegotiation extends BaseModel {
 
     get parent_negotiation() {
         return this._user_market.market_negotiations.find(x => x.id == this.market_negotiation_id);
+    }
+
+    get level_sides() {
+        let bid_source = this.getAmountSource('bid');
+        let offer_source = this.getAmountSource('offer');
+        let sides = [];
+        // im on the bid
+        if(bid_source.is_my_org) {
+            sides.push('bid');
+        }
+        if(offer_source.is_my_org) {
+            sides.push('offer');
+        }
+        return sides;
     }
     
     /**

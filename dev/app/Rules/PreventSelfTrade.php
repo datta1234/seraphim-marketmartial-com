@@ -33,6 +33,7 @@ class PreventSelfTrade implements Rule
         if(!$this->marketNegotiation->tradeNegotiations()->exists())
         {
             $source = $this->marketNegotiation->marketNegotiationSource($attr);        
+            \Log::info([$attr, $source]);
             return $source->user->organisation_id != $this->user->organisation_id;
         }else
         {

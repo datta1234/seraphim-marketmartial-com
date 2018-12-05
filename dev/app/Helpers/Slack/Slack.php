@@ -59,7 +59,8 @@ class Slack
             $presets = config('slack.preset_users');
             if( isset($presets[$preset_as]) ) {
                 $content["as_user"] = false;
-                $content = array_merge($content, $presets[$preset_as]);
+                $data = $presets[$preset_as];
+                $content = array_merge($data, $content); // overwrite with input if need be
             }
         }
 

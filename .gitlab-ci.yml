@@ -68,7 +68,7 @@ reset_staging:
 reset_demo:
   stage: manual
   only:
-    - develop # Run only on develop branch
+    - master # Run only on develop branch
   variables:
     DEPLOYMENT_ROOT: '/var/www'
     DEPLOYENY_USER: 'deploy'

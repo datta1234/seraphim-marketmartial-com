@@ -142,6 +142,11 @@ class TradeNegotiation extends Model
         return $this->marketNegotiation->TradeNegotiations()->first();
     }
 
+    public function isOrganisationInvolved($org_id)
+    {
+        return $this->initiateUser->organisation_id == $org_id || $this->recievingUser->organisation_id == $org_id;
+    }
+
     public function setUpConfirmation()
     {
        $tradeConfirmation = new TradeConfirmation();
