@@ -46,9 +46,10 @@
             :market-negotiation="proposed_user_market_negotiation"
         >
         </ibar-market-negotiation-contracts>
-        
-        <!-- Alert me when cleared -->
-        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    </template>
+    <!-- Alert me when cleared -->
+    <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <b-row class="mb-1">
             <b-col cols="10">

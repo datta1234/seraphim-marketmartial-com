@@ -170,9 +170,18 @@ class TradeConfirmation extends Model
     public function getMessage($scenario) {
         switch($scenario) {
             case 'confirmation_disputed':
-                $user = ( $this->trade_confirmation_status_id == 3 ? $this->recievingUser : $this->sendUser );
-                $marketRequest = $this->marketRequest;
-                return "Dispute by ".$user->full_name." ".$user->cell_phone." for ".$marketRequest->getSummary().".";
+                if($this->trade_confirmation_status_id == 5) {
+                    // trade_confirmation_status_id == 5
+                    $partyA = $this->sendUser;
+                    $partyB = $this->recievingUser;
+                } else {
+                    // trade_confirmation_status_id == 3
+                    $partyB = $this->sendUser;
+                    $partyA = $this->recievingUser;
+                }
+                $partyA = $partyA->full_name." ".$partyA->cell_phone;
+                $partyB = $partyB->full_name." ".$partyB->cell_phone;
+                return "Dispute lodged on ".$this->marketRequest->getSummary()." between (".$partyA.") and (".$partyB.")";
             break;
         }
     }

@@ -633,7 +633,7 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
                         this.updateUserMarketRequest(packet_data.data);
-                        console.log(packet_data.message);
+                        console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
                 })

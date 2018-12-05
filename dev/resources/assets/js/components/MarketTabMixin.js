@@ -200,7 +200,7 @@ export default {
         },
         getStateClass(item,attr)
         {
-            if(item[attr] == null) {
+            if(!item || item[attr] == null) {
                 return "";
             }
             let source = item.getAmountSource(attr);

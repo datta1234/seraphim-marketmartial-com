@@ -260,6 +260,8 @@ class UserMarketRequest extends Model
         $data = [
             "id"                => $this->id,
             "market_id"         => $this->market_id,
+            "chosen_user_market"=> null,
+            "quotes"            => [],
             'is_interest'       => $is_interest,
             "is_market_maker"   => false,
             "trade_structure"   => $this->tradeStructure->title,
@@ -290,7 +292,6 @@ class UserMarketRequest extends Model
         if($showLevels)
         {
             $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedMarket();
-            $data["quotes"]  = [];
             //market has been chosen and this user is considerd the market maker
             $market_maker_org_id = $this->chosenUserMarket->organisation->id;
             $data['is_market_maker'] = $market_maker_org_id == $current_org_id;
@@ -492,9 +493,12 @@ class UserMarketRequest extends Model
             }
             
             // closed to self prevention
-            // if($lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id) {
-            //     return true;
-            // }
+            if(
+                ( $lastNegotiation->user && $lastNegotiation->counterUser ) 
+                && ( $lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id )
+            ) {
+                return true;
+            }
         }
 
         return false;
@@ -841,26 +845,31 @@ class UserMarketRequest extends Model
      *
      * @return Mixed
      */
-    public function getDynamicItems($attr)
+    public function getDynamicItems($attr, $return_objects = false)
     {
-       $query = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
-                $q->whereHas('userMarketRequest',function($qq){
-                    $qq->where('id',$this->id);
-                });
+        $query = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
+            $q->whereHas('userMarketRequest',function($qq){
+                $qq->where('id',$this->id);
             });
-
-       if(!is_array($attr))
-       {
-           $query = $query->where('title',$attr);
-       }else
-       {
-            $query = $query->whereIn('title',$attr); 
-       }
-        return $query->get()
-        ->map(function($item){
-            return $item->value;
         });
-        
+
+        if(!is_array($attr))
+        {
+            $query = $query->where('title',$attr);
+        }else
+        {
+            $query = $query->whereIn('title',$attr); 
+        }
+
+        // return objects
+        if($return_objects == true) {
+            return $query->get();
+        }
+
+        return $query->get()
+        ->map(function($item) {
+            return $item->value;
+        });   
     }
 
     /**
@@ -880,7 +889,112 @@ class UserMarketRequest extends Model
      * @return String
      */
     public function getSummary() {
-        return $this->tradeStructure->title;
+        // risky:       [underlying] [exp date][RISKY] [strike1ch / strike2ch]
+        // calendar:    [underlying] [exp date1]vs[exp date] [CALENDAR][strike1ch / strike2ch]
+        // fly:         [underlying] [exp date][FLY] [strike1ch / strike2 / strike3ch]
+        // outright:    [underlying] [exp date][structure][strike]
+        switch($this->trade_structure_slug) {
+            case 'risky':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "RISKY",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'calendar':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "CALENDAR",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'fly':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "FLY",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[2]->getDynamicItem($strike).($groups[2]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'option_switch':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "OPTION SWITCH",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'efp_switch':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "EFP SWITCH",
+                ]);
+            break;
+            case 'efp':
+                $exp_date = "Expiration Date";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "EFP"
+                ]);
+            break;
+            case 'rolls':
+                $exp_date_1 = "Expiration Date 1";
+                $exp_date_2 = "Expiration Date 2";
+                $strike = "Strike";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date_1))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date_2))->format("My"),
+                    strtoupper($this->tradeStructure->title)
+                ]);
+            break;
+            case 'outright':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    strtoupper($this->tradeStructure->title),
+                    $this->getDynamicItem($strike)
+                ]);
+            break;
+        }
     }
 
     /**
@@ -906,13 +1020,13 @@ class UserMarketRequest extends Model
                 return 'option_switch';
             break;
             case 6:
-                return 'efp_switch';
-            break;
-            case 7:
                 return 'efp';
             break;
-            case 8:
+            case 7:
                 return 'rolls';
+            break;
+            case 8:
+                return 'efp_switch';
             break;
         };
     }
