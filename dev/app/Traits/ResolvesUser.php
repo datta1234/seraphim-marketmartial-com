@@ -15,25 +15,33 @@ trait ResolvesUser {
         }
         if(\Auth::user() && \Auth::user()->organisation_id) {
             return \Auth::user()->organisation_id;
-        } else {
-            return null;
         }
+        return null;
     }
 
     protected function resolveOrganisation() {
         if($this->org_context) {
             return $this->org_context;
         }
-        if(\Auth::user() && \Auth::user()->organisation_id) {
-            return \Auth::user()->organisation;
-        } else {
-            return null;
+        if(\Auth::user()) { 
+            if(\Auth::user()->organisation_id) {
+                return \Auth::user()->organisation;
+            }
+            if($this->org_context == null && \Auth::user()->isAdmin()) {
+                $this->org_context = "admin";
+                return $this->org_context;
+            }
         }
+        return null;
     }
 
     public function setOrgContext($organisation) {
         $this->org_context = $organisation;
         return $this;
+    }
+
+    public function isAdminContext() {
+        return $this->resolveOrganisation() === "admin";
     }
 }
 //

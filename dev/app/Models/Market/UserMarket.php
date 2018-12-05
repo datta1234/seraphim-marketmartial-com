@@ -734,6 +734,11 @@ class UserMarket extends Model
             null 
         );
 
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['org'] = $this->user->organisation->title;
+        }
+
         return $data;
     }
 
@@ -770,6 +775,11 @@ class UserMarket extends Model
         if($data['is_interest']) {
             $data['is_on_hold'] = $this->is_on_hold;
         }
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['org'] = $this->user->organisation->title;
+        }
         return $data;
     }
 
@@ -801,6 +811,11 @@ class UserMarket extends Model
             $data['offer']      = $this->currentMarketNegotiation->offer;
             $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
             $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
+        }
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['org'] = $this->user->organisation->title;
         }
         return $data;
     }

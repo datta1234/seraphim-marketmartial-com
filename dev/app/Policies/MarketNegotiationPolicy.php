@@ -48,6 +48,10 @@ class MarketNegotiationPolicy
      */
     public function delete(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isAdmin()) {
+            return true;
+        }
+        
         // FoK
         if($marketNegotiation->isFoK()) {
             if($marketNegotiation->id !== $marketNegotiation->userMarket->current_market_negotiation_id) {
@@ -61,8 +65,7 @@ class MarketNegotiationPolicy
             return $user->organisation_id === $marketNegotiation->counterUser->organisation_id;
         }
 
-        // only admins can delete
-        return $user->isAdmin();
+        return false;
     }
 
     /**

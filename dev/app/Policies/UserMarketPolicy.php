@@ -79,6 +79,9 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
+        if(\Auth::user()->isAdmin()) {
+            return true;
+        }
         return $user->organisation_id === $userMarket->user->organisation_id 
             && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
