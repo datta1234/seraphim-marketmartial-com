@@ -492,9 +492,9 @@ class UserMarketRequest extends Model
             }
             
             // closed to self prevention
-            if($lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id) {
-                return true;
-            }
+            // if($lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id) {
+            //     return true;
+            // }
         }
 
         return false;
