@@ -14,6 +14,12 @@
         <hr class="title-decorator">
     @endslot
     @slot('body')
+        <p class="card-text text-center mb-0">
+            <a href="mailto:TheMartial@MarketMartial.com">TheMartial@MarketMartial.com</a>
+        </p>
+        <p class="card-text text-center mb-5">
+            +27 82 784 6004
+        </p>
         <form id="ContactUsForm" action="{{ route('contact') }}" method="POST">
              {{ csrf_field() }}
             <div class="page-form mx-auto">

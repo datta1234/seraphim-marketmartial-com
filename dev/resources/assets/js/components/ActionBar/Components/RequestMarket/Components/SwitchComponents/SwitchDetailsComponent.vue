@@ -294,10 +294,13 @@
                 })
                 .then(expiryDateResponse => {
                     Object.keys(expiryDateResponse.data.data).forEach(key => {
-                        this.expiry_dates.push({
-                            text: moment(expiryDateResponse.data.data[key].date, 'YYYY-MM-DD HH:mm:ss').format('MMMYY'),
-                            value: expiryDateResponse.data.data[key].date,
-                        });
+                        let date = moment(expiryDateResponse.data.data[key].date, 'YYYY-MM-DD HH:mm:ss');
+                        if(date.isAfter(moment())) {
+                            this.expiry_dates.push({
+                                text: date.format('MMMYY'),
+                                value: expiryDateResponse.data.data[key].date,
+                            });
+                        }
                     });
                     EventBus.$emit('loading', 'requestDates');
                     this.dates_loaded = true;

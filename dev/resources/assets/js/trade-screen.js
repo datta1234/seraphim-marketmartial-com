@@ -35,7 +35,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 })
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
