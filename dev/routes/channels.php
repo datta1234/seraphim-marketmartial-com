@@ -12,6 +12,9 @@ use App\Broadcasting\OrganisationChannel;
 |
 */
 
-Broadcast::channel('organisation.{organisation}',function($user,$organisationUuid){
+Broadcast::channel('organisation.{organisation}',function($user,$organisationUuid) {
+    if($organisationUuid == "admin") {
+        return $user->isAdmin();
+    }
 	return $user->organisation->uuid === $organisationUuid;
 });

@@ -33,7 +33,7 @@ class MarketUserMarketReqeustController extends Controller
     public function index(Request $request,Market $market)
     {
         $userMarketRequests = $market->userMarketRequests()
-            ->activeForToday()
+            ->active()
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',
@@ -226,10 +226,10 @@ class MarketUserMarketReqeustController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function show(Market $market, UserMarketRequest $userMarketRequest)
+    public function show(Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -238,10 +238,10 @@ class MarketUserMarketReqeustController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function edit(Market $market, UserMarketRequest $userMarketRequest)
+    public function edit(Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -251,10 +251,10 @@ class MarketUserMarketReqeustController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Market $market, UserMarketRequest $userMarketRequest)
+    public function update(Request $request, Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -263,12 +263,21 @@ class MarketUserMarketReqeustController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Market $market, UserMarketRequest $userMarketRequest)
+    public function destroy(Market $market, UserMarketRequest $marketRequest)
     {
-        //
+        $this->authorize('deactivate',$marketRequest);
+        $marketRequest->active = false;
+        $marketRequest->save();
+
+        $marketRequest->notifyRequested();
+
+        return response()->json([
+            'data'=> null,
+            'message'=>"Market Request removed successfully.",
+        ], 201);
     }
 
     /**

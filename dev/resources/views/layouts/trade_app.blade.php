@@ -65,8 +65,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     @if(Auth::user()->organisation)
-    <!-- Organisation key -->
-    <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+        <!-- Organisation key -->
+        <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+    @elseif(Auth::user()->isAdmin())
+        <!-- Admin key -->
+        <meta name="organisation-uuid" content="admin">
     @endif
 
     <title>Market Martial</title>
