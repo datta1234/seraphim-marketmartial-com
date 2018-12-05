@@ -4,7 +4,7 @@
             <b-row v-for="(item, index) in history" :key="index">            
                 <b-col cols="10" >
                     <b-row no-gutters v-if="item.is_interest">
-                        <b-col cols="6" class="text-center">
+                        <b-col cols="6" class="text-center" :class="{ 'text-my-org': item.is_maker }">
                             {{ getState(item) }}
                         </b-col>
                         <b-col cols="3" class="text-center">
@@ -21,16 +21,16 @@
                         </b-col>
                     </b-row>
                     <b-row no-gutters v-else-if="item.is_maker">
-                        <b-col cols="3" class="text-center">
+                        <b-col cols="3" class="text-center text-my-org">
                              {{ item.bid_qty ? item.bid_qty : "-"  }}
                         </b-col>
-                        <b-col cols="3" class="text-center">
+                        <b-col cols="3" class="text-center text-my-org">
                             {{ item.bid ? item.bid : "-"  }}
                         </b-col>
-                        <b-col cols="3" class="text-center">
+                        <b-col cols="3" class="text-center text-my-org">
                             {{ item.offer ? item.offer : "-"  }}
                         </b-col>
-                        <b-col cols="3" class="text-center">
+                        <b-col cols="3" class="text-center text-my-org">
                              {{ item.offer_qty ? item.offer_qty : "-"  }}
                         </b-col>
                     </b-row>
