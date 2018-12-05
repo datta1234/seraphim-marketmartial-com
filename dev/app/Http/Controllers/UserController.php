@@ -115,6 +115,10 @@ class UserController extends Controller
         $user = $request->user();
         $user->tc_accepted = $request->input('tc_accepted');
         $user->update();
-        return redirect()->back()->with('success', 'Profile completed.');
+
+        return response()->json([
+            'message'   => "Profile completed.",
+            'data' => null,
+        ]);
     }
 }

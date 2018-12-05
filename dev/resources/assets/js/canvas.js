@@ -51,6 +51,7 @@ Vue.component('email-settings', require('./components/Profile/Components/EmailSe
 Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
 Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
 Vue.component('day-month-picker', require('./components/Profile/Components/DayMonthPickerComponent.vue'));
+Vue.component('terms-and-conditions', require('./components/Profile/Components/TermsAndConditionsComponent.vue'));
 
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
