@@ -147,8 +147,23 @@ class RegisterController extends Controller
                 $slack_integration->save();
                 $user->organisation->slackIntegrations()->attach($slack_integration->id);
             }
-            
-            $user->marketInterests()->attach($data['market_types']);
+
+            // Refactored due to task MM-711
+            //$user->marketInterests()->attach($data['market_types']);
+            $market_interests = [];
+            foreach ($data['market_types'] as $market_type) {
+                switch ($market_type) {
+                    case 1:
+                        $market_interests[] = 1;
+                        $market_interests[] = 3;
+                        break;
+                    case 2: 
+                        $market_interests[] = 2;
+                        break;
+                }
+            }
+            $user->marketInterests()->attach($market_interests);
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
@@ -171,7 +186,9 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $market_types = MarketType::all()->pluck('title', 'id')->toArray();
+        // Refactored due to task MM-711
+        // $market_types = MarketType::all()->pluck('title', 'id')->toArray();
+        $market_types = [1 => "Options", 2 => "Delta One(EFPs, Rolls and EFP Switches)"];
         $organisations = Organisation::all()->pluck('title','id')->toArray();
         $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
         return view('auth.register')->with(compact('organisations', 'market_types','roles'));
