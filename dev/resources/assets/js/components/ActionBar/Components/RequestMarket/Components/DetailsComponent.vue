@@ -89,10 +89,13 @@
 						</b-row>
 
 						<b-row align-h="center">
-                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                            <b-col :cols="data.market_object.stock ?  11 : 11">
                                 <b-row align-h="center">
             						<b-col cols="3">
-            							<label for="quantity-0">Quantity <span v-if="display.is_ratio"> (Ratio)</span></label>
+            							<label for="quantity-0">
+                                            {{ display.is_vega ? 'Vega': 'Quantity'}} 
+                                            <span v-if="display.is_ratio"> (Ratio)</span>
+                                        </label>
             						</b-col>
             	      				<b-col  :key="index" v-for="(field, index) in form_data.fields"
                                             cols="3" 
@@ -115,7 +118,39 @@
                             <b-col v-if="data.market_object.stock" cols="1">
                                 <label for="quantity-0">Rm</label>
                             </b-col>
+                            <b-col v-if="display.is_vega" cols="1">
+                                <label for="quantity-0">ZAR</label>
+                            </b-col>
 						</b-row>
+
+                        <b-row v-if="display.has_capped" align-h="center">
+                            <b-col :cols="data.market_object.stock ?  11 : 11">
+                                <b-row align-h="center">
+                                    <b-col cols="3">
+                                        <label for="capped-0">Capped</label>
+                                    </b-col>
+                                    <b-col  :key="index" v-for="(field, index) in form_data.fields"
+                                            cols="3" 
+                                            :offset="(display.versus && index != 0)? 1 : 0">
+                                        <b-form-input :id="'capped-'+index" 
+                                            type="number"
+                                            min="0"
+                                            v-model="field.cap"
+                                            placeholder="500"
+                                            :state="inputState(index, 'Cap')"
+                                            required>
+                                        </b-form-input>
+                                        <p  v-if="field.cap < field.cap_default"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The recommended minimum quantity is {{ field.cap_default }}.
+                                        </p>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col cols="1">
+                                <label for="capped-0">x</label>
+                            </b-col>
+                        </b-row>
 
                         <b-row v-if="display.is_ratio">
                             <b-col class="text-center mt-3">    
@@ -172,6 +207,8 @@
                     has_strike: true,
                     versus: false,
                     is_ratio: false,
+                    is_vega: false,
+                    has_capped: false,
             	},
             	chosen_option: null,
                 form_data: {
@@ -182,7 +219,8 @@
                     DTOP: 2500,
                     DCAP: 1500,
                     stock: 50,
-                }
+                },
+                cap_default: 2.5,
             };
         },
         methods: {
@@ -231,6 +269,9 @@
                         break;
                     case 'EFP Switch':
                         return this.data.market_object.markets.map( market => this.quantity_default[market.title] );
+                    case 'Var Swap':
+                        return 500000;
+                        break;
                     default:
                         return 500;
                 }
@@ -253,6 +294,8 @@
             this.display.has_strike = true;
             this.display.versus = false;
             this.display.is_ratio = false;
+            this.display.is_vega = false;
+            this.display.has_capped = false;
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
@@ -306,6 +349,21 @@
                     this.display.has_strike = false;
                     this.display.versus = true;
                     this.chosen_option = 0;
+                    break;
+                case 'Var Swap':
+                    this.form_data.fields.push({
+                        is_selected: true,
+                        quantity: size_default,
+                        quantity_default: size_default[0],
+                        is_capped: true,
+                        cap: this.cap_default,
+                        cap_default: this.cap_default,
+                    });
+                    this.display.disable_choice = true,
+                    this.display.has_strike = false;
+                    this.display.is_vega = true;
+                    this.display.has_capped = true;
+                    this.chosen_option = null;
                     break;
             }
             this.setPreviousData();
