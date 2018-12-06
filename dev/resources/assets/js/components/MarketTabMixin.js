@@ -1,4 +1,16 @@
+import { EventBus } from '~/lib/EventBus.js';
+
 export default {
+    props: {
+        no_cares: {
+            type: Array,
+            default: () => []
+        },
+        interactable: {
+            type: Boolean,
+            default: true
+        }
+    },
     data: function () {
         return {
             market_request_state: '',
@@ -43,6 +55,12 @@ export default {
     },
     methods: {
         loadInteractionBar() {
+            // only pass if there is something to interact with
+            if(this.interactable == false) {
+                return;
+            }
+            this.toggleActionTaken();
+            this.isActive = true;
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
         calcMarketState() {

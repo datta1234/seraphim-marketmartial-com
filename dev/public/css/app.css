@@ -11805,6 +11805,17 @@ table.table {
   background-color: #e9ecef;
 }
 
+#previous_day_body .trading-opens {
+  font-size: 1.1rem;
+  font-weight: lighter;
+  color: red;
+}
+
+#previous_day_body .trading-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
 /*!
  * Font Awesome Free 5.5.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)

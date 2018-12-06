@@ -57,33 +57,35 @@
             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    @if(Auth::user()->organisation)
-        <!-- Organisation key -->
-        <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
-    @elseif(Auth::user()->isAdmin())
-        <!-- Admin key -->
-        <meta name="organisation-uuid" content="admin">
-    @endif
+        <!-- CSRF Token -->
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        
+        @if(Auth::user()->organisation)
+            <!-- Organisation key -->
+            <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+        @elseif(Auth::user()->isAdmin())
+            <!-- Admin key -->
+            <meta name="organisation-uuid" content="admin">
+        @endif
 
-    <title>Market Martial</title>
+        <title>Market Martial</title>
 
-    <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    
-    <!-- Scripts -->
-    <script>
-    window.Laravel = {!! json_encode([
-        'csrfToken' => csrf_token(),
-        'organisationUuid' => is_null(Auth::user()->organisation) ? null : Auth::user()->organisation->uuid 
-    ]) !!};
-    </script>
+        <!-- Styles -->
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        
+        <!-- Scripts -->
+        <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+            'organisationUuid' => is_null(Auth::user()->organisation) ? null : Auth::user()->organisation->uuid 
+        ]) !!};
+        </script>
+
+        @yield('head')
     </head>
     <body id="previous_day_body">
         <div id="previous_day_app">
@@ -96,6 +98,7 @@
     
      <!-- JavaScripts -->
     <script src="{{ mix('js/previous-day.js') }}"></script>
+    @include('partials.toast_messsage')
     <script type="text/javascript">function doABarrelRoll(){var a="-webkit-",b='transform:rotate(1turn);',c='transition:4s;';document.head.innerHTML+='<style id="doABarrelRoll">body{'+a+b+a+c+b+c+'}</style>';setTimeout(function(){var element = document.getElementById('doABarrelRoll');element.parentNode.removeChild(element);}, 4000);}</script>
 </body>
 </html>

@@ -137,13 +137,11 @@ class UserMarketRequest extends Model
     public function scopeActive($query)
     {
         // staging/demo is scoping to daily records to prevent clutter
-        $scope_to_daily = true;
+        $scope_to_daily = false;
 
         return $query->where('active', true)
             ->when($scope_to_daily, function($q) {
-                $q->where(function($qq) {
-                    $qq->where('created_at', '>', now()->startOfDay());
-                });
+                $q->where('created_at', '>', now()->startOfDay());
             });
     }
 
@@ -153,7 +151,7 @@ class UserMarketRequest extends Model
     */
     public function scopePreviousDayTraded($query)
     {
-        return $query->whereHas('userMarkets.marketNegotiations', function($q) {
+        return $query->whereHas('chosenUserMarket', function($q) {
                 $q->traded();
             });
     }
@@ -164,7 +162,7 @@ class UserMarketRequest extends Model
     */
     public function scopePreviousDayUntraded($query)
     {
-        return $query->whereHas('userMarkets.marketNegotiations', function($q) {
+        return $query->whereHas('chosenUserMarket', function($q) {
                 $q->untraded();
             });
     }
@@ -336,6 +334,91 @@ class UserMarketRequest extends Model
         }else
         {
             $data["quotes"] = $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
+                $query->where(function($query) use ($current_org_id) {
+                    // Only publicly visible
+                    $query->whereHas('currentMarketNegotiation', function($q) {
+                        $q->where('is_private', false);
+                    });
+                    // Or this org is the interest
+                    $query->orWhereHas('user',function($q) use ($current_org_id) {
+                        $q->where('organisation_id',$current_org_id);
+                    });
+                });
+            })->get()->map(function($item) {
+                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
+            });
+        }
+
+        return $data;
+    }
+
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
+    
+    /**
+    * Return pre formatted request for previous day frontend
+    * @return \App\Models\MarketRequest\UserMarketRequest
+    */
+    public function preFormattedPreviousDay($traded = true)
+    {
+        $current_org_id =  $this->resolveOrganisationId();
+
+        $interest_org_id = $this->user->organisation_id;
+        $is_interest = $interest_org_id == $current_org_id && $current_org_id != null;
+
+        // set the attributes
+        $attributes = $this->resolveRequestAttributes();
+        // $attributes['state'] = (
+        //     $traded
+        //     ? config('marketmartial.market_request_states.trade-negotiation-pending.interest')
+        //     : config('marketmartial.market_request_states.negotiation-open.interest')
+        // ); // set to traded or not
+        $attributes['action_needed'] = false; // never acton needed
+
+        $data = [
+            "id"                => $this->id,
+            "market_id"         => $this->market_id,
+            "chosen_user_market"=> null,
+            "quotes"            => [],
+            'is_interest'       => $is_interest,
+            "is_market_maker"   => false,
+            "trade_structure"   => $this->tradeStructure->title,
+            "trade_items"       => $this->userMarketRequestGroups
+             ->keyBy('tradeStructureGroup.title')
+             ->map(function($group) {
+                $data = $group->userMarketRequestItems->keyBy('title')->map(function($item) {
+                    if($item->type == 'expiration date') {
+                        return (new \Carbon\Carbon($item->value))->format("My");
+                    }
+                    return $item->value;
+                });
+                $data['id'] = $group->id;
+                $data['choice'] = $group->is_selected;
+                if($group->tradable) {
+                    $data['tradable'] = $group->tradable->preFormatted();
+                }
+                return $data;
+            }),
+            "ratio"             => $this->ratio,
+            "attributes"        => $attributes,
+            "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
+            "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
+        ];
+
+        $showLevels = $this->isAcceptedState($current_org_id);
+
+        if($showLevels)
+        {
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedPreviousDay();
+            //market has been chosen and this user is considerd the market maker
+            $market_maker_org_id = $this->chosenUserMarket->organisation->id;
+            $data['is_market_maker'] = $market_maker_org_id == $current_org_id;
+
+        }else
+        {
+            $data["quotes"] = $this->userMarkets()->previousDay()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
                 $query->where(function($query) use ($current_org_id) {
                     // Only publicly visible
                     $query->whereHas('currentMarketNegotiation', function($q) {

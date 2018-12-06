@@ -168,7 +168,12 @@
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
         
-        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" 
+        :user-market="marketRequest.chosen_user_market" 
+        :conditions="marketRequest.chosen_user_market.active_conditions"
+        :sent_conditions="marketRequest.chosen_user_market.sent_conditions"
+
+        ></ibar-active-conditions>
 
     </b-container>
 </template>

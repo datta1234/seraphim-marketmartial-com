@@ -170,7 +170,7 @@ export default class UserMarketNegotiation extends BaseModel {
         if(diff < 0) {
             return "00:00";
         } else {
-            return moment.utc(moment.duration(diff).as('milliseconds')).format('mm:ss');
+            return moment.duration(diff).format("mm:ss");
         }
     }
 

@@ -10,6 +10,9 @@ require('./components/data-methods');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+const momentDuration = require('moment-duration-format');
+momentDuration(moment);
+
 window.math = require('mathjs');
 
 import Echo from "laravel-echo"

@@ -17,9 +17,9 @@
 		  			<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('trade') }}">Trade</a>
 					</li>
-					<!-- <li class="nav-item">
-						<a class="nav-link active p-0 ml-4" href="#">Previous day</a>
-					</li> -->
+					<li class="nav-item">
+						<a class="nav-link active p-0 ml-4" href="{{ route('previous_day') }}">Previous day</a>
+					</li>
 				@endif
 				@if(Auth::user()->role_id == 1)
 					<li class="nav-item">
