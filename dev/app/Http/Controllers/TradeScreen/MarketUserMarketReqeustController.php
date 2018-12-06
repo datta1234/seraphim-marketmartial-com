@@ -192,6 +192,10 @@ class MarketUserMarketReqeustController extends Controller
                 return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.stock_quantity'));
             }
 
+            if(array_key_exists('Cap', $item["fields"])) {
+                return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.var_swap_quantity'));
+            }
+
             $config_market_default = config('marketmartial.thresholds.index_quantity.'.$item["market_id"]);
             if($config_market_default == null) {
                 return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.quantity')); 

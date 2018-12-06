@@ -101,6 +101,7 @@ class TradeStructureTableSeeder extends Seeder
             $tradeStructures['Calendar']->id,
             $tradeStructures['Fly']->id,
             $tradeStructures['Option Switch']->id,
+            $tradeStructures['Var Swap']->id,
         ]);
         $marketTypes['Delta One(EFPs, Rolls and EFP Switches)']->tradeStructures()->sync([
             $tradeStructures['EFP']->id,
