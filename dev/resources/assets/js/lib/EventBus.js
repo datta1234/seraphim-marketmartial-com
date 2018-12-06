@@ -65,3 +65,6 @@ EventBus.$on('startReset', (val) => {
 EventBus.$on('completeReset', (val) => {
     EventBus.$emit('resetComplete', val);
 });
+EventBus.$on('removeMarketRequest', (val) => {
+   EventBus.$emit('marketRequestRemoved', val); 
+});

@@ -253,6 +253,17 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
+    *   deactivate the market request (admin only)
+    */
+    deactivate()
+    {
+        return axios.delete(axios.defaults.baseUrl + '/trade/market/' + this.market_id + '/market-request/'+this.id)
+            .then(response => {
+                return response;
+            });
+    }
+
+    /**
     *   canNegotiate - Checks to see if the user can take any negotiation on the current ste of the request
     *   @return response from the request or the error
     */

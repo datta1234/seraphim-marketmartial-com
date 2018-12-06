@@ -184,8 +184,12 @@ class UserMarketController extends Controller
     public function destroy(Request $request, UserMarketRequest $userMarketRequest, UserMarket $userMarket)
     {
         $this->authorize('delete',$userMarket);
+
+        $org = $userMarket->user->organisation;
+        
         $userMarket->delete();
-        $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
+        $org->notify("market_request_delete","Your quote has been pulled.",true);
+
         $userMarketRequest->notifyRequested();
         
         return response()->json(['data' => null,'message'=> ""]);

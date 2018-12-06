@@ -20,6 +20,7 @@ class UserMarketRequest extends Model
      * @property integer $trade_structure_id
      * @property integer $chosen_user_market_id
      * @property integer $market_id
+     * @property boolean $active
      * @property \Carbon\Carbon $created_at
      * @property \Carbon\Carbon $updated_at
      */
@@ -133,12 +134,17 @@ class UserMarketRequest extends Model
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeActiveForToday($query)
+    public function scopeActive($query)
     {
-        return $query->where(function($q) {
-            $q->where('created_at', '>', now()->startOfDay());
-            
-        });
+        // staging/demo is scoping to daily records to prevent clutter
+        $scope_to_daily = true;
+
+        return $query->where('active', true)
+            ->when($scope_to_daily, function($q) {
+                $q->where(function($qq) {
+                    $qq->where('created_at', '>', now()->startOfDay());
+                });
+            });
     }
 
     /**
@@ -252,6 +258,15 @@ class UserMarketRequest extends Model
     */
     public function preFormatted()
     {
+        // if the market request has been deactivated, we preformat as removed
+        if($this->active == false) {
+            return [
+                "id"        =>  $this->id,
+                "market_id" =>  $this->market_id,
+                "inactive"  =>  true,
+            ];
+        }
+
         $current_org_id =  $this->resolveOrganisationId();
 
         $interest_org_id = $this->user->organisation_id;
@@ -298,20 +313,20 @@ class UserMarketRequest extends Model
 
         }else
         {
-            $data["quotes"]            =    $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
-                                                $query->where(function($query) use ($current_org_id) {
-                                                    // Only publicly visible
-                                                    $query->whereHas('currentMarketNegotiation', function($q) {
-                                                        $q->where('is_private', false);
-                                                    });
-                                                    // Or this org is the interest
-                                                    $query->orWhereHas('user',function($q) use ($current_org_id) {
-                                                        $q->where('organisation_id',$current_org_id);
-                                                    });
-                                                });
-                                            })->get()->map(function($item) {
-                                                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
-                                            });
+            $data["quotes"] = $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
+                $query->where(function($query) use ($current_org_id) {
+                    // Only publicly visible
+                    $query->whereHas('currentMarketNegotiation', function($q) {
+                        $q->where('is_private', false);
+                    });
+                    // Or this org is the interest
+                    $query->orWhereHas('user',function($q) use ($current_org_id) {
+                        $q->where('organisation_id',$current_org_id);
+                    });
+                });
+            })->get()->map(function($item) {
+                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
+            });
         }
 
         return $data;
@@ -336,9 +351,15 @@ class UserMarketRequest extends Model
         
         foreach ($organisations  as $organisation) 
         {
+            \Log::info("Notifying Org ".$organisation->id);
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
-        }    
+        }
+
+        // always send to admin channel
+        \Log::info("Notifying Admin");
+        $stream = new Stream(new UserMarketRequested($this,"admin"));
+        $stream->run();
     }
 
     /*

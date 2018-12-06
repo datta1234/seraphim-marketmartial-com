@@ -2,6 +2,20 @@
     <b-row dusk="ibar-negotiation-history-market">
         <b-col>
             <b-row v-for="(item, index) in history" :key="index">            
+                <b-col cols="10" v-if="$root.is_admin">
+                    <b-row no-gutters>
+                        <b-col cols="10" class="text-center admin-label" :class="{ 'is-my-org': item.is_interest }">
+                            {{ item.org }}
+                        </b-col>
+                    </b-row>
+                </b-col>
+                <b-col cols="2" v-if="$root.is_admin">
+                    <p class="text-center mb-0">
+                        <small>
+                            <a href="" @click.stop.prevent="pullQuote(item)" style="color: red;font-weight: bold;">PULL</a>
+                        </small>
+                    </p>
+                </b-col>
                 <b-col cols="10" >
                     <b-row no-gutters v-if="item.is_interest">
                         <b-col cols="6" class="text-center" :class="{ 'text-my-org': item.is_maker }">
@@ -107,6 +121,12 @@
             };
         },
         methods: {
+            pullQuote(item) {
+                let do_pull = confirm("WARNING!\n\nAre you sure you wish to pull this quote?");
+                if(do_pull) {
+                    item.delete();
+                }
+            },
             getState(item) {
                 if(item.bid_only) {
                     return "BID ONLY";
