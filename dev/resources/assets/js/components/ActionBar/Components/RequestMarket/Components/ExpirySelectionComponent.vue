@@ -84,9 +84,16 @@
              */
             selectExpiryDates(date) {
                 let date_index = this.selected_dates.indexOf(date);
+
+                // Checks if the date is already selected
                 if(date_index > -1) {
+                    // Removes date if already selected
                     this.selected_dates.splice(date_index, 1);
                 } else {
+                    // Checks if max number of dates already present
+                    if(this.selected_dates.length == this.data.number_of_dates) {
+                        this.selected_dates.pop();
+                    }
                     this.selected_dates.push(date);
                 }
 
