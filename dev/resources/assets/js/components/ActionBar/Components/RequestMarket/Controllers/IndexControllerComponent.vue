@@ -162,6 +162,7 @@
                 this.submitting_request = false;
                 
                 let new_data = this.formatRequestData();
+                console.log("Formatted data: ",new_data);
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.index_data.market_object.market.id +'/market-request', new_data)
                 .then(newMarketRequestResponse => {
                     // success closes the modal
@@ -300,11 +301,16 @@
                     formatted_data.trade_structure_groups.push({
                         is_selected: element.is_selected,
                         market_id: this.index_data.market_object.market.id,
-                        fields: {
+                        fields: (this.index_data.market_object.trade_structure == 'Var Swap') ? 
+                            {
+                                "Expiration Date": this.castToMoment(this.index_data.market_object.expiry_dates[0]),
+                                Cap: (element.is_capped) ? element.cap : 0,                            
+                                Quantity: element.quantity    
+                            } : {
                             "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? 
                                 this.index_data.market_object.expiry_dates[index]
                                 : this.index_data.market_object.expiry_dates[0] ),
-                            Strike: element.strike,
+                            Strike: element.strike,                            
                             Quantity: element.quantity
                         }
                     });

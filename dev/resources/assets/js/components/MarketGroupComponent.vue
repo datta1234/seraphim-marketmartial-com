@@ -44,7 +44,8 @@
                 type: Market
             },
             'no_cares':{
-                type: Array
+                type: Array,
+                default: () => []
             }
         },
         watch: {

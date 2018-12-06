@@ -246,14 +246,12 @@
                 this.old.offer_qty = this.marketNegotiation.offer_qty;
                 this.old.bid_qty = this.marketNegotiation.bid_qty;
                 this.resetting = false;
-                console.log("DONE RESET!!!")
             }
         },
         mounted() {
             this.reset();
             EventBus.$on('resetStarted', () => {
                 this.resetting = true;
-                console.log("ReSETTING!");
             });
             EventBus.$on('resetComplete', this.reset);
         }

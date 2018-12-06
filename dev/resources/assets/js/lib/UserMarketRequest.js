@@ -384,6 +384,9 @@ export default class UserMarketRequest extends BaseModel {
             case 'Rolls':
                 return 'rolls';
             break;
+            case 'Var Swap':
+                return 'var_swap';
+            break;
         };
         return null;
     }

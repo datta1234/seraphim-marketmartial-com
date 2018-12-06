@@ -75,7 +75,11 @@ class UserMarket extends Model
     */
     public function marketNegotiations()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"ASC");
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('updated_at',"ASC");
     }
 
     public function scopeActiveQuotes($query, $active = true)
@@ -84,12 +88,63 @@ class UserMarket extends Model
             $q->whereHas('firstNegotiation', function($qq) use ($active) {
                 $qq->where('is_killed', '=', !$active);
             });
+            // scoping by day -> current day or yesterday
+            $q->when(!config('loading_previous_day', false), function($qq) {
+                $qq->currentDay();
+            });
+            $q->when(config('loading_previous_day', false), function($qq) {
+                $qq->previousDay();
+            });
+        });
+    }
+
+    public function scopeBestQuotes($query)
+    {
+        $query->where(function($q) {
+            // @TODO: doesnt have a better vol spread
+            // $q->whereDoesntHave('userMarketRequest.userMarkets', function($qq) {
+            //     $qq->whereHas('marketNegotiations', function($qqq) {
+            //         $qqq->whereRaw();
+            //     });
+            // });
+            // @TODO: need to figure out how to calc BEST for bid/offer only
+        });
+    }
+    
+
+    public function scopeCurrentDay($query) {
+        return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
+    }
+
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
+    public function scopeTraded($query)
+    {
+        return $query->whereHas('marketNegotiations', function($q){
+            $q->whereHas('tradeNegotiations', function($qq){
+                $qq->where('traded',true);  
+            });
+        });
+    }
+
+    public function scopeUntraded($query)
+    {
+        return $query->whereDoesntHave('marketNegotiations', function($q){
+            $q->whereHas('tradeNegotiations', function($qq){
+                $qq->where('traded',true);
+            });
         });
     }
 
     public function marketNegotiationsDesc()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"DESC");
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('updated_at',"DESC");
     }
 
     public function firstNegotiation()
@@ -97,15 +152,24 @@ class UserMarket extends Model
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"ASC")->orderBy('id',"ASC");
     }
 
+    
     public function lastNegotiation()
     {
-        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"DESC")->orderBy('id',"DESC");
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('created_at',"DESC")
+            ->orderBy('id',"DESC");
     }
 
     // conditions
     public function activeConditionNegotiations()
     {
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+                    ->when(config('loading_previous_day', false), function($q) {
+                        $q->previousDay();
+                    })
                     ->conditions()
                     ->whereDoesntHave('marketNegotiationChildren')
                     ->whereDoesntHave('tradeNegotiations')
@@ -726,6 +790,95 @@ class UserMarket extends Model
         ];
         // dd($this->activeConditionNegotiations()->toSql());
         $data['activity'] = $this->getActivity('organisation.'.$this->resolveOrganisationId(), true);
+        
+        // if its trading at best
+        $data['trading_at_best'] = (
+            $this->isTradeAtBestOpen() ? 
+            $this->lastNegotiation->tradeAtBestSource()->setOrgContext($this->resolveOrganisation())->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            null 
+        );
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['org'] = $this->user->organisation->title;
+        }
+
+        return $data;
+    }
+
+    /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
+    public function preFormattedPreviousDay()
+    {
+
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
+        $is_watched = $this->isWatched();
+        
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()
+            // ->previousDay() // should be needed because of config('loading_previous_day', false) checks
+            ->notPrivate($this->resolveOrganisationId())
+            ->with('user')
+            ->get();
+
+        // @TODO addd back excludeFoKs but filter to only killed ones
+        $creation_idx_map = [];
+
+
+        $data = [
+            "id"                    =>  $this->id,
+            "is_interest"           =>  $is_interest,
+            "is_maker"              =>  $is_maker,
+            "is_watched"            =>  $is_watched,
+            "time"                  =>  $this->created_at->format("H:i"),
+            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations, &$creation_idx_map){
+                                            $data = $item->setOrgContext($this->resolveOrganisation())
+                                                        ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
+                                            $org_id = $item->user->organisation_id;
+                                            if(!in_array($org_id, $creation_idx_map)) {
+                                                $creation_idx_map[] = $org_id;
+                                            }
+                                            $data['creation_idx'] = array_search($org_id, $creation_idx_map);
+                                            return $data;
+                                        }),
+            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isCounter(null, $cond);
+                                            if($active === null) {
+                                                $active = $this->isInterest(null);
+                                            }
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
+            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isSent(null, $cond);
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
+            "volatilities"          =>  $this->volatilities->map(function($vol){
+                                            return $vol->preFormatted();
+                                        }),
+        ];
+        $data['activity'] = [];
         
         // if its trading at best
         $data['trading_at_best'] = (

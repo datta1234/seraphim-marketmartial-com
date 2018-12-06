@@ -17,7 +17,7 @@ class UserPrefController extends Controller
         $user = Auth::user();
         $userPreferences = [
             "prefered_market_types" => $user->marketInterests()->pluck('market_type_id')->toArray(),
-            "user_name" => $user->full_name
+            "user_name" => $user->full_name,
         ];
 
         return response()->json($userPreferences);

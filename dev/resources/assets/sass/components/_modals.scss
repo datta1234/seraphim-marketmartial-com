@@ -48,6 +48,12 @@
 		.details-choice-badge {
 			font-size: 1em;
 		}
+		.custom-checkbox > label::before {
+			background-color: $mm-white;
+		}
+		.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+		  	background-color: $mm-modal-header;
+		}
 	}
 	.modal-info-text {
 		font-size: 0.9em;

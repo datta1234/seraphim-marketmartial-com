@@ -1,112 +1,111 @@
-.trade-section.light-theme, .trade-section.dark-theme {
-	.market-group-title {
-		font-size: 1.1rem;
+
+.market-group-title {
+	font-size: 1.1rem;
+}
+.market-tab-group-title {
+	max-width: $mm-market-tab-group-title-max-width;
+	margin: auto;
+}
+.market-tab-wrapper {
+	max-width: $mm-market-tab-max-width;
+}
+.market-tab {
+	background-color: $mm-market-tab;
+	color: $mm-text-white;
+	border-radius: 0.6em;
+	box-shadow: 4px 4px 8px -1px #000000;
+
+	cursor: pointer;
+
+	/* max-width: 350px; */
+	max-width: 100%;
+
+	&.active {
+		box-shadow: 0px 0px 10px 5px #EBC300;
+		border: 0.15em solid #EBC300;
 	}
-	.market-tab-group-title {
-		max-width: $mm-market-tab-group-title-max-width;
-		margin: auto;
+}
+
+.market-tab-ratio {
+	padding-left:1.5em;
+	&.has-ratio:before {
+		content: "R";
+		color: maroon;
+		font-size: 1.5em;
+		font-weight: bold;
+		position: absolute;
+		left: 0;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
 	}
-	.market-tab-wrapper {
-		max-width: $mm-market-tab-max-width;
-	}
-	.market-tab {
-		background-color: $mm-market-tab;
-		color: $mm-text-white;
-		border-radius: 0.6em;
-		box-shadow: 4px 4px 8px -1px #000000;
+}
 
-		cursor: pointer;
-
-		/* max-width: 350px; */
-		max-width: 100%;
-
-		&.active {
-			box-shadow: 0px 0px 10px 5px #EBC300;
-    		border: 0.15em solid #EBC300;
-		}
-	}
-
-	.market-tab-ratio {
-		padding-left:1.5em;
-		&.has-ratio:before {
-			content: "R";
-			color: maroon;
-			font-size: 1.5em;
-			font-weight: bold;
-			position: absolute;
-			left: 0;
-			top: 50%;
-			-webkit-transform: translateY(-50%);
-			transform: translateY(-50%);
-		}
-	}
-
-	.market-tab
-	{
-		&.market-alert {
-			background-color: $mm-market-alert; 
-		}
-
-		&.market-confirm {
-			background-color: $mm-market-confirm;
-		}
-
-		&.market-request {
-			border: 0.15em solid $mm-market-intrest;
-
-			.market-tab-state {
-				color: $mm-market-intrest;
-			}
-		}
-
-
-		&.negotiation-vol-pending{
-			.market-tab-state{
-			 	border-left: 2px solid $mm-red;
-			}
-		}
-		
-		&.trade-negotiation-open.market-alert {
-			background-color: $mm-market-alert; 
-		}
-
-		&.trade-negotiation-pending, &.trade-negotiation-open{
-			background-color:  $mm-market-confirm;
-		}
-		
-		&.trade-negotiation-pending
-		{
-			.market-tab-state{
-			 	border-left: 2px solid $mm-red;
-			}	
-		}
-		
-		.market-tab-strikes {
-			text-align: left;
-		}
+.market-tab
+{
+	&.market-alert {
+		background-color: $mm-market-alert; 
 	}
 
-	
-	
-	// .market-tab.market-request-vol {
-	// 	border: 0.15em solid $mm-market-intrest;
+	&.market-confirm {
+		background-color: $mm-market-confirm;
+	}
 
-	// 	.market-tab-state {
-	// 		color: #fff;
-	// 	}
-	// }
-
-	.market-tab.market-request-grey {
-		border: 0.15em solid $mm-market-intrest-greyed;
+	&.market-request {
+		border: 0.15em solid $mm-market-intrest;
 
 		.market-tab-state {
-			color: $mm-market-intrest-greyed;
+			color: $mm-market-intrest;
 		}
 	}
 
-	.user-action {
-		color: $mm-user-action;
+
+	&.negotiation-vol-pending{
+		.market-tab-state{
+		 	border-left: 2px solid $mm-red;
+		}
 	}
+	
+	&.trade-negotiation-open.market-alert {
+		background-color: $mm-market-alert; 
+	}
+
+	&.trade-negotiation-pending, &.trade-negotiation-open{
+		background-color:  $mm-market-confirm;
+	}
+	
+	&.trade-negotiation-pending
+	{
+		.market-tab-state{
+		 	border-left: 2px solid $mm-red;
+		}	
+	}
+	
+	.market-tab-strikes {
+		text-align: left;
+	}
+}
+
+
+
+// .market-tab.market-request-vol {
+// 	border: 0.15em solid $mm-market-intrest;
+
+// 	.market-tab-state {
+// 		color: #fff;
+// 	}
+// }
+
+.market-tab.market-request-grey {
+	border: 0.15em solid $mm-market-intrest-greyed;
+
+	.market-tab-state {
+		color: $mm-market-intrest-greyed;
+	}
+}
+
+.user-action {
+	color: $mm-user-action;
 }
 
 .trade-section.dark-theme {

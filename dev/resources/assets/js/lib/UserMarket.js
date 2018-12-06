@@ -46,6 +46,8 @@ export default class UserMarket extends BaseModel {
             current_market_negotiation: null,
             created_at: moment(),
             updated_at: moment(),
+
+            // optional
             org: null,
         }
 

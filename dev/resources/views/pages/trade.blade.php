@@ -44,4 +44,5 @@
 		@endif
 	</b-row>
 </div>
+<refresh-quotes-modal></refresh-quotes-modal>
 @endsection

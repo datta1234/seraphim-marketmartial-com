@@ -58,6 +58,8 @@ export default class UserMarketNegotiation extends BaseModel {
             applicable_timeout: 0,
             creation_idx: null,
             created_at: moment(),
+
+            // optional
             bid_org: null,
             offer_org: null,
         }
@@ -170,7 +172,7 @@ export default class UserMarketNegotiation extends BaseModel {
         if(diff < 0) {
             return "00:00";
         } else {
-            return moment.utc(moment.duration(diff).as('milliseconds')).format('mm:ss');
+            return moment.duration(diff).format("mm:ss");
         }
     }
 

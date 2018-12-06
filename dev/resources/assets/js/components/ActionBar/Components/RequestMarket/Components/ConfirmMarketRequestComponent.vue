@@ -63,7 +63,7 @@
             </b-row>
             <b-row align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
-                    <p class="m-0">QUANTITY:</p>
+                    <p class="m-0">{{display.is_vega ? 'VEGA' : 'QUANTITY'}}:</p>
                 </b-col>
                 <b-col  :key="index" v-for="(field, index) in data.market_object.details.fields"
                         cols="3"
@@ -71,6 +71,16 @@
                         class="mt-2">
                 	<p class="m-0">{{ data.market_object.stock ? formatRandQty(field.quantity) + 'm' 
                         : splitValHelper(field.quantity,' ',3) }}</p>
+                </b-col>
+            </b-row>
+            <b-row v-if="display.has_cap" align-h="start" class="mt-0 mb-0">
+                <b-col cols="3" class="mt-2">
+                    <p class="m-0">CAPPED:</p>
+                </b-col>
+                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
+                    <p class="m-0">
+                        {{ ( field.is_capped && field.cap != 0) ? field.cap + 'x' : 'Uncapped' }}
+                    </p>
                 </b-col>
             </b-row>
             <b-row align-h="start" class="mt-0 mb-0">
@@ -119,6 +129,8 @@
                     has_strike: true,
                     is_versus_market: false,
                     is_versus_date: false,
+                    is_vega: false,
+                    has_cap: false,
                 },
             };
         },
@@ -143,6 +155,8 @@
             this.display.has_strike = true;
             this.display.is_versus_market = false;
             this.display.is_versus_date = false;
+            this.display.is_vega = false;
+            this.display.has_cap = false;
 
             this.display.is_stock_only = this.data.market_object.stock ? true : false;
             
@@ -164,6 +178,11 @@
                 case 'EFP Switch':
                     this.display.has_strike = false;
                     this.display.is_versus_market = true;
+                    break;
+                case 'Var Swap':
+                    this.display.has_strike = false;
+                    this.display.is_vega = true;
+                    this.display.has_cap = true;
                     break;
                 default:
 

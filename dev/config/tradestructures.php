@@ -1392,5 +1392,74 @@ return [
             ]
         ],
         
-    ]
+    ],
+    [
+        // __trade_structure__
+        "id" => 9,
+        "title" => "Var Swap",
+        "is_selectable" => true,
+        "trade_structure_group" => [
+            [
+                // __user_market_request_group__
+                "id" => 14,
+                "title"=> "default",
+                "force_select" => false,
+                "trade_structure_group_type_id" => 1,
+                "items"=>
+                [
+                    [
+                        // __item__
+                        "id" => 163,
+                        "title" => "Expiration Date",
+                        "type" => "expiration date"   
+                    ],
+                    [
+                        // __item__
+                        "id" => 164,
+                        'title' => 'Quantity',
+                        'type' => 'double'
+                    ],
+                    [
+                        // __item__
+                        "id" => 165,
+                        'title' => 'Cap',
+                        'type' => 'double'
+                    ],
+                ],
+                "trade_confirmation_group"=>[
+                    "options" =>
+                    [
+                        "title" => "Options Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 166,
+                                "title"=>"is_offer",
+                                "type"=>"boolean"
+                            ],
+                            [
+                                // __item__
+                                "id" => 167,
+                                "title"=>"is_put",
+                                "type"=>"double"
+                            ],
+                            [
+                                // __item__
+                                "id" => 168,
+                                "title"=>"Volatility",
+                                "type"=>"double"
+                            ],
+                            [
+                                // __item__
+                                "id" => 169,
+                                "title"=>"Contract",
+                                "type"=> "double"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        
+    ],
 ];

@@ -356,6 +356,10 @@ class MarketNegotiation extends Model
         return null;
     }
 
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
         return $query->where(function($q) use ($private, $user) {
