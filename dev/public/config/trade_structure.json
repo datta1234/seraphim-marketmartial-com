@@ -61,5 +61,11 @@
         "strike": "Strike",
         "quantity": "Quantity",
         "group_1": "default"
+    },
+    "var_swap": {
+        "title": "Var Swap",
+        "expiration_date": "Expiration Date",
+        "quantity": "Quantity",
+        "group_1": "default"
     }
 }

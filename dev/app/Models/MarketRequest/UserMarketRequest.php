@@ -1015,6 +1015,16 @@ class UserMarketRequest extends Model
                     $this->getDynamicItem($strike)
                 ]);
             break;
+            case 'var_swap':
+                $exp_date = "Expiration Date";
+                $cap = 'Cap';
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    strtoupper($this->tradeStructure->title),
+                    $this->getDynamicItem($cap)
+                ]);
+            break;
         }
     }
 
@@ -1048,6 +1058,9 @@ class UserMarketRequest extends Model
             break;
             case 8:
                 return 'efp_switch';
+            break;
+            case 9:
+                return 'var_swap';
             break;
         };
     }
