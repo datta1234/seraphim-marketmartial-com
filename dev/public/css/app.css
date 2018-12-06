@@ -17926,6 +17926,14 @@ input:checked + .slider:before {
   font-size: 1em;
 }
 
+.mm-modal .modal-body .custom-checkbox > label::before {
+  background-color: #ffffff;
+}
+
+.mm-modal .modal-body .custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #1c7c74;
+}
+
 .mm-modal .modal-info-text {
   font-size: 0.9em;
 }
