@@ -22,7 +22,7 @@
     import EFP from './MarketTabs/EFP';
     import Rolls from './MarketTabs/Rolls';
     import EFPSwitch from './MarketTabs/EFPSwitch';
-
+    import VarSwap from './MarketTabs/VarSwap';
     export default {
         components: {
             MarketTabOutright,
@@ -33,6 +33,7 @@
             EFP,
             Rolls,
             EFPSwitch,
+            VarSwap,
         },
         props: {
             marketRequest: {
@@ -53,6 +54,7 @@
                     'EFP': EFP,
                     'Rolls': Rolls,
                     'EFP Switch': EFPSwitch,
+                    'Var Swap': VarSwap,
                 }
             };
         },

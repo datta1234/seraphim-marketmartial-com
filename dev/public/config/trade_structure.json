@@ -66,6 +66,7 @@
         "title": "Var Swap",
         "expiration_date": "Expiration Date",
         "quantity": "Quantity",
+        "cap": "Cap",
         "group_1": "default"
     }
 }

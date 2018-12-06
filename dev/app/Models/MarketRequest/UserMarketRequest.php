@@ -148,6 +148,28 @@ class UserMarketRequest extends Model
     }
 
     /**
+    * Scope for active markets today
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopePreviousDayTraded($query)
+    {
+        return $query->whereHas('userMarkets.marketNegotiations', function($q) {
+                $q->traded();
+            });
+    }
+
+    /**
+    * Scope for active markets today
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopePreviousDayUntraded($query)
+    {
+        return $query->whereHas('userMarkets.marketNegotiations', function($q) {
+                $q->untraded();
+            });
+    }
+
+    /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */

@@ -31,6 +31,7 @@
     import BarLayoutEFP from './BarLayouts/EFP';
     import BarLayoutEFPSwitch from './BarLayouts/EFPSwitch';
     import BarLayoutRolls from './BarLayouts/Rolls';
+    import BarLayoutVarSwap from './BarLayouts/VarSwap';
 
     export default {
         components: {
@@ -42,6 +43,7 @@
             BarLayoutEFP,
             BarLayoutEFPSwitch,
             BarLayoutRolls,
+            BarLayoutVarSwap
         },
         props: {
             marketRequest: {
@@ -59,6 +61,7 @@
                     'EFP': BarLayoutEFP,
                     'EFP Switch': BarLayoutEFPSwitch,
                     'Rolls': BarLayoutRolls,
+                    'Var Swap': BarLayoutVarSwap,
                 }
             };
         },
