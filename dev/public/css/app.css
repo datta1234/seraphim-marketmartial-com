@@ -11801,6 +11801,10 @@ table.table {
   content: "\E917";
 }
 
+#previous_day_body {
+  background-color: #e9ecef;
+}
+
 /*!
  * Font Awesome Free 5.5.0 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -17476,24 +17480,20 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.trade-section.light-theme .market-group-title,
-.trade-section.dark-theme .market-group-title {
+.market-group-title {
   font-size: 1.1rem;
 }
 
-.trade-section.light-theme .market-tab-group-title,
-.trade-section.dark-theme .market-tab-group-title {
+.market-tab-group-title {
   max-width: 320px;
   margin: auto;
 }
 
-.trade-section.light-theme .market-tab-wrapper,
-.trade-section.dark-theme .market-tab-wrapper {
+.market-tab-wrapper {
   max-width: 310px;
 }
 
-.trade-section.light-theme .market-tab,
-.trade-section.dark-theme .market-tab {
+.market-tab {
   background-color: #071a22;
   color: #FFFFFF;
   border-radius: 0.6em;
@@ -17504,20 +17504,17 @@ input:checked + .slider:before {
   max-width: 100%;
 }
 
-.trade-section.light-theme .market-tab.active,
-.trade-section.dark-theme .market-tab.active {
+.market-tab.active {
   -webkit-box-shadow: 0px 0px 10px 5px #EBC300;
           box-shadow: 0px 0px 10px 5px #EBC300;
   border: 0.15em solid #EBC300;
 }
 
-.trade-section.light-theme .market-tab-ratio,
-.trade-section.dark-theme .market-tab-ratio {
+.market-tab-ratio {
   padding-left: 1.5em;
 }
 
-.trade-section.light-theme .market-tab-ratio.has-ratio:before,
-.trade-section.dark-theme .market-tab-ratio.has-ratio:before {
+.market-tab-ratio.has-ratio:before {
   content: "R";
   color: maroon;
   font-size: 1.5em;
@@ -17529,65 +17526,52 @@ input:checked + .slider:before {
   transform: translateY(-50%);
 }
 
-.trade-section.light-theme .market-tab.market-alert,
-.trade-section.dark-theme .market-tab.market-alert {
+.market-tab.market-alert {
   background-color: #BB1D1D;
 }
 
-.trade-section.light-theme .market-tab.market-confirm,
-.trade-section.dark-theme .market-tab.market-confirm {
+.market-tab.market-confirm {
   background-color: #E17428;
 }
 
-.trade-section.light-theme .market-tab.market-request,
-.trade-section.dark-theme .market-tab.market-request {
+.market-tab.market-request {
   border: 0.15em solid #2358BD;
 }
 
-.trade-section.light-theme .market-tab.market-request .market-tab-state,
-.trade-section.dark-theme .market-tab.market-request .market-tab-state {
+.market-tab.market-request .market-tab-state {
   color: #2358BD;
 }
 
-.trade-section.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
-.trade-section.dark-theme .market-tab.negotiation-vol-pending .market-tab-state {
+.market-tab.negotiation-vol-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
-.trade-section.light-theme .market-tab.trade-negotiation-open.market-alert,
-.trade-section.dark-theme .market-tab.trade-negotiation-open.market-alert {
+.market-tab.trade-negotiation-open.market-alert {
   background-color: #BB1D1D;
 }
 
-.trade-section.light-theme .market-tab.trade-negotiation-pending,
-.trade-section.light-theme .market-tab.trade-negotiation-open,
-.trade-section.dark-theme .market-tab.trade-negotiation-pending,
-.trade-section.dark-theme .market-tab.trade-negotiation-open {
+.market-tab.trade-negotiation-pending,
+.market-tab.trade-negotiation-open {
   background-color: #E17428;
 }
 
-.trade-section.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
-.trade-section.dark-theme .market-tab.trade-negotiation-pending .market-tab-state {
+.market-tab.trade-negotiation-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
-.trade-section.light-theme .market-tab .market-tab-strikes,
-.trade-section.dark-theme .market-tab .market-tab-strikes {
+.market-tab .market-tab-strikes {
   text-align: left;
 }
 
-.trade-section.light-theme .market-tab.market-request-grey,
-.trade-section.dark-theme .market-tab.market-request-grey {
+.market-tab.market-request-grey {
   border: 0.15em solid #6D6E70;
 }
 
-.trade-section.light-theme .market-tab.market-request-grey .market-tab-state,
-.trade-section.dark-theme .market-tab.market-request-grey .market-tab-state {
+.market-tab.market-request-grey .market-tab-state {
   color: #6D6E70;
 }
 
-.trade-section.light-theme .user-action,
-.trade-section.dark-theme .user-action {
+.user-action {
   color: #EBC300;
 }
 

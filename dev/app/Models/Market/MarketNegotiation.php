@@ -809,6 +809,20 @@ class MarketNegotiation extends Model
         })->exists();
     }
 
+    public function scopeTraded($query)
+    {
+        return $query->whereHas('tradeNegotiations', function($q){
+            $q->where('traded',true);  
+        });
+    }
+
+    public function scopeUntraded($query)
+    {
+        return $query->whereDoesntHave('tradeNegotiations', function($q){
+            $q->where('traded',true);  
+        });
+    }
+
     public function isSpun()
     {
         return $this->is_repeat && $this->marketNegotiationParent && $this->marketNegotiationParent->is_repeat;

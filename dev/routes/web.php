@@ -29,6 +29,14 @@ Route::get('/ping', function() {
     return response("pong");
 });
 
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {
+    Route::group(['middleware' => ['verified']], function () {
+        Route::get('/previous-day', 'PreviousDayController@index')->name('previous_day');
+        Route::get('/previous-day/markets', 'PreviousDayController@showMarkets')->name('previous_day.markets');
+        Route::get('/previous-day/market-requests', 'PreviousDayController@showMarketRequests')->name('previous_day.market_requests');
+    });
+});
+
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
 
 	Route::group(['middleware' => ['verified']], function () {
