@@ -88,7 +88,32 @@ class UserMarket extends Model
             $q->whereHas('firstNegotiation', function($qq) use ($active) {
                 $qq->where('is_killed', '=', !$active);
             });
+            // scoping by day -> current day or yesterday
+            $q->when(!config('loading_previous_day', false), function($qq) {
+                $qq->currentDay();
+            });
+            $q->when(config('loading_previous_day', false), function($qq) {
+                $qq->previousDay();
+            });
         });
+    }
+
+    public function scopeBestQuotes($query)
+    {
+        $query->where(function($q) {
+            // @TODO: doesnt have a better vol spread
+            // $q->whereDoesntHave('userMarketRequest.userMarkets', function($qq) {
+            //     $qq->whereHas('marketNegotiations', function($qqq) {
+            //         $qqq->whereRaw();
+            //     });
+            // });
+            // @TODO: need to figure out how to calc BEST for bid/offer only
+        });
+    }
+    
+
+    public function scopeCurrentDay($query) {
+        return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
     }
 
     public function scopePreviousDay($query) {

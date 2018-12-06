@@ -1123,11 +1123,12 @@ class UserMarketRequest extends Model
             case 'var_swap':
                 $exp_date = "Expiration Date";
                 $cap = 'Cap';
+                $capVal = $this->getDynamicItem($cap);
                 return implode(" ", [
                     $this->market->title,
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     strtoupper($this->tradeStructure->title),
-                    $this->getDynamicItem($cap)
+                    ( $capVal == 0 ? "(Uncapped)" : "(".$capVal."x Cap)" )
                 ]);
             break;
         }
