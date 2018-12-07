@@ -1,25 +1,13 @@
 <template>
-    <div dusk="safex-table" class="safex-table" >
+    <div dusk="open-interests-table" class="open-interests-table" >
         <div class="card mt-5">
             <div class="card-header text-center">
-                <h2 class="mt-2 mb-2">Rolling 6 Months of Safex Data</h2>
+                <h2 class="mt-2 mb-2">Open Interests Data</h2>
             </div>
             <div class="card-body">
                 <b-row>
                     <b-col cols="12">
                         <b-form v-on:submit.prevent="" id="chat-message-form">
-                            <b-row class="mt-4">
-                                <b-col cols="1">
-                                    <label class="mr-sm-2" for="stats-safex-nominal">Min.Nominal:</label>
-                                </b-col>
-                                <b-col cols="3">
-                                    <b-form-select id="stats-safex-table"
-                                               class="w-100"
-                                               :options="nominal_filter"
-                                               v-model="table_data.param_options.nominal">
-                                    </b-form-select>
-                                </b-col>
-                            </b-row>
                             <b-row class="mt-2">
                                 <b-col cols="1">
                                     <label class="mr-sm-2" for="stats-safex-markets">Markets:</label>
@@ -34,22 +22,13 @@
                             </b-row>
                             <b-row class="mt-2">
                                 <b-col cols="1">
-                                    <label class="mr-sm-2" for="stats-safex-expiration">Expiration:</label>
+                                    <label class="mr-sm-2" for="stats-open-interests-search">Search:</label>
                                 </b-col>
                                 <b-col cols="3">
-                                    <b-form-select id="stats-safex-expiration"
-                                                   class="w-100"
-                                                   :options="expiration_filter"
-                                                   v-model="table_data.param_options.expiration">
-                                    </b-form-select>
-                                </b-col>
-                            </b-row>
-                            <b-row class="mt-2">
-                                <b-col cols="1">
-                                    <label class="mr-sm-2" for="stats-safex-underlying">Underlying:</label>
-                                </b-col>
-                                <b-col cols="3">
-                                    <b-input v-model="table_data.param_options.underlying" class="w-100 mr-0" id="stats-safex-underlying" placeholder="e.g. NPN" />
+                                    <b-input v-model="table_data.param_options.search" 
+                                             class="w-100 mr-0" 
+                                             id="stats-open-interests-search" 
+                                             placeholder="Search..." />
                                 </b-col>
                                 <b-col cols="2">
                                     <button type="submit" 
@@ -59,9 +38,9 @@
                                     </button>
                                 </b-col>
                                 <b-col cols="4" offset="2">
-                                    <datepicker v-model="table_data.param_options.date"
+                                    <datepicker v-model="table_data.param_options.expiration"
                                                 class="float-right filter-date-picker"
-                                                name="safex-table-datepicker"
+                                                name="open-interests-table-datepicker"
                                                 placeholder="Select a date"
                                                 :bootstrap-styling="true"
                                                 :calendar-button="true"
@@ -123,33 +102,22 @@
                     {text: "DCAP", value: "DCAP"},
                     {text: "SINGLES", value: "SINGLES"},
                 ],
-                expiration_filter: [
-                    {text: "All Expirations", value: null},
-                ],
-                nominal_filter: [
-                    {text: "All Nominals", value: null},
-                    {text: "R10m to R40m", value: "10-40"},
-                    {text: "Greater than R40m", value: ">40"},
-                ],
                 table_data: {
                     table_fields: [
-                        { key: 'trade_date', label: 'Trade Date' },
-                        { key: 'structure', label: 'Strucure' },
-                        { key: 'underlying_alt', label: 'Underlying' },
-                        { key: 'strike', label: 'Strike' },
-                        { key: 'strike_percentage', label: 'Strike%' },
-                        { key: 'is_put', label: 'Put/Call' },
-                        { key: 'volspread', label: 'Vol' },
-                        { key: 'expiry', label: 'Expiry' },
-                        { key: 'nominal', label: 'Nominal' },
+                        { key: 'market_name', label: 'Market Name', sortable: true, sortDirection: 'desc' },
+                        { key: 'contract', label: 'Contract', sortable: true, sortDirection: 'desc' },
+                        { key: 'expiry_date', label: 'ExpiryDate', sortable: true, sortDirection: 'desc' },
+                        { key: 'is_put', label: 'Put/Call', sortable: true, sortDirection: 'desc' },
+                        { key: 'open_interest', label: 'Strike Price', sortable: true, sortDirection: 'desc' },
+                        { key: 'strike_price', label: 'Open Interest', sortable: true, sortDirection: 'desc' },
+                        { key: 'delta', label: 'Delta', sortable: true, sortDirection: 'desc' },
+                        { key: 'spot_price', label: 'Spot Price', sortable: true, sortDirection: 'desc' },
                     ],
                     data: [],
                     param_options: {
                         market: null,
                         expiration: null,
-                        underlying: null,
-                        nominal: null,
-                        date: null,
+                        search: null,
                         order_by: null,
                         order_ascending: true,
                     },
@@ -165,25 +133,23 @@
         methods: {
             loadTableData() {
                 this.table_data.loaded = false;
-                axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex', {
+                axios.get(axios.defaults.baseUrl + '/stats/open-interest/table', {
                     params:{
                         'page': this.table_data.pagination.current_page,
-                        'filter_date': this.table_data.param_options.date ? moment(this.table_data.param_options.date).format('YYYY-MM-DD'): null,
                         "filter_market": this.table_data.param_options.market,
                         "filter_expiration": this.table_data.param_options.expiration ? moment(this.table_data.param_options.expiration).format('YYYY-MM-DD'): null,
-                        "filter_nominal": this.table_data.param_options.nominal,
-                        "search": this.table_data.param_options.underlying,
+                        "search": this.table_data.param_options.search,
                         '_order_by': (this.table_data.param_options.order_by !== null ? this.table_data.param_options.order_by : ''),
                         '_order': (this.table_data.param_options.order_ascending ? 'ASC' : 'DESC'),
                     }
                 })
-                .then(safexDataResponse => {
-                    if(safexDataResponse.status == 200) {
-                        // console.log("FROM SERVER: ",safexDataResponse.data);
-                        this.table_data.pagination.current_page = safexDataResponse.data.current_page;
-                        this.table_data.pagination.per_page = safexDataResponse.data.per_page;
-                        this.table_data.pagination.total = safexDataResponse.data.total;
-                        this.table_data.data = safexDataResponse.data.data;
+                .then(openInterestsDataResponse => {
+                    if(openInterestsDataResponse.status == 200) {
+                        // console.log("FROM SERVER: ",openInterestsDataResponse.data);
+                        this.table_data.pagination.current_page = openInterestsDataResponse.data.current_page;
+                        this.table_data.pagination.per_page = openInterestsDataResponse.data.per_page;
+                        this.table_data.pagination.total = openInterestsDataResponse.data.total;
+                        this.table_data.data = openInterestsDataResponse.data.data;
                         this.table_data.loaded = true;
                         // console.log(this.table_data.data);
                     } else {
@@ -207,12 +173,13 @@
                     return '-';
                 }
                 switch (key) {
-                    case 'nominal':
-                    case 'strike':
+                    case 'open_interest':
+                    case 'strike_price':
+                    case 'delta':
+                    case 'spot_price':
                         return this.$root.splitValHelper(item[key], ' ', 3);
                         break;
-                    case 'trade_date':
-                    case 'expiry':
+                    case 'expiry_date':
                         return moment(item[key], 'YYYY-MM-DD').format('DD MMM YYYY');
                         break;
                     case 'is_put':
@@ -222,24 +189,8 @@
                         return item[key];
                 }
             },
-            loadExpirations() {
-                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
-                    params:{
-                        'not_paginate': true,
-                    }
-                })
-                .then(expirationsResponse => {
-                    Object.keys(expirationsResponse.data.data).forEach(key => {
-                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
-                    });
-                }, err => {
-                    console.error(err);
-                    this.$toasted.error("Failed to load safex expiration dates");
-                });
-            },
         },
         mounted() {
-            this.loadExpirations();
         	this.loadTableData();
         }
     }

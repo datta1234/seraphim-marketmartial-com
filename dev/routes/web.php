@@ -54,6 +54,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 			Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
 			
 			Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
+			Route::get('/open-interest/table', 'Stats\OpenInterestControlller@openInterestTableData')->name('open_interest.table');
 		});
 
 		Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
