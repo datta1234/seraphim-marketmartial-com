@@ -40,7 +40,6 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
 
 	Route::group(['middleware' => ['verified']], function () {
-		Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
 		Route::resource('user-pref', 'UserPrefController');
 
@@ -89,7 +88,12 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
+
+    Route::get('/', 'TradeScreenController@index')->name('trade');
+
+    Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
+    Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
 
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');

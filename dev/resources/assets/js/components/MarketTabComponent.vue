@@ -11,13 +11,12 @@
 </template>
 
 <script>
-    import { EventBus } from '../lib/EventBus.js';
     import UserMarketRequest from '../lib/UserMarketRequest';
 
-    import MarketTabOutright from './MarketTabs/Outright';
-    import MarketTabRisky from './MarketTabs/Risky';
-    import MarketTabCalendar from './MarketTabs/Calendar';
-    import MarketTabFly from './MarketTabs/Fly';
+    import Outright from './MarketTabs/Outright';
+    import Risky from './MarketTabs/Risky';
+    import Calendar from './MarketTabs/Calendar';
+    import Fly from './MarketTabs/Fly';
     import OptionSwitch from './MarketTabs/OptionSwitch';
     import EFP from './MarketTabs/EFP';
     import Rolls from './MarketTabs/Rolls';
@@ -25,10 +24,10 @@
     import VarSwap from './MarketTabs/VarSwap';
     export default {
         components: {
-            MarketTabOutright,
-            MarketTabRisky,
-            MarketTabCalendar,
-            MarketTabFly,
+            Outright,
+            Risky,
+            Calendar,
+            Fly,
             OptionSwitch,
             EFP,
             Rolls,
@@ -46,10 +45,10 @@
         data() {
             return {
                 tabs: {
-                    'Outright': MarketTabOutright,
-                    'Risky': MarketTabRisky,
-                    'Calendar': MarketTabCalendar,
-                    'Fly': MarketTabFly,
+                    'Outright': Outright,
+                    'Risky': Risky,
+                    'Calendar': Calendar,
+                    'Fly': Fly,
                     'Option Switch': OptionSwitch,
                     'EFP': EFP,
                     'Rolls': Rolls,

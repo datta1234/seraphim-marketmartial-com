@@ -356,6 +356,10 @@ class MarketNegotiation extends Model
         return null;
     }
 
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
         return $query->where(function($q) use ($private, $user) {
@@ -807,20 +811,6 @@ class MarketNegotiation extends Model
         return $this->tradeNegotiations()->where(function($q){
             return $q->where('traded',true);  
         })->exists();
-    }
-
-    public function scopeTraded($query)
-    {
-        return $query->whereHas('tradeNegotiations', function($q){
-            $q->where('traded',true);  
-        });
-    }
-
-    public function scopeUntraded($query)
-    {
-        return $query->whereDoesntHave('tradeNegotiations', function($q){
-            $q->where('traded',true);  
-        });
     }
 
     public function isSpun()

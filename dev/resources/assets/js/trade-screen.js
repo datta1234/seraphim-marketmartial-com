@@ -10,6 +10,9 @@ require('./components/data-methods');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+const momentDuration = require('moment-duration-format');
+momentDuration(moment);
+
 window.math = require('mathjs');
 
 import Echo from "laravel-echo"
@@ -91,7 +94,7 @@ Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
-
+Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQuotesModal.vue'));
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';

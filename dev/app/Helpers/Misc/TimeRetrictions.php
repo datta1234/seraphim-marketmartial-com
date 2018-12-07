@@ -14,7 +14,7 @@ class TimeRestrictions
         return $date->between($startTime,$endTime) && !in_array(Carbon::now()->format("D"), $daysOffline);
 	}
 
-	public function canTrade($date)
+	public static function canTrade($date)
 	{
 		$startTime = Carbon::createFromTimeString(config('marketmartial.window.trade_start_time'));
         $endTime = Carbon::createFromTimeString(config('marketmartial.window.trade_end_time'));

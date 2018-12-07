@@ -9,10 +9,25 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+const momentDuration = require('moment-duration-format');
+momentDuration(moment);
 
 // Bootstrap Vue
 import BootstrapVue from 'bootstrap-vue';
+import Toasted from 'vue-toasted';
 Vue.use(BootstrapVue);
+Vue.use(Toasted, {
+    position: 'top-center',
+    fullWidth: false,
+    action: {
+        text: 'Dismiss',
+        onClick(e, t) {
+            t.goAway(0);
+        }
+    },
+    theme: 'primary',
+    duration : 3000,
+});
 
 // Format Mixin - rand/qty formatting
 import FormatMixin from './FormatMixin.js'
@@ -25,6 +40,7 @@ import UntradedMarkets from './components/PreviousDay/UntradedMarkets.vue';
 // globals
 Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
 Vue.component('market-tab', require('./components/PreviousDay/MarketTab.vue'));
+Vue.component('trading-countdown', require('./components/PreviousDay/TradingCountdown.vue'));
 
 // Models
 import Market from './lib/Market';
@@ -40,6 +56,7 @@ const app = new Vue({
     },
     data() {
         return {
+            trading_opens: null,
             configs: {},
             display_markets_traded: [],
             display_markets_untraded: []
@@ -119,6 +136,7 @@ const app = new Vue({
         },
     },
     mounted() {
+        this.trading_opens = moment(document.head.querySelector('meta[name="trading-opens"]').content);
         Config.configs = this.configs;
         // load config files
         this.loadConfigs([
