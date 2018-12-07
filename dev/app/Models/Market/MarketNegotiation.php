@@ -1053,10 +1053,16 @@ class MarketNegotiation extends Model
                 */
                 if($tradeNegotiation->traded)
                 {
-                   $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
-                   $message = "Congrats on the trade! Complete the booking in the confirmation tab";
-                   $organisation = $tradeConfirmation->sendUser->organisation;
-                   $tradeConfirmation->notifyConfirmation($organisation,$message);
+                    //Market Maker receives trade notification
+                    //@TODO - @Francois Move to new event when rebate gets created after confirmation process is complete
+                    $market_maker_org = $this->userMarket->user->organisation;
+                    $market_maker_message = "Market traded. You have received a rebate";
+                    $market_maker_org->notify("market_traded_rebate_earned",$market_maker_message,true);
+
+                    $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
+                    $message = "Congrats on the trade! Complete the booking in the confirmation tab";
+                    $organisation = $tradeConfirmation->sendUser->organisation;
+                    $tradeConfirmation->notifyConfirmation($organisation,$message);
                 }
 
                 // if this was a private proposal, cascade public update to history 
