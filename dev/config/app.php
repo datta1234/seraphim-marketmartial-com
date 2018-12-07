@@ -182,6 +182,7 @@ return [
 
         App\Providers\StreamServiceProvider::class,
         App\Providers\SlackServiceProvider::class,
+        App\Providers\ActivityLogProvider::class,
 
         /*
          * 3rd Party Packages 
@@ -240,6 +241,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Slack' => \App\Facades\Slack\Slack::class,
+        'ActivityLogger' => \App\Facades\Logging\ActivityLogger::class,
     ],
 
 ];
