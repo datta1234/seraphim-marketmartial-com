@@ -34,7 +34,9 @@ class ActivityLogger
         $lines = [];
         foreach($daterange as $date) {
             $filePath = storage_path()."/logs/system/activity-".$date->format("Y-m-d").".log";
-            $this->getFilteredContent($filePath, $filter, $lines, $parseToString);
+            if(file_exists($filePath)) {
+                $this->getFilteredContent($filePath, $filter, $lines, $parseToString);
+            }
         }
         return $lines;
     }
