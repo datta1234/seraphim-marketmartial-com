@@ -75,4 +75,86 @@ class OpenInterest extends Model
 			'spot_price'	=> doubleval($data['spot_price']),
     	]);
     }
+
+    /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param array  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = "",$orderBy="market_name",$order='ASC', $filter = null)
+    {
+        if($orderBy == null)
+        {
+            $orderBy = "market_name";
+        }
+
+        if($order == null)
+        {
+            $order = "ASC";
+        }
+
+        // Search term
+        $open_interest_query = OpenInterest::where( function ($q) use ($term) {
+            $q->where('market_name','like',"%$term%")
+                ->orWhere('contract','like',"%$term%");
+            // Search term where term is put or call
+            if(strtolower($term) == 'put' || strtolower($term) == 'call') {
+                $q->orWhere('is_put', (strtolower($term) == 'put' ? 1: 0));
+            } 
+        });
+
+        // Apply Filters
+        if($filter !== null) {
+
+            // Applies Market filter
+            if(!empty($filter["filter_market"])) {
+                $market = $filter['filter_market'];
+                switch ($market) {
+                    case 'ALSI':
+                        $open_interest_query->where( function ($q) use ($market) {
+                            $q->where('contract','like',"%$market%")
+                                ->orWhere('contract','like',"%ALSX%");
+                        });
+                        break;
+                    case 'DTOP':
+                        $open_interest_query->where( function ($q) use ($market) {
+                            $q->where('contract','like',"%$market%")
+                                ->orWhere('contract','like',"%DTOX%");
+                        });
+                        break;
+                    case 'DCAP':
+                        $open_interest_query->where( function ($q) use ($market) {
+                            $q->where('contract','like',"%$market%")
+                                ->orWhere('contract','like',"%DCAX%");
+                        });
+                        break;
+                    case 'SINGLES':
+                    default:
+                        $open_interest_query->where( function ($q) {
+                            $q->where('contract','not like',"%ALSI%")
+                                ->where('contract','not like',"%ALSX%")
+                                ->where('contract','not like',"%DTOP%")
+                                ->where('contract','not like',"%DTOX%")
+                                ->where('contract','not like',"%DCAP%")
+                                ->where('contract','not like',"%DCAX%");
+                        });
+                        break;
+                }
+            }
+
+            // Applies Expiration filter
+            if(!empty($filter["filter_expiration"])) {
+                $open_interest_query->whereDate('expiry_date', $filter["filter_expiration"]);
+            }
+        }
+
+        $open_interest_query->orderBy($orderBy,$order);
+
+        return $open_interest_query;
+    }
 }

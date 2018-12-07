@@ -11,7 +11,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 
 class OpenInterestControlller extends Controller
-{
+{   
     /**
      * Display the specified resource.
      *
@@ -132,5 +132,26 @@ class OpenInterestControlller extends Controller
         }
 
         return response()->json(['data' => null,'message' => 'Open Interest data successfully uploaded.']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function openInterestTableData(Request $request)
+    {
+        // @TODO - Change reqeust to a custom reqeust
+        $data = OpenInterest::basicSearch(
+            $request->input('search'),
+            $request->input('_order_by'),
+            $request->input('_order'),
+            [
+                "filter_expiration" => $request->input('filter_expiration'),
+                "filter_market" => $request->input('filter_market'),
+            ]
+        )->paginate(25);
+
+        return $data;
     }
 }

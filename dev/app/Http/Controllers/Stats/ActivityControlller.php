@@ -18,9 +18,8 @@ use Illuminate\Validation\Rule;
 class ActivityControlller extends Controller
 {
     /**
-     * Display the specified resource.
+     * Display a listing of the resource.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function index()

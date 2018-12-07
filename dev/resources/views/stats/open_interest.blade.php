@@ -14,6 +14,7 @@
 		    @endslot
 		    @slot('body')
 		        <open-interests :data="{{ json_encode($grouped_open_interests) }}"></open-interests>
+		        <open-interests-table></open-interests-table>
 		    @endslot
 		@endcomponent
 	</div>
