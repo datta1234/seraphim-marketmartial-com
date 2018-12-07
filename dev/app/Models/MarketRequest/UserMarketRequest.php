@@ -1170,6 +1170,7 @@ class UserMarketRequest extends Model
             break;
         };
     }
+
     /**
      * Notify subscribed users and removes subscription,
      *
@@ -1197,6 +1198,32 @@ class UserMarketRequest extends Model
                 Log::error($e);
             }
         }
+    }
+
+    /**
+     * get the messages for logging of activity
+     *
+     * @param string $context
+     * @return array<string>
+     */
+    public function getLogMessages($context = "changed", $userString)
+    {
+        if($context == "created") {
+            return [
+                $userString." created ".$this->getHumanizedLabel()." ".$this->market->title." ".$this->tradeStructure->title
+            ];
+        }
+        return false;
+    }
+
+    /**
+     * get the human readable representation for this model
+     *
+     * @return string
+     */
+    public function getHumanizedLabel()
+    {
+        return "Market Request";
     }
 
 }

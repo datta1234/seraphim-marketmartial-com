@@ -85,9 +85,15 @@ class UserMarket extends Model
     public function scopeActiveQuotes($query, $active = true)
     {
         $query->where(function($q) use ($active) {
+            // quote phase
+            $q->whereHas('userMarketRequest', function($qq) use ($active) {
+                $qq->whereNull('chosen_user_market_id');
+            });
+            // not killed
             $q->whereHas('firstNegotiation', function($qq) use ($active) {
                 $qq->where('is_killed', '=', !$active);
             });
+            
             // scoping by day -> current day or yesterday
             $q->when(!config('loading_previous_day', false), function($qq) {
                 $qq->currentDay();

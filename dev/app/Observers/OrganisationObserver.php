@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Cache;
 
 class OrganisationObserver
 {
+    
     /**
      * Listen to the Organisaion saved event.
      *
