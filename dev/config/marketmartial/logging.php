@@ -2,13 +2,16 @@
 /**
 *   Models to have activity logged
 *
-*   NOTE: models can implement 2 functions to aid in log formatting
+*   NOTE: models can implement 3 functions to aid in log formatting
 *
 *       getLogMessages($context = "changed", $userString) : array<string>
 *           This must return an array of messages to be logged for the respective additions/deletions/changes made
 *
 *       getHumanizedLabel() : string
 *           This must return the human readable label for this model instance
+*
+*       getActivityType($context = "changed") : string
+*           This must return the goruping/type of the change being logged specific to this model
 */
 return [
     "name" => "activity_log",
@@ -16,6 +19,13 @@ return [
     "max_days" => 180,
     "path" => storage_path()."/logs/system/activity.log",
     "level" => "info",
+    "activity_types" =>  [
+        "default" => "trade",
+        "list" => [
+            "trade" => "Trade Activity",
+            "dispute" => "Dispute Activity"
+        ]
+    ],
     "models" => [
 
         /*

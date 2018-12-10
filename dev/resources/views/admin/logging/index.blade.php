@@ -1,7 +1,7 @@
-@extends('layouts.canvas_app')
+@extends('layouts.activity_log')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid" id="activity_log_app">
         {{-- Logging Card --}}
         @component('partials.content_card')
             @slot('header')
@@ -12,14 +12,7 @@
             @slot('decorator')
             @endslot
             @slot('body')
-                <div class="row">
-                    
-                </div>
-                <div class="row">
-                    <div class="col-2 offset-10 mt-2 mb-2">
-                        <button type="button" class="btn mm-generic-trade-button w-100">Download Logs</button>
-                    </div>
-                </div>
+                <activity-log-modal :activity-types="activity_types" action="{{ route('admin.logging.download') }}" method="GET"></activity-log-modal>
             @endslot
         @endcomponent
     </div>

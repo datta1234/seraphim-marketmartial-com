@@ -29,8 +29,9 @@ class ActivityLogObserver
     {
         $level = $this->level;
         $messages = $this->getMessages($model, "created");
+        $activity_type = $this->getActivityType($model, "created");
         foreach($messages as $message) {
-            ActivityLogger::{$level}($message, $this->getContext());
+            ActivityLogger::{$level}($message, $this->getContext($activity_type));
         }
     }
 
@@ -44,8 +45,9 @@ class ActivityLogObserver
     {
         $level = $this->level;
         $messages = $this->getMessages($model, "updated");
+        $activity_type = $this->getActivityType($model, "updated");
         foreach($messages as $message) {
-            ActivityLogger::{$level}($message, $this->getContext());
+            ActivityLogger::{$level}($message, $this->getContext($activity_type));
         }
     }
 
@@ -59,8 +61,9 @@ class ActivityLogObserver
     {
         $level = $this->level;
         $messages = $this->getMessages($model, "deleted");
+        $activity_type = $this->getActivityType($model, "deleted");
         foreach($messages as $message) {
-            ActivityLogger::{$level}($message, $this->getContext());
+            ActivityLogger::{$level}($message, $this->getContext($activity_type));
         }
     }
 
@@ -107,12 +110,35 @@ class ActivityLogObserver
         return $messages;
     }
 
+
+    /**
+     * get activity type context from model
+     *
+     * @param  \App\Models\<mixed> $model
+     * @param  string $context
+     * @return string
+     */
+    public function getActivityType($model, $context = "changed")
+    {
+        // first try from the model
+        try {
+            $return = $model->getActivityType($context);
+            if($return !== false) {
+                return $return;
+            }
+        } catch(\Exception $e) {
+            /* do nothing... */ 
+        }
+        return config('marketmartial.logging.activity_types.default', $context);
+    }
+    
+
     /**
      * get the context for logs
      *
      * @return array
      */
-    public function getContext()
+    public function getContext($activity_type)
     {
         $authUser = \Auth::user();
         if(!$authUser) {
@@ -120,18 +146,21 @@ class ActivityLogObserver
                 // background system activity
                 return [
                     0,
-                    null
+                    null,
+                    $activity_type
                 ];
             }
             // system activity
             return [
                 null,
-                null
+                null,
+                $activity_type
             ];
         }
         return [
             $authUser->id,
-            $authUser->organisation_id
+            $authUser->organisation_id,
+            $activity_type
         ];
     }
 
