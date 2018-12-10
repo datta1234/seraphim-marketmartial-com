@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6b13a136562d37a711cf27b3d070f7e",
+    "content-hash": "2a8c04b2e8d21860916a3545bb3689e1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -51,6 +51,45 @@
             "description": "BaconQrCode is a QR code generator for PHP.",
             "homepage": "https://github.com/Bacon/BaconQrCode",
             "time": "2017-10-17T09:59:25+00:00"
+        },
+        {
+            "name": "ddtraceweb/monolog-parser",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ddtraceweb/monolog-parser.git",
+                "reference": "1aa1a4af21c28796d89adacac096bb370b73a42b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ddtraceweb/monolog-parser/zipball/1aa1a4af21c28796d89adacac096bb370b73a42b",
+                "reference": "1aa1a4af21c28796d89adacac096bb370b73a42b",
+                "shasum": ""
+            },
+            "require": {
+                "monolog/monolog": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Dubture": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Robert Gruendler",
+                    "email": "r.gruendler@gmail.com"
+                }
+            ],
+            "description": "A parser for monolog log entries",
+            "time": "2015-06-25T08:36:59+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",
