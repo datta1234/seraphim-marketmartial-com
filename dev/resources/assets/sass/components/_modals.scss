@@ -54,6 +54,13 @@
 		.custom-checkbox .custom-control-input:checked ~ .custom-control-label::before {
 		  	background-color: $mm-modal-header;
 		}
+		.optional-input-prepend > .input-group-text {
+		    background-color: $mm-modal-header;
+	        border-color: $mm-modal-header;
+		}
+		input:disabled {
+			border: none;
+		}
 	}
 	.modal-info-text {
 		font-size: 0.9em;

@@ -18189,6 +18189,15 @@ input:checked + .slider:before {
   background-color: #1c7c74;
 }
 
+.mm-modal .modal-body .optional-input-prepend > .input-group-text {
+  background-color: #1c7c74;
+  border-color: #1c7c74;
+}
+
+.mm-modal .modal-body input:disabled {
+  border: none;
+}
+
 .mm-modal .modal-info-text {
   font-size: 0.9em;
 }

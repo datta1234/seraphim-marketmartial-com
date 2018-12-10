@@ -35,6 +35,7 @@
                         market:null,
                         trade_structure: 'Rolls',
                         trade_structure_groups: [],
+                        expiry_dates:[],
                         details: null,
                     },
                     number_of_dates: 1,
@@ -260,7 +261,7 @@
              */
             formatRequestData() {
                 // sets initial object structure
-                return {
+                let formatted_data = {
                     trade_structure: this.controller_data.market_object.trade_structure,
                     trade_structure_groups: [{
                         market_id: this.controller_data.market_object.market.id,
@@ -271,6 +272,12 @@
                         }    
                     }]
                 }
+
+                if(this.controller_data.market_object.details.fields[0].has_future) {
+                    formatted_data.trade_structure_groups[0].fields["Future"] = this.controller_data.market_object.details.fields[0].future;
+                }
+
+                return formatted_data;
             },
             /**
              * Casting a passed string to moment with a new format
@@ -282,7 +289,7 @@
             },
         },
         mounted() {
-            this.modal_data.title = ["EFP"];
+            this.modal_data.title = ["ROLL"];
             this.loadMarketType();
             this.selected_step_component = 'Market';
             this.$on('modal_step', this.loadStepComponent);

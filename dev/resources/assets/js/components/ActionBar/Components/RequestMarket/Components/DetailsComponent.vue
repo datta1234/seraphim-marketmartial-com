@@ -159,6 +159,36 @@
                             </b-col>
                         </b-row>
 
+                        <b-row v-if="display.has_future" align-h="center" class="mt-3">
+                            <b-col :cols="data.market_object.stock ?  11 : 12">
+                                <b-row align-h="center">
+                                    <b-col cols="3">
+                                        <label for="future-0">Future Price Reference</label>
+                                    </b-col>
+                                    <b-col  :key="index" 
+                                            v-for="(field, index) in form_data.fields" 
+                                            cols="3"
+                                            :offset="(display.versus && index != 0)? 1 : 0">
+                                        <b-input-group>
+                                            <b-input-group-prepend is-text class="optional-input-prepend">
+                                                <input v-model="field.has_future" 
+                                                       type="checkbox"
+                                                       class="optional-input-prepend-checkbox"
+                                                       aria-label="Include a future price">
+                                            </b-input-group-prepend>
+                                            <b-form-input :disabled="!field.has_future"
+                                                          v-model="field.future"
+                                                          placeholder="Optional"
+                                                          :state="inputState(index, 'Future')"
+                                                          aria-label="Input for optional future price">
+                                            </b-form-input>
+                                        </b-input-group>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col v-if="data.market_object.stock" cols="1"></b-col>
+                        </b-row>
+
                         <b-row v-if="display.is_ratio">
                             <b-col class="text-center mt-3">    
                                 <p class="modal-info-text">
@@ -244,6 +274,7 @@
                     is_ratio: false,
                     is_vega: false,
                     has_capped: false,
+                    has_future: true,
             	},
             	chosen_option: null,
                 form_data: {
@@ -335,37 +366,77 @@
             this.display.is_ratio = false;
             this.display.is_vega = false;
             this.display.has_capped = false;
+            this.display.has_future = true;
             // Sets up the view and object data defaults dictated by the structure
             switch(this.data.market_object.trade_structure) {
             	case 'Outright':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
             		this.display.disable_choice = true,
             		this.chosen_option = null;
             		break;
             	case 'Risky':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
-            		this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+            		this.form_data.fields.push({
+                        is_selected:false,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
                     this.display.is_ratio = true;
             		this.chosen_option = 0;
             		break;
             	case 'Fly':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:false,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:false,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
             		this.display.disable_choice = true,
                     this.display.is_ratio = true;
             		this.form_data.fields[2].is_selected = true;
             		break;
             	case 'Calendar':
-                    this.form_data.fields.push({is_selected:true,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:true,strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
-                    this.form_data.fields.push({is_selected:false,strike: null,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:false,
+                        strike: null,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
             		this.display.show_expiry = true,
                     this.display.is_ratio = true;
@@ -373,16 +444,28 @@
             		break;
                 case 'EFP':
                 case 'Rolls':
-                    this.form_data.fields.push({is_selected:true,quantity: size_default, quantity_default: size_default
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        has_future: false,
                     });
                     this.display.disable_choice = true,
                     this.display.has_strike = false;
                     this.chosen_option = null;
                     break;
                 case 'EFP Switch':
-                    this.form_data.fields.push({is_selected:true,quantity: size_default[0], quantity_default: size_default[0]
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        quantity: size_default[0],
+                        quantity_default: size_default[0],
+                        has_future: false,
                     });
-                    this.form_data.fields.push({is_selected:false,quantity: size_default[1], quantity_default: size_default[1]
+                    this.form_data.fields.push({
+                        is_selected:false,
+                        quantity: size_default[1],
+                        quantity_default: size_default[1],
+                        has_future: false,
                     });
                     this.display.disable_choice = false,
                     this.display.has_strike = false;
@@ -402,6 +485,7 @@
                     this.display.has_strike = false;
                     this.display.is_vega = true;
                     this.display.has_capped = true;
+                    this.display.has_future = false;
                     this.chosen_option = null;
                     break;
             }
