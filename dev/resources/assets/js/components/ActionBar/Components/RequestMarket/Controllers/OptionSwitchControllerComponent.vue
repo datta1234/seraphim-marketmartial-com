@@ -107,6 +107,8 @@
                                 switch_option["is_selected"] = component_data.fields[index]["is_selected"];
                                 switch_option["quantity"] = component_data.fields[index]["quantity"];
                                 switch_option["strike"] = component_data.fields[index]["strike"];
+                                switch_option["has_future"] = component_data.fields[index]["has_future"];
+                                switch_option["future"] = component_data.fields[index]["future"];
                             });
                         }
                         this.temp_title = this.modal_data.title;
@@ -189,16 +191,22 @@
                     trade_structure: this.option_switch_data.market_object.trade_structure,
                     trade_structure_groups:[]
                 }
-                console.log("Data to format: ", this.option_switch_data);
                 this.option_switch_data.market_object.switch_options.forEach( (element,index) => {
-                    formatted_data.trade_structure_groups.push({
+                    let group_data = {
                         is_selected: element.is_selected,
                         fields: {
                             "Expiration Date": element.expiration,
                             "Strike": element.strike,
                             "Quantity": element.quantity
                         }
-                    });
+                    };
+
+                    if(element.has_future) {
+                        group_data.fields["Future"] = element.future;
+                    }
+
+                    formatted_data.trade_structure_groups.push(group_data);
+
                     if(element.is_index) {
                         formatted_data.trade_structure_groups[index].market_id = element.index_market.id;
                     } else {
