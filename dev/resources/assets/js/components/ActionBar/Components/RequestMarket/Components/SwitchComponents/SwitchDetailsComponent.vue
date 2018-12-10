@@ -188,7 +188,55 @@
                                 </b-row>
                             </b-col>
                         </b-row>
-                       
+                       <!-- Future section -->
+                       <b-row class="mt-3">
+                            <b-col cols="5">
+                                <b-row>
+                                    <b-col cols="3">
+                                        <label for="future-0">Future Price Reference</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-input-group>
+                                            <b-input-group-prepend is-text class="optional-input-prepend">
+                                                <input v-model="form_data.fields[0].has_future" 
+                                                       type="checkbox"
+                                                       class="optional-input-prepend-checkbox"
+                                                       aria-label="Include a future price">
+                                            </b-input-group-prepend>
+                                            <b-form-input :disabled="!form_data.fields[0].has_future"
+                                                          v-model="form_data.fields[0].future"
+                                                          placeholder="Optional"
+                                                          :state="inputState(0, 'Future')"
+                                                          aria-label="Input for optional future price">
+                                            </b-form-input>
+                                        </b-input-group>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                            <b-col cols="5" offset="2">
+                                <b-row>
+                                    <b-col cols="3">
+                                        <label for="future-1">Future Price Reference</label>
+                                    </b-col>
+                                    <b-col cols="6">
+                                        <b-input-group>
+                                            <b-input-group-prepend is-text class="optional-input-prepend">
+                                                <input v-model="form_data.fields[1].has_future" 
+                                                       type="checkbox"
+                                                       class="optional-input-prepend-checkbox"
+                                                       aria-label="Include a future price">
+                                            </b-input-group-prepend>
+                                            <b-form-input :disabled="!form_data.fields[1].has_future"
+                                                          v-model="form_data.fields[1].future"
+                                                          placeholder="Optional"
+                                                          :state="inputState(1, 'Future')"
+                                                          aria-label="Input for optional future price">
+                                            </b-form-input>
+                                        </b-input-group>
+                                    </b-col>
+                                </b-row>
+                            </b-col>
+                        </b-row>
 
                         <b-row v-if="errors.messages.length > 0" class="text-center mt-4">
                             <b-col :key="index" v-for="(error, index) in errors.messages" cols="12">
@@ -334,6 +382,8 @@
                     strike: null,
                     quantity: default_size,
                     quantity_default: default_size,
+                    future: null,
+                    has_future: false,
                 });
             });
             this.chosen_option = 0;
