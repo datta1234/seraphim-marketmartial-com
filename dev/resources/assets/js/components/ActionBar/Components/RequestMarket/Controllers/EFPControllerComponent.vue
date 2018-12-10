@@ -148,7 +148,6 @@
                 // toggle loading
                 EventBus.$emit('loading', 'requestSubmission');
                 this.submitting_request = false;
-                console.log('What is this? ',this.formatRequestData());
                 axios.post(axios.defaults.baseUrl + '/trade/market/'+ this.controller_data.request_market_id +'/market-request', this.formatRequestData())
                 .then(newMarketRequestResponse => {
                     // success closes the modal
