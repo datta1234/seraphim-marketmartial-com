@@ -382,6 +382,7 @@
                     strike: null,
                     quantity: default_size,
                     quantity_default: default_size,
+                    future: null,
                     has_future: false,
                 });
             });

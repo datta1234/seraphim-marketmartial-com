@@ -375,6 +375,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
             		this.display.disable_choice = true,
@@ -386,6 +387,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
             		this.form_data.fields.push({
@@ -393,6 +395,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
                     this.display.is_ratio = true;
@@ -404,6 +407,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
                     this.form_data.fields.push({
@@ -411,6 +415,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
                     this.form_data.fields.push({
@@ -418,6 +423,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
             		this.display.disable_choice = true,
@@ -429,6 +435,7 @@
                         is_selected:true,strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
                     this.form_data.fields.push({
@@ -436,6 +443,7 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
             		this.display.show_expiry = true,
@@ -448,6 +456,7 @@
                         is_selected:true,
                         quantity: size_default,
                         quantity_default: size_default,
+                        future: null,
                         has_future: false,
                     });
                     this.display.disable_choice = true,
@@ -459,12 +468,14 @@
                         is_selected:true,
                         quantity: size_default[0],
                         quantity_default: size_default[0],
+                        future: null,
                         has_future: false,
                     });
                     this.form_data.fields.push({
                         is_selected:false,
                         quantity: size_default[1],
                         quantity_default: size_default[1],
+                        future: null,
                         has_future: false,
                     });
                     this.display.disable_choice = false,
