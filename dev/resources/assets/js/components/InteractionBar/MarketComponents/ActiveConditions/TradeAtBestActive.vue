@@ -16,7 +16,7 @@
                     <b-col>
                         {{ term }} at best: {{ trade_value }}
                     </b-col>
-                    <b-col v-if="isActive">
+                    <b-col v-if="isActive && !$root.is_viewer">
                         <div class="pull-right">
                             <span id="tab-popover">
                                 <a  href="" 

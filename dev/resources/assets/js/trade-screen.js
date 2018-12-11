@@ -481,6 +481,7 @@ const app = new Vue({
             suppressScrollY: true
         },
         is_admin: false,
+        is_viewer: false,
     },
     mounted: function() {
         Config.configs = this.configs;
@@ -536,6 +537,12 @@ const app = new Vue({
             //load the no cares from storage
             this.loadNoCares();
         });
+
+        let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
+        // test if a viewer type user is viewing the page, then disable some send features across the frontend
+        if(viewer_type.content) {
+            this.is_viewer = true;
+        }
 
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
         if(organisationUuid && organisationUuid.content)

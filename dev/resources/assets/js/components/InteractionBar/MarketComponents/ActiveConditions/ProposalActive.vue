@@ -16,7 +16,7 @@
                             Trade At {{ ( negotiation.bid ? negotiation.bid : '-' )+" / "+( negotiation.offer ? negotiation.offer : '-' ) }}
                         </span>
                     </b-col>
-                    <b-col v-if="isActive" cols="6">
+                    <b-col v-if="isActive && !$root.is_viewer" cols="6">
                         <span id="proposal-do-trade">
                             <a href="" @click.prevent.stop="doTrade">Trade</a>
                         </span>

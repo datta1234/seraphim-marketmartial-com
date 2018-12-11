@@ -21,7 +21,7 @@
 						<a class="nav-link active p-0 ml-4" href="{{ route('previous_day') }}">Previous day</a>
 					</li>
 				@endif
-				@if(Auth::user()->role_id == 1)
+				@if(Auth::user()->isAdmin())
 					<li class="nav-item">
 						<a class="nav-link active p-0 ml-4" href="{{ route('admin.activity.show') }}">Stats</a>
 					</li>
@@ -66,7 +66,7 @@
 							<a class="dropdown-item" href="{{ route('user.edit_password') }}">Change Password</a>
 							<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
 							<a class="dropdown-item" href="{{ route('trade_settings.edit') }}">Trade Settings</a>
-							@if(Auth::user()->verifiedActiveUser())
+							@if(Auth::user()->verifiedActiveUser() )
 								<a class="dropdown-item" href="{{ route('rebate_summary.index') }}">
 									Rebates Summary
 								</a>
