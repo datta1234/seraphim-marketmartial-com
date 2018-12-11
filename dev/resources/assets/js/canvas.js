@@ -118,7 +118,8 @@ const app = new Vue({
         },
     },
     data: {
-        configs: {}
+        configs: {},
+        is_viewer: false,
     },
     mounted: function() {
         this.loadConfigs([
@@ -127,6 +128,12 @@ const app = new Vue({
         .then(() => {
             ActiveRequestDirective.init(this);
             ActiveMakerService.init(this);
-        })
+        });
+
+        let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
+        // test if a viewer type user is viewing the page, then disable some send features across the frontend
+        if(viewer_type.content) {
+            this.is_viewer = true;
+        }
     }
 });
