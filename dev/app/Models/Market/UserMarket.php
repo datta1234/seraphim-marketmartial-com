@@ -104,17 +104,44 @@ class UserMarket extends Model
         });
     }
 
-    public function scopeBestQuotes($query)
+    /**
+    *   Method to return if this quote is the best one that was available
+    *   @return Boolean
+    */
+    public function isBestQuote()
     {
-        $query->where(function($q) {
-            // @TODO: doesnt have a better vol spread
-            // $q->whereDoesntHave('userMarketRequest.userMarkets', function($qq) {
-            //     $qq->whereHas('marketNegotiations', function($qqq) {
-            //         $qqq->whereRaw();
-            //     });
-            // });
-            // @TODO: need to figure out how to calc BEST for bid/offer only
-        });
+        /*
+        * Handle VOL Spread - only when there DOESN'T exist a better(lower) VOL Spread
+        */
+        if($this->firstNegotiation->offer != null && $this->firstNegotiation->bid != null) {
+            $vol = ($this->firstNegotiation->offer-$this->firstNegotiation->bid);
+            $id = $this->id;
+            return $this->userMarketRequest()
+                ->whereHas('userMarkets', function($sub) use ($id, $vol) {
+                    $sub->where('id', '!=', $id);
+                    $sub->whereHas('marketNegotiations', function($q) use ($vol) {
+                        $q->whereRaw('(offer-bid) < ?', [$vol]);
+                    });
+                })
+                ->doesntExist();
+        }
+        /*
+        * Handle BID/OFFER ONLY - only when there DOESN'T exist a better(bid:higher|offer:lower) bid/offer
+        */
+        $attr = $this->firstNegotiation->bid != null ? 'bid' : 'offer'; // has to be one of them
+        $level = $this->firstNegotiation->{$attr};
+        $id = $this->id;
+        return $this->userMarketRequest()
+            ->whereHas('userMarkets', function($sub) use ($id, $attr, $level) {
+                $sub->where('id', '!=', $id);
+                $sub->whereHas('firstNegotiation', function($q) use ($attr, $level) {
+                    $symbol = ( $attr == 'bid' ? '>' : '<' );
+                    $inverse = ( $attr == 'bid' ? 'offer' : 'bid' );
+                    $q->where($attr, $symbol, $level);
+                    $q->whereNull($inverse);
+                });
+            })
+            ->doesntExist();
     }
     
 
