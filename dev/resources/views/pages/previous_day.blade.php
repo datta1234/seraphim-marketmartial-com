@@ -8,10 +8,8 @@
 
 @section('content')
 <div class="container-fluid previous-day-wrapper mt-3">
-    <div class="row" v-if="trading_opens != null">
-        <div class="trading-opens col-12 text-center">
-            Trading Opens In <trading-countdown :open-time="trading_opens"></trading-countdown>
-        </div>
+    <div class="row">
+        <trading-countdown :open-time="trading_opens"></trading-countdown>
     </div class="row">
     <div class="row">
         <div class="trading-title col-12 text-center">

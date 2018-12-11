@@ -74,7 +74,6 @@ class PreviousDayController extends Controller
             });
 
         \Config::set('loading_previous_day', false); // reset request context
-
         return response()->json($data, 200);
     }
 

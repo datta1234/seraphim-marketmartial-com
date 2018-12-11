@@ -8,14 +8,27 @@ use Closure;
 class ActivityLogger
 {
 
+    /**
+    * retrieve filtered log data - $outputParser can be true,false or a Closure of the parser function to run on each line or false to disable
+    *
+    * @param String $start
+    * @param String $end
+    * @param Array $filter
+    * @param Closure|Boolean $outputParser
+    *
+    * @return Array
+    */
     public static function getLogData($start, $end, $filter, $outputParser = false)
     {
+        // parse to datetimes
         $start = new \DateTime( $start );
         $end = new \DateTime( $end );
 
+        // generate range from interval of 1 day
         $interval = new \DateInterval('P1D');
         $daterange = new \DatePeriod($start, $interval ,$end);
 
+        // test if the default parser is required
         if($outputParser === true) {
             $outputParser = function($line) {
                 return implode(' ', [
@@ -28,9 +41,15 @@ class ActivityLogger
             };
         }
 
+        // itterate over each date in the range and process the logs for that day
         $lines = [];
+        $path = config('marketmartial.logging.path', storage_path()."/logs/system/activity.log");
+        if(substr($path, -4) != ".log") {
+            throw new \Exception("Log file does not have the '.log' extention");
+        }
+        $path = substr($path, 0, strlen($path)-4 );
         foreach($daterange as $date) {
-            $filePath = storage_path()."/logs/system/activity-".$date->format("Y-m-d").".log";
+            $filePath = $path.'-'.$date->format("Y-m-d").".log";
             if(file_exists($filePath)) {
                 self::getFilteredContent($filePath, $filter, $lines, $outputParser);
             }
@@ -38,10 +57,19 @@ class ActivityLogger
         return $lines;
     }
 
+    /**
+    * filter out the lines of log based on the filter object - mutates the $lines parameter
+    *
+    * @param String $filePath
+    * @param Array $filter
+    * @param Array $lines
+    * @param Closure|Boolean $outputParser
+    */
     public static function getFilteredContent($filePath, $filter, &$lines, $outputParser)
     {
         $reader = new LogReader($filePath);
 
+        // 
         $sub = self::generateFilterPattern($filter);
         $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w-\s]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{]'.$sub.'[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
 
@@ -53,9 +81,13 @@ class ActivityLogger
                 $lines[] = ( $outputParser ? $outputParser->call(new self(), $line) : $line );
             }
         }
-        return $lines;
     }
 
+    /**
+    * generate rexex pattern for filter
+    *
+    * @param Array $filter
+    */
     private static function generateFilterPattern($filter = [])
     {
         $user = ( 
@@ -74,16 +106,6 @@ class ActivityLogger
                 : '.+'
         );
         return $user.'\,'.$org.'\,'.$act;
-        if($filter['user_id'] != null) {
-            if($filter['organisation_id'] != null) {
-                return $filter['user_id'].'\,'.$filter['organisation_id'].'[\D.]*';
-            }
-            return $filter['user_id'].'\,.*';
-        }
-        if($filter['organisation_id'] != null) {
-            return '.*\,'.$filter['organisation_id'].'[\D.]*';
-        }
-        return '.*';
     }
 
 }

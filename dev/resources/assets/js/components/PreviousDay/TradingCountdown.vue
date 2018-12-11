@@ -1,5 +1,7 @@
 <template>
-    <span>{{ timer_value }}</span>
+    <div class="trading-opens col-12 text-center" v-if="show_timer">
+            Trading Opens In <span>{{ timer_value }}</span>
+    </div>
 </template>
 <script>
     import moment from 'moment';
@@ -11,6 +13,7 @@
         },
         data() {
             return {
+                show_timer: false,
                 timer_value: "00:00:00",
                 timer: null
             }
@@ -22,6 +25,7 @@
                 if(diff < 0) {
                     return "00:00:00";
                 } else {
+                    this.show_timer = true;
                     return moment.duration(diff).format("hh:mm:ss");
                 }
             },
@@ -32,9 +36,11 @@
                 this.timer = setInterval(this.runTimer, 1000);
             },
             runTimer() {
-                this.timer_value = this.getRemainingTime();
-                if(this.timer_value == "00:00:00") {
-                    this.stopTimer();
+                if(this.openTime != null) {
+                    this.timer_value = this.getRemainingTime();
+                    if(this.timer_value == "00:00:00") {
+                        this.stopTimer();
+                    }
                 }
             },
             stopTimer() {
