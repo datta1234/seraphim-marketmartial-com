@@ -77,6 +77,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function store(UserMarketRequestRequest $request, Market $market)
     {
+        $this->authorize('addMarketReqeust',$market);
         $input = $request->all();
 
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with(['tradeStructureGroups' => function($q){
@@ -295,6 +296,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function actionTaken(Request $request, UserMarketRequest $userMarketRequest)
     {   
+         $this->authorize('actionTaken',$userMarketRequest);
         if($request->has('action_needed')) {
             if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
                 $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));

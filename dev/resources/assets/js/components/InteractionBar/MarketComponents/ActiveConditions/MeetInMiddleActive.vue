@@ -13,12 +13,12 @@
                             Trade At {{ value }}
                         </span>
                     </b-col>
-                    <b-col v-if="isActive" cols="2">
+                    <b-col v-if="isActive && !$root.is_viewer" cols="2">
                         <span id="meet-in-middle-do-trade">
                             <a href="" @click.prevent.stop="doTrade">{{ type }}</a>
                         </span>
                     </b-col>
-                    <b-col v-if="isActive" cols="5">
+                    <b-col v-if="isActive && !$root.is_viewer" cols="5">
                         <span>
                             <a href="" @click.prevent.stop="doReject">Reject</a>
                         </span>

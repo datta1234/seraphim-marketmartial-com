@@ -67,6 +67,7 @@
     @if(Auth::user()->organisation)
         <!-- Organisation key -->
         <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+        <meta name="viewer-type" content="{{ Auth::user()->isViewer() }}">
     @elseif(Auth::user()->isAdmin())
         <!-- Admin key -->
         <meta name="organisation-uuid" content="admin">

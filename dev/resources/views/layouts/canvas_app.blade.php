@@ -7,7 +7,11 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
+    @if(Auth::check())
+        <meta name="viewer-type" content="{{ Auth::user()->isViewer() }}">
+    @endif
+    
     <title>Market Martial</title>
 
     <!-- Styles -->
