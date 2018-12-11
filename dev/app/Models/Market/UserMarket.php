@@ -144,15 +144,32 @@ class UserMarket extends Model
             ->doesntExist();
     }
     
-
+    /**
+    * Scope the query to the current day
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function scopeCurrentDay($query) {
         return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
     }
 
+    /**
+    * Scope the query to the previous day
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function scopePreviousDay($query) {
         return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
     }
 
+    /**
+    * Scope the query to only the traded
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function scopeTraded($query)
     {
         return $query->whereHas('marketNegotiations', function($q){
@@ -162,6 +179,12 @@ class UserMarket extends Model
         });
     }
 
+    /**
+    * Scope the query to only the untraded
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function scopeUntraded($query)
     {
         return $query->whereDoesntHave('marketNegotiations', function($q){
@@ -171,6 +194,11 @@ class UserMarket extends Model
         });
     }
 
+    /**
+    * market negotiations ordered desc by updated_at field
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function marketNegotiationsDesc()
     {
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
@@ -180,12 +208,21 @@ class UserMarket extends Model
             ->orderBy('updated_at',"DESC");
     }
 
+    /**
+    * initial market negotiation
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function firstNegotiation()
     {
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"ASC")->orderBy('id',"ASC");
     }
 
-    
+    /**
+    * current latest market negotiation
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function lastNegotiation()
     {
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
@@ -196,7 +233,11 @@ class UserMarket extends Model
             ->orderBy('id',"DESC");
     }
 
-    // conditions
+    /**
+    * negotiations with active conditions
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function activeConditionNegotiations()
     {
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
@@ -276,11 +317,21 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\UserMarketVolatility','user_market_id');
     }
 
+    /**
+    * test if this user_market is trading
+    *
+    * @return Boolean
+    */
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
         return ( $trade ? !$trade->traded : false );
     }
 
+    /**
+    * test if this user_market needs to have balance worked
+    *
+    * @return Boolean
+    */
     public function needsBalanceWorked()
     {
         $lastTrade = $this->tradeNegotiations()->latest()->first();
@@ -303,6 +354,11 @@ class UserMarket extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    /**
+    * related organisation via user
+    *
+    * @return \App\Models\UserManagement\Organisation
+    */
     public function getOrganisationAttribute()
     {
        return $this->user->organisation;
