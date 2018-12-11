@@ -23,7 +23,7 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-    <template v-if="!negotiation_available && cant_amend && !$root.is_admin">
+    <template v-if="!negotiation_available && cant_amend && !$root.is_admin && !$root.is_viewer">
         <b-row>
             <b-col cols="10">
                 <p class="text-center">
@@ -57,8 +57,8 @@
 
     </template>
     <!-- Alert me when cleared -->
-    <alert-cleared v-if="!can_negotiate && !$root.is_admin" :market_request="marketRequest"></alert-cleared>
-    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
+    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer" :market_request="marketRequest"></alert-cleared>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available && !$root.is_viewer">
         
         <b-row class="mb-1">
             <b-col cols="10">

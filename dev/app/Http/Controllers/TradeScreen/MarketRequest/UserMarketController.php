@@ -68,13 +68,14 @@ class UserMarketController extends Controller
 
     public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
-      $user = $request->user();   
-      $userMarket->workTheBalance($user,$request->input('quantity'));
+        $this->authorize('workTheBalance',$userMarket);
+        $user = $request->user();   
+        $userMarket->workTheBalance($user,$request->input('quantity'));
       
-      $user->organisation->notify("market_request_store","You have worked the balance",true);
-      $userMarketRequest->notifyRequested();
+        $user->organisation->notify("market_request_store","You have worked the balance",true);
+        $userMarketRequest->notifyRequested();
 
-      return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
+        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
     }
 
 
@@ -101,9 +102,10 @@ class UserMarketController extends Controller
         //
     }
 
-
+    // @TODO - move to trade negotiation controller
     public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
+        // @TODO - policy authorization for Traders and Deny for Viewers
         $user = $request->user();
         $last_trade_negotiation = $userMarketRequest->chosenUserMarket->lastNegotiation->lastTradeNegotiation;
         $last_trade_negotiation->no_cares = true;

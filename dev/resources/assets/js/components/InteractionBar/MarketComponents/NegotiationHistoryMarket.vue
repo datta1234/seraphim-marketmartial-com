@@ -17,7 +17,7 @@
                     </p>
                 </b-col>
                 <b-col cols="10" >
-                    <b-row no-gutters v-if="item.is_interest">
+                    <b-row no-gutters v-if="item.is_interest && !$root.is_viewer">
                         <b-col cols="6" class="text-center" :class="{ 'text-my-org': item.is_maker }">
                             {{ getState(item) }}
                         </b-col>

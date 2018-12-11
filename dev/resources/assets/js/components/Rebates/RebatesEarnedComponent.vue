@@ -18,13 +18,13 @@
 		<div class="card graph-card">
 			<div v-if="has_data" class="card-body">
 				<bar-graph :chart-data="active_data_set" :options="options"></bar-graph>
-				<b-form-checkbox class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
+				<b-form-checkbox v-if="!$root.is_viewer" class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
 	    			Show only my trades
 			    </b-form-checkbox>
 			</div>
 			<div v-else class="card-body">
 				<p class="text-center">No Data for this market to display</p>
-                <b-form-checkbox class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
+                <b-form-checkbox v-if="!$root.is_viewer" class="float-right mt-3" @change="toggleMyTrades" v-model="my_trades_only">
                     Show only my trades
                 </b-form-checkbox>
 			</div>

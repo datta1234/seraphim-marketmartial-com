@@ -16,7 +16,8 @@ class AuthServiceProvider extends ServiceProvider
         'App\Model' => 'App\Policies\ModelPolicy',
         'App\Models\Market\UserMarket' => 'App\Policies\UserMarketPolicy',
         'App\Models\Market\MarketNegotiation' => 'App\Policies\MarketNegotiationPolicy',
-        'App\Models\MarketRequest\UserMarketRequest' => 'App\Policies\UserMarketRequestPolicy'
+        'App\Models\MarketRequest\UserMarketRequest' => 'App\Policies\UserMarketRequestPolicy',
+        'App\Models\StructureItems\Market' => 'App\Policies\MarketPolicy',
     ];
 
     /**

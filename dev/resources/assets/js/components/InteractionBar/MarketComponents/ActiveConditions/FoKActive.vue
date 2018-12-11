@@ -11,7 +11,7 @@
                     <b-col>
                         {{ fok_value }}
                     </b-col>
-                    <b-col v-if="isActive">
+                    <b-col v-if="isActive && !$root.is_viewer">
                         <span id="fok-popover-hit">
                             <a  href="" 
                                 @click.prevent.stop="doTrade">
