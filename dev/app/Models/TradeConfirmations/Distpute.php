@@ -68,4 +68,14 @@ class Distpute extends Model
     {
         return $this->belongsTo('App\Models\UserManagement\User','receiving_user_id');
     }
+
+    /**
+    * Get the activity type for context for this models events
+    * @param string $context
+    * @return string
+    */
+    public function getActivityType($context = "changed")
+    {
+        return "dispute";
+    }
 }

@@ -43,6 +43,9 @@
 							<a class="dropdown-item" href="{{ route('admin.mfa.setup') }}">
 								Setup MFA
 							</a>
+							<a class="dropdown-item" href="{{ route('admin.logging.index') }}">
+								Activity Logs
+							</a>
 						</div>
 					</li>
 					<li class="nav-item">

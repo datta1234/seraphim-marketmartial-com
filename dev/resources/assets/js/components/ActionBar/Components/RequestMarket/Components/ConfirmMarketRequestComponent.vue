@@ -83,6 +83,16 @@
                     </p>
                 </b-col>
             </b-row>
+            <b-row v-if="display.has_future" align-h="start" class="mt-0 mb-0">
+                <b-col cols="3" class="mt-2">
+                    <p class="m-0">FUTURE PRICE REFERENCE:</p>
+                </b-col>
+                <b-col :key="index" v-for="(field, index) in data.market_object.details.fields" cols="3" class="mt-2">
+                    <p class="m-0">
+                        {{ field.has_future ? splitValHelper(field.future,' ',3) : '-' }}
+                    </p>
+                </b-col>
+            </b-row>
             <b-row align-h="start" class="mt-0 mb-0">
                 <b-col cols="3" class="mt-2">
                     <p class="m-0">STRUCTURE:</p>
@@ -131,6 +141,7 @@
                     is_versus_date: false,
                     is_vega: false,
                     has_cap: false,
+                    has_future: true,
                 },
             };
         },
@@ -157,6 +168,7 @@
             this.display.is_versus_date = false;
             this.display.is_vega = false;
             this.display.has_cap = false;
+            this.display.has_future = true;
 
             this.display.is_stock_only = this.data.market_object.stock ? true : false;
             
@@ -183,6 +195,7 @@
                     this.display.has_strike = false;
                     this.display.is_vega = true;
                     this.display.has_cap = true;
+                    this.display.has_future = false;
                     break;
                 default:
 

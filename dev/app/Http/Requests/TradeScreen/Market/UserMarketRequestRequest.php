@@ -75,9 +75,8 @@ class UserMarketRequestRequest extends FormRequest
 
             foreach ($tradeStructuregroup->items as $structureItem)
             {
-                $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule . ($structureItem->title == "Cap" ? '|between:0,10' : '');
+                $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = ($structureItem->title == "Future" ? 'sometimes|' : '').$structureItem->itemType->validation_rule . ($structureItem->title == "Cap" ? '|between:0,10' : '');
             }
-            $rules["trade_structure_groups.{$i}.fields.Cap"];
         }
         return $rules;
     }

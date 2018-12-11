@@ -90,9 +90,12 @@ class PreviousDayController extends Controller
                 $q->where('organisation_id', \Auth::user()->organisation_id);
             })
             ->activeQuotes()
-            ->bestQuotes()
             ->with('userMarketRequest')
             ->get()
+            ->filter(function($quote){
+                // only the best quotes
+                return $quote->isBestQuote();
+            })
             ->map(function($quote) {
                 $data = $quote->setOrgContext()->preFormattedQuote();
                 $data['market_request_summary'] = $quote->userMarketRequest->getSummary();
@@ -117,13 +120,15 @@ class PreviousDayController extends Controller
                 $q->where('organisation_id', \Auth::user()->organisation_id);
             })
             ->activeQuotes()
-            ->bestQuotes()
-            ->get();
+            ->get()
+            ->filter(function($quote){
+                // only the best quotes
+                return $quote->isBestQuote();
+            });
         \Config::set('loading_previous_day', false); // reset request context
 
-        $marketRequests = [];
-
         // walk through the quotes and refresh if need be or pull
+        $marketRequests = [];
         foreach($quotes as $quote) {
             if(in_array($quote->id, $refresh)) {
                 // REFRESH

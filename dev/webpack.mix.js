@@ -29,6 +29,7 @@ mix.js('resources/assets/js/trade-screen.js', 'public/js')
 mix.js('resources/assets/js/canvas.js', 'public/js')
 mix.js('resources/assets/js/public.js', 'public/js')
 mix.js('resources/assets/js/previous-day.js', 'public/js')
+mix.js('resources/assets/js/activity-log.js', 'public/js')
 mix.sass('resources/assets/sass/app.scss', 'public/css');
 
 if(process.env.NODE_ENV == 'production') {

@@ -17,6 +17,8 @@ export default {
             market_request_state_label: '',
             user_market_bid: '',
             user_market_offer: '',
+            user_market_bid_choice: '',
+            user_market_offer_choice: '',
         }
     },
      computed: {
@@ -67,10 +69,11 @@ export default {
             // set new refs
             this.user_market_bid = null;
             this.user_market_offer = null;
+            this.user_market_bid_choice = null;
+            this.user_market_offer_choice = null;
             this.market_request_state = null;
             this.market_request_state_label = null;
-           let lastTradeNegotiation  = null;
-
+            let lastTradeNegotiation  = null;
             
           /*  if()
             {

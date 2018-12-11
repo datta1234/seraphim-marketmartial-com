@@ -174,7 +174,6 @@
             if(this.data.market_object.expiry_dates.length <= this.data.number_of_dates && this.data.market_object && this.data.market_object.expiry_dates) {
                 this.selected_dates = this.data.market_object.expiry_dates;
             }
-            console.log("Dates: ",this.selected_dates);
         }
     }
 </script>

@@ -269,14 +269,20 @@
                     trade_structure_groups:[]
                 }
                 this.controller_data.market_object.details.fields.forEach( (element,index) => {
-                    formatted_data.trade_structure_groups.push({
+                    let group_data = {
                         is_selected: element.is_selected,
                         market_id: this.controller_data.market_object.markets[index].id,
                         fields: {
                             "Expiration Date": this.castToMoment( this.controller_data.market_object.expiry_dates[0] ),
                             Quantity: element.quantity
                         }
-                    });
+                    };
+                    
+                    if(element.has_future) {
+                        group_data.fields["Future"] = element.future;
+                    }
+
+                    formatted_data.trade_structure_groups.push(group_data);
                 });
                 return formatted_data;
             },

@@ -260,16 +260,26 @@
              */
             formatRequestData() {
                 // sets initial object structure
-                return {
+                let formatted_data = {
                     trade_structure: this.controller_data.market_object.trade_structure,
-                    trade_structure_groups: [{
+                    trade_structure_groups:[]
+                }
+                this.controller_data.market_object.details.fields.forEach( (element,index) => {
+                    let group_data = {
                         market_id: this.controller_data.market_object.market.id,
                         fields: {
                             "Expiration Date": this.castToMoment( this.controller_data.market_object.expiry_dates[0] ),
-                            Quantity: this.controller_data.market_object.details.fields[0].quantity,
-                        }    
-                    }]
-                }
+                            Quantity: element.quantity,
+                        }
+                    };
+                    if(element.has_future) {
+                        group_data.fields["Future"] = element.future;
+                    }
+
+                    formatted_data.trade_structure_groups.push(group_data);
+                });
+
+                return formatted_data;
             },
             /**
              * Casting a passed string to moment with a new format
