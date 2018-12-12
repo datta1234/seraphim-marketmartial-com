@@ -243,7 +243,8 @@
                     'quantity',
                     'expiration_date',
                     'strike',
-                    'status'
+                    'status',
+                    'future',
                 ]
             };
         },

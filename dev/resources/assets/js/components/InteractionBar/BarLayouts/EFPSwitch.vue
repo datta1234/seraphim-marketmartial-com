@@ -243,7 +243,8 @@
                 market_requested_columns: [
                     'quantity',
                     'tradable',
-                    'status'
+                    'status',
+                    'future',
                 ]
             };
         },
