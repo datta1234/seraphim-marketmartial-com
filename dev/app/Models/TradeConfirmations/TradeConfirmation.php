@@ -662,7 +662,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $value = null;
                 break;
                 case 'Volatility':
-                $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
                 break;
                 case 'Gross Premiums':
                 $value = null;

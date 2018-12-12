@@ -8,10 +8,8 @@
 
 @section('content')
 <div class="container-fluid previous-day-wrapper mt-3">
-    <div class="row" v-if="trading_opens != null">
-        <div class="trading-opens col-12 text-center">
-            Trading Opens In <trading-countdown :open-time="trading_opens"></trading-countdown>
-        </div>
+    <div class="row">
+        <trading-countdown :open-time="trading_opens"></trading-countdown>
     </div class="row">
     <div class="row">
         <div class="trading-title col-12 text-center">
@@ -19,10 +17,10 @@
         </div>
     </div class="row">
     <div class="row">
-        <traded-markets :markets="display_markets_traded" class="mb-5"></traded-markets>
+        <traded-markets class="previous-day-traded" :markets="display_markets_traded" class="mb-5"></traded-markets>
     </div class="row">
     <div class="row">
-        <untraded-markets :markets="display_markets_untraded"></untraded-markets>
+        <untraded-markets class="previous-day-untraded" :markets="display_markets_untraded"></untraded-markets>
     </div class="row">
 </div>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\TradeScreen\MarketNegotiation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Market\MarketNegotiation;
+use App\Models\Trade\TradeNegotiation;
 use App\Http\Requests\TradeScreen\MarketNegotiation\TradeNegotiationStoreRequest;
 
 class TradeNegotiationController extends Controller
@@ -41,5 +42,15 @@ class TradeNegotiationController extends Controller
         {
             return response()->json(['data' => false, 'message' => "Response failed to be sent."],500);
         }
+    }
+
+    public function noFurtherCares(Request $request,TradeNegotiation $tradeNegotiation)
+    {
+        $user = $request->user();
+        $this->authorize('applyNoFurtherCares',$tradeNegotiation);
+        $tradeNegotiation->no_cares = true;
+        $tradeNegotiation->update();
+        $tradeNegotiation->userMarket->fresh()->userMarketRequest->notifyRequested();
+        return response()->json(['data' => null, 'message' => "No further cares applied"]);
     }
 }

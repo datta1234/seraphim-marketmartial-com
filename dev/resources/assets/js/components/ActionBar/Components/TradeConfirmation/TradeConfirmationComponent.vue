@@ -52,10 +52,10 @@
                     {{ option_group.volatility }} %
                 </td>
                 <td>
-                    {{  splitValHelper(option_group.gross_prem,' ',3) }}
+                    <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
                 </td>
                 <td>
-                    {{  splitValHelper(option_group.net_prem,' ',3)   }}
+                    <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
                 </td>
             </tr>
           </tbody>

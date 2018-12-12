@@ -24,16 +24,29 @@ class TradeConfirmationPolicy
      * Determine whether the user can dispute a TradeConfirmation.
      *
      * @param  \App\Models\UserManagement\User  $user
-     * @param  \App\Models\TradeConfirmations\TradeConfirmation $market
+     * @param  \App\Models\TradeConfirmations\TradeConfirmation $tradeConfirmation
      * @return mixed
      */
-    public function dispute(User $user, TradeConfirmation $market)
+    public function dispute(User $user, TradeConfirmation $tradeConfirmation)
     {
 
         if($user->isViewer()) { 
             return false; 
         }
-        return $user->isTrader();
+        // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [3])) {
+            // test sender org
+            if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+            // test receiver org
+            if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        return false;
     }
 
     /**
@@ -45,11 +58,23 @@ class TradeConfirmationPolicy
      */
     public function confirm(User $user, TradeConfirmation $tradeConfirmation)
     {
-
         if($user->isViewer()) { 
             return false; 
         }
-        return $user->isTrader();
+        // Status 3 = send user 2 or 5 received user anything else is not allowed 
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [3])) {
+            // test sender org
+            if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+            // test receiver orgs
+            if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        return false;
     }
 
     /**
@@ -61,11 +86,23 @@ class TradeConfirmationPolicy
      */
     public function phaseTwo(User $user, TradeConfirmation $tradeConfirmation)
     {
-
         if($user->isViewer()) { 
             return false; 
         }
-        return $user->isTrader();
+        // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [1,3])) {
+            // test sender org
+            if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+            // test receiver org
+            if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        return false;
     }
 
     /**
@@ -80,7 +117,20 @@ class TradeConfirmationPolicy
         if($user->isViewer()) { 
             return false; 
         }
-        return $user->isTrader();
+        // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [1,3])) {
+            // test sender org
+            if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+            // test receiver org
+            if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
+                return $user->isTrader();
+            }
+        }
+        return false;
     }
 
 }

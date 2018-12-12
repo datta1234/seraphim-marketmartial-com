@@ -21,7 +21,9 @@ class Slack
     /**
     *   Send Request
     *   
-    *   
+    *   @param String $method
+    *   @param Array $headers
+    *   @param mixed $body
     */
     protected function sendHttp($method, $headers, $body) {
         

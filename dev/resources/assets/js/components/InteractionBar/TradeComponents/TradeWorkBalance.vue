@@ -84,7 +84,8 @@
            },
           noFutherCares(){
                 this.server_loading = true;
-                this.marketRequest.chosen_user_market.noFutherCares()
+
+                this.marketRequest.chosen_user_market.getLastNegotiation().getLastTradeNegotiation().noFutherCares()
                 .then(response => {
                     EventBus.$emit('addToNoCares',this.marketRequest.id);
                     EventBus.$emit('interactionToggle', false);

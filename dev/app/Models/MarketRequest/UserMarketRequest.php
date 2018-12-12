@@ -763,7 +763,7 @@ class UserMarketRequest extends Model
 
 
 
-        if($this->chosenUserMarket != null)
+        if($this->chosenUserMarket != null && $this->chosenUserMarket->lastNegotiation)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             $marketNegotiationRoles = ["other"];
