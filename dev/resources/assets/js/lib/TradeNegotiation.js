@@ -218,5 +218,18 @@ export default class TradeNegotiation extends BaseModel {
             });
         });
     }
+
+    noFutherCares()
+    {
+         return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl + "/trade/trade-negotiation/"+this.id+"/no-further-cares")
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        }); 
+    }
  
 }

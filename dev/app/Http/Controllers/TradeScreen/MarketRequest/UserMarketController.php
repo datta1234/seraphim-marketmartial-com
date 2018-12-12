@@ -102,18 +102,6 @@ class UserMarketController extends Controller
         //
     }
 
-    // @TODO - move to trade negotiation controller
-    public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
-    {
-        // @TODO - policy authorization for Traders and Deny for Viewers
-        $user = $request->user();
-        $last_trade_negotiation = $userMarketRequest->chosenUserMarket->lastNegotiation->lastTradeNegotiation;
-        $last_trade_negotiation->no_cares = true;
-        $last_trade_negotiation->update();
-        $userMarket->fresh()->userMarketRequest->notifyRequested();
-        return response()->json(['data' => null, 'message' => "No further cares applied"]);
-    }
-
     /**
      * Update the specified resource in storage.
      *

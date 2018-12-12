@@ -235,7 +235,8 @@
                 ],
                 market_requested_columns: [
                     'quantity',
-                    'status'
+                    'status',
+                    'future',
                 ]
             };
         },

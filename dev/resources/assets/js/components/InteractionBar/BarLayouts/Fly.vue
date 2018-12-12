@@ -243,7 +243,8 @@
                 market_requested_columns: [
                     'quantity',
                     'strike',
-                    'status'
+                    'status',
+                    'future',
                 ]
             };
         },

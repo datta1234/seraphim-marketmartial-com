@@ -229,7 +229,7 @@
                         stock: this.stock_data.market_object.stock.code,
                         fields: {
                             "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? 
-                                this.stock_data.market_object.expiry_dates[index]
+                                this.stock_data.market_object.expiry_dates[key]
                                 : this.stock_data.market_object.expiry_dates[0] ),                            
                             Quantity: element.quantity,
                             Strike: element.strike,

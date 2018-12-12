@@ -17169,6 +17169,7 @@ readers do not read off random characters that represent icons */
   -webkit-box-shadow: 0px 1px 6px 3px black;
           box-shadow: 0px 1px 6px 3px black;
   height: 58px;
+  padding: 0rem 0rem;
 }
 
 #mainNav .nav-item > a {
