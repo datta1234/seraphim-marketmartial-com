@@ -426,18 +426,20 @@ class UserMarket extends Model
         })->first();
         $this->update(['is_on_hold'=>false]);
 
-      return  $marketNegotiation->update(['is_repeat'=>true]);    
+        return  $marketNegotiation->update(['is_repeat'=>true]);    
     }
 
     /**
-    * Return Boolean
     * if the person presented q qoute and was placed on hold the can repaet market negotaui
-    * @params void
+    *
+    * @param $user \App\Models\UserManagement\User
+    * @param $data Array
+    *
+    * @return Boolean
     */
     public function updateQuote($user,$data)
     {
-        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
-        {
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user) {
             $query->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id', $user->organisation_id);
             });
@@ -458,7 +460,11 @@ class UserMarket extends Model
         return  $marketNegotiation->update($data);
     }
 
-
+    /**
+    * set the action on the market reuqest for organisation specified
+    *
+    * @param $organisation_id Integer
+    */
     private function setCounterOrgnisationAction($organisation_id)
     {
         $this->userMarketRequest->setAction(
