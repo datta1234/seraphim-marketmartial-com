@@ -24,10 +24,10 @@ class TradeConfirmationPolicy
      * Determine whether the user can dispute a TradeConfirmation.
      *
      * @param  \App\Models\UserManagement\User  $user
-     * @param  \App\Models\TradeConfirmations\TradeConfirmation $market
+     * @param  \App\Models\TradeConfirmations\TradeConfirmation $tradeConfirmation
      * @return mixed
      */
-    public function dispute(User $user, TradeConfirmation $market)
+    public function dispute(User $user, TradeConfirmation $tradeConfirmation)
     {
 
         if($user->isViewer()) { 

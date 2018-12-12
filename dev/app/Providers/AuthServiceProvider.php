@@ -19,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\MarketRequest\UserMarketRequest' => 'App\Policies\UserMarketRequestPolicy',
         'App\Models\StructureItems\Market' => 'App\Policies\MarketPolicy',
         'App\Models\TradeConfirmations\TradeConfirmation' => 'App\Policies\TradeConfirmationPolicy',
+        'App\Models\Trade\TradeNegotiation' => 'App\Policies\TradeNegotiationPolicy',
     ];
 
     /**
