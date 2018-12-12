@@ -305,29 +305,6 @@ export default class UserMarket extends BaseModel {
         });
     }
 
-
-    noFutherCares()
-    {
-        console.log(this.user_market_request_id,this.id);
-        // catch not assigned to a market request yet!
-        if(this.user_market_request_id == null) {
-            return new Promise((resolve, reject) => {
-                reject(new Errors("Invalid Market Request"));
-            });
-        }
-
-         return new Promise((resolve, reject) => {
-            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id+"/no-further-cares")
-            .then(response => {
-                resolve(response);
-            })
-            .catch(err => {
-                reject(err);
-            });
-        }); 
-    }
-
-
     
     /**
     *  delete
