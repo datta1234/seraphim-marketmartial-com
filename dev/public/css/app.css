@@ -17537,40 +17537,120 @@ input:checked + .slider:before {
   transform: translateY(-50%);
 }
 
-.market-tab.market-alert {
+.trade-section.dark-theme .market-tab,
+.previous-day-wrapper.dark-theme .market-tab {
+  background-color: #073238;
+}
+
+.trade-section.light-theme .market-tab,
+.previous-day-wrapper.light-theme .market-tab {
+  background-color: #071a22;
+}
+
+.trade-section.dark-theme .market-tab.market-alert,
+.trade-section.light-theme .market-tab.market-alert,
+.trade-section .previous-day-traded .market-tab.market-alert,
+.trade-section .previous-day-untraded .market-tab.market-alert,
+.previous-day-wrapper.dark-theme .market-tab.market-alert,
+.previous-day-wrapper.light-theme .market-tab.market-alert,
+.previous-day-wrapper .previous-day-traded .market-tab.market-alert,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-alert {
   background-color: #BB1D1D;
 }
 
-.market-tab.market-confirm {
+.trade-section.dark-theme .market-tab.market-confirm,
+.trade-section.light-theme .market-tab.market-confirm,
+.trade-section .previous-day-traded .market-tab.market-confirm,
+.trade-section .previous-day-untraded .market-tab.market-confirm,
+.previous-day-wrapper.dark-theme .market-tab.market-confirm,
+.previous-day-wrapper.light-theme .market-tab.market-confirm,
+.previous-day-wrapper .previous-day-traded .market-tab.market-confirm,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-confirm {
   background-color: #E17428;
 }
 
-.market-tab.market-request {
+.trade-section.dark-theme .market-tab.market-request,
+.trade-section.light-theme .market-tab.market-request,
+.trade-section .previous-day-traded .market-tab.market-request,
+.trade-section .previous-day-untraded .market-tab.market-request,
+.previous-day-wrapper.dark-theme .market-tab.market-request,
+.previous-day-wrapper.light-theme .market-tab.market-request,
+.previous-day-wrapper .previous-day-traded .market-tab.market-request,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-request {
   border: 0.15em solid #2358BD;
 }
 
-.market-tab.market-request .market-tab-state {
+.trade-section.dark-theme .market-tab.market-request .market-tab-state,
+.trade-section.light-theme .market-tab.market-request .market-tab-state,
+.trade-section .previous-day-traded .market-tab.market-request .market-tab-state,
+.trade-section .previous-day-untraded .market-tab.market-request .market-tab-state,
+.previous-day-wrapper.dark-theme .market-tab.market-request .market-tab-state,
+.previous-day-wrapper.light-theme .market-tab.market-request .market-tab-state,
+.previous-day-wrapper .previous-day-traded .market-tab.market-request .market-tab-state,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-request .market-tab-state {
   color: #2358BD;
 }
 
-.market-tab.negotiation-vol-pending .market-tab-state {
+.trade-section.dark-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section .previous-day-traded .market-tab.negotiation-vol-pending .market-tab-state,
+.trade-section .previous-day-untraded .market-tab.negotiation-vol-pending .market-tab-state,
+.previous-day-wrapper.dark-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.previous-day-wrapper.light-theme .market-tab.negotiation-vol-pending .market-tab-state,
+.previous-day-wrapper .previous-day-traded .market-tab.negotiation-vol-pending .market-tab-state,
+.previous-day-wrapper .previous-day-untraded .market-tab.negotiation-vol-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
-.market-tab.trade-negotiation-open.market-alert {
+.trade-section.dark-theme .market-tab.trade-negotiation-open.market-alert,
+.trade-section.light-theme .market-tab.trade-negotiation-open.market-alert,
+.trade-section .previous-day-traded .market-tab.trade-negotiation-open.market-alert,
+.trade-section .previous-day-untraded .market-tab.trade-negotiation-open.market-alert,
+.previous-day-wrapper.dark-theme .market-tab.trade-negotiation-open.market-alert,
+.previous-day-wrapper.light-theme .market-tab.trade-negotiation-open.market-alert,
+.previous-day-wrapper .previous-day-traded .market-tab.trade-negotiation-open.market-alert,
+.previous-day-wrapper .previous-day-untraded .market-tab.trade-negotiation-open.market-alert {
   background-color: #BB1D1D;
 }
 
-.market-tab.trade-negotiation-pending,
-.market-tab.trade-negotiation-open {
+.trade-section.dark-theme .market-tab.trade-negotiation-pending,
+.trade-section.dark-theme .market-tab.trade-negotiation-open,
+.trade-section.light-theme .market-tab.trade-negotiation-pending,
+.trade-section.light-theme .market-tab.trade-negotiation-open,
+.trade-section .previous-day-traded .market-tab.trade-negotiation-pending,
+.trade-section .previous-day-traded .market-tab.trade-negotiation-open,
+.trade-section .previous-day-untraded .market-tab.trade-negotiation-pending,
+.trade-section .previous-day-untraded .market-tab.trade-negotiation-open,
+.previous-day-wrapper.dark-theme .market-tab.trade-negotiation-pending,
+.previous-day-wrapper.dark-theme .market-tab.trade-negotiation-open,
+.previous-day-wrapper.light-theme .market-tab.trade-negotiation-pending,
+.previous-day-wrapper.light-theme .market-tab.trade-negotiation-open,
+.previous-day-wrapper .previous-day-traded .market-tab.trade-negotiation-pending,
+.previous-day-wrapper .previous-day-traded .market-tab.trade-negotiation-open,
+.previous-day-wrapper .previous-day-untraded .market-tab.trade-negotiation-pending,
+.previous-day-wrapper .previous-day-untraded .market-tab.trade-negotiation-open {
   background-color: #E17428;
 }
 
-.market-tab.trade-negotiation-pending .market-tab-state {
+.trade-section.dark-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section .previous-day-traded .market-tab.trade-negotiation-pending .market-tab-state,
+.trade-section .previous-day-untraded .market-tab.trade-negotiation-pending .market-tab-state,
+.previous-day-wrapper.dark-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.previous-day-wrapper.light-theme .market-tab.trade-negotiation-pending .market-tab-state,
+.previous-day-wrapper .previous-day-traded .market-tab.trade-negotiation-pending .market-tab-state,
+.previous-day-wrapper .previous-day-untraded .market-tab.trade-negotiation-pending .market-tab-state {
   border-left: 2px solid #BB1D1D;
 }
 
-.market-tab .market-tab-strikes {
+.trade-section.dark-theme .market-tab .market-tab-strikes,
+.trade-section.light-theme .market-tab .market-tab-strikes,
+.trade-section .previous-day-traded .market-tab .market-tab-strikes,
+.trade-section .previous-day-untraded .market-tab .market-tab-strikes,
+.previous-day-wrapper.dark-theme .market-tab .market-tab-strikes,
+.previous-day-wrapper.light-theme .market-tab .market-tab-strikes,
+.previous-day-wrapper .previous-day-traded .market-tab .market-tab-strikes,
+.previous-day-wrapper .previous-day-untraded .market-tab .market-tab-strikes {
   text-align: left;
 }
 
@@ -17584,14 +17664,6 @@ input:checked + .slider:before {
 
 .user-action {
   color: #EBC300;
-}
-
-.trade-section.dark-theme .market-tab {
-  background-color: #073238;
-}
-
-.trade-section.light-theme .market-tab {
-  background-color: #071a22;
 }
 
 .market-tab-state .is-maker {

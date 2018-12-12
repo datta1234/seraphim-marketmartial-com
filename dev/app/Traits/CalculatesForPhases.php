@@ -66,15 +66,14 @@ trait CalcuatesForPhases {
         $h = $this->Ln($future/$strike) / ($volatility * pow($tt,0.5) ) + ($volatility * pow($tt,0.5) ) / 2;
         
         $putOptionPremium = -$future * $this->normSdist(-$h) + $strike * $this->normSdist($volatility * pow($tt,0.5) - $h);
-         
-         if($singleStock){
+
+         if(!$singleStock){
             return round($putOptionPremium*10);
 
         }else{
             return round($putOptionPremium*100,2);
         }   
     }
-
 
     // start excel calculations
 

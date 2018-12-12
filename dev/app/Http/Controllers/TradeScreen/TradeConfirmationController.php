@@ -18,7 +18,7 @@ class TradeConfirmationController extends Controller
     public function phaseTwo(TradeConfirmation $tradeConfirmation,TradeConfirmationStoreRequest $request)
     {
         $user = $request->user();
-        $this->authorize('phaseTwo',$tradeConfirmation);
+        $this->authorize('phaseTwo', $tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
     	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
         $tradeConfirmation->phaseTwo();  

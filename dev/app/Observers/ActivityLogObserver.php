@@ -89,8 +89,7 @@ class ActivityLogObserver
                 return $return;
             }
         } catch(\Exception $e) { 
-            /* do nothing... */ 
-            \Log::info($e);
+            /* do nothing... */
         }
 
         $messages = $dirty->map(function($value, $key) use (&$model, $userString, $classHumanName, $context) {

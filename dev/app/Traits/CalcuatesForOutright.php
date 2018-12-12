@@ -55,7 +55,6 @@ trait CalcuatesForOutright {
           $contracts/*cell(21,6)*/ = $COD1;
         }
 
-        // dd( $POD1, $COD1,$gross_prem);
         // futures and deltas buy/sell
         if($contracts < 0)
         {
@@ -70,7 +69,6 @@ trait CalcuatesForOutright {
         $this->futureGroups[0]->setOpVal('Contract', round($contracts));
 
         $this->load(['futureGroups','optionGroups']);
-
 
         $this->feesCalc($isOffer,$gross_prem,$is_sender);
     }

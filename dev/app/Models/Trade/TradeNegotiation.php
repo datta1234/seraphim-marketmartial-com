@@ -71,6 +71,31 @@ class TradeNegotiation extends Model
             }
         });
     }
+
+    /**
+    *   Get source of negotiations
+    *   
+    */
+    public function getRoot()
+    {
+        $table = $this->table;
+        $parentKey = $this->tradeNegotiationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $history = \DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id
+                    FROM (
+                        SELECT @id := $id
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+        ");
+        return self::hydrate($history)->sortBy('id')->first();
+    }
     
     /**
     * Return relation based of _id_foreign index
@@ -163,8 +188,6 @@ class TradeNegotiation extends Model
         }
         return null;
     }
-
-
   
 
     public function preFormatted()

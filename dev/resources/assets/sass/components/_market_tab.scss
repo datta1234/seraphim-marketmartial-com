@@ -41,48 +41,64 @@
 	}
 }
 
-.market-tab
-{
-	&.market-alert {
-		background-color: $mm-market-alert; 
-	}
-
-	&.market-confirm {
-		background-color: $mm-market-confirm;
-	}
-
-	&.market-request {
-		border: 0.15em solid $mm-market-intrest;
-
-		.market-tab-state {
-			color: $mm-market-intrest;
+.trade-section, .previous-day-wrapper {
+	&.dark-theme {
+		.market-tab {
+			background-color: $mm-market-tab-alt;
 		}
 	}
 
-
-	&.negotiation-vol-pending{
-		.market-tab-state{
-		 	border-left: 2px solid $mm-red;
+	&.light-theme {
+		.market-tab {
+			background-color: $mm-market-tab;
 		}
 	}
-	
-	&.trade-negotiation-open.market-alert {
-		background-color: $mm-market-alert; 
-	}
+	&.dark-theme ,&.light-theme, .previous-day-traded, .previous-day-untraded {
 
-	&.trade-negotiation-pending, &.trade-negotiation-open{
-		background-color:  $mm-market-confirm;
-	}
-	
-	&.trade-negotiation-pending
-	{
-		.market-tab-state{
-		 	border-left: 2px solid $mm-red;
-		}	
-	}
-	
-	.market-tab-strikes {
-		text-align: left;
+		.market-tab
+		{
+			&.market-alert {
+				background-color: $mm-market-alert; 
+			}
+
+			&.market-confirm {
+				background-color: $mm-market-confirm;
+			}
+
+			&.market-request {
+				border: 0.15em solid $mm-market-intrest;
+
+				.market-tab-state {
+					color: $mm-market-intrest;
+				}
+			}
+
+
+			&.negotiation-vol-pending{
+				.market-tab-state{
+				 	border-left: 2px solid $mm-red;
+				}
+			}
+			
+			&.trade-negotiation-open.market-alert {
+				background-color: $mm-market-alert; 
+			}
+
+			&.trade-negotiation-pending, &.trade-negotiation-open{
+				background-color:  $mm-market-confirm;
+			}
+			
+			&.trade-negotiation-pending
+			{
+				.market-tab-state{
+				 	border-left: 2px solid $mm-red;
+				}	
+			}
+			
+			.market-tab-strikes {
+				text-align: left;
+			}
+		}
 	}
 }
 
@@ -108,17 +124,7 @@
 	color: $mm-user-action;
 }
 
-.trade-section.dark-theme {
-	.market-tab {
-		background-color: $mm-market-tab-alt;
-	}
-}
 
-.trade-section.light-theme {
-	.market-tab {
-		background-color: $mm-market-tab;
-	}
-}
 
 
   

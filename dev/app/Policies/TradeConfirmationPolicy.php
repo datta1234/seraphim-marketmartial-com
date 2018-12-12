@@ -61,7 +61,6 @@ class TradeConfirmationPolicy
      */
     public function phaseTwo(User $user, TradeConfirmation $tradeConfirmation)
     {
-
         if($user->isViewer()) { 
             return false; 
         }
