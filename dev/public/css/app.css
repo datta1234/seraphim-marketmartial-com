@@ -11357,6 +11357,20 @@ table.table {
   color: #98f89b !important;
 }
 
+.optional-input-prepend .input-group-prepend > .input-group-text {
+  background-color: #1c7c74;
+  border-color: #1c7c74;
+}
+
+.optional-input-prepend > .input-group-text {
+  background-color: #1c7c74;
+  border-color: #1c7c74;
+}
+
+.optional-input-prepend input:disabled {
+  border: none;
+}
+
 #trade_html {
   position: relative;
   height: 100%;

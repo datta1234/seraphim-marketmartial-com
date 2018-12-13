@@ -1,6 +1,6 @@
 <template>
     <b-input-group>
-        <b-input-group-prepend is-text>
+        <b-input-group-prepend is-text class="optional-input-prepend">
             <input type="checkbox" aria-label="Checkbox for following text input" v-model="mutableActive"
 :checked="clearField()">
         </b-input-group-prepend>
