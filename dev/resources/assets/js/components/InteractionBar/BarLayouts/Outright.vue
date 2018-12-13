@@ -2,12 +2,11 @@
     <b-container fluid dusk="ibar-negotiation-bar-outright">
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
-        
-        <ibar-market-requested class="mb-2" 
+
+        <ibar-market-requested-futures class="mb-2" 
             :market-request="marketRequest" 
-            :columns="market_requested_columns"
-            :show-time-stamps="false">
-        </ibar-market-requested>
+            :columns="market_requested_future_columns">
+        </ibar-market-requested-futures>
 
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
@@ -195,7 +194,7 @@
     import IbarRemoveConditions from '../MarketComponents/RemoveConditionsComponent';
     import IbarActiveConditions from '../MarketComponents/ActiveConditions';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
-    import IbarMarketRequested from '../MarketComponents/MarketRequested';
+    import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
     
     import AlertCleared from '../Components/AlertClearedComponent.vue';
     
@@ -209,7 +208,7 @@
             IbarActiveConditions,
             IbarTradeAtBestNegotiation,
             AlertCleared,
-            IbarMarketRequested
+            IbarMarketRequestedFutures
         },
         props: {
             
@@ -237,7 +236,7 @@
                     "market_request_delete",
                     "market_negotiation_store"
                 ],
-                market_requested_columns: [
+                market_requested_future_columns: [
                     'future',
                 ]
             };

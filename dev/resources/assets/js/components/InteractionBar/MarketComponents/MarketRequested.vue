@@ -1,10 +1,10 @@
 <template>
-    <b-row dusk="ibar-market-requested" class="market-requested-info">
+    <b-row dusk="ibar-market-requested" class="ibar-market-requested">
         <b-col>
             <b-row align-v="end">
                 <b-col cols="10">
                     <b-row no-gutters v-for="(item, index) in tradings" :key="index">
-                        <b-col :cols="columns.length > 4? 2 : 3" class="info-col text-left" v-if="columns.indexOf('quantity') != -1">
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('quantity') != -1">
                             <span v-if="item.is_stock">
                                 ({{ formatRandQty(item.quantity, '&nbsp;', 3) }}m)
                             </span>
@@ -20,10 +20,10 @@
                                 {{ item.tradable }}
                             </span>
                         </b-col>
-                        <b-col :cols="columns.length > 4? 2 : 3" class="info-col text-left" v-if="columns.indexOf('expiration_date') != -1">
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('expiration_date') != -1">
                             {{ item.expiry }}
                         </b-col>
-                        <b-col :cols="columns.length > 4? 2 : 3" class="info-col text-left" v-if="columns.indexOf('strike') != -1">
+                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('strike') != -1">
                             <span v-if="item.is_stock">
                                 {{ formatRandQty(item.strike, '&nbsp;', 3) }}{{ (item.choice ? '&nbsp;ch' : '') }}
                             </span>
@@ -34,12 +34,9 @@
                         <b-col cols="3" class="info-col text-center" v-if="columns.indexOf('status') != -1">
                             {{ (item.choice ? ( item.vol ? item.vol : 'choice' )  : 'bid&nbsp;/&nbsp;offer') }}
                         </b-col>
-                        <b-col cols="3" class="info-col text-left" v-if="columns.indexOf('future') != -1">
-                            {{ item.future ? splitValHelper(item.future, '&nbsp;', 3) : '' }}
-                        </b-col>
                     </b-row>
                 </b-col>
-                <b-col v-if="showTimeStamps" cols="2">
+                <b-col cols="2">
                     <p class="pull-right m-0">{{ time }}</p>
                 </b-col>
             </b-row>
@@ -53,10 +50,6 @@ export default {
     props: {
         marketRequest: UserMarketRequest,
         columns: Array,
-        showTimeStamps: {
-            type: Boolean,
-            default: true,
-        },
     },
     data() {
         return {
@@ -84,7 +77,6 @@ export default {
                     strike: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.strike],
                     is_stock: this.marketRequest.trade_items[this.keys['group_'+itt]].tradable.is_stock,
                     choice: this.marketRequest.trade_items[this.keys['group_'+itt]]['choice'], // this one is static
-                    future: this.marketRequest.trade_items[this.keys['group_'+itt]][this.keys.future],
                     vol: null
                 };
                 if(this.marketRequest.chosen_user_market) {

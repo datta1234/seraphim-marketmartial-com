@@ -66,7 +66,7 @@
 
         <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" :target="'popover-lift-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
-        <b-col cols="12">
+        <b-col cols="10">
 
             <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
@@ -91,7 +91,8 @@
                     {{ tradeNegotiation.getTradingText() }}
                 </div>
             </div>
-        </b-col> 
+        </b-col>
+        <b-col cols="2"></b-col>
         
         <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
             <b-row dusk="ibar-trade-request-open">

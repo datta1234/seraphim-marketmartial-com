@@ -92,10 +92,10 @@
                     <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
                     <span class="text-danger">
                         <!-- @TODO figure out how to not hardcode the first value -->
-                  <ul v-if="errors">
-                      <li class="text-danger" v-if="errors['structure_groups.0.items.0']" v-for="error in errors['structure_groups.0.items.0']">
+                    <ul v-if="errors">
+                      <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
                           {{ error }}
-                      </li>  
+                      </li>
                     </ul>
                     </span>
                 </td>
@@ -112,26 +112,33 @@
             <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
                 <button type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
                 <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
                     <b-form-select :disabled="can_send" v-model="selected_trading_account">
-                            <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
-                            </option>
-                      </b-form-select>
-                  </div>
+                        <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
+                        </option>
+                    </b-form-select>
+                    <b-row v-if="errors && errors['trading_account']" class="text-center mt-2 mb-2">
+                        <b-col cols="12">
+                            <p class="text-danger mb-0">{{ errors['trading_account'] }}</p>
+                        </b-col>
+                    </b-row>
+                    <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
+                </div>
             </b-col>
            <b-col md="5" offset-md="7" v-else>
                 <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button  type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                 <button  type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                <button type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
-                 <div class="form-group">
+                <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
                     <b-form-select v-model="selected_trading_account">
-                            <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
-                            </option>
-                      </b-form-select>
-                  </div>
+                        <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
+                        </option>
+                    </b-form-select>
+                    <a :href="base_url + '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
+                </div>
             </b-col>
         </b-row> 
 
@@ -154,16 +161,17 @@
             can_calc:function (val) {
                 return this.trade_confirmation.hasFutures() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
             }
-    },
-      data() {
-        return {
+        },
+        data() {
+            return {
                 trading_accounts:[],
                 selected_trading_account:null,
                 errors:{},
                 confirmationLoaded: true,
                 oldConfirmationData: null,
                 trade_confirmation: null,
-                can_dispute: true
+                can_dispute: true,
+                base_url: '',
             }
         },
         methods: {
@@ -194,7 +202,7 @@
                 .then(response => {
                     
                     this.trading_accounts = response.data.trading_accounts;
-
+                    console.log("Trading accounts: ",this.trading_accounts);
                     this.selected_trading_account = this.trading_accounts.find((item)=>{
                         return item.market_id == this.trade_confirmation.market_id;
                     });
@@ -210,6 +218,7 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
+                    console.log("HITTING THIS", response);
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
@@ -222,6 +231,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
                 .catch(err => {
+                    console.log("Catching error", err);
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.confirmationLoaded = true;
                     this.errors = err.errors;
@@ -284,6 +294,7 @@
             }  
         },
         mounted() {
+            this.base_url = axios.defaults.baseUrl;
             this.getTradingAccounts();
         }
     }
