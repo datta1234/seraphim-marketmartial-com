@@ -121,7 +121,7 @@ class UserMarketController extends Controller
 
            $this->authorize('placeOnHold',$userMarket);
             $success = $userMarket->placeOnHold();
-            $request->user()->organisation->notify("market_request_update","You have placed a market on hold. Response sent to counterparty.",true);
+            $request->user()->organisation->notify("market_request_update",/*"You have placed a market on hold. Response sent to counterparty."*/ "",true);
             // Set action that needs to be taken for the org being put on hold
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
        
@@ -130,7 +130,7 @@ class UserMarketController extends Controller
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
             $myOrganisation = $request->user()->organisation;
-            $myOrganisation->notify("market_request_update","You have accepted the market. Please improve the bid or offer",true);
+            $myOrganisation->notify("market_request_update","Please improve the bid or offer.",true);
 
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);

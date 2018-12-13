@@ -2,7 +2,6 @@
     <b-container fluid dusk="ibar-negotiation-bar-outright">
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-3"></ibar-user-market-title>
-        
 
         <ibar-market-requested-futures class="mb-2" 
             :market-request="marketRequest" 

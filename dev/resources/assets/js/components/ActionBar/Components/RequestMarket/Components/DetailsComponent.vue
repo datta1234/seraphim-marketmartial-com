@@ -72,7 +72,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
         							<b-col cols="3">
-        								<label for="strike-0">Strike</label>
+        								<label class="pt-2" for="strike-0">Strike</label>
         							</b-col>
         		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
         		      					<b-form-input :id="'strike-'+index" 
@@ -84,7 +84,7 @@
                                 </b-row>
                             </b-col>
                             <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="strike-0">ZAR</label>
+                                <label class="pt-2" for="strike-0">ZAR</label>
                             </b-col>
 						</b-row>
 
@@ -92,7 +92,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
             						<b-col :cols="display.is_vega ? 2 : 3">
-            							<label for="quantity-0">
+            							<label class="pt-2" for="quantity-0">
                                             {{ display.is_vega ? 'Vega': 'Quantity'}} 
                                             <span v-if="display.is_ratio"> (Ratio)</span>
                                         </label>
@@ -116,12 +116,12 @@
                                     <b-col v-if="form_data.fields[0].hasOwnProperty('future_1') && form_data.fields[0].hasOwnProperty('future_2')" cols="3">
                                     </b-col>
                                     <b-col v-if="display.is_vega" cols="1">
-                                        <label for="quantity-0">ZAR</label>
+                                        <label class="pt-2" for="quantity-0">ZAR</label>
                                     </b-col>
                                 </b-row>
                             </b-col>
                             <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="quantity-0">Rm</label>
+                                <label class="pt-2" for="quantity-0">Rm</label>
                             </b-col>
 						</b-row>
 
@@ -129,7 +129,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
                                     <b-col cols="2">
-                                        <label for="capped-0">Capped</label>
+                                        <label class="pt-2" for="capped-0">Capped</label>
                                     </b-col>
                                     <template v-for="(field, index) in form_data.fields">
                                         <b-col cols="1">
@@ -155,7 +155,7 @@
                                         </b-col>
                                     </template>
                                     <b-col cols="1">
-                                        <label for="capped-0">x</label>
+                                        <label class="pt-2" for="capped-0">x</label>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -165,7 +165,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
                                     <b-col cols="3">
-                                        <label for="future-0">Future Price Reference</label>
+                                        <label class="pt-2" for="future-0">Future Price Reference</label>
                                     </b-col>
                                     <template v-if="form_data.fields[0].hasOwnProperty('future')">
                                         <b-col  :key="index" 

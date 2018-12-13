@@ -705,13 +705,7 @@ table.table {
 	}
 }
 
-.optional-input-prepend {
-	.input-group-prepend  > .input-group-text {
-	    background-color: $mm-modal-header;
-	    border-color: $mm-modal-header;
-	}
-}
-.optional-input-prepend > .input-group-text {
+/* .optional-input-prepend > .input-group-text {
     background-color: $mm-modal-header;
     border-color: $mm-modal-header;
 }
@@ -720,4 +714,4 @@ table.table {
 	input:disabled {
 		border: none;
 	}
-}
+} */

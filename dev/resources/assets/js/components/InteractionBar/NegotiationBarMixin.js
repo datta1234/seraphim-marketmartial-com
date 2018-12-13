@@ -437,6 +437,7 @@ export default {
         },
         addToNoCares() {
             EventBus.$emit('addToNoCares',this.marketRequest.id);
+            EventBus.$emit('interactionToggle', false);
         },
         init() {
             EventBus.$emit('startReset');

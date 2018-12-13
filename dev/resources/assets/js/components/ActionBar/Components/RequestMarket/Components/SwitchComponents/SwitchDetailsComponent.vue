@@ -38,7 +38,7 @@
                             <b-col cols="5">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label class="mr-sm-2" for="option-expiry-0">Expiry</label>
+                                        <label class="mr-sm-2 pt-2" for="option-expiry-0">Expiry</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-select id="option-expiry-1"
@@ -53,7 +53,7 @@
                             <b-col cols="5" offset="2">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label class="mr-sm-2" for="option-expiry-1">Expiry</label>
+                                        <label class="mr-sm-2 pt-2" for="option-expiry-1">Expiry</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-select id="option-expiry-2"
@@ -97,7 +97,7 @@
                             <b-col cols="5">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="strike-0">Strike</label>
+                                        <label class="pt-2" for="strike-0">Strike</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-input id="strike-0"
@@ -107,7 +107,7 @@
                                         </b-form-input>
                                     </b-col>
                                     <b-col cols="3">
-                                        <label for="strike-0">
+                                        <label class="pt-2" for="strike-0">
                                             {{ form_data.fields[0].is_index ? "Points" : "ZAR"}}
                                         </label>
                                     </b-col>
@@ -116,7 +116,7 @@
                             <b-col cols="5" offset="2">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="strike-1">Strike</label>
+                                        <label class="pt-2" for="strike-1">Strike</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-input id="strike-1"
@@ -126,7 +126,7 @@
                                         </b-form-input>
                                     </b-col>
                                     <b-col cols="3">
-                                        <label for="strike-1">
+                                        <label class="pt-2" for="strike-1">
                                             {{ form_data.fields[1].is_index ? "Points" : "ZAR"}}
                                         </label>
                                     </b-col>
@@ -138,7 +138,7 @@
                             <b-col cols="5">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="quantity-0">Quantity</label>
+                                        <label class="pt-2" for="quantity-0">Quantity</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-input id="quantity-0" 
@@ -155,7 +155,7 @@
                                         </p>
                                     </b-col>
                                     <b-col cols="3">
-                                        <label for="quantity-0">
+                                        <label class="pt-2" for="quantity-0">
                                             {{ form_data.fields[0].is_index ? "Contracts" : "Rm"}}
                                         </label>
                                     </b-col>
@@ -164,7 +164,7 @@
                             <b-col cols="5" offset="2">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="quantity-1">Quantity</label>
+                                        <label class="pt-2" for="quantity-1">Quantity</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-form-input id="quantity-1" 
@@ -181,7 +181,7 @@
                                         </p>
                                     </b-col>
                                     <b-col cols="3">
-                                        <label for="quantity-1">
+                                        <label class="pt-2" for="quantity-1">
                                             {{ form_data.fields[1].is_index ? "Contracts" : "Rm"}}
                                         </label>
                                     </b-col>
@@ -193,7 +193,7 @@
                             <b-col cols="5">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="future-0">Future Price Reference</label>
+                                        <label class="pt-2" for="future-0">Future Price Reference</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-input-group>
@@ -216,7 +216,7 @@
                             <b-col cols="5" offset="2">
                                 <b-row>
                                     <b-col cols="3">
-                                        <label for="future-1">Future Price Reference</label>
+                                        <label class="pt-2" for="future-1">Future Price Reference</label>
                                     </b-col>
                                     <b-col cols="6">
                                         <b-input-group>

@@ -11357,19 +11357,16 @@ table.table {
   color: #98f89b !important;
 }
 
-.optional-input-prepend .input-group-prepend > .input-group-text {
-  background-color: #1c7c74;
-  border-color: #1c7c74;
+/* .optional-input-prepend > .input-group-text {
+    background-color: $mm-modal-header;
+    border-color: $mm-modal-header;
 }
 
-.optional-input-prepend > .input-group-text {
-  background-color: #1c7c74;
-  border-color: #1c7c74;
-}
-
-.optional-input-prepend input:disabled {
-  border: none;
-}
+.optional-input-prepend {
+	input:disabled {
+		border: none;
+	}
+} */
 
 #trade_html {
   position: relative;
@@ -18277,12 +18274,13 @@ input:checked + .slider:before {
 }
 
 .mm-modal .modal-body .optional-input-prepend > .input-group-text {
-  background-color: #1c7c74;
-  border-color: #1c7c74;
+  background-color: #D3D8DC;
+  border-color: #afafaf;
 }
 
 .mm-modal .modal-body input:disabled {
   border: none;
+  background-color: #c2c2c2;
 }
 
 .mm-modal .modal-info-text {
