@@ -92,10 +92,10 @@
                     <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
                     <span class="text-danger">
                         <!-- @TODO figure out how to not hardcode the first value -->
-                  <ul v-if="errors">
-                      <li class="text-danger" v-if="errors['structure_groups.0.items.0']" v-for="error in errors['structure_groups.0.items.0']">
+                    <ul v-if="errors">
+                      <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
                           {{ error }}
-                      </li>  
+                      </li>
                     </ul>
                     </span>
                 </td>
@@ -118,6 +118,11 @@
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                         </option>
                     </b-form-select>
+                    <b-row v-if="errors && errors['trading_account']" class="text-center mt-2 mb-2">
+                        <b-col cols="12">
+                            <p class="text-danger mb-0">{{ errors['trading_account'] }}</p>
+                        </b-col>
+                    </b-row>
                     <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
                 </div>
             </b-col>
@@ -213,6 +218,7 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
+                    console.log("HITTING THIS", response);
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
@@ -225,6 +231,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
                 .catch(err => {
+                    console.log("Catching error", err);
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.confirmationLoaded = true;
                     this.errors = err.errors;
