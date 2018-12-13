@@ -135,6 +135,7 @@ export default class TradeConfirmation extends BaseModel {
             resolve();
         })
            .catch(err => {
+            console.log("reject being hit");
             reject(err);
         }); 
        });

@@ -158,7 +158,6 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	Route::get('logging/download', 'Admin\ActivityLogController@download')->name('admin.logging.download');
     Route::get('logging', 'Admin\ActivityLogController@index')->name('admin.logging.index');
 
-
 	Route::post('/user/profile/{user}','Admin\UserController@updateProfile')
 		->name('admin.user.profile.update');
 
@@ -200,7 +199,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 
 	Route::get('organisation', 'Admin\OrganisationController@index');
 	Route::get('organisation/{organisation}/users', 'Admin\OrganisationController@users');
-	
+
 	Route::get('markets', 'Admin\MarketController@index')->name('admin.markets.index');
 	Route::put('markets','Admin\MarketController@update')->name('admin.markets.update');
 
