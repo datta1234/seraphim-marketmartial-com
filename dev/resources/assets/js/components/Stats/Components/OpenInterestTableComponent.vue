@@ -104,14 +104,13 @@
                 ],
                 table_data: {
                     table_fields: [
-                        { key: 'market_name', label: 'Market Name', sortable: true, sortDirection: 'desc' },
-                        { key: 'contract', label: 'Contract', sortable: true, sortDirection: 'desc' },
-                        { key: 'expiry_date', label: 'ExpiryDate', sortable: true, sortDirection: 'desc' },
-                        { key: 'is_put', label: 'Put/Call', sortable: true, sortDirection: 'desc' },
-                        { key: 'open_interest', label: 'Strike Price', sortable: true, sortDirection: 'desc' },
-                        { key: 'strike_price', label: 'Open Interest', sortable: true, sortDirection: 'desc' },
-                        { key: 'delta', label: 'Delta', sortable: true, sortDirection: 'desc' },
-                        { key: 'spot_price', label: 'Spot Price', sortable: true, sortDirection: 'desc' },
+                        { key: 'contract', label: 'Contract', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'expiry_date', label: 'ExpiryDate', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'is_put', label: 'Put/Call', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'open_interest', label: 'Open Interest', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'strike_price', label: 'Strike Price', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'delta', label: 'Delta', sortable: true, sortDirection: 'desc', class: 'text-right' },
+                        { key: 'spot_price', label: 'Spot Price', sortable: true, sortDirection: 'desc', class: 'text-right' },
                     ],
                     data: [],
                     param_options: {
