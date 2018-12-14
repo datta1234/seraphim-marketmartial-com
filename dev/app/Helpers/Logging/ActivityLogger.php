@@ -71,8 +71,8 @@ class ActivityLogger
 
         $sub = self::generateFilterPattern($filter);
         $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w-\s]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{]'.$sub.'[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-        // $reader->getParser()->registerPattern('activity_log', $pattern);
-        // $reader->setPattern('activity_log');
+        $reader->getParser()->registerPattern('activity_log', $pattern);
+        $reader->setPattern('activity_log');
 
         foreach($reader as $line) {
             if(!empty($line)) {
