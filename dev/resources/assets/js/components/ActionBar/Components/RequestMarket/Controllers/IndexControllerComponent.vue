@@ -139,7 +139,6 @@
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.index_data);
             },
             /**
              * Loads Index MarketType 
