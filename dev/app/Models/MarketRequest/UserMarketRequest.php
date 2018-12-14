@@ -162,9 +162,9 @@ class UserMarketRequest extends Model
     */
     public function scopePreviousDayUntraded($query)
     {
-        return $query->whereHas('chosenUserMarket', function($q) {
-                $q->untraded();
-            });
+        return $query->whereDoesntHave('chosenUserMarket', function($q) {
+                $q->traded();
+            })->orWhereDoesntHave('chosenUserMarket');// include quote phases
     }
 
     /**
