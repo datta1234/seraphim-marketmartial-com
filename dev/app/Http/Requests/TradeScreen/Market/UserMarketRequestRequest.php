@@ -5,6 +5,7 @@ namespace App\Http\Requests\TradeScreen\Market;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\StructureItems\TradeStructure;
 use App\Rules\TradeStructureGroupChoice;
+use App\Rules\GreaterValue;
 
 class UserMarketRequestRequest extends FormRequest
 {
@@ -75,9 +76,35 @@ class UserMarketRequestRequest extends FormRequest
 
             foreach ($tradeStructuregroup->items as $structureItem)
             {
-                $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = ($structureItem->title == "Future" ? 'sometimes|' : '').$structureItem->itemType->validation_rule . ($structureItem->title == "Cap" ? '|between:0,10' : '');
+                switch ($structureItem->title) {
+                    case 'Future':
+                        $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = 'sometimes|'
+                            .$structureItem->itemType->validation_rule;
+                        break;
+                    case 'Cap':
+                        $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule
+                            .'|between:0,10';
+                        break;
+                    case 'Strike':
+                        if($i !== 0) {
+                            $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = array_merge(
+                                explode("|", $structureItem->itemType->validation_rule),
+                                [new GreaterValue(array_search(
+                                    'Strike',
+                                    array_column($tradeStructure->tradeStructureGroups[$i-1]->toArray(), 'title')
+                                ), 'Strike')]
+                            );
+                        } else {
+                            $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;
+                        }
+                        break;      
+                    default:
+                        $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;
+                        break;
+                }
             }
         }
+
         return $rules;
     }
 
