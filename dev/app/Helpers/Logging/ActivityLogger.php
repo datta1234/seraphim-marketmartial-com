@@ -67,12 +67,10 @@ class ActivityLogger
     */
     public static function getFilteredContent($filePath, $filter, &$lines, $outputParser)
     {
-        $reader = new LogReader($filePath);
+        $reader = new LogReader($filePath, 0);
 
-        // 
         $sub = self::generateFilterPattern($filter);
         $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w-\s]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{]'.$sub.'[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-
         $reader->getParser()->registerPattern('activity_log', $pattern);
         $reader->setPattern('activity_log');
 

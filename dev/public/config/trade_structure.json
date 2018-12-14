@@ -67,7 +67,8 @@
         "expiration_date_2": "Expiration Date 2",
         "strike": "Strike",
         "quantity": "Quantity",
-        "future": "Future",
+        "future_1": "Future 1",
+        "future_2": "Future 2",
         "group_1": "default"
     },
     "var_swap": {

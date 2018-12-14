@@ -126,13 +126,11 @@
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.controller_data);
             },
             /**
              * Loads Index MarketType 
              */
             loadMarketType() {
-                console.log("Market Types",this.$root.market_types);
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((market_type) => {
                         if(market_type.title == this.controller_data.market_type_title) {
@@ -273,8 +271,12 @@
                     }]
                 }
 
-                if(this.controller_data.market_object.details.fields[0].has_future) {
-                    formatted_data.trade_structure_groups[0].fields["Future"] = this.controller_data.market_object.details.fields[0].future;
+                if(this.controller_data.market_object.details.fields[0].has_future_1) {
+                    formatted_data.trade_structure_groups[0].fields["Future 1"] = this.controller_data.market_object.details.fields[0].future_1;
+                }
+
+                if(this.controller_data.market_object.details.fields[0].has_future_2) {
+                    formatted_data.trade_structure_groups[0].fields["Future 2"] = this.controller_data.market_object.details.fields[0].future_2;
                 }
 
                 return formatted_data;

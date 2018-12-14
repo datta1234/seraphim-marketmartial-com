@@ -56,7 +56,7 @@
 			             <div class="form-group row">
 			                    {{ Form::label('work_phone','Alternative Phone Number', ['class' => 'col-sm-4 col-form-label']) }}
 			                <div class="col-sm-8">
-			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your Work Phone here here...']) }}
+			                  {{ Form::text('work_phone',null,['class' => ($errors->has('work_phone') ? 'form-control is-invalid' : 'form-control'),'placeholder'=>'Enter your alternative phone number here …']) }}
 
 
 			                    @if ($errors->has('work_phone'))

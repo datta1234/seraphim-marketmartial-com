@@ -72,7 +72,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
         							<b-col cols="3">
-        								<label for="strike-0">Strike</label>
+        								<label class="pt-2" for="strike-0">Strike</label>
         							</b-col>
         		      				<b-col :key="index" v-for="(field, index) in form_data.fields" cols="3">
         		      					<b-form-input :id="'strike-'+index" 
@@ -80,11 +80,15 @@
                                             :state="inputState(index, 'Strike')"
         									required>
         		      					</b-form-input>
+                                        <p  v-if="validStrike(index)"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The Strike must be greater than the previous Strike.
+                                        </p>
         		      				</b-col>
                                 </b-row>
                             </b-col>
                             <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="strike-0">ZAR</label>
+                                <label class="pt-2" for="strike-0">ZAR</label>
                             </b-col>
 						</b-row>
 
@@ -92,7 +96,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
             						<b-col :cols="display.is_vega ? 2 : 3">
-            							<label for="quantity-0">
+            							<label class="pt-2" for="quantity-0">
                                             {{ display.is_vega ? 'Vega': 'Quantity'}} 
                                             <span v-if="display.is_ratio"> (Ratio)</span>
                                         </label>
@@ -113,13 +117,15 @@
                                             *Warning: The recommended minimum {{display.is_vega ? 'vega' : 'quantity'}} is {{ field.quantity_default }}.
                                         </p>
             	      				</b-col>
+                                    <b-col v-if="form_data.fields[0].hasOwnProperty('future_1') && form_data.fields[0].hasOwnProperty('future_2')" cols="3">
+                                    </b-col>
                                     <b-col v-if="display.is_vega" cols="1">
-                                        <label for="quantity-0">ZAR</label>
+                                        <label class="pt-2" for="quantity-0">ZAR</label>
                                     </b-col>
                                 </b-row>
                             </b-col>
                             <b-col v-if="data.market_object.stock" cols="1">
-                                <label for="quantity-0">Rm</label>
+                                <label class="pt-2" for="quantity-0">Rm</label>
                             </b-col>
 						</b-row>
 
@@ -127,7 +133,7 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
                                     <b-col cols="2">
-                                        <label for="capped-0">Capped</label>
+                                        <label class="pt-2" for="capped-0">Capped</label>
                                     </b-col>
                                     <template v-for="(field, index) in form_data.fields">
                                         <b-col cols="1">
@@ -153,7 +159,7 @@
                                         </b-col>
                                     </template>
                                     <b-col cols="1">
-                                        <label for="capped-0">x</label>
+                                        <label class="pt-2" for="capped-0">x</label>
                                     </b-col>
                                 </b-row>
                             </b-col>
@@ -163,27 +169,63 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
                                     <b-col cols="3">
-                                        <label for="future-0">Future Price Reference</label>
+                                        <label class="pt-2" for="future-0">Future Price Reference</label>
                                     </b-col>
-                                    <b-col  :key="index" 
-                                            v-for="(field, index) in form_data.fields" 
-                                            cols="3"
-                                            :offset="(display.versus && index != 0)? 1 : 0">
-                                        <b-input-group>
-                                            <b-input-group-prepend is-text class="optional-input-prepend">
-                                                <input v-model="field.has_future" 
-                                                       type="checkbox"
-                                                       class="optional-input-prepend-checkbox"
-                                                       aria-label="Include a future price">
-                                            </b-input-group-prepend>
-                                            <b-form-input :disabled="!field.has_future"
-                                                          v-model="field.future"
-                                                          placeholder="Optional"
-                                                          :state="inputState(index, 'Future')"
-                                                          aria-label="Input for optional future price">
-                                            </b-form-input>
-                                        </b-input-group>
-                                    </b-col>
+                                    <template v-if="form_data.fields[0].hasOwnProperty('future')">
+                                        <b-col  :key="index" 
+                                                v-for="(field, index) in form_data.fields" 
+                                                cols="3"
+                                                :offset="(display.versus && index != 0)? 1 : 0">
+                                            <b-input-group v-if="field.hasOwnProperty('future')">
+                                                <b-input-group-prepend is-text class="optional-input-prepend">
+                                                    <input v-model="field.has_future" 
+                                                           type="checkbox"
+                                                           class="optional-input-prepend-checkbox"
+                                                           aria-label="Include a future price">
+                                                </b-input-group-prepend>
+                                                <b-form-input :disabled="!field.has_future"
+                                                              v-model="field.future"
+                                                              placeholder="Optional"
+                                                              :state="inputState(index, 'Future')"
+                                                              aria-label="Input for optional future price">
+                                                </b-form-input>
+                                            </b-input-group>
+                                        </b-col>
+                                    </template>
+                                    <template v-else-if="form_data.fields[0].hasOwnProperty('future_1') && form_data.fields[0].hasOwnProperty('future_2')">
+                                        <b-col v-if="form_data.fields[0].hasOwnProperty('future_1')" cols="3">
+                                            <b-input-group>
+                                                <b-input-group-prepend is-text class="optional-input-prepend">
+                                                    <input v-model="form_data.fields[0].has_future_1" 
+                                                           type="checkbox"
+                                                           class="optional-input-prepend-checkbox"
+                                                           aria-label="Include a future price">
+                                                </b-input-group-prepend>
+                                                <b-form-input :disabled="!form_data.fields[0].has_future_1"
+                                                              v-model="form_data.fields[0].future_1"
+                                                              placeholder="Optional"
+                                                              :state="inputState(0, 'Future 1')"
+                                                              aria-label="Input for optional future price">
+                                                </b-form-input>
+                                            </b-input-group>
+                                        </b-col>
+                                        <b-col v-if="form_data.fields[0].hasOwnProperty('future_2')" cols="3">
+                                            <b-input-group>
+                                                <b-input-group-prepend is-text class="optional-input-prepend">
+                                                    <input v-model="form_data.fields[0].has_future_2" 
+                                                           type="checkbox"
+                                                           class="optional-input-prepend-checkbox"
+                                                           aria-label="Include a future price">
+                                                </b-input-group-prepend>
+                                                <b-form-input :disabled="!form_data.fields[0].has_future_2"
+                                                              v-model="form_data.fields[0].future_2"
+                                                              placeholder="Optional"
+                                                              :state="inputState(0, 'Future 2')"
+                                                              aria-label="Input for optional future price">
+                                                </b-form-input>
+                                            </b-input-group>
+                                        </b-col>
+                                    </template>
                                 </b-row>
                             </b-col>
                             <b-col v-if="data.market_object.stock" cols="1"></b-col>
@@ -240,6 +282,13 @@
                     if(this.display.has_strike) {
                     // Check for valid Strike
                         can_submit = can_submit && element.strike !== '' && element.strike !== null;
+
+                        if(index !== 0) {
+                            let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                            let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                            can_submit = can_submit && ( (!isNaN(current_parsed) && !isNaN(previous_parsed))? current_parsed > previous_parsed : false);
+                        }
                     }
                 
                     if(this.display.has_capped) {
@@ -324,6 +373,19 @@
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
             },
+            validStrike(index) {
+                if(index === 0) {
+                    return false;
+                }
+                let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                if(!isNaN(current_parsed) && !isNaN(previous_parsed)) {
+                    let show = current_parsed <= previous_parsed;
+                    return show;
+                }
+                return false;
+            },
             setDefaultQuantity() {
                 switch(this.data.market_object.trade_structure) {
                     case 'Outright':
@@ -395,8 +457,6 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
-                        future: null,
-                        has_future: false,
                     });
                     this.display.is_ratio = true;
             		this.chosen_option = 0;
@@ -415,16 +475,12 @@
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
-                        future: null,
-                        has_future: false,
                     });
                     this.form_data.fields.push({
                         is_selected:false,
                         strike: null,
                         quantity: size_default,
                         quantity_default: size_default,
-                        future: null,
-                        has_future: false,
                     });
             		this.display.disable_choice = true,
                     this.display.is_ratio = true;
@@ -451,13 +507,26 @@
             		this.chosen_option = 0;
             		break;
                 case 'EFP':
-                case 'Rolls':
                     this.form_data.fields.push({
                         is_selected:true,
                         quantity: size_default,
                         quantity_default: size_default,
                         future: null,
                         has_future: false,
+                    });
+                    this.display.disable_choice = true,
+                    this.display.has_strike = false;
+                    this.chosen_option = null;
+                    break;
+                case 'Rolls':
+                    this.form_data.fields.push({
+                        is_selected:true,
+                        quantity: size_default,
+                        quantity_default: size_default,
+                        future_1: null,
+                        has_future_1: false,
+                        future_2: null,
+                        has_future_2: false,
                     });
                     this.display.disable_choice = true,
                     this.display.has_strike = false;
