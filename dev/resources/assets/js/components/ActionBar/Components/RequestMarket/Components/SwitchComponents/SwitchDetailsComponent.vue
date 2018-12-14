@@ -124,6 +124,10 @@
                                             :state="inputState(1, 'Strike')"
                                             required>
                                         </b-form-input>
+                                        <p  v-if="validStrike(1)"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The Strike must be greater than the previous Strike.
+                                        </p>
                                     </b-col>
                                     <b-col cols="3">
                                         <label class="pt-2" for="strike-1">
@@ -245,9 +249,12 @@
                         </b-row>
 	                    
 	                    <b-form-group class="text-center mt-4 mb-0">
-	                        <b-button id="submit-index-details" type="submit" class="mm-modal-market-button-alt w-50">
-	                            Submit
-	                        </b-button>
+	                        <b-button id="submit-index-details"
+                                      type="submit" 
+                                      class="mm-modal-market-button-alt w-50"
+                                      :disabled="disabled_submit">
+                                Submit
+                            </b-button>
 	                    </b-form-group>
 	                </b-form>
             	</b-col>
@@ -270,6 +277,32 @@
             'errors': {
                 type: Object
             }
+        },
+        computed: {
+            disabled_submit() {
+                let can_submit = true;
+                
+                this.form_data.fields.forEach( (element, index) => {
+                    // Check for valid Strike
+                    can_submit = can_submit && element.strike !== '' && element.strike !== null;
+
+                    if(index !== 0) {
+                        let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                        let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                        can_submit = can_submit && ( (!isNaN(current_parsed) && !isNaN(previous_parsed))? current_parsed > previous_parsed : false);
+                    }
+
+                    // Check for valid quantity
+                    can_submit = can_submit && element.quantity !== '' && element.quantity !== null;
+
+                    // Check for valid expiration
+                    can_submit = can_submit && element.expiration !== '' && element.expiration !== null;
+                });
+
+                
+                return !can_submit;
+            },
         },
         watch: {
             'chosen_option': function(chosen_index) {
@@ -330,6 +363,19 @@
              */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
+            },
+            validStrike(index) {
+                if(index === 0) {
+                    return false;
+                }
+                let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                if(!isNaN(current_parsed) && !isNaN(previous_parsed)) {
+                    let show = current_parsed <= previous_parsed;
+                    return show;
+                }
+                return false;
             },
             /**
              * Loads Expiry Dates from API and sets pagination variables

@@ -80,6 +80,10 @@
                                             :state="inputState(index, 'Strike')"
         									required>
         		      					</b-form-input>
+                                        <p  v-if="validStrike(index)"
+                                            class="modal-warning-text text-danger text-center">
+                                            *Warning: The Strike must be greater than the previous Strike.
+                                        </p>
         		      				</b-col>
                                 </b-row>
                             </b-col>
@@ -278,6 +282,13 @@
                     if(this.display.has_strike) {
                     // Check for valid Strike
                         can_submit = can_submit && element.strike !== '' && element.strike !== null;
+
+                        if(index !== 0) {
+                            let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                            let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                            can_submit = can_submit && ( (!isNaN(current_parsed) && !isNaN(previous_parsed))? current_parsed > previous_parsed : false);
+                        }
                     }
                 
                     if(this.display.has_capped) {
@@ -361,6 +372,19 @@
              */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
+            },
+            validStrike(index) {
+                if(index === 0) {
+                    return false;
+                }
+                let current_parsed = parseFloat(this.form_data.fields[index].strike);
+                let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
+
+                if(!isNaN(current_parsed) && !isNaN(previous_parsed)) {
+                    let show = current_parsed <= previous_parsed;
+                    return show;
+                }
+                return false;
             },
             setDefaultQuantity() {
                 switch(this.data.market_object.trade_structure) {

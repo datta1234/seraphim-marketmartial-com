@@ -126,13 +126,11 @@
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.controller_data);
             },
             /**
              * Loads Index MarketType 
              */
             loadMarketType() {
-                console.log("Market Types",this.$root.market_types);
                 if(Array.isArray(this.$root.market_types)) {
                     this.$root.market_types.forEach((market_type) => {
                         if(market_type.title == this.controller_data.market_type_title) {
