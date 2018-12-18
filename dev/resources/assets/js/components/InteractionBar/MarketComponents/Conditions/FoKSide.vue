@@ -59,6 +59,7 @@
                         this.defaults[this.condition.alias] = null;
                     }
                 }
+                console.log("Checking this ==================================", available);
                 return available;
             }
         }

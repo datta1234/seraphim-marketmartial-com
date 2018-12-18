@@ -17209,13 +17209,15 @@ readers do not read off random characters that represent icons */
 }
 
 #trade_app #mainNav,
-#canvas_app #mainNav {
+#canvas_app #mainNav,
+#previous_day_app #mainNav {
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
 #trade_app #mainNav span,
-#canvas_app #mainNav span {
+#canvas_app #mainNav span,
+#previous_day_app #mainNav span {
   font-size: 2.5rem;
 }
 
