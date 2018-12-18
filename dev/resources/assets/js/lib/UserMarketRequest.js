@@ -276,7 +276,9 @@ export default class UserMarketRequest extends BaseModel {
                 "REQUEST-VOL",
                 "NEGOTIATION-VOL",
                 "NEGOTIATION-OPEN-VOL",
-                "TRADE-NEGOTIATION-OPEN"
+                "TRADE-NEGOTIATION-OPEN",
+                "TRADE-NEGOTIATION-SENDER",
+                "TRADE-NEGOTIATION-COUNTER",
             ];
         
         console.log("this should be shown",this.attributes.state);
