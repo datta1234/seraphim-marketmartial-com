@@ -50,7 +50,6 @@ class ActivityLogger
         $path = substr($path, 0, strlen($path)-4 );
         foreach($daterange as $date) {
             $filePath = $path.'-'.$date->format("Y-m-d").".log";
-            \Log::info("Getting File From: ".$filePath);
             if(file_exists($filePath)) {
                 self::getFilteredContent($filePath, $filter, $lines, $outputParser);
             }
@@ -72,11 +71,10 @@ class ActivityLogger
 
         $sub = self::generateFilterPattern($filter);
         $pattern = '/\[(?P<date>.*)\] (?P<logger>[\w-\s]+).(?P<level>\w+): (?P<message>[^\[\{]+) (?P<context>[\[\{]'.$sub.'[\]\}]) (?P<extra>[\[\{].*[\]\}])/';
-        // $reader->getParser()->registerPattern('activity_log', $pattern);
-        // $reader->setPattern('activity_log');
+        $reader->getParser()->registerPattern('activity_log', $pattern);
+        $reader->setPattern('activity_log');
 
         foreach($reader as $line) {
-            \Log::info($line);
             if(!empty($line)) {
                 $lines[] = ( $outputParser ? $outputParser->call(new self(), $line) : $line );
             }
