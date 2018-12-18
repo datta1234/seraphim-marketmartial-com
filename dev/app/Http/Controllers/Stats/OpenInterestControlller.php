@@ -139,7 +139,7 @@ class OpenInterestControlller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function openInterestTableData(Request $request)
+    /*public function openInterestTableData(Request $request)
     {
         // @TODO - Change reqeust to a custom reqeust
         $data = OpenInterest::basicSearch(
@@ -153,5 +153,5 @@ class OpenInterestControlller extends Controller
         )->paginate(25);
 
         return $data;
-    }
+    }*/
 }
