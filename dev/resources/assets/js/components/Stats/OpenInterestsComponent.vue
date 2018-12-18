@@ -32,22 +32,31 @@
                 </b-form-select>
             </b-col>
         </b-row>
-        <div class="card graph-card">
-            <div v-if="has_data" class="card-body">
-                <bar-graph :chart-data="active_data_set" :options="options"></bar-graph>
+        <template v-if="has_data">
+            <div class="card graph-card">
+                <div class="card-body">
+                    <bar-graph :chart-data="active_data_set" :options="options"></bar-graph>
+                </div>
             </div>
-            <div v-else class="card-body">
-                <p class="text-center">No Data for this market to display</p>
+            <open-interests-table :table-data="table_data"></open-interests-table>
+        </template>
+        <template v-else>
+            <div class="card graph-card">
+                <div class="card-body">
+                    <p class="text-center">No Data for this market to display</p>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
 </template>
 
 <script>
     import BarGraph from '~/components/BarGraph.js';
+    import openInterestsTable from '~/components/Stats/Components/OpenInterestTableComponent.vue';
     export default {
         components: {
-            BarGraph
+            BarGraph,
+            openInterestsTable
         },
     	props: ['data'],
         computed: {
@@ -62,6 +71,7 @@
             return {
                 graph_markets: ['ALSI','DTOP','DCAP','SINGLES'],
             	graph_data:null,
+                table_data: [],
                 data_details:[
                     {
                         label: 'Call Delta',
@@ -215,6 +225,7 @@
                 });
             },
             setDataSet(date_data) {
+                this.table_data = [];
                 let temp_data_set = [];
                 // Clear data set
                 this.data_details.forEach(dataset => {
@@ -243,6 +254,7 @@
                             obj['Call'] = single.open_interest;
                             obj['Call Delta'] = (single.delta * 100);
                         }
+                        this.table_data.push(single);
                     });
                     this.data_details.forEach(dataset => {
                         dataset.data.push(obj[dataset.label]); 
