@@ -37,6 +37,7 @@
                                         :is="components[child.component]" 
                                         :condition="child" 
                                         :market-negotiation="marketNegotiation"
+                                        :market-request="marketRequest"
                                         :parser="parseRadioGroup"
                                         :defaults="defaults"
                                         @change="e => setCondition(child, e, c_group)"
@@ -239,6 +240,7 @@
             },
             setCondition(condition, value, group) {
                 console.log("SetCondition: ", condition, value, group);
+                console.log("Market request", this.marketRequest);
                 this.resetConditions(group, value.ignores);
                 if(value === null) {
                     this.marketNegotiation[condition.alias] = value;

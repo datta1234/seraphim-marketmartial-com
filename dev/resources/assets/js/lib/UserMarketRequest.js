@@ -164,9 +164,11 @@ export default class UserMarketRequest extends BaseModel {
     *   getSentQuote - Set the UserMarketRequest UserMarker
     *   @param {UserMarket} user_market - UserMarket object
     */
-    getChosenUserMarket() {
+    // @TODO - I dont know why this is even here, Removed because it was overriding the original method.
+    //          Does not seem to be used anywhere in the js.
+    /*getChosenUserMarket() {
         return this.user_market;
-    }
+    }*/
 
     /**
     *   getUserMarket - Set the UserMarketRequest UserMarker
