@@ -102,6 +102,9 @@ export default {
         'can_negotiate':function(){
             return this.marketRequest.canNegotiate();
         },
+        'is_quote_phase': function() {
+            return this.marketRequest.isQuotePhase();
+        },
         is_trading: function(){
             return this.marketRequest.isTrading();
         },

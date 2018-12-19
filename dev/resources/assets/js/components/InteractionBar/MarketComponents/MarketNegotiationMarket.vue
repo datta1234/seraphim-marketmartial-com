@@ -21,6 +21,21 @@
                 <b-col cols="2">
                 </b-col>
             </b-row>
+            
+            <b-row v-if="isQuotePhase" class="mb-3">
+                <b-col cols="10 text-center">
+                    <b-form-group>
+                        <b-form-checkbox-group buttons 
+                                               button-variant="primary btn-sm"
+                                               v-model="bid_offer_selected" 
+                                               name="disable-bid-offer" 
+                                               :options="bid_offer_options">
+                        </b-form-checkbox-group>
+                    </b-form-group>
+                </b-col>
+                <b-col cols="2">
+                </b-col>
+            </b-row>
         </b-col>
     </b-row>
 </template>
@@ -41,6 +56,10 @@
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            isQuotePhase: {
+                type: Boolean,
+                default: false    
             }
         },
         watch: {
@@ -109,11 +128,21 @@
                     offer: null,
                     bid_qty: null,
                     offer_qty: null
-                }
+                },
+                bid_offer_options: [
+                    { text: 'Bid Only', value: 'bid-only' },
+                    { text: 'Offer Only', value: 'offer-only' },
+                ],
+                bid_offer_selected: [],
             };
         },
         computed: {
             disabled_bid: function() {
+                // if offer only is selected
+                if(this.bid_offer_selected.includes('offer-only')) {
+                    return true;
+                }
+
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
@@ -130,6 +159,10 @@
                 return false;
             },
             disabled_offer: function() {
+                // if bid only is selected
+                if(this.bid_offer_selected.includes('bid-only')) {
+                    return true;
+                }
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();

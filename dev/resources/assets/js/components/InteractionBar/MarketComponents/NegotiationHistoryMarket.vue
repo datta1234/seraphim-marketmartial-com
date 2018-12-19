@@ -68,13 +68,13 @@
                     </p>
                 </b-col>
             </b-row> -->
-            <b-row class="justify-content-md-center">
+            <!-- <b-row class="justify-content-md-center">
                 <b-col class="mt-2">
                     <p class="ibar-message">
                         <small>To show a One Way, clear the quantity of the level NOT being shown only.</small>
                     </p>
                 </b-col>
-            </b-row>
+            </b-row> -->
             <b-row class="justify-content-md-center" v-if="vm_message">
                 <b-col cols="10" class="mt-0">
                     <p class="text-center ibar-message">

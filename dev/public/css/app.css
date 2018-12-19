@@ -17814,6 +17814,16 @@ input:checked + .slider:before {
   color: #FFFFFF;
 }
 
+.interaction-bar-wrapper .interaction-bar .btn-primary.active {
+  color: #FFFFFF;
+  background-color: #282828;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-primary.focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
 .interaction-bar-wrapper .interaction-bar .btn-secondary {
   background-color: #282828;
   color: #FFFFFF;

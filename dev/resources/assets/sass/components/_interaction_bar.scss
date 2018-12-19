@@ -68,6 +68,15 @@
         .btn-primary {
             background-color: $ibar-btn-background-primary;
             color: $ibar-btn-color-primary;
+
+            &.active {
+                color: $ibar-btn-color-primary;
+                background-color: $ibar-btn-background-secondary;
+            }
+
+            &.focus {
+                box-shadow: none;
+            }
         }
         .btn-secondary {
             background-color: $ibar-btn-background-secondary;
