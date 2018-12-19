@@ -7,7 +7,7 @@
             </template>
             <b-row v-if="message">
                 <b-col cols="10" class="mt-2">
-                    <p class="text-center">
+                    <p class="text-center ibar-message">
                         {{ message }}
                     </p>
                 </b-col>

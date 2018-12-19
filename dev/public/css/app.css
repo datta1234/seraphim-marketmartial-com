@@ -11508,6 +11508,13 @@ table.table {
   vertical-align: middle;
 }
 
+.menu-actions .mm-request-button,
+.menu-actions .mm-important-button,
+.menu-actions .mm-alert-button,
+.menu-actions .mm-confirmation-button {
+  font-size: 0.85rem;
+}
+
 .mm-request-button {
   color: #FFFFFF;
   background-color: #2358BD;
@@ -17932,6 +17939,10 @@ input:checked + .slider:before {
 .interaction-bar-wrapper input[type="text"]:disabled {
   background-color: #afafaf;
   border-color: #8e8e8e;
+}
+
+.interaction-bar-wrapper .ibar-message {
+  font-size: 0.8rem;
 }
 
 .text-my-org {
