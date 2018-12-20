@@ -18,11 +18,8 @@ trait CalcuatesForOutright {
         $strike1 =  floatval($this->optionGroups[0]->getOpVal('strike'));
         $volatility1 = ( floatval($this->optionGroups[0]->getOpVal('volatility'))/100);//its a percentage
         
-        $putDirection1   = 1;
-        $callDirection1  = 1; 
+        // @TODO - add logic for single stock
         $contracts  = null;
-
-
         $singleStock = false;
         
  
@@ -32,6 +29,9 @@ trait CalcuatesForOutright {
         {
             $putDirection1  = 1;
             $callDirection1 = 1; 
+        } else {
+            $putDirection1   = -1;
+            $callDirection1  = -1;  
         }
         $startDate = Carbon::now()->startOfDay();
 
