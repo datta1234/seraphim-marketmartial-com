@@ -139,7 +139,7 @@
         computed: {
             disabled_bid: function() {
                 // if offer only is selected
-                if(this.bid_offer_selected.includes('offer-only')) {
+                if(this.bid_offer_selected.includes('offer-only') && this.isQuotePhase) {
                     return true;
                 }
 
@@ -160,7 +160,7 @@
             },
             disabled_offer: function() {
                 // if bid only is selected
-                if(this.bid_offer_selected.includes('bid-only')) {
+                if(this.bid_offer_selected.includes('bid-only') && this.isQuotePhase) {
                     return true;
                 }
                 // if both parents are spin and bid has value disabled
@@ -279,6 +279,7 @@
                 this.old.offer_qty = this.marketNegotiation.offer_qty;
                 this.old.bid_qty = this.marketNegotiation.bid_qty;
                 this.resetting = false;
+                this.bid_offer_selected = [];
             }
         },
         mounted() {
