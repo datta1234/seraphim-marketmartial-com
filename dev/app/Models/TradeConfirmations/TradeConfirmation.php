@@ -15,6 +15,13 @@ class TradeConfirmation extends Model
     use \App\Traits\ResolvesUser;
     use \App\Traits\CalcuatesForPhases;
     use \App\Traits\CalcuatesForOutright;
+    use \App\Traits\CalcuatesForRisky;
+    use \App\Traits\CalcuatesForCalendar;
+    use \App\Traits\CalcuatesForFly;
+    use \App\Traits\CalcuatesForOptionSwitch;
+    use \App\Traits\CalcuatesForEfp;
+    use \App\Traits\CalcuatesForRolls;
+    use \App\Traits\CalcuatesForEfpSwitch;
 
 	/**
 	 * @property integer $id

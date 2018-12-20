@@ -11,6 +11,27 @@ trait CalcuatesForPhases {
            case 'Outright':
                 $this->outrightTwo();
            break;
+           case 'Risky':
+                $this->riskyTwo();
+           break;
+           case 'Calendar':
+                $this->calendarTwo();
+           break;
+           case 'Fly':
+                $this->flyTwo();
+           break;
+           case 'Option Switch':
+                $this->optionSwitchTwo();
+           break;
+           case 'EFP':
+                $this->efpTwo();
+           break;
+           case 'Rolls':
+                $this->rollsTwo();
+           break;
+           case 'EFP Switch':
+                $this->efpSwitchTwo();
+           break;
        }
 	}
 
@@ -19,6 +40,27 @@ trait CalcuatesForPhases {
         switch ($this->tradeStructure->title) {
            case 'Outright':
                 $this->outrightFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'Risky':
+                $this->riskyFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'Calendar':
+                $this->calendarFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'Fly':
+                $this->flyFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'Option Switch':
+                $this->optionSwitchFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'EFP':
+                $this->efpFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'Rolls':
+                $this->rollsFees($isOffer,$gross_prem,$is_sender);
+           break;
+           case 'EFP Switch':
+                $this->efpSwitchFees($isOffer,$gross_prem,$is_sender);
            break;
        }  
     }

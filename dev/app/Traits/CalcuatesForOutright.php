@@ -75,7 +75,7 @@ trait CalcuatesForOutright {
 
     public function outrightFees($isOffer,$gross_prem,$is_sender)
     {     
-       //get the spot price ref.
+        //get the spot price ref.
         $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');
 
         $SpotReferencePrice1 = $this->market->spot_price_ref;
