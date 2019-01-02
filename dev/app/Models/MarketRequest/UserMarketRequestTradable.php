@@ -64,6 +64,11 @@ class UserMarketRequestTradable extends Model
         return $this->belongsTo('App\Models\StructureItems\Stock','stock_id');
     }
 
+    public function isStock()
+    {
+        return $this->stock_id != null;
+    }
+
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

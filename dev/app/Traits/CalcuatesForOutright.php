@@ -11,17 +11,16 @@ trait CalcuatesForOutright {
 
         $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
+        
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
         $contracts1 =  floatval($this->optionGroups[0]->getOpVal('Contract'));
         $expiry1 = Carbon::createFromFormat("Y-m-d",$this->optionGroups[0]->getOpVal('Expiration Date'));
-
         $strike1 =  floatval($this->optionGroups[0]->getOpVal('strike'));
         $volatility1 = ( floatval($this->optionGroups[0]->getOpVal('volatility'))/100);//its a percentage
         
-        // @TODO - add logic for single stock
         $contracts  = null;
-        $singleStock = false;
-        
+        $tradables = $this->marketRequest->userMarketRequestTradables;
+        $singleStock = $tradables[0]->isStock();       
  
         $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
         
@@ -33,8 +32,8 @@ trait CalcuatesForOutright {
             $putDirection1   = -1;
             $callDirection1  = -1;  
         }
-        $startDate = Carbon::now()->startOfDay();
 
+        $startDate = Carbon::now()->startOfDay();
 
         $POD1 = $this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1  * $putDirection1;
         $COD1 = $this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1 * $callDirection1;
@@ -46,54 +45,63 @@ trait CalcuatesForOutright {
             $gross_prem = $this->putOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
             $this->optionGroups[0]->setOpVal('Gross Premiums',$gross_prem,$is_sender);
 
-            $contracts = $POD1;
-        }else
-        {
+            $future_contracts = $POD1;
+        } else {
            $this->optionGroups[0]->setOpVal('is_put',false);
            $gross_prem = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
            $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem,$is_sender);
-          $contracts/*cell(21,6)*/ = $COD1;
+          $future_contracts/*cell(21,6)*/ = $COD1;
         }
 
         // futures and deltas buy/sell
-        if($contracts < 0)
+        if($future_contracts < 0)
         {
             $isOffer = false;
             $this->futureGroups[0]->setOpVal('is_offer', $isOffer);
-        }else
-        {
+        } else {
             $isOffer = true;
             $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
         }
 
-        $this->futureGroups[0]->setOpVal('Contract', round($contracts));
+        $this->futureGroups[0]->setOpVal('Contract', round($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->feesCalc($isOffer,$gross_prem,$is_sender);
+        $this->outrightFees($isOffer,$gross_prem,$is_sender,$singleStock, $contracts1);
     }
 
-    public function outrightFees($isOffer,$gross_prem,$is_sender)
+    public function outrightFees($isOffer,$gross_prem,$is_sender,$singleStock,$contracts1)
     {     
-        //get the spot price ref.
-        $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');
+        $Brodirection1 = $isOffer ? 1 : -1;
+        $counterBrodirection1 = $Brodirection1 * -1;
+            
+        if($singleStock) {
+            $SINGLEoutrightFEE = config('marketmartial.confirmation_settings.outright.singles.only_leg');
 
-        $SpotReferencePrice1 = $this->market->spot_price_ref;
-        $Brodirection1 = 1;
-       
-        if(!$isOffer)
-        {
-            $Brodirection1 = -1;
+            $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+            $nominal1 = $user_market_request_groups[0]->getDynamicItem('Quantity');
+
+            //NETPREM = Round(nominal1 * SINGLEoutrightFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
+            $netPremium =  round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $Brodirection1 + $gross_prem, 2);
+            //set for the counter
+            $netPremiumCounter =  round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $counterBrodirection1 + $gross_prem, 2); 
+        } else {
+            //get the spot price ref.
+            $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');        
+            
+            $SpotReferencePrice1 = $this->market->spot_price_ref;
+
+            //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
+            $netPremium =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1, 0) + $gross_prem; 
+            //set for the counter
+            $netPremiumCounter =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection1 , 0) + $gross_prem; 
         }
 
-        //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
-        $netPremium =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1, 0) + $gross_prem; 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
-
+        
         //set for the counter
-        $counterBrodirection1 = $Brodirection1 * -1;
-        $netPremium =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection1 , 0) + $gross_prem; 
-        $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,!$is_sender);
+        $this->optionGroups[0]->setOpVal('Net Premiums', $netPremiumCounter,!$is_sender);
+
 
     }
 }

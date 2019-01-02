@@ -35,35 +35,36 @@ trait CalcuatesForPhases {
        }
 	}
 
-    public function feesCalc($isOffer,$gross_prem,$is_sender)
+    // Removed - seems redundant and over complicates as each structures fees require different variables
+    /*public function feesCalc($isOffer,$gross_prem,$is_sender,$tradables)
     {
         switch ($this->tradeStructure->title) {
            case 'Outright':
-                $this->outrightFees($isOffer,$gross_prem,$is_sender);
+                $this->outrightFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'Risky':
-                $this->riskyFees($isOffer,$gross_prem,$is_sender);
+                $this->riskyFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'Calendar':
-                $this->calendarFees($isOffer,$gross_prem,$is_sender);
+                $this->calendarFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'Fly':
-                $this->flyFees($isOffer,$gross_prem,$is_sender);
+                $this->flyFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'Option Switch':
-                $this->optionSwitchFees($isOffer,$gross_prem,$is_sender);
+                $this->optionSwitchFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'EFP':
-                $this->efpFees($isOffer,$gross_prem,$is_sender);
+                $this->efpFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'Rolls':
-                $this->rollsFees($isOffer,$gross_prem,$is_sender);
+                $this->rollsFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
            case 'EFP Switch':
-                $this->efpSwitchFees($isOffer,$gross_prem,$is_sender);
+                $this->efpSwitchFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
        }  
-    }
+    }*/
 
  	/*
     * formulas from the macros
