@@ -121,7 +121,7 @@ trait CalcuatesForFly {
             $nominal2 = $user_market_request_groups[1]->getDynamicItem('Quantity');
             $nominal3 = $user_market_request_groups[2]->getDynamicItem('Quantity');
 
-            //NETPREM = Round(nominal1 * SINGLEflyFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
+            // NETPREM = Round(nominal1 * SINGLEflyFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
             $netPremium1 =  round($nominal1 * $SINGLEflyFEE / $contracts1 * $Brodirection + $gross_prem1, 2);
             $netPremium2 =  round($nominal2 * $SINGLEflyFEE / $contracts2 * $Brodirection + $gross_prem2, 2);
             $netPremium3 =  round($nominal3 * $SINGLEflyFEE / $contracts3 * $Brodirection + $gross_prem3, 2);
@@ -135,7 +135,7 @@ trait CalcuatesForFly {
             
             $SpotReferencePrice1 = $this->market->spot_price_ref;
 
-            //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
+            // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
             $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection, 0) + $gross_prem1;
             $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection, 0) + $gross_prem2; 
             $netPremium3 =  round($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection, 0) + $gross_prem3; 

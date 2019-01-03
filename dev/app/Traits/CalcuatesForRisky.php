@@ -105,14 +105,18 @@ trait CalcuatesForRisky {
 	        $nominal2 = $user_market_request_groups[1]->getDynamicItem('Quantity');
 
 	        if($nominal1 < $nominal2) {
+	        	// NETPREM = Round(nominal1 * SINGLEriskybigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
 	        	$netPremium1 =  round($nominal1 * $SINGLEriskybigFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+		      	// NETPREM =  Round(nominal2 * SINGLEriskysmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
 		      	$netPremium2 =  round($nominal2 * $SINGLEriskysmallFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 		      	
 	        	//set for the counter
 	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEriskybigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
 		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEriskysmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
 	        } else {
+	        	// NETPREM = Round(nominal1 * SINGLEriskysmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
 	        	$netPremium1 =  round($nominal1 * $SINGLEriskysmallFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+		      	// NETPREM = Round(nominal2 * SINGLEriskybigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
 		      	$netPremium2 =  round($nominal2 * $SINGLEriskybigFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 
 		      	//set for the counter
@@ -128,9 +132,11 @@ trait CalcuatesForRisky {
 	        $SpotReferencePrice1 = $this->market->spot_price_ref;
 
 	        if($contracts1 < $contracts2) {
+		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1
 		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1, 0) + $gross_prem1;
 		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2, 0) + $gross_prem2;
 	        } else {
+	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskysmallFEE * Brodirection1, 0) + GrossPrem1
 		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1, 0) + $gross_prem1;
 		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2, 0) + $gross_prem2;
 	        }

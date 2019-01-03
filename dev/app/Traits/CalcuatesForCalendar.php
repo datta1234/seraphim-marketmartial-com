@@ -118,14 +118,18 @@ trait CalcuatesForCalendar {
 	        $nominal2 = $user_market_request_groups[1]->getDynamicItem('Quantity');
 
 	        if($nominal1 < $nominal2) {
+	        	// NETPREM = Round(nominal1 * SINGLEcalendarbigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
 	        	$netPremium1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $Brodirection + $gross_prem1, 2);
+		      	// NETPREM = Round(nominal2 * SINGLEcalendarsmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
 		      	$netPremium2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $Brodirection + $gross_prem2, 2);
 		      	
 	        	//set for the counter
 	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $counterBrodirection + $gross_prem1, 2);
 		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $counterBrodirection + $gross_prem2, 2);
 	        } else {
+	        	// NETPREM = Round(nominal1 * SINGLEcalendarsmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
 	        	$netPremium1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $Brodirection + $gross_prem1, 2);
+		      	// NETPREM = Round(nominal2 * SINGLEcalendarbigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
 		      	$netPremium2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $Brodirection + $gross_prem2, 2);
 
 		      	//set for the counter
@@ -141,9 +145,11 @@ trait CalcuatesForCalendar {
 	        $SpotReferencePrice1 = $this->market->spot_price_ref;
 
 	        if($contracts1 < $contracts2) {
+	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarbigFEE * Brodirection1, 0) + GrossPrem1
 		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection, 0) + $gross_prem1;
 		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection, 0) + $gross_prem2;
 	        } else {
+	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarsmallFEE * Brodirection1, 0) + GrossPrem1
 		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection, 0) + $gross_prem1;
 		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection, 0) + $gross_prem2;
 	        }
