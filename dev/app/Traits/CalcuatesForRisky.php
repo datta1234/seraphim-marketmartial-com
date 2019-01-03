@@ -22,7 +22,7 @@ trait CalcuatesForRisky {
         $strike2 =  floatval($this->optionGroups[1]->getOpVal('strike'));
         $volatility2 = ( floatval($this->optionGroups[1]->getOpVal('volatility'))/100);//its a percentage
  
-        $contracts  = null;        
+        $future_contracts  = null;        
         $tradables = $this->marketRequest->userMarketRequestTradables;
         $singleStock = $tradables[0]->isStock();
         
@@ -86,10 +86,10 @@ trait CalcuatesForRisky {
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2);
+        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
 
-    public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2)
+    public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {
     	$Brodirection1 = $isOffer ? 1 : -1;
     	$Brodirection2 = $isOffer ? 1 : -1;

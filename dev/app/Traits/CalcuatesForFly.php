@@ -28,7 +28,7 @@ trait CalcuatesForFly {
     	
         $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
 
-        $contracts  = null;        
+        $$future_contracts = null;        
         $tradables = $this->marketRequest->userMarketRequestTradables;
         $singleStock = $tradables[0]->isStock();
 
@@ -105,10 +105,10 @@ trait CalcuatesForFly {
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $gross_prem3, $is_sender, $contracts1, $contracts2, $contracts3);
+        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $gross_prem3, $is_sender, $contracts1, $contracts2, $contracts3,$singleStock);
     }
 
-    public function flyFees($isOffer,$gross_prem1,$gross_prem2,$gross_prem3,$is_sender,$contracts1,$contracts2,$contracts3)
+    public function flyFees($isOffer,$gross_prem1,$gross_prem2,$gross_prem3,$is_sender,$contracts1,$contracts2,$contracts3,$singleStock)
     {     
     	$Brodirection = $isOffer ? 1 : -1;
         $counterBrodirection = $Brodirection * -1;

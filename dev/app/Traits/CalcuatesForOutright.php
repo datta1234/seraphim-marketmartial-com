@@ -18,7 +18,7 @@ trait CalcuatesForOutright {
         $strike1 =  floatval($this->optionGroups[0]->getOpVal('strike'));
         $volatility1 = ( floatval($this->optionGroups[0]->getOpVal('volatility'))/100);//its a percentage
         
-        $contracts  = null;
+        $future_contracts  = null;
         $tradables = $this->marketRequest->userMarketRequestTradables;
         $singleStock = $tradables[0]->isStock();       
  
@@ -67,10 +67,10 @@ trait CalcuatesForOutright {
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->outrightFees($isOffer,$gross_prem,$is_sender,$singleStock, $contracts1);
+        $this->outrightFees($isOffer,$gross_prem,$is_sender, $contracts1, $singleStock);
     }
 
-    public function outrightFees($isOffer,$gross_prem,$is_sender,$singleStock,$contracts1)
+    public function outrightFees($isOffer,$gross_prem,$is_sender,$contracts1,$singleStock)
     {     
         $Brodirection1 = $isOffer ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;

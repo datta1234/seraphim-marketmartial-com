@@ -24,7 +24,8 @@ trait CalcuatesForCalendar {
         $strike2 =  floatval($this->optionGroups[1]->getOpVal('strike'));
         $volatility2 = ( floatval($this->optionGroups[1]->getOpVal('volatility'))/100);//its a percentage 
 
-        $contracts  = null;        
+        $future_contracts1  = null;
+        $future_contracts2  = null;
         $tradables = $this->marketRequest->userMarketRequestTradables;
         $singleStock = $tradables[0]->isStock();
         
@@ -100,10 +101,10 @@ trait CalcuatesForCalendar {
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->calendarFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2);
+        $this->calendarFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
 
-    public function calendarFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2)
+    public function calendarFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {   
         $Brodirection = $isOffer ? 1 : -1;
         $counterBrodirection = $Brodirection * -1;
