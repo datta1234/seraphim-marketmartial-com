@@ -129,7 +129,7 @@ trait CalcuatesForRisky {
 	        $IXriskybigFEE = config('marketmartial.confirmation_settings.risky.index.big_leg');
 	        $IXriskysmallFEE = config('marketmartial.confirmation_settings.risky.index.small_leg');
 
-	        $SpotReferencePrice1 = $this->market->spot_price_ref;
+	        $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
 	        if($contracts1 < $contracts2) {
 		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1

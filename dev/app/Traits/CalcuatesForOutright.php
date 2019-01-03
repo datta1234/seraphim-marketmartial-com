@@ -89,7 +89,7 @@ trait CalcuatesForOutright {
             //get the spot price ref.
             $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');        
             
-            $SpotReferencePrice1 = $this->market->spot_price_ref;
+            $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
             //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
             $netPremium =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1, 0) + $gross_prem; 

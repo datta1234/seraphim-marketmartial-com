@@ -132,8 +132,8 @@ trait CalcuatesForFly {
         } else {
             //get the spot price ref.
             $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.only_leg');        
-            
-            $SpotReferencePrice1 = $this->market->spot_price_ref;
+
+            $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
             // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
             $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection, 0) + $gross_prem1;
