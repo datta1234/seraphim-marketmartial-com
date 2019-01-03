@@ -14,11 +14,11 @@ trait CalcuatesForEfp {
 
         $closingspotref =  floatval($this->futureGroups[0]->getOpVal('Spot'));
         $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+        
+        // @TODO figure out how to get points - the agreed upon bid/offer value
         $Points = $user_market_request_groups[0]->getDynamicItem('Quantity');
         
         $future1 = $closingspotref + $Points;
-        
-        $future_contracts/*cell(21,6)*/ = $this->quantity;
 
         $isOffer = $this->futureGroups[0]->getOpVal('is_offer');
 

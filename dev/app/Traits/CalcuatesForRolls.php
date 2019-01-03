@@ -14,15 +14,15 @@ trait CalcuatesForRolls {
 
         $nearref =  floatval($this->futureGroups[0]->getOpVal('Future 1'));
         $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+        
+        // @TODO figure out how to get points - the agreed upon bid/offer value
         $Points = $user_market_request_groups[0]->getDynamicItem('Quantity');
         
         $future2 = $nearref + $Points;
-        
-        $future_contracts/*cell(21,6)*/ = $this->quantity;
 
         $isOffer = $this->futureGroups[0]->getOpVal('is_offer 2');
 
-        $this->efpFees($isOffer,$is_sender, $future2, $nearref, $Points);
+        $this->rollsFees($isOffer,$is_sender, $future2, $nearref, $Points);
     }
 
     public function rollsFees($isOffer,$is_sender,$future2,$RollNearFutureRef,$points1)
