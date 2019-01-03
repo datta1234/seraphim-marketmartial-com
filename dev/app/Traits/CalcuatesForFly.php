@@ -114,7 +114,7 @@ trait CalcuatesForFly {
         $counterBrodirection = $Brodirection * -1;
             
         if($singleStock) {
-            $SINGLEflyFEE = config('marketmartial.confirmation_settings.fly.singles.only_leg');
+            $SINGLEflyFEE = config('marketmartial.confirmation_settings.fly.singles.per_leg');
             
             $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
             $nominal1 = $user_market_request_groups[0]->getDynamicItem('Quantity');
@@ -131,7 +131,7 @@ trait CalcuatesForFly {
             $netPremiumCounter3 =  round($nominal3 * $SINGLEflyFEE / $contracts3 * $counterBrodirection + $gross_prem3, 2);
         } else {
             //get the spot price ref.
-            $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.only_leg');        
+            $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.per_leg');        
 
             $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 

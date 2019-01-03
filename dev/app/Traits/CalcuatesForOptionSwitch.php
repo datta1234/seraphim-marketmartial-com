@@ -102,7 +102,7 @@ trait CalcuatesForOptionSwitch {
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->calendarFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2,$singleStock1,$singleStock2);
+        $this->optionSwitchFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2,$singleStock1,$singleStock2);
     }
 
     public function optionSwitchFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock1,$singleStock2)
@@ -110,8 +110,8 @@ trait CalcuatesForOptionSwitch {
 		$Brodirection = $isOffer ? 1 : -1;
         $counterBrodirection = $Brodirection * -1;
 
-		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.outright.singles.only_leg');
-		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.outright.index.only_leg');
+		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.singles.per_leg');
+		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.index.per_leg');
         
 
     	// Leg1 Top40, DTop, DCap or Single?
