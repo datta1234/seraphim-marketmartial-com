@@ -33,7 +33,7 @@ trait CalcuatesForEfp {
     	$D1efpFee = config('marketmartial.confirmation_settings.efp.index.only_leg');
 
     	//FUTURE = Application.Round(Future1 * D1efpFee * FutBrodirection1, 2) + Future1
-    	$future =  round($future * $D1efpFee * $FutBrodirection1, 2);
+    	$future =  round($future1 * $D1efpFee * $FutBrodirection1, 2) + $future1;
     	$this->optionGroups[0]->setOpVal('Future', $future,$is_sender);
 
         //set for the counter
