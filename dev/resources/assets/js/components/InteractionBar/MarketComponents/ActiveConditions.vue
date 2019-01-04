@@ -16,7 +16,7 @@
                     <strong>Received</strong>
                 </b-col>
             </b-row>
-            <b-row v-for="cond in conditions_active" :key="cond.condition.id">
+            <b-row v-for="cond in conditions_active" :key="'active_'+cond.condition.id">
                 <b-col>
                     <component
                         :is="condition_components[cond.type]" 
@@ -32,7 +32,7 @@
                     <strong>Sent</strong>
                 </b-col>
             </b-row>
-            <b-row v-for="cond in conditions_sent" :key="cond.condition.id">
+            <b-row v-for="cond in conditions_sent" :key="'sent_'+cond.condition.id">
                 <b-col>
                     <component
                         :is="condition_components[cond.type]" 

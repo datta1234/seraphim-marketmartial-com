@@ -11384,12 +11384,7 @@ table.table {
 #trade_body {
   position: relative;
   height: 100%;
-  padding-bottom: 65px;
   margin-bottom: 0px;
-}
-
-#trade_body #trade-footer {
-  position: fixed;
 }
 
 #trade_app {
@@ -11399,14 +11394,14 @@ table.table {
 
 #trade_app .trade-screen-wrapper {
   position: absolute;
-  height: 100%;
   top: 58px;
-  bottom: 65px;
+  bottom: 0px;
   margin: 0px;
 }
 
 #trade_app .trade-section {
   overflow-y: auto;
+  min-height: calc(100% - 65px);
 }
 
 #trade_app .trade-section.light-theme {
@@ -17703,7 +17698,6 @@ input:checked + .slider:before {
   background-color: #303030;
   z-index: 10000;
   width: 100%;
-  position: absolute;
   bottom: 0;
   height: 65px;
 }

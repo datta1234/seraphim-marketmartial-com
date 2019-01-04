@@ -588,7 +588,6 @@ class UserMarket extends Model
         $marketNegotiation = new MarketNegotiation($data);
         $counterNegotiation = $this->findCounterNegotiation($user);
 
-
         $marketNegotiation->user_id = $user->id;
 
         if($counterNegotiation && $counterNegotiation->isTraded())
@@ -603,7 +602,6 @@ class UserMarket extends Model
         {
             $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
         }
-
 
         if($counterNegotiation)
         {
