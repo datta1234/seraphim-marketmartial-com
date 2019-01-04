@@ -42,7 +42,7 @@
         </template>
         <template slot="modal-footer">
             <b-btn size="md" variant="primary" class="pull-right" @click="refreshQuotes()">Refresh</b-btn>
-            <b-btn size="md" variant="default" class="pull-right" @click="modal_open = false">Close</b-btn>
+            <b-btn size="md" variant="default" class="pull-right" @click="closeModal()">Close</b-btn>
         </template>
     </b-modal>
 </template>
@@ -57,6 +57,12 @@
             }
         },
         methods: {
+            closeModal() {
+                let res = confirm("Are you sure you wish to take no action?");
+                if(res) {
+                    this.modal_open = false;
+                }
+            },
             refreshQuotes() {
                 let res = true;
                 if(this.selected.length == 0) {
@@ -94,6 +100,7 @@
             }
         },
         mounted() {
+            console.log("LOADING PREVIOUS DAY");
             this.loadOldQuotes();
         }
     }

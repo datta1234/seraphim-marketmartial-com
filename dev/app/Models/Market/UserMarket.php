@@ -588,7 +588,6 @@ class UserMarket extends Model
         $marketNegotiation = new MarketNegotiation($data);
         $counterNegotiation = $this->findCounterNegotiation($user);
 
-
         $marketNegotiation->user_id = $user->id;
 
         if($counterNegotiation && $counterNegotiation->isTraded())
@@ -603,7 +602,6 @@ class UserMarket extends Model
         {
             $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
         }
-
 
         if($counterNegotiation)
         {
@@ -641,15 +639,14 @@ class UserMarket extends Model
             }
 
             // add missing values (prior data), however if traded keep them as null
-            
-                if($marketNegotiation->bid == null) {
-                    $marketNegotiation->bid = $counterNegotiation->bid;
-                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
-                }
-                if($marketNegotiation->offer == null) {
-                    $marketNegotiation->offer = $counterNegotiation->offer;
-                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
-                }  
+            if($marketNegotiation->bid == null) {
+                $marketNegotiation->bid = $counterNegotiation->bid;
+                $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+            }
+            if($marketNegotiation->offer == null) {
+                $marketNegotiation->offer = $counterNegotiation->offer;
+                $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+            }  
         }
         // @TODO, this fails when you send new negotiation after you already have, need to stop this?
         try {

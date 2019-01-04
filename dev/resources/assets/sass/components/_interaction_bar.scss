@@ -31,12 +31,13 @@
             position: relative;
 
             top: $main-nav-header-height;
-            bottom: $trade-footer-height;
+            bottom: 0px;
 
             // background: red;
             
             .ibar-negotiation-content {
                 padding-right: 25px;
+                padding-bottom: $trade-footer-height;
             }
         }
         &.active {
