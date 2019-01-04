@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-group" v-bind:class="{ 'user-market': true, 'd-none': show_group }">
+    <div dusk="market-group" v-bind:class="{ 'user-market': true, 'd-none': hide_group }">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">
@@ -46,6 +46,10 @@
             'no_cares':{
                 type: Array,
                 default: () => []
+            },
+            'forceShow': {
+                type: Boolean,
+                default: false
             }
         },
         watch: {
@@ -70,7 +74,7 @@
                     delta: 'trade_structure'
                 },
 
-                show_group: true,
+                hide_group: true,
             };
         },
         computed: {
@@ -146,7 +150,7 @@
                     default:
                         this.updateDefaultRequests(reqs);
                 }
-                this.show_group = ( this.market.is_seldom == true && reqs.length == 0 );
+                this.hide_group = this.forceShow ? false : ( this.market.is_seldom == true && reqs.length == 0 );
             }
         },
         mounted() {
