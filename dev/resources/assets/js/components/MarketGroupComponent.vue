@@ -25,9 +25,6 @@
                         <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
                 </div>
-
-                <div>
-                </div>
             </div>
         </div>
     </div>
