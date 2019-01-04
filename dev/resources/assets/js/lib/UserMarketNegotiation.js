@@ -583,6 +583,14 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     /**
+    *   test if the negotiation is trading
+    */
+    isTrading() {
+        let lastTrade = this.getLastTradeNegotiation();
+        return lastTrade && !lastTrade.traded;
+    }
+
+    /**
     * determine if there is a condition applied
     */
     hasCondition() {
