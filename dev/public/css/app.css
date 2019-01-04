@@ -17767,11 +17767,12 @@ input:checked + .slider:before {
   background-color: #000705;
   position: relative;
   top: 58px;
-  bottom: 65px;
+  bottom: 0px;
 }
 
 .interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {
   padding-right: 25px;
+  padding-bottom: 65px;
 }
 
 .interaction-bar-wrapper .interaction-bar.active {
