@@ -11387,6 +11387,10 @@ table.table {
   margin-bottom: 0px;
 }
 
+#trade_body #trade-footer {
+  position: relative;
+}
+
 #trade_app {
   position: relative;
   height: 100%;
@@ -17698,6 +17702,7 @@ input:checked + .slider:before {
   background-color: #303030;
   z-index: 10000;
   width: 100%;
+  position: absolute;
   bottom: 0;
   height: 65px;
 }
