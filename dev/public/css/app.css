@@ -11384,12 +11384,11 @@ table.table {
 #trade_body {
   position: relative;
   height: 100%;
-  padding-bottom: 65px;
   margin-bottom: 0px;
 }
 
 #trade_body #trade-footer {
-  position: fixed;
+  position: relative;
 }
 
 #trade_app {
@@ -11399,14 +11398,14 @@ table.table {
 
 #trade_app .trade-screen-wrapper {
   position: absolute;
-  height: 100%;
   top: 58px;
-  bottom: 65px;
+  bottom: 0px;
   margin: 0px;
 }
 
 #trade_app .trade-section {
   overflow-y: auto;
+  min-height: calc(100% - 65px);
 }
 
 #trade_app .trade-section.light-theme {
@@ -11506,6 +11505,13 @@ table.table {
 .menu-actions .icon {
   font-size: 1.7em;
   vertical-align: middle;
+}
+
+.menu-actions .mm-request-button,
+.menu-actions .mm-important-button,
+.menu-actions .mm-alert-button,
+.menu-actions .mm-confirmation-button {
+  font-size: 0.85rem;
 }
 
 .mm-request-button {
@@ -17209,13 +17215,15 @@ readers do not read off random characters that represent icons */
 }
 
 #trade_app #mainNav,
-#canvas_app #mainNav {
+#canvas_app #mainNav,
+#previous_day_app #mainNav {
   padding-top: 0px;
   padding-bottom: 0px;
 }
 
 #trade_app #mainNav span,
-#canvas_app #mainNav span {
+#canvas_app #mainNav span,
+#previous_day_app #mainNav span {
   font-size: 2.5rem;
 }
 
@@ -17764,11 +17772,12 @@ input:checked + .slider:before {
   background-color: #000705;
   position: relative;
   top: 58px;
-  bottom: 65px;
+  bottom: 0px;
 }
 
 .interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {
   padding-right: 25px;
+  padding-bottom: 65px;
 }
 
 .interaction-bar-wrapper .interaction-bar.active {
@@ -17803,6 +17812,16 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .interaction-bar .btn-primary {
   background-color: #1D3641;
   color: #FFFFFF;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-primary.active {
+  color: #FFFFFF;
+  background-color: #282828;
+}
+
+.interaction-bar-wrapper .interaction-bar .btn-primary.focus {
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .interaction-bar-wrapper .interaction-bar .btn-secondary {
@@ -17930,6 +17949,10 @@ input:checked + .slider:before {
 .interaction-bar-wrapper input[type="text"]:disabled {
   background-color: #afafaf;
   border-color: #8e8e8e;
+}
+
+.interaction-bar-wrapper .ibar-message {
+  font-size: 0.8rem;
 }
 
 .text-my-org {

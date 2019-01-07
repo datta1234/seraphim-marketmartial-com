@@ -84,9 +84,13 @@
                   {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
                 </td>
                 <td>
-                     - 
-                   <!--   <b-form-input v-model="trade_confirmation.future_groups[key]['spot']" type="text"></b-form-input> -->
-             
+                    
+                    <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
+                        <b-form-input v-model="trade_confirmation.future_groups[key]['spot']" type="number"></b-form-input> 
+                    </template>
+                    <template v-else>
+                        -    
+                    </template>
                 </td>
                 <td>
                     <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
@@ -159,6 +163,7 @@
                 return  this.trade_confirmation.hasFutures() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore());
             },
             can_calc:function (val) {
+                console.log("Checking this: ",this.trade_confirmation);
                 return this.trade_confirmation.hasFutures() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
             }
         },
@@ -197,7 +202,6 @@
             },
             getTradingAccounts: function()
             {
-
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     

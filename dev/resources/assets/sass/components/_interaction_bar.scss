@@ -31,12 +31,13 @@
             position: relative;
 
             top: $main-nav-header-height;
-            bottom: $trade-footer-height;
+            bottom: 0px;
 
             // background: red;
             
             .ibar-negotiation-content {
                 padding-right: 25px;
+                padding-bottom: $trade-footer-height;
             }
         }
         &.active {
@@ -68,6 +69,15 @@
         .btn-primary {
             background-color: $ibar-btn-background-primary;
             color: $ibar-btn-color-primary;
+
+            &.active {
+                color: $ibar-btn-color-primary;
+                background-color: $ibar-btn-background-secondary;
+            }
+
+            &.focus {
+                box-shadow: none;
+            }
         }
         .btn-secondary {
             background-color: $ibar-btn-background-secondary;
@@ -203,6 +213,10 @@
             background-color: #afafaf;
             border-color: #8e8e8e;
         }
+    }
+
+    .ibar-message {
+        font-size: 0.8rem;
     }
 }
 

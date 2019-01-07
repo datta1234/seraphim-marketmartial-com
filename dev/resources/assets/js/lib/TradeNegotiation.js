@@ -91,22 +91,31 @@ export default class TradeNegotiation extends BaseModel {
         };
     }
 
-    getSortedTradingText(fromTraded)
+    getSortedTradingText()
     {
         let text = "";
-        if(this.sent_by_me) {
-            text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
-        
-        } else if(this.sent_to_me) {
-            text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
-        
-        } else if(this.traded || fromTraded) {
-            text = "Traded Away at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
-        
+        if(this.traded) {
+            if(this.sent_by_me) {
+                text =  ( this.is_offer ? "You bought @ " +  this.getUserMarketNegotiation().bid : "You sold @ " +this.getUserMarketNegotiation().offer );
+            
+            } else if(this.sent_to_me) {
+                text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().bid : "You bought @ "+this.getUserMarketNegotiation().offer );
+            
+            } else {
+                text = "Trading Away at "; 
+                text +=  this.is_offer ? this.getUserMarketNegotiation().bid : this.getUserMarketNegotiation().offer;
+            }
         } else {
-            text = "Trading Away at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+            if(this.sent_by_me) {
+                text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
+            
+            } else if(this.sent_to_me) {
+                text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
+            
+            } else {
+                text = "Trading Away at "; 
+                text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+            }
         }
 
         return text;
@@ -118,7 +127,7 @@ export default class TradeNegotiation extends BaseModel {
            return trade_negotiation.trade_negotiation_id == this.id;
         });
 
-        let text = this.getSortedTradingText(this.traded);
+        let text = this.getSortedTradingText();
         text += this.traded ? " ("+this.quantity+")" : "";
 
         if(ChildTradeNegotiationIndex === -1) {

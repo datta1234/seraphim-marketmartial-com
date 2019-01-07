@@ -164,9 +164,11 @@ export default class UserMarketRequest extends BaseModel {
     *   getSentQuote - Set the UserMarketRequest UserMarker
     *   @param {UserMarket} user_market - UserMarket object
     */
-    getChosenUserMarket() {
+    // @TODO - I dont know why this is even here, Removed because it was overriding the original method.
+    //          Does not seem to be used anywhere in the js.
+    /*getChosenUserMarket() {
         return this.user_market;
-    }
+    }*/
 
     /**
     *   getUserMarket - Set the UserMarketRequest UserMarker
@@ -276,11 +278,32 @@ export default class UserMarketRequest extends BaseModel {
                 "REQUEST-VOL",
                 "NEGOTIATION-VOL",
                 "NEGOTIATION-OPEN-VOL",
-                "TRADE-NEGOTIATION-OPEN"
+                "TRADE-NEGOTIATION-OPEN",
+                "TRADE-NEGOTIATION-SENDER",
+                "TRADE-NEGOTIATION-COUNTER",
             ];
         
         console.log("this should be shown",this.attributes.state);
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+    /**
+    *   isQuotePhase - Checks to see if the user is in any quote phase on the current state of the request
+    *   
+    *   @return {Boolean} - if the request has any of the listed statuses
+    */
+    isQuotePhase()
+    {
+        let tradebleStatuses = [
+            "NEGOTIATION-VOL",
+            "NEGOTIATION-OPEN-VOL",
+            "TRADE-NEGOTIATION-OPEN",
+            "TRADE-NEGOTIATION-SENDER",
+            "TRADE-NEGOTIATION-COUNTER",
+        ];
+        
+        console.log("this should be shown",this.attributes.state);
+        return  tradebleStatuses.indexOf(this.attributes.state) > -1;    
     }
 
     /**

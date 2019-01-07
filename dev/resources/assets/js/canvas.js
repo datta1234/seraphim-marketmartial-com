@@ -69,7 +69,6 @@ Vue.component('all-market-activity', require('./components/Stats/AllMarketActivi
 Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue'));
 Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue'));
 Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue'));
-Vue.component('open-interests-table', require('./components/Stats/Components/OpenInterestTableComponent.vue'));
 
 // Rebate Componenets
 Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));

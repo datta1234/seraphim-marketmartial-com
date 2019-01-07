@@ -45,6 +45,7 @@
             :check-invalid="check_invalid" 
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
+            :is-quote-phase="is_quote_phase"
         >
         </ibar-market-negotiation-contracts>
 

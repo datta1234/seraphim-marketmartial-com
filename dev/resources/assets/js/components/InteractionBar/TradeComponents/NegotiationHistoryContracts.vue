@@ -3,11 +3,11 @@
         <b-col>
             <template v-for="item in history" v-if="item.id != ''">   
                 <!-- && !item.is_killed"  -->
-                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item)" :is-current="isLast(item)"></ibar-trade-request>
+                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item) && !item.isTrading() && !item.isTraded()" :is-current="isLast(item)"></ibar-trade-request>
             </template>
             <b-row v-if="message">
                 <b-col cols="10" class="mt-2">
-                    <p class="text-center">
+                    <p class="text-center ibar-message">
                         {{ message }}
                     </p>
                 </b-col>

@@ -15,6 +15,13 @@ class TradeConfirmation extends Model
     use \App\Traits\ResolvesUser;
     use \App\Traits\CalcuatesForPhases;
     use \App\Traits\CalcuatesForOutright;
+    use \App\Traits\CalcuatesForRisky;
+    use \App\Traits\CalcuatesForCalendar;
+    use \App\Traits\CalcuatesForFly;
+    use \App\Traits\CalcuatesForOptionSwitch;
+    use \App\Traits\CalcuatesForEfp;
+    use \App\Traits\CalcuatesForRolls;
+    use \App\Traits\CalcuatesForEfpSwitch;
 
 	/**
 	 * @property integer $id
@@ -230,8 +237,6 @@ class TradeConfirmation extends Model
 
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
-
-            'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             
@@ -654,7 +659,7 @@ public function preFormatStats($user = null, $is_Admin = false)
      */
      private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
      {
-         foreach($tradeStructureGroup->items as $item) {
+         foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
             switch ($item->title) {
@@ -704,8 +709,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            }else if($item->title == "is_offer")
-            {
+            } else if($item->title == "is_offer") {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -721,10 +725,19 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
+            } else if($item->title == "Spot") {
+                if($tradeGroup->userMarketRequestGroup->hasSpotPrice()) {
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        "is_seller" => null,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                } 
 
-            }else
-            {
-               $tradeGroup->tradeConfirmationItems()->create([
+            } else {
+                $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
                     "is_seller" => null,

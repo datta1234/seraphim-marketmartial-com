@@ -1,12 +1,12 @@
 <template>
-    <b-col cols="12" v-if="has_requests">
+    <b-col cols="12">
         <b-row no-gutters>
             <b-col>
                 <h3>Untraded Markets</h3>
             </b-col>
         </b-row>
         <b-row class="justify-content-md-center">
-            <market-group :key="market.id" v-for="(market, market_index) in markets" :market="market" class="col"></market-group>
+            <market-group :key="market.id" v-for="(market, market_index) in markets" :market="market" class="col" :force-show="true"></market-group>
         </b-row>
     </b-col>
 </template>

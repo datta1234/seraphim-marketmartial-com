@@ -5,7 +5,7 @@
                 <h2 class="mt-2 mb-2">Open Interests Data</h2>
             </div>
             <div class="card-body">
-                <b-row>
+                <!-- <b-row>
                     <b-col cols="12">
                         <b-form v-on:submit.prevent="" id="chat-message-form">
                             <b-row class="mt-2">
@@ -52,24 +52,20 @@
                             </b-row>
                         </b-form>
                     </b-col>
-                </b-row>
+                </b-row> -->
                 <template v-if="table_data.data.length > 0">
                     <!-- Main table element -->
                     <b-table v-if="table_data.loaded && table_data.data != null"
                              class="mt-2 stats-table"
                              stacked="md"
                              :items="table_data.data"
-                             :fields="table_data.table_fields"
-                             :sort-by.sync="table_data.param_options.order_by"
-                             :sort-desc.sync="table_data.param_options.order_ascending"
-                             :no-local-sorting="true"
-                             @sort-changed="sortingChanged">
+                             :fields="table_data.table_fields">
                         <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
                             {{ formatItem(row.item, field.key) }}
                         </template>
                     </b-table>
 
-                    <b-row v-if="table_data.data != null" class="justify-content-md-center">
+                    <!-- <b-row v-if="table_data.data != null" class="justify-content-md-center">
                         <b-col md="auto" class="my-1">
                             <b-pagination @change="changePage($event)"
                                           :total-rows="table_data.pagination.total"
@@ -78,7 +74,7 @@
                                           v-model="table_data.pagination.current_page"
                                           align="center"/>
                         </b-col>
-                    </b-row>
+                    </b-row> -->
                 </template>
                 <template v-else>
                     <p class="text-center mt-5">No Open Interest Data to display</p>
@@ -91,36 +87,46 @@
 <script>
     export default {
     	props: {
-            
+            tableData: {
+                type: Array
+            },
+        },
+        watch: {
+            'tableData': {
+                handler: function(){
+                    this.table_data.loaded = false;
+                    this.loadTableData();
+                },
+                deep: true
+            },
         },
         data() {
             return {
-                markets_filter: [
+                /*markets_filter: [
                     {text: "All Markets", value: null},
                     {text: "ALSI", value: "ALSI"},
                     {text: "DTOP", value: "DTOP"},
                     {text: "DCAP", value: "DCAP"},
                     {text: "SINGLES", value: "SINGLES"},
-                ],
+                ],*/
                 table_data: {
                     table_fields: [
-                        { key: 'market_name', label: 'Market Name', sortable: true, sortDirection: 'desc' },
-                        { key: 'contract', label: 'Contract', sortable: true, sortDirection: 'desc' },
-                        { key: 'expiry_date', label: 'ExpiryDate', sortable: true, sortDirection: 'desc' },
-                        { key: 'is_put', label: 'Put/Call', sortable: true, sortDirection: 'desc' },
-                        { key: 'open_interest', label: 'Strike Price', sortable: true, sortDirection: 'desc' },
-                        { key: 'strike_price', label: 'Open Interest', sortable: true, sortDirection: 'desc' },
-                        { key: 'delta', label: 'Delta', sortable: true, sortDirection: 'desc' },
-                        { key: 'spot_price', label: 'Spot Price', sortable: true, sortDirection: 'desc' },
+                        { key: 'contract', label: 'Contract', sortable: false/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'expiry_date', label: 'ExpiryDate', sortable: false/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'is_put', label: 'Put/Call', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'open_interest', label: 'Open Interest', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'strike_price', label: 'Strike Price', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'delta', label: 'Delta', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'spot_price', label: 'Spot Price', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
                     ],
                     data: [],
-                    param_options: {
+                    /*param_options: {
                         market: null,
                         expiration: null,
                         search: null,
                         order_by: null,
                         order_ascending: true,
-                    },
+                    },*/
                     pagination: {
                         current_page: 1,
                         per_page: 10,
@@ -132,6 +138,10 @@
         },
         methods: {
             loadTableData() {
+                this.table_data.data = this.tableData;
+                this.table_data.loaded = true;
+            },
+            /*loadTableData() {
                 this.table_data.loaded = false;
                 axios.get(axios.defaults.baseUrl + '/stats/open-interest/table', {
                     params:{
@@ -158,7 +168,7 @@
                 }, err => {
                     console.error(err);
                 });
-            },
+            },*/
             changePage($event) {
                 this.table_data.pagination.current_page = $event;
                 this.loadTableData();
@@ -191,7 +201,7 @@
             },
         },
         mounted() {
-        	this.loadTableData();
+        	//this.loadTableData();
         }
     }
 </script>

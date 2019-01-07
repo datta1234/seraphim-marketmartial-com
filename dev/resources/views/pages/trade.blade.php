@@ -42,6 +42,7 @@
 		@if(Auth::user()->isAdmin() == false)
 			<chat-bar></chat-bar>
 		@endif
+		@include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
 	</b-row>
 </div>
 <refresh-quotes-modal></refresh-quotes-modal>

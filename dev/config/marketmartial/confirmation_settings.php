@@ -68,5 +68,29 @@ return [
 		[
 			"per_leg"=>0.05
 		]
-	],        
+	],
+	// __trade_structure__
+	"efp"=>
+	[
+		"index" => 
+		[
+			"only_leg"=>0.0025
+		],
+	],
+	// __trade_structure__
+	"rolls"=>
+	[
+		"index" => 
+		[
+			"far_leg_only"=>0.0025
+		],
+	],
+	// __trade_structure__
+	"efp_switch"=>
+	[
+		"index" => 
+		[
+			"per_leg"=>0.0025
+		],
+	],
 ];

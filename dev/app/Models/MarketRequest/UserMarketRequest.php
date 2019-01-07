@@ -122,15 +122,6 @@ class UserMarketRequest extends Model
     }
 
     /**
-    * Return relation based of _id_foreign index
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
-    public function tradables()
-    {
-        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_id');
-    }
-
-    /**
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
