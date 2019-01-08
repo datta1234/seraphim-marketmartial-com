@@ -632,7 +632,7 @@ public function preFormatStats($user = null, $is_Admin = false)
         //3 index
         //4 single 
             $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
-            foreach($groups as $tradeStructureGroup) {
+            foreach($groups as $key => $tradeStructureGroup) {
 
                 $tradeGroup = $this->tradeConfirmationGroups()->create([
                     'trade_structure_group_id'  =>  $tradeStructureGroup->id,
@@ -641,7 +641,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                     'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
                 ]);
 
-                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+                $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
+
+                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock);
             }
 
             return $this;
@@ -657,7 +659,7 @@ public function preFormatStats($user = null, $is_Admin = false)
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
      {
          foreach($tradeStructureGroup->items as $key => $item) {
 
@@ -681,11 +683,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                 case 'Contract':
 
 
-                if($isOption)
-                {
+                if($isOption && !$is_single_stock) {
                     $value = $tradeNegotiation->quantity; //quantity   
-                }else
-                {
+                } else {
                     $value = null;
                 }
                 break;
