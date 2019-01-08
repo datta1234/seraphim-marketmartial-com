@@ -12,6 +12,21 @@ trait CalcuatesForOptionSwitch {
         $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
 
+        $singleStock1 = $this->optionGroups[0]->userMarketRequestGroup->tradable->isStock();
+        $singleStock2 = $this->optionGroups[1]->userMarketRequestGroup->tradable->isStock();
+        
+        if($singleStock1) {
+            $SpotRef1 = floatval($this->futureGroups[0]->getOpVal('Spot'));
+            // Need to multiply by 1M because the Nomninal is amount per million
+            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity *1000000) / ($SpotRef1 *100), 0));
+        }
+
+        if($singleStock2) {
+            $SpotRef2 = floatval($this->futureGroups[1]->getOpVal('Spot'));
+            // Need to multiply by 1M because the Nomninal is amount per million
+            $this->optionGroups[1]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity *1000000) / ($SpotRef2 *100), 0));
+        }
+
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
         $contracts1 =  floatval($this->optionGroups[0]->getOpVal('Contract'));
         $expiry1 = Carbon::createFromFormat("Y-m-d",$this->optionGroups[0]->getOpVal('Expiration Date'));
@@ -26,9 +41,6 @@ trait CalcuatesForOptionSwitch {
 
         $future_contracts2 = null;
         $future_contracts1 = null;
-        $tradables = $this->marketRequest->userMarketRequestTradables;
-        $singleStock1 = $tradables[0]->isStock();
-        $singleStock2 = $tradables[1]->isStock();
         
         $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
 
@@ -110,8 +122,8 @@ trait CalcuatesForOptionSwitch {
 		$Brodirection = $isOffer ? 1 : -1;
         $counterBrodirection = $Brodirection * -1;
 
-		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.singles.per_leg');
-		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.index.per_leg');
+		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.singles.per_leg')/100;//its a percentage
+		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.index.per_leg')/100;//its a percentage
         
 
     	// Leg1 Top40, DTop, DCap or Single?
