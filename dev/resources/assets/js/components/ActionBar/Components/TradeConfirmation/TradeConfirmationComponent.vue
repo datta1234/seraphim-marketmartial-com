@@ -40,7 +40,7 @@
                     {{ option_group.is_put ? "Put" : "Call" }} 
                 </td>
                 <td>
-                    -   
+                    {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
                 </td>
                 <td>
                     {{ option_group.contracts }} 
