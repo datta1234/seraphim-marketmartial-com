@@ -86,13 +86,10 @@ class UserMarketRequestRequest extends FormRequest
                             .'|between:0,10';
                         break;
                     case 'Strike':
-                        if($i !== 0) {
+                        if($i !== 0 && $tradeStructure->title != 'Calendar') {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = array_merge(
                                 explode("|", $structureItem->itemType->validation_rule),
-                                [new GreaterValue(array_search(
-                                    'Strike',
-                                    array_column($tradeStructure->tradeStructureGroups[$i-1]->toArray(), 'title')
-                                ), 'Strike')]
+                                [new GreaterValue($this->input('trade_structure_groups.'.($i-1).'.fields.Strike'), 'Strike')]
                             );
                         } else {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;

@@ -249,7 +249,7 @@
                     // Check for valid Strike
                         can_submit = can_submit && element.strike !== '' && element.strike !== null;
 
-                        if(index !== 0) {
+                        if(index !== 0 && this.data.market_object.trade_structure !== 'Calendar') {
                             let current_parsed = parseFloat(this.form_data.fields[index].strike);
                             let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
 
@@ -341,6 +341,9 @@
             },
             validStrike(index) {
                 if(index === 0) {
+                    return false;
+                }
+                if(this.data.market_object.trade_structure === 'Calendar') {
                     return false;
                 }
                 let current_parsed = parseFloat(this.form_data.fields[index].strike);
