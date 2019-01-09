@@ -186,7 +186,8 @@
                     case 'open_interest':
                     case 'strike_price':
                     case 'delta':
-                    case 'spot_price':
+                    // removed due to field type change [MM-811]
+                    /*case 'spot_price':*/
                         return this.$root.splitValHelper(item[key], ' ', 3);
                         break;
                     case 'expiry_date':
