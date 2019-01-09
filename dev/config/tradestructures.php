@@ -1100,12 +1100,6 @@ return [
                         'title' => 'Quantity',
                         'type' => 'double'
                     ],
-                    [
-                        // __item__
-                        "id" => 135,
-                        "title" => "Future",
-                        "type" => "double"   
-                    ],
                 ],
                 "trade_confirmation_group"=>[
                     "futures" =>
@@ -1114,25 +1108,25 @@ return [
                         "items" => [
                             [
                                 // __item__
-                                "id" => 136,
+                                "id" => 135,
                                 "title"=>"is_offer",
                                 "type"=> "boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 137,
+                                "id" => 136,
                                 "title"=>"Future",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 138,
+                                "id" => 137,
                                 "title"=>"Contract",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 139,
+                                "id" => 138,
                                 "title"=>"Spot",
                                 "type"=> "double"
                             ]
@@ -1159,33 +1153,21 @@ return [
                 [
                     [
                         // __item__
-                        "id" => 140,
+                        "id" => 139,
                         "title" => "Expiration Date 1",
                         "type" => "expiration date"   
                     ],
                     [
                         // __item__
-                        "id" => 141,
+                        "id" => 140,
                         "title" => "Expiration Date 2",
                         "type" => "expiration date"   
                     ],
                     [
                         // __item__
-                        "id" => 142,
+                        "id" => 141,
                         'title' => 'Quantity',
                         'type' => 'double'
-                    ],
-                    [
-                        // __item__
-                        "id" => 143,
-                        "title" => "Future 1",
-                        "type" => "double"   
-                    ],
-                    [
-                        // __item__
-                        "id" => 144,
-                        "title" => "Future 2",
-                        "type" => "double"   
                     ],
                 ],
                 "trade_confirmation_group"=>[
@@ -1195,31 +1177,31 @@ return [
                         "items" => [
                             [
                                 // __item__
-                                "id" => 145,
+                                "id" => 142,
                                 "title"=>"is_offer 1",
                                 "type"=> "boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 146,
+                                "id" => 143,
                                 "title"=>"is_offer 2",
                                 "type"=> "boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 147,
+                                "id" => 144,
                                 "title" => "Future 1",
                                 "type" => "double"   
                             ],
                             [
                                 // __item__
-                                "id" => 148,
+                                "id" => 145,
                                 "title" => "Future 2",
                                 "type" => "double"   
                             ],
                             [
                                 // __item__
-                                "id" => 149,
+                                "id" => 146,
                                 "title"=>"Contract",
                                 "type"=> "double"
                             ]
@@ -1246,21 +1228,15 @@ return [
                 [
                     [
                         // __item__
-                        "id" => 150,
+                        "id" => 147,
                         "title" => "Expiration Date",
                         "type" => "expiration date"   
                     ],
                     [
                         // __item__
-                        "id" => 151,
+                        "id" => 148,
                         'title' => 'Quantity',
                         'type' => 'double'
-                    ],
-                    [
-                        // __item__
-                        "id" => 152,
-                        "title" => "Future",
-                        "type" => "double"   
                     ],
                 ],
                 "trade_confirmation_group"=>[
@@ -1270,25 +1246,25 @@ return [
                         "items" => [
                             [
                                 // __item__
-                                "id" => 153,
+                                "id" => 149,
                                 "title"=>"is_offer",
                                 "type"=> "boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 154,
+                                "id" => 150,
                                 "title"=>"Future",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 155,
+                                "id" => 151,
                                 "title"=>"Contract",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 156,
+                                "id" => 152,
                                 "title"=>"Spot",
                                 "type"=> "double"
                             ]
@@ -1306,21 +1282,15 @@ return [
                 [
                     [
                         // __item__
-                        "id" => 157,
+                        "id" => 153,
                         "title" => "Expiration Date",
                         "type" => "expiration date"   
                     ],
                     [
                         // __item__
-                        "id" => 158,
+                        "id" => 154,
                         'title' => 'Quantity',
                         'type' => 'double'
-                    ],
-                    [
-                        // __item__
-                        "id" => 159,
-                        "title" => "Future",
-                        "type" => "double"   
                     ],
                 ],
                 "trade_confirmation_group"=>[
@@ -1330,25 +1300,25 @@ return [
                         "items" => [
                             [
                                 // __item__
-                                "id" => 160,
+                                "id" => 155,
                                 "title"=>"is_offer",
                                 "type"=> "boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 161,
+                                "id" => 156,
                                 "title"=>"Future",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 162,
+                                "id" => 157,
                                 "title"=>"Contract",
                                 "type"=> "double"
                             ],
                             [
                                 // __item__
-                                "id" => 163,
+                                "id" => 158,
                                 "title"=>"Spot",
                                 "type"=> "double"
                             ]
@@ -1376,19 +1346,19 @@ return [
                 [
                     [
                         // __item__
-                        "id" => 164,
+                        "id" => 159,
                         "title" => "Expiration Date",
                         "type" => "expiration date"   
                     ],
                     [
                         // __item__
-                        "id" => 165,
+                        "id" => 160,
                         'title' => 'Quantity',
                         'type' => 'double'
                     ],
                     [
                         // __item__
-                        "id" => 166,
+                        "id" => 161,
                         'title' => 'Cap',
                         'type' => 'double'
                     ],
@@ -1400,25 +1370,25 @@ return [
                         "items" => [
                             [
                                 // __item__
-                                "id" => 167,
+                                "id" => 162,
                                 "title"=>"is_offer",
                                 "type"=>"boolean"
                             ],
                             [
                                 // __item__
-                                "id" => 168,
+                                "id" => 163,
                                 "title"=>"is_put",
                                 "type"=>"double"
                             ],
                             [
                                 // __item__
-                                "id" => 169,
+                                "id" => 164,
                                 "title"=>"Volatility",
                                 "type"=>"double"
                             ],
                             [
                                 // __item__
-                                "id" => 170,
+                                "id" => 165,
                                 "title"=>"Contract",
                                 "type"=> "double"
                             ]

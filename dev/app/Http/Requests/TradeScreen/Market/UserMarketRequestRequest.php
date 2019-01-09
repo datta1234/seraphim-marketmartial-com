@@ -78,8 +78,6 @@ class UserMarketRequestRequest extends FormRequest
             {
                 switch ($structureItem->title) {
                     case 'Future':
-                    case 'Future 1':
-                    case 'Future 2':
                         $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = 'sometimes|'
                             .$structureItem->itemType->validation_rule;
                         break;
