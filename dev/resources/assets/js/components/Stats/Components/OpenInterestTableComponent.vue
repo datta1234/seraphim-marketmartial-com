@@ -117,7 +117,7 @@
                         { key: 'open_interest', label: 'Open Interest', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
                         { key: 'strike_price', label: 'Strike Price', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
                         { key: 'delta', label: 'Delta', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
-                        { key: 'spot_price', label: 'Spot Price', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
+                        { key: 'spot_price', label: 'Settlement', sortable: true/*, sortDirection: 'desc', class: 'text-right'*/ },
                     ],
                     data: [],
                     /*param_options: {
