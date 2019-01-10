@@ -288,21 +288,18 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
-    *   isQuotePhase - Checks to see if the user is in any quote phase on the current state of the request
+    *   isRequestPhase - Checks to see if the user is in any request phase on the current state of the request
     *   
     *   @return {Boolean} - if the request has any of the listed statuses
     */
-    isQuotePhase()
+    isRequestPhase()
     {
         let tradebleStatuses = [
-            "NEGOTIATION-VOL",
-            "NEGOTIATION-OPEN-VOL",
-            "TRADE-NEGOTIATION-OPEN",
-            "TRADE-NEGOTIATION-SENDER",
-            "TRADE-NEGOTIATION-COUNTER",
+            "REQUEST-SENT",
+            "REQUEST",
+            "REQUEST-SENT-VOL",
+            "REQUEST-VOL",
         ];
-        
-        console.log("this should be shown",this.attributes.state);
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;    
     }
 
