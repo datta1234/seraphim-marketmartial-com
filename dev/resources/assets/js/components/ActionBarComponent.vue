@@ -3,7 +3,7 @@
         <div class="row mt-2 menu-actions">
             <div class="col-9">
                 <request-market-menu v-if="!$root.is_admin && !$root.is_viewer"></request-market-menu>
-                <important-menu :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
+                <important-menu v-if="market_notifications.important.length >0" :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
                 <alerts-menu :notifications="market_notifications.alert" :markets="markets" v-if="market_notifications.alert.length >0"></alerts-menu>
                 
                 <confirmations-menu :trade_confirmations="trade_confirmations" v-if="trade_confirmations.length >0 && !$root.is_viewer"></confirmations-menu>
