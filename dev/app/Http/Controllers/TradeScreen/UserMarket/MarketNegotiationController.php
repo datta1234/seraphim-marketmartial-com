@@ -49,15 +49,16 @@ class MarketNegotiationController extends Controller
         else
         {
             $this->authorize('addNegotiation',$userMarket);
-            $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
-            if($marketNegotiation->isProposal()) {
+            $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());
+            // Removed due to task [MM-838]
+            /*if($marketNegotiation->isProposal()) {
                 $marketNegotiation->userMarket
                 ->trackActivity(
                     "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".proposed",
                     "Private Negotiation Sent", 
                     10
                 );
-            }
+            }*/
 
             if($marketNegotiation->isMeetInMiddle()) {
                 $marketNegotiation->userMarket
