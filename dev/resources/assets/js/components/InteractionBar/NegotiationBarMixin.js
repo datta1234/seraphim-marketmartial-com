@@ -429,6 +429,10 @@ export default {
                             this.proposed_user_market_negotiation._bid_initial_value = this.last_negotiation.bid;
                         }
                     }
+                // Traded set quantities back to default   
+                } else {
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.defaultQuantity();
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.defaultQuantity(); 
                 }
 
             }
@@ -450,7 +454,7 @@ export default {
             console.log("Setup Started");
             // set up up data
             if(this.marketRequest) {
-                console.log("Seting Up:", this.marketRequest);
+                console.log("Seting Up:", this.marketRequest.default_quantity);
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
 
                 this.setUpProposal();
