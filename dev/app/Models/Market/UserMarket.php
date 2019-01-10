@@ -921,6 +921,7 @@ class UserMarket extends Model
 
         // admin needs to see who owns what
         if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
         }
 
@@ -1010,6 +1011,7 @@ class UserMarket extends Model
 
         // admin needs to see who owns what
         if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
         }
 
@@ -1052,6 +1054,7 @@ class UserMarket extends Model
 
         // admin needs to see who owns what
         if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
         }
         return $data;

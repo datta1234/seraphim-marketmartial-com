@@ -14,7 +14,6 @@ export default {
     watch: {
             'marketRequest': {
                 handler: function(newVal, oldVal) {
-                    console.log("MarketRequest CHANGED! >>> ", newVal, oldVal);
                     if(newVal.id != oldVal.id)
                     {
                         this.init();
@@ -28,11 +27,9 @@ export default {
                         this.setUpData(); 
                         // ensure values dont change if they werent suposed to
                         if(vals.bid != null && vals.bid != "") {
-                            console.log("Reset To Original BID 1", vals.bid);
                             this.proposed_user_market_negotiation.bid = vals.bid;
                         }
                         if(vals.offer != null && vals.offer != "") {
-                            console.log("Reset To Original OFFER 1", vals.offer);
                             this.proposed_user_market_negotiation.offer = vals.offer;
                         }
                     }
@@ -42,35 +39,29 @@ export default {
             'last_negotiation': function(nV, oV) {
                 // not the same negitation, been countered - or its the initial setup
                 if( (oV == null && nV != null) || (oV != null && nV != null && nV.id != oV.id) ) {
-                    console.log("Updating Last Negotiation: ", nV, oV);
                     let vals = {
                         bid: this.proposed_user_market_negotiation.bid != this.proposed_user_market_negotiation._bid_initial_value ? this.proposed_user_market_negotiation.bid : null,
                         offer: this.proposed_user_market_negotiation.offer != this.proposed_user_market_negotiation._offer_initial_value ? this.proposed_user_market_negotiation.offer : null,
                     };
                     Vue.nextTick(() => {
-                        console.log("Performing Update");
                         this.reset(['history_message']);
                         this.setUpData();
                         // ensure values dont change if they werent suposed to
                         if(vals.bid != null && vals.bid != "") {
-                            console.log("Reset To Original BID 2", vals.bid);
                             this.proposed_user_market_negotiation.bid = vals.bid;
                         }
                         if(vals.offer != null && vals.offer != "") {
-                            console.log("Reset To Original OFFER 2", vals.offer);
                             this.proposed_user_market_negotiation.offer = vals.offer;
                         }
                     });
                     return;
                 }
                 if(this.proposed_user_market_negotiation._offer_initial_value != null && this.proposed_user_market_negotiation.offer == this.proposed_user_market_negotiation._offer_initial_value) {
-                    console.log("Setting Offer", nV);
                     // update to new value
                     this.proposed_user_market_negotiation.offer = nV.offer;
                     this.proposed_user_market_negotiation._offer_initial_value = nV.offer;
                 }
                 if(this.proposed_user_market_negotiation._bid_initial_value != null && this.proposed_user_market_negotiation.bid == this.proposed_user_market_negotiation._bid_initial_value) {
-                    console.log("Setting Bid", nV);
                     // update to new value
                     this.proposed_user_market_negotiation.bid = nV.bid;
                     this.proposed_user_market_negotiation._bid_initial_value = nV.bid;
@@ -331,7 +322,6 @@ export default {
             
             this.proposed_user_market.setMarketRequest(this.marketRequest);
             // this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-            console.log(this.proposed_user_market);
 
             this.server_loading = true;
             // save
@@ -382,15 +372,12 @@ export default {
             let chosen_user_market =  this.marketRequest.chosen_user_market;
             if(chosen_user_market)
             {
-                console.log("Proposal2");
                 this.user_market = this.marketRequest.chosen_user_market;
                 if(this.last_negotiation) {
-                    console.log("Proposal3", this.last_negotiation);
                     if(this.last_negotiation.is_my_org == true) {
                         // its my org... can i ammend?
                         if(!this.cant_amend) {
                             this.proposed_user_market_negotiation.id = this.last_negotiation.id;
-                            console.log("Proposal Set", this.proposed_user_market_negotiation.id, this.proposed_user_market_negotiation);
                         }
                     }
                 }
@@ -451,10 +438,8 @@ export default {
             }
         },
         setUpData() {
-            console.log("Setup Started");
             // set up up data
             if(this.marketRequest) {
-                console.log("Seting Up:", this.marketRequest.default_quantity);
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
 
                 this.setUpProposal();

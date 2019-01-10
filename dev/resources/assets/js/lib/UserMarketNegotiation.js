@@ -60,6 +60,8 @@ export default class UserMarketNegotiation extends BaseModel {
             created_at: moment(),
 
             // optional
+            bid_user: null,
+            offer_user: null,
             bid_org: null,
             offer_org: null,
         }
