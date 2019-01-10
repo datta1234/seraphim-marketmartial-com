@@ -56,7 +56,7 @@
             :check-invalid="check_invalid" 
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
-            :is-quote-phase="is_quote_phase"
+            :is-request-phase="is_request_phase"
         >
         </ibar-market-negotiation-contracts>
         <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>

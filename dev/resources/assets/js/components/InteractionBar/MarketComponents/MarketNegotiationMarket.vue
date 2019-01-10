@@ -22,7 +22,7 @@
                 </b-col>
             </b-row>
             
-            <b-row v-if="isQuotePhase" class="mb-3">
+            <b-row v-if="isRequestPhase" class="mb-3">
                 <b-col cols="10 text-center">
                     <b-form-group>
                         <b-form-checkbox-group buttons 
@@ -57,7 +57,7 @@
                 type: Boolean,
                 default: false
             },
-            isQuotePhase: {
+            isRequestPhase: {
                 type: Boolean,
                 default: false    
             }
@@ -140,7 +140,7 @@
         computed: {
             disabled_bid: function() {
                 // if offer only is selected
-                if(this.bid_offer_selected.includes('offer-only') && this.isQuotePhase) {
+                if(this.bid_offer_selected.includes('offer-only') && this.isRequestPhase) {
                     return true;
                 }
 
@@ -161,7 +161,7 @@
             },
             disabled_offer: function() {
                 // if bid only is selected
-                if(this.bid_offer_selected.includes('bid-only') && this.isQuotePhase) {
+                if(this.bid_offer_selected.includes('bid-only') && this.isRequestPhase) {
                     return true;
                 }
                 // if both parents are spin and bid has value disabled
