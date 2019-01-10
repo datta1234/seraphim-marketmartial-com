@@ -140,7 +140,7 @@ export default {
             return !this.last_negotiation.hasTimeoutRemaining() || this.last_negotiation.isTraded();
         },
         is_trading_at_best_source: function() {
-            return this.marketRequest.chosen_user_market.isTradingAtBest() && this.marketRequest.trading_at_best.is_my_org;
+            return this.marketRequest.chosen_user_market.trading_at_best && this.marketRequest.chosen_user_market.trading_at_best.is_my_org;
         },
         'can_disregard':function(){
             return this.marketRequest.canApplyNoCares();
