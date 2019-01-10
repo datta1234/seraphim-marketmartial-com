@@ -43,7 +43,7 @@
             mySideAtValue(side, value) {
                 let chosen_user_market = this.marketRequest.getChosenUserMarket();
                 if(!chosen_user_market) {
-                    return false;
+                    return true;
                 }
                 let current_negotiation = chosen_user_market.getLastNegotiation();
                 // if the value is the same as the current one
