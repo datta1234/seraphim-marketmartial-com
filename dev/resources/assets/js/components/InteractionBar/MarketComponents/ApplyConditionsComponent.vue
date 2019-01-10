@@ -77,7 +77,7 @@
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import conditionPropose from './Conditions/Propose';
     import conditionFoKSide from './Conditions/FoKSide';
-    
+    import { EventBus } from '~/lib/EventBus';
     /*
         Sets the state of the following attributes on the 'marketNegotiation'
             cond_is_repeat_atw
@@ -166,7 +166,6 @@
                 return true;
             },
             onToggleClick(condition, group) {
-                console.log("onToggleClick", condition, group, this.marketNegotiation);
                 if(condition.children) {
                     condition.children.forEach(child => {
                         if(typeof child.value !== 'undefined') {
@@ -190,7 +189,6 @@
                 }
                 this.defaults = {};
                 this.setDefaults(condition);
-                console.log("Defaults: ", this.defaults, this.marketNegotiation);
             },
             updateShownGroups() {
                 this.shown_groups = [];
@@ -222,7 +220,6 @@
                         if(typeof condition.default_value !== 'undefined') {
                             this.defaults[condition.alias] = condition.value.find(item => {
                                 if(this.getDeepValue(item) === condition.default_value) {
-                                    console.log(" 1====>",condition.alias, this.getDeepValue(item), condition.default_value);
                                     return true;
                                 }
                             }).value;
@@ -231,16 +228,12 @@
                     break;
                     default:
                         if(typeof condition.default_value !== 'undefined') {
-                            console.log(" 2====>",condition.alias, condition.value, condition.default_value);
                             this.defaults[condition.alias] = condition.value;
                             this.marketNegotiation[condition.alias] = condition.default_value;
                         }
                 }
-                console.log("Set Data: ", this.defaults[condition.alias], this.marketNegotiation[condition.alias]);
             },
             setCondition(condition, value, group) {
-                console.log("SetCondition: ", condition, value, group);
-                console.log("Market request", this.marketRequest);
                 this.resetConditions(group, value.ignores);
                 if(value === null) {
                     this.marketNegotiation[condition.alias] = value;
@@ -272,7 +265,6 @@
                             this.marketNegotiation[condition.alias] = value;
                     }
                 }
-                console.log("Set: ", this.marketNegotiation[condition.alias]);
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {
@@ -312,6 +304,10 @@
                 });
             })
             this.updateShownGroups();
+            EventBus.$on('conditionsReset', () => {
+                this.resetConditions();
+                this.updateShownGroups();
+            });
         }
     }
 </script>

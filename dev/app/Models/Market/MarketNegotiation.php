@@ -1218,6 +1218,9 @@ class MarketNegotiation extends Model
             $bid_source = $this->marketNegotiationSource('bid');
             $offer_source = $this->marketNegotiationSource('offer');
 
+            $data['bid_user'] = ( $bid_source && $bid_source->user ? $bid_source->user->full_name : null );
+            $data['offer_user'] = ( $offer_source && $offer_source->user ? $offer_source->user->full_name : null );
+
             $data['bid_org'] = ( $bid_source && $bid_source->user ? $bid_source->user->organisation->title : null );
             $data['offer_org'] = ( $offer_source && $offer_source->user ? $offer_source->user->organisation->title : null );
         }

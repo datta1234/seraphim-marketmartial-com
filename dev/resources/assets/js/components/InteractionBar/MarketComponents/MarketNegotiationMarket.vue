@@ -229,13 +229,19 @@
                             (
                                 this.currentNegotiation.bid != null
                                 && !this.is_empty(this.marketNegotiation.bid)
-                                && parseFloat(this.marketNegotiation.bid) < parseFloat(currentBid.bid)
+                                && ( 
+                                    parseFloat(this.marketNegotiation.bid) < parseFloat(currentBid.bid)
+                                    || parseFloat(this.marketNegotiation.bid) >= parseFloat(currentOffer.offer)
+                                )
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
                                 this.currentNegotiation.offer != null
                                 && !this.is_empty(this.marketNegotiation.offer)
-                                && parseFloat(this.marketNegotiation.offer) > parseFloat(currentOffer.offer)
+                                && (
+                                    parseFloat(this.marketNegotiation.offer) > parseFloat(currentOffer.offer)
+                                    || parseFloat(this.marketNegotiation.offer) <= parseFloat(currentBid.bid)
+                                )
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
 

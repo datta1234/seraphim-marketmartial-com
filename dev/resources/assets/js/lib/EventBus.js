@@ -69,9 +69,13 @@ EventBus.$on('removeMarketRequest', (val) => {
    EventBus.$emit('marketRequestRemoved', val); 
 });
 
-EventBus.$on('disableNegotiationInput', (val) => {
-   EventBus.$emit('negotiationInputDisabled', val); 
+EventBus.$on('disableNegotiationInput', () => {
+   EventBus.$emit('negotiationInputDisabled'); 
 });
-EventBus.$on('enableNegotiationInput', (val) => {
-   EventBus.$emit('negotiationInputEnabled', val); 
+EventBus.$on('enableNegotiationInput', () => {
+   EventBus.$emit('negotiationInputEnabled'); 
 });
+
+EventBus.$on('resetConditions', () => {
+    EventBus.$emit('conditionsReset');
+})

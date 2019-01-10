@@ -2,10 +2,10 @@
     <b-row dusk="ibar-trade-request" v-bind:id="dynamicId">
         <b-col cols="10" v-if="$root.is_admin">
             <b-row no-gutters>
-                <b-col cols="6" class="text-center admin-label" :class="getStateClass('bid')">
+                <b-col cols="6" class="text-center admin-label" :class="getStateClass('bid')" v-b-popover.hover.top="marketNegotiation.bid_user">
                     {{ marketNegotiation.bid_org }}
                 </b-col>
-                <b-col cols="6" class="text-center admin-label" :class="getStateClass('offer')">
+                <b-col cols="6" class="text-center admin-label" :class="getStateClass('offer')" v-b-popover.hover.top="marketNegotiation.offer_user">
                     {{ marketNegotiation.offer_org }}
                 </b-col>
             </b-row>

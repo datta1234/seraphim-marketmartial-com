@@ -18208,6 +18208,10 @@ input:checked + .slider:before {
   visibility: hidden;
 }
 
+body > .popover > .arrow {
+  visibility: visible;
+}
+
 .important-markets-menu,
 .alerts-markets-menu,
 .confirmations-markets-menu,

@@ -67,7 +67,6 @@
                 let chosen_user_market = this.marketRequest.getChosenUserMarket();
                 
                 let available = this.parser(this.condition.value).filter(val => {
-                    console.log("Ok maybe not", val, this.condition.value, this.parser(this.condition.value));
                     return val.applies_to.reduce((out, side) => {
                         if(vals[side] == null || vals[side] == 0 || !this.mySideAtValue(side, vals[side])) {
                             out = false;
@@ -77,7 +76,7 @@
                 });
                 
                 let foundIndex = available.findIndex(x => {
-                    return x.value.value == this.defaults[this.condition.alias].value;
+                    return this.defaults[this.condition.alias] && x.value.value == this.defaults[this.condition.alias].value;
                 });
 
                 // if its not found in the available list
