@@ -132,14 +132,17 @@
             {
                 "value": true,
                 "text": "Buy at best",
-                "title": "Buy at best"
+                "title": "Buy at best",
+                "applies_to": ["offer"]
             },
             {
                 "value": false,
                 "text": "Sell at best",
-                "title": "Sell at best"
+                "title": "Sell at best",
+                "applies_to": ["bid"]
             }
         ],
-        "only": "market"
+        "only": "market",
+        "component": "condition-trade-at-best"
     }
 ]
