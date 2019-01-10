@@ -71,23 +71,33 @@
             },
             'marketNegotiation.cond_buy_mid'(nv, ov) {
                 this.$nextTick(() => {
-                    if(this.resetting) { return }; // break early
+                    if(this.resetting) { 
+                        this.buying_at_mid = false;
+                        return;
+                    }// break early
                     console.log("Changed: ", nv)
                     if(nv !== null) {
+                        this.buying_at_mid = true;
                         if(ov === null) {
                             this.old.bid = this.marketNegotiation.bid;
                             this.old.offer = this.marketNegotiation.offer;
                         }
-                        this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
+                        let bid = this.currentNegotiation.bid;
+                        let offer = this.currentNegotiation.offer;
+                        console.log("Setting To: ", bid, offer);
+                        this.marketNegotiation.bid = this.marketNegotiation.offer = ( bid + offer ) / 2;
+                        this.disable_input = true;
                     } else {
+                        this.buying_at_mid = false;
                         this.marketNegotiation.bid = this.old.bid;
                         this.marketNegotiation.offer = this.old.offer;
+                        this.disable_input = false;
                     }
                 });
             },
             'disabled_bid'(nv, ov) {
                 this.$nextTick(() => {
-                    if(this.resetting) { return }; // break early
+                    if(this.resetting || this.buying_at_mid == true) { return }; // break early
                     console.log("Changed 2: ", nv)
                     if(nv) {
                         if(this.marketNegotiation.bid_qty) {
@@ -104,7 +114,7 @@
             },
             'disabled_offer'(nv, ov) {
                 this.$nextTick(() => {
-                    if(this.resetting) { return }; // break early
+                    if(this.resetting || this.buying_at_mid == true) { return }; // break early
                     console.log("Changed 3: ", nv)
                     if(nv) {
                         if(this.marketNegotiation.offer_qty) {
@@ -122,6 +132,7 @@
         },
         data() {
             return {
+                buying_at_mid: false,
                 disable_input: false,
                 old: {
                     resetting: false,
@@ -139,41 +150,44 @@
         },
         computed: {
             disabled_bid: function() {
-                // if offer only is selected
-                if(this.bid_offer_selected.includes('offer-only') && this.isRequestPhase) {
-                    return true;
-                }
-
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                let value = this.marketNegotiation.offer;
+                let only = (this.bid_offer_selected.includes('offer-only') && this.isRequestPhase );
+
+                // if offer only is selected
+                if( only ) {
+                    return true;
+                }
+
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('bid').is_my_org;
                 }
 
-                let value = this.marketNegotiation.offer;
                 if((traded || spun) && value) {
                     return true;
                 }
                 return false;
             },
             disabled_offer: function() {
-                // if bid only is selected
-                if(this.bid_offer_selected.includes('bid-only') && this.isRequestPhase) {
-                    return true;
-                }
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                let value = this.marketNegotiation.bid;
+                let only = (this.bid_offer_selected.includes('bid-only') && this.isRequestPhase);
+
+                // if bid only is selected
+                if( only ) {
+                    return true;
+                }
+
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('offer').is_my_org;
                 }
 
-                let value = this.marketNegotiation.bid;
                 if((traded || spun) && value) {
                     return true;
                 }

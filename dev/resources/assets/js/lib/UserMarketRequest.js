@@ -280,8 +280,9 @@ export default class UserMarketRequest extends BaseModel {
                 "NEGOTIATION-VOL",
                 "NEGOTIATION-OPEN-VOL",
                 "TRADE-NEGOTIATION-OPEN",
-                "TRADE-NEGOTIATION-SENDER",
-                "TRADE-NEGOTIATION-COUNTER",
+                // Adding these broke things [MM-820]
+                // "TRADE-NEGOTIATION-SENDER",
+                // "TRADE-NEGOTIATION-COUNTER",
             ];
         
         console.log("this should be shown",this.attributes.state);

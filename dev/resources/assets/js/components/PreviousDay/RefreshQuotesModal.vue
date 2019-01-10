@@ -41,7 +41,7 @@
             </b-container>
         </template>
         <template slot="modal-footer">
-            <b-btn size="md" variant="primary" class="pull-right" @click="refreshQuotes()">Refresh</b-btn>
+            <b-btn size="md" variant="primary" class="pull-right" v-active-request @click="refreshQuotes()">Refresh</b-btn>
             <b-btn size="md" variant="default" class="pull-right" @click="closeModal()">Close</b-btn>
         </template>
     </b-modal>
@@ -74,7 +74,7 @@
                     })
                     .then(response => {
                         if(response.data.success) {
-                            this.modal_open = true;
+                            this.modal_open = false;
                             this.$toasted.success(response.data.data.message);
                         } else {
                             this.$toasted.error("An error occured refreshing your quotes, contact an administrator if the problem presists");

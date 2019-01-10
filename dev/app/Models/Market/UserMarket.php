@@ -492,9 +492,16 @@ class UserMarket extends Model
         $marketNegotiation = $oldNegotiation->replicate();
         $marketNegotiation->is_repeat = true;
 
-        // if its a repeat ATW just repeat it, dont repeat the condition
-        if($marketNegotiation->isRepeatATW()) {
-            $marketNegotiation->cond_is_repeat_atw = null;
+        /*
+        *   Replaced with removing all conditions
+            // if its a repeat ATW just repeat it, dont repeat the condition
+            if($marketNegotiation->isRepeatATW()) {
+                $marketNegotiation->cond_is_repeat_atw = null;
+            }
+        */
+        // if there are conditions applied, remove them
+        foreach($marketNegotiation->applicableConditions as $cond => $default) {
+            $marketNegotiation->{$cond} = $default;
         }
 
         $marketNegotiation->user_id = $user->id;
@@ -544,16 +551,27 @@ class UserMarket extends Model
                 $source = $counterNegotiation->marketNegotiationSource('offer');
                 $marketNegotiation->counter_user_id = $source->user_id;
                 
-                $marketNegotiation->offer = $source->offer;
-                $marketNegotiation->offer_qty =  $qty;
+                /* 
+                    Replaced below per [MM-828] - leaving other side open
+                */
+                // $marketNegotiation->offer = $source->offer;
+                // $marketNegotiation->offer_qty =  $qty;
+                $marketNegotiation->offer = null;
+                $marketNegotiation->offer_qty =  null;
 
             }
             elseif($marketNegotiation->offer != null) {
                 // improved offer
                 $source = $counterNegotiation->marketNegotiationSource('bid');
                 $marketNegotiation->counter_user_id = $source->user_id;
-                $marketNegotiation->bid = $source->bid;
-                $marketNegotiation->bid_qty =  $qty ;
+                
+                /* 
+                    Replaced below per [MM-828] - leaving other side open
+                */
+                // $marketNegotiation->bid = $source->bid;
+                // $marketNegotiation->bid_qty =  $qty;
+                $marketNegotiation->bid = null;
+                $marketNegotiation->bid_qty =  null;
             }
 
 
@@ -590,8 +608,15 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        if($counterNegotiation && $counterNegotiation->isTraded())
-        {
+        \Log::info("Want to Starting New Tree");
+        if(
+            // this is for when the counter waas traded, we start a new tree
+            ($counterNegotiation && $counterNegotiation->isTraded()) 
+            // handle exceptions to the case where the counter is not the one traded, 
+            // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
+            || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
+        ) {
+            \Log::info("Starting New Tree");
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
@@ -634,7 +659,11 @@ class UserMarket extends Model
             }
 
             // responding to RepeatATW will open to market automatically - no longer happens
-            if($counterNegotiation->isRepeatATW()) {
+            if($counterNegotiation->isRepeatATW() // parent is a RATW
+                && $counterNegotiation->marketNegotiationParent 
+                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+            ) {
+                // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;
             }
 

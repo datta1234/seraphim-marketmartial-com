@@ -112,7 +112,7 @@
                     </b-col>
                 </b-row>
 
-                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate && (!is_trading_at_best || is_trading_at_best_closed)">
                     <b-col cols="6">
                          <!-- || conditionActive('repeat-atw') -->
                         <b-button v-active-request class="w-100 mt-1" 
@@ -135,7 +135,7 @@
                     </b-col>
                 </b-row>
                 
-                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed && !is_trading_at_best_source">
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
