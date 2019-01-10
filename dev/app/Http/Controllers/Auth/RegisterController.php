@@ -188,7 +188,7 @@ class RegisterController extends Controller
     {
         // Refactored due to task MM-711
         // $market_types = MarketType::all()->pluck('title', 'id')->toArray();
-        $market_types = [1 => "Options", 2 => "Delta One(EFPs, Rolls and EFP Switches)"];
+        $market_types = [1 => "Options", 2 => "Delta One (EFPs, Rolls and EFP Switches)"];
         $organisations = Organisation::all()->pluck('title','id')->toArray();
         $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
         return view('auth.register')->with(compact('organisations', 'market_types','roles'));
