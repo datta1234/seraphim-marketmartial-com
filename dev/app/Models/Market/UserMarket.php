@@ -492,9 +492,16 @@ class UserMarket extends Model
         $marketNegotiation = $oldNegotiation->replicate();
         $marketNegotiation->is_repeat = true;
 
-        // if its a repeat ATW just repeat it, dont repeat the condition
-        if($marketNegotiation->isRepeatATW()) {
-            $marketNegotiation->cond_is_repeat_atw = null;
+        /*
+        *   Replaced with removing all conditions
+            // if its a repeat ATW just repeat it, dont repeat the condition
+            if($marketNegotiation->isRepeatATW()) {
+                $marketNegotiation->cond_is_repeat_atw = null;
+            }
+        */
+        // if there are conditions applied, remove them
+        foreach($marketNegotiation->applicableConditions as $cond => $default) {
+            $marketNegotiation->{$cond} = $default;
         }
 
         $marketNegotiation->user_id = $user->id;

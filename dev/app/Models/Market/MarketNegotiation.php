@@ -92,7 +92,7 @@ class MarketNegotiation extends Model
         "cond_buy_best"         => 'Boolean',
     ];
 
-    protected $applicableConditions = [
+    public $applicableConditions = [
         /*
             'attribute_name' => 'default_value'
         */
