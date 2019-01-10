@@ -226,7 +226,8 @@
 
 .condition
 {
-  color: $mm-yellow;  
+  // color: $mm-yellow;  // MM-836
+  color: $mm-text-white;
 }
 
 .condition-toggle {

@@ -68,3 +68,10 @@ EventBus.$on('completeReset', (val) => {
 EventBus.$on('removeMarketRequest', (val) => {
    EventBus.$emit('marketRequestRemoved', val); 
 });
+
+EventBus.$on('disableNegotiationInput', (val) => {
+   EventBus.$emit('negotiationInputDisabled', val); 
+});
+EventBus.$on('enableNegotiationInput', (val) => {
+   EventBus.$emit('negotiationInputEnabled', val); 
+});
