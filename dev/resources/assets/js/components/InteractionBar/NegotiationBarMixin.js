@@ -124,6 +124,9 @@ export default {
         is_trading: function(){
             return this.marketRequest.isTrading();
         },
+        is_involved_in_trade: function(){
+            return this.marketRequest.isInvolvedInTrade();
+        },
         is_trading_at_best: function() {
             return this.marketRequest.chosen_user_market.isTradingAtBest();
         },
