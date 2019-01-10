@@ -56,7 +56,7 @@
    
     </template>
     <!-- Alert me when cleared -->
-    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer" :market_request="marketRequest"></alert-cleared>
+    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer && !is_involved_in_trade" :market_request="marketRequest"></alert-cleared>
     <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <b-row class="mb-1">

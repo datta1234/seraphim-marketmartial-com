@@ -344,6 +344,17 @@ export default class UserMarketRequest extends BaseModel {
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
     }
 
+    isInvolvedInTrade()
+    {
+        let tradingStates = [
+            "TRADE-NEGOTIATION-SENDER",
+            "TRADE-NEGOTIATION-COUNTER",
+            "TRADE-NEGOTIATION-BALANCER"
+        ];
+
+        return  tradingStates.indexOf(this.attributes.state) > -1;
+    }
+
     get is_trading_at_best() {
         // console.log("is_trading_at_best ",this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
         return (this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
