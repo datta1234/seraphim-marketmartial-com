@@ -101,7 +101,8 @@ class OpenInterestControlller extends Controller
                 $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
                 $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
                 $a['delta'] = str_replace(" ", "", $a['delta']);
-                $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+                // removed due to field type change [MM-811]
+                /*$a['spot_price'] = str_replace(" ", "", $a['spot_price']);*/
             }
         });
         array_shift($csv);

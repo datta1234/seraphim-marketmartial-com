@@ -71,7 +71,9 @@ return [
             '*.strike_price'    => 'required|numeric',
             '*.open_interest'   => 'required|numeric',
             '*.delta'           => 'required|numeric',
-            '*.spot_price'      => 'required|numeric'
+            // changed due to field type change [MM-811]
+            /*'*.spot_price'      => 'required|numeric'*/
+            '*.spot_price'      => 'required|string|max:255'
         ],
         'messages' => [
             '*.market_name.required'    => 'The Market Name field is required.',
@@ -91,7 +93,10 @@ return [
             '*.delta.required'          => 'The Delta field is required',
             '*.delta.numeric'           => 'The Delta field must be a numberic value.',
             '*.spot_price.required'     => 'The Spot Price field is required',
-            '*.spot_price.numeric'      => 'The Spot Price field must be a numberic value.'
+            // changed due to field type change [MM-811]
+            /*'*.spot_price.numeric'      => 'The Spot Price field must be a numberic value.'*/
+            '*.spot_price.string'      => 'The Spot Price field must be a string value.',
+            '*.spot_price.max'         => 'The Spot Price field has a max length of :max.'
         ]
     ],
 ];

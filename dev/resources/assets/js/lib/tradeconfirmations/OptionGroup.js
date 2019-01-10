@@ -13,15 +13,55 @@ export default class OptionGroup {
 
     setByStructure(structureGroup)
     {
-        this.is_put = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_put' }) ? structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_put' }).value == 1 : null; 
-        this.contracts = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Contract' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Contract' }).value) : null;
-        this.is_offer = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }) ? structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'is_offer' }).value == 1 : null; 
-        this.volatility = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Volatility' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Volatility' }).value) : null;
-        this.expires_at = structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Expiration Date' }) ? this.setUpDate(structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Expiration Date' }).value) : null;
-        this.strike = structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }) ? this.setUpNumbers(structureGroup.user_market_request_group.items.find((item)=>{ return item.title == 'Strike' }).value) : null;
-        this.gross_prem = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Gross Premiums' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Gross Premiums' }).value) : null;
-        this.net_prem = structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Net Premiums' }) ? this.setUpNumbers(structureGroup.trade_confirmation_items.find((item)=>{ return item.title == 'Net Premiums' }).value) : null;   
-        this.underlying_title = structureGroup.user_market_request_group.tradable ? structureGroup.user_market_request_group.tradable.title: null; 
+        structureGroup.trade_confirmation_items.forEach(item => {
+            switch(item.title) {
+                case 'is_put':
+                    this.is_put = item.value == 1;
+                    break;
+                case 'is_offer':
+                    this.is_offer = item.value == 1;
+                    break;
+                case 'Expiration Date':
+                    this.expires_at = this.setUpDate(item.value);
+                    break;
+                case 'Contract':
+                    this.contracts = this.setUpNumbers(item.value);
+                    break;
+                case 'Nominal':
+                    this.nominal = this.setUpNumbers(item.value);
+                    break;
+                case 'Volatility':
+                    this.volatility = this.setUpNumbers(item.value);
+                    break;
+                case 'Strike':
+                    this.strike = this.setUpNumbers(item.value);
+                    break;
+                case 'Gross Premiums':
+                    this.gross_prem = this.setUpNumbers(item.value);
+                    break;
+                case 'Net Premiums':
+                    this.net_prem = this.setUpNumbers(item.value);
+                    break;
+                
+            }
+        });
+
+        structureGroup.user_market_request_group.items.forEach(item => {
+            switch(item.title) {
+                case 'Expiration Date':
+                    this.expires_at = this.setUpDate(item.value);
+                    break;
+                case 'Strike':
+                    this.strike = this.setUpNumbers(item.value);
+                    break;
+                case 'Quantity':
+                    this.spot = this.setUpNumbers(item.value);
+                    break;             
+            }
+        });
+
+        this.underlying_title = structureGroup.user_market_request_group.tradable ? structureGroup.user_market_request_group.tradable.title: null;
+        
     }
 
     setUpDate(value)

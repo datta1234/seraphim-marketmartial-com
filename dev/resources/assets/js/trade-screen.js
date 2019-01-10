@@ -186,6 +186,10 @@ const app = new Vue({
                    self.trade_confirmations.push(new TradeConfirmation(x));   
                     return x;
                 });
+                console.log('====================================');
+                console.log("Loading Trade Confirmations: FROM SERVER - ", tradeConfirmationResponse.data.data);
+                console.log("Loading Trade Confirmations: OBJECT - ", self.trade_confirmations);
+                console.log('====================================');
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);

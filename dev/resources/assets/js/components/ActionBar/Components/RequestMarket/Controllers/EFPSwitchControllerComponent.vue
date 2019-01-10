@@ -275,10 +275,6 @@
                             Quantity: element.quantity
                         }
                     };
-                    
-                    if(element.has_future) {
-                        group_data.fields["Future"] = element.future;
-                    }
 
                     formatted_data.trade_structure_groups.push(group_data);
                 });

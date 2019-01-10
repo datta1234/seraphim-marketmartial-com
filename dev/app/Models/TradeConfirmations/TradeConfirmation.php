@@ -238,8 +238,6 @@ class TradeConfirmation extends Model
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
 
-            'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
-
             'date'                      => Carbon::now()->format("Y-m-d"),
             
             'traded_at'                 => $this->tradeNegotiation->updated_at,
@@ -634,7 +632,7 @@ public function preFormatStats($user = null, $is_Admin = false)
         //3 index
         //4 single 
             $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
-            foreach($groups as $tradeStructureGroup) {
+            foreach($groups as $key => $tradeStructureGroup) {
 
                 $tradeGroup = $this->tradeConfirmationGroups()->create([
                     'trade_structure_group_id'  =>  $tradeStructureGroup->id,
@@ -643,7 +641,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                     'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
                 ]);
 
-                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+                $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
+
+                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock);
             }
 
             return $this;
@@ -659,38 +659,40 @@ public function preFormatStats($user = null, $is_Admin = false)
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
      {
-         foreach($tradeStructureGroup->items as $item) {
+         foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
             switch ($item->title) {
                 case 'is_put':
-                $value = null;
-                break;
-                case 'Volatility':
-                $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-                break;
-                case 'Gross Premiums':
-                $value = null;
-                break;
-                case 'Net Premiums':
-                $value = null;
-                break;
-                case 'Future':
-                $value = null;
-                break;
-                case 'Contract':
-
-
-                if($isOption)
-                {
-                    $value = $tradeNegotiation->quantity; //quantity   
-                }else
-                {
                     $value = null;
-                }
-                break;
+                    break;
+                case 'Volatility':
+                    $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    break;
+                case 'Gross Premiums':
+                    $value = null;
+                    break;
+                case 'Net Premiums':
+                    $value = null;
+                    break;
+                case 'Future':
+                    $value = null;
+                    break;
+                case 'Contract':
+                    if($isOption && !$is_single_stock) {
+                        $value = $tradeNegotiation->quantity; //quantity   
+                    } else {
+                        $value = null;
+                    }
+                    break;
+                case 'Nominal':
+                    if($is_single_stock) {
+                        // Need to multiply by 1M because the Nomninal is amount per million
+                        $value = $tradeNegotiation->quantity * 1000000;  
+                    }
+                    break;
             }
 
             if($item->title =="Net Premiums")
@@ -711,8 +713,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            }else if($item->title == "is_offer")
-            {
+            } else if($item->title == "is_offer") {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -728,10 +729,30 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
+            } else if($item->title == "Spot") {
+                if($tradeGroup->userMarketRequestGroup->hasSpotPrice()) {
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        "is_seller" => null,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                } 
 
-            }else
-            {
-               $tradeGroup->tradeConfirmationItems()->create([
+            } else if($item->title == "Nominal") {
+                if($is_single_stock) {
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        "is_seller" => null,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                } 
+
+            } else {
+                $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
                     "is_seller" => null,

@@ -13,6 +13,16 @@ trait CalcuatesForFly {
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
 
+        $singleStock = $this->optionGroups[0]->userMarketRequestGroup->tradable->isStock();
+        
+        if($singleStock) {
+            $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
+            // Need to multiply by 1M because the Nomninal is amount per million
+            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+            $this->optionGroups[1]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+            $this->optionGroups[2]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+        }
+
         $contracts1 =  floatval($this->optionGroups[0]->getOpVal('Contract'));
         $expiry1 = Carbon::createFromFormat("Y-m-d",$this->optionGroups[0]->getOpVal('Expiration Date'));
         $strike1 =  floatval($this->optionGroups[0]->getOpVal('strike'));
@@ -29,8 +39,6 @@ trait CalcuatesForFly {
         $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
 
         $$future_contracts = null;        
-        $tradables = $this->marketRequest->userMarketRequestTradables;
-        $singleStock = $tradables[0]->isStock();
 
         if($is_offer == 1) {
             $putDirection1	= 1;
@@ -114,7 +122,7 @@ trait CalcuatesForFly {
         $counterBrodirection = $Brodirection * -1;
             
         if($singleStock) {
-            $SINGLEflyFEE = config('marketmartial.confirmation_settings.fly.singles.per_leg');
+            $SINGLEflyFEE = config('marketmartial.confirmation_settings.fly.singles.per_leg')/100;//its a percentage
             
             $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
             $nominal1 = $user_market_request_groups[0]->getDynamicItem('Quantity');
@@ -131,7 +139,7 @@ trait CalcuatesForFly {
             $netPremiumCounter3 =  round($nominal3 * $SINGLEflyFEE / $contracts3 * $counterBrodirection + $gross_prem3, 2);
         } else {
             //get the spot price ref.
-            $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.per_leg');        
+            $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.per_leg')/100;//its a percentage
 
             $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 

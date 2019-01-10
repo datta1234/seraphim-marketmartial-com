@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col col-lg-8">
     <div class="home-page-title">
-        <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
+        <h1>The Inter-Bank Derivatives<br>Negotiation Platform</h1>
     </div>
     </div>
     @if (Auth::guest())

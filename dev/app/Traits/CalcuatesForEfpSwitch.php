@@ -36,7 +36,7 @@ trait CalcuatesForEfpSwitch {
     	$FutBrodirection = $isOffer ? 1 : -1;
     	$counterFutBrodirection = $FutBrodirection * -1;
 
-    	$D1switchFEE = config('marketmartial.confirmation_settings.efp_switch.index.per_leg');
+    	$D1switchFEE = config('marketmartial.confirmation_settings.efp_switch.index.per_leg')/100;//its a percentage
 
     	//FUTURE = Application.Round(Future1 * D1switchFEE * FutBrodirection1, 2) + Future1
     	$finalFuture1 =  round($future1 * $D1switchFEE * $FutBrodirection, 2) + $future1;

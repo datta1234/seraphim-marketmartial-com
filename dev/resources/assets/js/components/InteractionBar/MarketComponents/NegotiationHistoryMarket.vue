@@ -81,6 +81,7 @@
                         {{ vm_message }}
                     </p>
                 </b-col>
+                <b-col cols="2" class="mt-0"></b-col>
             </b-row>
         </b-col>
     </b-row>

@@ -184,7 +184,7 @@ export default class TradeConfirmation extends BaseModel {
     hasFutures()
     {
         return this.future_groups.reduce((out, group)=>{
-                if(group.future.length == 0)
+                if(group.future == null)
                 {
                     out = false;
                 }
@@ -192,6 +192,25 @@ export default class TradeConfirmation extends BaseModel {
             }, true);
 
     }
+
+    /**
+    * Validation method that checks if this TradeConfirmation has a spot in it's future groups
+    *   and it contains a value
+    *
+    * @return {Boolean}
+    */
+    hasSpots()
+    {
+        return this.future_groups.reduce( (out, group) => {
+                if( group.hasOwnProperty('spot') && group.spot == null)
+                {
+                    out = false;
+                }
+                return out;
+            }, true);
+
+    }
+
     dispute(trading_account)
     {
         return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
