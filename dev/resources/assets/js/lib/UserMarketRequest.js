@@ -47,6 +47,7 @@ export default class UserMarketRequest extends BaseModel {
             chosen_user_market: null,
             created_at: moment(),
             updated_at: moment(),
+            default_quantity: 500,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -413,11 +414,13 @@ export default class UserMarketRequest extends BaseModel {
 
     defaultQuantity()
     {
-        let group = Object.values(this.trade_items).find(item => item.choice == false);
+        /*let group = Object.values(this.trade_items).find(item => item.choice == false);
         let ts = this.trade_structure_slug;
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
         let val = group[conf];
-        return val;
+        return val;*/
+
+        return this.default_quantity;
     }
 
     getQuantityType()
