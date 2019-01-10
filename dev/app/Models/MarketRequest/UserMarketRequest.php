@@ -574,6 +574,7 @@ class UserMarketRequest extends Model
                     }
                     
                     if($lastNegotiation->isImprovedRepeatATW()) {
+                        \Log::info("Got Here LOOOOL");
                         return true;
                     }
 

@@ -634,7 +634,11 @@ class UserMarket extends Model
             }
 
             // responding to RepeatATW will open to market automatically - no longer happens
-            if($counterNegotiation->isRepeatATW()) {
+            if($counterNegotiation->isRepeatATW() // parent is a RATW
+                && $counterNegotiation->marketNegotiationParent 
+                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+            ) {
+                // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;
             }
 

@@ -440,10 +440,12 @@ class MarketNegotiation extends Model
         $source_bid = $this->marketNegotiationSource('bid');
         $source_offer = $this->marketNegotiationSource('offer');
 
-        return ($source_bid->isRepeatATW() && $source_offer->id === $this->id 
-            && $source_offer->id !==$source_bid->id) 
+        return $this->isRepeatATW() && (
+            ($source_bid->isRepeatATW() && $source_offer->id === $this->id 
+            && $source_offer->id !== $source_bid->id) 
             || ($source_offer->isRepeatATW() && $source_bid->id === $this->id
-            && $source_bid->id !==$source_offer->id);
+            && $source_bid->id !== $source_offer->id)
+        );
     }    
 
     /**
