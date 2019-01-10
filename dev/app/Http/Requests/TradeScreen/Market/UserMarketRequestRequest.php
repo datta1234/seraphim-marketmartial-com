@@ -86,7 +86,8 @@ class UserMarketRequestRequest extends FormRequest
                             .'|between:0,10';
                         break;
                     case 'Strike':
-                        if($i !== 0 && $tradeStructure->title != 'Calendar') {
+                        $exclude_structures = ['Calendar','Option Switch'];
+                        if($i !== 0 && !in_array($tradeStructure->title, $exclude_structures)) {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = array_merge(
                                 explode("|", $structureItem->itemType->validation_rule),
                                 [new GreaterValue($this->input('trade_structure_groups.'.($i-1).'.fields.Strike'), 'Strike')]
