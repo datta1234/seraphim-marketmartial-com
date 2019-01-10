@@ -37,7 +37,7 @@
             
             .ibar-negotiation-content {
                 padding-right: 25px;
-                padding-bottom: $trade-footer-height;
+                padding-bottom: $trade-footer-height * 3;
             }
         }
         &.active {
@@ -226,7 +226,8 @@
 
 .condition
 {
-  color: $mm-yellow;  
+  // color: $mm-yellow;  // MM-836
+  color: $mm-text-white;
 }
 
 .condition-toggle {

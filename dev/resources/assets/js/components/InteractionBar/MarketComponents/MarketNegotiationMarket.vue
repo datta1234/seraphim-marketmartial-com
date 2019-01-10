@@ -5,16 +5,16 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
                         </div>
                     </b-form>
                 </b-col>
@@ -122,6 +122,7 @@
         },
         data() {
             return {
+                disable_input: false,
                 old: {
                     resetting: false,
                     bid: null,
@@ -288,6 +289,12 @@
                 this.resetting = true;
             });
             EventBus.$on('resetComplete', this.reset);
+            EventBus.$on('negotiationInputDisabled', () => {
+                this.disable_input = true;
+            });
+            EventBus.$on('negotiationInputEnabled', () => {
+                this.disable_input = false;
+            });
         }
     }
 </script>
