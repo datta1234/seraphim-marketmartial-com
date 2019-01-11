@@ -666,10 +666,15 @@ public function preFormatStats($user = null, $is_Admin = false)
             $value = null;
             switch ($item->title) {
                 case 'is_put':
+                case 'is_offer':
                     $value = null;
                     break;
                 case 'Volatility':
-                    $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    if($tradeGroup->userMarketRequestGroup->is_selected) {
+                        $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
+                    } else {
+                        $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    }
                     break;
                 case 'Gross Premiums':
                     $value = null;
@@ -682,7 +687,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock) {
-                        $value = $tradeNegotiation->quantity; //quantity   
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
                     } else {
                         $value = null;
                     }
@@ -714,10 +719,20 @@ public function preFormatStats($user = null, $is_Admin = false)
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
             } else if($item->title == "is_offer") {
+                $seller_value = $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
+                $buyer_value = $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id); 
+                
+                if($isOption) {
+                    $seller_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$seller_value : $seller_value;
+                    $buyer_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$buyer_value : $buyer_value;
+                } else {
+                    $seller_is_offer = null;
+                    $buyer_is_offer = null;
+                }
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
-                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id),
+                    'value' =>  $seller_is_offer,
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
@@ -725,7 +740,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
-                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id),
+                    'value' =>  $buyer_is_offer,
                     "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);

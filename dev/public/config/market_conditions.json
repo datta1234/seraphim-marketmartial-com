@@ -108,7 +108,7 @@
         "title": "Meet in the Middle (Private)",
         "alias": "cond_buy_mid",
         "default": null,
-        "default_value": true,
+        "default_value": null,
         "value": [
             {
                 "value": true,
@@ -133,13 +133,13 @@
                 "value": true,
                 "text": "Buy at best",
                 "title": "Buy at best",
-                "applies_to": ["offer"]
+                "applies_to": ["bid"]
             },
             {
                 "value": false,
                 "text": "Sell at best",
                 "title": "Sell at best",
-                "applies_to": ["bid"]
+                "applies_to": ["offer"]
             }
         ],
         "only": "market",

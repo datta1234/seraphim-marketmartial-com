@@ -21,7 +21,7 @@ class TradeConfirmationController extends Controller
         $this->authorize('phaseTwo', $tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
     	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
-        $tradeConfirmation->phaseTwo();  
+        $tradeConfirmation->phaseTwo();
         $tradeConfirmation->save();
         
         $data = $tradeConfirmation->fresh()->load([
