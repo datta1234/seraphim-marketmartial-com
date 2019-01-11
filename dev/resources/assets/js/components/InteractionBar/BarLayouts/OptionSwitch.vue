@@ -270,11 +270,15 @@
                 return this.marketRequest.trade_items[group];
             },
             'market_title': function() {
-                return [
-                    this.marketRequest.trade_items.default.tradable.title,
-                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.option_switch.expiration_date")],
-                    this.marketRequest.trade_structure
-                ].join(' ');
+                let title_groups = []
+                Object.keys(this.marketRequest.trade_items).forEach(item => {
+                    let choice = this.marketRequest.trade_items[item].choice ? '(CH)' : '';
+                    title_groups.push([
+                        this.marketRequest.trade_items[item].tradable.title + choice,
+                        this.marketRequest.trade_items[item][this.$root.config("trade_structure.option_switch.expiration_date")]
+                    ].join(' '));
+                });
+                return title_groups.join(' vs ') + ' ' + this.marketRequest.trade_structure;
             },
         },
         methods: {
