@@ -48,6 +48,10 @@
             }
         },
         computed: {
+            on_neither_side: function() {
+                return !this.mySideAtValue('bid', this.marketNegotiation.bid) 
+                    && !this.mySideAtValue('offer', this.marketNegotiation.offer);
+            },
             available: function() {
                 let vals = {
                     bid: this.marketNegotiation.bid,
@@ -68,14 +72,14 @@
                     this.marketNegotiation[this.condition.alias] = available[0].value;
                 } else {
                     this.marketNegotiation[this.condition.alias] = null;
+                    EventBus.$emit('errorConditions', "Please improve the bid or the offer before applying buy/sell@best.");
                 }
-                console.log(available);
 
                 return available;
             }
         },
         mounted() {
-            console.log(this.condition);
+
         }
     }
 </script>

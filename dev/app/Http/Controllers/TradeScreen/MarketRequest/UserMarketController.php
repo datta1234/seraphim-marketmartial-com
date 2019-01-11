@@ -130,7 +130,13 @@ class UserMarketController extends Controller
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
             $myOrganisation = $request->user()->organisation;
-            $myOrganisation->notify("market_request_update","Please improve the bid or offer.",true);
+
+            $message = "Please improve the bid or offer.";
+            if($userMarket->firstNegotiation->isFoK()) {
+                // no message if there is an FoK applied [MM-854]
+                $message = "";
+            }
+            $myOrganisation->notify("market_request_update",$message,true);
 
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
