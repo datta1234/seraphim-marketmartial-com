@@ -27,7 +27,15 @@
                                 role="tabpanel">
                         
                         <div class="ibar-condition-panel-content text-left" v-if="condition.component">
-                            <component  v-if="shown_groups[c_group]" :is="components[condition.component]" :condition="condition" :market-negotiation="marketNegotiation"></component>
+                            <component  v-if="shown_groups[c_group]" 
+                                :is="components[condition.component]" 
+                                :condition="condition" 
+                                :market-negotiation="marketNegotiation"
+                                :market-request="marketRequest"
+                                :parser="parseRadioGroup"
+                                :defaults="defaults"
+                                @change="e => setCondition(condition, e, c_group)">
+                            </component>
                         </div>
                         <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
                             <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
@@ -77,6 +85,8 @@
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import conditionPropose from './Conditions/Propose';
     import conditionFoKSide from './Conditions/FoKSide';
+    import conditionTradeAtBest from './Conditions/TradeAtBest';
+
     import { EventBus } from '~/lib/EventBus';
     /*
         Sets the state of the following attributes on the 'marketNegotiation'
@@ -102,7 +112,8 @@
         },
         components: {
             conditionPropose,
-            conditionFoKSide
+            conditionFoKSide,
+            conditionTradeAtBest,
         },
         data() {
             return {
@@ -111,7 +122,8 @@
                 conditions: this.$root.config('market_conditions'),
                 components: {
                     'condition-propose': conditionPropose,
-                    'condition-fok-side': conditionFoKSide
+                    'condition-fok-side': conditionFoKSide,
+                    'condition-trade-at-best': conditionTradeAtBest
                 },
                 defaults: {}
             };
