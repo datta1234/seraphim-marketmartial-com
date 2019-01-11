@@ -35,6 +35,7 @@ export default class UserMarketQuote extends BaseModel {
             is_repeat: false,
 
             // optional
+            user: null,
             org: null,
             market_request_summary: null,
         }

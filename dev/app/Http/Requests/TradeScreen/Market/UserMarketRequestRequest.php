@@ -78,8 +78,6 @@ class UserMarketRequestRequest extends FormRequest
             {
                 switch ($structureItem->title) {
                     case 'Future':
-                    case 'Future 1':
-                    case 'Future 2':
                         $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = 'sometimes|'
                             .$structureItem->itemType->validation_rule;
                         break;
@@ -88,13 +86,11 @@ class UserMarketRequestRequest extends FormRequest
                             .'|between:0,10';
                         break;
                     case 'Strike':
-                        if($i !== 0) {
+                        $exclude_structures = ['Calendar','Option Switch'];
+                        if($i !== 0 && !in_array($tradeStructure->title, $exclude_structures)) {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = array_merge(
                                 explode("|", $structureItem->itemType->validation_rule),
-                                [new GreaterValue(array_search(
-                                    'Strike',
-                                    array_column($tradeStructure->tradeStructureGroups[$i-1]->toArray(), 'title')
-                                ), 'Strike')]
+                                [new GreaterValue($this->input('trade_structure_groups.'.($i-1).'.fields.Strike'), 'Strike')]
                             );
                         } else {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;

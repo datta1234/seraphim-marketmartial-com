@@ -182,14 +182,17 @@
                     break;
                 case 'EFP':
                     this.display.has_strike = false;
+                    this.display.has_future = false;
                     break;
                 case 'Rolls':
                     this.display.has_strike = false;
                     this.display.is_versus_date = true;
+                    this.display.has_future = false;
                     break;
                 case 'EFP Switch':
                     this.display.has_strike = false;
                     this.display.is_versus_market = true;
+                    this.display.has_future = false;
                     break;
                 case 'Var Swap':
                     this.display.has_strike = false;

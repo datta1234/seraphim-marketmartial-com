@@ -17777,7 +17777,7 @@ input:checked + .slider:before {
 
 .interaction-bar-wrapper .interaction-bar .interaction-content .ibar-negotiation-content {
   padding-right: 25px;
-  padding-bottom: 65px;
+  padding-bottom: 195px;
 }
 
 .interaction-bar-wrapper .interaction-bar.active {
@@ -17960,7 +17960,7 @@ input:checked + .slider:before {
 }
 
 .condition {
-  color: #EBC300;
+  color: #FFFFFF;
 }
 
 .condition-toggle {
@@ -18206,6 +18206,10 @@ input:checked + .slider:before {
 
 .popover .popover-header::before {
   visibility: hidden;
+}
+
+body > .popover > .arrow {
+  visibility: visible;
 }
 
 .important-markets-menu,

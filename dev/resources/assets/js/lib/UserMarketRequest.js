@@ -47,6 +47,7 @@ export default class UserMarketRequest extends BaseModel {
             chosen_user_market: null,
             created_at: moment(),
             updated_at: moment(),
+            default_quantity: 500,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -279,8 +280,9 @@ export default class UserMarketRequest extends BaseModel {
                 "NEGOTIATION-VOL",
                 "NEGOTIATION-OPEN-VOL",
                 "TRADE-NEGOTIATION-OPEN",
-                "TRADE-NEGOTIATION-SENDER",
-                "TRADE-NEGOTIATION-COUNTER",
+                // Adding these broke things [MM-820]
+                // "TRADE-NEGOTIATION-SENDER",
+                // "TRADE-NEGOTIATION-COUNTER",
             ];
         
         console.log("this should be shown",this.attributes.state);
@@ -288,21 +290,18 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
-    *   isQuotePhase - Checks to see if the user is in any quote phase on the current state of the request
+    *   isRequestPhase - Checks to see if the user is in any request phase on the current state of the request
     *   
     *   @return {Boolean} - if the request has any of the listed statuses
     */
-    isQuotePhase()
+    isRequestPhase()
     {
         let tradebleStatuses = [
-            "NEGOTIATION-VOL",
-            "NEGOTIATION-OPEN-VOL",
-            "TRADE-NEGOTIATION-OPEN",
-            "TRADE-NEGOTIATION-SENDER",
-            "TRADE-NEGOTIATION-COUNTER",
+            "REQUEST-SENT",
+            "REQUEST",
+            "REQUEST-SENT-VOL",
+            "REQUEST-VOL",
         ];
-        
-        console.log("this should be shown",this.attributes.state);
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;    
     }
 
@@ -343,6 +342,17 @@ export default class UserMarketRequest extends BaseModel {
 
         return tradingStates.indexOf(this.attributes.state) > -1 
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
+    }
+
+    isInvolvedInTrade()
+    {
+        let tradingStates = [
+            "TRADE-NEGOTIATION-SENDER",
+            "TRADE-NEGOTIATION-COUNTER",
+            "TRADE-NEGOTIATION-BALANCER"
+        ];
+
+        return  tradingStates.indexOf(this.attributes.state) > -1;
     }
 
     get is_trading_at_best() {
@@ -416,11 +426,13 @@ export default class UserMarketRequest extends BaseModel {
 
     defaultQuantity()
     {
-        let group = Object.values(this.trade_items).find(item => item.choice == false);
+        /*let group = Object.values(this.trade_items).find(item => item.choice == false);
         let ts = this.trade_structure_slug;
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
         let val = group[conf];
-        return val;
+        return val;*/
+
+        return this.default_quantity;
     }
 
     getQuantityType()

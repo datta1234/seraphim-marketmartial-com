@@ -124,10 +124,6 @@
                                             :state="inputState(1, 'Strike')"
                                             required>
                                         </b-form-input>
-                                        <p  v-if="validStrike(1)"
-                                            class="modal-warning-text text-danger text-center">
-                                            *Warning: The Strike must be greater than the previous Strike.
-                                        </p>
                                     </b-col>
                                     <b-col cols="3">
                                         <label class="pt-2" for="strike-1">
@@ -286,13 +282,6 @@
                     // Check for valid Strike
                     can_submit = can_submit && element.strike !== '' && element.strike !== null;
 
-                    if(index !== 0) {
-                        let current_parsed = parseFloat(this.form_data.fields[index].strike);
-                        let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
-
-                        can_submit = can_submit && ( (!isNaN(current_parsed) && !isNaN(previous_parsed))? current_parsed > previous_parsed : false);
-                    }
-
                     // Check for valid quantity
                     can_submit = can_submit && element.quantity !== '' && element.quantity !== null;
 
@@ -363,19 +352,6 @@
              */
             inputState(index, type) {
                 return (this.errors.fields.indexOf('trade_structure_groups.'+ index +'.fields.'+ type) == -1)? null: false;
-            },
-            validStrike(index) {
-                if(index === 0) {
-                    return false;
-                }
-                let current_parsed = parseFloat(this.form_data.fields[index].strike);
-                let previous_parsed = parseFloat(this.form_data.fields[index-1].strike);
-
-                if(!isNaN(current_parsed) && !isNaN(previous_parsed)) {
-                    let show = current_parsed <= previous_parsed;
-                    return show;
-                }
-                return false;
             },
             /**
              * Loads Expiry Dates from API and sets pagination variables

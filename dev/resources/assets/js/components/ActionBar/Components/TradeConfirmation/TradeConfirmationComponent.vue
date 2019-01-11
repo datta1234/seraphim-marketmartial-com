@@ -40,7 +40,7 @@
                     {{ option_group.is_put ? "Put" : "Call" }} 
                 </td>
                 <td>
-                    -   
+                    {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
                 </td>
                 <td>
                     {{ option_group.contracts }} 
@@ -160,11 +160,11 @@
       name: 'TradeConfirmationComponent',
         computed: {
             can_send:function (val) {
-                return  this.trade_confirmation.hasFutures() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore());
+                return  this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore());
             },
             can_calc:function (val) {
                 console.log("Checking this: ",this.trade_confirmation);
-                return this.trade_confirmation.hasFutures() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
+                return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
             }
         },
         data() {
@@ -206,7 +206,6 @@
                 .then(response => {
                     
                     this.trading_accounts = response.data.trading_accounts;
-                    console.log("Trading accounts: ",this.trading_accounts);
                     this.selected_trading_account = this.trading_accounts.find((item)=>{
                         return item.market_id == this.trade_confirmation.market_id;
                     });

@@ -45,13 +45,13 @@
             :check-invalid="check_invalid" 
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
-            :is-quote-phase="is_quote_phase"
+            :is-request-phase="is_request_phase"
         >
         </ibar-market-negotiation-contracts>
 
     </template>
     <!-- Alert me when cleared -->
-    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer" :market_request="marketRequest"></alert-cleared>
+    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer && !is_involved_in_trade" :market_request="marketRequest"></alert-cleared>
     <template v-if="(!is_trading || is_trading_at_best) && negotiation_available && !$root.is_viewer">
         
         <b-row class="mb-1">
@@ -107,7 +107,7 @@
                     </b-col>
                 </b-row>
 
-                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate && (!is_trading_at_best || is_trading_at_best_closed)">
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 

@@ -190,6 +190,15 @@ class UserMarketRequest extends Model
         }, false);
     }
 
+    public function marketDefaultQuantity($tradable) {
+        if($this->tradeStructureSlug == 'var_swap') {
+            $default = config('marketmartial.thresholds.var_swap_quantity');
+        } else {
+            $default = $tradable->isStock() ? config('marketmartial.thresholds.stock_quantity') : config('marketmartial.thresholds.index_quantity.'.$tradable->market_id);
+        }
+
+        return empty($default) ? config('marketmartial.thresholds.quantity') : $default;
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -309,9 +318,14 @@ class UserMarketRequest extends Model
             }),
             "ratio"             => $this->ratio,
             "attributes"        => $this->resolveRequestAttributes(),
-            "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
-            "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
+            "created_at"        => $this->created_at->format("Y-m-d H:i:s"),
+            "updated_at"        => $this->updated_at->format("Y-m-d H:i:s"),
         ];
+
+        $default_tradable =$this->userMarketRequestGroups->first(function ($value, $key) {
+            return $value->is_selected == false;
+        })->tradable; 
+        $data["default_quantity"] = $this->marketDefaultQuantity($default_tradable);
 
         $showLevels = $this->isAcceptedState($current_org_id);
 

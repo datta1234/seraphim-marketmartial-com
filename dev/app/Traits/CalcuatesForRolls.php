@@ -30,7 +30,7 @@ trait CalcuatesForRolls {
     	$FutBrodirection1 = $isOffer ? 1 : -1;
     	$counterFutBrodirection1 = $FutBrodirection1 * -1;
 
-    	$D1rollFee = config('marketmartial.confirmation_settings.rolls.index.far_leg_only');
+    	$D1rollFee = config('marketmartial.confirmation_settings.rolls.index.far_leg_only')/100;//its a percentage
 
     	//FUTURE = Application.Round(Future2 * D1rollFee * FutBrodirection2, 2) + Future2
     	$future =  round($future2 * $D1rollFee * $FutBrodirection1, 2) + $future2;

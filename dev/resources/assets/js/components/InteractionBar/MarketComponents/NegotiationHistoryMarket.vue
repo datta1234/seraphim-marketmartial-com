@@ -4,7 +4,7 @@
             <b-row v-for="(item, index) in history" :key="index">            
                 <b-col cols="10" v-if="$root.is_admin">
                     <b-row no-gutters>
-                        <b-col cols="10" class="text-center admin-label" :class="{ 'is-my-org': item.is_interest }">
+                        <b-col cols="10" class="text-center admin-label" :class="{ 'is-my-org': item.is_interest }" v-b-popover.hover.top="item.user">
                             {{ item.org }}
                         </b-col>
                     </b-row>
@@ -81,6 +81,7 @@
                         {{ vm_message }}
                     </p>
                 </b-col>
+                <b-col cols="2" class="mt-0"></b-col>
             </b-row>
         </b-col>
     </b-row>

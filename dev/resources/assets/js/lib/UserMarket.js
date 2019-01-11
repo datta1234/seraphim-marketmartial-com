@@ -48,6 +48,7 @@ export default class UserMarket extends BaseModel {
             updated_at: moment(),
 
             // optional
+            user: null,
             org: null,
         }
 

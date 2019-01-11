@@ -27,7 +27,15 @@
                                 role="tabpanel">
                         
                         <div class="ibar-condition-panel-content text-left" v-if="condition.component">
-                            <component  v-if="shown_groups[c_group]" :is="components[condition.component]" :condition="condition" :market-negotiation="marketNegotiation"></component>
+                            <component  v-if="shown_groups[c_group]" 
+                                :is="components[condition.component]" 
+                                :condition="condition" 
+                                :market-negotiation="marketNegotiation"
+                                :market-request="marketRequest"
+                                :parser="parseRadioGroup"
+                                :defaults="defaults"
+                                @change="e => setCondition(condition, e, c_group)">
+                            </component>
                         </div>
                         <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
                             <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
@@ -77,7 +85,9 @@
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import conditionPropose from './Conditions/Propose';
     import conditionFoKSide from './Conditions/FoKSide';
-    
+    import conditionTradeAtBest from './Conditions/TradeAtBest';
+
+    import { EventBus } from '~/lib/EventBus';
     /*
         Sets the state of the following attributes on the 'marketNegotiation'
             cond_is_repeat_atw
@@ -102,7 +112,8 @@
         },
         components: {
             conditionPropose,
-            conditionFoKSide
+            conditionFoKSide,
+            conditionTradeAtBest,
         },
         data() {
             return {
@@ -111,7 +122,8 @@
                 conditions: this.$root.config('market_conditions'),
                 components: {
                     'condition-propose': conditionPropose,
-                    'condition-fok-side': conditionFoKSide
+                    'condition-fok-side': conditionFoKSide,
+                    'condition-trade-at-best': conditionTradeAtBest
                 },
                 defaults: {}
             };
@@ -166,7 +178,6 @@
                 return true;
             },
             onToggleClick(condition, group) {
-                console.log("onToggleClick", condition, group, this.marketNegotiation);
                 if(condition.children) {
                     condition.children.forEach(child => {
                         if(typeof child.value !== 'undefined') {
@@ -190,7 +201,6 @@
                 }
                 this.defaults = {};
                 this.setDefaults(condition);
-                console.log("Defaults: ", this.defaults, this.marketNegotiation);
             },
             updateShownGroups() {
                 this.shown_groups = [];
@@ -222,7 +232,6 @@
                         if(typeof condition.default_value !== 'undefined') {
                             this.defaults[condition.alias] = condition.value.find(item => {
                                 if(this.getDeepValue(item) === condition.default_value) {
-                                    console.log(" 1====>",condition.alias, this.getDeepValue(item), condition.default_value);
                                     return true;
                                 }
                             }).value;
@@ -231,16 +240,12 @@
                     break;
                     default:
                         if(typeof condition.default_value !== 'undefined') {
-                            console.log(" 2====>",condition.alias, condition.value, condition.default_value);
                             this.defaults[condition.alias] = condition.value;
                             this.marketNegotiation[condition.alias] = condition.default_value;
                         }
                 }
-                console.log("Set Data: ", this.defaults[condition.alias], this.marketNegotiation[condition.alias]);
             },
             setCondition(condition, value, group) {
-                console.log("SetCondition: ", condition, value, group);
-                console.log("Market request", this.marketRequest);
                 this.resetConditions(group, value.ignores);
                 if(value === null) {
                     this.marketNegotiation[condition.alias] = value;
@@ -272,7 +277,6 @@
                             this.marketNegotiation[condition.alias] = value;
                     }
                 }
-                console.log("Set: ", this.marketNegotiation[condition.alias]);
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {
@@ -312,6 +316,10 @@
                 });
             })
             this.updateShownGroups();
+            EventBus.$on('conditionsReset', () => {
+                this.resetConditions();
+                this.updateShownGroups();
+            });
         }
     }
 </script>

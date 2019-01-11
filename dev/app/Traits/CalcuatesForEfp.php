@@ -30,7 +30,7 @@ trait CalcuatesForEfp {
     	$FutBrodirection1 = $isOffer ? 1 : -1;
     	$counterFutBrodirection1 = $FutBrodirection1 * -1;
 
-    	$D1efpFee = config('marketmartial.confirmation_settings.efp.index.only_leg');
+    	$D1efpFee = config('marketmartial.confirmation_settings.efp.index.only_leg')/100;//its a percentage
 
     	//FUTURE = Application.Round(Future1 * D1efpFee * FutBrodirection1, 2) + Future1
     	$future =  round($future1 * $D1efpFee * $FutBrodirection1, 2) + $future1;

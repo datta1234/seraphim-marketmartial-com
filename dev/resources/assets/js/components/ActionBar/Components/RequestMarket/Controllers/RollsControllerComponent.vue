@@ -271,14 +271,6 @@
                     }]
                 }
 
-                if(this.controller_data.market_object.details.fields[0].has_future_1) {
-                    formatted_data.trade_structure_groups[0].fields["Future 1"] = this.controller_data.market_object.details.fields[0].future_1;
-                }
-
-                if(this.controller_data.market_object.details.fields[0].has_future_2) {
-                    formatted_data.trade_structure_groups[0].fields["Future 2"] = this.controller_data.market_object.details.fields[0].future_2;
-                }
-
                 return formatted_data;
             },
             /**

@@ -15,7 +15,7 @@ class OpenInterest extends Model
 	 * @property double $open_interest
 	 * @property double $strike_price
 	 * @property double $delta
-	 * @property double $spot_price
+	 * @property string $spot_price
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -72,7 +72,9 @@ class OpenInterest extends Model
 			'open_interest'	=> doubleval($data['open_interest']),
 			'strike_price'	=> doubleval($data['strike_price']),
 			'delta'			=> doubleval($data['delta']),
-			'spot_price'	=> doubleval($data['spot_price']),
+            // changed due to field type change [MM-811]
+			//'spot_price'	=> doubleval($data['spot_price']),
+            'spot_price'    => $data['spot_price'],
     	]);
     }
 

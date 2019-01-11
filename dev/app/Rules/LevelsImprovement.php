@@ -42,8 +42,6 @@ class LevelsImprovement implements Rule
 
         $org_status = $this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id);
 
-
-
         //check to see if the bid is improved or the offer
         if(in_array($org_status, ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
@@ -72,6 +70,7 @@ class LevelsImprovement implements Rule
                 }
             }
 
+            // should handle MM-845
             if($this->request->input($attribute) != null && $this->request->input($inverse) != null) {
                 if($this->request->input('offer') < $this->request->input('bid')) {
                     $this->message = "Bid value cannot be higher than offer value.";

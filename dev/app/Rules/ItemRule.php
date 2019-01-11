@@ -28,11 +28,13 @@ class ItemRule implements Rule
     {
         switch ($value['title']) {
             case 'Future':
-                    if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
-                    {
-                        $this->message = "please enter a valid Future value";
-                        return false;
-                    }
+            case 'Future 1':
+            case 'Future 2':
+                if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                {
+                    $this->message = "please enter a valid Future value";
+                    return false;
+                }
                 break;
             case 'Contract':
                 if($value['value'] !== null)
@@ -49,7 +51,14 @@ class ItemRule implements Rule
                         return false;     
                     }  
                 }
-            break;
+                break;
+            case 'Spot':
+                if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                {
+                    $this->message = "please enter a valid Spot value";
+                    return false;
+                }
+                break;
             default:
                 $this->message = "Invalid field";
                 return false;

@@ -56,12 +56,12 @@ class TradeNegotiationStoreRequest extends FormRequest
             if($negotiation->isTradeAtBestOpen()) {
                 if($negotiation->cond_buy_best == true) {
                     // if BUY @ best && OFFER
-                    if($isOffer == true) {
+                    if($isOffer !== true) {
                         $validator->errors()->add('offer', "Only the initiator can trade this level");
                     }
                 } else {
                     // if SELL @ best && BID
-                    if($isOffer == false) {
+                    if($isOffer !== false) {
                         $validator->errors()->add('bid', "Only the initiator can trade this level");
                     }
                 }
