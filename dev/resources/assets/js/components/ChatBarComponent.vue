@@ -31,19 +31,20 @@
                                             class="chat-block">
                                         <b-row>
                                             <b-col cols="12" class="chat-user-name mb-0 pt-3">
-                                                <h6 class="m-0">{{ messageUserName(message.user_name) }}</h6>
+                                                <h6 class="m-0">
+                                                    {{ messageUserName(message.user_name) }}
+                                                    <span class="float-right chat-timestamp">{{ castToMomentTime(message.time_stamp) }}</span>
+                                                </h6>
                                             </b-col>
                                             <b-col cols="12" class="chat-message mt-3">
                                                 <p>{{ message.message }}</p>
                                             </b-col>
                                             <b-col cols="12" class="chat-time mt-0">
-                                                <h6 v-bind:class="{'float-right': message.user_name != $root.config('user_preferences.user_name'), 
-                                                }">
-                                                    {{ castToMomentTime(message.time_stamp) }}
-                                                    <i v-if="message.status == 'sent'" class="fas fa-check float-right"></i>
-                                                    <i v-if="message.status == 'received'" class="fas fa-check-double float-right"></i>
+                                                <h6 class="text-right">
+                                                    &nbsp;
+                                                    <i v-if="message.status == 'sent'" class="fas fa-check"></i>
+                                                    <i v-if="message.status == 'received'" class="fas fa-check-double"></i>
                                                 </h6>
-                                                    
                                             </b-col>
                                         </b-row>
                                     </b-col>    

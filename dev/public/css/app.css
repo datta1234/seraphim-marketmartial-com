@@ -18150,6 +18150,10 @@ input:checked + .slider:before {
   background-color: #B1B1B1;
 }
 
+.organisation-chat .chat-block .chat-timestamp {
+  font-size: 0.8em;
+}
+
 .organisation-chat .admin-chat .chat-block {
   color: #FFFFFF;
   background-color: #1c7c74;
