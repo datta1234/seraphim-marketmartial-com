@@ -686,7 +686,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock) {
-                        $value = $tradeNegotiation->quantity; //quantity   
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
                     } else {
                         $value = null;
                     }
