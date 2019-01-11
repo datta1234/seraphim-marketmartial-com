@@ -6,6 +6,11 @@
                     <b-form-checkbox v-active-request v-model="show_options" dusk="ibar-apply-a-condition" name="apply-a-condition" :value="true" :unchecked-value="false"> Apply a condition</b-form-checkbox>
                 </b-col>
             </b-row>
+            <b-row v-if="error" class="text-danger text-center">
+                <b-col offset="2" cols="8">
+                    {{ error }}
+                </b-col>
+            </b-row>
             <b-row v-if="show_options" class="text-center" role="tablist">
             
                 <b-col v-for="(condition, c_group) in conditions" :key="c_group" cols="12" v-if="condition.hidden !== true && conditionDisplayed(condition)">
@@ -117,6 +122,7 @@
         },
         data() {
             return {
+                error: "",
                 shown_groups: [],
                 show_options: false,
                 conditions: this.$root.config('market_conditions'),
@@ -246,6 +252,7 @@
                 }
             },
             setCondition(condition, value, group) {
+                this.error = "";
                 this.resetConditions(group, value.ignores);
                 if(value === null) {
                     this.marketNegotiation[condition.alias] = value;
@@ -319,6 +326,9 @@
             EventBus.$on('conditionsReset', () => {
                 this.resetConditions();
                 this.updateShownGroups();
+            });
+            EventBus.$on('conditionsError', (err) => {
+                this.error = err;
             });
         }
     }
