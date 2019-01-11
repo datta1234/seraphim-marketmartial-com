@@ -268,25 +268,38 @@ export default class UserMarketRequest extends BaseModel {
 
     /**
     *   canNegotiate - Checks to see if the user can take any negotiation on the current ste of the request
-    *   @return response from the request or the error
+    *   @return {Boolean}
     */
     canNegotiate()
     {
         let tradebleStatuses = [
-                "REQUEST-SENT",
-                "REQUEST",
-                "REQUEST-SENT-VOL",
-                "REQUEST-VOL",
-                "NEGOTIATION-VOL",
-                "NEGOTIATION-OPEN-VOL",
-                "TRADE-NEGOTIATION-OPEN",
-                // Adding these broke things [MM-820]
-                // "TRADE-NEGOTIATION-SENDER",
-                // "TRADE-NEGOTIATION-COUNTER",
-            ];
-        
-        console.log("this should be shown",this.attributes.state);
+            "REQUEST-SENT",
+            "REQUEST",
+            "REQUEST-SENT-VOL",
+            "REQUEST-VOL",
+            "NEGOTIATION-VOL",
+            "NEGOTIATION-OPEN-VOL",
+            "TRADE-NEGOTIATION-OPEN",
+            // Adding these broke things [MM-820]
+            // "TRADE-NEGOTIATION-SENDER",
+            // "TRADE-NEGOTIATION-COUNTER",
+        ];
+            
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+    /**
+    *   canInitiateTrade - Checks to see if the user can start a trade on any negotiation on the current state of the request
+    *   @return {Boolean}
+    */
+    canInitiateTrade()
+    {
+        let tradebleStatuses = [
+            "NEGOTIATION-VOL",
+            "NEGOTIATION-OPEN-VOL",
+        ];
+
+        return tradebleStatuses.indexOf(this.attributes.state) > -1;
     }
 
     /**

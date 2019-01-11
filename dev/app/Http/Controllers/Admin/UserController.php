@@ -177,15 +177,15 @@ class UserController extends Controller
             DB::commit();
 
         } catch (\Illuminate\Database\QueryException $e) {
-            DB::rollBack();
-            Log::error($e);
+            DB::rollback();
+            \Log::error($e);
             if($request->ajax()) {
                 return response()->json(['data' => null, 'message' => 'Failed to verify the user.'],500);
             }
             return redirect()->back()->with('error', 'Failed to verify the user.');
 
         } catch (\App\Exceptions\SlackException $e) {
-            Log::error($e);
+            \Log::error($e);
             if($request->ajax()) {
                 return response()->json(['data' => null, 'message' => $e->getMessage()],500);
             }
