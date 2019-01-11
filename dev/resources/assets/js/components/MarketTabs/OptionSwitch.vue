@@ -93,11 +93,11 @@
             },
             tradable_1: function() {
                 let group = this.$root.config("trade_structure.option_switch.group_1");
-                return this.marketRequest.trade_items[group].tradable.title;
+                return this.marketRequest.trade_items[group].tradable.title + this.tradableChoice(this.marketRequest.trade_items[group]);
             },
             tradable_2: function() {
                 let group = this.$root.config("trade_structure.option_switch.group_2");
-                return this.marketRequest.trade_items[group].tradable.title;
+                return this.marketRequest.trade_items[group].tradable.title + this.tradableChoice(this.marketRequest.trade_items[group]);
             },
             marketState: function() {
                 return {
@@ -113,6 +113,12 @@
                     'active': this.isActive,
                 }
             }
+        },
+        methods: {
+            tradableChoice(trade_item_group)
+            {
+                return trade_item_group.choice ? 'ch' : '';
+            },
         },
         mounted() {
             // initial setup of states
