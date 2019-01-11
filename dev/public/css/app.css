@@ -18093,6 +18093,7 @@ input:checked + .slider:before {
 .interaction-bar-wrapper .chat-bar .chat-history .card-body {
   padding-left: 15px;
   padding-right: 15px;
+  padding-top: 0px;
 }
 
 .interaction-bar-wrapper .chat-bar-toggle {
