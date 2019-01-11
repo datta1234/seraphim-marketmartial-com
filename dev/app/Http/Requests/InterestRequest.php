@@ -35,7 +35,7 @@ class InterestRequest extends FormRequest
     public function messages()
     {
         return [
-            'interest.*.value.required'=>'once you have checked and interest please complete the team.'
+            'interest.*.value.required'=>'Which team or athlete do you support?'
         ];
     }
 }
