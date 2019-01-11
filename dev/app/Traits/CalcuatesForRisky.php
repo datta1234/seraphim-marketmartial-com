@@ -140,21 +140,21 @@ trait CalcuatesForRisky {
 
 	        if($contracts1 < $contracts2) {
 		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1, 0, PHP_ROUND_HALF_DOWN) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2, 0, PHP_ROUND_HALF_DOWN) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2) + $gross_prem2;
 	        } else {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskysmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1, 0, PHP_ROUND_HALF_DOWN) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2, 0, PHP_ROUND_HALF_DOWN) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2) + $gross_prem2;
 	        }
 
 	        //set for the counter
 	        if($contracts1 < $contracts2) {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection1, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection2, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection2) + $gross_prem2;
 	        } else {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection1, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection2, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection2) + $gross_prem2;
 	        }
         }
 
