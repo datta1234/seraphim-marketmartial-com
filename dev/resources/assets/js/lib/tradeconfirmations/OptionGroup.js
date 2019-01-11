@@ -53,9 +53,6 @@ export default class OptionGroup {
                     break;
                 case 'Strike':
                     this.strike = this.setUpNumbers(item.value);
-                    break;
-                case 'Quantity':
-                    this.spot = this.setUpNumbers(item.value);
                     break;             
             }
         });
