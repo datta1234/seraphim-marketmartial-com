@@ -145,7 +145,7 @@
         },
         computed: {
             negotiation_stage() {
-                return this.marketRequest._stage;
+                return this.marketRequest.stage();
             },
             condition_aliases() {
                 let getAlias = (list, group) => {
