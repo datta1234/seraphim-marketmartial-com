@@ -695,7 +695,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                 case 'Nominal':
                     if($is_single_stock) {
                         // Need to multiply by 1M because the Nomninal is amount per million
-                        $value = $tradeNegotiation->quantity * 1000000;  
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity * 1000000;  
                     }
                     break;
             }
@@ -765,7 +765,6 @@ public function preFormatStats($user = null, $is_Admin = false)
                         'trade_confirmation_group_id' => $tradeStructureGroup->id
                     ]);
                 } 
-
             } else {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,

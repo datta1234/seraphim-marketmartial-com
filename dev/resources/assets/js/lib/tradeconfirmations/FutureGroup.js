@@ -40,7 +40,7 @@ export default class FutureGroup {
                     break;
                 case 'Strike':
                     this.strike = this.setUpNumbers(item.value);
-                    break; 
+                    break;
             }
         });
         console.log("Show me the MONEY",this, structureGroup);
