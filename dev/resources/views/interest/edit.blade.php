@@ -100,7 +100,7 @@
 									<div class="form-group row">
 										<div class="col-md-12">
 											{{ Form::label($interest->id,$interest->title, ['class' => 'col-form-label']) }}
-												<activate-input :active="{{ ($interest->pivot != null) || is_array(old('interest')) && array_key_exists($index,old('interest'))? 'true': 'false' }}" placeholder="Details..." name="{{ 'interest['.$interest->id.'][value]' }}" value="{{ $interest->pivot ? $interest->pivot->value : null }}">
+												<activate-input :active="{{ ($interest->pivot != null) || is_array(old('interest')) && array_key_exists($index,old('interest'))? 'true': 'false' }}" placeholder="Details..." name="{{ 'interest['.$interest->id.'][value]' }}" value="{{ isset(old('interest')[$index]) ? old('interest')[$index]['value'] : ( $interest->pivot ? $interest->pivot->value : null ) }}">
 												</activate-input>
 
 												@if ($errors->has("interest.{$index}.value"))

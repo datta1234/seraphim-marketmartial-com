@@ -15,8 +15,8 @@
     @slot('body')
         <div>
             <p class="card-text text-center">
-            Fill in your details below and we will email you a login to complete your profile.<br>
-            Once your credentials have been verified you will be able to view and use the Market Martial trading platform.
+            Please fill in your details below.<br>
+            Once your credentials have been verified, you will be able to view and use the Market Martial trading platform.
             </p>
 
             <div class="row justify-content-md-center mb-">

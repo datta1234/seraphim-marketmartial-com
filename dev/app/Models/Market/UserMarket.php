@@ -639,7 +639,7 @@ class UserMarket extends Model
             ) {
                 if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
                     // @TODO: well shit
-                    throw Exception("Can Only Improve One Side On SPIN");
+                    throw \Exception("Can Only Improve One Side On SPIN");
                 }
                 elseif ($marketNegotiation->bid != null) {
                     // improved bid

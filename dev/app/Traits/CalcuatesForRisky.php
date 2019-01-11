@@ -16,9 +16,11 @@ trait CalcuatesForRisky {
         
         if($singleStock) {
             $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
-            // Need to multiply by 1M because the Nomninal is amount per million
-            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
-            $this->optionGroups[1]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+            $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
+            $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
+
+            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef * 100), 0));
+            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef * 100), 0));
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -51,11 +53,11 @@ trait CalcuatesForRisky {
 
         $startDate = Carbon::now()->startOfDay();
         
-        $POD1 = $this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1  * $putDirection1;
-        $COD1 = $this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1 * $callDirection1;
+        $POD1 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0)  * $putDirection1;
+        $COD1 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0) * $callDirection1;
 
-        $POD2 = $this->putOptionDelta($startDate,$expiry1,$future1,$strike2,$volatility2) * $contracts2  * $putDirection2;
-        $COD2 = $this->callOptionDelta($startDate,$expiry1,$future1,$strike2,$volatility2) * $contracts2 * $callDirection2;
+        $POD2 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike2,$volatility2) * $contracts2, 0)  * $putDirection2;
+        $COD2 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike2,$volatility2) * $contracts2, 0) * $callDirection2;
 
         if(abs($POD1 + $POD2) <= abs($COD1 + $COD2)) {
             //set the cell to a put
@@ -81,15 +83,13 @@ trait CalcuatesForRisky {
         // futures and deltas buy/sell
         if($future_contracts < 0) {
             $isOffer = false;
-            $this->futureGroups[0]->setOpVal('is_offer', $isOffer);
-            $this->futureGroups[1]->setOpVal('is_offer', $isOffer);
         } else {
             $isOffer = true;
-            $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
-            $this->futureGroups[1]->setOpVal('is_offer',$isOffer);
         }
+        $this->futureGroups[0]->setOpVal('is_offer', $isOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isOffer, false);
 
-        $this->futureGroups[0]->setOpVal('Contract', round($future_contracts));
+        $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
@@ -99,7 +99,7 @@ trait CalcuatesForRisky {
     public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {
     	$Brodirection1 = $isOffer ? 1 : -1;
-    	$Brodirection2 = $isOffer ? 1 : -1;
+    	$Brodirection2 = $isOffer ? -1 : 1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
@@ -108,8 +108,8 @@ trait CalcuatesForRisky {
 	        $SINGLEriskysmallFEE = config('marketmartial.confirmation_settings.risky.singles.small_leg')/100;//its a percentage
 
 	        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
-	        $nominal1 = $user_market_request_groups[0]->getDynamicItem('Quantity');
-	        $nominal2 = $user_market_request_groups[1]->getDynamicItem('Quantity');
+	        $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
+	        $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
 	        if($nominal1 < $nominal2) {
 	        	// NETPREM = Round(nominal1 * SINGLEriskybigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
@@ -140,21 +140,21 @@ trait CalcuatesForRisky {
 
 	        if($contracts1 < $contracts2) {
 		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1, 0) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2, 0) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2) + $gross_prem2;
 	        } else {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskysmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1, 0) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2, 0) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2) + $gross_prem2;
 	        }
 
 	        //set for the counter
 	        if($contracts1 < $contracts2) {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection1, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection2, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection2) + $gross_prem2;
 	        } else {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection1, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection2, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection2) + $gross_prem2;
 	        }
         }
 

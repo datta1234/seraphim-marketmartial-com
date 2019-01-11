@@ -78,4 +78,7 @@ EventBus.$on('enableNegotiationInput', () => {
 
 EventBus.$on('resetConditions', () => {
     EventBus.$emit('conditionsReset');
-})
+});
+EventBus.$on('errorConditions', (err) => {
+    EventBus.$emit('conditionsError', err);
+});
