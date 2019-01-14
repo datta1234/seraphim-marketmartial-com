@@ -18,9 +18,10 @@ class TradeConfirmationController extends Controller
     public function phaseTwo(TradeConfirmation $tradeConfirmation,TradeConfirmationStoreRequest $request)
     {
         $user = $request->user();
+        $this->authorize('phaseTwo', $tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
     	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
-        $tradeConfirmation->phaseTwo();  
+        $tradeConfirmation->phaseTwo();
         $tradeConfirmation->save();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -37,6 +38,7 @@ class TradeConfirmationController extends Controller
     public function update(TradeConfirmation $tradeConfirmation,Request $request)
     {
         $user = $request->user();
+        $this->authorize('update',$tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
      
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
@@ -66,6 +68,7 @@ class TradeConfirmationController extends Controller
     public function confirm(TradeConfirmation $tradeConfirmation,Request $request)
     {
         $user = $request->user();
+        $this->authorize('confirm',$tradeConfirmation); 
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
         $tradeConfirmation->save();
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
@@ -104,7 +107,8 @@ class TradeConfirmationController extends Controller
 
     public function dispute(TradeConfirmation $tradeConfirmation,Request $request)
     {
-        $user = $request->user();        
+        $user = $request->user();
+        $this->authorize('dispute',$tradeConfirmation);  
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
         {
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
@@ -122,8 +126,7 @@ class TradeConfirmationController extends Controller
         }
 
         \Slack::postMessage([
-            "text"      => $tradeConfirmation->getMessage('confirmation_disputed'),
-            "channel"   => env("SLACK_ADMIN_DISPUTES_CHANNEL")
+            "text"      => $tradeConfirmation->getMessage('confirmation_disputed')
         ], 'dispute');
 
         $data = $tradeConfirmation->fresh()->load([

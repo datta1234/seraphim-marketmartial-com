@@ -120,4 +120,50 @@ class UserMarketRequestGroup extends Model
             })
         ];
     }
+
+    /**
+     * return a trade item singleton by key
+     *
+     * @return Mixed
+     */
+    public function getDynamicItem($attr, $return_object = false)
+    {
+        $item = $this->userMarketRequestItems()
+        ->where('title',$attr)
+        ->first();
+        if($item)
+        {
+            if($return_object == true) {
+                return $item;
+            }
+            switch ($item->type) {
+                case 'double':
+                    return floatval($item->value);
+                    break;
+                default:
+                    return $item->value;
+                    break;
+            }
+        }else
+        {
+            return null;
+        }
+    }
+
+    /** 
+     *  Conditionally check wether to add a spot price or not
+     *  No Spot:
+     *      Trade Structure - Outright,Risky,Calendar,Fly where the the market type is Index
+     *      Trade Structure - Option Switch, where the tradable has a market id
+     *      Trade Structure - Rolls
+     *  Read from config to determine if has spot
+     *
+     *  @return boolean
+     */
+    public function hasSpotPrice()
+    {
+        $trade_structure = $this->userMarketRequest->trade_structure_slug; // get slug
+        $tradable_type = $this->tradable->isStock() ? 'stock' : 'market'; // get tradable type
+        return !!config('marketmartial.future_group_spot_price')[$trade_structure][$tradable_type];
+    }
 }

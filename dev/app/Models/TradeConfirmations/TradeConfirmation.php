@@ -15,6 +15,13 @@ class TradeConfirmation extends Model
     use \App\Traits\ResolvesUser;
     use \App\Traits\CalcuatesForPhases;
     use \App\Traits\CalcuatesForOutright;
+    use \App\Traits\CalcuatesForRisky;
+    use \App\Traits\CalcuatesForCalendar;
+    use \App\Traits\CalcuatesForFly;
+    use \App\Traits\CalcuatesForOptionSwitch;
+    use \App\Traits\CalcuatesForEfp;
+    use \App\Traits\CalcuatesForRolls;
+    use \App\Traits\CalcuatesForEfpSwitch;
 
 	/**
 	 * @property integer $id
@@ -170,9 +177,18 @@ class TradeConfirmation extends Model
     public function getMessage($scenario) {
         switch($scenario) {
             case 'confirmation_disputed':
-                $user = ( $this->trade_confirmation_status_id == 3 ? $this->recievingUser : $this->sendUser );
-                $marketRequest = $this->marketRequest;
-                return "Dispute by ".$user->full_name." ".$user->cell_phone." for ".$marketRequest->getSummary().".";
+                if($this->trade_confirmation_status_id == 5) {
+                    // trade_confirmation_status_id == 5
+                    $partyA = $this->sendUser;
+                    $partyB = $this->recievingUser;
+                } else {
+                    // trade_confirmation_status_id == 3
+                    $partyB = $this->sendUser;
+                    $partyA = $this->recievingUser;
+                }
+                $partyA = $partyA->full_name." ".$partyA->cell_phone;
+                $partyB = $partyB->full_name." ".$partyB->cell_phone;
+                return "Dispute lodged on ".$this->marketRequest->getSummary()." between (".$partyA.") and (".$partyB.")";
             break;
         }
     }
@@ -221,8 +237,6 @@ class TradeConfirmation extends Model
 
             'underlying_id'             => $this->marketRequest->underlying->id,
             'underlying_title'          => $this->marketRequest->underlying->title,
-
-            'is_single_stock'           => false, //@todo when doing single stock ensure to update this method;
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             
@@ -618,7 +632,7 @@ public function preFormatStats($user = null, $is_Admin = false)
         //3 index
         //4 single 
             $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
-            foreach($groups as $tradeStructureGroup) {
+            foreach($groups as $key => $tradeStructureGroup) {
 
                 $tradeGroup = $this->tradeConfirmationGroups()->create([
                     'trade_structure_group_id'  =>  $tradeStructureGroup->id,
@@ -627,7 +641,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                     'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
                 ]);
 
-                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup);
+                $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
+
+                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock);
             }
 
             return $this;
@@ -643,38 +659,45 @@ public function preFormatStats($user = null, $is_Admin = false)
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup)
+     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
      {
-         foreach($tradeStructureGroup->items as $item) {
+         foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
             switch ($item->title) {
                 case 'is_put':
-                $value = null;
-                break;
-                case 'Volatility':
-                $value =  $tradeNegotiation->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-                break;
-                case 'Gross Premiums':
-                $value = null;
-                break;
-                case 'Net Premiums':
-                $value = null;
-                break;
-                case 'Future':
-                $value = null;
-                break;
-                case 'Contract':
-
-
-                if($isOption)
-                {
-                    $value = $tradeNegotiation->quantity; //quantity   
-                }else
-                {
+                case 'is_offer':
                     $value = null;
-                }
-                break;
+                    break;
+                case 'Volatility':
+                    if($tradeGroup->userMarketRequestGroup->is_selected) {
+                        $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
+                    } else {
+                        $value =  $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    }
+                    break;
+                case 'Gross Premiums':
+                    $value = null;
+                    break;
+                case 'Net Premiums':
+                    $value = null;
+                    break;
+                case 'Future':
+                    $value = null;
+                    break;
+                case 'Contract':
+                    if($isOption && !$is_single_stock) {
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
+                    } else {
+                        $value = null;
+                    }
+                    break;
+                case 'Nominal':
+                    if($is_single_stock) {
+                        // Need to multiply by 1M because the Nomninal is amount per million
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity * 1000000;  
+                    }
+                    break;
             }
 
             if($item->title =="Net Premiums")
@@ -695,12 +718,21 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            }else if($item->title == "is_offer")
-            {
+            } else if($item->title == "is_offer") {
+                $seller_value = $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
+                $buyer_value = $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id); 
+                
+                if($isOption) {
+                    $seller_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$seller_value : $seller_value;
+                    $buyer_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$buyer_value : $buyer_value;
+                } else {
+                    $seller_is_offer = null;
+                    $buyer_is_offer = null;
+                }
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
-                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id),
+                    'value' =>  $seller_is_offer,
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
@@ -708,14 +740,33 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
-                    'value' =>  $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id),
+                    'value' =>  $buyer_is_offer,
                     "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
+            } else if($item->title == "Spot") {
+                if($tradeGroup->userMarketRequestGroup->hasSpotPrice()) {
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        "is_seller" => null,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                } 
 
-            }else
-            {
-               $tradeGroup->tradeConfirmationItems()->create([
+            } else if($item->title == "Nominal") {
+                if($is_single_stock) {
+                    $tradeGroup->tradeConfirmationItems()->create([
+                        'item_id' => $item->id,
+                        'title' => $item->title,
+                        "is_seller" => null,
+                        'value' =>  $value,
+                        'trade_confirmation_group_id' => $tradeStructureGroup->id
+                    ]);
+                } 
+            } else {
+                $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
                     "is_seller" => null,

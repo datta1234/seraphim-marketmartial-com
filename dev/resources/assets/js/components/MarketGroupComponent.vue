@@ -1,5 +1,5 @@
 <template>
-    <div dusk="market-group" v-bind:class="{ 'user-market': true, 'd-none': show_group }">
+    <div dusk="market-group" v-bind:class="{ 'user-market': true, 'd-none': hide_group }">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-12">
@@ -25,9 +25,6 @@
                         <market-tab :market-request="m_req" :key="m_req.id" v-for="(m_req,m_req_index) in market_date_groups[date]" :no_cares="no_cares"></market-tab>
                     </div><!-- END Date collection section -->
                 </div>
-
-                <div>
-                </div>
             </div>
         </div>
     </div>
@@ -44,7 +41,12 @@
                 type: Market
             },
             'no_cares':{
-                type: Array
+                type: Array,
+                default: () => []
+            },
+            'forceShow': {
+                type: Boolean,
+                default: false
             }
         },
         watch: {
@@ -69,7 +71,7 @@
                     delta: 'trade_structure'
                 },
 
-                show_group: true,
+                hide_group: true,
             };
         },
         computed: {
@@ -145,7 +147,7 @@
                     default:
                         this.updateDefaultRequests(reqs);
                 }
-                this.show_group = ( this.market.is_seldom == true && reqs.length == 0 );
+                this.hide_group = this.forceShow ? false : ( this.market.is_seldom == true && reqs.length == 0 );
             }
         },
         mounted() {

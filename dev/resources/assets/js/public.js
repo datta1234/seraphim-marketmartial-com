@@ -17,7 +17,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 });
 
 Vue.use(FlatSurfaceShader);

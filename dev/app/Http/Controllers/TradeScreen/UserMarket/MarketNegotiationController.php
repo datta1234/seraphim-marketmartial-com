@@ -49,15 +49,16 @@ class MarketNegotiationController extends Controller
         else
         {
             $this->authorize('addNegotiation',$userMarket);
-            $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());  
-            if($marketNegotiation->isProposal()) {
+            $marketNegotiation = $userMarket->addNegotiation($request->user(),$request->all());
+            // Removed due to task [MM-838]
+            /*if($marketNegotiation->isProposal()) {
                 $marketNegotiation->userMarket
                 ->trackActivity(
                     "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".proposed",
                     "Private Negotiation Sent", 
                     10
                 );
-            }
+            }*/
 
             if($marketNegotiation->isMeetInMiddle()) {
                 $marketNegotiation->userMarket
@@ -145,6 +146,28 @@ class MarketNegotiationController extends Controller
     {
         $success = false;
         $message = 'Invalid Action';
+
+        // if its an admin - just soft delete it, no other steps since they can only delete not kill
+        if(\Auth::user()->isAdmin()) {
+            // delete history - if present
+            if($marketNegotiation->is_private) {
+                $history = $marketNegotiation->getConditionHistory();
+                $history->each(function($item) {
+                    $item->delete();
+                });
+            }
+            
+            // reset parent request if this is the initial quote
+            if($marketNegotiation->marketNegotiationParent == null && $userMarket->marketNegotiations()->count() == 1) {
+                $request = $userMarket->userMarketRequest;
+                $request->chosen_user_market_id = null;
+                $request->save();
+            }
+            
+            // delete negotiation
+            $success = $marketNegotiation->delete();
+            $message = "Negotiation Pulled Successfully";
+        }
 
         // Handle FOK kill
         if($marketNegotiation->isFoK()) {

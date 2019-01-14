@@ -224,15 +224,23 @@
                     trade_structure_groups:[]
                 }
                 this.stock_data.market_object.details.fields.forEach( (element,key) => {
-                    formatted_data.trade_structure_groups.push({
+                    let group_data = {
                         is_selected: element.is_selected,
                         stock: this.stock_data.market_object.stock.code,
                         fields: {
-                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? this.stock_data.market_object.expiry_dates[key] : this.stock_data.market_object.expiry_dates[0] ),
+                            "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? 
+                                this.stock_data.market_object.expiry_dates[key]
+                                : this.stock_data.market_object.expiry_dates[0] ),                            
+                            Quantity: element.quantity,
                             Strike: element.strike,
-                            Quantity: element.quantity
                         }
-                    });
+                    };
+
+                    if(element.has_future) {
+                        group_data.fields["Future"] = element.future;
+                    }
+
+                    formatted_data.trade_structure_groups.push(group_data);
                 });
                 return formatted_data;
             },

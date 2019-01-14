@@ -15,7 +15,7 @@
 <div class="row">
     <div class="col col-lg-8">
     <div class="home-page-title">
-        <h1>The Inter-Bank Derivatives<br>Trading Platform</h1>
+        <h1>The Inter-Bank Derivatives<br>Negotiation Platform</h1>
     </div>
     </div>
     @if (Auth::guest())
@@ -224,7 +224,7 @@
 @endcomponent
 
 {{-- Bridge the Gap Card --}}
-@component('partials.content_card')
+{{--@component('partials.content_card')
     @slot('header')
         <h2 class="mt-1 mb-1"><span class="icon icon-star-circle"></span></h2>
     @endslot
@@ -243,7 +243,7 @@
             </div>
         </div>
     @endslot
-@endcomponent
+@endcomponent --}}
 
 {{-- Priority Card --}}
 @component('partials.content_card')

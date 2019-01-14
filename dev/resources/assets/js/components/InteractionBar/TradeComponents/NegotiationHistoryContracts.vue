@@ -3,11 +3,11 @@
         <b-col>
             <template v-for="item in history" v-if="item.id != ''">   
                 <!-- && !item.is_killed"  -->
-                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item)" :is-current="isLast(item)"></ibar-trade-request>
+                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item) && canInitiateTrade && !item.isTrading() && !item.isTraded()" :is-current="isLast(item)"></ibar-trade-request>
             </template>
-            <b-row class="justify-content-md-center" v-if="message">
+            <b-row v-if="message">
                 <b-col cols="10" class="mt-2">
-                    <p class="text-center">
+                    <p class="text-center ibar-message">
                         {{ message }}
                     </p>
                 </b-col>
@@ -26,6 +26,9 @@
          }
         },
         computed: {
+            canInitiateTrade: function() {
+                return this.lastItem.getUserMarket().getMarketRequest().canInitiateTrade();
+            },
             // a computed getter
             lastItem() {
               return this.history[this.history.length - 1];
@@ -45,7 +48,7 @@
                 return item.id == this.lastItem.id; 
             }
         },
-        mounted() {       
+        mounted() { 
         }
     }
 </script>

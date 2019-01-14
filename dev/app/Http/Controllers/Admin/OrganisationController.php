@@ -17,4 +17,15 @@ class OrganisationController extends Controller
     {	
 		return response()->json(Organisation::all()->pluck("title","id"));
     }
+
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function users(Organisation $organisation)
+    {   
+        return response()->json($organisation->users()->pluck("full_name","id"));
+    }
 }

@@ -81,17 +81,18 @@
                     title: ''
                 }),
                 emailSettingForm: new Form(),
-                mutableEmailSettingsData: []
-
+                mutableEmailSettingsData: [],
+                formattedDefaultLabelsData: []
             }
         },
         methods: {
             update() {
                 this.emailSettingForm.put(axios.defaults.baseUrl + (this.isAdmin ? '/admin/user/email-settings/' + this.user.id : '/email-settings') )
                 .then((response) => {
-                    this.mutableEmailSettingsData = response.data.email;
-                    this.fields = [];
-                    // fields will be update from the server
+                    this.mutableEmailSettingsData = response.data.email.concat(response.data.defaultLabels);
+                    this.mutableEmailSettingsData.sort( (a,b) => {
+                        return a.default_id - b.default_id;
+                    });
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
                     console.log(response.data);
                     this.$toasted.success(response.message);
@@ -119,11 +120,10 @@
         },
         mounted() {
             //load the defaults as users ones
-            this.defaultLabelsData = JSON.parse(this.defaultLabels);
-            this.emailSettingsData = JSON.parse(this.emailSettings);
-            
+            let defaultLabelsData = JSON.parse(this.defaultLabels);
+            let emailSettingsData = JSON.parse(this.emailSettings);
 
-            this.defaultLabelsData.forEach((label)=>{
+            defaultLabelsData.forEach((label)=>{
                 this.mutableEmailSettingsData.push({
                     'title': label.title,
                     'default_id':label.id,
@@ -132,11 +132,20 @@
                 });
             });
 
-            this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(this.emailSettingsData);
-            console.log(this.mutableEmailSettingsData);
+            this.mutableEmailSettingsData = this.mutableEmailSettingsData.concat(emailSettingsData);
+            this.mutableEmailSettingsData.sort( (a,b) => {
+                return a.default_id - b.default_id;
+            });
+
+            let directIndex = this.mutableEmailSettingsData.findIndex(element => {
+                return element.title == "Direct";
+            });
+
+            if(directIndex !== -1 && this.mutableEmailSettingsData[directIndex].email == null) {
+                this.mutableEmailSettingsData[directIndex].email = this.user.email;
+            }
 
             this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
-            console.log("user: ",this.user.id);
         }
     }
 </script>

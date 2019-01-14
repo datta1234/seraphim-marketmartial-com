@@ -4,6 +4,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default"
     },
     "risky": {
@@ -11,6 +12,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default",
         "group_2": "Risky options"
     },
@@ -19,6 +21,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default",
         "group_2": "Fly Second option",
         "group_3": "Fly third option"
@@ -28,6 +31,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default",
         "group_2": "Calander option"
     },
@@ -36,6 +40,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default",
         "group_2": "Switch Options"
     },
@@ -44,6 +49,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default",
         "group_2": "Switch Options"
     },
@@ -52,6 +58,7 @@
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future": "Future",
         "group_1": "default"
     },
     "rolls": {
@@ -60,6 +67,15 @@
         "expiration_date_2": "Expiration Date 2",
         "strike": "Strike",
         "quantity": "Quantity",
+        "future_1": "Future 1",
+        "future_2": "Future 2",
+        "group_1": "default"
+    },
+    "var_swap": {
+        "title": "Var Swap",
+        "expiration_date": "Expiration Date",
+        "quantity": "Quantity",
+        "cap": "Cap",
         "group_1": "default"
     }
 }

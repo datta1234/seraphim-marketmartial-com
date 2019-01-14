@@ -60,27 +60,40 @@ class MarketNegotiationTimeout implements ShouldQueue
             }
 
             // Trade @ best
-            if(($marketNegotiation->isTradeAtBest() || $marketNegotiation->isTradeAtBestOpen()) && !$marketNegotiation->isTrading()) {
+            if($marketNegotiation->isTradeAtBest() && !$marketNegotiation->isTrading()) {
 
-                $sourceNegotiation = $marketNegotiation->tradeAtBestSource();
-                
-                $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
-                    "quantity"      =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
-                    "is_offer"      =>  $marketNegotiation->cond_buy_best,
-                    "is_distpute"   =>  false,
-                ]);
+                // auto repeat after timeout
+                $marketNegotiation->repeat($marketNegotiation->counterUser);
 
+                // notify users with updated data
                 $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
 
                 // Notify The Admin 
-                $term = $marketNegotiation->cond_buy_best == true ? 'Buy' : 'Sell';
-                $title_initiator = $sourceNegotiation->user->organisation->title;
-                $title_responder = $marketNegotiation->user->organisation->title;
-                $level = $term == 'Buy' ? $marketNegotiation->offer : $marketNegotiation->bid;
                 \Slack::postMessage([
-                    "text"      => "A ".$term." at Best Timeout has occured, Trading Between _".$title_initiator."_ and _".$title_responder."_ @ *".$level."*",
+                    "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
                     "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
-                ], 'timeout');
+                ], "timeout");
+            }
+
+            if($marketNegotiation->isTradeAtBestOpen() && !$marketNegotiation->isTrading()) {
+
+                // DEPRECATED per MM-639 - no longer auto trade - require initiate user to enter desired quantity first
+                // $sourceNegotiation = $marketNegotiation->tradeAtBestSource();
+                
+                // $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
+                //     "quantity"      =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
+                //     "is_offer"      =>  $marketNegotiation->cond_buy_best,
+                //     "is_distpute"   =>  false,
+                // ]);
+
+                // notify users with updated data
+                $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
+
+                // Notify The Admin 
+                \Slack::postMessage([
+                    "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
+                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                ], "timeout");
             }
         }
         return true;

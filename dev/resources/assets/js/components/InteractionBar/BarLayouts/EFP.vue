@@ -2,7 +2,12 @@
     <b-container fluid dusk="ibar-negotiation-bar-efp-switch">
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
-
+        
+        <ibar-market-requested-futures class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_future_columns">
+        </ibar-market-requested-futures>
+        
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
          :message="history_message"
@@ -18,7 +23,7 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-    <template v-if="!negotiation_available && cant_amend">
+    <template v-if="!negotiation_available && cant_amend && !$root.is_admin && !$root.is_viewer">
         <b-row>
             <b-col cols="10">
                 <p class="text-center">
@@ -27,7 +32,16 @@
             </b-col>
         </b-row>
     </template>
-    <template v-if="!is_trading && negotiation_available">
+     <template v-if="negotiation_available">
+        <ibar-trade-at-best-negotiation 
+         v-if="!can_negotiate && is_trading_at_best"
+         :check-invalid="check_invalid" 
+         :current-negotiation="last_negotiation" 
+         :market-negotiation="proposed_user_market_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-negotiation>
+    </template>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         <!-- conditionActive('repeat-atw') || -->
         <ibar-market-negotiation-contracts 
             class="mb-1" v-if="can_negotiate" 
@@ -36,19 +50,14 @@
             :check-invalid="check_invalid" 
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
+            :is-request-phase="is_request_phase"
         >
         </ibar-market-negotiation-contracts>
-
-        <ibar-trade-at-best-negotiation 
-         v-if="!can_negotiate && is_trading_at_best"
-         :check-invalid="check_invalid" 
-         :current-negotiation="last_negotiation" 
-         :market-negotiation="proposed_user_market_negotiation"
-         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
-        </ibar-trade-at-best-negotiation>
    
-        <!-- Alert me when cleared -->
-        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    </template>
+    <!-- Alert me when cleared -->
+    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer && !is_involved_in_trade" :market_request="marketRequest"></alert-cleared>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <b-row class="mb-1">
             <b-col cols="10">
@@ -103,7 +112,7 @@
                     </b-col>
                 </b-row>
 
-                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate && (!is_trading_at_best || is_trading_at_best_closed)">
                     <b-col cols="6">
                          <!-- || conditionActive('repeat-atw') -->
                         <b-button v-active-request class="w-100 mt-1" 
@@ -126,7 +135,7 @@
                     </b-col>
                 </b-row>
                 
-                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed && !is_trading_at_best_source">
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
@@ -149,7 +158,7 @@
                 </b-row>
             </b-col>
         </b-row>
-        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
     </template>
     
             
@@ -165,7 +174,12 @@
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
         
-        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+       <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" 
+        :user-market="marketRequest.chosen_user_market" 
+        :conditions="marketRequest.chosen_user_market.active_conditions"
+        :sent_conditions="marketRequest.chosen_user_market.sent_conditions"
+
+        ></ibar-active-conditions>
 
     </b-container>
 </template>
@@ -183,6 +197,7 @@
     import IbarVolatilityField from '../MarketComponents/VolatilityField';
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
+    import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
 
     import AlertCleared from '../Components/AlertClearedComponent.vue';
 
@@ -197,7 +212,8 @@
             IbarVolatilityField,
             IbarMarketRequested,
             IbarTradeAtBestNegotiation,
-            AlertCleared
+            AlertCleared,
+            IbarMarketRequestedFutures
         },
         props: {
             
@@ -227,7 +243,10 @@
                 ],
                 market_requested_columns: [
                     'quantity',
-                    'status'
+                    'status',
+                ],
+                market_requested_future_columns: [
+                    'future',
                 ]
             };
         },

@@ -55,8 +55,15 @@ export default class UserMarketNegotiation extends BaseModel {
             is_my_org:false,
             market_negotiation_id: null,
             time: null,
+            applicable_timeout: 0,
             creation_idx: null,
             created_at: moment(),
+
+            // optional
+            bid_user: null,
+            offer_user: null,
+            bid_org: null,
+            offer_org: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -81,12 +88,22 @@ export default class UserMarketNegotiation extends BaseModel {
         if(options && options['active_condition']) {
             this.setActiveCondition(options['active_condition']);
         }
+
+        this._sent_condition = null;
+        if(options && options['sent_condition']) {
+            this.setSentCondition(options['sent_condition']);
+        }
     }
 
 
     setActiveCondition(cond) {
         this._active_condition = cond;
     }
+
+    setSentCondition(cond) {
+        this._sent_condition = cond;
+    }
+
 
     /**
     *   setUserMarket - Sets the negotiations UserMarket
@@ -152,17 +169,17 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     getTimeoutRemaining() {
-        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         if(diff < 0) {
             return "00:00";
         } else {
-            return moment.utc(moment.duration(diff).as('milliseconds')).format('mm:ss');
+            return moment.duration(diff).format("mm:ss");
         }
     }
 
     hasTimeoutRemaining() {
-        let diff = moment(this.created_at).add(20, 'minutes').diff(moment());
+        let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         return diff > 0;
     }
@@ -432,6 +449,8 @@ export default class UserMarketNegotiation extends BaseModel {
         {
             if(this._active_condition != null) {
                 prevItem = this._active_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
+            } else if (this._sent_condition != null) {
+                prevItem = this._sent_condition.history.find((itItem) => this.market_negotiation_id == itItem.id);
             } else {
                 prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
             }
@@ -465,9 +484,9 @@ export default class UserMarketNegotiation extends BaseModel {
     {
         if(this.trade_negotiations.length > 0)
         {
-         let lastNegotiation = this.trade_negotiations[0];
-         lastNegotiation.setUserMarket(this);
-         return lastNegotiation;
+         let firstNegotiation = this.trade_negotiations[0];
+         firstNegotiation.setUserMarket(this);
+         return firstNegotiation;
         }
         else
         {
@@ -535,6 +554,20 @@ export default class UserMarketNegotiation extends BaseModel {
     get parent_negotiation() {
         return this._user_market.market_negotiations.find(x => x.id == this.market_negotiation_id);
     }
+
+    get level_sides() {
+        let bid_source = this.getAmountSource('bid');
+        let offer_source = this.getAmountSource('offer');
+        let sides = [];
+        // im on the bid
+        if(bid_source.is_my_org) {
+            sides.push('bid');
+        }
+        if(offer_source.is_my_org) {
+            sides.push('offer');
+        }
+        return sides;
+    }
     
     /**
     *   test if the parents are spun
@@ -549,6 +582,38 @@ export default class UserMarketNegotiation extends BaseModel {
     isTraded() {
         let lastTrade = this.getLastTradeNegotiation();
         return lastTrade && lastTrade.traded;
+    }
+
+    /**
+    *   test if the negotiation is trading
+    */
+    isTrading() {
+        let lastTrade = this.getLastTradeNegotiation();
+        return lastTrade && !lastTrade.traded;
+    }
+
+    /**
+    * determine if there is a condition applied
+    */
+    hasCondition() {
+        let conds = {
+            is_private: false,
+            cond_is_repeat_atw: null,
+            cond_fok: null, // alias
+            cond_fok_apply_bid: null,
+            cond_fok_spin: null,
+            cond_timeout: null,
+            cond_is_oco: null,
+            cond_is_subject: null,
+            cond_buy_mid: null,
+            cond_buy_best: null,
+        };
+        for(let key in conds) {
+            if(this[key] != conds[key]) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

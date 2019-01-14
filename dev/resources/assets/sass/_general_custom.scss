@@ -25,10 +25,6 @@ body
 	background-size: cover; */
 }
 
-
-
-
-
 .card {
 	border: none;
 	box-shadow: 4px 4px 9px -4px #000000;
@@ -581,19 +577,22 @@ input.input-small {
 
 
 
-#trade_app .popover.popover-meet-in-middle {
+#trade_app {
+	font-size: $mm-font-size;
+	.popover.popover-meet-in-middle {
 
-	.popover-header
-	{
-		background: $mm-modal-header;
-		color: $mm-text-white;
-	}
+		.popover-header
+		{
+			background: $mm-modal-header;
+			color: $mm-text-white;
+		}
 
-	.popover-body {
-		.btn-primary {
-            background-color: $ibar-btn-background-primary;
-            color: $ibar-btn-color-primary;
-        }
+		.popover-body {
+			.btn-primary {
+	            background-color: $ibar-btn-background-primary;
+	            color: $ibar-btn-color-primary;
+	        }
+		}
 	}
 }
 
@@ -694,3 +693,25 @@ table.table {
 		background-color: #afafaf;
 	}
 }
+
+.admin-label {
+	font-size: .9em;
+    color: #d9d9d9 !important;
+    &.is-interest {
+		color: #81acfc !important
+    }
+	&.is-maker {
+		color: #98f89b !important;
+	}
+}
+
+/* .optional-input-prepend > .input-group-text {
+    background-color: $mm-modal-header;
+    border-color: $mm-modal-header;
+}
+
+.optional-input-prepend {
+	input:disabled {
+		border: none;
+	}
+} */

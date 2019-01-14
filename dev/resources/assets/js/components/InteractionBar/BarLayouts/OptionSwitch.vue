@@ -8,6 +8,11 @@
             :columns="market_requested_columns">
         </ibar-market-requested>
 
+        <ibar-market-requested-futures class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_future_columns">
+        </ibar-market-requested-futures>
+
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
          :message="history_message"
@@ -23,7 +28,7 @@
         <!-- Contracts History - Trade-->
         <ibar-negotiation-history-contracts :message="history_message" :history="marketRequest.chosen_user_market.market_negotiations" v-if="marketRequest.chosen_user_market" class="mb-2"></ibar-negotiation-history-contracts>
 
-    <template v-if="!negotiation_available && cant_amend">
+    <template v-if="!negotiation_available && cant_amend && !$root.is_admin && !$root.is_viewer">
         <b-row>
             <b-col cols="10">
                 <p class="text-center">
@@ -32,20 +37,7 @@
             </b-col>
         </b-row>
     </template>
-    <template v-if="!is_trading && negotiation_available">
-        
-        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
-        <ibar-market-negotiation-contracts 
-            class="mb-1" v-if="can_negotiate" 
-            @validate-proposal="validateProposal" 
-            :disabled="conditionActive('repeat-atw') || conditionActive('fok') || meet_in_the_middle_proposed" 
-            :check-invalid="check_invalid" 
-            :current-negotiation="last_negotiation" 
-            :market-negotiation="proposed_user_market_negotiation"
-        >
-        </ibar-market-negotiation-contracts>
-        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
-
+     <template v-if="negotiation_available">
         <ibar-trade-at-best-negotiation 
          v-if="!can_negotiate && is_trading_at_best"
          :check-invalid="check_invalid" 
@@ -53,9 +45,26 @@
          :market-negotiation="proposed_user_market_negotiation"
          :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
         </ibar-trade-at-best-negotiation>
+    </template>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
+        
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_1.choice" :user-market="proposed_user_market" :trade-group="trade_group_1"></ibar-volatility-field>
+        <ibar-market-negotiation-contracts 
+            class="mb-1" v-if="can_negotiate" 
+            @validate-proposal="validateProposal" 
+            :disabled="conditionActive('fok') || meet_in_the_middle_proposed" 
+            :check-invalid="check_invalid" 
+            :current-negotiation="last_negotiation" 
+            :market-negotiation="proposed_user_market_negotiation"
+            :is-request-phase="is_request_phase"
+        >
+        </ibar-market-negotiation-contracts>
+        <ibar-volatility-field v-if="!marketRequest.chosen_user_market && trade_group_2.choice" :user-market="proposed_user_market" :trade-group="trade_group_2"></ibar-volatility-field>
    
-        <!-- Alert me when cleared -->
-        <alert-cleared v-if="!can_negotiate" :market_request="marketRequest"></alert-cleared>
+    </template>
+    <!-- Alert me when cleared -->
+    <alert-cleared v-if="!can_negotiate && !$root.is_admin && !$root.is_viewer && !is_involved_in_trade" :market_request="marketRequest"></alert-cleared>
+    <template v-if="(!is_trading || is_trading_at_best) && negotiation_available && !$root.is_viewer">
         
         <b-row class="mb-1">
             <b-col cols="10">
@@ -110,11 +119,11 @@
                     </b-col>
                 </b-row>
 
-                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate">
+                 <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && can_negotiate && (!is_trading_at_best || is_trading_at_best_closed)">
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
-                         :disabled="check_invalid || server_loading || conditionActive('fok') || conditionActive('repeat-atw')" 
+                         :disabled="check_invalid || server_loading || conditionActive('fok')" 
                          size="sm" 
                          dusk="ibar-action-send" 
                          variant="primary" 
@@ -133,7 +142,7 @@
                     </b-col>
                 </b-row>
                 
-                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed">
+                <b-row class="justify-content-md-center" v-if="marketRequest.chosen_user_market && is_trading_at_best && !is_trading_at_best_closed && !is_trading_at_best_source">
                     <b-col cols="6">
                          
                         <b-button v-active-request class="w-100 mt-1" 
@@ -156,7 +165,7 @@
                 </b-row>
             </b-col>
         </b-row>
-        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('repeat-atw') && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
+        <ibar-apply-conditions v-if="can_negotiate && !conditionActive('fok')" class="mb-2 mt-2" :market-negotiation="proposed_user_market_negotiation" :market-request="marketRequest"></ibar-apply-conditions>
     </template>
     
             
@@ -172,7 +181,12 @@
 
       <!--   <ibar-apply-premium-calculator  v-if="can_negotiate" :market-negotiatio="proposed_user_market_negotiation"></ibar-apply-premium-calculator> -->
         
-        <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" :user-market="marketRequest.chosen_user_market" :conditions="marketRequest.chosen_user_market.active_conditions"></ibar-active-conditions>
+      <ibar-active-conditions class="mt-2" v-if="marketRequest.chosen_user_market != null" 
+        :user-market="marketRequest.chosen_user_market" 
+        :conditions="marketRequest.chosen_user_market.active_conditions"
+        :sent_conditions="marketRequest.chosen_user_market.sent_conditions"
+
+        ></ibar-active-conditions>
 
     </b-container>
 </template>
@@ -190,6 +204,7 @@
     import IbarVolatilityField from '../MarketComponents/VolatilityField';
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
+    import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
 
     import AlertCleared from '../Components/AlertClearedComponent.vue';
 
@@ -204,7 +219,8 @@
             IbarVolatilityField,
             IbarMarketRequested,
             IbarTradeAtBestNegotiation,
-            AlertCleared
+            AlertCleared,
+            IbarMarketRequestedFutures
         },
         props: {
             
@@ -236,7 +252,10 @@
                     'quantity',
                     'expiration_date',
                     'strike',
-                    'status'
+                    'status',
+                ],
+                market_requested_future_columns: [
+                    'future',
                 ]
             };
         },
@@ -251,11 +270,15 @@
                 return this.marketRequest.trade_items[group];
             },
             'market_title': function() {
-                return [
-                    this.marketRequest.trade_items.default.tradable.title,
-                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.option_switch.expiration_date")],
-                    this.marketRequest.trade_structure
-                ].join(' ');
+                let title_groups = []
+                Object.keys(this.marketRequest.trade_items).forEach(item => {
+                    let choice = this.marketRequest.trade_items[item].choice ? '(CH)' : '';
+                    title_groups.push([
+                        this.marketRequest.trade_items[item].tradable.title + choice,
+                        this.marketRequest.trade_items[item][this.$root.config("trade_structure.option_switch.expiration_date")]
+                    ].join(' '));
+                });
+                return title_groups.join(' vs ') + ' ' + this.marketRequest.trade_structure;
             },
         },
         methods: {

@@ -13,45 +13,10 @@
 						You're done. Thank you!
 				</h2>
 			@endslot
-	
 				@slot('body')
-				
-				@if(!$user->tc_accepted)
-            		{!! Form::model($user,['route' => 'tsandcs.update','method'=>'PUT']) !!}
-					<p>
-						After submitting this information, the Market Martial team will verify your profile.
-					</p>
-					<p>
-						You can view your account details at any time.
-					</p>
-
-					<div class="form-check">
-						{!!  Form::hidden('tc_accepted', '0') !!}
-						{!!  Form::checkbox('tc_accepted',1,null,['id'=>'terms-of-use']) !!}
-						<label class="form-check-label" for="terms-of-use">
-							I accept the <a href="#">Privacy Policy</a> and <a href="#">Terms of use</a>
-						</label>
-					</div>
-					
-					@if ($errors->has('tc_accepted'))
-					    <span class="text-danger">
-					        <strong>{{ $errors->first('tc_accepted') }}</strong>
-					    </span>
-					@endif
-
-
-					<div class="form-group row mb-0">
-					    <div class="col-sm-12 col-md-3 offset-md-6 col-xl-2 offset-xl-8 mt-2">
-					        <button type="submit" class="btn mm-button">Next</button>
-					    </div>
-					</div>
-
-       				{!! Form::close() !!}
-       			@else
-					Please wait for your account to be verified.
-       			@endif
-
+					<terms-and-conditions :tc-accepted="{{ $user->tc_accepted ? "true" : "false" }}"></terms-and-conditions>
 				@endslot
+
 		@endcomponent
 		</div>
 	</div>

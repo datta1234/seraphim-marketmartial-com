@@ -9,6 +9,7 @@
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
+    import { EventBus } from '~/lib/EventBus';
     /*
         Sets the state of the following attributes on the 'marketNegotiation'
             cond_is_repeat_atw
@@ -134,6 +135,7 @@
                         }
                     }
                 }
+                EventBus.$emit('resetConditions');
             },
             groupIsSet(group) {
                 for(let i = 0, cond; cond = group.items[i]; i++) {

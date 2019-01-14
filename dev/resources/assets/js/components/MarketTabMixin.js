@@ -1,10 +1,24 @@
+import { EventBus } from '~/lib/EventBus.js';
+
 export default {
+    props: {
+        no_cares: {
+            type: Array,
+            default: () => []
+        },
+        interactable: {
+            type: Boolean,
+            default: true
+        }
+    },
     data: function () {
         return {
             market_request_state: '',
             market_request_state_label: '',
             user_market_bid: '',
             user_market_offer: '',
+            user_market_bid_choice: '',
+            user_market_offer_choice: '',
         }
     },
      computed: {
@@ -43,16 +57,23 @@ export default {
     },
     methods: {
         loadInteractionBar() {
+            // only pass if there is something to interact with
+            if(this.interactable == false) {
+                return;
+            }
+            this.toggleActionTaken();
+            this.isActive = true;
             EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
         },
         calcMarketState() {
             // set new refs
             this.user_market_bid = null;
             this.user_market_offer = null;
+            this.user_market_bid_choice = null;
+            this.user_market_offer_choice = null;
             this.market_request_state = null;
             this.market_request_state_label = null;
-           let lastTradeNegotiation  = null;
-
+            let lastTradeNegotiation  = null;
             
           /*  if()
             {
@@ -114,8 +135,15 @@ export default {
                         this.market_request_state = 'negotiation-vol';
                         this.market_request_state_label = "";
                         if(this.current_user_market_negotiation.isTraded()) {
-                            this.user_market_bid = '-';
-                            this.user_market_offer = '-';
+                            this.market_request_state = 'trade-negotiation-open';
+                            // replaced per [MM-723] - "The tab should display the traded level until a new bid or offer is shown." + only show traded level
+                            if(this.current_user_market_negotiation.getLastTradeNegotiation.is_offer) {
+                                this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
+                                this.user_market_offer = '-';
+                            } else {
+                                this.user_market_bid = '-';
+                                this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
+                            }
                         } else {
                             this.user_market_bid = this.current_user_market_negotiation != null && this.current_user_market_negotiation.bid ? this.current_user_market_negotiation.bid: '-';
                             this.user_market_offer = this.current_user_market_negotiation != null && this.current_user_market_negotiation.offer ? this.current_user_market_negotiation.offer : '-';
@@ -193,7 +221,7 @@ export default {
         },
         getStateClass(item,attr)
         {
-            if(item[attr] == null) {
+            if(!item || item[attr] == null) {
                 return "";
             }
             let source = item.getAmountSource(attr);

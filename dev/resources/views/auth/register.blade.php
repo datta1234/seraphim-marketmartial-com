@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-@if($errors->any())
-    {{ var_dump($errors->all()) }}
-@endif
 {{-- Register Card --}}
 @component('partials.content_card')
     @slot('header')
@@ -18,8 +15,8 @@
     @slot('body')
         <div>
             <p class="card-text text-center">
-            Fill in your details below and we will email you a login to complete your profile.<br>
-            Once your credentials have been verified you will be able to view and use the Market Martial trading platform.
+            Please fill in your details below.<br>
+            Once your credentials have been verified, you will be able to view and use the Market Martial trading platform.
             </p>
 
             <div class="row justify-content-md-center mb-">
@@ -122,7 +119,7 @@
                 <label for="market_types" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
 
                 <div class="form-group col-sm-12 col-md-4 mt-2">
-                    <div class="no-backdrop form-control {{ $errors->has('market_types') ? ' is-invalid' : '' }}" id="market_types">
+                    <div class="no-backdrop form-control {{ $errors->has('market_types') ? ' is-invalid' : '' }} mb-4" id="market_types">
                     @foreach ($market_types as $key=>$market)
                         <div class="form-check checkbox largeCheckBox">
                             <label lass="form-check-label">

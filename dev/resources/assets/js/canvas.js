@@ -24,7 +24,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 })
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import { Bar } from 'vue-chartjs';
@@ -50,6 +51,7 @@ Vue.component('email-settings', require('./components/Profile/Components/EmailSe
 Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
 Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
 Vue.component('day-month-picker', require('./components/Profile/Components/DayMonthPickerComponent.vue'));
+Vue.component('terms-and-conditions', require('./components/Profile/Components/TermsAndConditionsComponent.vue'));
 
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
@@ -72,64 +74,9 @@ Vue.component('open-interests', require('./components/Stats/OpenInterestsCompone
 Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));
 Vue.component('rebates-year-tables', require('./components/Rebates/RebatesYearTablesComponent.vue'));
 
-Vue.mixin({
-    methods: {
-        /*
-         * Basic bubble sort that sorts a date string array usesing Moment.
-         *
-         * @param {String[]} date_string_array - array of date string
-         * @param {String} format - the format to cast to a moment object
-         */
-        dateStringArraySort(date_string_array, format, ) {
-            for(let i = 0; i < date_string_array.length - 1; i++) {
-                for(let j = 0; j < date_string_array.length - i - 1; j++) {
-                    if( moment(date_string_array[j+1],format).isBefore(moment(date_string_array[j],format)) ) {
-                        let temp = date_string_array[j];
-                        date_string_array[j] = date_string_array[j+1];
-                        date_string_array[j+1] = temp;
-                    }
-                }
-            }
-        },
-        /**
-         * Takes in a value and splits the value by a splitter in a desired frequency
-         *
-         * @param {string|number} val - the desired value to split
-         * @param {string} splitter - the splitter to split the value by
-         * @param {number} frequency - the frequency in which to apply the split to the value
-         *
-         * @return {string} the newly splitted value
-         */
-        splitValHelper (val, splitter, frequency) {
-            let tempVal = ('' + val);
-            let floatVal = '';
-            let sign = '';
-            //Check if our passed value is negative signed
-            if( ("" + val).indexOf('-') !== -1 ) 
-            {
-                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
-                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
-            }
-            //Check if our passed value is a float
-            if( ("" + tempVal).indexOf('.') !== -1 ) 
-            {
-                floatVal = tempVal.slice(tempVal.indexOf('.'));
-                tempVal = tempVal.slice(0,tempVal.indexOf('.'));
-            }
-            //Creates an array of chars reverses and itterates through it
-            return sign + tempVal.split('').reverse().reduce(function(x,y) {
-                //adds a space on the spesified frequency position
-                if(x[x.length-1].length == frequency)
-                {
-                   x.push("");
-                }
-                x[x.length-1] = y+x[x.length-1];
-                return x;
-            //Concats the array to a string back in the correct order
-            }, [""]).reverse().join(splitter) + floatVal;
-        },
-    }
-});
+import FormatMixin from './FormatMixin.js'
+Vue.mixin(FormatMixin);
+
 const app = new Vue({
     el: '#canvas_app',
     methods: {
@@ -170,7 +117,8 @@ const app = new Vue({
         },
     },
     data: {
-        configs: {}
+        configs: {},
+        is_viewer: false,
     },
     mounted: function() {
         this.loadConfigs([
@@ -179,6 +127,12 @@ const app = new Vue({
         .then(() => {
             ActiveRequestDirective.init(this);
             ActiveMakerService.init(this);
-        })
+        });
+
+        let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
+        // test if a viewer type user is viewing the page, then disable some send features across the frontend
+        if(viewer_type.content) {
+            this.is_viewer = true;
+        }
     }
 });

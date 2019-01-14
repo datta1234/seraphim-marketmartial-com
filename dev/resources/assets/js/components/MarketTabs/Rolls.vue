@@ -26,17 +26,14 @@
 </template>
 
 <script>
-    import { EventBus } from '../../lib/EventBus.js';
-    import UserMarketRequest from '../../lib/UserMarketRequest';
-    import MarketTabMixin from '../MarketTabMixin';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import MarketTabMixin from '~/components/MarketTabMixin';
     
     export default {
         props: {
             marketRequest: {
                 type: UserMarketRequest
-            },
-             no_cares: {
-                type: Array
             }
         },
         watch: {
@@ -82,13 +79,6 @@
                     'market-confirm': this.market_request_state == 'confirm',
                     'active': this.isActive,
                 }
-            }
-        },
-        methods: {
-            loadInteractionBar() {
-                this.toggleActionTaken();
-                this.isActive = true;
-                EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
             }
         },
         mounted() {

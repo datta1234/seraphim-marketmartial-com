@@ -33,7 +33,7 @@ class MarketUserMarketReqeustController extends Controller
     public function index(Request $request,Market $market)
     {
         $userMarketRequests = $market->userMarketRequests()
-            ->activeForToday()
+            ->active()
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',
@@ -77,6 +77,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function store(UserMarketRequestRequest $request, Market $market)
     {
+        $this->authorize('addMarketReqeust',$market);
         $input = $request->all();
 
         $tradeStructure = TradeStructure::where('title',$request->input('trade_structure'))->with(['tradeStructureGroups' => function($q){
@@ -192,6 +193,10 @@ class MarketUserMarketReqeustController extends Controller
                 return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.stock_quantity'));
             }
 
+            if(array_key_exists('Cap', $item["fields"])) {
+                return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.var_swap_quantity'));
+            }
+
             $config_market_default = config('marketmartial.thresholds.index_quantity.'.$item["market_id"]);
             if($config_market_default == null) {
                 return $carry && ($item["fields"]["Quantity"] >= config('marketmartial.thresholds.quantity')); 
@@ -215,7 +220,7 @@ class MarketUserMarketReqeustController extends Controller
 
 
         //broadCast new market request;
-        $userMarketRequest->notifyRequested();
+        $userMarketRequest->fresh()->notifyRequested();
         return response()->json([
             'data'=> $responseData,
             'message'=>"Market Request created successfully.", 
@@ -226,10 +231,10 @@ class MarketUserMarketReqeustController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function show(Market $market, UserMarketRequest $userMarketRequest)
+    public function show(Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -238,10 +243,10 @@ class MarketUserMarketReqeustController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function edit(Market $market, UserMarketRequest $userMarketRequest)
+    public function edit(Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -251,10 +256,10 @@ class MarketUserMarketReqeustController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Market $market, UserMarketRequest $userMarketRequest)
+    public function update(Request $request, Market $market, UserMarketRequest $marketRequest)
     {
         //
     }
@@ -263,12 +268,21 @@ class MarketUserMarketReqeustController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $userMarketRequest
+     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Market $market, UserMarketRequest $userMarketRequest)
+    public function destroy(Market $market, UserMarketRequest $marketRequest)
     {
-        //
+        $this->authorize('deactivate',$marketRequest);
+        $marketRequest->active = false;
+        $marketRequest->save();
+
+        $marketRequest->notifyRequested();
+
+        return response()->json([
+            'data'=> null,
+            'message'=>"Market Request removed successfully.",
+        ], 201);
     }
 
     /**
@@ -282,6 +296,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function actionTaken(Request $request, UserMarketRequest $userMarketRequest)
     {   
+         $this->authorize('actionTaken',$userMarketRequest);
         if($request->has('action_needed')) {
             if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
                 $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));

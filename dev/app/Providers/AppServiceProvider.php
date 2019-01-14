@@ -2,10 +2,11 @@
 
 namespace App\Providers;
 
-use App\Observers\OrganisationObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Models\UserManagement\Organisation;
 use Illuminate\Support\Facades\Blade;
+
+use App\Observers\OrganisationObserver;
 
 class AppServiceProvider extends ServiceProvider
 {

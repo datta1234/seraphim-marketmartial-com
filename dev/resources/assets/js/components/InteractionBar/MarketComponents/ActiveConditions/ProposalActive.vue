@@ -9,14 +9,14 @@
             </b-collapse>
         </b-col>
         <b-col cols="12" class="mb-1">
-            <div class="cond-bar">
+            <div v-bind:class="[ isActive ? 'cond-bar-alert' : 'cond-bar-sent' ]">
                 <b-row id="cond-container" class="trade-popover" no-gutters>
-                    <b-col cols="6">
+                    <b-col :cols=" isActive ? '6' : '12'">
                         <span>
                             Trade At {{ ( negotiation.bid ? negotiation.bid : '-' )+" / "+( negotiation.offer ? negotiation.offer : '-' ) }}
                         </span>
                     </b-col>
-                    <b-col cols="6">
+                    <b-col v-if="isActive && !$root.is_viewer" cols="6">
                         <span id="proposal-do-trade">
                             <a href="" @click.prevent.stop="doTrade">Trade</a>
                         </span>
@@ -57,13 +57,18 @@
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import ActiveCondition from '~/lib/ActiveCondition';
+    import SentCondition from '~/lib/SentCondition';
 
     import CounterHistory from './CounterHistory';
 
     export default {
         props: {
             condition: {
-                type: ActiveCondition
+                type: [ActiveCondition,SentCondition]
+            },
+            isActive: {
+                type: Boolean,
+                default: true,
             },
         },
         components: {
@@ -103,7 +108,6 @@
             },
         },
         mounted() {
-
         }
     }
 </script>

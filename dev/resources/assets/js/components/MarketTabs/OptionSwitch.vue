@@ -1,6 +1,6 @@
 <template>
     <div dusk="market-tab-option_switch"  class="market-tab-option_switch" v-bind:class="marketState" @click="loadInteractionBar()">
-        <b-row class="justify-content-md-center">
+        <b-row class="justify-content-md-center" align-v="center">
             <b-col class="market-tab-name market-tab-name">
                 <b-row no-gutters align-v="center" align-h="center">
                     <b-col cols="auto">
@@ -18,7 +18,23 @@
                         <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
                     </b-col>
                     <b-col v-else>
-                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                        <b-row>
+                            <b-col>
+                                <span v-if="choice_vol_1 != null">{{ choice_vol_1 }}</span>
+                                <span v-else>&nbsp;</span>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <span v-if="choice_vol_2 != null">{{ choice_vol_2 }}</span>
+                                <span v-else>&nbsp;</span>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
             </b-col>
@@ -27,17 +43,14 @@
 </template>
 
 <script>
-    import { EventBus } from '../../lib/EventBus.js';
-    import UserMarketRequest from '../../lib/UserMarketRequest';
-    import MarketTabMixin from '../MarketTabMixin';
+    import { EventBus } from '~/lib/EventBus.js';
+    import UserMarketRequest from '~/lib/UserMarketRequest';
+    import MarketTabMixin from '~/components/MarketTabMixin';
     
     export default {
         props: {
             marketRequest: {
                 type: UserMarketRequest
-            },
-             no_cares: {
-                type: Array
             }
         },
         watch: {
@@ -56,13 +69,35 @@
             };
         },
         computed: {
+            'choice_vol_1': function() {
+                let group = this.$root.config("trade_structure.option_switch.group_1");
+                let id = this.marketRequest.trade_items[group].id;
+                if(this.marketRequest.chosen_user_market) {
+                    let vol = this.marketRequest.chosen_user_market.volatilityForGroup(id);
+                    if(vol && vol.value) {
+                        return vol.value;
+                    }
+                }
+                return null;
+            },
+            'choice_vol_2': function() {
+                let group = this.$root.config("trade_structure.option_switch.group_2");
+                let id = this.marketRequest.trade_items[group].id;
+                if(this.marketRequest.chosen_user_market) {
+                    let vol = this.marketRequest.chosen_user_market.volatilityForGroup(id);
+                    if(vol && vol.value) {
+                        return vol.value;
+                    }
+                }
+                return null;
+            },
             tradable_1: function() {
                 let group = this.$root.config("trade_structure.option_switch.group_1");
-                return this.marketRequest.trade_items[group].tradable.title;
+                return this.marketRequest.trade_items[group].tradable.title + this.tradableChoice(this.marketRequest.trade_items[group]);
             },
             tradable_2: function() {
                 let group = this.$root.config("trade_structure.option_switch.group_2");
-                return this.marketRequest.trade_items[group].tradable.title;
+                return this.marketRequest.trade_items[group].tradable.title + this.tradableChoice(this.marketRequest.trade_items[group]);
             },
             marketState: function() {
                 return {
@@ -80,11 +115,10 @@
             }
         },
         methods: {
-            loadInteractionBar() {
-                this.toggleActionTaken();
-                this.isActive = true;
-                EventBus.$emit('toggleSidebar', 'interaction', true, this.marketRequest);
-            }
+            tradableChoice(trade_item_group)
+            {
+                return trade_item_group.choice ? 'ch' : '';
+            },
         },
         mounted() {
             // initial setup of states

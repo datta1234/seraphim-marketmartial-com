@@ -10,6 +10,9 @@ require('./components/data-methods');
 
 window.Vue = require('vue');
 window.moment = require('moment');
+const momentDuration = require('moment-duration-format');
+momentDuration(moment);
+
 window.math = require('mathjs');
 
 import Echo from "laravel-echo"
@@ -35,7 +38,8 @@ Vue.use(Toasted, {
             t.goAway(0);
         }
     },
-    theme: 'primary'
+    theme: 'primary',
+    duration : 3000,
 })
 import VuePerfectScrollbar from 'vue-perfect-scrollbar';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
@@ -90,7 +94,7 @@ Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
-
+Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQuotesModal.vue'));
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';
@@ -100,88 +104,8 @@ import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
 Vue.component('active-makers', ActiveMarketMakers);
 
-Vue.mixin({
-    methods: {
-        /**
-         * Takes in a value and formats it according to it's size to a currency format
-         *
-         * @param {string|number} val - the desired value to be formatted
-         *
-         * @return {string} the formated currency value
-         */
-        formatRandQty(val) {
-            let sbl = "R";
-            let calcVal = ( typeof val === 'number' ? val : parseFloat(val) );
-            calcVal = calcVal % 1 != 0 ? calcVal.toFixed(2) : calcVal;
-            //currently they want the format the same for all values
-            switch(Math.ceil( ('' + Math.trunc(val)).length / 3)) {
-                case 3: // 1 000 000 < x
-                    //return sbl+(calcVal/1000000)+"m";
-                break;
-                case 2: // 1000 < x < 1 000 000
-                    //return sbl + splitValHelper( calcVal, ' ', 3);
-                case 1: // 100 < x < 1000
-                case 0: // x < 100
-                default:
-                    return sbl + this.splitValHelper( calcVal, ' ', 3);
-            }
-        },
-        /**
-         * Takes in a value and splits the value by a splitter in a desired frequency
-         *
-         * @param {string|number} val - the desired value to split
-         * @param {string} splitter - the splitter to split the value by
-         * @param {number} frequency - the frequency in which to apply the split to the value
-         *
-         * @return {string} the newly splitted value
-         */
-        splitValHelper (val, splitter, frequency) {
-            let tempVal = ('' + val);
-            let floatVal = '';
-            let sign = '';
-            //Check if our passed value is negative signed
-            if( ("" + val).indexOf('-') !== -1 ) 
-            {
-                sign = tempVal.slice(0,tempVal.indexOf('-') + 1);
-                tempVal = tempVal.slice(tempVal.indexOf('-') + 1);
-            }
-            //Check if our passed value is a float
-            if( ("" + tempVal).indexOf('.') !== -1 ) 
-            {
-                floatVal = tempVal.slice(tempVal.indexOf('.'));
-                tempVal = tempVal.slice(0,tempVal.indexOf('.'));
-            }
-            //Creates an array of chars reverses and itterates through it
-            return sign + tempVal.split('').reverse().reduce(function(x,y) {
-                //adds a space on the spesified frequency position
-                if(x[x.length-1].length == frequency)
-                {
-                   x.push("");
-                }
-                x[x.length-1] = y+x[x.length-1];
-                return x;
-            //Concats the array to a string back in the correct order
-            }, [""]).reverse().join(splitter) + floatVal;
-        },
-        /*
-         * Basic bubble sort that sorts a date string array usesing Moment.
-         *
-         * @param {String[]} date_string_array - array of date string
-         * @param {String} format - the format to cast to a moment object
-         */
-        dateStringArraySort(date_string_array, format) {
-            for(let i = 0; i < date_string_array.length - 1; i++) {
-                for(let j = 0; j < date_string_array.length - i - 1; j++) {
-                    if( moment(date_string_array[j+1],format).isBefore(moment(date_string_array[j],format)) ) {
-                        let temp = date_string_array[j];
-                        date_string_array[j] = date_string_array[j+1];
-                        date_string_array[j+1] = temp;
-                    }
-                }
-            }
-        },
-    }
-});
+import FormatMixin from './FormatMixin.js'
+Vue.mixin(FormatMixin);
 
 const app = new Vue({
     el: '#trade_app',
@@ -262,6 +186,10 @@ const app = new Vue({
                    self.trade_confirmations.push(new TradeConfirmation(x));   
                     return x;
                 });
+                console.log('====================================');
+                console.log("Loading Trade Confirmations: FROM SERVER - ", tradeConfirmationResponse.data.data);
+                console.log("Loading Trade Confirmations: OBJECT - ", self.trade_confirmations);
+                console.log('====================================');
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);
@@ -361,6 +289,19 @@ const app = new Vue({
          * @todo - Add logic to display market if not already displaying
          */
         updateUserMarketRequest(userMarketRequestData) {
+            // handle removal of market requests
+            if(typeof userMarketRequestData.inactive !== 'undefined' && userMarketRequestData.inactive == true) {
+                let market = this.display_markets.find(display_market => display_market.id == userMarketRequestData.market_id);
+                if(market) {
+                    let market_request_index = market.market_requests.findIndex( market_request => market_request.id == userMarketRequestData.id);
+                    if(market_request_index !== -1) {
+                        market.market_requests.splice(market_request_index, 1); // remove
+                        EventBus.$emit('removeMarketRequest', userMarketRequestData.id);
+                    }
+                }
+                return; // return early
+            }
+            //handle adding/updating
             let index = this.display_markets.findIndex( display_market => display_market.id == userMarketRequestData.market_id);
             if(index !== -1)
             {
@@ -543,6 +484,8 @@ const app = new Vue({
         scroll_settings: {
             suppressScrollY: true
         },
+        is_admin: false,
+        is_viewer: false,
     },
     mounted: function() {
         Config.configs = this.configs;
@@ -599,6 +542,12 @@ const app = new Vue({
             this.loadNoCares();
         });
 
+        let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
+        // test if a viewer type user is viewing the page, then disable some send features across the frontend
+        if(viewer_type && viewer_type.content) {
+            this.is_viewer = true;
+        }
+
         let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
         if(organisationUuid && organisationUuid.content)
         {
@@ -612,6 +561,10 @@ const app = new Vue({
 
             let connectStream = (subCb) => {
                 console.log("Org UUID: ", organisationUuid.content);
+                // test if admin is viewing the page, then disable some send features across the frontend
+                if(organisationUuid.content == "admin") {
+                    this.is_admin = true;
+                }
                 // possibly let us cath what happens when pusher dc's
                 window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
                 let channel = window.Echo.private('organisation.'+organisationUuid.content)
@@ -632,7 +585,11 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
                         this.updateUserMarketRequest(packet_data.data);
-                        console.log(packet_data.message);
+                        console.log("[SOCKET] .UserMarketRequested ", packet_data);
+                        //@TODO - @Francois Move to new event when rebate gets created
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded_rebate_earned") {
+                            this.$toasted.success(packet_data.message.data, { duration : 20000 });
+                        }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
                 })
@@ -644,7 +601,7 @@ const app = new Vue({
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)
                         {
-                             this.$toasted.show(packet_data.message.data,{
+                            this.$toasted.show(packet_data.message.data,{
                                 'className':"mm-confirm-toast"
                             }); 
                         }

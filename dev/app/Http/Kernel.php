@@ -62,9 +62,11 @@ class Kernel extends HttpKernel
         'redirectOnFirstLogin' => \App\Http\Middleware\RedirectOnFirstLogin::class,
         'RedirectProfileStep' => \App\Http\Middleware\RedirectProfileStep::class,
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
+        'timeWindowPreventTrade' => \App\Http\Middleware\TradePreventAction::class,
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
         '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,
         'verified' =>\App\Http\Middleware\CheckVerified::class,
+        'lock-model' => \App\Http\Middleware\LockModelAction::class,
     ];
 }

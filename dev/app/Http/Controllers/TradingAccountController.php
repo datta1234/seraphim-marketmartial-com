@@ -25,7 +25,7 @@ class TradingAccountController extends Controller
 	{
 		$user = $request->user();
 		$user_accounts = $user->tradingAccounts()->get(); 
-		$markets = Market::all();
+		$markets = Market::where('id', '!=', 5)->get();
         $trading_accounts =  [];
 
         foreach ($markets as $market) 

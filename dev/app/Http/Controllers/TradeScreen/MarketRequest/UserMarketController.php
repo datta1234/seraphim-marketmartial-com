@@ -59,22 +59,23 @@ class UserMarketController extends Controller
             $userMarket->userMarketRequest->id,
             true
         );
-        
-        $user->organisation->notify("market_request_store","Response sent to interest.",true);
+        // Removed as specified in task MM-741
+        //$user->organisation->notify("market_request_store","Response sent to interest.",true);
         $userMarketRequest->notifyRequested();
 
-        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "Response sent to interest."]);
+        return response()->json(['data' => $userMarket->preFormatted()/*, 'message' => "Response sent to interest."*/]);
     }
 
     public function workTheBalance(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
     {
-      $user = $request->user();   
-      $userMarket->workTheBalance($user,$request->input('quantity'));
+        $this->authorize('workTheBalance',$userMarket);
+        $user = $request->user();   
+        $userMarket->workTheBalance($user,$request->input('quantity'));
       
-      $user->organisation->notify("market_request_store","You have worked the balance",true);
-      $userMarketRequest->notifyRequested();
+        $user->organisation->notify("market_request_store","You have worked the balance",true);
+        $userMarketRequest->notifyRequested();
 
-      return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
+        return response()->json(['data' => $userMarket->preFormatted(), 'message' => "You have worked the balance"]);
     }
 
 
@@ -101,17 +102,6 @@ class UserMarketController extends Controller
         //
     }
 
-
-    public function noFurtherCares(Request $request,UserMarketRequest $userMarketRequest,UserMarket $userMarket)
-    {
-        $user = $request->user();
-        $last_trade_negotiation = $userMarketRequest->chosenUserMarket->lastNegotiation->lastTradeNegotiation;
-        $last_trade_negotiation->no_cares = true;
-        $last_trade_negotiation->update();
-        $userMarket->fresh()->userMarketRequest->notifyRequested();
-        return response()->json(['data' => null, 'message' => "No further cares applied"]);
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -131,7 +121,7 @@ class UserMarketController extends Controller
 
            $this->authorize('placeOnHold',$userMarket);
             $success = $userMarket->placeOnHold();
-            $request->user()->organisation->notify("market_request_update","You have placed a market on hold. Response sent to counterparty.",true);
+            $request->user()->organisation->notify("market_request_update",/*"You have placed a market on hold. Response sent to counterparty."*/ "",true);
             // Set action that needs to be taken for the org being put on hold
             $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
        
@@ -140,7 +130,13 @@ class UserMarketController extends Controller
             $this->authorize('accept',$userMarket);
             $success = $userMarket->accept();
             $myOrganisation = $request->user()->organisation;
-            $myOrganisation->notify("market_request_update","You have accepted the market. Response sent to counterparty.",true);
+
+            $message = "Please improve the bid or offer.";
+            if($userMarket->firstNegotiation->isFoK()) {
+                // no message if there is an FoK applied [MM-854]
+                $message = "";
+            }
+            $myOrganisation->notify("market_request_update",$message,true);
 
             // Set action that needs to be taken for theaccepted
             // $userMarketRequest->setAction($userMarket->user->organisation->id,$userMarketRequest->id,true);
@@ -157,8 +153,8 @@ class UserMarketController extends Controller
                 $success = $userMarket->updateQuote($request->user(),$request->all());
             }
 
-
-            $request->user()->organisation->notify("market_request_update","Response sent to interest.",true);
+            // Removed as specified in task MM-741
+            //$request->user()->organisation->notify("market_request_update","Response sent to interest.",true);
 
             // Set action that needs to be taken for the org related to this userMarketRequest
             $userMarket->userMarketRequest->setAction(
@@ -184,8 +180,12 @@ class UserMarketController extends Controller
     public function destroy(Request $request, UserMarketRequest $userMarketRequest, UserMarket $userMarket)
     {
         $this->authorize('delete',$userMarket);
+
+        $org = $userMarket->user->organisation;
+        
         $userMarket->delete();
-        $request->user()->organisation->notify("market_request_delete","Your quote has been pulled.",true);
+        $org->notify("market_request_delete","Your quote has been pulled.",true);
+
         $userMarketRequest->notifyRequested();
         
         return response()->json(['data' => null,'message'=> ""]);

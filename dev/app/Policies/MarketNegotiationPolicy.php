@@ -30,9 +30,16 @@ class MarketNegotiationPolicy
      * @return bool
      * @return mixed
      */
-    public function addTradeNegotiation(User $user)
+    public function addTradeNegotiation(User $user, MarketNegotiation $marketNegotiation)
     {
-        return true;
+        if($user->isViewer()) { 
+            return false; 
+        }
+        if($marketNegotiation->isTrading()) {
+            // only involved
+            return $marketNegotiation->lastTradeNegotiation->isOrganisationInvolved($user->organisation_id);
+        }
+        return $user->isTrader();
     }
 
     /**
@@ -44,6 +51,13 @@ class MarketNegotiationPolicy
      */
     public function delete(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
+        if($user->isAdmin()) {
+            return true;
+        }
+        
         // FoK
         if($marketNegotiation->isFoK()) {
             if($marketNegotiation->id !== $marketNegotiation->userMarket->current_market_negotiation_id) {
@@ -69,6 +83,9 @@ class MarketNegotiationPolicy
      */
     public function counter(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         return (
             $user->organisation_id == $marketNegotiation->counterUser->organisation_id &&
             !$marketNegotiation->marketNegotiationChildren()->exists()
@@ -77,6 +94,9 @@ class MarketNegotiationPolicy
 
     public function amend(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         $userMarket = $marketNegotiation->userMarket;
         $current_org_id = $user->organisation_id;
         $lastNegotiation = $userMarket->lastNegotiation;
@@ -114,6 +134,9 @@ class MarketNegotiationPolicy
      */
     public function improveBest(User $user, MarketNegotiation $marketNegotiation)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         $user_market = $marketNegotiation->userMarket;
         $current_best = $user_market->lastNegotiation;
         return (

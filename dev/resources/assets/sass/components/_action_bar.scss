@@ -24,6 +24,11 @@
 	}
 }
 
+// Direct Children on body
+body > .popover > .arrow {
+		visibility: visible;
+}
+
 .important-markets-menu, .alerts-markets-menu, .confirmations-markets-menu, .filter-markets-menu, .request-market-menu {
 	display: inline;
 }

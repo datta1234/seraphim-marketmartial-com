@@ -20,6 +20,7 @@ class UserMarketRequest extends Model
      * @property integer $trade_structure_id
      * @property integer $chosen_user_market_id
      * @property integer $market_id
+     * @property boolean $active
      * @property \Carbon\Carbon $created_at
      * @property \Carbon\Carbon $updated_at
      */
@@ -121,24 +122,40 @@ class UserMarketRequest extends Model
     }
 
     /**
-    * Return relation based of _id_foreign index
+    * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradables()
+    public function scopeActive($query)
     {
-        return $this->hasMany('App\Models\MarketRequest\UserMarketRequestTradable','user_market_request_id');
+        // staging/demo is scoping to daily records to prevent clutter
+        $scope_to_daily = false;
+
+        return $query->where('active', true)
+            ->when($scope_to_daily, function($q) {
+                $q->where('created_at', '>', now()->startOfDay());
+            });
     }
 
     /**
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeActiveForToday($query)
+    public function scopePreviousDayTraded($query)
     {
-        return $query->where(function($q) {
-            $q->where('created_at', '>', now()->startOfDay());
-            
-        });
+        return $query->whereHas('chosenUserMarket', function($q) {
+                $q->traded();
+            });
+    }
+
+    /**
+    * Scope for active markets today
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopePreviousDayUntraded($query)
+    {
+        return $query->whereDoesntHave('chosenUserMarket', function($q) {
+                $q->traded();
+            })->orWhereDoesntHave('chosenUserMarket');// include quote phases
     }
 
     /**
@@ -173,6 +190,15 @@ class UserMarketRequest extends Model
         }, false);
     }
 
+    public function marketDefaultQuantity($tradable) {
+        if($this->tradeStructureSlug == 'var_swap') {
+            $default = config('marketmartial.thresholds.var_swap_quantity');
+        } else {
+            $default = $tradable->isStock() ? config('marketmartial.thresholds.stock_quantity') : config('marketmartial.thresholds.index_quantity.'.$tradable->market_id);
+        }
+
+        return empty($default) ? config('marketmartial.thresholds.quantity') : $default;
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -252,6 +278,15 @@ class UserMarketRequest extends Model
     */
     public function preFormatted()
     {
+        // if the market request has been deactivated, we preformat as removed
+        if($this->active == false) {
+            return [
+                "id"        =>  $this->id,
+                "market_id" =>  $this->market_id,
+                "inactive"  =>  true,
+            ];
+        }
+
         $current_org_id =  $this->resolveOrganisationId();
 
         $interest_org_id = $this->user->organisation_id;
@@ -260,6 +295,8 @@ class UserMarketRequest extends Model
         $data = [
             "id"                => $this->id,
             "market_id"         => $this->market_id,
+            "chosen_user_market"=> null,
+            "quotes"            => [],
             'is_interest'       => $is_interest,
             "is_market_maker"   => false,
             "trade_structure"   => $this->tradeStructure->title,
@@ -281,6 +318,96 @@ class UserMarketRequest extends Model
             }),
             "ratio"             => $this->ratio,
             "attributes"        => $this->resolveRequestAttributes(),
+            "created_at"        => $this->created_at->format("Y-m-d H:i:s"),
+            "updated_at"        => $this->updated_at->format("Y-m-d H:i:s"),
+        ];
+
+        $default_tradable =$this->userMarketRequestGroups->first(function ($value, $key) {
+            return $value->is_selected == false;
+        })->tradable; 
+        $data["default_quantity"] = $this->marketDefaultQuantity($default_tradable);
+
+        $showLevels = $this->isAcceptedState($current_org_id);
+
+        if($showLevels)
+        {
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedMarket();
+            //market has been chosen and this user is considerd the market maker
+            $market_maker_org_id = $this->chosenUserMarket->organisation->id;
+            $data['is_market_maker'] = $market_maker_org_id == $current_org_id;
+
+        }else
+        {
+            $data["quotes"] = $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
+                $query->where(function($query) use ($current_org_id) {
+                    // Only publicly visible
+                    $query->whereHas('currentMarketNegotiation', function($q) {
+                        $q->where('is_private', false);
+                    });
+                    // Or this org is the interest
+                    $query->orWhereHas('user',function($q) use ($current_org_id) {
+                        $q->where('organisation_id',$current_org_id);
+                    });
+                });
+            })->get()->map(function($item) {
+                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
+            });
+        }
+
+        return $data;
+    }
+
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
+    
+    /**
+    * Return pre formatted request for previous day frontend
+    * @return \App\Models\MarketRequest\UserMarketRequest
+    */
+    public function preFormattedPreviousDay($traded = true)
+    {
+        $current_org_id =  $this->resolveOrganisationId();
+
+        $interest_org_id = $this->user->organisation_id;
+        $is_interest = $interest_org_id == $current_org_id && $current_org_id != null;
+
+        // set the attributes
+        $attributes = $this->resolveRequestAttributes();
+        // $attributes['state'] = (
+        //     $traded
+        //     ? config('marketmartial.market_request_states.trade-negotiation-pending.interest')
+        //     : config('marketmartial.market_request_states.negotiation-open.interest')
+        // ); // set to traded or not
+        $attributes['action_needed'] = false; // never acton needed
+
+        $data = [
+            "id"                => $this->id,
+            "market_id"         => $this->market_id,
+            "chosen_user_market"=> null,
+            "quotes"            => [],
+            'is_interest'       => $is_interest,
+            "is_market_maker"   => false,
+            "trade_structure"   => $this->tradeStructure->title,
+            "trade_items"       => $this->userMarketRequestGroups
+             ->keyBy('tradeStructureGroup.title')
+             ->map(function($group) {
+                $data = $group->userMarketRequestItems->keyBy('title')->map(function($item) {
+                    if($item->type == 'expiration date') {
+                        return (new \Carbon\Carbon($item->value))->format("My");
+                    }
+                    return $item->value;
+                });
+                $data['id'] = $group->id;
+                $data['choice'] = $group->is_selected;
+                if($group->tradable) {
+                    $data['tradable'] = $group->tradable->preFormatted();
+                }
+                return $data;
+            }),
+            "ratio"             => $this->ratio,
+            "attributes"        => $attributes,
             "created_at"         => $this->created_at->format("Y-m-d H:i:s"),
             "updated_at"         => $this->updated_at->format("Y-m-d H:i:s"),
         ];
@@ -289,28 +416,27 @@ class UserMarketRequest extends Model
 
         if($showLevels)
         {
-            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedMarket();
-            $data["quotes"]  = [];
+            $data["chosen_user_market"] = $this->chosenUserMarket->setOrgContext($this->resolveOrganisation())->preFormattedPreviousDay();
             //market has been chosen and this user is considerd the market maker
             $market_maker_org_id = $this->chosenUserMarket->organisation->id;
             $data['is_market_maker'] = $market_maker_org_id == $current_org_id;
 
         }else
         {
-            $data["quotes"]            =    $this->userMarkets()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
-                                                $query->where(function($query) use ($current_org_id) {
-                                                    // Only publicly visible
-                                                    $query->whereHas('currentMarketNegotiation', function($q) {
-                                                        $q->where('is_private', false);
-                                                    });
-                                                    // Or this org is the interest
-                                                    $query->orWhereHas('user',function($q) use ($current_org_id) {
-                                                        $q->where('organisation_id',$current_org_id);
-                                                    });
-                                                });
-                                            })->get()->map(function($item) {
-                                                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
-                                            });
+            $data["quotes"] = $this->userMarkets()->previousDay()->activeQuotes()->when(!$is_interest, function($query) use ($current_org_id) {
+                $query->where(function($query) use ($current_org_id) {
+                    // Only publicly visible
+                    $query->whereHas('currentMarketNegotiation', function($q) {
+                        $q->where('is_private', false);
+                    });
+                    // Or this org is the interest
+                    $query->orWhereHas('user',function($q) use ($current_org_id) {
+                        $q->where('organisation_id',$current_org_id);
+                    });
+                });
+            })->get()->map(function($item) {
+                return $item->setOrgContext($this->resolveOrganisation())->preFormattedQuote(); 
+            });
         }
 
         return $data;
@@ -335,9 +461,15 @@ class UserMarketRequest extends Model
         
         foreach ($organisations  as $organisation) 
         {
+            \Log::info("Notifying Org ".$organisation->id);
             $stream = new Stream(new UserMarketRequested($this,$organisation));
             $stream->run();
-        }    
+        }
+
+        // always send to admin channel
+        \Log::info("Notifying Admin");
+        $stream = new Stream(new UserMarketRequested($this,"admin"));
+        $stream->run();
     }
 
     /*
@@ -424,21 +556,21 @@ class UserMarketRequest extends Model
                     return true;
                 }
 
+                //@TODO @alex market should be open if current is killled and 
+                if($lastNegotiation->isFok() && 
+                    $lastNegotiation->is_killed == true && 
+                    $lastNegotiation->cond_fok_spin == true && 
+                    $lastNegotiation->is_repeat == true &&
+                    $lastNegotiation->is_private == false
+                ) 
+                {
+                    return true;
+                }
 
                 // negotiation history exists
                 if(!is_null($lastNegotiation->marketNegotiationParent)) {
                     // open if the last one is killed but isnt a fill
 
-                    //@TODO @alex market should be open if current is killled and 
-                    if($lastNegotiation->isFok() && 
-                        $lastNegotiation->is_killed == true && 
-                        $lastNegotiation->cond_fok_spin == true && 
-                        $lastNegotiation->is_repeat == true &&
-                        $lastNegotiation->is_private == false
-                    ) 
-                    {
-                        return true;
-                    }
 
                     //if the last market has been traded open the whole market
                     if($lastNegotiation->isTraded())
@@ -460,6 +592,18 @@ class UserMarketRequest extends Model
                     }
 
 
+                    // @TODO: THis is pending discussion with MM around how to handle 'open' markets where private conditions are applied
+                    // if there is a private condition applied when the market is open, it should stay open
+                    // if(
+                    //     $lastNegotiation->isMeetInMiddle()
+                    // ) {
+                    //     if($lastNegotiation->marketNegotiationParent->marketNegotiationParent) {
+                    //         // parent and parents parent
+                    //         return $lastNegotiation->marketNegotiationParent->is_repeat 
+                    //             && $lastNegotiation->marketNegotiationParent->marketNegotiationParent->is_repeat
+                    //     }
+                    // }
+
                     //when spin and parent is spin
                     return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
@@ -478,7 +622,16 @@ class UserMarketRequest extends Model
                 // @TODO: this is breaking the initial levels being set.
                 return is_null($lastNegotiation->marketNegotiationParent);
             }
+            
+            // closed to self prevention
+            if(
+                ( $lastNegotiation->user && $lastNegotiation->counterUser ) 
+                && ( $lastNegotiation->user->organisation_id == $lastNegotiation->counterUser->organisation_id )
+            ) {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -558,12 +711,18 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        elseif($marketOpen && $is_trade_at_best)
+        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded)
         {
             return 'trade-negotiation-open';
         }
         elseif(!$marketOpen && $is_trading && !$lastTraded)
         {
+            return 'trade-negotiation-pending';
+        }
+        // @TODO - state when new trade happens on a market that has already traded 
+        elseif($marketOpen && $is_trading && !$lastTraded) // Checks to check if new trade is happening
+        {
+            // @TODO - figure out what state if not a new one is required.
             return 'trade-negotiation-pending';
         }
         // negotiation
@@ -575,7 +734,7 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-pending';
         }
-        elseif($acceptedState && $marketOpen && !$is_trade_at_best && !$is_trading )
+        elseif($acceptedState && $marketOpen && !$is_trading )
         {
             return 'negotiation-open';
         }
@@ -609,7 +768,7 @@ class UserMarketRequest extends Model
 
 
 
-        if($this->chosenUserMarket != null)
+        if($this->chosenUserMarket != null && $this->chosenUserMarket->lastNegotiation)
         {
             $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
             $marketNegotiationRoles = ["other"];
@@ -683,7 +842,7 @@ class UserMarketRequest extends Model
         $interest_org_id = $this->user->organisation->id;
         $market_maker_org_id = !is_null($this->chosenUserMarket) ? $this->chosenUserMarket->organisation->id : null;
         $state = $this->getStatus($current_org_id,$interest_org_id);
-        
+        \Log::info("STATE: ".$state);
 
         $marketRequestRoles = $this->getCurrentUserRoleInRequest($current_org_id, $interest_org_id,$market_maker_org_id);        
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
@@ -817,26 +976,31 @@ class UserMarketRequest extends Model
      *
      * @return Mixed
      */
-    public function getDynamicItems($attr)
+    public function getDynamicItems($attr, $return_objects = false)
     {
-       $query = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
-                $q->whereHas('userMarketRequest',function($qq){
-                    $qq->where('id',$this->id);
-                });
+        $query = UserMarketRequestItem::whereHas('userMarketRequestGroups', function ($q) {
+            $q->whereHas('userMarketRequest',function($qq){
+                $qq->where('id',$this->id);
             });
-
-       if(!is_array($attr))
-       {
-           $query = $query->where('title',$attr);
-       }else
-       {
-            $query = $query->whereIn('title',$attr); 
-       }
-        return $query->get()
-        ->map(function($item){
-            return $item->value;
         });
-        
+
+        if(!is_array($attr))
+        {
+            $query = $query->where('title',$attr);
+        }else
+        {
+            $query = $query->whereIn('title',$attr); 
+        }
+
+        // return objects
+        if($return_objects == true) {
+            return $query->get();
+        }
+
+        return $query->get()
+        ->map(function($item) {
+            return $item->value;
+        });   
     }
 
     /**
@@ -856,7 +1020,123 @@ class UserMarketRequest extends Model
      * @return String
      */
     public function getSummary() {
-        return $this->tradeStructure->title;
+        // risky:       [underlying] [exp date][RISKY] [strike1ch / strike2ch]
+        // calendar:    [underlying] [exp date1]vs[exp date] [CALENDAR][strike1ch / strike2ch]
+        // fly:         [underlying] [exp date][FLY] [strike1ch / strike2 / strike3ch]
+        // outright:    [underlying] [exp date][structure][strike]
+        switch($this->trade_structure_slug) {
+            case 'risky':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "RISKY",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'calendar':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "CALENDAR",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'fly':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "FLY",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[2]->getDynamicItem($strike).($groups[2]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'option_switch':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "OPTION SWITCH",
+                    $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
+                    "/",
+                    $groups[1]->getDynamicItem($strike).($groups[1]->is_selected ? 'ch' : ''),
+                ]);
+            break;
+            case 'efp_switch':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                $groups = $this->userMarketRequestGroups;
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
+                    "EFP SWITCH",
+                ]);
+            break;
+            case 'efp':
+                $exp_date = "Expiration Date";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    "EFP"
+                ]);
+            break;
+            case 'rolls':
+                $exp_date_1 = "Expiration Date 1";
+                $exp_date_2 = "Expiration Date 2";
+                $strike = "Strike";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date_1))->format("My"),
+                    "vs",
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date_2))->format("My"),
+                    strtoupper($this->tradeStructure->title)
+                ]);
+            break;
+            case 'outright':
+                $exp_date = "Expiration Date";
+                $strike = "Strike";
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    strtoupper($this->tradeStructure->title),
+                    $this->getDynamicItem($strike)
+                ]);
+            break;
+            case 'var_swap':
+                $exp_date = "Expiration Date";
+                $cap = 'Cap';
+                $capVal = $this->getDynamicItem($cap);
+                return implode(" ", [
+                    $this->market->title,
+                    \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
+                    strtoupper($this->tradeStructure->title),
+                    ( $capVal == 0 ? "(Uncapped)" : "(".$capVal."x Cap)" )
+                ]);
+            break;
+        }
     }
 
     /**
@@ -882,16 +1162,20 @@ class UserMarketRequest extends Model
                 return 'option_switch';
             break;
             case 6:
-                return 'efp_switch';
-            break;
-            case 7:
                 return 'efp';
             break;
-            case 8:
+            case 7:
                 return 'rolls';
+            break;
+            case 8:
+                return 'efp_switch';
+            break;
+            case 9:
+                return 'var_swap';
             break;
         };
     }
+
     /**
      * Notify subscribed users and removes subscription,
      *
@@ -919,6 +1203,32 @@ class UserMarketRequest extends Model
                 Log::error($e);
             }
         }
+    }
+
+    /**
+     * get the messages for logging of activity
+     *
+     * @param string $context
+     * @return array<string>
+     */
+    public function getLogMessages($context = "changed", $userString)
+    {
+        if($context == "created") {
+            return [
+                $userString." created ".$this->getHumanizedLabel()." ".$this->market->title." ".$this->tradeStructure->title
+            ];
+        }
+        return false;
+    }
+
+    /**
+     * get the human readable representation for this model
+     *
+     * @return string
+     */
+    public function getHumanizedLabel()
+    {
+        return "Market Request";
     }
 
 }

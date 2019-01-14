@@ -156,9 +156,14 @@ class Rebate extends Model
         return $data;
     }
 
-    public  function scopeNoTrade()
+    public  function scopeNoTrade($q)
     {
-        return Rebate::doesntHave('bookedTrade');
+        return $q->doesntHave('bookedTrade');
+    }
+
+    public function scopeCurrentMonth($q)
+    {
+        return $q->whereMonth('trade_date', Carbon::now()->month);
     }
 
     public static function notifyOrganisationUpdate($organisation)

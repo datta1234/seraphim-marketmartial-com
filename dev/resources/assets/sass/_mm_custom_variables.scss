@@ -43,6 +43,8 @@ $mm-font-body-alt: 	Arial;
 /* 
 * Trade View Variables
 */
+$mm-font-size: 0.7rem;
+
 $mm-market-important:	#1D3641;
 $mm-modal-header:		#1c7c74;
 $mm-text-white:			#FFFFFF;
@@ -65,6 +67,8 @@ $mm-footer-bg:			#303030;
 $mm-toggle-bg:			#1c7d74;
 
 $mm-chat-block:			#B1B1B1;
+$mm-chat-timeblock:     #ced6d7;
+$mm-chat-timeblock-text:#555555;
 $mm-chat-text:			#1D3641;
 $mm-chat-block-own:		#9fe29f;
 $mm-chat-own-text:		#1D3641;

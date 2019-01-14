@@ -139,7 +139,6 @@
                         this.saveMarketRequest();
                     default:
                 }
-                console.log("Current Data: ", this.index_data);
             },
             /**
              * Loads Index MarketType 
@@ -297,17 +296,27 @@
                     trade_structure_groups:[]
                 }
                 this.index_data.market_object.details.fields.forEach( (element,index) => {
-                    formatted_data.trade_structure_groups.push({
+                    let group_data = {
                         is_selected: element.is_selected,
                         market_id: this.index_data.market_object.market.id,
                         fields: {
                             "Expiration Date": this.castToMoment( (formatted_data.trade_structure == 'Calendar') ? 
                                 this.index_data.market_object.expiry_dates[index]
-                                : this.index_data.market_object.expiry_dates[0] ),
-                            Strike: element.strike,
-                            Quantity: element.quantity
+                                : this.index_data.market_object.expiry_dates[0] ),                            
+                            Quantity: element.quantity,
                         }
-                    });
+                    };
+
+                    if(this.index_data.market_object.trade_structure == 'Var Swap') {
+                        group_data.fields["Cap"] = (element.is_capped) ? element.cap : 0;
+                    } else {
+                        group_data.fields["Strike"] = element.strike;
+                        if(element.has_future) {
+                            group_data.fields["Future"] = element.future;
+                        }
+                    }
+
+                    formatted_data.trade_structure_groups.push(group_data);
                 });
                 return formatted_data;
             },

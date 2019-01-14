@@ -1,102 +1,125 @@
 <template>
     <b-row dusk="ibar-trade-request" v-bind:id="dynamicId">
-    <b-col cols="10" >
+        <b-col cols="10" v-if="$root.is_admin">
+            <b-row no-gutters>
+                <b-col cols="6" class="text-center admin-label" :class="getStateClass('bid')" v-b-popover.hover.top="marketNegotiation.bid_user">
+                    {{ marketNegotiation.bid_org }}
+                </b-col>
+                <b-col cols="6" class="text-center admin-label" :class="getStateClass('offer')" v-b-popover.hover.top="marketNegotiation.offer_user">
+                    {{ marketNegotiation.offer_org }}
+                </b-col>
+            </b-row>
+        </b-col>
+        <b-col cols="2" v-if="$root.is_admin && isCurrent">
+            <p class="text-center mb-0">
+                <small>
+                    <a href="" @click.stop.prevent="pullNegotiation()" style="color: red;font-weight: bold;">PULL</a>
+                </small>
+            </p>
+        </b-col>
+        <b-col cols="10" >
+            
+            <b-row>
+                <b-col cols="3" class="text-center">
+                    {{ marketNegotiation.bid_qty ? marketNegotiation.bid_qty : "-"  }}
+                </b-col>
 
-        <b-row>
-            <b-col cols="3" class="text-center">
-                {{ marketNegotiation.bid_qty ? marketNegotiation.bid_qty : "-"  }}
-            </b-col>
+                <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
-            <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
+                    <span v-if="selectable && marketNegotiation.bid && bid_selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
+                        {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                    </span>
+                    <span v-else>
+                        {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                    </span>
 
-                <span v-if="selectable && marketNegotiation.bid" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
-                    {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
-                </span>
-                <span v-else>
-                    {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
-                </span>
+                </b-col>
 
-            </b-col>
+                <b-col cols="3" class="text-center" :class="getStateClass('offer')">
+                    <span v-if="selectable && marketNegotiation.offer && offer_selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
+                        {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                    </span>
+                    <span v-else>
+                        {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                    </span>
+                </b-col>
 
-            <b-col cols="3" class="text-center" :class="getStateClass('offer')">
-                <span v-if="selectable && marketNegotiation.offer" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
-                    {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
-                </span>
-                <span v-else>
-                    {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
-                </span>
-            </b-col>
+                <b-col cols="3" class="text-center">
+                    {{ marketNegotiation.offer_qty ? marketNegotiation.offer_qty : "-"  }}
+                </b-col>
+            </b-row>
+            <b-row> 
 
-            <b-col cols="3" class="text-center">
-                {{ marketNegotiation.offer_qty ? marketNegotiation.offer_qty : "-"  }}
-            </b-col>
-        </b-row>
-        <b-row> 
+                <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
 
-            <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "bid") }} </small></b-col>
-
-            <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "offer") }} </small></b-col>
+                <b-col class="condition text-center" cols="6"> <small>{{ getConditionState(marketNegotiation, "offer") }} </small></b-col>
 
 
-        </b-row>
-    </b-col>
-    <b-col cols="2">
-        <p class="text-center">
-            <small>{{ marketNegotiation.time }}</small>
-        </p>
-    </b-col>
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" :target="'popover-hit-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"  parent="last-negotiation"></ibar-trade-desired-quantity>
+            </b-row>
+        </b-col>
+        <b-col cols="2">
+            <p class="text-center mb-0">
+                <small>{{ marketNegotiation.time }}</small>
+            </p>
+        </b-col>
+        <ibar-trade-desired-quantity v-if="selectable" ref="popoverHit" :target="'popover-hit-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="hitOpen" :is-offer="false" @close="cancelOption(false)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" :target="'popover-lift-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
+        <ibar-trade-desired-quantity v-if="selectable" ref="popoverLift" :target="'popover-lift-'+marketNegotiation.id" :market-negotiation="marketNegotiation" :open="liftOpen" :is-offer="true" @close="cancelOption(true)"  parent="last-negotiation"></ibar-trade-desired-quantity>
 
-    <b-col cols="12">
+        <b-col cols="10">
 
-        <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
+            <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
-                    <template v-if="tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me">
-                        <template v-if="index == 0">
-                            {{ tradeNegotiation.getTradingText() }}
-                        </template>
+                    <template v-if="(tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me) 
+                                    && index == (marketNegotiation.trade_negotiations.length - 1)">
+                        <div v-if="tradeNegotiation.getTradingText() !== null">
+                            {{ tradeNegotiation.getTradingText() }} 
+                        </div>
                         <ul class="text-my-org">
                             <li>{{ tradeNegotiation.getSizeText()+" "+tradeNegotiation.quantity }}</li>
                         </ul>
                     </template>
-                    <div v-else class="text-my-org text-center">
-                        {{ tradeNegotiation.getTradingText() }}
+                    <div v-else-if="tradeNegotiation.getTradingText() !== null" class="text-my-org text-center">
+                        <div v-if="tradeNegotiation.getTradingText() !== null">
+                            {{ tradeNegotiation.getTradingText() }} 
+                        </div>
                     </div>
                 </div>
-        </template>
-        <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
-                {{ lastTradeNegotiation.getTradingText() }}
-        </div>
-    </b-col> 
-    
-    <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
-        <b-row dusk="ibar-trade-request-open">
-            <b-col cols="10">
-                <b-row>
-                    <b-col cols="3" class="text-center">
-                        -
-                    </b-col>
-                    <b-col  cols="3" class="text-center">
-                        -
-                    </b-col>
-                    <b-col cols="3" class="text-center">
-                        -
-                    </b-col>
-                    <b-col cols="3" class="text-center">
-                        -
-                    </b-col>
-                </b-row>
-            </b-col>
-            <b-col cols="2">
-                <p class="text-center">
-                    <small></small>
-                </p>
-            </b-col>
-        </b-row>
-    </b-col>
-</b-row>
+            </template>
+            <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
+                <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
+                    {{ tradeNegotiation.getTradingText() }}
+                </div>
+            </div>
+        </b-col>
+        <b-col cols="2"></b-col>
+        
+        <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
+            <b-row dusk="ibar-trade-request-open">
+                <b-col cols="10">
+                    <b-row>
+                        <b-col cols="3" class="text-center">
+                            -
+                        </b-col>
+                        <b-col  cols="3" class="text-center">
+                            -
+                        </b-col>
+                        <b-col cols="3" class="text-center">
+                            -
+                        </b-col>
+                        <b-col cols="3" class="text-center">
+                            -
+                        </b-col>
+                    </b-row>
+                </b-col>
+                <b-col cols="2">
+                    <p class="text-center">
+                        <small></small>
+                    </p>
+                </b-col>
+            </b-row>
+        </b-col>
+    </b-row>
 </template>
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
@@ -114,12 +137,12 @@
             isCurrent: Boolean
         },
         data() {
-           return {
-               conditionAttr:[],
-               dialogText: '',
-               liftOpen: false,
-               hitOpen: false,
-           };
+            return {
+                conditionAttr:[],
+                dialogText: '',
+                liftOpen: false,
+                hitOpen: false
+            };
        },
        watch: {
 
@@ -141,7 +164,19 @@
         canOffer: function(){
             let source = this.marketNegotiation.getAmountSource("offer");
             return !source.is_my_org;
-        }
+        },
+        bid_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === false) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;   
+        },
+        offer_selectable: function() {
+            if(this.marketNegotiation.cond_buy_best === true) {
+                return this.marketNegotiation._user_market.trading_at_best.is_my_org;
+            }
+            return true;
+        },
     },
     watch: {
         'marketNegotiation': function() {
@@ -150,6 +185,12 @@
         }
     },
     methods: {
+        pullNegotiation() {
+            let do_pull = confirm("WARNING!\n\nAre you sure you wish to pull these levels?");
+            if(do_pull) {
+                this.marketNegotiation.killNegotiation();
+            }
+        },
         selectOption(isOffer)
         {
 

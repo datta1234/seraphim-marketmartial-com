@@ -31,12 +31,13 @@
             position: relative;
 
             top: $main-nav-header-height;
-            bottom: $trade-footer-height;
+            bottom: 0px;
 
             // background: red;
             
             .ibar-negotiation-content {
                 padding-right: 25px;
+                padding-bottom: $trade-footer-height * 3;
             }
         }
         &.active {
@@ -68,6 +69,15 @@
         .btn-primary {
             background-color: $ibar-btn-background-primary;
             color: $ibar-btn-color-primary;
+
+            &.active {
+                color: $ibar-btn-color-primary;
+                background-color: $ibar-btn-background-secondary;
+            }
+
+            &.focus {
+                box-shadow: none;
+            }
         }
         .btn-secondary {
             background-color: $ibar-btn-background-secondary;
@@ -89,9 +99,16 @@
         .active-cond-bar {
             margin-bottom: 10px;
             font-size: 0.9em;
-            .cond-bar {
-                padding: 10px 10px;
+
+            .cond-bar-alert {
                 background: $mm-red;
+                padding: 10px 10px;
+            }
+
+            .cond-bar-sent {
+                background: $mm-yellow;
+                color: $mm-black;
+                padding: 10px 10px;   
             }
 
         }
@@ -101,6 +118,10 @@
             .info-col {
                 font-size: .8em;
             }
+        }
+
+        .trade-at-best-deisred-qty {
+            background-color: $mm-main-header-alt;
         }
 
     }
@@ -193,6 +214,10 @@
             border-color: #8e8e8e;
         }
     }
+
+    .ibar-message {
+        font-size: 0.8rem;
+    }
 }
 
 .text-my-org{
@@ -201,7 +226,8 @@
 
 .condition
 {
-  color: $mm-yellow;  
+  // color: $mm-yellow;  // MM-836
+  color: $mm-text-white;
 }
 
 .condition-toggle {

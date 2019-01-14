@@ -2,16 +2,16 @@
     <div dusk="action-bar" class="action-bar">
         <div class="row mt-2 menu-actions">
             <div class="col-9">
-                <request-market-menu></request-market-menu>
-                <important-menu :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
+                <request-market-menu v-if="!$root.is_admin && !$root.is_viewer"></request-market-menu>
+                <important-menu v-if="market_notifications.important.length >0" :notifications="market_notifications.important" :markets="markets" :no_cares="no_cares"></important-menu>
                 <alerts-menu :notifications="market_notifications.alert" :markets="markets" v-if="market_notifications.alert.length >0"></alerts-menu>
                 
-                <confirmations-menu :trade_confirmations="trade_confirmations" v-if="trade_confirmations.length >0"></confirmations-menu>
+                <confirmations-menu :trade_confirmations="trade_confirmations" v-if="trade_confirmations.length >0 && !$root.is_viewer"></confirmations-menu>
             </div>
             <div class="col-3">
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
-                    <button id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened">
+                    <button id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened && !$root.is_admin">
                         <span class="badge badge-danger message-alert-count" v-if="$root.message_count > 0">{{ $root.message_count }}</span>
                         <span class="icon icon-chat"></span> Chat
                     </button>

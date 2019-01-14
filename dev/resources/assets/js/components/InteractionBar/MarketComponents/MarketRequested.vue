@@ -1,5 +1,5 @@
 <template>
-    <b-row dusk="ibar-market-requested" class="market-requested-info">
+    <b-row dusk="ibar-market-requested" class="ibar-market-requested">
         <b-col>
             <b-row align-v="end">
                 <b-col cols="10">

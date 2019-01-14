@@ -30,6 +30,9 @@ class UserMarketPolicy
      */
     public function update(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         return $user->orgnisation_id === $userMarket->user->orgnisation_id;
     }
 
@@ -42,6 +45,9 @@ class UserMarketPolicy
      */
     public function placeOnHold(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
     }
 
@@ -55,12 +61,18 @@ class UserMarketPolicy
      */
     public function accept(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
     }
 
 
     public function updateNegotiation(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         return $userMarket->marketNegotiations()->where(function($query) use ($user)
         {
             $query->whereHas('user',function($query) use ($user){
@@ -79,12 +91,21 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
+        if(\Auth::user()->isAdmin()) {
+            return true;
+        }
         return $user->organisation_id === $userMarket->user->organisation_id 
             && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
     }
 
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         $current_org_id = $user->organisation_id;
 
         // Cant Negotiate With Self
@@ -113,8 +134,19 @@ class UserMarketPolicy
 
     public function spinNegotiation(User $user, UserMarket $userMarket)
     {
+        if($user->isViewer()) { 
+            return false; 
+        }
         $current_org_id = $user->organisation_id;
         return $userMarket->userMarketRequest->isAcceptedState($current_org_id);
+    }
+
+    public function workTheBalance(User $user, UserMarket $userMarket)
+    {
+        if($user->isViewer()) { 
+            return false; 
+        }
+        return $user->isTrader();
     }
     
 }

@@ -65,8 +65,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     @if(Auth::user()->organisation)
-    <!-- Organisation key -->
-    <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+        <!-- Organisation key -->
+        <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">
+        <meta name="viewer-type" content="{{ Auth::user()->isViewer() }}">
+    @elseif(Auth::user()->isAdmin())
+        <!-- Admin key -->
+        <meta name="organisation-uuid" content="admin">
     @endif
 
     <title>Market Martial</title>
@@ -89,10 +93,8 @@
             @yield('content')
         </div>
     
-    @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ])
-    
      <!-- JavaScripts -->
     <script src="{{ mix('js/trade-screen.js') }}"></script>
     <script type="text/javascript">function doABarrelRoll(){var a="-webkit-",b='transform:rotate(1turn);',c='transition:4s;';document.head.innerHTML+='<style id="doABarrelRoll">body{'+a+b+a+c+b+c+'}</style>';setTimeout(function(){var element = document.getElementById('doABarrelRoll');element.parentNode.removeChild(element);}, 4000);}</script>
-</body>
+    </body>
 </html>

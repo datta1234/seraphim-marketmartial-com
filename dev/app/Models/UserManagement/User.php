@@ -283,6 +283,15 @@ class User extends Authenticatable
     }
 
     /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function sessions()
+    {
+        return $this->hasMany('App\Models\UserManagement\Session', 'user_id');
+    }
+
+    /**
     * Return total rebate amount of user on monthly basis
     * @return int sum
     */
@@ -308,8 +317,7 @@ class User extends Authenticatable
     public function setRequiredProfileStep()
     {
         // Profile Check
-        if(!isset($this->work_phone)) {
-            //'work_phone' => 'required'
+        if(!\Cache::has('user_profile_complete_'.$this->id)) {
             return 'user.edit';
         }
         
@@ -319,11 +327,8 @@ class User extends Authenticatable
         }
         
         $has_defaults = true;
-        $default_label_ids = \App\Models\UserManagement\DefaultLabel::pluck('id');
-        //Loop through default_labels and check if account has emails with those id's
-        foreach ($default_label_ids as $key => $default_label_id) {
-            $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id);
-        }
+        $default_label_id = \App\Models\UserManagement\DefaultLabel::where('title', config('marketmartial.default_email_labels.0'))->pluck('id');
+        $has_defaults = $has_defaults && $this->emails->contains('default_id',$default_label_id[0]);
         // Emails Check
         if(!$has_defaults) {
             return 'email.edit';
@@ -335,12 +340,7 @@ class User extends Authenticatable
         }
 
         //Interests Check
-        if(!isset($this->birthdate) && !isset($this->is_married) 
-            && !isset($this->has_children) && !isset($this->hobbies)) {
-            /*'birthdate'   => 'required',
-            'is_married'    => 'required',
-            'has_children'  => 'required',
-            'hobbies'       => 'required',*/
+        if(!\Cache::has('user_interests_complete_'.$this->id)) {
             return 'interest.edit';
         }
 
@@ -448,6 +448,26 @@ class User extends Authenticatable
     }
 
     /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isTrader()
+    {
+        return $this->role_id == 2;
+    }
+
+    /**
+     * Determines if a user is an admin
+     *
+     * @return bool
+     */
+    public function isViewer()
+    {
+        return $this->role_id == 3;
+    }    
+
+    /**
      * Ecrypt the user's google_2fa secret.
      *
      * @param  string  $value
@@ -469,5 +489,5 @@ class User extends Authenticatable
         if ($value === NULL) 
             return NULL;
         return decrypt($value);
-    }    
+    }
 }

@@ -75,37 +75,175 @@ class UserMarket extends Model
     */
     public function marketNegotiations()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"ASC");
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('updated_at',"ASC");
     }
 
     public function scopeActiveQuotes($query, $active = true)
     {
         $query->where(function($q) use ($active) {
+            // quote phase
+            $q->whereHas('userMarketRequest', function($qq) use ($active) {
+                $qq->whereNull('chosen_user_market_id');
+            });
+            // not killed
             $q->whereHas('firstNegotiation', function($qq) use ($active) {
                 $qq->where('is_killed', '=', !$active);
+            });
+            
+            // scoping by day -> current day or yesterday
+            $q->when(!config('loading_previous_day', false), function($qq) {
+                $qq->currentDay();
+            });
+            $q->when(config('loading_previous_day', false), function($qq) {
+                $qq->previousDay();
             });
         });
     }
 
-    public function marketNegotiationsDesc()
+    /**
+    *   Method to return if this quote is the best one that was available
+    *   @return Boolean
+    */
+    public function isBestQuote()
     {
-        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('updated_at',"DESC");
+        /*
+        * Handle VOL Spread - only when there DOESN'T exist a better(lower) VOL Spread
+        */
+        if($this->firstNegotiation->offer != null && $this->firstNegotiation->bid != null) {
+            $vol = ($this->firstNegotiation->offer-$this->firstNegotiation->bid);
+            $id = $this->id;
+            return $this->userMarketRequest()
+                ->whereHas('userMarkets', function($sub) use ($id, $vol) {
+                    $sub->where('id', '!=', $id);
+                    $sub->whereHas('marketNegotiations', function($q) use ($vol) {
+                        $q->whereRaw('(offer-bid) < ?', [$vol]);
+                    });
+                })
+                ->doesntExist();
+        }
+        /*
+        * Handle BID/OFFER ONLY - only when there DOESN'T exist a better(bid:higher|offer:lower) bid/offer
+        */
+        $attr = $this->firstNegotiation->bid != null ? 'bid' : 'offer'; // has to be one of them
+        $level = $this->firstNegotiation->{$attr};
+        $id = $this->id;
+        return $this->userMarketRequest()
+            ->whereHas('userMarkets', function($sub) use ($id, $attr, $level) {
+                $sub->where('id', '!=', $id);
+                $sub->whereHas('firstNegotiation', function($q) use ($attr, $level) {
+                    $symbol = ( $attr == 'bid' ? '>' : '<' );
+                    $inverse = ( $attr == 'bid' ? 'offer' : 'bid' );
+                    $q->where($attr, $symbol, $level);
+                    $q->whereNull($inverse);
+                });
+            })
+            ->doesntExist();
+    }
+    
+    /**
+    * Scope the query to the current day
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeCurrentDay($query) {
+        return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
     }
 
+    /**
+    * Scope the query to the previous day
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopePreviousDay($query) {
+        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
+    }
+
+    /**
+    * Scope the query to only the traded
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeTraded($query)
+    {
+        return $query->whereHas('marketNegotiations', function($q){
+            $q->whereHas('tradeNegotiations', function($qq){
+                $qq->where('traded',true);  
+            });
+        });
+    }
+
+    /**
+    * Scope the query to only the untraded
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopeUntraded($query)
+    {
+        return $query->whereDoesntHave('marketNegotiations', function($q){
+            $q->whereHas('tradeNegotiations', function($qq){
+                $qq->where('traded',true);
+            });
+        });
+    }
+
+    /**
+    * market negotiations ordered desc by updated_at field
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function marketNegotiationsDesc()
+    {
+        return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('updated_at',"DESC");
+    }
+
+    /**
+    * initial market negotiation
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function firstNegotiation()
     {
         return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"ASC")->orderBy('id',"ASC");
     }
 
+    /**
+    * current latest market negotiation
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function lastNegotiation()
     {
-        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')->orderBy('created_at',"DESC")->orderBy('id',"DESC");
+        return $this->hasOne('App\Models\Market\MarketNegotiation','user_market_id')
+            ->when(config('loading_previous_day', false), function($q) {
+                $q->previousDay();
+            })
+            ->orderBy('created_at',"DESC")
+            ->orderBy('id',"DESC");
     }
 
-    // conditions
+    /**
+    * negotiations with active conditions
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
     public function activeConditionNegotiations()
     {
         return $this->hasMany('App\Models\Market\MarketNegotiation','user_market_id')
+                    ->when(config('loading_previous_day', false), function($q) {
+                        $q->previousDay();
+                    })
                     ->conditions()
                     ->whereDoesntHave('marketNegotiationChildren')
                     ->whereDoesntHave('tradeNegotiations')
@@ -179,11 +317,21 @@ class UserMarket extends Model
         return $this->hasMany('App\Models\Market\UserMarketVolatility','user_market_id');
     }
 
+    /**
+    * test if this user_market is trading
+    *
+    * @return Boolean
+    */
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
         return ( $trade ? !$trade->traded : false );
     }
 
+    /**
+    * test if this user_market needs to have balance worked
+    *
+    * @return Boolean
+    */
     public function needsBalanceWorked()
     {
         $lastTrade = $this->tradeNegotiations()->latest()->first();
@@ -206,6 +354,11 @@ class UserMarket extends Model
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
     }
 
+    /**
+    * related organisation via user
+    *
+    * @return \App\Models\UserManagement\Organisation
+    */
     public function getOrganisationAttribute()
     {
        return $this->user->organisation;
@@ -218,7 +371,7 @@ class UserMarket extends Model
     public static function placeOldQuotesOnHold()
     {
         //get all the user market that have no chosen market on market request the last 20 min
-        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes'),20);
+        $date = Carbon::now()->subMinutes(config('marketmartial.auto_on_hold_minutes',20));
         $updatedMarketsId = self::where('created_at','<=',$date)
         ->where('is_on_hold',false)
         ->whereDoesntHave('marketNegotiations',function($q){
@@ -273,18 +426,20 @@ class UserMarket extends Model
         })->first();
         $this->update(['is_on_hold'=>false]);
 
-      return  $marketNegotiation->update(['is_repeat'=>true]);    
+        return  $marketNegotiation->update(['is_repeat'=>true]);    
     }
 
     /**
-    * Return Boolean
     * if the person presented q qoute and was placed on hold the can repaet market negotaui
-    * @params void
+    *
+    * @param $user \App\Models\UserManagement\User
+    * @param $data Array
+    *
+    * @return Boolean
     */
     public function updateQuote($user,$data)
     {
-        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user)
-        {
+        $marketNegotiation = $this->marketNegotiations()->where(function($query) use ($user) {
             $query->whereHas('user',function($query) use ($user){
                 $query->where('organisation_id', $user->organisation_id);
             });
@@ -305,7 +460,11 @@ class UserMarket extends Model
         return  $marketNegotiation->update($data);
     }
 
-
+    /**
+    * set the action on the market reuqest for organisation specified
+    *
+    * @param $organisation_id Integer
+    */
     private function setCounterOrgnisationAction($organisation_id)
     {
         $this->userMarketRequest->setAction(
@@ -333,9 +492,16 @@ class UserMarket extends Model
         $marketNegotiation = $oldNegotiation->replicate();
         $marketNegotiation->is_repeat = true;
 
-        // if its a repeat ATW just repeat it, dont repeat the condition
-        if($marketNegotiation->isRepeatATW()) {
-            $marketNegotiation->cond_is_repeat_atw = null;
+        /*
+        *   Replaced with removing all conditions
+            // if its a repeat ATW just repeat it, dont repeat the condition
+            if($marketNegotiation->isRepeatATW()) {
+                $marketNegotiation->cond_is_repeat_atw = null;
+            }
+        */
+        // if there are conditions applied, remove them
+        foreach($marketNegotiation->applicableConditions as $cond => $default) {
+            $marketNegotiation->{$cond} = $default;
         }
 
         $marketNegotiation->user_id = $user->id;
@@ -385,16 +551,27 @@ class UserMarket extends Model
                 $source = $counterNegotiation->marketNegotiationSource('offer');
                 $marketNegotiation->counter_user_id = $source->user_id;
                 
-                $marketNegotiation->offer = $source->offer;
-                $marketNegotiation->offer_qty =  $qty;
+                /* 
+                    Replaced below per [MM-828] - leaving other side open
+                */
+                // $marketNegotiation->offer = $source->offer;
+                // $marketNegotiation->offer_qty =  $qty;
+                $marketNegotiation->offer = null;
+                $marketNegotiation->offer_qty =  null;
 
             }
             elseif($marketNegotiation->offer != null) {
                 // improved offer
                 $source = $counterNegotiation->marketNegotiationSource('bid');
                 $marketNegotiation->counter_user_id = $source->user_id;
-                $marketNegotiation->bid = $source->bid;
-                $marketNegotiation->bid_qty =  $qty ;
+                
+                /* 
+                    Replaced below per [MM-828] - leaving other side open
+                */
+                // $marketNegotiation->bid = $source->bid;
+                // $marketNegotiation->bid_qty =  $qty;
+                $marketNegotiation->bid = null;
+                $marketNegotiation->bid_qty =  null;
             }
 
 
@@ -429,11 +606,17 @@ class UserMarket extends Model
         $marketNegotiation = new MarketNegotiation($data);
         $counterNegotiation = $this->findCounterNegotiation($user);
 
-
         $marketNegotiation->user_id = $user->id;
 
-        if($counterNegotiation->isTraded())
-        {
+        \Log::info("Want to Starting New Tree");
+        if(
+            // this is for when the counter waas traded, we start a new tree
+            ($counterNegotiation && $counterNegotiation->isTraded()) 
+            // handle exceptions to the case where the counter is not the one traded, 
+            // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
+            || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
+        ) {
+            \Log::info("Starting New Tree");
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
@@ -444,7 +627,6 @@ class UserMarket extends Model
         {
             $counterNegotiation = $counterNegotiation->getImprovedNegotiation($marketNegotiation); 
         }
-
 
         if($counterNegotiation)
         {
@@ -457,7 +639,7 @@ class UserMarket extends Model
             ) {
                 if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
                     // @TODO: well shit
-                    throw Exception("Can Only Improve One Side On SPIN");
+                    throw \Exception("Can Only Improve One Side On SPIN");
                 }
                 elseif ($marketNegotiation->bid != null) {
                     // improved bid
@@ -477,20 +659,23 @@ class UserMarket extends Model
             }
 
             // responding to RepeatATW will open to market automatically - no longer happens
-            if($counterNegotiation->isRepeatATW()) {
+            if($counterNegotiation->isRepeatATW() // parent is a RATW
+                && $counterNegotiation->marketNegotiationParent 
+                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+            ) {
+                // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;
             }
 
             // add missing values (prior data), however if traded keep them as null
-            
-                if($marketNegotiation->bid == null) {
-                    $marketNegotiation->bid = $counterNegotiation->bid;
-                    $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
-                }
-                if($marketNegotiation->offer == null) {
-                    $marketNegotiation->offer = $counterNegotiation->offer;
-                    $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
-                }  
+            if($marketNegotiation->bid == null) {
+                $marketNegotiation->bid = $counterNegotiation->bid;
+                $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+            }
+            if($marketNegotiation->offer == null) {
+                $marketNegotiation->offer = $counterNegotiation->offer;
+                $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+            }  
         }
         // @TODO, this fails when you send new negotiation after you already have, need to stop this?
         try {
@@ -525,19 +710,21 @@ class UserMarket extends Model
             $data['offer'] = $this->lastNegotiation->offer;
             $data['offer_qty'] = $this->lastNegotiation->offer_qty;
         }
-        return $marketNegotiation->update(
-            collect($data)->only([
-                "bid",
-                "offer",
-                "offer_qty",
-                "bid_qty",
-                
-                "bid_premium",
-                "offer_premium",
-                
-                "has_premium_calc",
-                "is_repeat",
-
+        $fields = [
+            "bid",
+            "offer",
+            "offer_qty",
+            "bid_qty",
+            
+            "bid_premium",
+            "offer_premium",
+            
+            "has_premium_calc",
+            // "is_repeat",
+        ];
+        // only let a condition be applied when one does not exist already
+        if(!$marketNegotiation->hasCondition()) {
+            $fields = array_merge($fields, [
                 "cond_is_repeat_atw",
                 "cond_fok_apply_bid",
                 "cond_fok_spin",
@@ -546,8 +733,15 @@ class UserMarket extends Model
                 "cond_is_subject",
                 "cond_buy_mid",
                 "cond_buy_best",
-            ])->toArray()
+            ]);
+        }
+        $ret = $marketNegotiation->update(
+            collect($data)->only($fields)->toArray()
         );
+        if($marketNegotiation->counterUser)
+        {
+             $this->setCounterOrgnisationAction($marketNegotiation->counterUser->organisation_id);
+        }
     }
 
 
@@ -571,9 +765,10 @@ class UserMarket extends Model
         * bid over → opens offer side
         * offered over → opens bid side
         */
-        $attr = $lastTradeNegotiation->is_offer ? 'bid' : 'offer';
+        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
         $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
-        $newMarketNegotiation->user_id = $sourceNegotiation->user_id;//user->id
+        // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
+        $newMarketNegotiation->user_id = $user->id;
 
         if($lastTradeNegotiation->is_offer)
         {   
@@ -611,7 +806,6 @@ class UserMarket extends Model
     }
 
     public function isCounter($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -619,12 +813,12 @@ class UserMarket extends Model
         if($negotiation->marketNegotiationParent == null) {
             return null;
         }
-        return $org == $negotiation->marketNegotiationParent->user->organisation_id;
+        // deprecated logic, need to look at who is on the bid/offer as counter - use only as backup
+        return $org == $negotiation->counterUser->organisation_id;
     }
 
 
     public function isSent($user = null, $negotiation = null) {
-        $negotiation = $negotiation == null ? $this->currentMarketNegotiation : $negotiation;
         $org = ($user == null ? $this->resolveOrganisationId() : $user->organisation_id);
         if($org == null) {
             return false;
@@ -683,7 +877,7 @@ class UserMarket extends Model
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
                                             if($active === null) {
-                                                $active = $this->isInterest();
+                                                $active = $this->isInterest(null);
                                             }
                                             return $active;
                                         })->map(function($cond) use ($uneditedmarketNegotiations) {
@@ -721,10 +915,105 @@ class UserMarket extends Model
         // if its trading at best
         $data['trading_at_best'] = (
             $this->isTradeAtBestOpen() ? 
-            $this->lastNegotiation->tradeAtBestSource()->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            $this->lastNegotiation->tradeAtBestSource()->setOrgContext($this->resolveOrganisation())->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
             null 
         );
 
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
+            $data['org'] = $this->user->organisation->title;
+        }
+
+        return $data;
+    }
+
+    /**
+    * Return pre formatted request for frontend
+    * @return \App\Models\Market\UserMarket
+    */
+    public function preFormattedPreviousDay()
+    {
+
+        $is_maker = $this->isMaker();
+        $is_interest = $this->isInterest();
+        $is_watched = $this->isWatched();
+        
+        $uneditedmarketNegotiations = $marketNegotiations = $this->marketNegotiations()
+            // ->previousDay() // should be needed because of config('loading_previous_day', false) checks
+            ->notPrivate($this->resolveOrganisationId())
+            ->with('user')
+            ->get();
+
+        // @TODO addd back excludeFoKs but filter to only killed ones
+        $creation_idx_map = [];
+
+
+        $data = [
+            "id"                    =>  $this->id,
+            "is_interest"           =>  $is_interest,
+            "is_maker"              =>  $is_maker,
+            "is_watched"            =>  $is_watched,
+            "time"                  =>  $this->created_at->format("H:i"),
+            "market_negotiations"   =>  $marketNegotiations->map(function($item) use ($uneditedmarketNegotiations, &$creation_idx_map){
+                                            $data = $item->setOrgContext($this->resolveOrganisation())
+                                                        ->preFormattedMarketNegotiation($uneditedmarketNegotiations); 
+                                            $org_id = $item->user->organisation_id;
+                                            if(!in_array($org_id, $creation_idx_map)) {
+                                                $creation_idx_map[] = $org_id;
+                                            }
+                                            $data['creation_idx'] = array_search($org_id, $creation_idx_map);
+                                            return $data;
+                                        }),
+            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isCounter(null, $cond);
+                                            if($active === null) {
+                                                $active = $this->isInterest(null);
+                                            }
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
+            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+                                            // only if counter
+                                            $active = $this->isSent(null, $cond);
+                                            return $active;
+                                        })->map(function($cond) use ($uneditedmarketNegotiations) {
+                                            return [
+                                                'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                                                'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                                                    return $item->setOrgContext($this->resolveOrganisation())
+                                                                ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                                                })->values(),
+                                                'type'      => $cond->activeConditionType
+                                            ];
+                                        })->values(),
+            "volatilities"          =>  $this->volatilities->map(function($vol){
+                                            return $vol->preFormatted();
+                                        }),
+        ];
+        $data['activity'] = [];
+        
+        // if its trading at best
+        $data['trading_at_best'] = (
+            $this->isTradeAtBestOpen() ? 
+            $this->lastNegotiation->tradeAtBestSource()->setOrgContext($this->resolveOrganisation())->preFormattedMarketNegotiation($uneditedmarketNegotiations) : 
+            null 
+        );
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
+            $data['org'] = $this->user->organisation->title;
+        }
 
         return $data;
     }
@@ -737,7 +1026,6 @@ class UserMarket extends Model
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
-
 
         $data = [
             "id"            => $this->id,
@@ -762,6 +1050,12 @@ class UserMarket extends Model
         }
         if($data['is_interest']) {
             $data['is_on_hold'] = $this->is_on_hold;
+        }
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
+            $data['org'] = $this->user->organisation->title;
         }
         return $data;
     }
@@ -794,6 +1088,11 @@ class UserMarket extends Model
             $data['offer']      = $this->currentMarketNegotiation->offer;
             $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
             $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
+        }
+
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['org'] = $this->user->organisation->title;
         }
         return $data;
     }

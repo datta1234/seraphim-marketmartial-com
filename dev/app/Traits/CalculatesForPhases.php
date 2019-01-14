@@ -7,21 +7,65 @@ trait CalcuatesForPhases {
 	
 	public function phaseTwo()
 	{
-       switch ($this->tradeStructure->title) {
+        // @TODO (NANI!) what do we do with var swap?
+        switch ($this->tradeStructure->title) {
            case 'Outright':
                 $this->outrightTwo();
+           break;
+           case 'Risky':
+                $this->riskyTwo();
+           break;
+           case 'Calendar':
+                $this->calendarTwo();
+           break;
+           case 'Fly':
+                $this->flyTwo();
+           break;
+           case 'Option Switch':
+                $this->optionSwitchTwo();
+           break;
+           case 'EFP':
+                $this->efpTwo();
+           break;
+           case 'Rolls':
+                $this->rollsTwo();
+           break;
+           case 'EFP Switch':
+                $this->efpSwitchTwo();
            break;
        }
 	}
 
-    public function feesCalc($isOffer,$gross_prem,$is_sender)
+    // Removed - seems redundant and over complicates as each structures fees require different variables
+    /*public function feesCalc($isOffer,$gross_prem,$is_sender,$tradables)
     {
         switch ($this->tradeStructure->title) {
            case 'Outright':
-                $this->outrightFees($isOffer,$gross_prem,$is_sender);
+                $this->outrightFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'Risky':
+                $this->riskyFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'Calendar':
+                $this->calendarFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'Fly':
+                $this->flyFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'Option Switch':
+                $this->optionSwitchFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'EFP':
+                $this->efpFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'Rolls':
+                $this->rollsFees($isOffer,$gross_prem,$is_sender,$tradables);
+           break;
+           case 'EFP Switch':
+                $this->efpSwitchFees($isOffer,$gross_prem,$is_sender,$tradables);
            break;
        }  
-    }
+    }*/
 
  	/*
     * formulas from the macros
@@ -66,15 +110,14 @@ trait CalcuatesForPhases {
         $h = $this->Ln($future/$strike) / ($volatility * pow($tt,0.5) ) + ($volatility * pow($tt,0.5) ) / 2;
         
         $putOptionPremium = -$future * $this->normSdist(-$h) + $strike * $this->normSdist($volatility * pow($tt,0.5) - $h);
-         
-         if($singleStock){
+
+         if(!$singleStock){
             return round($putOptionPremium*10);
 
         }else{
             return round($putOptionPremium*100,2);
         }   
     }
-
 
     // start excel calculations
 

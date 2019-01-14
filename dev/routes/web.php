@@ -29,10 +29,17 @@ Route::get('/ping', function() {
     return response("pong");
 });
 
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {
+    Route::group(['middleware' => ['verified']], function () {
+        Route::get('/previous-day', 'PreviousDayController@index')->name('previous_day');
+        Route::get('/previous-day/markets', 'PreviousDayController@showMarkets')->name('previous_day.markets');
+        Route::get('/previous-day/market-requests', 'PreviousDayController@showMarketRequests')->name('previous_day.market_requests');
+    });
+});
+
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
 
 	Route::group(['middleware' => ['verified']], function () {
-		Route::get('/trade', 'TradeScreenController@index')->name('trade');
 
 		Route::resource('user-pref', 'UserPrefController');
 
@@ -47,6 +54,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 			Route::get('/market-activity/safex', 'Stats\ActivityControlller@safexRollingData')->name('activity.safex');
 			
 			Route::get('/open-interest', 'Stats\OpenInterestControlller@show')->name('open_interest.show');
+			//Route::get('/open-interest/table', 'Stats\OpenInterestControlller@openInterestTableData')->name('open_interest.table');
 		});
 
 		Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
@@ -80,7 +88,12 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
+
+    Route::get('/', 'TradeScreenController@index')->name('trade');
+
+    Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
+    Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
 
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
@@ -93,10 +106,9 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
     Route::get('stock', 'TradeScreen\StockController@index');
-
-    Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     
-    Route::post('user-market-request/{user_market_request}/user-market/{user_market}/no-further-cares', 'TradeScreen\MarketRequest\UserMarketController@noFurtherCares');
+    Route::post('trade-negotiation/{trade_negotiation}/no-further-cares',
+		'TradeScreen\MarketNegotiation\TradeNegotiationController@noFurtherCares');
 
     Route::post(
     	'user-market-request/{user_market_request}/user-market/{user_market}/work-the-balance', 
@@ -143,6 +155,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		'as' => 'admin'
 	]);
 
+	Route::get('logging/download', 'Admin\ActivityLogController@download')->name('admin.logging.download');
+    Route::get('logging', 'Admin\ActivityLogController@index')->name('admin.logging.index');
+
 	Route::post('/user/profile/{user}','Admin\UserController@updateProfile')
 		->name('admin.user.profile.update');
 
@@ -183,6 +198,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	Route::get('/rebates-summary', 'Admin\RebatesController@summaryIndex')->name('admin.rebate_summary.index');
 
 	Route::get('organisation', 'Admin\OrganisationController@index');
+	Route::get('organisation/{organisation}/users', 'Admin\OrganisationController@users');
 
 	Route::get('markets', 'Admin\MarketController@index')->name('admin.markets.index');
 	Route::put('markets','Admin\MarketController@update')->name('admin.markets.update');

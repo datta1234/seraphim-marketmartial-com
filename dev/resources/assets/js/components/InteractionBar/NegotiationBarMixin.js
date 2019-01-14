@@ -14,21 +14,65 @@ export default {
     watch: {
             'marketRequest': {
                 handler: function(newVal, oldVal) {
-                    
                     if(newVal.id != oldVal.id)
                     {
                         this.init();
                     }else
                     {
-                      this.reset(['history_message']);
-                      this.setUpData(); 
+                        let vals = {
+                            bid: this.proposed_user_market_negotiation.bid != this.proposed_user_market_negotiation._bid_initial_value ? this.proposed_user_market_negotiation.bid : null,
+                            offer: this.proposed_user_market_negotiation.offer != this.proposed_user_market_negotiation._offer_initial_value ? this.proposed_user_market_negotiation.offer : null,
+                        };
+                        this.reset(['history_message']);
+                        this.setUpData(); 
+                        // ensure values dont change if they werent suposed to
+                        if(vals.bid != null && vals.bid != "") {
+                            this.proposed_user_market_negotiation.bid = vals.bid;
+                        }
+                        if(vals.offer != null && vals.offer != "") {
+                            this.proposed_user_market_negotiation.offer = vals.offer;
+                        }
                     }
                 },
                 deep: true
+            },
+            'last_negotiation': function(nV, oV) {
+                // not the same negitation, been countered - or its the initial setup
+                if( (oV == null && nV != null) || (oV != null && nV != null && nV.id != oV.id) ) {
+                    let vals = {
+                        bid: this.proposed_user_market_negotiation.bid != this.proposed_user_market_negotiation._bid_initial_value ? this.proposed_user_market_negotiation.bid : null,
+                        offer: this.proposed_user_market_negotiation.offer != this.proposed_user_market_negotiation._offer_initial_value ? this.proposed_user_market_negotiation.offer : null,
+                    };
+                    Vue.nextTick(() => {
+                        this.reset(['history_message']);
+                        this.setUpData();
+                        // ensure values dont change if they werent suposed to
+                        if(vals.bid != null && vals.bid != "") {
+                            this.proposed_user_market_negotiation.bid = vals.bid;
+                        }
+                        if(vals.offer != null && vals.offer != "") {
+                            this.proposed_user_market_negotiation.offer = vals.offer;
+                        }
+                    });
+                    return;
+                }
+                if(this.proposed_user_market_negotiation._offer_initial_value != null && this.proposed_user_market_negotiation.offer == this.proposed_user_market_negotiation._offer_initial_value) {
+                    // update to new value
+                    this.proposed_user_market_negotiation.offer = nV.offer;
+                    this.proposed_user_market_negotiation._offer_initial_value = nV.offer;
+                }
+                if(this.proposed_user_market_negotiation._bid_initial_value != null && this.proposed_user_market_negotiation.bid == this.proposed_user_market_negotiation._bid_initial_value) {
+                    // update to new value
+                    this.proposed_user_market_negotiation.bid = nV.bid;
+                    this.proposed_user_market_negotiation._bid_initial_value = nV.bid;
+                }
             }
         },
     computed: {
         'negotiation_available': function(){
+            // admins cant negotiate
+            if(this.$root.is_admin || this.$root.is_viewer) { return false; }
+
             // if(this.last_negotiation.is_my_org) {
             //     if(this.cant_amend) {
             //         return this.last_negotiation.isSpun() || this.last_negotiation.isTraded();
@@ -74,14 +118,23 @@ export default {
         'can_negotiate':function(){
             return this.marketRequest.canNegotiate();
         },
+        'is_request_phase': function() {
+            return this.marketRequest.isRequestPhase();
+        },
         is_trading: function(){
             return this.marketRequest.isTrading();
+        },
+        is_involved_in_trade: function(){
+            return this.marketRequest.isInvolvedInTrade();
         },
         is_trading_at_best: function() {
             return this.marketRequest.chosen_user_market.isTradingAtBest();
         },
         is_trading_at_best_closed: function() {
-            return !this.last_negotiation.hasTimeoutRemaining();
+            return !this.last_negotiation.hasTimeoutRemaining() || this.last_negotiation.isTraded();
+        },
+        is_trading_at_best_source: function() {
+            return this.marketRequest.chosen_user_market.trading_at_best && this.marketRequest.chosen_user_market.trading_at_best.is_my_org;
         },
         'can_disregard':function(){
             return this.marketRequest.canApplyNoCares();
@@ -150,7 +203,7 @@ export default {
             }
             else if(!this.can_negotiate && !this.is_trading && !this.is_trading_at_best)
             {
-                this.history_message = "Market is pending. As soon as the market clears, you will be able to participate."; 
+                this.history_message = "Market is pending.";
             }
         },
         subscribeToMarketRequest() {
@@ -272,7 +325,6 @@ export default {
             
             this.proposed_user_market.setMarketRequest(this.marketRequest);
             // this.proposed_user_market.setCurrentNegotiation(this.proposed_user_market_negotiation);
-            console.log(this.proposed_user_market);
 
             this.server_loading = true;
             // save
@@ -310,7 +362,7 @@ export default {
                     this.$set(this.$data, k, defaults[k]); 
                 }
             });
-            
+
             this.$forceUpdate();
         },
         setUpProposal(){
@@ -323,15 +375,12 @@ export default {
             let chosen_user_market =  this.marketRequest.chosen_user_market;
             if(chosen_user_market)
             {
-                console.log("Proposal2");
                 this.user_market = this.marketRequest.chosen_user_market;
                 if(this.last_negotiation) {
-                    console.log("Proposal3", this.last_negotiation);
                     if(this.last_negotiation.is_my_org == true) {
                         // its my org... can i ammend?
                         if(!this.cant_amend) {
                             this.proposed_user_market_negotiation.id = this.last_negotiation.id;
-                            console.log("Proposal Set", this.proposed_user_market_negotiation.id, this.proposed_user_market_negotiation);
                         }
                     }
                 }
@@ -357,9 +406,23 @@ export default {
                     this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
                     if(!this.last_negotiation.isSpun()) {
 
-                        this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
-                        this.proposed_user_market_negotiation.bid = this.last_negotiation.bid; 
+                        // track changes to the values
+                        if(!this.proposed_user_market_negotiation._offer_initial_value || this.proposed_user_market_negotiation._offer_initial_value == this.proposed_user_market_negotiation.offer) {
+                            // is the same as original
+                            this.proposed_user_market_negotiation.offer = this.last_negotiation.offer;
+                            this.proposed_user_market_negotiation._offer_initial_value = this.last_negotiation.offer;
+                        }
+
+                        if(!this.proposed_user_market_negotiation._bid_initial_value || this.proposed_user_market_negotiation._bid_initial_value == this.proposed_user_market_negotiation.bid) {
+                            // is the same as original
+                            this.proposed_user_market_negotiation.bid = this.last_negotiation.bid;
+                            this.proposed_user_market_negotiation._bid_initial_value = this.last_negotiation.bid;
+                        }
                     }
+                // Traded set quantities back to default   
+                } else {
+                    this.proposed_user_market_negotiation.offer_qty = this.marketRequest.defaultQuantity();
+                    this.proposed_user_market_negotiation.bid_qty = this.marketRequest.defaultQuantity(); 
                 }
 
             }
@@ -378,10 +441,8 @@ export default {
             }
         },
         setUpData() {
-            console.log("Setup Started");
             // set up up data
             if(this.marketRequest) {
-                console.log("Seting Up:", this.marketRequest);
                 this.market_history = this.user_market ? this.user_market.market_negotiations : this.market_history;
 
                 this.setUpProposal();
@@ -396,10 +457,16 @@ export default {
         },
         addToNoCares() {
             EventBus.$emit('addToNoCares',this.marketRequest.id);
+            EventBus.$emit('interactionToggle', false);
         },
         init() {
+            EventBus.$emit('startReset');
             this.reset();// clear current state
+            // clear saved state data on reset
+            this.proposed_user_market_negotiation._bid_initial_value = null;
+            this.proposed_user_market_negotiation._offer_initial_value = null;
             this.setUpData();
+            EventBus.$emit('completeReset');
         }
     }
 }

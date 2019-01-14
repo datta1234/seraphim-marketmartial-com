@@ -11,7 +11,7 @@ use Validator;
 use Illuminate\Validation\Rule;
 
 class OpenInterestControlller extends Controller
-{
+{   
     /**
      * Display the specified resource.
      *
@@ -101,7 +101,8 @@ class OpenInterestControlller extends Controller
                 $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
                 $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
                 $a['delta'] = str_replace(" ", "", $a['delta']);
-                $a['spot_price'] = str_replace(" ", "", $a['spot_price']);
+                // removed due to field type change [MM-811]
+                /*$a['spot_price'] = str_replace(" ", "", $a['spot_price']);*/
             }
         });
         array_shift($csv);
@@ -133,4 +134,25 @@ class OpenInterestControlller extends Controller
 
         return response()->json(['data' => null,'message' => 'Open Interest data successfully uploaded.']);
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    /*public function openInterestTableData(Request $request)
+    {
+        // @TODO - Change reqeust to a custom reqeust
+        $data = OpenInterest::basicSearch(
+            $request->input('search'),
+            $request->input('_order_by'),
+            $request->input('_order'),
+            [
+                "filter_expiration" => $request->input('filter_expiration'),
+                "filter_market" => $request->input('filter_market'),
+            ]
+        )->paginate(25);
+
+        return $data;
+    }*/
 }

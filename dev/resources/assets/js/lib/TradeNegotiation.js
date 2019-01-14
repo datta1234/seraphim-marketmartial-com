@@ -91,33 +91,50 @@ export default class TradeNegotiation extends BaseModel {
         };
     }
 
-    getSortedTradingText(fromTraded)
+    getSortedTradingText()
     {
         let text = "";
-        if(this.sent_by_me)
-        {
-            text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
-        }else if(this.sent_to_me)
-        {
-            text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
-
-        }else if(this.traded || fromTraded)
-        {
-            text = "Traded Away at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
-        }else
-        {
-            text = "Trading at "; 
-            text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+        if(this.traded) {
+            if(this.sent_by_me) {
+                text =  ( this.is_offer ? "You bought @ " +  this.getUserMarketNegotiation().bid : "You sold @ " +this.getUserMarketNegotiation().offer );
+            
+            } else if(this.sent_to_me) {
+                text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().bid : "You bought @ "+this.getUserMarketNegotiation().offer );
+            
+            } else {
+                text = "Traded Away at "; 
+                text +=  this.is_offer ? this.getUserMarketNegotiation().bid : this.getUserMarketNegotiation().offer;
+            }
+        } else {
+            if(this.sent_by_me) {
+                text =  ( this.is_offer ? "You bought @ " +this.getUserMarketNegotiation().offer : "You sold @ " +  this.getUserMarketNegotiation().bid );
+            
+            } else if(this.sent_to_me) {
+                text = ( this.is_offer ? "You sold @ "+this.getUserMarketNegotiation().offer : "You bought @ "+this.getUserMarketNegotiation().bid );
+            
+            } else {
+                text = "Trading Away at "; 
+                text +=  this.is_offer ? this.getUserMarketNegotiation().offer : this.getUserMarketNegotiation().bid;
+            }
         }
+
         return text;
     }
 
     getTradingText()
     {
-        let text = this.getUserMarketNegotiation().getFirstTradeNegotiation().getSortedTradingText(this.traded );
+        let ChildTradeNegotiationIndex = this.getUserMarketNegotiation().trade_negotiations.findIndex((trade_negotiation)=>{
+           return trade_negotiation.trade_negotiation_id == this.id;
+        });
+
+        let text = this.getSortedTradingText();
         text += this.traded ? " ("+this.quantity+")" : "";
-        return text;
+
+        if(ChildTradeNegotiationIndex === -1) {
+            return text;
+        }
+
+        return null
     }
 
     getSizeText()
@@ -145,10 +162,10 @@ export default class TradeNegotiation extends BaseModel {
     {
         if(this.trade_negotiation_id)
         {
-            let relatedTradeNehotiation = this.getUserMarketNegotiation().trade_negotiations.find((trade_negotiation)=>{
+            let relatedTradeNegotiation = this.getUserMarketNegotiation().trade_negotiations.find((trade_negotiation)=>{
                return trade_negotiation.id == this.trade_negotiation_id;
             });
-            return  relatedTradeNehotiation.quantity - this.quantity;
+            return  relatedTradeNegotiation.quantity - this.quantity;
         }else
         {
             return null;
@@ -209,6 +226,19 @@ export default class TradeNegotiation extends BaseModel {
                 reject(err);
             });
         });
+    }
+
+    noFutherCares()
+    {
+         return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl + "/trade/trade-negotiation/"+this.id+"/no-further-cares")
+            .then(response => {
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        }); 
     }
  
 }

@@ -15,7 +15,7 @@
                                  dusk="ibar-send-counter" 
                                  variant="success" 
                                  @click="storeTradeNegotiation()">
-                                    Trade requested size
+                                    Trade
                     </b-button>
                      <b-button v-active-request  class="w-100 mt-1" 
                                  :disabled="server_loading || !amendInput()" 

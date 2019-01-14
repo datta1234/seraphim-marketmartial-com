@@ -13,34 +13,43 @@
                 </div>
                 <div class="chat-inner-wrapper pr-2">
                     <b-card ref="chat_history" class="chat-history">
-                        <b-row  v-for="(message, index) in display_messages" 
-                                :key="index"
-                                v-bind:class="{
-                                    'mt-4': index != 0, 
-                                    'admin-chat': message.user_name == 'Market Martial',
-                                    'own-chat': message.user_name == $root.config('user_preferences.user_name'), 
-                                }">
-                            <b-col :offset-md="message.user_name == $root.config('user_preferences.user_name')? 2 : 0" 
-                                    cols="10" 
-                                    class="chat-block">
-                                <b-row>
-                                    <b-col cols="12" class="chat-user-name mb-0 pt-3">
-                                        <h6 class="m-0">{{ messageUserName(message.user_name) }}</h6>
-                                    </b-col>
-                                    <b-col cols="12" class="chat-message mt-3">
-                                        <p>{{ message.message }}</p>
-                                    </b-col>
-                                    <b-col cols="12" class="chat-time mt-0">
-                                        <h6 v-bind:class="{'float-right': message.user_name != $root.config('user_preferences.user_name'), 
-                                        }">
-                                            {{ castToMoment(message.time_stamp) }}
-                                            <i v-if="message.status == 'sent'" class="fas fa-check float-right"></i>
-                                            <i v-if="message.status == 'received'" class="fas fa-check-double float-right"></i>
-                                        </h6>
-                                            
-                                    </b-col>
+                        <b-row fluid v-for="(display_messages, key) in display_messages_grouped" :key="key">
+                            <b-col>
+                                <b-row class="timeblock-chat">
+                                    <b-col>{{ key }}</b-col>
                                 </b-row>
-                            </b-col>    
+                                <b-row  v-for="(message, index) in display_messages" 
+                                        :key="index"
+                                        v-bind:class="{
+                                            'chat-row': true,
+                                            'mt-4': index != 0, 
+                                            'admin-chat': message.user_name == 'Market Martial',
+                                            'own-chat': message.user_name == $root.config('user_preferences.user_name'),
+                                        }">
+                                    <b-col :offset-md="message.user_name == $root.config('user_preferences.user_name') ? 2 : 0" 
+                                            cols="10" 
+                                            class="chat-block">
+                                        <b-row>
+                                            <b-col cols="12" class="chat-user-name mb-0 pt-3">
+                                                <h6 class="m-0">
+                                                    {{ messageUserName(message.user_name) }}
+                                                    <span class="float-right chat-timestamp">{{ castToMomentTime(message.time_stamp) }}</span>
+                                                </h6>
+                                            </b-col>
+                                            <b-col cols="12" class="chat-message mt-3">
+                                                <p>{{ message.message }}</p>
+                                            </b-col>
+                                            <b-col cols="12" class="chat-time mt-0">
+                                                <h6 class="text-right">
+                                                    &nbsp;
+                                                    <i v-if="message.status == 'sent'" class="fas fa-check"></i>
+                                                    <i v-if="message.status == 'received'" class="fas fa-check-double"></i>
+                                                </h6>
+                                            </b-col>
+                                        </b-row>
+                                    </b-col>    
+                                </b-row>
+                            </b-col>
                         </b-row>
                     </b-card>
                     
@@ -160,8 +169,18 @@
             newChatMessageListener() {
                 this.$root.$on('chatMessageReceived', this.addNewMessage);
             },
-            castToMoment(date_string) {
-                return moment(date_string, "X").format('H:mmA, DD MMM YYYY');
+            humanizeDate(date_string) {
+                return moment(date_string, "X").calendar(null, {
+                    sameDay: '[Today]',
+                    lastDay: '[Yesterday]',
+                    sameElse: 'DD MMM YYYY',
+                });
+            },
+            castToMomentDate(date_string) {
+                return moment(date_string, "X").format('DD MMM YYYY');
+            },
+            castToMomentTime(date_string) {
+                return moment(date_string, "X").format('H:mmA');
             },
             loadChatHistory() {
                 axios.get(axios.defaults.baseUrl + '/trade/organisation-chat')
@@ -216,6 +235,20 @@
                     this.toggleNewIncomingState(false);
                 }
             },
+        },
+        computed: {
+            display_messages_grouped: function() {
+                return this.display_messages.reduce((acc, message) => {
+                    let date = this.humanizeDate(message.time_stamp);
+                    // define date index if not exist
+                    if(typeof acc[date] === 'undefined') {
+                        acc[date] = [];
+                    }
+                    // push to date index
+                    acc[date].push(message);
+                    return acc;
+                }, {});
+            }
         },
         mounted() {
             this.$refs.chat_history.onscroll = this.resetNewMessageState;

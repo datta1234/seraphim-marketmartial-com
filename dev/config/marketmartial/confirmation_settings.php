@@ -2,6 +2,7 @@
 return [
 	//big leg is based of the nominal
     'rebate_percentage'   =>  env('REBATE_PERCENTAGE',0.25),
+  // trade_structure fees are percentage values
   // __trade_structure__
 	"outright"=>
 	[
@@ -68,5 +69,29 @@ return [
 		[
 			"per_leg"=>0.05
 		]
-	],        
+	],
+	// __trade_structure__
+	"efp"=>
+	[
+		"index" => 
+		[
+			"only_leg"=>0.0025
+		],
+	],
+	// __trade_structure__
+	"rolls"=>
+	[
+		"index" => 
+		[
+			"far_leg_only"=>0.0025
+		],
+	],
+	// __trade_structure__
+	"efp_switch"=>
+	[
+		"index" => 
+		[
+			"per_leg"=>0.0025
+		],
+	],
 ];

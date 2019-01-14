@@ -35,7 +35,7 @@ trait OrganisationSlackChat {
             ]);
             $body = json_decode($response->getBody());
             
-            if(isset($body->ok)) {
+            if(isset($body->ok) && $body->ok) {
                 return $body;
             }
             
@@ -56,7 +56,7 @@ trait OrganisationSlackChat {
             if(isset($body->error) && $body->error == 'name_taken') {
                 $channel = $this->findChannel($channel_name);
                 if($channel != false) {
-                    return ['ok' => true,'group' => $channel];
+                    return (object)['ok' => true,'group' => $channel];
                 }
                 \Log::error(["Failed to find Oganisation Channel: ", (array)$body]);
             }

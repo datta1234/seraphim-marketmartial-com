@@ -47,6 +47,7 @@ export default class UserMarketRequest extends BaseModel {
             chosen_user_market: null,
             created_at: moment(),
             updated_at: moment(),
+            default_quantity: 500,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -164,9 +165,11 @@ export default class UserMarketRequest extends BaseModel {
     *   getSentQuote - Set the UserMarketRequest UserMarker
     *   @param {UserMarket} user_market - UserMarket object
     */
-    getChosenUserMarket() {
+    // @TODO - I dont know why this is even here, Removed because it was overriding the original method.
+    //          Does not seem to be used anywhere in the js.
+    /*getChosenUserMarket() {
         return this.user_market;
-    }
+    }*/
 
     /**
     *   getUserMarket - Set the UserMarketRequest UserMarker
@@ -253,23 +256,66 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     /**
+    *   deactivate the market request (admin only)
+    */
+    deactivate()
+    {
+        return axios.delete(axios.defaults.baseUrl + '/trade/market/' + this.market_id + '/market-request/'+this.id)
+            .then(response => {
+                return response;
+            });
+    }
+
+    /**
     *   canNegotiate - Checks to see if the user can take any negotiation on the current ste of the request
-    *   @return response from the request or the error
+    *   @return {Boolean}
     */
     canNegotiate()
     {
         let tradebleStatuses = [
-                "REQUEST-SENT",
-                "REQUEST",
-                "REQUEST-SENT-VOL",
-                "REQUEST-VOL",
-                "NEGOTIATION-VOL",
-                "NEGOTIATION-OPEN-VOL",
-                "TRADE-NEGOTIATION-OPEN"
-            ];
-        
-        console.log("this should be shown",this.attributes.state);
+            "REQUEST-SENT",
+            "REQUEST",
+            "REQUEST-SENT-VOL",
+            "REQUEST-VOL",
+            "NEGOTIATION-VOL",
+            "NEGOTIATION-OPEN-VOL",
+            "TRADE-NEGOTIATION-OPEN",
+            // Adding these broke things [MM-820]
+            // "TRADE-NEGOTIATION-SENDER",
+            // "TRADE-NEGOTIATION-COUNTER",
+        ];
+            
         return  tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+    /**
+    *   canInitiateTrade - Checks to see if the user can start a trade on any negotiation on the current state of the request
+    *   @return {Boolean}
+    */
+    canInitiateTrade()
+    {
+        let tradebleStatuses = [
+            "NEGOTIATION-VOL",
+            "NEGOTIATION-OPEN-VOL",
+        ];
+
+        return tradebleStatuses.indexOf(this.attributes.state) > -1;
+    }
+
+    /**
+    *   isRequestPhase - Checks to see if the user is in any request phase on the current state of the request
+    *   
+    *   @return {Boolean} - if the request has any of the listed statuses
+    */
+    isRequestPhase()
+    {
+        let tradebleStatuses = [
+            "REQUEST-SENT",
+            "REQUEST",
+            "REQUEST-SENT-VOL",
+            "REQUEST-VOL",
+        ];
+        return  tradebleStatuses.indexOf(this.attributes.state) > -1;    
     }
 
     /**
@@ -309,6 +355,17 @@ export default class UserMarketRequest extends BaseModel {
 
         return tradingStates.indexOf(this.attributes.state) > -1 
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
+    }
+
+    isInvolvedInTrade()
+    {
+        let tradingStates = [
+            "TRADE-NEGOTIATION-SENDER",
+            "TRADE-NEGOTIATION-COUNTER",
+            "TRADE-NEGOTIATION-BALANCER"
+        ];
+
+        return  tradingStates.indexOf(this.attributes.state) > -1;
     }
 
     get is_trading_at_best() {
@@ -373,17 +430,22 @@ export default class UserMarketRequest extends BaseModel {
             case 'Rolls':
                 return 'rolls';
             break;
+            case 'Var Swap':
+                return 'var_swap';
+            break;
         };
         return null;
     }
 
     defaultQuantity()
     {
-        let group = Object.values(this.trade_items).find(item => item.choice == false);
+        /*let group = Object.values(this.trade_items).find(item => item.choice == false);
         let ts = this.trade_structure_slug;
         let conf = Config.get('trade_structure.'+this.trade_structure_slug+'.quantity');
         let val = group[conf];
-        return val;
+        return val;*/
+
+        return this.default_quantity;
     }
 
     getQuantityType()

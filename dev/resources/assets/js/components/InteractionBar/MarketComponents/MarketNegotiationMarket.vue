@@ -5,18 +5,33 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
                         </div>
                     </b-form>
+                </b-col>
+                <b-col cols="2">
+                </b-col>
+            </b-row>
+            
+            <b-row v-if="isRequestPhase" class="mb-3">
+                <b-col cols="10 text-center">
+                    <b-form-group>
+                        <b-form-checkbox-group buttons 
+                                               button-variant="primary btn-sm"
+                                               v-model="bid_offer_selected" 
+                                               name="disable-bid-offer" 
+                                               :options="bid_offer_options">
+                        </b-form-checkbox-group>
+                    </b-form-group>
                 </b-col>
                 <b-col cols="2">
                 </b-col>
@@ -28,7 +43,7 @@
 <script>
     import UserMarketNegotiation from '../../../lib/UserMarketNegotiation';
     import UserMarketQuote from '../../../lib/UserMarketQuote';
-
+    import { EventBus } from '~/lib/EventBus.js';
     
     export default {
         props: {
@@ -41,6 +56,10 @@
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            isRequestPhase: {
+                type: Boolean,
+                default: false    
             }
         },
         watch: {
@@ -51,53 +70,82 @@
                 deep: true
             },
             'marketNegotiation.cond_buy_mid'(nv, ov) {
-                console.log("Changed: ", nv)
-                if(nv !== null) {
-                    if(ov === null) {
-                        this.old.bid = this.marketNegotiation.bid;
-                        this.old.offer = this.marketNegotiation.offer;
+                this.$nextTick(() => {
+                    if(this.resetting) { 
+                        this.buying_at_mid = false;
+                        return;
+                    }// break early
+                    console.log("Changed: ", nv)
+                    if(nv !== null) {
+                        this.buying_at_mid = true;
+                        if(ov === null) {
+                            this.old.bid = this.marketNegotiation.bid;
+                            this.old.offer = this.marketNegotiation.offer;
+                        }
+                        let bid = this.currentNegotiation.bid;
+                        let offer = this.currentNegotiation.offer;
+                        console.log("Setting To: ", bid, offer);
+                        this.marketNegotiation.bid = this.marketNegotiation.offer = ( bid + offer ) / 2;
+                        this.disable_input = true;
+                    } else {
+                        this.buying_at_mid = false;
+                        this.marketNegotiation.bid = this.old.bid;
+                        this.marketNegotiation.offer = this.old.offer;
+                        this.disable_input = false;
                     }
-                    this.marketNegotiation.bid = this.marketNegotiation.offer = ( this.currentNegotiation.bid + this.currentNegotiation.offer ) / 2;
-                } else {
-                    this.marketNegotiation.bid = this.old.bid;
-                    this.marketNegotiation.offer = this.old.offer;
-                }
+                });
             },
             'disabled_bid'(nv, ov) {
-                if(nv) {
-                    if(this.marketNegotiation.bid_qty) {
-                        this.old.bid = this.marketNegotiation.bid;
-                        this.old.bid_qty = this.marketNegotiation.bid_qty;
-                        this.marketNegotiation.bid = null;
-                        this.marketNegotiation.bid_qty = null;
+                this.$nextTick(() => {
+                    if(this.resetting || this.buying_at_mid == true) { return }; // break early
+                    console.log("Changed 2: ", nv)
+                    if(nv) {
+                        if(this.marketNegotiation.bid_qty) {
+                            this.old.bid = this.marketNegotiation.bid;
+                            this.old.bid_qty = this.marketNegotiation.bid_qty;
+                            this.marketNegotiation.bid = null;
+                            this.marketNegotiation.bid_qty = null;
+                        }
+                    } else {
+                        this.marketNegotiation.bid_qty = this.old.bid_qty;
+                        this.marketNegotiation.bid = this.old.bid;
                     }
-                } else {
-                    this.marketNegotiation.bid_qty = this.old.bid_qty;
-                    this.marketNegotiation.bid = this.old.bid;
-                }
+                });
             },
             'disabled_offer'(nv, ov) {
-                if(nv) {
-                    if(this.marketNegotiation.offer_qty) {
-                        this.old.offer = this.marketNegotiation.offer;
-                        this.old.offer_qty = this.marketNegotiation.offer_qty;
-                        this.marketNegotiation.offer = null;
-                        this.marketNegotiation.offer_qty = null;
+                this.$nextTick(() => {
+                    if(this.resetting || this.buying_at_mid == true) { return }; // break early
+                    console.log("Changed 3: ", nv)
+                    if(nv) {
+                        if(this.marketNegotiation.offer_qty) {
+                            this.old.offer = this.marketNegotiation.offer;
+                            this.old.offer_qty = this.marketNegotiation.offer_qty;
+                            this.marketNegotiation.offer = null;
+                            this.marketNegotiation.offer_qty = null;
+                        }
+                    } else {
+                        this.marketNegotiation.offer_qty = this.old.offer_qty;
+                        this.marketNegotiation.offer = this.old.offer;
                     }
-                } else {
-                    this.marketNegotiation.offer_qty = this.old.offer_qty;
-                    this.marketNegotiation.offer = this.old.offer;
-                }
+                });
             }
         },
         data() {
             return {
+                buying_at_mid: false,
+                disable_input: false,
                 old: {
-                    bid: 0,
-                    offer: 0,
-                    bid_qty: 0,
-                    offer_qty: 0
-                }
+                    resetting: false,
+                    bid: null,
+                    offer: null,
+                    bid_qty: null,
+                    offer_qty: null
+                },
+                bid_offer_options: [
+                    { text: 'Bid Only', value: 'bid-only' },
+                    { text: 'Offer Only', value: 'offer-only' },
+                ],
+                bid_offer_selected: [],
             };
         },
         computed: {
@@ -105,13 +153,19 @@
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                let value = this.marketNegotiation.offer;
+                let only = (this.bid_offer_selected.includes('offer-only') && this.isRequestPhase );
+
+                // if offer only is selected
+                if( only ) {
+                    return true;
+                }
+
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('bid').is_my_org;
                 }
 
-                let value = this.marketNegotiation.offer;
                 if((traded || spun) && value) {
                     return true;
                 }
@@ -121,13 +175,19 @@
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
+                let value = this.marketNegotiation.bid;
+                let only = (this.bid_offer_selected.includes('bid-only') && this.isRequestPhase);
+
+                // if bid only is selected
+                if( only ) {
+                    return true;
+                }
+
                 if(amending) {
                     return !this.currentNegotiation.getAmountSource('offer').is_my_org;
                 }
 
-                let value = this.marketNegotiation.bid;
                 if((traded || spun) && value) {
                     return true;
                 }
@@ -169,13 +229,19 @@
                             (
                                 this.currentNegotiation.bid != null
                                 && !this.is_empty(this.marketNegotiation.bid)
-                                && this.marketNegotiation.bid < currentBid.bid
+                                && ( 
+                                    parseFloat(this.marketNegotiation.bid) < parseFloat(currentBid.bid)
+                                    || parseFloat(this.marketNegotiation.bid) >= parseFloat(currentOffer.offer)
+                                )
                             )
                         // ||  this.marketNegotiation.bid_qty == this.currentNegotiation.bid_qty
                         ||  (
                                 this.currentNegotiation.offer != null
                                 && !this.is_empty(this.marketNegotiation.offer)
-                                && this.marketNegotiation.offer > currentOffer.offer
+                                && (
+                                    parseFloat(this.marketNegotiation.offer) > parseFloat(currentOffer.offer)
+                                    || parseFloat(this.marketNegotiation.offer) <= parseFloat(currentBid.bid)
+                                )
                             )
                         // ||  this.marketNegotiation.offer_qty == this.currentNegotiation.offer_qty;
 
@@ -227,12 +293,28 @@
                 }
                 return invalid_states.all_empty || invalid_states.bid_pair || invalid_states.offer_pair || invalid_states.previous;
             
+            },
+            reset() {
+                this.old.bid = null;
+                this.old.offer = null;
+                this.old.offer_qty = this.marketNegotiation.offer_qty;
+                this.old.bid_qty = this.marketNegotiation.bid_qty;
+                this.resetting = false;
+                this.bid_offer_selected = [];
             }
         },
         mounted() {
-            this.old.offer_qty = this.marketNegotiation.offer_qty;
-            this.old.bid_qty = this.marketNegotiation.bid_qty;
-            console.log(this.disabled);
+            this.reset();
+            EventBus.$on('resetStarted', () => {
+                this.resetting = true;
+            });
+            EventBus.$on('resetComplete', this.reset);
+            EventBus.$on('negotiationInputDisabled', () => {
+                this.disable_input = true;
+            });
+            EventBus.$on('negotiationInputEnabled', () => {
+                this.disable_input = false;
+            });
         }
     }
 </script>

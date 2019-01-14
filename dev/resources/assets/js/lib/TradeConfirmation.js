@@ -124,6 +124,11 @@ export default class TradeConfirmation extends BaseModel {
     postPhaseTwo(trading_account)
     {
         console.log("calculate");
+        if(!trading_account) {
+            return new Promise((resolve, reject) => {
+                reject({errors:{'trading_account':"Trading account is required"}});
+            });
+        }
         return new Promise((resolve, reject) => {
            axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/phase-two',{
             "trading_account_id":trading_account.id,
@@ -179,7 +184,7 @@ export default class TradeConfirmation extends BaseModel {
     hasFutures()
     {
         return this.future_groups.reduce((out, group)=>{
-                if(group.future.length == 0)
+                if(group.future == null)
                 {
                     out = false;
                 }
@@ -187,22 +192,35 @@ export default class TradeConfirmation extends BaseModel {
             }, true);
 
     }
+
+    /**
+    * Validation method that checks if this TradeConfirmation has a spot in it's future groups
+    *   and it contains a value
+    *
+    * @return {Boolean}
+    */
+    hasSpots()
+    {
+        return this.future_groups.reduce( (out, group) => {
+                if( group.hasOwnProperty('spot') && group.spot == null)
+                {
+                    out = false;
+                }
+                return out;
+            }, true);
+
+    }
+
     dispute(trading_account)
     {
-      return new Promise((resolve, reject) => {
-           axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
+        return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
             "trading_account_id":trading_account.id,
             "trade_confirmation": this.prepareStore()
-           })
-           .then(response => {
-            this.update(response.data.data);
-            resolve();
         })
-           .catch(err => {
-            console.log(err);
-            reject(err);
-        }); 
-       });
+        .then(response => {
+            this.update(response.data.data);
+            return response;
+        });
     }
 
     prepareStore() {

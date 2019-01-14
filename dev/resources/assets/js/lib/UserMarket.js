@@ -3,6 +3,7 @@ import Errors from './Errors';
 import UserMarketNegotiation from './UserMarketNegotiation';
 import UserMarketVolatility from '~/lib/UserMarketVolatility';
 import ActiveCondition from './ActiveCondition';
+import SentCondition from './SentCondition';
 
 export default class UserMarket extends BaseModel {
 
@@ -16,6 +17,9 @@ export default class UserMarket extends BaseModel {
                 },
                 active_conditions: {
                     setMethod: (active_condition) => { this.setActiveConditions(active_condition) },
+                },
+                sent_conditions: {
+                    setMethod: (sent_condition) => { this.setSentConditions(sent_condition) },
                 },
                 activity: {
                     setMethod: (activity) => { this.setActivity(activity) },
@@ -42,6 +46,10 @@ export default class UserMarket extends BaseModel {
             current_market_negotiation: null,
             created_at: moment(),
             updated_at: moment(),
+
+            // optional
+            user: null,
+            org: null,
         }
 
         // assign options with defaults
@@ -70,6 +78,11 @@ export default class UserMarket extends BaseModel {
         this.active_conditions = [];
         if(options && options.active_conditions) {
             this.setActiveConditions(options.active_conditions);
+        }
+
+        this.sent_conditions = [];
+        if(options && options.sent_conditions) {
+            this.setSentConditions(options.sent_conditions);
         }
 
         this.activity = {};
@@ -148,6 +161,17 @@ export default class UserMarket extends BaseModel {
     }
 
     /**
+    *   setSentConditions - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    setSentConditions(sent_conditions) {
+        this.sent_conditions.splice(0, this.sent_conditions.length);
+        sent_conditions.forEach(cond => {
+            this.addSentCondition(cond);
+        });
+    }
+
+    /**
     *   setVolatility - set the volatility colelction
     *   @param {Object} volatility - Volatility object
     */
@@ -186,6 +210,19 @@ export default class UserMarket extends BaseModel {
         }
 
         this.active_conditions.push(active_condition);
+    }
+
+    /**
+    *   addActiveCondition - add user user_market_negotiation
+    *   @param {UserMarketNegotiation} user_market_negotiation - UserMarketNegotiation objects
+    */
+    addSentCondition(sent_condition) {
+        
+        if(!(sent_condition instanceof SentCondition)) {
+            sent_condition = new SentCondition(this, sent_condition);
+        }
+
+        this.sent_conditions.push(sent_condition);
     }
 
     /**
@@ -268,29 +305,6 @@ export default class UserMarket extends BaseModel {
             });
         });
     }
-
-
-    noFutherCares()
-    {
-        console.log(this.user_market_request_id,this.id);
-        // catch not assigned to a market request yet!
-        if(this.user_market_request_id == null) {
-            return new Promise((resolve, reject) => {
-                reject(new Errors("Invalid Market Request"));
-            });
-        }
-
-         return new Promise((resolve, reject) => {
-            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id+"/no-further-cares")
-            .then(response => {
-                resolve(response);
-            })
-            .catch(err => {
-                reject(err);
-            });
-        }); 
-    }
-
 
     
     /**

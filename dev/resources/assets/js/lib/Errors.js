@@ -9,7 +9,7 @@ module.exports =  class Errors {
 
         if(errors && errors.constructor == String) {
             this.errors = [];
-            this.message = message;
+            this.message = errors;
         } else {
             Object.assign(this, errors);
             if(errors && errors.response && errors.response.data) {

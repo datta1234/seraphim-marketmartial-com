@@ -4,7 +4,7 @@
             <div class="card-header text-center">
                 <h2 class="mt-2 mb-2">Rolling 6 Months of Safex Data</h2>
             </div>
-            <div v-if="table_data.data.length > 0" class="card-body">
+            <div class="card-body">
                 <b-row>
                     <b-col cols="12">
                         <b-form v-on:submit.prevent="" id="chat-message-form">
@@ -74,34 +74,36 @@
                         </b-form>
                     </b-col>
                 </b-row>
-                <!-- Main table element -->
-                <b-table v-if="table_data.loaded && table_data.data != null"
-                         class="mt-2 stats-table"
-                         stacked="md"
-                         :items="table_data.data"
-                         :fields="table_data.table_fields"
-                         :sort-by.sync="table_data.param_options.order_by"
-                         :sort-desc.sync="table_data.param_options.order_ascending"
-                         :no-local-sorting="true"
-                         @sort-changed="sortingChanged">
-                    <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
-                        {{ formatItem(row.item, field.key) }}
-                    </template>
-                </b-table>
+                <template v-if="table_data.data.length > 0">
+                    <!-- Main table element -->
+                    <b-table v-if="table_data.loaded && table_data.data != null"
+                             class="mt-2 stats-table"
+                             stacked="md"
+                             :items="table_data.data"
+                             :fields="table_data.table_fields"
+                             :sort-by.sync="table_data.param_options.order_by"
+                             :sort-desc.sync="table_data.param_options.order_ascending"
+                             :no-local-sorting="true"
+                             @sort-changed="sortingChanged">
+                        <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
+                            {{ formatItem(row.item, field.key) }}
+                        </template>
+                    </b-table>
 
-                <b-row v-if="table_data.data != null" class="justify-content-md-center">
-                    <b-col md="auto" class="my-1">
-                        <b-pagination @change="changePage($event)"
-                                      :total-rows="table_data.pagination.total"
-                                      :per-page="table_data.pagination.per_page"
-                                      :hide-ellipsis="true"
-                                      v-model="table_data.pagination.current_page"
-                                      align="center"/>
-                    </b-col>
-                </b-row>
-            </div>
-            <div v-else class="card-body">
-                <p class="text-center">No Safex Data to display</p>
+                    <b-row v-if="table_data.data != null" class="justify-content-md-center">
+                        <b-col md="auto" class="my-1">
+                            <b-pagination @change="changePage($event)"
+                                          :total-rows="table_data.pagination.total"
+                                          :per-page="table_data.pagination.per_page"
+                                          :hide-ellipsis="true"
+                                          v-model="table_data.pagination.current_page"
+                                          align="center"/>
+                        </b-col>
+                    </b-row>
+                </template>
+                <template v-else>
+                    <p class="text-center mt-5">No Open Interest Data to display</p>
+                </template>
             </div>
         </div>
     </div>
