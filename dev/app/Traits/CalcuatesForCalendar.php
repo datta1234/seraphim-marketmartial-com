@@ -102,9 +102,10 @@ trait CalcuatesForCalendar {
 
         // futures and deltas buy/sell
         $isFutureOffer2 = !($future_contracts2 < 0);
-        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer2, true);
-        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer2, false);
+        $this->futureGroups[1]->setOpVal('is_offer', $isFutureOffer2, true);
+        $this->futureGroups[1]->setOpVal('is_offer', !$isFutureOffer2, false);
 
+        //dd($future_contracts1,$future_contracts2);
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts1));
         $this->futureGroups[1]->setOpVal('Contract', abs($future_contracts2));
 
