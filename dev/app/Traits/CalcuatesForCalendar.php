@@ -38,9 +38,10 @@ trait CalcuatesForCalendar {
         $future_contracts1  = null;
         $future_contracts2  = null;
         
-        $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer1 = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer2 = $this->optionGroups[1]->getOpVal('is_offer',true);
 
-        if($is_offer == 1) {
+        if($is_offer1 == 1) {
             $putDirection1	= 1;
             $callDirection1 = 1;
             
@@ -79,9 +80,9 @@ trait CalcuatesForCalendar {
         }
 
         // futures and deltas buy/sell
-        $isOffer1 = !($future_contracts1 < 0);
-        $this->futureGroups[0]->setOpVal('is_offer', $isOffer1, true);
-        $this->futureGroups[0]->setOpVal('is_offer', !$isOffer1, false);
+        $isFututeOffer1 = !($future_contracts1 < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFututeOffer1, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFututeOffer1, false);
 
         // Leg2 - 2nd Expiry
         if(abs($POD2) <= abs($COD2)) {
@@ -100,22 +101,22 @@ trait CalcuatesForCalendar {
         }
 
         // futures and deltas buy/sell
-        $isOffer2 = !($future_contracts2 < 0);
-        $this->futureGroups[0]->setOpVal('is_offer', $isOffer2, true);
-        $this->futureGroups[0]->setOpVal('is_offer', !$isOffer2, false);
+        $isFutureOffer2 = !($future_contracts2 < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer2, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer2, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts1));
         $this->futureGroups[1]->setOpVal('Contract', abs($future_contracts2));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->calendarFees($isOffer1, $isOffer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
+        $this->calendarFees($is_offer1, $is_offer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
 
     public function calendarFees($isOffer1,$isOffer2,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {   
-        $Brodirection1 = $isOffer1 ? -1 : 1;
-        $Brodirection2 = $isOffer2 ? -1 : 1;
+        $Brodirection1 = $isOffer1 ? 1 : -1;
+        $Brodirection2 = $isOffer2 ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
@@ -125,26 +126,25 @@ trait CalcuatesForCalendar {
 
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
+            if($nominal1 < $nominal2) {
+                // NETPREM = Round(nominal1 * SINGLEcalendarbigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
+                $netPremium1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+                // NETPREM = Round(nominal2 * SINGLEcalendarsmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
+                $netPremium2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+                
+                //set for the counter
+                $netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+                $netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+            } else {
+                // NETPREM = Round(nominal1 * SINGLEcalendarsmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
+                $netPremium1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+                // NETPREM = Round(nominal2 * SINGLEcalendarbigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
+                $netPremium2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 
-	        if($nominal1 < $nominal2) {
-	        	// NETPREM = Round(nominal1 * SINGLEcalendarbigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-	        	$netPremium1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
-		      	// NETPREM = Round(nominal2 * SINGLEcalendarsmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-		      	$netPremium2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
-		      	
-	        	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
-	        } else {
-	        	// NETPREM = Round(nominal1 * SINGLEcalendarsmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-	        	$netPremium1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
-		      	// NETPREM = Round(nominal2 * SINGLEcalendarbigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-		      	$netPremium2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
-
-		      	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
-	        }
+                //set for the counter
+                $netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+                $netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+            }
 
         } else {
 	    	//get the spot price ref.
