@@ -58,14 +58,9 @@ trait CalcuatesForOutright {
         }
 
         // futures and deltas buy/sell
-        if($future_contracts < 0)
-        {
-            $isFututeOffer = false;
-            $this->futureGroups[0]->setOpVal('is_offer', $isFututeOffer);
-        } else {
-            $isFututeOffer = true;
-            $this->futureGroups[0]->setOpVal('is_offer',$isFututeOffer);
-        }
+        $isFutureOffer = !($future_contracts < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
