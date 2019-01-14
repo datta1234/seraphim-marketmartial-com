@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForEfpSwitch {
+trait CalculatesForEfpSwitch {
     
     public function efpSwitchTwo()
     {

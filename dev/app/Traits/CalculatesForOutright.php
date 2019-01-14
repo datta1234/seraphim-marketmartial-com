@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForOutright {
+trait CalculatesForOutright {
 	
     public function outrightTwo()
     {

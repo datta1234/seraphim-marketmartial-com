@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForFly {
+trait CalculatesForFly {
     
     public function flyTwo()
     {

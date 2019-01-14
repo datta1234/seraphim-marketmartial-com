@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForEfp {
+trait CalculatesForEfp {
 	
     public function efpTwo()
     {

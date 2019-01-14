@@ -13,15 +13,15 @@ use Carbon\Carbon;
 class TradeConfirmation extends Model
 {
     use \App\Traits\ResolvesUser;
-    use \App\Traits\CalcuatesForPhases;
-    use \App\Traits\CalcuatesForOutright;
-    use \App\Traits\CalcuatesForRisky;
-    use \App\Traits\CalcuatesForCalendar;
-    use \App\Traits\CalcuatesForFly;
-    use \App\Traits\CalcuatesForOptionSwitch;
-    use \App\Traits\CalcuatesForEfp;
-    use \App\Traits\CalcuatesForRolls;
-    use \App\Traits\CalcuatesForEfpSwitch;
+    use \App\Traits\CalculatesForPhases;
+    use \App\Traits\CalculatesForOutright;
+    use \App\Traits\CalculatesForRisky;
+    use \App\Traits\CalculatesForCalendar;
+    use \App\Traits\CalculatesForFly;
+    use \App\Traits\CalculatesForOptionSwitch;
+    use \App\Traits\CalculatesForEfp;
+    use \App\Traits\CalculatesForRolls;
+    use \App\Traits\CalculatesForEfpSwitch;
 
 	/**
 	 * @property integer $id

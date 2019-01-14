@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForPhases {
+trait CalculatesForPhases {
 	
 	public function phaseTwo()
 	{
