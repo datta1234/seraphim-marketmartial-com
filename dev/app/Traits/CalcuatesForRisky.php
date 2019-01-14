@@ -36,7 +36,7 @@ trait CalcuatesForRisky {
         $future_contracts  = null;        
         
         $is_offer1 = $this->optionGroups[0]->getOpVal('is_offer',true);
-        $is_offer2 = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer2 = $this->optionGroups[1]->getOpVal('is_offer',true);
 
         if($is_offer1 == 1) {
             $putDirection1	= 1;
