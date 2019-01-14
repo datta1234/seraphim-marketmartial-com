@@ -98,8 +98,8 @@ trait CalcuatesForRisky {
 
     public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {
-    	$Brodirection1 = $isOffer ? 1 : -1;
-    	$Brodirection2 = $isOffer ? -1 : 1;
+    	$Brodirection1 = $isOffer ? -1 : 1;
+    	$Brodirection2 = $isOffer ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 

@@ -101,11 +101,11 @@ trait CalcuatesForCalendar {
 
         // futures and deltas buy/sell
         $isOffer2 = !($future_contracts2 < 0);
-        $this->futureGroups[0]->setOpVal('is_offer', $isOffer2 true);
+        $this->futureGroups[0]->setOpVal('is_offer', $isOffer2, true);
         $this->futureGroups[0]->setOpVal('is_offer', !$isOffer2, false);
 
-        $this->futureGroups[0]->setOpVal('Contract', round($future_contracts1));
-        $this->futureGroups[1]->setOpVal('Contract', round($future_contracts2));
+        $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts1));
+        $this->futureGroups[1]->setOpVal('Contract', abs($future_contracts2));
 
         $this->load(['futureGroups','optionGroups']);
 
@@ -114,7 +114,7 @@ trait CalcuatesForCalendar {
 
     public function calendarFees($isOffer1,$isOffer2,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {   
-        $Brodirection1 = $isOffer1 ? 1 : -1;
+        $Brodirection1 = $isOffer1 ? -1 : 1;
         $Brodirection2 = $isOffer2 ? -1 : 1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
@@ -155,21 +155,23 @@ trait CalcuatesForCalendar {
 
 	        if($contracts1 < $contracts2) {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarbigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection, 0) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection, 0) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection2) + $gross_prem2;
 	        } else {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarsmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection, 0) + $gross_prem1;
-		        $netPremium2 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection, 0) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection2) + $gross_prem2;
 	        }
+
+            //dd($SpotReferencePrice1, $IXcalendarbigFEE, $IXcalendarsmallFEE, $Brodirection1, $Brodirection2, $gross_prem1, $gross_prem2);
 
 	        //set for the counter
 	        if($contracts1 < $contracts2) {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection2) + $gross_prem2;
 	        } else {
-		        $netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection, 0) + $gross_prem1;
-		        $netPremiumCounter2 =  round($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection, 0) + $gross_prem2;
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection2) + $gross_prem2;
 	        }
         }
 
