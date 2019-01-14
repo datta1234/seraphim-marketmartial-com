@@ -96,10 +96,10 @@ trait CalcuatesForOutright {
             $SpotReferencePrice1 = $this->optionGroups[0]->userMarketRequestGroup->tradable->market->spot_price_ref;
 
             //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1, 0, PHP_ROUND_HALF_DOWN) + $gross_prem;
+            $netPremium =  floor($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1) + $gross_prem;
 
             //set for the counter
-            $netPremiumCounter =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection1 , 0, PHP_ROUND_HALF_DOWN) + $gross_prem; 
+            $netPremiumCounter =  floor($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection1) + $gross_prem; 
         }
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
