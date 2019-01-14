@@ -107,7 +107,6 @@ trait CalcuatesForRisky {
 	        $SINGLEriskybigFEE = config('marketmartial.confirmation_settings.risky.singles.big_leg')/100;//its a percentage
 	        $SINGLEriskysmallFEE = config('marketmartial.confirmation_settings.risky.singles.small_leg')/100;//its a percentage
 
-	        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
 	        $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
 	        $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
