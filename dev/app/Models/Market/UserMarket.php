@@ -543,8 +543,17 @@ class UserMarket extends Model
             $qty = $this->userMarketRequest->getDynamicItem("quantity");
 
             if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                // @TODO: well shit
-                throw Exception("Can Only Improve One Side On New Negotian tree.");
+                // Well shit
+                // ... sooo cond MIM causes this to be hit... well... shit
+                if($marketNegotiation->cond_buy_mid !== null) {
+                    // MITM Buy = lock down with offer 
+                    // MITM Sell = lock down with the bid
+                    $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                } else {
+                    // the real well shit...
+                    throw new \Exception("Can Only Improve One Side On Open Market");
+                }
             }
             elseif ($marketNegotiation->bid != null) {
                 // improved bidw
@@ -636,8 +645,17 @@ class UserMarket extends Model
                 && $counterNegotiation->marketNegotiationParent->is_repeat
             ) {
                 if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                    // @TODO: well shit
-                    throw \Exception("Can Only Improve One Side On SPIN");
+                    // Well shit
+                    // ... sooo cond MIM causes this to be hit... well... shit
+                    if($marketNegotiation->cond_buy_mid !== null) {
+                        // MITM Buy = lock down with offer 
+                        // MITM Sell = lock down with the bid
+                        $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                    } else {
+                        // the real well shit...
+                        throw new \Exception("Can Only Improve One Side On Open Market");
+                    }
                 }
                 elseif ($marketNegotiation->bid != null) {
                     // improved bid

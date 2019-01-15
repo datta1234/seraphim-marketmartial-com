@@ -236,11 +236,14 @@
                 switch(condition.value.constructor) {
                     case Array:
                         if(typeof condition.default_value !== 'undefined') {
-                            this.defaults[condition.alias] = condition.value.find(item => {
+                            let defaultVal = condition.value.find(item => {
                                 if(this.getDeepValue(item) === condition.default_value) {
                                     return true;
                                 }
-                            }).value;
+                            });
+                            if(typeof defaultVal !== 'undefined') {
+                                this.defaults[condition.alias] = defaultVal.value
+                            }
                             this.marketNegotiation[condition.alias] = condition.default_value;
                         }
                     break;

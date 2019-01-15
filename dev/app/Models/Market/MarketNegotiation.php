@@ -1329,8 +1329,13 @@ class MarketNegotiation extends Model
     public function applyCondBuyMidCondition() {
         // assumption it exists... it should since you cant apply this to a quote...
         $parent = $this->marketNegotiationParent;
-        $bid = doubleval($parent->getLatestBid());
-        $offer = doubleval($parent->getLatestOffer());
+        if($parent) {
+            $bid = doubleval($parent->getLatestBid());
+            $offer = doubleval($parent->getLatestOffer());
+        } else {
+            $bid = $this->bid;
+            $offer = $this->offer;
+        }
 
         /*   
             @NOTICE: commented out below due to [MM-788]
