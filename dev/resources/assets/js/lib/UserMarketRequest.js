@@ -3,6 +3,7 @@ import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
 import Config from './Config';
+import util from './util';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -48,6 +49,10 @@ export default class UserMarketRequest extends BaseModel {
             created_at: moment(),
             updated_at: moment(),
             default_quantity: 500,
+
+            // optional
+            user: null,
+            org: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -405,36 +410,7 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     get trade_structure_slug() {
-        switch(this.trade_structure) {
-            case 'Outright':
-                return 'outright';
-            break;
-            case 'Risky':
-                return 'risky';
-            break;
-            case 'Calendar':
-                return 'calendar';
-            break;
-            case 'Fly':
-                return 'fly';
-            break;
-            case 'Option Switch':
-                return 'option_switch';
-            break;
-            case 'EFP Switch':
-                return 'efp_switch';
-            break;
-            case 'EFP':
-                return 'efp';
-            break;
-            case 'Rolls':
-                return 'rolls';
-            break;
-            case 'Var Swap':
-                return 'var_swap';
-            break;
-        };
-        return null;
+        return util.resolveTradeStructureSlug(this.trade_structure);
     }
 
     defaultQuantity()
@@ -454,5 +430,17 @@ export default class UserMarketRequest extends BaseModel {
         {
             return this.getMarket().title == "SINGLES" ? "Rm" : "Contracts";
         }
+    }
+
+    myOrgInvolved() {
+        if(this.chosen_user_market) {
+            // NEGOTIATIONS
+            let negotiation = this.chosen_user_market.getLastNegotiation();
+            // is on one of the sides
+            return negotiation && negotiation.level_sides.length != 0;
+        }
+        // QUOTES
+        // I have sent a quote
+        return this.quotes.length > 0 && this.quotes.findIndex(q => q.is_maker) != -1;
     }
 }

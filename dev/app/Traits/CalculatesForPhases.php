@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForPhases {
+trait CalculatesForPhases {
 	
 	public function phaseTwo()
 	{
@@ -97,7 +97,7 @@ trait CalcuatesForPhases {
 
         $callOptionPremium = $future * $this->normSdist($h) - $strike * $this->normSdist($h - $volatility * pow($tt,0.5));
 
-        if($singleStock){
+        if(!$singleStock){
             return round($callOptionPremium*10);
         }else{
             return round($callOptionPremium*100,2);

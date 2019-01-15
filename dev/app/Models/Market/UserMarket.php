@@ -543,8 +543,17 @@ class UserMarket extends Model
             $qty = $this->userMarketRequest->getDynamicItem("quantity");
 
             if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                // @TODO: well shit
-                throw Exception("Can Only Improve One Side On New Negotian tree.");
+                // Well shit
+                // ... sooo cond MIM causes this to be hit... well... shit
+                if($marketNegotiation->cond_buy_mid !== null) {
+                    // MITM Buy = lock down with offer 
+                    // MITM Sell = lock down with the bid
+                    $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                } else {
+                    // the real well shit...
+                    throw new \Exception("Can Only Improve One Side On Open Market");
+                }
             }
             elseif ($marketNegotiation->bid != null) {
                 // improved bidw
@@ -608,7 +617,6 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        \Log::info("Want to Starting New Tree");
         if(
             // this is for when the counter waas traded, we start a new tree
             ($counterNegotiation && $counterNegotiation->isTraded()) 
@@ -616,7 +624,6 @@ class UserMarket extends Model
             // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
             || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
         ) {
-            \Log::info("Starting New Tree");
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
@@ -638,8 +645,17 @@ class UserMarket extends Model
                 && $counterNegotiation->marketNegotiationParent->is_repeat
             ) {
                 if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                    // @TODO: well shit
-                    throw \Exception("Can Only Improve One Side On SPIN");
+                    // Well shit
+                    // ... sooo cond MIM causes this to be hit... well... shit
+                    if($marketNegotiation->cond_buy_mid !== null) {
+                        // MITM Buy = lock down with offer 
+                        // MITM Sell = lock down with the bid
+                        $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                    } else {
+                        // the real well shit...
+                        throw new \Exception("Can Only Improve One Side On Open Market");
+                    }
                 }
                 elseif ($marketNegotiation->bid != null) {
                     // improved bid
@@ -660,8 +676,15 @@ class UserMarket extends Model
 
             // responding to RepeatATW will open to market automatically - no longer happens
             if($counterNegotiation->isRepeatATW() // parent is a RATW
-                && $counterNegotiation->marketNegotiationParent 
-                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                && (
+                    (
+                        $counterNegotiation->marketNegotiationParent 
+                        && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                    ) || (
+                        !$counterNegotiation->marketNegotiationParent
+                        && $this->marketNegotiations()->count() == 1
+                    )
+                )
             ) {
                 // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;

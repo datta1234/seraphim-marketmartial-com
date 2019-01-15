@@ -17543,6 +17543,7 @@ input:checked + .slider:before {
 
 .market-tab-ratio {
   padding-left: 1.5em;
+  padding-right: 1.5em;
 }
 
 .market-tab-ratio.has-ratio:before {
@@ -17552,6 +17553,21 @@ input:checked + .slider:before {
   font-weight: bold;
   position: absolute;
   left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.market-tab-ratio.org-involvement:after {
+  content: "";
+  height: 0.75em;
+  width: 0.75em;
+  border-radius: 50%;
+  background-color: #EBC300;
+  -webkit-box-shadow: 0px 0px 3px 1px #000000;
+  box-shadow: 0px 0px 3px 1px #000000;
+  position: absolute;
+  right: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);

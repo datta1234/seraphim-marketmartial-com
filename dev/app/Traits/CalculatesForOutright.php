@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForOutright {
+trait CalculatesForOutright {
 	
     public function outrightTwo()
     {
@@ -58,20 +58,15 @@ trait CalcuatesForOutright {
         }
 
         // futures and deltas buy/sell
-        if($future_contracts < 0)
-        {
-            $isOffer = false;
-            $this->futureGroups[0]->setOpVal('is_offer', $isOffer);
-        } else {
-            $isOffer = true;
-            $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
-        }
+        $isFutureOffer = !($future_contracts < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->outrightFees($isOffer,$gross_prem,$is_sender, $contracts1, $singleStock);
+        $this->outrightFees($is_offer,$gross_prem,$is_sender, $contracts1, $singleStock);
     }
 
     public function outrightFees($isOffer,$gross_prem,$is_sender,$contracts1,$singleStock)

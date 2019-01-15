@@ -368,7 +368,7 @@
                         if(date.isAfter(moment())) {
                             this.expiry_dates.push({
                                 text: date.format('MMMYY'),
-                                value: expiryDateResponse.data.data[key].date,
+                                value: date.format('YYYY-MM-DD'),
                             });
                         }
                     });

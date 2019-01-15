@@ -2,6 +2,11 @@
     <b-container fluid dusk="ibar-negotiation-bar-var_swap">
 
         <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+    
+        <ibar-market-requested-futures class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_future_columns">
+        </ibar-market-requested-futures>
 
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
@@ -233,7 +238,8 @@
                     "market_request_update",
                     "market_request_delete",
                     "market_negotiation_store"
-                ]
+                ],
+                market_requested_future_columns: []
             };
         },
 

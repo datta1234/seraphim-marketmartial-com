@@ -13,6 +13,7 @@ class UserMarketRequest extends Model
 {
     use \App\Traits\ResolvesUser;
     use \App\Traits\ActionListCache;
+    use \App\Traits\ResolveTradeStructureSlug;
 
     /**
      * @property integer $id
@@ -354,6 +355,11 @@ class UserMarketRequest extends Model
             });
         }
 
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
+            $data['org'] = $this->user->organisation->title;
+        }
         return $data;
     }
 
@@ -1137,43 +1143,6 @@ class UserMarketRequest extends Model
                 ]);
             break;
         }
-    }
-
-    /**
-     * get computer readable slug of trade structure. this should be used as the unique identifier
-     *
-     * @return String
-     */
-    public function getTradeStructureSlugAttribute() {
-        switch($this->trade_structure_id) {
-            case 1:
-                return 'outright';
-            break;
-            case 2:
-                return 'risky';
-            break;
-            case 3:
-                return 'calendar';
-            break;
-            case 4:
-                return 'fly';
-            break;
-            case 5:
-                return 'option_switch';
-            break;
-            case 6:
-                return 'efp';
-            break;
-            case 7:
-                return 'rolls';
-            break;
-            case 8:
-                return 'efp_switch';
-            break;
-            case 9:
-                return 'var_swap';
-            break;
-        };
     }
 
     /**

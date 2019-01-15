@@ -13,15 +13,17 @@ use Carbon\Carbon;
 class TradeConfirmation extends Model
 {
     use \App\Traits\ResolvesUser;
-    use \App\Traits\CalcuatesForPhases;
-    use \App\Traits\CalcuatesForOutright;
-    use \App\Traits\CalcuatesForRisky;
-    use \App\Traits\CalcuatesForCalendar;
-    use \App\Traits\CalcuatesForFly;
-    use \App\Traits\CalcuatesForOptionSwitch;
-    use \App\Traits\CalcuatesForEfp;
-    use \App\Traits\CalcuatesForRolls;
-    use \App\Traits\CalcuatesForEfpSwitch;
+    use \App\Traits\ResolveTradeStructureSlug;
+
+    use \App\Traits\CalculatesForPhases;
+    use \App\Traits\CalculatesForOutright;
+    use \App\Traits\CalculatesForRisky;
+    use \App\Traits\CalculatesForCalendar;
+    use \App\Traits\CalculatesForFly;
+    use \App\Traits\CalculatesForOptionSwitch;
+    use \App\Traits\CalculatesForEfp;
+    use \App\Traits\CalculatesForRolls;
+    use \App\Traits\CalculatesForEfpSwitch;
 
 	/**
 	 * @property integer $id
@@ -661,6 +663,8 @@ public function preFormatStats($user = null, $is_Admin = false)
      */
      private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
      {
+        $delta_one_list = ['efp', 'rolls', 'efp_switch'];
+
          foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
@@ -683,10 +687,20 @@ public function preFormatStats($user = null, $is_Admin = false)
                     $value = null;
                     break;
                 case 'Future':
+                case 'Future 2':
+                    if($tradeGroup->userMarketRequestGroup->is_selected) {
+                        $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
+                    } else if(in_array($this->tradeStructureSlug, $delta_one_list)) {
+                        $value = $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    } else {
+                        $value = null;
+                    }
+                    break;
+                case 'Future 1':
                     $value = null;
                     break;
                 case 'Contract':
-                    if($isOption && !$is_single_stock) {
+                    if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
                         $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
                     } else {
                         $value = null;
@@ -695,14 +709,13 @@ public function preFormatStats($user = null, $is_Admin = false)
                 case 'Nominal':
                     if($is_single_stock) {
                         // Need to multiply by 1M because the Nomninal is amount per million
-                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity * 1000000;  
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') * 1000000 : $tradeNegotiation->quantity * 1000000;  
                     }
                     break;
             }
 
             if($item->title =="Net Premiums")
             {
-
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -718,17 +731,23 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            } else if($item->title == "is_offer") {
+            } else if($item->title == "is_offer" || $item->title == "is_offer 1" || $item->title == "is_offer 2") {
                 $seller_value = $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
                 $buyer_value = $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id); 
                 
-                if($isOption) {
+                if($isOption || in_array($this->tradeStructureSlug, $delta_one_list)) {
                     $seller_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$seller_value : $seller_value;
                     $buyer_is_offer = $tradeGroup->userMarketRequestGroup->is_selected ? !$buyer_value : $buyer_value;
                 } else {
                     $seller_is_offer = null;
                     $buyer_is_offer = null;
                 }
+
+                if($item->title == "is_offer 2") {
+                    $seller_is_offer = !$seller_is_offer;
+                    $buyer_is_offer = !$buyer_is_offer;
+                }
+
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -765,6 +784,22 @@ public function preFormatStats($user = null, $is_Admin = false)
                         'trade_confirmation_group_id' => $tradeStructureGroup->id
                     ]);
                 } 
+            } else if(in_array($this->tradeStructureSlug, $delta_one_list) && ($item->title == "Future" || $item->title == "Future 2")) {
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
             } else {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
@@ -918,34 +953,5 @@ public function preFormatStats($user = null, $is_Admin = false)
         {
             return $netPremium->value;
         }
-    }
-
-    public function getTradeStructureSlugAttribute() {
-        switch($this->trade_structure_id) {
-            case 1:
-                return 'outright';
-            break;
-            case 2:
-                return 'risky';
-            break;
-            case 3:
-                return 'calendar';
-            break;
-            case 4:
-                return 'fly';
-            break;
-            case 5:
-                return 'option_switch';
-            break;
-            case 6:
-                return 'efp_switch';
-            break;
-            case 7:
-                return 'efp';
-            break;
-            case 8:
-                return 'rolls';
-            break;
-        };
     }
 }

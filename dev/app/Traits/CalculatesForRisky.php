@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForRisky {
+trait CalculatesForRisky {
     
     public function riskyTwo()
     {
@@ -35,9 +35,10 @@ trait CalcuatesForRisky {
  
         $future_contracts  = null;        
         
-        $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer1 = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer2 = $this->optionGroups[1]->getOpVal('is_offer',true);
 
-        if($is_offer == 1) {
+        if($is_offer1 == 1) {
             $putDirection1	= 1;
             $callDirection1 = 1;
             
@@ -81,25 +82,21 @@ trait CalcuatesForRisky {
         }
 
         // futures and deltas buy/sell
-        if($future_contracts < 0) {
-            $isOffer = false;
-        } else {
-            $isOffer = true;
-        }
-        $this->futureGroups[0]->setOpVal('is_offer', $isOffer, true);
-        $this->futureGroups[0]->setOpVal('is_offer', !$isOffer, false);
+        $isFutureOffer = !($future_contracts < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
+        $this->riskyFees($is_offer1, $is_offer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
 
-    public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
+    public function riskyFees($isOffer1,$isOffer2,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {
-    	$Brodirection1 = $isOffer ? 1 : -1;
-    	$Brodirection2 = $isOffer ? -1 : 1;
+    	$Brodirection1 = $isOffer1 ? 1 : -1;
+    	$Brodirection2 = $isOffer2 ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
@@ -107,7 +104,6 @@ trait CalcuatesForRisky {
 	        $SINGLEriskybigFEE = config('marketmartial.confirmation_settings.risky.singles.big_leg')/100;//its a percentage
 	        $SINGLEriskysmallFEE = config('marketmartial.confirmation_settings.risky.singles.small_leg')/100;//its a percentage
 
-	        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
 	        $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
 	        $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 

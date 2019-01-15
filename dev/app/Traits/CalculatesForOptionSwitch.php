@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForOptionSwitch {
+trait CalculatesForOptionSwitch {
     
     public function optionSwitchTwo()
     {
@@ -17,14 +17,16 @@ trait CalcuatesForOptionSwitch {
         
         if($singleStock1) {
             $SpotRef1 = floatval($this->futureGroups[0]->getOpVal('Spot'));
-            // Need to multiply by 1M because the Nomninal is amount per million
-            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity *1000000) / ($SpotRef1 *100), 0));
+            $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
+            
+            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef1 *100), 0));
         }
 
         if($singleStock2) {
             $SpotRef2 = floatval($this->futureGroups[1]->getOpVal('Spot'));
-            // Need to multiply by 1M because the Nomninal is amount per million
-            $this->optionGroups[1]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity *1000000) / ($SpotRef2 *100), 0));
+            $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
+
+            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef2 *100), 0));
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -42,9 +44,10 @@ trait CalcuatesForOptionSwitch {
         $future_contracts2 = null;
         $future_contracts1 = null;
         
-        $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer1 = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer2 = $this->optionGroups[1]->getOpVal('is_offer',true);
 
-        if($is_offer == 1) {
+        if($is_offer1 == 1) {
             $putDirection1	= 1;
             $callDirection1 = 1;
             
@@ -60,11 +63,11 @@ trait CalcuatesForOptionSwitch {
 
         $startDate = Carbon::now()->startOfDay();
         
-        $POD1 = $this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1  * $putDirection1;
-        $COD1 = $this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1 * $callDirection1;
+        $POD1 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0)  * $putDirection1;
+        $COD1 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0) * $callDirection1;
 
-        $POD2 = $this->putOptionDelta($startDate,$expiry2,$future2,$strike2,$volatility2) * $contracts2  * $putDirection2;
-        $COD2 = $this->callOptionDelta($startDate,$expiry2,$future2,$strike2,$volatility2) * $contracts2 * $callDirection2;
+        $POD2 = round($this->putOptionDelta($startDate,$expiry2,$future2,$strike2,$volatility2) * $contracts2, 0)  * $putDirection2;
+        $COD2 = round($this->callOptionDelta($startDate,$expiry2,$future2,$strike2,$volatility2) * $contracts2, 0) * $callDirection2;
 
         // Leg1 - 1st Expiry
         if(abs($POD1) <= abs($COD1)) {
@@ -81,6 +84,11 @@ trait CalcuatesForOptionSwitch {
 
           $future_contracts1/*cell(21,6)*/ = $COD1;
         }
+
+        // futures and deltas buy/sell
+        $isFututeOffer1 = !($future_contracts1 < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFututeOffer1, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFututeOffer1, false);
 
         // Leg2 - 2nd Expiry
         if(abs($POD2) <= abs($COD2)) {
@@ -99,28 +107,24 @@ trait CalcuatesForOptionSwitch {
         }
 
         // futures and deltas buy/sell
-        if($contracts < 0) {
-            $isOffer = false;
-            $this->futureGroups[0]->setOpVal('is_offer', $isOffer);
-            $this->futureGroups[1]->setOpVal('is_offer', $isOffer);
-        } else {
-            $isOffer = true;
-            $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
-            $this->futureGroups[1]->setOpVal('is_offer',$isOffer);
-        }
+        $isFutureOffer2 = !($future_contracts2 < 0);
+        $this->futureGroups[1]->setOpVal('is_offer', $isFutureOffer2, true);
+        $this->futureGroups[1]->setOpVal('is_offer', !$isFutureOffer2, false);
 
-        $this->futureGroups[0]->setOpVal('Contract', round($future_contracts1));
-        $this->futureGroups[1]->setOpVal('Contract', round($future_contracts2));
+        $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts1));
+        $this->futureGroups[1]->setOpVal('Contract', abs($future_contracts2));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->optionSwitchFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2,$singleStock1,$singleStock2);
+        $this->optionSwitchFees($is_offer1, $is_offer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2,$singleStock1,$singleStock2);
     }
 
-    public function optionSwitchFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock1,$singleStock2)
+    public function optionSwitchFees($isOffer1,$isOffer2,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock1,$singleStock2)
     {     
-		$Brodirection = $isOffer ? 1 : -1;
-        $counterBrodirection = $Brodirection * -1;
+		$Brodirection1 = $isOffer1 ? 1 : -1;
+        $Brodirection2 = $isOffer2 ? 1 : -1;
+        $counterBrodirection1 = $Brodirection1 * -1;
+        $counterBrodirection2 = $Brodirection2 * -1;
 
 		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.singles.per_leg')/100;//its a percentage
 		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.index.per_leg')/100;//its a percentage
@@ -128,38 +132,36 @@ trait CalcuatesForOptionSwitch {
 
     	// Leg1 Top40, DTop, DCap or Single?
     	if($singleStock1) {
-        	$user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
-            $nominal1 = $user_market_request_groups[0]->getDynamicItem('Quantity');
+            $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
 
     		//NETPREM = Application.Round(nominal1 * SINGLEoptionswitchFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-    		$netPremium1 =  round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $Brodirection + $gross_prem1, 2);
+    		$netPremium1 =  round($nominal1 * $SINGLEoptionswitchFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
     		//set for the counter
-    		$netPremiumCounter1 = round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $counterBrodirection + $gross_prem1, 2);
+    		$netPremiumCounter1 = round($nominal1 * $SINGLEoptionswitchFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
     	} else {
 			$SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoptionswitchFEE * Brodirection1, 0) + GrossPrem1
-    		$netPremium1 =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection, 0) + $gross_prem1;
+    		$netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXoptionswitchFEE * $Brodirection1) + $gross_prem1;
     		//set for the counter
-    		$netPremiumCounter1 =  round($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection, 0) + $gross_prem1;
+    		$netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXoptionswitchFEE * $counterBrodirection1) + $gross_prem1;
     	}
 
     	// Leg2 Top40, DTop, DCap or Single?
     	if($singleStock2) {
-    		$user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
-            $nominal2 = $user_market_request_groups[1]->getDynamicItem('Quantity');
+            $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
     		//NETPREM = Application.Round(nominal2 * SINGLEoptionswitchFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-    		$netPremium2 =  round($nominal2 * $SINGLEoutrightFEE / $contracts2 * $Brodirection + $gross_prem2, 2);
+    		$netPremium2 =  round($nominal2 * $SINGLEoptionswitchFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
     		//set for the counter
-    		$netPremiumCounter2 =  round($nominal2 * $SINGLEoutrightFEE / $contracts2 * $counterBrodirection + $gross_prem2, 2);
+    		$netPremiumCounter2 =  round($nominal2 * $SINGLEoptionswitchFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
     	} else {
     		$SpotReferencePrice2 = $this->marketRequest->userMarketRequestTradables[1]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice2 * 10 * IXoptionswitchFEE * Brodirection2, 0) + GrossPrem2
-    		$netPremium2 =  round($SpotReferencePrice2 * 10 * $IXoutrightFEE * $Brodirection, 0) + $gross_prem2;
+    		$netPremium2 =  floor($SpotReferencePrice2 * 10 * $IXoptionswitchFEE * $Brodirection2) + $gross_prem2;
     		//set for the counter
-    		$netPremiumCounter2 =  round($SpotReferencePrice2 * 10 * $IXoutrightFEE * $counterBrodirection, 0) + $gross_prem2;
+    		$netPremiumCounter2 =  floor($SpotReferencePrice2 * 10 * $IXoptionswitchFEE * $counterBrodirection2) + $gross_prem2;
     	}
 
     	$this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
