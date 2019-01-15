@@ -2,7 +2,7 @@
     <b-row dusk="ibar-market-requested-futures" class="ibar-market-requested-futures market-requested-info">
         <b-col>
             <b-row align-v="end">
-                <b-col cols="10" v-if="true">
+                <b-col cols="10">
                     <template v-for="(item, index) in tradings">
                         <b-row no-gutters v-if="columns.indexOf('future') != -1 && item.future">
                             <b-col cols="3" class="info-col text-left">
@@ -41,6 +41,13 @@
                             </b-col>
                         </b-row>
                     </template>
+                </b-col>
+            </b-row>
+            <b-row v-if="$root.is_admin">
+                <b-col cols="12">
+                    <span class="text-left admin-label is-interest" v-b-popover.hover.top="marketRequest.user">
+                        {{ marketRequest.org }}
+                    </span>
                 </b-col>
             </b-row>
         </b-col>
