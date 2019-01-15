@@ -3,6 +3,7 @@ import BaseModel from './BaseModel';
 import OptionGroup from './tradeconfirmations/OptionGroup';
 import FutureGroup from './tradeconfirmations/FutureGroup';
 import Errors from './Errors';
+import util from './util';
 
 export default class TradeConfirmation extends BaseModel {
 
@@ -79,8 +80,12 @@ export default class TradeConfirmation extends BaseModel {
         let options = [];
         this.future_groups.forEach((group)=>{
           options.push(group.prepareStore());
-      });
+        });
         return options;
+    }
+
+    get trade_structure_slug() {
+        return util.resolveTradeStructureSlug(this.trade_structure_title);
     }
 
     updateOptionColoumns(tradeStructureGroup)

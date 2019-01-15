@@ -608,7 +608,6 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        \Log::info("Want to Starting New Tree");
         if(
             // this is for when the counter waas traded, we start a new tree
             ($counterNegotiation && $counterNegotiation->isTraded()) 
@@ -616,7 +615,6 @@ class UserMarket extends Model
             // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
             || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
         ) {
-            \Log::info("Starting New Tree");
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
@@ -660,8 +658,15 @@ class UserMarket extends Model
 
             // responding to RepeatATW will open to market automatically - no longer happens
             if($counterNegotiation->isRepeatATW() // parent is a RATW
-                && $counterNegotiation->marketNegotiationParent 
-                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                && (
+                    (
+                        $counterNegotiation->marketNegotiationParent 
+                        && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                    ) || (
+                        !$counterNegotiation->marketNegotiationParent
+                        && $this->marketNegotiations()->count() == 1
+                    )
+                )
             ) {
                 // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;
