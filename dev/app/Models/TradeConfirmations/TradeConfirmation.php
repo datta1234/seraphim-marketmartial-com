@@ -13,6 +13,8 @@ use Carbon\Carbon;
 class TradeConfirmation extends Model
 {
     use \App\Traits\ResolvesUser;
+    use \App\Traits\ResolveTradeStructureSlug;
+
     use \App\Traits\CalculatesForPhases;
     use \App\Traits\CalculatesForOutright;
     use \App\Traits\CalculatesForRisky;
@@ -683,11 +685,17 @@ public function preFormatStats($user = null, $is_Admin = false)
                     $value = null;
                     break;
                 case 'Future':
-                    $value = null;
+                    if($this->tradeStructureSlug == 'efp') {
+                        $value = $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    } else {
+                        $value = null;
+                    }
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock) {
                         $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
+                    } else if($this->tradeStructureSlug == 'efp') {
+                        $value = $tradeNegotiation->quantity;
                     } else {
                         $value = null;
                     }
@@ -918,34 +926,5 @@ public function preFormatStats($user = null, $is_Admin = false)
         {
             return $netPremium->value;
         }
-    }
-
-    public function getTradeStructureSlugAttribute() {
-        switch($this->trade_structure_id) {
-            case 1:
-                return 'outright';
-            break;
-            case 2:
-                return 'risky';
-            break;
-            case 3:
-                return 'calendar';
-            break;
-            case 4:
-                return 'fly';
-            break;
-            case 5:
-                return 'option_switch';
-            break;
-            case 6:
-                return 'efp_switch';
-            break;
-            case 7:
-                return 'efp';
-            break;
-            case 8:
-                return 'rolls';
-            break;
-        };
     }
 }
