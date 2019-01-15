@@ -94,7 +94,7 @@
                         -    
                     </template>
                 </td>
-                <td>
+                <td v-if="canEdit('future')">
                     <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
                     <span class="text-danger">
                         <!-- @TODO figure out how to not hardcode the first value -->
@@ -104,6 +104,9 @@
                       </li>
                     </ul>
                     </span>
+                </td>
+                <td v-else>
+                    {{ trade_confirmation.future_groups[key]['future'] }}
                 </td>
                 <td>
                     <b-form-input class="mm-blue-bg" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
@@ -182,6 +185,20 @@
             }
         },
         methods: {
+            canEdit(field) {
+                switch(field) {
+                    case 'future':
+                        return !this.trade_confirmation.trade_structure_slug == 'efp';
+                        break;
+                    case 'underlying':
+                    case 'spot':
+                    case 'contracts':
+                    case 'expiry':
+                    default:
+                        return false; 
+                        break;
+                }
+            },
             loadConfirmation(tradeConfirmation)
             {
                 this.trade_confirmation = tradeConfirmation;
