@@ -3,6 +3,7 @@ import UserMarket from './UserMarket';
 import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
 import Config from './Config';
+import util from './util';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -405,36 +406,7 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     get trade_structure_slug() {
-        switch(this.trade_structure) {
-            case 'Outright':
-                return 'outright';
-            break;
-            case 'Risky':
-                return 'risky';
-            break;
-            case 'Calendar':
-                return 'calendar';
-            break;
-            case 'Fly':
-                return 'fly';
-            break;
-            case 'Option Switch':
-                return 'option_switch';
-            break;
-            case 'EFP Switch':
-                return 'efp_switch';
-            break;
-            case 'EFP':
-                return 'efp';
-            break;
-            case 'Rolls':
-                return 'rolls';
-            break;
-            case 'Var Swap':
-                return 'var_swap';
-            break;
-        };
-        return null;
+        return util.resolveTradeStructureSlug(this.trade_structure);
     }
 
     defaultQuantity()
