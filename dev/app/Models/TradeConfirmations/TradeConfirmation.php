@@ -664,7 +664,7 @@ public function preFormatStats($user = null, $is_Admin = false)
      private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
      {
         $delta_one_list = ['efp', 'rolls', 'efp_switch'];
-        
+
          foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
@@ -687,17 +687,17 @@ public function preFormatStats($user = null, $is_Admin = false)
                     $value = null;
                     break;
                 case 'Future':
-                    if(in_array($this->tradeStructureSlug, $delta_one_list)) {
+                    if($tradeGroup->userMarketRequestGroup->is_selected) {
+                        $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
+                    } else if(in_array($this->tradeStructureSlug, $delta_one_list)) {
                         $value = $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
                     } else {
                         $value = null;
                     }
                     break;
                 case 'Contract':
-                    if($isOption && !$is_single_stock) {
+                    if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
                         $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
-                    } else if($this->tradeStructureSlug == 'efp') {
-                        $value = $tradeNegotiation->quantity;
                     } else {
                         $value = null;
                     }

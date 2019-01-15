@@ -39,7 +39,7 @@ trait CalculatesForEfp {
 
         //set for the counter
         // FUTURE = Application.Round(FuturesSpotRef1 * D1efpFee * FutureBrodirection1, 2) + (FuturesSpotRef1 + points1)
-        $futureCounter =  round( ($FuturesSpotRef1 * $D1efpFee * $counterFutBrodirection1) + ($FuturesSpotRef1 + $points1), 2);
+        $futureCounter =  round( ($FuturesSpotRef1 * $D1efpFee * $counterFutBrodirection1), 2) + ($FuturesSpotRef1 + $points1);
         $this->futureGroups[0]->setOpVal('Future', $futureCounter,!$is_sender);
     }
 }
