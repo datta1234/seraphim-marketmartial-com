@@ -49,6 +49,10 @@ export default class UserMarketRequest extends BaseModel {
             created_at: moment(),
             updated_at: moment(),
             default_quantity: 500,
+
+            // optional
+            user: null,
+            org: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
