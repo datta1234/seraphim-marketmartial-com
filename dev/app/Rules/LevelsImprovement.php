@@ -66,7 +66,10 @@ class LevelsImprovement implements Rule
                 $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
                 // if the attribute on the last killed FoK is the one under validation, ignore its value...
                 if($attribute == $cond_att) {
-                    return true;
+                    $valid = ( $attribute == 'bid' ? true : false );
+                    $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $attribute value.";
+                    return $this->request->input($attribute) != $this->lastNegotiation->getLatest($inverse)
+                        && $this->request->input($attribute) < $this->lastNegotiation->getLatest($inverse) === $valid;
                 }
             }
 

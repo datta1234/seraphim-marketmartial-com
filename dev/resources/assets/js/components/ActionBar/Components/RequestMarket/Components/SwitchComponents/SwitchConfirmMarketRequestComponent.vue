@@ -49,6 +49,7 @@
                     "EXPIRY",
                     "STRIKE",
                     "QUANTITY/RATIO",
+                    "FUTURE PRICE REFERENCE",
                     "STRUCTURE",
                 ]
             };
@@ -76,6 +77,9 @@
                     case "QUANTITY/RATIO":
                         return switch_option.is_index ? switch_option.quantity + " contracts" 
                             : this.$root.formatRandQty(switch_option.quantity) + 'm';
+                        break;
+                    case "FUTURE PRICE REFERENCE":
+                        return switch_option.has_future ? this.$root.splitValHelper(switch_option.future,' ',3) : '-';
                         break;
                     case "STRUCTURE":
                         return option_index == 0 ? this.data.market_object.trade_structure : '';
