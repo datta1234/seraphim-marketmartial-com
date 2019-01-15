@@ -5,61 +5,63 @@
         <p>Thank you for your trade! Please check before accepting.</p>
         <p>Date: {{ trade_confirmation.date }} </p>
         <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
-        <div style="Display:inline;">
-            <h3 class="text-dark">Option</h3>
-        </div>
+        <template v-if="trade_confirmation.option_groups.length > 0">
+            <div style="Display:inline;">
+                <h3 class="text-dark">Option</h3>
+            </div>
 
-        <table class="table table-sm">
-          <thead>
-            <tr>
-                <th scope="col">{{ trade_confirmation.organisation }}</th>
-                <th scope="col">Underlying</th>
-                <th scope="col">Strike</th>
-                <th scope="col">Put/Call</th>
-                <th scope="col">Nominal</th>
-                <th scope="col">Contracts</th>
-                <th scope="col">Expiry</th>
-                <th scope="col">Volatility</th>
-                <th scope="col">Gross Prem</th>
-                <th scope="col">Net Prem</th>
-            </tr>
-          </thead>
-          <tbody>
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                    <th scope="col">{{ trade_confirmation.organisation }}</th>
+                    <th scope="col">Underlying</th>
+                    <th scope="col">Strike</th>
+                    <th scope="col">Put/Call</th>
+                    <th scope="col">Nominal</th>
+                    <th scope="col">Contracts</th>
+                    <th scope="col">Expiry</th>
+                    <th scope="col">Volatility</th>
+                    <th scope="col">Gross Prem</th>
+                    <th scope="col">Net Prem</th>
+                </tr>
+              </thead>
+              <tbody>
 
-            <tr v-for="option_group in trade_confirmation.option_groups">
-                <td>
-                  {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sell"):'') }}
-                </td>
-                <td>
-                    {{ option_group.underlying_title }}
-                </td>
-                  <td>
-                    {{ splitValHelper(option_group.strike,' ',3) }} 
-                </td>
-                <td>
-                    {{ option_group.is_put ? "Put" : "Call" }} 
-                </td>
-                <td>
-                    {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
-                </td>
-                <td>
-                    {{ option_group.contracts }} 
-                </td>
-                <td>
-                    {{ option_group.expires_at }}                            
-                </td>
-                <td>
-                    {{ option_group.volatility }} %
-                </td>
-                <td>
-                    <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
-                </td>
-                <td>
-                    <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
-                </td>
-            </tr>
-          </tbody>
-        </table>
+                <tr v-for="option_group in trade_confirmation.option_groups">
+                    <td>
+                      {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sell"):'') }}
+                    </td>
+                    <td>
+                        {{ option_group.underlying_title }}
+                    </td>
+                      <td>
+                        {{ splitValHelper(option_group.strike,' ',3) }} 
+                    </td>
+                    <td>
+                        {{ option_group.is_put ? "Put" : "Call" }} 
+                    </td>
+                    <td>
+                        {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
+                    </td>
+                    <td>
+                        {{ option_group.contracts }} 
+                    </td>
+                    <td>
+                        {{ option_group.expires_at }}                            
+                    </td>
+                    <td>
+                        {{ option_group.volatility }} %
+                    </td>
+                    <td>
+                        <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
+                    </td>
+                    <td>
+                        <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+        </template>
 
         <div>
             <h3 class="text-dark">Futures</h3>
@@ -92,7 +94,7 @@
                         -    
                     </template>
                 </td>
-                <td>
+                <td v-if="canEdit('future')">
                     <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
                     <span class="text-danger">
                         <!-- @TODO figure out how to not hardcode the first value -->
@@ -102,6 +104,9 @@
                       </li>
                     </ul>
                     </span>
+                </td>
+                <td v-else>
+                    {{ trade_confirmation.future_groups[key]['future'] }}
                 </td>
                 <td>
                     <b-form-input class="mm-blue-bg" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
@@ -180,6 +185,20 @@
             }
         },
         methods: {
+            canEdit(field) {
+                switch(field) {
+                    case 'future':
+                        return !this.trade_confirmation.trade_structure_slug == 'efp';
+                        break;
+                    case 'underlying':
+                    case 'spot':
+                    case 'contracts':
+                    case 'expiry':
+                    default:
+                        return false; 
+                        break;
+                }
+            },
             loadConfirmation(tradeConfirmation)
             {
                 this.trade_confirmation = tradeConfirmation;
