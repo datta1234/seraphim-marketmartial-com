@@ -78,43 +78,98 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(future_group, key) in trade_confirmation.future_groups">
-                <td>
-                  {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
-                </td>
-                <td>
-                  {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
-                </td>
-                <td>
-                    
-                    <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
-                        <b-form-input v-model="trade_confirmation.future_groups[key]['spot']" type="number"></b-form-input> 
-                    </template>
-                    <template v-else>
-                        -    
-                    </template>
-                </td>
-                <td v-if="canEdit('future')">
-                    <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
-                    <span class="text-danger">
-                        <!-- @TODO figure out how to not hardcode the first value -->
-                    <ul v-if="errors">
-                      <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
-                          {{ error }}
-                      </li>
-                    </ul>
-                    </span>
-                </td>
-                <td v-else>
-                    {{ trade_confirmation.future_groups[key]['future'] }}
-                </td>
-                <td>
-                    <b-form-input class="mm-blue-bg" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
-                </td>
-                <td>
-                    {{ future_group.expires_at }}     
-                </td>
-            </tr>
+            <template v-for="(future_group, key) in trade_confirmation.future_groups">
+                <!-- Used for Rolls Structure only -->
+                <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'rolls'">
+                    <tr>
+                        <td>
+                          {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sell"):'') }}
+                        </td>
+                        <td>
+                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                        </td>
+                        <td>
+                            -    
+                        </td>
+                        <td>
+                            <b-form-input v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></b-form-input>
+                            <span class="text-danger">
+                                <!-- @TODO figure out how to not hardcode the first value -->
+                            <ul v-if="errors">
+                              <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
+                                  {{ error }}
+                              </li>
+                            </ul>
+                            </span>
+                        </td>
+                        <td>
+                            {{ trade_confirmation.future_groups[key]['contracts'] }}
+                        </td>
+                        <td>
+                            {{ future_group.expires_at_1 }}     
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                          {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sell"):'') }}
+                        </td>
+                        <td>
+                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                        </td>
+                        <td>
+                            -    
+                        </td>
+                        <td>
+                            {{ trade_confirmation.future_groups[key]['future_2'] }}
+                        </td>
+                        <td>
+                            {{ trade_confirmation.future_groups[key]['contracts'] }} 
+                        </td>
+                        <td>
+                            {{ future_group.expires_at_2 }}     
+                        </td>
+                    </tr> 
+                </template>
+                <template v-else>
+                    <tr>
+                        <td>
+                          {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
+                        </td>
+                        <td>
+                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                        </td>
+                        <td>
+                            
+                            <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
+                                <b-form-input v-model="trade_confirmation.future_groups[key]['spot']" type="number"></b-form-input> 
+                            </template>
+                            <template v-else>
+                                -    
+                            </template>
+                        </td>
+                        <td v-if="canEdit('future')">
+                            <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
+                            <span class="text-danger">
+                                <!-- @TODO figure out how to not hardcode the first value -->
+                            <ul v-if="errors">
+                              <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
+                                  {{ error }}
+                              </li>
+                            </ul>
+                            </span>
+                        </td>
+                        <td v-else>
+                            {{ trade_confirmation.future_groups[key]['future'] }}
+                        </td>
+                        <td>
+                            <b-form-input class="mm-blue-bg" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></b-form-input>
+                        </td>
+                        <td>
+                            {{ future_group.expires_at }}     
+                        </td>
+                    </tr>
+                </template>
+            </template>
           </tbody>
         </table>
          <b-row>

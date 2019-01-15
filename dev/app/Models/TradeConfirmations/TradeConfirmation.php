@@ -687,6 +687,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     $value = null;
                     break;
                 case 'Future':
+                case 'Future 2':
                     if($tradeGroup->userMarketRequestGroup->is_selected) {
                         $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
                     } else if(in_array($this->tradeStructureSlug, $delta_one_list)) {
@@ -694,6 +695,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                     } else {
                         $value = null;
                     }
+                    break;
+                case 'Future 1':
+                    $value = null;
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
@@ -712,7 +716,6 @@ public function preFormatStats($user = null, $is_Admin = false)
 
             if($item->title =="Net Premiums")
             {
-
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -728,7 +731,7 @@ public function preFormatStats($user = null, $is_Admin = false)
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            } else if($item->title == "is_offer") {
+            } else if($item->title == "is_offer" || $item->title == "is_offer 1" || $item->title == "is_offer 2") {
                 $seller_value = $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
                 $buyer_value = $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id); 
                 
@@ -739,6 +742,12 @@ public function preFormatStats($user = null, $is_Admin = false)
                     $seller_is_offer = null;
                     $buyer_is_offer = null;
                 }
+
+                if($item->title == "is_offer 2") {
+                    $seller_is_offer = !$seller_is_offer;
+                    $buyer_is_offer = !$buyer_is_offer;
+                }
+
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
                     'title' => $item->title,
@@ -775,6 +784,22 @@ public function preFormatStats($user = null, $is_Admin = false)
                         'trade_confirmation_group_id' => $tradeStructureGroup->id
                     ]);
                 } 
+            } else if(in_array($this->tradeStructureSlug, $delta_one_list) && ($item->title == "Future" || $item->title == "Future 2")) {
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $value,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
             } else {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,

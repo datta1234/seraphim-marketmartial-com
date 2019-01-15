@@ -189,7 +189,12 @@ export default class TradeConfirmation extends BaseModel {
     hasFutures()
     {
         return this.future_groups.reduce((out, group)=>{
-                if(group.future == null)
+                if( group.hasOwnProperty('future') && group.future == null )
+                {
+                    out = false;
+                }
+
+                if( group.hasOwnProperty('future_1') && group.future_1 == null )
                 {
                     out = false;
                 }
@@ -207,7 +212,7 @@ export default class TradeConfirmation extends BaseModel {
     hasSpots()
     {
         return this.future_groups.reduce( (out, group) => {
-                if( group.hasOwnProperty('spot') && group.spot == null)
+                if( group.hasOwnProperty('spot') && group.spot == null )
                 {
                     out = false;
                 }
