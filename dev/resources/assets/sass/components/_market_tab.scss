@@ -28,6 +28,7 @@
 
 .market-tab-ratio {
 	padding-left:1.5em;
+	padding-right:1.5em;
 	&.has-ratio:before {
 		content: "R";
 		color: maroon;
@@ -35,6 +36,18 @@
 		font-weight: bold;
 		position: absolute;
 		left: 0;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	&.org-involvement:after {
+		content: "";
+		height: 0.75em;
+		width: 0.75em;
+		border-radius: 50%;
+		background-color: $mm-yellow;
+		position: absolute;
+		right: 0;
 		top: 50%;
 		-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);
