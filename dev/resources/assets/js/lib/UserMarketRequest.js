@@ -427,4 +427,16 @@ export default class UserMarketRequest extends BaseModel {
             return this.getMarket().title == "SINGLES" ? "Rm" : "Contracts";
         }
     }
+
+    myOrgInvolved() {
+        if(this.chosen_user_market) {
+            // NEGOTIATIONS
+            let negotiation = this.chosen_user_market.getLastNegotiation();
+            // is on one of the sides
+            return negotiation && negotiation.level_sides.length != 0;
+        }
+        // QUOTES
+        // I have sent a quote
+        return this.quotes.length > 0 && this.quotes.findIndex(q => q.is_maker) != -1;
+    }
 }
