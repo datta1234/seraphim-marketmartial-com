@@ -110,8 +110,16 @@
 
                 let marketRequest = this.marketNegotiation.getUserMarket().getMarketRequest();
                 let marketTitle = marketRequest.getMarket().title
-                let title = marketTitle+" "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+
-                " "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
+                let trade_structure_config = this.$root.config("trade_structure."+marketRequest.trade_structure_slug);
+                let group = Object.values(marketRequest.trade_items).find(g => g.choice == false);
+                console.log(trade_structure_config, group);
+
+                let title = marketTitle
+                  +" "
+                  +( trade_structure_config.expiration_date_1 ? group[trade_structure_config.expiration_date_1] : group[trade_structure_config.expiration_date] )
+                  +" "
+                  +( trade_structure_config.strike_1 ? group[trade_structure_config.strike_1] : group[trade_structure_config.strike] )
+                ;
                 
                 if(this.is_offer == null) {
                   return "Buy Or Sell?"

@@ -30,22 +30,22 @@
                                             cols="10" 
                                             class="chat-block">
                                         <b-row>
-                                            <b-col cols="12" class="chat-user-name mb-0 pt-3">
+                                            <div class="w-100 chat-user-name pt-2 pr-2 pl-2">
                                                 <h6 class="m-0">
                                                     {{ messageUserName(message.user_name) }}
                                                     <span class="float-right chat-timestamp">{{ castToMomentTime(message.time_stamp) }}</span>
                                                 </h6>
-                                            </b-col>
-                                            <b-col cols="12" class="chat-message mt-3">
-                                                <p>{{ message.message }}</p>
-                                            </b-col>
-                                            <b-col cols="12" class="chat-time mt-0">
-                                                <h6 class="text-right">
+                                            </div>
+                                            <div class="w-100 chat-message mt-1 pr-2 pl-2">
+                                                <p class="mb-0">{{ message.message }}</p>
+                                            </div>
+                                            <div class="w-100 chat-time mt-0 pr-2 pl-2 pb-2">
+                                                <h6 class="text-right mb-0" v-if="message.status != null">
                                                     &nbsp;
                                                     <i v-if="message.status == 'sent'" class="fas fa-check"></i>
                                                     <i v-if="message.status == 'received'" class="fas fa-check-double"></i>
                                                 </h6>
-                                            </b-col>
+                                            </div>
                                         </b-row>
                                     </b-col>    
                                 </b-row>
