@@ -237,8 +237,8 @@ class TradeConfirmation extends Model
 
             'can_interact'              => $this->canInteract(),
 
-            'underlying_id'             => $this->marketRequest->underlying->id,
-            'underlying_title'          => $this->marketRequest->underlying->title,
+            'underlying_id'             => $this->marketRequest->trading_underlying->trading_market_id,
+            'underlying_title'          => $this->marketRequest->trading_underlying->title,
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             
@@ -445,7 +445,7 @@ public function resolveUserMarketRequestItems()
 public function resolveUnderlying() {
     // Get the user market request items
     $underlyings = array();
-    $user_market_request_tradables = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestTradables;
+    $user_market_request_tradables = $this->marketRequest->userMarketRequestTradables;
     foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
         $underlyings[] = $user_market_request_tradable->stock_id === null ?
             $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
@@ -615,9 +615,10 @@ public function preFormatStats($user = null, $is_Admin = false)
 
             $marketNegotiation = $tradeNegotiation->marketNegotiation;
             $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
+            $tradeNegotiationRoot = $tradeNegotiation->getRoot();
             $this->fill([
-                'send_user_id' => $tradeNegotiation->initiate_user_id,
-                'receiving_user_id' => $tradeNegotiation->recieving_user_id,
+                'send_user_id' => $tradeNegotiationRoot->initiate_user_id,
+                'receiving_user_id' => $tradeNegotiationRoot->recieving_user_id,
                 'trade_negotiation_id' => $tradeNegotiation->id,
                 'stock_id' => null,
                 'market_id' => $marketRequest->market_id,

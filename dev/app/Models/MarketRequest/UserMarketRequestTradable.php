@@ -3,6 +3,7 @@
 namespace App\Models\MarketRequest;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\StructureItems\Market;
 
 class UserMarketRequestTradable extends Model
 {
@@ -76,6 +77,16 @@ class UserMarketRequestTradable extends Model
     public function getTitleAttribute()
     {
         return $this->market_id != null ? $this->market->title : $this->stock->code;
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function getTradingMarketIdAttribute()
+    {
+        $single_market = Market::where('title','SINGLES')->first();
+        return $this->market_id != null ? $this->market_id : $single_market->id;
     }
 
     public function preFormatted()

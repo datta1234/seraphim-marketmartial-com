@@ -61,7 +61,6 @@ export default class FutureGroup {
                     break;
             }
         });
-        console.log("Show me the MONEY",this, structureGroup);
 
         this.underlying_title = structureGroup.user_market_request_group.tradable ? structureGroup.user_market_request_group.tradable.title: null;
     }

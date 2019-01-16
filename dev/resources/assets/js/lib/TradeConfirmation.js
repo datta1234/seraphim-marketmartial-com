@@ -44,8 +44,8 @@ export default class TradeConfirmation extends BaseModel {
                 market_type_id : "",
                 market_request_id : "",
                 market_request_title : "",
-                underlying_id : "",
                 underlying_title : "",
+                underlying_id : "",
                 is_single_stock : "",
                 traded_at : "",
                 is_offer : "",
@@ -152,20 +152,14 @@ export default class TradeConfirmation extends BaseModel {
 
     send(trading_account)
     {
-      return new Promise((resolve, reject) => {
-           axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
+        return axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
             "trading_account_id":trading_account.id,
             "trade_confirmation_data": this.prepareStore()
-           })
-           .then(response => {
-
-            this.update(response.data.data);
-            resolve();
         })
-           .catch(err => {
-            reject(err);
+        .then(response => {
+            this.update(response.data.data);
+            return response;
         }); 
-       });
     }
 
     confirm(trading_account)

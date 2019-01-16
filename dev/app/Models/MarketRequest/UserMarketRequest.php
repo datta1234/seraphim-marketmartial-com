@@ -1012,14 +1012,14 @@ class UserMarketRequest extends Model
     }
 
     /**
-     * get the underlying market
+     * get the first underlying market
      *
      * @return \App\Models\StructureItems\Market
      */
-    public function getUnderlyingAttribute()
+    public function getTradingUnderlyingAttribute()
     {
-        //@TODO for sigle stock set up the relations and update method with tradeables
-        return $this->market;
+        $trading_group = $this->userMarketRequestGroups()->where('is_selected', false)->first();
+        return $trading_group->tradable;
     }
 
     /**
