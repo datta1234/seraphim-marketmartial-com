@@ -33,11 +33,11 @@ trait CalculatesForRolls {
 
     	//FUTURE = Application.Round(Future2 * D1rollFee * FutBrodirection2, 2) + Future2
     	$future =  round($future2 * $D1rollFee * $FutBrodirection2, 2) + $future2;
-    	$this->futureGroups[0]->setOpVal('Future 2', $future,!$is_sender);
+    	$this->futureGroups[0]->setOpVal('Future 2', $future,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(RollNearFutureRef * D1rollFee * FutureBrodirection2, 2) + (RollNearFutureRef + points1)
         $futureCounter =  round( ($RollNearFutureRef * $D1rollFee * $counterFutBrodirection2) + ($RollNearFutureRef + $points1), 2);
-        $this->futureGroups[0]->setOpVal('Future 2', $futureCounter,$is_sender);
+        $this->futureGroups[0]->setOpVal('Future 2', $futureCounter,!$is_sender);
     }
 }

@@ -615,9 +615,10 @@ public function preFormatStats($user = null, $is_Admin = false)
 
             $marketNegotiation = $tradeNegotiation->marketNegotiation;
             $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
+            $tradeNegotiationRoot = $tradeNegotiation->getRoot();
             $this->fill([
-                'send_user_id' => $tradeNegotiation->initiate_user_id,
-                'receiving_user_id' => $tradeNegotiation->recieving_user_id,
+                'send_user_id' => $tradeNegotiationRoot->initiate_user_id,
+                'receiving_user_id' => $tradeNegotiationRoot->recieving_user_id,
                 'trade_negotiation_id' => $tradeNegotiation->id,
                 'stock_id' => null,
                 'market_id' => $marketRequest->market_id,

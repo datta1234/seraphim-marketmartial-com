@@ -147,7 +147,7 @@
                                 -    
                             </template>
                         </td>
-                        <td v-if="canEdit('future')">
+                        <td v-if="can_set_future">
                             <b-form-input v-model="trade_confirmation.future_groups[key]['future']" type="number"></b-form-input>
                             <span class="text-danger">
                                 <!-- @TODO figure out how to not hardcode the first value -->
@@ -225,6 +225,10 @@
             can_calc:function (val) {
                 console.log("Checking this: ",this.trade_confirmation);
                 return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
+            },
+            can_set_future:function (val) {
+                return this.trade_confirmation.trade_structure_slug != 'efp' 
+                    && this.trade_confirmation.trade_structure_slug != 'efp_switch';
             }
         },
         data() {
@@ -240,20 +244,6 @@
             }
         },
         methods: {
-            canEdit(field) {
-                switch(field) {
-                    case 'future':
-                        return !this.trade_confirmation.trade_structure_slug == 'efp';
-                        break;
-                    case 'underlying':
-                    case 'spot':
-                    case 'contracts':
-                    case 'expiry':
-                    default:
-                        return false; 
-                        break;
-                }
-            },
             loadConfirmation(tradeConfirmation)
             {
                 this.trade_confirmation = tradeConfirmation;
@@ -324,6 +314,7 @@
                 this.confirmationLoaded = false;
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
+                    this.$toasted.success(response.data.message);
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
@@ -342,6 +333,7 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
+                    console.log();
                     this.updateOldData();
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');

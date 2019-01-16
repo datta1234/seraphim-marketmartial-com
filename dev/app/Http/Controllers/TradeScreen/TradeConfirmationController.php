@@ -62,7 +62,7 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['message'=> 'Confirmation sent to counterparty','data' => $data]);
     }
 
     public function confirm(TradeConfirmation $tradeConfirmation,Request $request)
