@@ -59,7 +59,17 @@
         },
         computed: {
             org_involved: function() {
-                return this.marketRequest.myOrgInvolved();
+                return this.marketRequest.myOrgInvolved()
+                || (
+                    this.marketRequest.is_interest
+                    && (
+                        this.marketRequest.chosen_user_market == null
+                        || (
+                            this.marketRequest.chosen_user_market
+                            && this.marketRequest.chosen_user_market.market_negotiations.length == 1
+                        )
+                    )
+                );
             }
         },
         methods: {

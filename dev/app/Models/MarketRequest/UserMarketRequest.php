@@ -323,10 +323,12 @@ class UserMarketRequest extends Model
             "updated_at"        => $this->updated_at->format("Y-m-d H:i:s"),
         ];
 
-        $default_tradable =$this->userMarketRequestGroups->first(function ($value, $key) {
+        // default quantity should be from the quantity on group
+        $default_group = $this->userMarketRequestGroups->first(function ($value, $key) {
             return $value->is_selected == false;
-        })->tradable; 
-        $data["default_quantity"] = $this->marketDefaultQuantity($default_tradable);
+        });
+        $quantity = $default_group->getDynamicItem("Quantity");
+        $data["default_quantity"] = $quantity ? $quantity : $this->marketDefaultQuantity($default_group->tradable);
 
         $showLevels = $this->isAcceptedState($current_org_id);
 
