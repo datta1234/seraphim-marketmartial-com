@@ -1014,10 +1014,10 @@ class UserMarketRequest extends Model
      *
      * @return \App\Models\StructureItems\Market
      */
-    public function getUnderlyingAttribute()
+    public function getUnderlyingTitleAttribute()
     {
-        //@TODO for sigle stock set up the relations and update method with tradeables
-        return $this->market;
+        $tradables = $this->userMarketRequestTradables;
+        return $tradables[0]->isStock() ? $tradables[0]->stock->code : $tradables[0]->market->title;
     }
 
     /**

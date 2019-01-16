@@ -237,8 +237,7 @@ class TradeConfirmation extends Model
 
             'can_interact'              => $this->canInteract(),
 
-            'underlying_id'             => $this->marketRequest->underlying->id,
-            'underlying_title'          => $this->marketRequest->underlying->title,
+            'underlying_title'          => $this->marketRequest->underlyingTitle,
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             
@@ -445,7 +444,7 @@ public function resolveUserMarketRequestItems()
 public function resolveUnderlying() {
     // Get the user market request items
     $underlyings = array();
-    $user_market_request_tradables = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestTradables;
+    $user_market_request_tradables = $this->marketRequest->userMarketRequestTradables;
     foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
         $underlyings[] = $user_market_request_tradable->stock_id === null ?
             $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
