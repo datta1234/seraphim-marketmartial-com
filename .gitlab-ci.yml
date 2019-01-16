@@ -35,6 +35,19 @@ deploy_staging:
     SERVER_IP: $STAGING_IP
   <<: *deploy_script
 
+deploy_test:
+  stage: deploy
+  only:
+    - develop # Run only on develop branch
+  variables:
+    DEPLOYMENT_ROOT: '/var/www'
+    DEPLOYENY_USER: 'deploy'
+    DIR_CURRENT: 'html'
+    DIR_OLD: 'html_previous'
+    DIR_NEW: 'deployment'
+    SERVER_IP: $TEST_IP
+  <<: *deploy_script
+
 deploy_demo:
   stage: deploy
   only:
@@ -76,6 +89,40 @@ reset_staging:
     DIR_OLD: 'html_previous'
     DIR_NEW: 'deployment'
     SERVER_IP: $STAGING_IP
+  <<: *ssh_script
+  script:
+    - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
+    - ssh -p22 $DEPLOYENY_USER@$SERVER_IP "cd $DEPLOYMENT_ROOT && cd $DIR_CURRENT && php artisan mm:reset" # run reset
+  when: manual
+
+total_reseed_test:
+  stage: manual
+  only:
+    - develop # Run only on develop branch
+  variables:
+    DEPLOYMENT_ROOT: '/var/www'
+    DEPLOYENY_USER: 'deploy'
+    DIR_CURRENT: 'html'
+    DIR_OLD: 'html_previous'
+    DIR_NEW: 'deployment'
+    SERVER_IP: $TEST_IP
+  <<: *ssh_script
+  script:
+    - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
+    - ssh -p22 $DEPLOYENY_USER@$SERVER_IP "cd $DEPLOYMENT_ROOT && cd $DIR_CURRENT && php artisan migrate:fresh --seed && php artisan mm:populate" # run reset
+  when: manual
+
+reset_test:
+  stage: manual
+  only:
+    - develop # Run only on develop branch
+  variables:
+    DEPLOYMENT_ROOT: '/var/www'
+    DEPLOYENY_USER: 'deploy'
+    DIR_CURRENT: 'html'
+    DIR_OLD: 'html_previous'
+    DIR_NEW: 'deployment'
+    SERVER_IP: $TEST_IP
   <<: *ssh_script
   script:
     - ssh-add <(echo "$SERVER_PRIVATE_KEY") # Add SSH key
