@@ -237,7 +237,8 @@ class TradeConfirmation extends Model
 
             'can_interact'              => $this->canInteract(),
 
-            'underlying_title'          => $this->marketRequest->underlyingTitle,
+            'underlying_id'             => $this->marketRequest->trading_underlying->trading_market_id,
+            'underlying_title'          => $this->marketRequest->trading_underlying->title,
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             

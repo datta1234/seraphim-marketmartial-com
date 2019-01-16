@@ -45,6 +45,7 @@ export default class TradeConfirmation extends BaseModel {
                 market_request_id : "",
                 market_request_title : "",
                 underlying_title : "",
+                underlying_id : "",
                 is_single_stock : "",
                 traded_at : "",
                 is_offer : "",

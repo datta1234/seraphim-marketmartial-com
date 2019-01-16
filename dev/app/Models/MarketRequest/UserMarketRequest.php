@@ -1010,14 +1010,14 @@ class UserMarketRequest extends Model
     }
 
     /**
-     * get the underlying market
+     * get the first underlying market
      *
      * @return \App\Models\StructureItems\Market
      */
-    public function getUnderlyingTitleAttribute()
+    public function getTradingUnderlyingAttribute()
     {
-        $tradables = $this->userMarketRequestTradables;
-        return $tradables[0]->isStock() ? $tradables[0]->stock->code : $tradables[0]->market->title;
+        $trading_group = $this->userMarketRequestGroups()->where('is_selected', false)->first();
+        return $trading_group->tradable;
     }
 
     /**

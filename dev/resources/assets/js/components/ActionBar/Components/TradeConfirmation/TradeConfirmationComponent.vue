@@ -257,7 +257,8 @@
             loadConfirmation(tradeConfirmation)
             {
                 this.trade_confirmation = tradeConfirmation;
-                this.updateOldData(this.trade_confirmation)
+                this.updateOldData(this.trade_confirmation);
+                this.setDefaultTradingAccount();
             },
             clearConfirmation()
             {
@@ -278,7 +279,6 @@
             {
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
-                    
                     this.trading_accounts = response.data.trading_accounts;
                     this.selected_trading_account = this.trading_accounts.find((item)=>{
                         return item.market_id == this.trade_confirmation.market_id;
@@ -289,13 +289,17 @@
                 
                 }); 
             },
+            setDefaultTradingAccount() {
+                this.selected_trading_account = this.trading_accounts.find((item)=>{
+                    return item.market_id == this.trade_confirmation.underlying_id;
+                });
+            },
             phaseTwo: function()
             {
                 EventBus.$emit('loading', 'confirmationSubmission');
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
-                    console.log("HITTING THIS", response);
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
@@ -334,13 +338,10 @@
             },
             dispute: function()
             {
-                console.log("h1");
                 EventBus.$emit('loading', 'confirmationSubmission');
                 this.confirmationLoaded = false;
 
-                console.log("h2");
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-                    console.log("h5");
                     this.updateOldData();
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
