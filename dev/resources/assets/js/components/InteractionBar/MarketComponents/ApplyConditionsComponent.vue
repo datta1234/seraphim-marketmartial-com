@@ -39,8 +39,9 @@
                                 :market-request="marketRequest"
                                 :parser="parseRadioGroup"
                                 :defaults="defaults"
-                                @change="e => setCondition(condition, e, c_group)">
-                            </component>
+                                @change="e => setCondition(condition, e, c_group)"
+                                @reset="e => updateShownGroups()"
+                            ></component>
                         </div>
                         <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
                             <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
@@ -54,6 +55,7 @@
                                         :parser="parseRadioGroup"
                                         :defaults="defaults"
                                         @change="e => setCondition(child, e, c_group)"
+                                        @reset="e => updateShownGroups()"
                                     ></component>
                                 </div>
                                 <div class="content" v-else>
@@ -62,7 +64,8 @@
                                                         v-model="defaults[child.alias]"
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
-                                                        v-on:change="e => setCondition(child, e, c_group)"
+                                                        @change="e => setCondition(child, e, c_group)"
+                                                        @reset="e => updateShownGroups()"
                                                         name="">
                                     </b-form-radio-group>
                                 </div>
@@ -75,7 +78,8 @@
                                                 v-model="defaults[condition.alias]"
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
-                                                v-on:change="e => setCondition(condition, e, c_group)"
+                                                @change="e => setCondition(condition, e, c_group)"
+                                                @reset="e => updateShownGroups()"
                                                 name="">
                             </b-form-radio-group>
                         </div>

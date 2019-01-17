@@ -1169,18 +1169,29 @@ class MarketNegotiation extends Model
             $market_negotiation_parent_id = $this->marketNegotiationParent->market_negotiation_id;
         }
 
+        $show_bid = true;
+        $show_offer = true;
+        // NOTE: below commented out - we would need a 'wasProposal' function for this to work
+        // if(($this->isTraded() || $this->isTrading()) && $this->wasProposal()) {
+        //     $traded_offer = $this->tradeNegotiations()->last()->getRoot()->is_offer;
+        //     $show_bid = !$traded_offer;
+        //     $show_offer = $traded_offer;
+        // }
+
         $data = [
             'id'                    => $this->id,
             "market_negotiation_id" => $market_negotiation_parent_id,
             "user_market_id"        => $this->user_market_id,
-            "bid"                   => $this->bid,
-            "offer"                 => $this->offer,
+            
+            "bid"                   => $show_bid ? $this->bid : null,
+            "offer"                 => $show_offer ? $this->offer : null,
+            "offer_qty"             => $show_offer ? $this->offer_qty : null,
+            "bid_qty"               => $show_bid ? $this->bid_qty : null,
+
             // "bid_source"            => $bid_source,
             // "offer_source"          => $offer_source,
             "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
             "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
-            "offer_qty"             => $this->offer_qty,
-            "bid_qty"               => $this->bid_qty,
             "bid_premium"           => $this->bid_premium,
             "offer_premium"         => $this->offer_premium,
             "future_reference"      => $this->future_reference,
@@ -1268,6 +1279,8 @@ class MarketNegotiation extends Model
     public function applyFOKCondition() {
         if (!$this->fok_applied) {
             $this->fok_applied = true;
+            // FORCE KILL - [MM-876]
+            $this->cond_fok_spin = false;
 
             // Prefer to Spin (fill)
             if( $this->cond_fok_spin == true ) {
