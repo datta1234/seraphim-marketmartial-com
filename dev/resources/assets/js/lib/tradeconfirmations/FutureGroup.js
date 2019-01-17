@@ -87,41 +87,46 @@ export default class FutureGroup {
         }
     }
 
-    prepareStore() {
+    prepareStore(exclude_list) {
+        if(!Array.isArray(exclude_list)) {
+            exclude_list = [];
+        }
         let store_items = [];
 
         Object.keys(this).forEach(key => {
-            switch(key) {
-                case 'contracts':
-                    store_items.push({
-                        "title": "Contract",
-                        "value": parseFloat(this.contracts)
-                    });
-                    break;
-                case 'future':
-                    store_items.push({
-                        "title": "Future",
-                        "value": parseFloat(this.future)
-                    });
-                    break;
-                case 'future_1':
-                    store_items.push({
-                        "title": "Future 1",
-                        "value": parseFloat(this.future_1)
-                    });
-                    break;
-                case 'future_2':
-                    store_items.push({
-                        "title": "Future 2",
-                        "value": parseFloat(this.future_2)
-                    });
-                    break;
-                case 'spot':
-                    store_items.push({
-                        "title": "Spot",
-                        "value": parseFloat(this.spot)
-                    });
-                    break;
+            if(!exclude_list.includes(key)) {
+                switch(key) {
+                    case 'contracts':
+                        store_items.push({
+                            "title": "Contract",
+                            "value": parseFloat(this.contracts)
+                        });
+                        break;
+                    case 'future':
+                        store_items.push({
+                            "title": "Future",
+                            "value": parseFloat(this.future)
+                        });
+                        break;
+                    case 'future_1':
+                        store_items.push({
+                            "title": "Future 1",
+                            "value": parseFloat(this.future_1)
+                        });
+                        break;
+                    case 'future_2':
+                        store_items.push({
+                            "title": "Future 2",
+                            "value": parseFloat(this.future_2)
+                        });
+                        break;
+                    case 'spot':
+                        store_items.push({
+                            "title": "Spot",
+                            "value": parseFloat(this.spot)
+                        });
+                        break;
+                }
             }
         });
 

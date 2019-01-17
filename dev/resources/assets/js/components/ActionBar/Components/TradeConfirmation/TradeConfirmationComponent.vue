@@ -220,11 +220,10 @@
       name: 'TradeConfirmationComponent',
         computed: {
             can_send:function (val) {
-                return  this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore());
+                return  this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
             },
             can_calc:function (val) {
-                console.log("Checking this: ",this.trade_confirmation);
-                return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore());
+                return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
             },
             can_set_future:function (val) {
                 return this.trade_confirmation.trade_structure_slug != 'efp' 
@@ -241,6 +240,7 @@
                 trade_confirmation: null,
                 can_dispute: true,
                 base_url: '',
+                change_exclude_list: ['contracts'],
             }
         },
         methods: {
@@ -263,7 +263,7 @@
             },
             updateOldData(TradeConfirmation)
             {
-                this.oldConfirmationData = this.trade_confirmation.prepareStore();
+                this.oldConfirmationData = this.trade_confirmation.prepareStore(this.change_exclude_list);
             },
             getTradingAccounts: function()
             {
@@ -333,7 +333,6 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-                    console.log();
                     this.updateOldData();
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
