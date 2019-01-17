@@ -17592,17 +17592,6 @@ input:checked + .slider:before {
   background-color: #071a22;
 }
 
-.trade-section.dark-theme .market-tab.market-alert,
-.trade-section.light-theme .market-tab.market-alert,
-.trade-section .previous-day-traded .market-tab.market-alert,
-.trade-section .previous-day-untraded .market-tab.market-alert,
-.previous-day-wrapper.dark-theme .market-tab.market-alert,
-.previous-day-wrapper.light-theme .market-tab.market-alert,
-.previous-day-wrapper .previous-day-traded .market-tab.market-alert,
-.previous-day-wrapper .previous-day-untraded .market-tab.market-alert {
-  background-color: #BB1D1D;
-}
-
 .trade-section.dark-theme .market-tab.market-confirm,
 .trade-section.light-theme .market-tab.market-confirm,
 .trade-section .previous-day-traded .market-tab.market-confirm,
@@ -17612,6 +17601,28 @@ input:checked + .slider:before {
 .previous-day-wrapper .previous-day-traded .market-tab.market-confirm,
 .previous-day-wrapper .previous-day-untraded .market-tab.market-confirm {
   background-color: #E17428;
+}
+
+.trade-section.dark-theme .market-tab.traded-on-day,
+.trade-section.light-theme .market-tab.traded-on-day,
+.trade-section .previous-day-traded .market-tab.traded-on-day,
+.trade-section .previous-day-untraded .market-tab.traded-on-day,
+.previous-day-wrapper.dark-theme .market-tab.traded-on-day,
+.previous-day-wrapper.light-theme .market-tab.traded-on-day,
+.previous-day-wrapper .previous-day-traded .market-tab.traded-on-day,
+.previous-day-wrapper .previous-day-untraded .market-tab.traded-on-day {
+  background-color: #E17428;
+}
+
+.trade-section.dark-theme .market-tab.market-alert,
+.trade-section.light-theme .market-tab.market-alert,
+.trade-section .previous-day-traded .market-tab.market-alert,
+.trade-section .previous-day-untraded .market-tab.market-alert,
+.previous-day-wrapper.dark-theme .market-tab.market-alert,
+.previous-day-wrapper.light-theme .market-tab.market-alert,
+.previous-day-wrapper .previous-day-traded .market-tab.market-alert,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-alert {
+  background-color: #BB1D1D;
 }
 
 .trade-section.dark-theme .market-tab.market-request,

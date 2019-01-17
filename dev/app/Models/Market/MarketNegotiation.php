@@ -360,6 +360,24 @@ class MarketNegotiation extends Model
         return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
     }
 
+    public function scopeCurrentDay($query) {
+        return $query->where('updated_at', '>', now()->startOfDay());
+    }
+
+    public function scopeSelectedDay($query) {
+        return $query->when(config('loading_previous_day', false), function($q){
+            $q->previousDay();
+        })->when(!config('loading_previous_day', false), function($q){
+            $q->currentDay();
+        });
+    }
+
+    public function scopeTraded($query) {
+        return $query->whereHas('tradeNegotiations', function($q) {
+            $q->where('traded', true);
+        });
+    }
+
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
         return $query->where(function($q) use ($private, $user) {

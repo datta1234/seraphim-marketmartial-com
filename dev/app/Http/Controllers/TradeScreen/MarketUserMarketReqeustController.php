@@ -44,7 +44,6 @@ class MarketUserMarketReqeustController extends Controller
                 'userMarketRequestGroups.userMarketRequestItems'
             ])->get();
 
-
         $user = $request->user();
 
         $output = $userMarketRequests->map(function($marketRequest) use ($user) {

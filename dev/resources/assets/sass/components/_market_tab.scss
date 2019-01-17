@@ -72,12 +72,16 @@
 
 		.market-tab
 		{
-			&.market-alert {
-				background-color: $mm-market-alert; 
-			}
-
 			&.market-confirm {
 				background-color: $mm-market-confirm;
+			}
+
+			&.traded-on-day {
+				background-color: $mm-market-confirm;
+			}
+
+			&.market-alert {
+				background-color: $mm-market-alert; 
 			}
 
 			&.market-request {

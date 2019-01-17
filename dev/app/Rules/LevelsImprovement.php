@@ -36,12 +36,14 @@ class LevelsImprovement implements Rule
         $inverse = ($attribute == 'bid' ? 'offer' : 'bid');
 
         if(!in_array($attribute, ['bid', 'offer'])) {
+            \Log::info($attribute." >>> 1");
             return false;
         }
         $this->request->user_market->load('userMarketRequest');
 
         $org_status = $this->request->user_market->userMarketRequest->getStatus($this->request->user()->organisation_id);
 
+        \Log::info($org_status);
         //check to see if the bid is improved or the offer
         if(in_array($org_status, ["negotiation-pending", "negotiation-open", "trade-negotiation-open"]))
         {
@@ -56,6 +58,7 @@ class LevelsImprovement implements Rule
                 {
                     if($this->request->user()->organisation_id == $source->user->organisation_id)
                     {
+                        \Log::info($attribute." >>> 2");
                         return true;
                     }
                 }
@@ -68,6 +71,7 @@ class LevelsImprovement implements Rule
                 if($attribute == $cond_att) {
                     $valid = ( $attribute == 'bid' ? true : false );
                     $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $attribute value.";
+                    \Log::info($attribute." >>> 3");
                     return $this->request->input($attribute) != $this->lastNegotiation->getLatest($inverse)
                         && $this->request->input($attribute) < $this->lastNegotiation->getLatest($inverse) === $valid;
                 }
@@ -77,11 +81,13 @@ class LevelsImprovement implements Rule
             if($this->request->input($attribute) != null && $this->request->input($inverse) != null) {
                 if($this->request->input('offer') < $this->request->input('bid')) {
                     $this->message = "Bid value cannot be higher than offer value.";
+                    \Log::info($attribute." >>> 4");
                     return false;
                 }
             }
 
             if($this->lastNegotiation->isTraded()) {
+                \Log::info($attribute." >>> 5");
                 return true;
             }
 
@@ -109,6 +115,7 @@ class LevelsImprovement implements Rule
                     Last negotiation Unset -- allow any value
                 */
                 if($this->lastNegotiation->{$attribute} === null) {
+                    \Log::info($attribute." >>> 6");
                     return true;
                 }
                 /*
@@ -133,6 +140,7 @@ class LevelsImprovement implements Rule
                     ($this->request->input($attribute) > $this->lastNegotiation->getLatest($attribute)) == $valid &&
                     ($this->request->input($attribute) < $this->lastNegotiation->getLatest($attribute)) == !$valid
                 ) {
+                    \Log::info($attribute." >>> 7");
                     return true;
                 } else {
                     // if the last one was an FOK & killed
@@ -141,6 +149,7 @@ class LevelsImprovement implements Rule
                         // if the value was not improved, yet the same and the inverse on the last killed FoK is the one under validation, ignore its value...
                         // still validate the same
                         if($inverse == $cond_att && floatval($this->request->input($attribute)) === floatval($this->lastNegotiation->getLatest($attribute))) {
+                            \Log::info($attribute." >>> 8");
                             return true;
                         }
                     }
@@ -148,12 +157,14 @@ class LevelsImprovement implements Rule
                         Only Proceed if its the same as the prior value
                     */
                     if(floatval($this->request->input($attribute)) !== floatval($this->lastNegotiation->getLatest($attribute))) {
+                        \Log::info($attribute." >>> 9");
                         return false;
                     }
                     /*
                         Last negotiation Unset -- allow any value
                     */
                     if($this->lastNegotiation->{$inverse} === null) {
+                        \Log::info($attribute." >>> 10");
                         return true;
                     }
                     /*
@@ -178,10 +189,12 @@ class LevelsImprovement implements Rule
                         ($this->request->input($inverse) > $this->lastNegotiation->getLatest($inverse)) == !$valid &&
                         ($this->request->input($inverse) < $this->lastNegotiation->getLatest($inverse)) == $valid
                     ) {
+                        \Log::info($attribute." >>> 11");
                         return true;
                     }
                 }
             } else {
+                \Log::info($attribute." >>> 12");
                 return $this->request->input($inverse) != null;
             }
             /*
@@ -207,9 +220,11 @@ class LevelsImprovement implements Rule
                 ($this->request->input($inverse) > $this->lastNegotiation->getLatest($inverse)) == !$valid &&
                 ($this->request->input($inverse) < $this->lastNegotiation->getLatest($inverse)) == $valid
             ) {
+                \Log::info($attribute." >>> 13");
                 return true;
             }
         }
+        \Log::info($attribute." >>> 14");
         return false;
     }
 
