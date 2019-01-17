@@ -8,10 +8,10 @@
                             <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
                             <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
@@ -146,6 +146,18 @@
             };
         },
         computed: {
+            active_input_bid: function() {
+                let old = this.currentNegotiation.bid;
+                let current = this.marketNegotiation.bid;
+                console.log("active_input_bid >>> ", old, current);
+                return old !== null && old != current
+            },
+            active_input_offer: function() {
+                let old = this.currentNegotiation.offer;
+                let current = this.marketNegotiation.offer;
+                console.log("active_input_offer >>> ", old, current);
+                return old !== null && old != current
+            },
             disabled_bid: function() {
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();

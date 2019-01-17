@@ -142,9 +142,6 @@
             show_options() {
                 this.resetConditions();
                 this.updateShownGroups();
-            },
-            shown_groups(nV, oV) {
-                console.log("shown_groups changed", nV, oV);
             }
         },
         computed: {
@@ -211,7 +208,6 @@
                 }
                 this.defaults = {};
                 this.setDefaults(condition);
-                console.log("Set Condition", this.marketNegotiation.cond_buy_mid, this.defaults, this.shown_groups);
             },
             updateShownGroups() {
                 this.shown_groups = [];
