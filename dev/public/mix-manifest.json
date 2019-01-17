@@ -3,6 +3,6 @@
     "/css/app.css": "/css/app.css",
     "/js/canvas.js": "/js/canvas.js",
     "/js/previous-day.js": "/js/previous-day.js",
-    "/js/activity-log.js": "/js/activity-log.js",
-    "/js/public.js": "/js/public.js"
+    "/js/public.js": "/js/public.js",
+    "/js/activity-log.js": "/js/activity-log.js"
 }
