@@ -149,12 +149,12 @@
             active_input_bid: function() {
                 let old = this.currentNegotiation ? this.currentNegotiation.bid : null;
                 let current = this.marketNegotiation.bid;
-                return old !== null && old != current
+                return old !== null && current !== null && current !== '' && old != current
             },
             active_input_offer: function() {
                 let old = this.currentNegotiation ? this.currentNegotiation.offer : null;
                 let current = this.marketNegotiation.offer;
-                return old !== null && old != current
+                return old !== null && current !== null && current !== '' && old != current
             },
             disabled_bid: function() {
                 // if both parents are spin and offer has value disabled
