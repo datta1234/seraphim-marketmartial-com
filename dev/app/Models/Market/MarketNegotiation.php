@@ -360,6 +360,24 @@ class MarketNegotiation extends Model
         return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
     }
 
+    public function scopeCurrentDay($query) {
+        return $query->where('updated_at', '>', now()->startOfDay());
+    }
+
+    public function scopeSelectedDay($query) {
+        return $query->when(config('loading_previous_day', false), function($q){
+            $q->previousDay();
+        })->when(!config('loading_previous_day', false), function($q){
+            $q->currentDay();
+        });
+    }
+
+    public function scopeTraded($query) {
+        return $query->whereHas('tradeNegotiations', function($q) {
+            $q->where('traded', true);
+        });
+    }
+
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
         return $query->where(function($q) use ($private, $user) {
@@ -1169,18 +1187,29 @@ class MarketNegotiation extends Model
             $market_negotiation_parent_id = $this->marketNegotiationParent->market_negotiation_id;
         }
 
+        $show_bid = true;
+        $show_offer = true;
+        // NOTE: below commented out - we would need a 'wasProposal' function for this to work
+        // if(($this->isTraded() || $this->isTrading()) && $this->wasProposal()) {
+        //     $traded_offer = $this->tradeNegotiations()->last()->getRoot()->is_offer;
+        //     $show_bid = !$traded_offer;
+        //     $show_offer = $traded_offer;
+        // }
+
         $data = [
             'id'                    => $this->id,
             "market_negotiation_id" => $market_negotiation_parent_id,
             "user_market_id"        => $this->user_market_id,
-            "bid"                   => $this->bid,
-            "offer"                 => $this->offer,
+            
+            "bid"                   => $show_bid ? $this->bid : null,
+            "offer"                 => $show_offer ? $this->offer : null,
+            "offer_qty"             => $show_offer ? $this->offer_qty : null,
+            "bid_qty"               => $show_bid ? $this->bid_qty : null,
+
             // "bid_source"            => $bid_source,
             // "offer_source"          => $offer_source,
             "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
             "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
-            "offer_qty"             => $this->offer_qty,
-            "bid_qty"               => $this->bid_qty,
             "bid_premium"           => $this->bid_premium,
             "offer_premium"         => $this->offer_premium,
             "future_reference"      => $this->future_reference,
@@ -1268,6 +1297,8 @@ class MarketNegotiation extends Model
     public function applyFOKCondition() {
         if (!$this->fok_applied) {
             $this->fok_applied = true;
+            // FORCE KILL - [MM-876]
+            $this->cond_fok_spin = false;
 
             // Prefer to Spin (fill)
             if( $this->cond_fok_spin == true ) {

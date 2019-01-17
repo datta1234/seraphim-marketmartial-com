@@ -53,6 +53,21 @@ export default {
                        'user-action': this.marketRequest.attributes.offer_state == 'action',
                     }   
                 }
+            },
+            marketState: function() {
+                return {
+                    'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',
+                    'trade-negotiation-pending':  this.market_request_state == 'trade-negotiation-pending',
+                    'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
+                    'negotiation-vol': this.market_request_state == 'negotiation-vol',
+                    'market-request-grey': this.market_request_state == 'request-grey',
+                    'market-request': !this.marketRequest.is_interest  && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
+                    'market-request-vol': this.market_request_state == 'request-vol',
+                    'market-alert': this.marketRequest.attributes.action_needed,
+                    'market-confirm': this.market_request_state == 'confirm',
+                    'active': this.isActive,
+                    'traded-on-day': this.marketRequest.attributes.traded_on_day,
+                }
             }
     },
     methods: {

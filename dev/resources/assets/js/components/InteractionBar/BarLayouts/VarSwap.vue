@@ -197,7 +197,7 @@
     import IbarVolatilityField from '../MarketComponents/VolatilityField';
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
-
+    import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
     import AlertCleared from '../Components/AlertClearedComponent.vue';
 
     import NegotiationBarMixin from '../NegotiationBarMixin';
@@ -211,7 +211,8 @@
             IbarVolatilityField,
             IbarMarketRequested,
             IbarTradeAtBestNegotiation,
-            AlertCleared
+            AlertCleared,
+            IbarMarketRequestedFutures
         },
         props: {
             

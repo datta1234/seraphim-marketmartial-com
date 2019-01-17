@@ -35,12 +35,13 @@ class TradeConfirmationController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    public function update(TradeConfirmation $tradeConfirmation,Request $request)
+    public function update(TradeConfirmation $tradeConfirmation,TradeConfirmationStoreRequest $request)
     {
         $user = $request->user();
         $this->authorize('update',$tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-     
+        $tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
+
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
         {
             $tradeConfirmation->trade_confirmation_status_id = 2;
@@ -62,7 +63,7 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['message'=> 'Confirmation sent to counterparty','data' => $data]);
     }
 
     public function confirm(TradeConfirmation $tradeConfirmation,Request $request)

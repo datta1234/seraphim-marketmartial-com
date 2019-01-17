@@ -34,7 +34,7 @@ export default class UserMarketRequest extends BaseModel {
             id: "",
             trade_structure: "",
             market_id:"",
-            is_interest:false,
+            is_interest: false,
             is_market_maker: false,
             attributes: {
                 state: "",
@@ -335,8 +335,11 @@ export default class UserMarketRequest extends BaseModel {
                 "REQUEST-SENT-VOL",
                 "REQUEST-VOL"
             ];
-
-        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || cantDisRegard.indexOf(this.attributes.state) == -1  ;  
+        // my org is source of trading at best that is active - i HAVE to care
+        if(this.chosen_user_market && this.chosen_user_market.isTradingAtBest() && this.chosen_user_market.trading_at_best.is_my_org) {
+            return false;
+        }
+        return (this.attributes.state == 'REQUEST-VOL' && this.sent_quote == null) || cantDisRegard.indexOf(this.attributes.state) == -1;  
     }
 
     canSpin()

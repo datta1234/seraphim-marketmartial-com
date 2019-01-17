@@ -45,6 +45,6 @@ class InterestController extends Controller
             \Cache::put('user_interests_complete_'.$user->id, true,1440);
         }
         
-        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Interest have been updated!') : redirect()->route('tsandcs.edit')->with('success', 'Interest have been updated!');
+        return $request->user()->completeProfile() ? redirect()->back()->with('success', 'Your interests have been updated.') : redirect()->route('tsandcs.edit')->with('success', 'Your interests have been updated.');
     }
 }

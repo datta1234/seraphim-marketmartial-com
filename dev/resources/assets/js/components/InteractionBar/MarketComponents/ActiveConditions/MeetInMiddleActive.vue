@@ -13,18 +13,18 @@
                             Trade At {{ value }}
                         </span>
                     </b-col>
-                    <b-col v-if="isActive && !$root.is_viewer" cols="2">
-                        <span id="meet-in-middle-do-trade">
-                            <a href="" @click.prevent.stop="doTrade">{{ type }}</a>
-                        </span>
-                    </b-col>
-                    <b-col v-if="isActive && !$root.is_viewer" cols="5">
-                        <span>
-                            <a href="" @click.prevent.stop="doReject">Reject</a>
-                        </span>
-                        <span id="meet-in-middle-counter">
-                            <a href="" @click.prevent.stop="doCounter">Counter</a>
-                        </span>
+                    <b-col v-if="isActive && !$root.is_viewer" cols="7">
+                        <b-row>
+                            <b-col id="meet-in-middle-do-trade">
+                                <a href="" @click.prevent.stop="doTrade">{{ type }}</a>
+                            </b-col>
+                            <b-col>
+                                <a href="" @click.prevent.stop="doReject">Reject</a>
+                            </b-col>
+                            <b-col id="meet-in-middle-counter">
+                                <a href="" @click.prevent.stop="doCounter">Counter</a>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
             </div>

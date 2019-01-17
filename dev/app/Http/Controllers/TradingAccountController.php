@@ -13,7 +13,17 @@ class TradingAccountController extends Controller
 
     public function index(Request $request)
     {
-        return response()->json(["trading_accounts"=>$request->user()->tradingAccounts],200);
+        $user = $request->user();
+        $user_accounts = $user->tradingAccounts()->get(); 
+        $markets = Market::where('id', '!=', 5)->get();
+        $trading_accounts =  [];
+
+        foreach ($markets as $market) 
+        {
+            $trading_accounts[] = $user_accounts->firstWhere('market_id',$market->id);
+        }
+        //dd($trading_accounts);
+        return response()->json(["trading_accounts" => $trading_accounts],200);
     }
 
 	/**

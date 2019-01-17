@@ -129,12 +129,40 @@ class UserMarketRequest extends Model
     public function scopeActive($query)
     {
         // staging/demo is scoping to daily records to prevent clutter
-        $scope_to_daily = false;
+        $scope_to_daily = true;
 
-        return $query->where('active', true)
-            ->when($scope_to_daily, function($q) {
-                $q->where('created_at', '>', now()->startOfDay());
+        return $query->where(function($q) use ($scope_to_daily) {
+            $q->when(!$scope_to_daily, function($q) {
+                $q->where('active', true);
             });
+            $q->when($scope_to_daily, function($q) {
+                $q->where(function($q) {
+                    $q->where('active', true);
+                    $q->where('updated_at', '>', now()->startOfDay());
+                });
+                $q->orWhere(\DB::raw('(
+                    select `trade_sub`.`traded` as `trade_sub_traded`
+                    from `user_markets` 
+                    left join (
+                        select *
+                        from `market_negotiations` 
+                        where `market_negotiations`.`deleted_at` is null
+                        order by `updated_at` desc 
+                    ) `neogitation_sub`
+                    on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
+                    left join (
+                        select * 
+                        from `trade_negotiations`
+                        order by `updated_at` desc 
+                    ) `trade_sub`
+                    on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
+                    where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
+                    and `user_markets`.`deleted_at` is null
+                    order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
+                    limit 1
+                )'), 0);
+            });
+        });
     }
 
     /**
@@ -323,10 +351,12 @@ class UserMarketRequest extends Model
             "updated_at"        => $this->updated_at->format("Y-m-d H:i:s"),
         ];
 
-        $default_tradable =$this->userMarketRequestGroups->first(function ($value, $key) {
+        // default quantity should be from the quantity on group
+        $default_group = $this->userMarketRequestGroups->first(function ($value, $key) {
             return $value->is_selected == false;
-        })->tradable; 
-        $data["default_quantity"] = $this->marketDefaultQuantity($default_tradable);
+        });
+        $quantity = $default_group->getDynamicItem("Quantity");
+        $data["default_quantity"] = $quantity ? $quantity : $this->marketDefaultQuantity($default_group->tradable);
 
         $showLevels = $this->isAcceptedState($current_org_id);
 
@@ -854,14 +884,18 @@ class UserMarketRequest extends Model
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
         
         $tradeNegotiationRoles = $this->getCurrentUserRoleInTradeNegotiation($current_org_id);
-
-
+        $traded_on_day = (
+            $this->chosen_user_market_id !== null
+            ? $this->chosenUserMarket->marketNegotiations()->selectedDay()->traded()->exists() // this should be formatted by loading_previous_day / loadign_current_day config settings
+            : false
+        );
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state'     => "",
             'offer_state'   => "",
-            'action_needed' => ""
+            'action_needed' => "",
+            'traded_on_day'  => $traded_on_day
         ];
  
         switch ($state) {
@@ -1010,14 +1044,14 @@ class UserMarketRequest extends Model
     }
 
     /**
-     * get the underlying market
+     * get the first underlying market
      *
      * @return \App\Models\StructureItems\Market
      */
-    public function getUnderlyingAttribute()
+    public function getTradingUnderlyingAttribute()
     {
-        //@TODO for sigle stock set up the relations and update method with tradeables
-        return $this->market;
+        $trading_group = $this->userMarketRequestGroups()->where('is_selected', false)->first();
+        return $trading_group->tradable;
     }
 
     /**
