@@ -3,6 +3,8 @@ image: lorisleiva/laravel-docker:latest
 stages:
   - deploy
   - manual
+  - secondary_deploy
+  - secondary_manual
 
 .ssh_script: &ssh_script
   before_script: # Setup the SSH agent etc
@@ -36,7 +38,7 @@ deploy_staging:
   <<: *deploy_script
 
 deploy_test:
-  stage: deploy
+  stage: secondary_deploy
   only:
     - develop # Run only on develop branch
   variables:
@@ -96,7 +98,7 @@ reset_staging:
   when: manual
 
 total_reseed_test:
-  stage: manual
+  stage: secondary_manual
   only:
     - develop # Run only on develop branch
   variables:
@@ -113,7 +115,7 @@ total_reseed_test:
   when: manual
 
 reset_test:
-  stage: manual
+  stage: secondary_manual
   only:
     - develop # Run only on develop branch
   variables:
