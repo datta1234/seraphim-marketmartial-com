@@ -151,7 +151,7 @@ class UserMarket extends Model
     * @return $query \Illuminate\Database\Eloquent\Builder
     */
     public function scopeCurrentDay($query) {
-        return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
+        return $query->where('updated_at', '>', now()->startOfDay());
     }
 
     /**
