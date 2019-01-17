@@ -24,9 +24,18 @@ Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 
 // Keepalive For Trade Screen
-Route::get('/ping', function() {
-    // valid session still alive, continue
+Route::get('/ping', function(\Illuminate\Http\Request $request) {
     return response("pong");
+    // $authed = \Auth::guard('web')->check();
+    // $ft = (int) $request->get('t');
+    // $bt = (int) round(microtime(true) * 1000);
+    // // valid session still alive, continue
+    // return response()->json([
+    //     "ft" => $ft,
+    //     "bt" => $bt,
+    //     "bfd" => ($bt - $ft),
+    //     "authed" => $authed
+    // ]);
 });
 
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {

@@ -715,3 +715,10 @@ table.table {
 		border: none;
 	}
 } */
+
+input.self-active-input {
+	background-color: $mm-yellow;
+	&:focus, &:active {
+		background-color: $mm-yellow;
+	}
+}
