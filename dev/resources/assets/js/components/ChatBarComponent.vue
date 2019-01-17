@@ -55,9 +55,13 @@
                     
                     <div class="chat-actions">
                         <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
-                            <b-form-group v-for="(option, index) in quick_message_options" :key="index" class="text-center mb-1">
-                                <button @click="quick_message = option.message" type="submit" class="btn mm-generic-trade-button w-100">{{ option.title }}</button>
-                            </b-form-group>
+                            <template v-for="(option, index) in quick_message_options">
+                                <button @click="quick_message = option.message" 
+                                            type="submit" 
+                                            class="btn mm-generic-trade-button w-50 mb-1">
+                                        {{ option.title }}
+                                    </button>
+                            </template>
                             <textarea @keydown.enter.prevent="sendMessage"
                                       rows="6"
                                       class="mb-1 mt-1 w-100"
@@ -89,7 +93,7 @@
                 display_messages: [],
                 quick_message_options: [
                     {
-                        title: 'No cares, thanks',
+                        title: 'No cares',
                         message: 'No cares, thanks',
                     },
                     {
@@ -97,8 +101,12 @@
                         message: 'Looking',
                     },
                     {
-                        title: 'Please call me',
+                        title: 'Call me',
                         message: 'Please call me',
+                    },
+                    {
+                        title: 'Subject on all',
+                        message: 'Subject on all',
                     },
                 ],
             };

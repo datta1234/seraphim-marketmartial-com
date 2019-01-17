@@ -265,6 +265,10 @@
                             && element.cap !== '' && element.cap !== null;
                     }
 
+                    if(this.display.has_future && element.has_future) {
+                        can_submit = can_submit && element.future !== '' && element.future !== null
+                    }
+
                     can_submit = can_submit && element.quantity !== '' && element.quantity !== null;
                 });
 

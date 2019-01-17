@@ -287,6 +287,10 @@
 
                     // Check for valid expiration
                     can_submit = can_submit && element.expiration !== '' && element.expiration !== null;
+
+                    if(element.has_future) {
+                        can_submit = can_submit && element.future !== '' && element.future !== null
+                    }
                 });
 
                 
