@@ -314,23 +314,28 @@ class MarketNegotiationController extends Controller
         $last->improveBest($request->user(), $request->all());
 
         $marketNegotiation->userMarket
-            ->trackActivity(
-                "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".improved",
-                "New best level has been set", 
-                10
-            );
-        $last->userMarket
+        ->trackActivity(
+            "organisation.".$marketNegotiation->user->organisation_id.".proposal.".$marketNegotiation->id.".improved",
+            "New best level has been set", 
+            10
+        );
+
+        // send message to last level owner if not the original one
+        if($last->id != $marketNegotiation->id) {
+            $last->userMarket
             ->trackActivity(
                 "organisation.".$last->user->organisation_id.".proposal.".$last->id.".improved",
                 "New best level has been set",
                 10
             );
+        }
+        
         $marketNegotiation->userMarket
-            ->trackActivity(
-                "organisation.".$request->user()->organisation_id.".proposal.".$last->id.".improve",
-                "Best level improved", 
-                10
-            );
+        ->trackActivity(
+            "organisation.".$request->user()->organisation_id.".proposal.".$last->id.".improve",
+            "Best level improved", 
+            10
+        );
 
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         return ['success'=>true, 'message'=>'Improvement Sent'];
