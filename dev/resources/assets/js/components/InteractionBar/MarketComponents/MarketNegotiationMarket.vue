@@ -147,15 +147,13 @@
         },
         computed: {
             active_input_bid: function() {
-                let old = this.currentNegotiation.bid;
+                let old = this.currentNegotiation ? this.currentNegotiation.bid : null;
                 let current = this.marketNegotiation.bid;
-                console.log("active_input_bid >>> ", old, current);
                 return old !== null && old != current
             },
             active_input_offer: function() {
-                let old = this.currentNegotiation.offer;
+                let old = this.currentNegotiation ? this.currentNegotiation.offer : null;
                 let current = this.marketNegotiation.offer;
-                console.log("active_input_offer >>> ", old, current);
                 return old !== null && old != current
             },
             disabled_bid: function() {

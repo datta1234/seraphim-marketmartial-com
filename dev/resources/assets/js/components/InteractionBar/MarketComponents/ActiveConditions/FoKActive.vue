@@ -65,6 +65,7 @@
                 return this.condition.condition;
             },
             fok_value: function() {
+                console.log(this.negotiation);
                 let bid     = this.negotiation.bid,
                     offer   = this.negotiation.offer,
                     cond    = this.negotiation.cond_fok_apply_bid;

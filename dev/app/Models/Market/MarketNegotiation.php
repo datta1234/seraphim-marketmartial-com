@@ -1268,6 +1268,8 @@ class MarketNegotiation extends Model
     public function applyFOKCondition() {
         if (!$this->fok_applied) {
             $this->fok_applied = true;
+            // FORCE KILL - [MM-876]
+            $this->cond_fok_spin = false;
 
             // Prefer to Spin (fill)
             if( $this->cond_fok_spin == true ) {
