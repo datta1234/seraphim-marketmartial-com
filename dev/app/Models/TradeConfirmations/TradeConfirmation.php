@@ -463,21 +463,23 @@ public function preFormatStats($user = null, $is_Admin = false)
         "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
         "market" => $this->resolveUnderlying(),
         "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
-        "nominal" =>  $user_market_request_items["nominal"],
+        "nominal" =>  array(),
         "strike" =>  $user_market_request_items["strike"],
         "expiration" =>  $user_market_request_items["expiration"],
         "strike_percentage" =>  $user_market_request_items["strike_percentage"],
         "volatility" => array(),
     ];
 
-    $market_negotiation = $this->tradeNegotiation->marketNegotiation;
+    foreach ($this->optionGroups as $key => $group) {
+        $isSingleStock = $group->userMarketRequestGroup->tradable->isStock();
+        
         // volatility
-    if($market_negotiation->bid_qty) {
-        $data["volatility"][] = $market_negotiation->bid_qty;
-    }
+        $data["volatility"][] = $group->getOpVal('volatility');
+        
+        // Nominal / Contacts
+        $quantity = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity;
+        $data["nominal"][] = $isSingleStock ? 'R'.$quantity.'m' : $quantity;
 
-    if($market_negotiation->offer_qty) {
-        $data["volatility"][] = $market_negotiation->offer_qty;
     }
 
     if($is_Admin) {
