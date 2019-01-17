@@ -130,6 +130,7 @@
             return {
                 buying_at_mid: false,
                 disable_input: false,
+                force_invalid: false,
                 old: {
                     resetting: false,
                     bid: null,
@@ -195,6 +196,10 @@
                 return value === undefined || value == null || value == '';
             },
             'check_invalid':function() {
+                if(this.force_invalid == true) {
+                    return true;
+                }
+
                 let invalid_states = {
                     all_empty: false,
                     bid_pair: false,
@@ -349,6 +354,14 @@
             EventBus.$on('negotiationInputEnabled', () => {
                 this.disable_input = false;
             });
+
+            EventBus.$on('sendDisabled', () => {
+                this.force_invalid = true;
+            });
+            EventBus.$on('sendEnabled', () => {
+                this.force_invalid = false;
+            });
+            
         }
     }
 </script>

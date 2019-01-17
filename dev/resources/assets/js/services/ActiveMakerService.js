@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 
 const INTERVAL = 1000*60; // once a minute
 const state = {
@@ -12,6 +13,9 @@ const ping = () => {
     axios.get(axios.defaults.baseUrl + '/ping', {
         headers: {
             [state._ignore_header]: true
+        },
+        params: {
+            t: moment().valueOf()
         }
     })
     .then(res => {

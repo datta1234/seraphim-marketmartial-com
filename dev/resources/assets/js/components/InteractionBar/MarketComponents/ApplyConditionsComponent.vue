@@ -122,6 +122,7 @@
         },
         data() {
             return {
+                updating: false,
                 error: "",
                 shown_groups: [],
                 show_options: false,
@@ -141,6 +142,9 @@
             show_options() {
                 this.resetConditions();
                 this.updateShownGroups();
+            },
+            shown_groups(nV, oV) {
+                console.log("shown_groups changed", nV, oV);
             }
         },
         computed: {
@@ -207,6 +211,7 @@
                 }
                 this.defaults = {};
                 this.setDefaults(condition);
+                console.log("Set Condition", this.marketNegotiation.cond_buy_mid, this.defaults, this.shown_groups);
             },
             updateShownGroups() {
                 this.shown_groups = [];
@@ -218,6 +223,7 @@
                         this.shown_groups[this.condition_aliases[k].group] = true;
                     }
                 }
+                this.updating = false;
             },
             getDeepValue(value) {
                 switch(value.constructor) {
@@ -241,14 +247,21 @@
                                     return true;
                                 }
                             });
+                            if(condition.default_value === condition.default) {
+                                EventBus.$emit('disableSend');
+                            }
                             if(typeof defaultVal !== 'undefined') {
                                 this.defaults[condition.alias] = defaultVal.value
                             }
                             this.marketNegotiation[condition.alias] = condition.default_value;
+
                         }
                     break;
                     default:
                         if(typeof condition.default_value !== 'undefined') {
+                            if(condition.default_value === condition.default) {
+                                EventBus.$emit('disableSend');
+                            }
                             this.defaults[condition.alias] = condition.value;
                             this.marketNegotiation[condition.alias] = condition.default_value;
                         }
@@ -290,6 +303,7 @@
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {
+                EventBus.$emit('enableSend');
                 for(let k in this.condition_aliases) {
                     if(group) {
                         if(group != this.condition_aliases[k].group) {
@@ -314,17 +328,18 @@
             }
         },
         mounted() {
-            this.$watch(() => {
-                let val = "";
-                for(let k in this.condition_aliases) {
-                    val += this.marketNegotiation[k];
-                }
-                return val;
-            }, () => {
-                Vue.nextTick(() => {
-                    this.updateShownGroups();
-                });
-            })
+            // deprecated causing issues post [MM-867]
+            // this.$watch(() => {
+            //     let val = "";
+            //     for(let k in this.condition_aliases) {
+            //         val += this.marketNegotiation[k];
+            //     }
+            //     return val;
+            // }, () => {
+            //     Vue.nextTick(() => {
+            //         this.updateShownGroups();
+            //     });
+            // })
             this.updateShownGroups();
             EventBus.$on('conditionsReset', () => {
                 this.resetConditions();
