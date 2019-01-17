@@ -74,12 +74,12 @@ export default class TradeConfirmation extends BaseModel {
     }
 
 
-    getTradeStructures()
+    getTradeStructures(exclude_list)
     {
         /* only care about the futuregroup the rest we do on the server */
         let options = [];
         this.future_groups.forEach((group)=>{
-          options.push(group.prepareStore());
+          options.push(group.prepareStore(exclude_list));
         });
         return options;
     }
@@ -198,11 +198,11 @@ export default class TradeConfirmation extends BaseModel {
     }
 
     /**
-    * Validation method that checks if this TradeConfirmation has a spot in it's future groups
-    *   and it contains a value
-    *
-    * @return {Boolean}
-    */
+     * Validation method that checks if this TradeConfirmation has a spot in it's future groups
+     *   and it contains a value
+     *
+     * @return {Boolean}
+     */
     hasSpots()
     {
         return this.future_groups.reduce( (out, group) => {
@@ -227,10 +227,19 @@ export default class TradeConfirmation extends BaseModel {
         });
     }
 
-    prepareStore() {
+    /**
+     * Method that returns store object of this TradeConfirmation
+     * 
+     * @param {Array} exclude_list - An array of properties to ignore for comparison purposes
+     *
+     * @return {Boolean}
+     */
+    prepareStore(exclude_list) {
         return {
             id: this.id,
-            structure_groups: this.getTradeStructures()
+            structure_groups: this.getTradeStructures(exclude_list)
         };
     }
+
+
 }

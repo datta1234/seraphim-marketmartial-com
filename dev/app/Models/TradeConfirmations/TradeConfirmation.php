@@ -813,24 +813,33 @@ public function preFormatStats($user = null, $is_Admin = false)
        }
    }
 
-    public function updateGroups($groups)
+    public function updateGroups($groups, $update_only = null)
     {
+        if(!isset($update_only)) {
+            $update_only = [];
+        }
         foreach ($groups as $group) 
         {
             $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
             foreach ($group['items'] as $item) 
             {
-              $itemModel = $groupModel->tradeConfirmationItems()
-              ->where([
-                'trade_confirmation_group_id' => $groupModel->id,
-                'title'=>$item['title']
-            ])->first();
-              $itemModel->update(
+                if( empty($update_only) || in_array($item['title'], $update_only)) {
+                    $itemModel = $groupModel->tradeConfirmationItems()->where([
+                        'trade_confirmation_group_id' => $groupModel->id,
+                        'title'=>$item['title']
+                    ])->first();
 
-                ['value'=>$item['value']]
-            );
-          }
-      }
+                    $itemModel->update(
+                        ['value'=>$item['value']]
+                    );
+                }
+            }
+        }
+    }
+
+    public function updateFutureContracts()
+    {
+
     }
 
     public function setAccount($user,$trading_account)
