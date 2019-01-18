@@ -895,7 +895,13 @@ class UserMarketRequest extends Model
             'bid_state'     => "",
             'offer_state'   => "",
             'action_needed' => "",
-            'traded_on_day'  => $traded_on_day
+            'traded_on_day'  => $traded_on_day,
+            'market_open'   => in_array($state, [
+                'request',
+                'request-vol',
+                'negotiation-open',
+                'trade-negotiation-open',
+            ]),
         ];
  
         switch ($state) {

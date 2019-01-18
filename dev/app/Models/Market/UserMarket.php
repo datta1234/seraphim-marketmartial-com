@@ -694,10 +694,24 @@ class UserMarket extends Model
             if($marketNegotiation->bid == null) {
                 $marketNegotiation->bid = $counterNegotiation->bid;
                 $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+
+                // no bid entered, check if the owner of bid is a RATW [MM-885]
+                $bidSourceNegotiation = $counterNegotiation->marketNegotiationSource('bid');
+                if($bidSourceNegotiation->isRepeatATW()) {
+                    // force repeat
+                    $marketNegotiation->is_repeat = true;
+                }
             }
             if($marketNegotiation->offer == null) {
                 $marketNegotiation->offer = $counterNegotiation->offer;
                 $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+
+                // no offer entered, check if the owner of offer is a RATW [MM-885]
+                $offerSourceNegotiation = $counterNegotiation->marketNegotiationSource('offer');
+                if($offerSourceNegotiation->isRepeatATW()) {
+                    // force repeat
+                    $marketNegotiation->is_repeat = true;
+                }
             }  
         }
         // @TODO, this fails when you send new negotiation after you already have, need to stop this?
