@@ -403,28 +403,18 @@ public function resolveUserMarketRequestItems()
         "strike" => array(),
         "strike_percentage" => array(),
         "nominal" => array(),
+        "underlying" => array(),
+        "volatility" => array(),
     ];
-
-    // Get the user market request items
-    $user_market_request_items = array();
-    $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
-    foreach ($user_market_request_groups as $key => $user_market_request_group) {
-        $user_market_request_items[] = $user_market_request_group->userMarketRequestItems->groupBy(function ($item, $key) {
-            return $item->user_market_request_group_id;
-        });
-    }
-
-        // Set Strike, Strike percentage, expiration dates and nominals
-    foreach ($user_market_request_items as $item_groups) {
-        foreach ($item_groups as $item_group) {
-            foreach ($item_group as $item) {
-                switch ($item->title) {
-                    case 'Expiration Date':
-                    case 'Expiration Date 1':
-                    case 'Expiration Date 2':
+    foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
+        foreach ($group->userMarketRequestItems as $key => $item) {
+            switch ($item->title) {
+                case 'Expiration Date':
+                case 'Expiration Date 1':
+                case 'Expiration Date 2':
                     $resolved_items["expiration"][] = $item->value;
                     break;
-                    case 'Strike':
+                case 'Strike':
                     $resolved_items["strike"][] = $item->value;
                     if($this->spot_price !== null) {
                         $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
@@ -432,13 +422,29 @@ public function resolveUserMarketRequestItems()
                         $resolved_items["strike_percentage"] = null;
                     }
                     break;
-                    case 'Quantity':
-                    $resolved_items["nominal"][] = $item->value;
+                case 'Quantity':
+                    $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
                     break;
-                }
-            }    
-        }   
+            }
+        }
+        // Add the group underlying
+        $resolved_items["underlying"][] = $group->tradable->title;
+
+        // Add the group volatility
+        if($group->is_selected) {
+            $resolved_items["volatility"][] = $group->volatility->volatility;        
+        } else {
+            $marketNegotiation = $this->tradeNegotiation->marketNegotiation;
+            $resolved_items["volatility"][] = $this->tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+        }
     }
+
+    $is_versus_underlying_type = ['option_switch','efp_switch'];
+    // Remove duplicates tradables for non versus underlying trade structures
+    if(in_array($this->tradeStructureSlug, $is_versus_underlying_type)) {
+        $resolved_items["underlying"] = array_unique($resolved_items["underlying"]);
+    }
+
     return $resolved_items;
 }
 
@@ -461,24 +467,15 @@ public function preFormatStats($user = null, $is_Admin = false)
     $data = [
         "id" => $this->id,
         "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-        "market" => $this->resolveUnderlying(),
-        "structure" => $this->tradeNegotiation->userMarket->userMarketRequest->tradeStructure->title,
+        "underlying" => $user_market_request_items["underlying"],
+        "structure" => $this->tradeStructure->title,
         "nominal" =>  $user_market_request_items["nominal"],
         "strike" =>  $user_market_request_items["strike"],
         "expiration" =>  $user_market_request_items["expiration"],
         "strike_percentage" =>  $user_market_request_items["strike_percentage"],
-        "volatility" => array(),
+        "volatility" => $user_market_request_items["volatility"],
     ];
 
-    $market_negotiation = $this->tradeNegotiation->marketNegotiation;
-        // volatility
-    if($market_negotiation->bid_qty) {
-        $data["volatility"][] = $market_negotiation->bid_qty;
-    }
-
-    if($market_negotiation->offer_qty) {
-        $data["volatility"][] = $market_negotiation->offer_qty;
-    }
 
     if($is_Admin) {
         $data["seller"] = $this->sendUser->organisation->title;
@@ -491,38 +488,79 @@ public function preFormatStats($user = null, $is_Admin = false)
         return $data; 
     }
 
-        // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
+    
+    // Direction (Buy / Sell)
+    $root_trade_negotiation = $this->tradeNegotiation->getRoot();
+
+    if($root_trade_negotiation->is_offer) {
+        $data["direction"] = $root_trade_negotiation->initiate_user_id == $user->id;
+    } else {
+        $data["direction"] = $root_trade_negotiation->initiate_user_id;
+    }
+
+    switch (true) {
+    // My Trade
+        case ($root_trade_negotiation->initiate_user_id == $user->id):
+            $data["status"] = 'My Trade';
+            $data["trader"] = $user->full_name;
+            $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
+            break;
+        case ($root_trade_negotiation->recieving_user_id == $user->id):
+            $data["status"] = 'My Trade';
+            $data["trader"] = $user->full_name;
+            $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
+            break;
+    // Org Trade
+        case ($root_trade_negotiation->initiateUser->organisation->id == $user->organisation->id):
+            $data["status"] = 'Trade';
+            $data["trader"] = $root_trade_negotiation->initiateUser->full_name;
+            $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
+            break;
+        case ($root_trade_negotiation->recievingUser->organisation->id == $user->organisation->id):
+            $data["status"] = 'Trade';
+            $data["trader"] = $root_trade_negotiation->recievingUser->full_name;
+            $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
+            break;
+    // Traded Away
+        case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
+            $data["status"] = 'Market Maker Traded Away';
+            $data["trader"] = null;
+            $data["direction"] = null;
+            break;
+        default:
+            $data["status"] = null;
+            $data["trader"] = null;
+            $data["direction"] = null;
+            break;
+    }
+
+
+
+
+
+    // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
     switch (true) {
         case ($this->send_user_id == $user->id):
-        $data["status"] = 'My Trade';
-        $data["trader"] = $user->full_name;
-        $data["direction"] = 'Sell';
-        break;
         case ($this->receiving_user_id == $user->id):
-        $data["status"] = 'My Trade';
-        $data["trader"] = $user->full_name;
-        $data["direction"] = 'Buy';
-        break;
+            $data["status"] = 'My Trade';
+            $data["trader"] = $user->full_name;
+            break;
         case ($this->sendUser->organisation->id == $user->organisation->id):
-        $data["status"] = 'Trade';
-        $data["trader"] = $this->sendUser->full_name;
-        $data["direction"] = 'Sell';
-        break;
+            $data["status"] = 'Trade';
+            $data["trader"] = $this->sendUser->full_name;
+            break;
         case ($this->recievingUser->organisation->id == $user->organisation->id):
-        $data["status"] = 'Trade';
-        $data["trader"] = $this->recievingUser->full_name;
-        $data["direction"] = 'Buy';
+            $data["status"] = 'Trade';
+            $data["trader"] = $this->recievingUser->full_name;
         break;
         case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
-        $data["status"] = 'Market Maker Traded Away';
-        $data["trader"] = null;
-        $data["direction"] = null;
-        break;
+            $data["status"] = 'Market Maker Traded Away';
+            $data["trader"] = null;
+            break;
         default:
-        $data["status"] = null;
-        $data["trader"] = null;
-        $data["direction"] = null;
-        break;
+            $data["status"] = null;
+            $data["trader"] = null;
+            break;
     }
 
     return $data;

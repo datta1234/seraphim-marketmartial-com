@@ -18481,6 +18481,18 @@ body > .popover > .arrow {
   }
 }
 
+.market-text.is-maker {
+  color: #37A53A;
+}
+
+.market-text.is-interest {
+  color: #2358BD;
+}
+
+.market-text.is-my-org {
+  color: #EBC300;
+}
+
 .shader {
   width: 100%;
   height: 100%;

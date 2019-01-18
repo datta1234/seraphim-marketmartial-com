@@ -153,6 +153,15 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     */
     Route::delete('/user-market/{user_market}/activity/{activity}', 'ActivityController@userMarket');
     
+    /*
+    * Admin Trade Screen Functionality
+    */
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
+        Route::resource('market-request', 'TradeScreen\Admin\MarketRequestController', [
+            'as' => 'market-request',
+            'only' => ['show']
+        ]);
+    });
 });
 
 /**

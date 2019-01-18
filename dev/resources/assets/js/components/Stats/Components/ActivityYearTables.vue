@@ -131,7 +131,7 @@
                 },
                 table_fields: [
                     { key: 'updated_at', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'market', label: 'Instrument'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'underlying', label: 'Instrument'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'structure', label: 'Structure'/*, sortable: true, sortDirection: 'desc'*/ },
                     (this.is_my_activity ? { key: 'direction', label: 'Direction'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
                     { key: 'nominal', label: 'Nominal' },
@@ -275,6 +275,9 @@
                     case 'updated_at':
                         return this.castToMoment(item[key]);
                         break;
+                    case 'direction':
+                        return item[key] ? 'Buy' : 'Sell';
+                        break;
                     default:
                         return item[key];
                 }
@@ -283,24 +286,23 @@
                 if(array_item.length < 1) {
                     return '-';
                 }
-                let formatted_array = '';
-                array_item.forEach(element => {
-                    switch (key) {
-                        case 'expiration':
-                            formatted_array += this.castToMoment(element) + ' / ';
-                            break;
-                        case 'strike':
-                        case 'nominal':
-                            formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
-                            break;
-                        case 'market':
-                            formatted_array += element + ' vs. ';
-                            break;
-                        default:
-                            formatted_array += element + ' / ';
-                    }
-                });
-                return formatted_array.substring(0, formatted_array.length - 3);
+                let formatted_element = '';
+                switch (key) {
+                    case 'expiration':
+                        formatted_element = array_item.map(x => this.castToMoment(x)).join(' / ');
+                        break;
+                    case 'strike':
+                    case 'nominal':
+                        formatted_element = array_item.map(x => this.$root.splitValHelper(x, ' ', 3)).join(' / ');
+                        break;
+                    case 'underlying':
+                        formatted_element = array_item.join(' vs. ');
+                        break;
+                    default:
+                        formatted_element = array_item.join(' / ');
+                }
+
+                return formatted_element;
             },
             /**
              * Casting a passed string to moment with a new format
