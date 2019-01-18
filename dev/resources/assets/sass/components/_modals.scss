@@ -169,3 +169,16 @@
    max-width:1200px;
   }
 }
+
+.market-text
+{
+    &.is-maker{
+        color: $mm-market-maker;
+    }
+    &.is-interest{
+        color: $mm-blue;
+    }
+    &.is-my-org{
+        color: $mm-yellow;
+    }
+}

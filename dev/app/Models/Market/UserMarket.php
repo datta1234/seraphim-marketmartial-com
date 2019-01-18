@@ -1045,7 +1045,7 @@ class UserMarket extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedQuote()
+    public function preFormattedQuote($show_levels = false)
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
@@ -1079,6 +1079,15 @@ class UserMarket extends Model
         if($this->isAdminContext()) {
             $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
+            if($show_levels) {
+                $data['bid']        = $this->currentMarketNegotiation->bid;
+                $data['offer']      = $this->currentMarketNegotiation->offer;
+                $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
+                $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
+                $data['org_interest']= $this->user->organisation_id == $this->userMarketRequest->user->organisation_id;
+                $data['org_maker']   = $this->userMarketRequest->chosen_user_market_id != null 
+                                    && $this->userMarketRequest->chosen_user_market_id == $this->id;
+            }
         }
         return $data;
     }
