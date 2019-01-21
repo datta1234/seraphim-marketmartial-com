@@ -1,7 +1,7 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-calendar">
 
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        <ibar-user-market-title :market-request="marketRequest" :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
         <ibar-market-requested class="mb-2" 
             :market-request="marketRequest" 

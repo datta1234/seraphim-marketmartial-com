@@ -59,14 +59,18 @@
         },
         computed: {
             org_involved: function() {
-                return this.marketRequest.myOrgInvolved()
-                || (
-                    this.marketRequest.is_interest
-                    && (
-                        this.marketRequest.chosen_user_market == null
-                        || (
-                            this.marketRequest.chosen_user_market
-                            && this.marketRequest.chosen_user_market.market_negotiations.length == 1
+                // this is not org involvement any more - its "is the market pending for others"
+                console.log("ORG INVOLVEMENT >>> ", this.marketRequest.id, !this.marketRequest.attributes.market_open, this.marketRequest.myOrgInvolved());
+                return !this.marketRequest.attributes.market_open && (
+                    this.marketRequest.myOrgInvolved()
+                    || (
+                        this.marketRequest.is_interest
+                        && (
+                            this.marketRequest.chosen_user_market == null
+                            || (
+                                this.marketRequest.chosen_user_market
+                                && this.marketRequest.chosen_user_market.market_negotiations.length == 1
+                            )
                         )
                     )
                 );
