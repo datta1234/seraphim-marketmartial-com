@@ -246,7 +246,7 @@
                         filter_expiration:null,
                         search: null,
                         order_by: null,
-                        order_ascending: true
+                        order_ascending: false
                     };
                 });
                 this.loadTableData(0, false)

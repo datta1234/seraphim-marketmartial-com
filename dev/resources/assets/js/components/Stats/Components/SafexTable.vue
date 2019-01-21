@@ -151,7 +151,7 @@
                         nominal: null,
                         date: null,
                         order_by: null,
-                        order_ascending: true,
+                        order_ascending: false,
                     },
                     pagination: {
                         current_page: 1,

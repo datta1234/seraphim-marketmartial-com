@@ -598,9 +598,17 @@ public function preFormatStats($user = null, $is_Admin = false)
      */
     public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
+        if($orderBy == null)
+        {
+            $orderBy = "updated_at";
+        }
 
+        if($order == null)
+        {
+            $order = "DESC";
+        }
+        
         // Search markets
-        // @TODO - Change to account for single stocks and match with stock name (instrument)
         $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
         {
             $q->whereHas('tradeConfirmationGroups',function($q) use ($term){
@@ -672,6 +680,8 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $trade_confirmations_query->orderBy("updated_at", "ASC");
                 break;
             }*/
+
+            $trade_confirmations_query->orderBy($orderBy,$order);
 
             return $trade_confirmations_query;
         }
