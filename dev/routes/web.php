@@ -104,6 +104,9 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
     Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
 
+    Route::get('/previous-negotiations', 'PreviousDayController@getOldNegotiations')->name('previous-negotiations');
+    Route::post('/previous-negotiations', 'PreviousDayController@refreshOldNegotiations')->name('previous-negotiations.refresh');
+
 	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
     Route::resource('market-type', 'TradeScreen\MarketTypeController');
     Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
