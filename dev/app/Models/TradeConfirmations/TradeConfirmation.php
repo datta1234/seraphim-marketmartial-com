@@ -406,6 +406,7 @@ public function resolveUserMarketRequestItems()
         "underlying" => array(),
         "volatility" => array(),
     ];
+
     foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
         foreach ($group->userMarketRequestItems as $key => $item) {
             switch ($item->title) {
@@ -416,11 +417,6 @@ public function resolveUserMarketRequestItems()
                     break;
                 case 'Strike':
                     $resolved_items["strike"][] = $item->value;
-                    if($this->spot_price !== null) {
-                        $resolved_items["strike_percentage"][] = round($item->value/$this->spot_price, 2);
-                    } else {
-                        $resolved_items["strike_percentage"] = null;
-                    }
                     break;
                 case 'Quantity':
                     $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
@@ -436,6 +432,30 @@ public function resolveUserMarketRequestItems()
         } else {
             $marketNegotiation = $this->tradeNegotiation->marketNegotiation;
             $resolved_items["volatility"][] = $this->tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+        }
+    }
+
+    // Resolve Strike percentage
+    foreach ($this->tradeConfirmationGroups as $key => $group) {
+        $tradable = $group->userMarketRequestGroup->tradable;
+        $strike = $group->getOpVal('Strike');
+        $spot_price = $group->getOpVal('Spot');
+
+        // Will get into for Markets without a user defined Spot Price
+        // Asked by client to exclude
+        /*if(!empty($strike) && empty($spot_price)) {
+            switch ($tradable->market->title) {
+                case 'TOP40':
+                case 'DTOP':
+                case 'DCAP':
+                    $spot_price = $tradable->market->spot_price_ref;
+                    break;
+            }
+        }*/
+
+        // Only Calculate percentage if both Strike and Spot Price is set
+        if( !empty($strike) && !empty($spot_price) ) {
+            $resolved_items["strike_percentage"][] = round($strike/$spot_price, 2);
         }
     }
 
@@ -578,13 +598,30 @@ public function preFormatStats($user = null, $is_Admin = false)
      */
     public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
+        if($orderBy == null)
+        {
+            $orderBy = "updated_at";
+        }
 
+        if($order == null)
+        {
+            $order = "DESC";
+        }
+        
         // Search markets
-        // @TODO - Change to account for single stocks and match with stock name (instrument)
         $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
         {
-            $q->whereHas('market',function($q) use ($term){
-                $q->where('title','like',"%$term%");
+            $q->whereHas('tradeConfirmationGroups',function($q) use ($term){
+                $q->whereHas('userMarketRequestGroup', function ($q) use ($term) {
+                    $q->whereHas('tradable', function ($q) use ($term) {
+                        $q->whereHas('market', function ($q) use ($term) {
+                            $q->where('title','like',"%$term%");
+                        })
+                        ->orWhereHas('stock', function ($q) use ($term) {
+                            $q->where('code','like',"%$term%");  
+                        });
+                    });
+                });
             });
         });
 
@@ -643,6 +680,8 @@ public function preFormatStats($user = null, $is_Admin = false)
                 $trade_confirmations_query->orderBy("updated_at", "ASC");
                 break;
             }*/
+
+            $trade_confirmations_query->orderBy($orderBy,$order);
 
             return $trade_confirmations_query;
         }

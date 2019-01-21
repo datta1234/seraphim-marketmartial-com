@@ -104,14 +104,15 @@
             	      				<b-col  :key="index" v-for="(field, index) in form_data.fields"
                                             cols="3" 
                                             :offset="((display.versus && index != 0) || display.is_vega)? 1 : 0">
-            	      					<b-form-input :id="'quantity-'+index" 
+            	      					<input :id="'quantity-'+index" 
             	      						type="number"
             								min="0"
             								v-model="field.quantity"
                                             placeholder="500"
-                                            :state="inputState(index, 'Quantity')"
+                                            class="form-control "
+                                            v-bind:class="{ 'is-invalid': inputState(index, 'Quantity') == false }"
             								required>
-            	      					</b-form-input>
+            	      					</input>
                                         <p  v-if="field.quantity < field.quantity_default"
                                             class="modal-warning-text text-danger text-center">
                                             *Warning: The recommended minimum {{display.is_vega ? 'vega' : 'quantity'}} is {{ field.quantity_default }}.

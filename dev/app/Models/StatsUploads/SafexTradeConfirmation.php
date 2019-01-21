@@ -108,7 +108,7 @@ class SafexTradeConfirmation extends Model
 
         if($order == null)
         {
-            $order = "ASC";
+            $order = "DESC";
         }
 
         // Search markets
