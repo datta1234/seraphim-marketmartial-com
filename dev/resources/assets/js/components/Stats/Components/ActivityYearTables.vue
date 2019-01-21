@@ -293,7 +293,7 @@
                         break;
                     case 'strike':
                     case 'nominal':
-                        formatted_element = array_item.map(x => this.$root.splitValHelper(x, ' ', 3)).join(' / ');
+                        formatted_element = array_item.map(x => x[0] == 'R' ? x : this.$root.splitValHelper(x, ' ', 3)).join(' / ');
                         break;
                     case 'underlying':
                         formatted_element = array_item.join(' vs. ');
