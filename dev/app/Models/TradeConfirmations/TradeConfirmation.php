@@ -603,8 +603,17 @@ public function preFormatStats($user = null, $is_Admin = false)
         // @TODO - Change to account for single stocks and match with stock name (instrument)
         $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
         {
-            $q->whereHas('market',function($q) use ($term){
-                $q->where('title','like',"%$term%");
+            $q->whereHas('tradeConfirmationGroups',function($q) use ($term){
+                $q->whereHas('userMarketRequestGroup', function ($q) use ($term) {
+                    $q->whereHas('tradable', function ($q) use ($term) {
+                        $q->whereHas('market', function ($q) use ($term) {
+                            $q->where('title','like',"%$term%");
+                        })
+                        ->orWhereHas('stock', function ($q) use ($term) {
+                            $q->where('code','like',"%$term%");  
+                        });
+                    });
+                });
             });
         });
 
