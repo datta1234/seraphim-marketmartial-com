@@ -93,12 +93,12 @@
                 display_messages: [],
                 quick_message_options: [
                     {
-                        title: 'No cares',
-                        message: 'No cares, thanks',
-                    },
-                    {
                         title: 'Looking',
                         message: 'Looking',
+                    },
+                    {
+                        title: 'No cares',
+                        message: 'No cares, thanks',
                     },
                     {
                         title: 'Call me',
