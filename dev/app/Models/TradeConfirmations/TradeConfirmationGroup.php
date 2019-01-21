@@ -125,7 +125,7 @@ class TradeConfirmationGroup extends Model
 
     public function getOpVal($title,$is_sender = null)
     {
-        $marketRequestOptions =['Expiration Date','strike','Strike'];
+        $marketRequestOptions =['Expiration Date','Expiration Date 1','Expiration Date 2','strike','Strike'];
         
         if(in_array($title, $marketRequestOptions))
         {
