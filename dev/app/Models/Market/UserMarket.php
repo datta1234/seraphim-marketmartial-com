@@ -1002,7 +1002,7 @@ class UserMarket extends Model
                                             $data['creation_idx'] = array_search($org_id, $creation_idx_map);
                                             return $data;
                                         }),
-            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond) {
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
                                             if($active === null) {
@@ -1019,7 +1019,7 @@ class UserMarket extends Model
                                                 'type'      => $cond->activeConditionType
                                             ];
                                         })->values(),
-            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond) {
                                             // only if counter
                                             $active = $this->isSent(null, $cond);
                                             return $active;

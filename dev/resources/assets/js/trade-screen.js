@@ -520,19 +520,19 @@ const app = new Vue({
                     });
                     promises.push(this.loadTradeConfirmations(market_type));
 
-                    promises.push(
-                        this.loadMarkets(market_type)
-                        .then(markets => {
-                            markets.forEach(market => {
-                                promises.push(
-                                    this.loadMarketRequests(market)
-                                );
-                            });
-                        })
-                    );
+                    promises.push(this.loadMarkets(market_type));
                 });
             }
             //
+            return Promise.all(promises);
+        })
+        .then(market_types => {
+            let promises = [];
+            this.display_markets.forEach(market => {
+                promises.push(
+                    this.loadMarketRequests(market)
+                );
+            });
             return Promise.all(promises);
         })
         .then(all_loaded => {
@@ -540,6 +540,14 @@ const app = new Vue({
             this.page_loaded = true;
             //load the no cares from storage
             this.loadNoCares();
+
+            let market_titles = [];
+            this.display_markets.forEach(m => {
+                m.market_requests.forEach(mr => {
+                    market_titles.push(mr.marketTradeTitle());
+                })
+            });
+            console.log("Market Titles >>>\n", market_titles.join('\n'));
         });
 
         let viewer_type = document.head.querySelector('meta[name="viewer-type"]');

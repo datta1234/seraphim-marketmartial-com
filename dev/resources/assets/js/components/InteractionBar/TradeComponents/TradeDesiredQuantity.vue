@@ -1,12 +1,16 @@
 <template>
        <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
             <template slot="title">
-               <div class="text-center">{{ title }}
-                   <a @click="cancel" class="close" aria-label="Close">
-                    <span class="d-inline-block" aria-hidden="true">&times;</span>
+               <b-row no-gutters>
+                  <b-col class="text-center">
+                    {{ title }}
+                  </b-col>
+                  <b-col cols="auto">
+                    <a @click="cancel" class="close" aria-label="Close">
+                      <span class="d-inline-block" aria-hidden="true">&times;</span>
                     </a>
-               </div>
-            
+                  </b-col>
+               </b-row>
             </template>
             <b-row> 
                 <b-col cols="12" v-html="subtitle" class="text-center"></b-col>
@@ -106,20 +110,9 @@
             }
         },
         computed: {
-           title(){
-
+           title() {
                 let marketRequest = this.marketNegotiation.getUserMarket().getMarketRequest();
-                let marketTitle = marketRequest.getMarket().title
-                let trade_structure_config = this.$root.config("trade_structure."+marketRequest.trade_structure_slug);
-                let group = Object.values(marketRequest.trade_items).find(g => g.choice == false);
-                console.log(trade_structure_config, group);
-
-                let title = marketTitle
-                  +" "
-                  +( trade_structure_config.expiration_date_1 ? group[trade_structure_config.expiration_date_1] : group[trade_structure_config.expiration_date] )
-                  +" "
-                  +( trade_structure_config.strike_1 ? group[trade_structure_config.strike_1] : group[trade_structure_config.strike] )
-                ;
+                let title = marketRequest.marketTradeTitle();
                 
                 if(this.is_offer == null) {
                   return "Buy Or Sell?"
@@ -127,7 +120,8 @@
                 if(this.is_offer)
                 {
                     return this.confirmed ?  title : "Lift the offer?";   
-                }else
+                }
+                else
                 {
                     return this.confirmed ?  title : "Hit the bid?";   
                 }
@@ -137,7 +131,7 @@
             if(this.is_offer){
                return this.confirmed ? "You Are Buying @ <span class='text-success'>" + this.marketNegotiation.offer +'</span>': "";
             }else
-            { 
+            {
               return this.confirmed ? "You Are Selling @ <span class='text-success'>" + this.marketNegotiation.bid +'</span>': "";
 
             }
