@@ -161,46 +161,68 @@ class ActivityControlller extends Controller
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
 
-        // Create a new array of csv file lines
-        array_walk($csv, function(&$row) {
-            array_walk($row, function(&$col) {
-                $col = trim($col);
+        if(count($csv) > 5001) {
+            return response()->json([
+                'errors' => [],
+                'message' => 'Failed to upload Safex data. Csv file is larger than 5001 lines.'
+            ], 422);
+        }
+
+        // 1. Create a new array of csv file lines
+        array_walk($csv, function(&$row,$row_index) use (&$csv) {
+            array_walk($row, function(&$col) use (&$csv,$row,$row_index) {
+                if(count($row) <= 1 && $col == null) {
+                    unset($csv[$row_index]);
+                } else {
+                    $col = trim($col);
+                }
             });
         });
 
-        // Replace the imported fields with the data base fields
+        // 2. Replace the imported fields with the data base fields
         foreach ($csv[0] as $index => $field) {
             $csv[0][$index] = config('marketmartial.import_csv_field_mapping.safex_fields.'.$field);
         }
 
-        // remove headings field and map each value to the heading as key value pair
-        array_walk($csv, function(&$a) use ($csv) {
+        $errors = array();
+        // 3. remove headings field and map each value to the heading as key value pair
+        array_walk($csv, function(&$a, $idx) use ($csv,&$errors) {
             $a = array_combine($csv[0], $a);
-            // removing white space before validation
+            // 3.1 removing white space before validation
             $a['strike'] = str_replace(" ", "", $a['strike']);
             $a['trade_id'] = str_replace(" ", "", $a['trade_id']);
             $a['nominal'] = str_replace(" ", "", $a['nominal']);
+
+            if($idx > 0) {
+                // 3.2 Validate current row fields
+                $validator = Validator::make($a,
+                    config('marketmartial.import_csv_field_mapping.safex_validation.rules'),
+                    config('marketmartial.import_csv_field_mapping.safex_validation.messages')
+                );
+
+                if($validator->fails()) {
+                    // 3.3 Add row validation errors to the list
+                    $errors[$idx] = $validator->messages();
+                }
+            }
         });
         array_shift($csv);
         
-        // Validate the uploaded Csv fields
-        $validator = Validator::make($csv,
-            config('marketmartial.import_csv_field_mapping.safex_validation.rules'),
-            config('marketmartial.import_csv_field_mapping.safex_validation.messages')
-        );
-        if ($validator->fails()) {
+        // 4. Return validation errors
+        if (!empty($errors)) {
             return response()->json([
-                'errors' => $validator->messages(),
+                'errors' => $errors,
                 'message' => 'Failed to upload Safex data.'
             ], 422);
         }
 
-        // removes all previous safex trade confirmation records
+        // 5. removes all previous safex trade confirmation records
         SafexTradeConfirmation::truncate();
         try {
             DB::beginTransaction();
-            // create new records for each csv file entry
+            // 6. create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\SafexTradeConfirmation::createFromCSV', $csv);
+            SafexTradeConfirmation::insert($created);
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             \Log::error($e);
