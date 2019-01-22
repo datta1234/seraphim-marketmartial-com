@@ -35,7 +35,7 @@
                         {{ option_group.underlying_title }}
                     </td>
                       <td>
-                        {{ splitValHelper(option_group.strike,' ',3) }} 
+                        {{ option_group.hasOwnProperty('strike') ? splitValHelper(option_group.strike,' ',3) : '-' }} 
                     </td>
                     <td>
                         {{ option_group.is_put ? "Put" : "Call" }} 

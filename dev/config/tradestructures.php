@@ -1368,38 +1368,6 @@ return [
                         "title" => "Future",
                         "type" => "double"   
                     ],
-                ],
-                "trade_confirmation_group"=>[
-                    "options" =>
-                    [
-                        "title" => "Options Group",
-                        "items" => [
-                            [
-                                // __item__
-                                "id" => 163,
-                                "title"=>"is_offer",
-                                "type"=>"boolean"
-                            ],
-                            [
-                                // __item__
-                                "id" => 164,
-                                "title"=>"is_put",
-                                "type"=>"double"
-                            ],
-                            [
-                                // __item__
-                                "id" => 165,
-                                "title"=>"Volatility",
-                                "type"=>"double"
-                            ],
-                            [
-                                // __item__
-                                "id" => 166,
-                                "title"=>"Contract",
-                                "type"=> "double"
-                            ]
-                        ]
-                    ]
                 ]
             ]
         ],
