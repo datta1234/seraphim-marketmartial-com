@@ -76,6 +76,7 @@
         "expiration_date": "Expiration Date",
         "quantity": "Quantity",
         "cap": "Cap",
+        "future": "Future",
         "group_1": "default"
     }
 }

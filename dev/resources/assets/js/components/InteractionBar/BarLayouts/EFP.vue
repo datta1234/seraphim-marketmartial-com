@@ -253,10 +253,9 @@
         
         computed: {
             'market_title': function() {
-                let group1 = this.$root.config("trade_structure.efp_switch.group_1");
                 return [
-                    this.marketRequest.trade_items[group1].tradable.title,
-                    this.marketRequest.trade_items[group1][this.$root.config("trade_structure.efp_switch.expiration_date")],
+                    this.marketRequest.trade_items.default.tradable.title,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.efp.expiration_date")],
                     'EFP'
                 ].join(' ');
             },

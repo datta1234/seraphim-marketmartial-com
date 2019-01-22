@@ -64,7 +64,7 @@ class OpenInterest extends Model
      */
     public static function createFromCSV($data) {
     	
-    	return self::create([
+    	return [
     		'market_name'	=> $data['market_name'],
 			'contract'		=> $data['contract'],
 			'expiry_date'	=> \Carbon\Carbon::parse($data['expiry_date']),
@@ -75,7 +75,9 @@ class OpenInterest extends Model
             // changed due to field type change [MM-811]
 			//'spot_price'	=> doubleval($data['spot_price']),
             'spot_price'    => $data['spot_price'],
-    	]);
+            'created_at'    => now(),
+            'updated_at'    => now(),
+    	];
     }
 
     /**

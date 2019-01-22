@@ -417,6 +417,35 @@ class MarketNegotiation extends Model
     }
 
     /**
+    *
+    *
+    */
+    public function scopePreviousDayRefreshable($query)
+    {
+        return $query->whereRaw('
+            `id` = (
+                select `neg_sub_i`.`id`
+                from `market_negotiations` as `neg_sub_i`
+                where `neg_sub_i`.`user_market_id` = `market_negotiations`.`user_market_id`
+                and `neg_sub_i`.`is_private` = 0
+                and exists (
+                    select * 
+                    from `user_market_requests`
+                    where `user_market_requests`.`chosen_user_market_id` = `neg_sub_i`.`user_market_id`
+                    and `updated_at` between ? and ?
+                    and `active` = 1
+                )
+                order by `neg_sub_i`.`updated_at` DESC
+                limit 1
+            )',
+            [ 
+                now()->subDays(1)->startOfDay(), 
+                now()->startOfDay()
+            ]
+        );
+    }
+
+    /**
     * test if this negotiation has conditions applied
     * @return Boolean
     */

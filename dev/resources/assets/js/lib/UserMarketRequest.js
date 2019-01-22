@@ -446,4 +446,118 @@ export default class UserMarketRequest extends BaseModel {
         // I have sent a quote
         return this.quotes.length > 0 && this.quotes.findIndex(q => q.is_maker) != -1;
     }
+
+
+    /*
+      outright:         [underlying][exp_date][structure][strike]
+      risky:            [underlying][exp_date][structure][bid/offer_strike]
+      calendar:         [underlying][bid/offer_exp_date][structure][bid/offer_strike]
+      fly:              [underlying][exp_date][structure][bid/offer_strike]
+      option_switch:    [underlying_1][exp_date_1]"VS."[underlying_2][exp_date_2][structure][bid/offer_strike]
+      efp:              [underlying][exp_date][structure]
+      efp_switch:       [underlying_1]"VS."[underlying_2][structure][bid/offer_strike]
+      rolls:            [underlying][exp_date_1]"VS."[exp_date_2][structure]
+      var_swap:         [underlying][exp_date][structure](2.5x Cap)
+    */
+    marketTradeTitle() {
+        switch(this.trade_structure_slug) {
+            case "outright":
+                return [
+                    this.trade_items.default.tradable.title,
+                    this.trade_items.default[Config.get("trade_structure.outright.expiration_date")],
+                    this.trade_structure,
+                    this.getTradingGroupItem(Config.get("trade_structure.outright.strike"))
+                ].join(' ');
+            break;
+            case "risky":
+                return [
+                    this.trade_items.default.tradable.title,
+                    this.trade_items.default[Config.get("trade_structure.risky.expiration_date")],
+                    this.trade_structure,
+                    this.getTradingGroupItem(Config.get("trade_structure.risky.strike"))
+                ].join(' ');
+            break;
+            case "calendar":
+                return [
+                    this.trade_items.default.tradable.title,
+                    this.getTradingGroupItem(Config.get("trade_structure.risky.expiration_date")),
+                    this.trade_structure,
+                    this.getTradingGroupItem(Config.get("trade_structure.risky.strike")),
+                ].join(' ');
+            break;
+            case "fly":
+                return [
+                    this.trade_items.default.tradable.title,
+                    this.trade_items.default[Config.get("trade_structure.fly.expiration_date")],
+                    this.trade_structure,
+                    this.getTradingGroupItem(Config.get("trade_structure.fly.strike")),
+                ].join(' ');
+            break;
+            case "option_switch":
+                let title_groups = []
+                Object.keys(this.trade_items).forEach(item => {
+                    let choice = this.trade_items[item].choice ? '(CH)' : '';
+                    title_groups.push([
+                        this.trade_items[item].tradable.title + choice,
+                        this.trade_items[item][Config.get("trade_structure.option_switch.expiration_date")]
+                    ].join(' '));
+                });
+                return [
+                    title_groups.join(' vs '),
+                    this.trade_structure,
+                    this.getTradingGroupItem(Config.get("trade_structure.option_switch.strike"))
+                ].join(' ');
+            break;
+            case "efp":
+                return [
+                    this.trade_items.default.tradable.title,
+                    this.getTradingGroupItem(Config.get("trade_structure.option_switch.expiration_date")),
+                    'EFP'
+                ].join(' ');
+            break;
+            case "efp_switch":
+                return [
+                    this.trade_items[Config.get("trade_structure.efp_switch.group_1")].tradable.title,
+                    'vs',
+                    this.trade_items[Config.get("trade_structure.efp_switch.group_2")].tradable.title,
+                    this.trade_items[Config.get("trade_structure.efp_switch.group_1")][Config.get("trade_structure.efp_switch.expiration_date")],
+                    // strike ? doesnt have one ?
+                    'EFP Switch'
+                ].join(' ');
+            break;
+            case "rolls":
+                return [
+                    this.trade_items[Config.get("trade_structure.rolls.group_1")].tradable.title,
+                    this.trade_items[Config.get("trade_structure.rolls.group_1")][Config.get("trade_structure.rolls.expiration_date_1")],
+                    'vs',
+                    this.trade_items[Config.get("trade_structure.rolls.group_1")][Config.get("trade_structure.rolls.expiration_date_2")],
+                    this.trade_structure
+                ].join(' ');
+            break;
+            case "var_swap":
+                return [
+                    this.trade_items[Config.get("trade_structure.var_swap.group_1")].tradable.title,
+                    this.trade_items[Config.get("trade_structure.var_swap.group_1")][Config.get("trade_structure.var_swap.expiration_date")],
+                    this.trade_structure,
+                    '('+( 
+                        this.trade_items[Config.get("trade_structure.var_swap.group_1")][Config.get("trade_structure.var_swap.cap")] == 0 
+                        ? 'Uncapped' 
+                        : ''+this.trade_items[Config.get("trade_structure.var_swap.group_1")][Config.get("trade_structure.var_swap.cap")]+'x Cap'
+                    )+')'
+                ].join(' ');
+            break;
+        }
+    }
+
+
+    getTradingGroup() {
+        return Object.values(this.trade_items).find(item => {
+            return item.choice === false;
+        });
+    }
+
+    getTradingGroupItem(name) {
+        let group = this.getTradingGroup();
+        return group ? group[name] : null;
+    }
 }

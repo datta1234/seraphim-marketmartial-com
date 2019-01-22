@@ -130,15 +130,15 @@
                     state: true,
                 },
                 table_fields: [
-                    { key: 'updated_at', label: 'Date'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'underlying', label: 'Instrument'/*, sortable: true, sortDirection: 'desc'*/ },
-                    { key: 'structure', label: 'Structure'/*, sortable: true, sortDirection: 'desc'*/ },
-                    (this.is_my_activity ? { key: 'direction', label: 'Direction'/*, sortable: true, sortDirection: 'desc'*/ } : {}),
-                    { key: 'nominal', label: 'Nominal' },
-                    { key: 'strike_percentage', label: 'Strike %' },
-                    { key: 'strike', label: 'Strike' },
-                    { key: 'volatility', label: 'Volatility' },
-                    { key: 'expiration', label: 'Expiration' },
+                    { key: 'updated_at', label: 'Date', tdClass:'text-right', thClass:'text-right'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'underlying', label: 'Instrument', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right' },
+                    (this.is_my_activity ? { key: 'direction', label: 'Direction', tdClass:'text-right', thClass:'text-right' } : {}),
+                    { key: 'nominal', label: 'Nominal', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'strike_percentage', label: 'Strike %', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'volatility', label: 'Volatility', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'expiration', label: 'Expiration', tdClass:'text-right', thClass:'text-right' },
                 ],
                 table_data:{},
                 markets_filter: [
@@ -246,7 +246,7 @@
                         filter_expiration:null,
                         search: null,
                         order_by: null,
-                        order_ascending: true
+                        order_ascending: false
                     };
                 });
                 this.loadTableData(0, false)
@@ -293,7 +293,7 @@
                         break;
                     case 'strike':
                     case 'nominal':
-                        formatted_element = array_item.map(x => this.$root.splitValHelper(x, ' ', 3)).join(' / ');
+                        formatted_element = array_item.map(x => x[0] == 'R' ? x : this.$root.splitValHelper(x, ' ', 3)).join(' / ');
                         break;
                     case 'underlying':
                         formatted_element = array_item.join(' vs. ');
