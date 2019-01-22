@@ -5,16 +5,25 @@
                 <b-col cols="10">
                     <template v-for="(item, index) in tradings">
                         <b-row no-gutters v-if="columns.indexOf('future') != -1 && item.future">
-                            <b-col cols="3" class="info-col text-left">
-                                <span>
-                                    {{ item.expiry }}
-                                </span>
-                            </b-col>
-                            <b-col cols="6" class="info-col text-left">
-                                <span>
-                                    Future Ref: {{ splitValHelper(item.future, '&nbsp;', 3) }}
-                                </span>
-                            </b-col>
+                            <template v-if="isNearDated">
+                                <b-col cols="9" class="info-col text-left">
+                                    <span>
+                                        Near Dated Future Ref: {{ splitValHelper(item.future, '&nbsp;', 3) }}
+                                    </span>
+                                </b-col>
+                            </template>
+                            <template v-else>
+                                <b-col cols="3" class="info-col text-left">
+                                    <span>
+                                        {{ item.expiry }}
+                                    </span>
+                                </b-col>
+                                <b-col cols="6" class="info-col text-left">
+                                    <span>
+                                        Future Ref: {{ splitValHelper(item.future, '&nbsp;', 3) }}
+                                    </span>
+                                </b-col>
+                            </template>
                         </b-row>
                         <b-row no-gutters v-if="columns.indexOf('future_1') != -1 && item.future_1">
                             <b-col cols="3" class="info-col text-left">
@@ -60,6 +69,10 @@ export default {
     props: {
         marketRequest: UserMarketRequest,
         columns: Array,
+        isNearDated: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {
@@ -83,6 +96,7 @@ export default {
                 groups.push(row);
                 itt++;
             }
+            console.log("NANI?!?!?! ", groups, this.marketRequest);
             return groups;
         }
     },

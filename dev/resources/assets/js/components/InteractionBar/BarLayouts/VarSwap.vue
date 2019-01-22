@@ -5,7 +5,8 @@
     
         <ibar-market-requested-futures class="mb-2" 
             :market-request="marketRequest" 
-            :columns="market_requested_future_columns">
+            :columns="market_requested_future_columns"
+            :is-near-dated="true">
         </ibar-market-requested-futures>
 
         <!-- VOL SPREAD History - Market-->
@@ -240,7 +241,9 @@
                     "market_request_delete",
                     "market_negotiation_store"
                 ],
-                market_requested_future_columns: []
+                market_requested_future_columns: [
+                    'future',
+                ]
             };
         },
 
