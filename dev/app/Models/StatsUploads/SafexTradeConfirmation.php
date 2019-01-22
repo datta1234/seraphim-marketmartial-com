@@ -70,7 +70,7 @@ class SafexTradeConfirmation extends Model
      */
     public static function createFromCSV($data) {
     	
-    	return self::create([
+    	return [
             'is_put' 			=> ($data['is_put'] == 'P'),
             'expiry' 			=> \Carbon\Carbon::parse($data['expiry']),
             'strike' 			=> doubleval($data['strike']),
@@ -86,7 +86,7 @@ class SafexTradeConfirmation extends Model
 			'volspread' 		=> $data['volspread'],
 			'created_at'		=> \Carbon\Carbon::now(),
 			'updated_at'		=> \Carbon\Carbon::now(),
-    	]);
+    	];
     }
 
     /**

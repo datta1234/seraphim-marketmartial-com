@@ -170,7 +170,8 @@
                             <b-col :cols="data.market_object.stock ?  11 : 12">
                                 <b-row align-h="center">
                                     <b-col cols="3">
-                                        <label class="pt-2" for="future-0">Future Price Reference</label>
+                                        <label v-if="data.market_object.trade_structure === 'Var Swap'" class="pt-2" for="future-0">Near Dated Future Ref</label>
+                                        <label v-else class="pt-2" for="future-0">Future Price Reference</label>
                                     </b-col>
                                     <template v-if="form_data.fields[0].hasOwnProperty('future')">
                                         <b-col  :key="index" 
@@ -192,6 +193,7 @@
                                                 </b-form-input>
                                             </b-input-group>
                                         </b-col>
+                                        <b-col v-if="display.is_vega" cols="1"></b-col>
                                     </template>
                                 </b-row>
                             </b-col>
@@ -527,12 +529,13 @@
                         is_capped: true,
                         cap: this.cap_setting.default,
                         cap_default: this.cap_setting.default,
+                        future: null,
+                        has_future: false,
                     });
                     this.display.disable_choice = true,
                     this.display.has_strike = false;
                     this.display.is_vega = true;
                     this.display.has_capped = true;
-                    this.display.has_future = false;
                     this.chosen_option = null;
                     break;
             }

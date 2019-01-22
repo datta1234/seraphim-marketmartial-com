@@ -76,8 +76,14 @@ class OpenInterestControlller extends Controller
     {
         $path = $request->file('csv_upload_file')->getRealPath();
         $csv = array_map('str_getcsv', file($path));
-
-        // Create a new array of csv file lines
+        
+        if(count($csv) > 5001) {
+            return response()->json([
+                'errors' => [],
+                'message' => 'Failed to upload Open Interest data. Csv file is larger than 5001 lines.'
+            ], 422);
+        }
+        // 1. Create a new array of csv file lines
         array_walk($csv, function(&$row,$row_index) use (&$csv) {
             array_walk($row, function(&$col) use (&$csv,$row,$row_index) {
                 if(count($row) <= 1 && $col == null) {
@@ -88,43 +94,55 @@ class OpenInterestControlller extends Controller
             });
         });
 
-        // Replace the imported fields with the data base fields
+        // 2. Replace the imported fields with the data base fields
         foreach ($csv[0] as $index => $field) {
             $csv[0][$index] = config('marketmartial.import_csv_field_mapping.open_interest_fields.'.$field);
         }
 
-        // remove headings field and map each value to the heading as key value pair
-        array_walk($csv, function(&$a) use ($csv) {
+        $errors = array();
+        // 3. remove headings field and map each value to the heading as key value pair
+        array_walk($csv, function(&$a, $idx) use ($csv,&$errors) {
             if(count($a) == count($csv[0])) {
                 $a = array_combine($csv[0], $a);
-                // removing white space before validation
+                // 3.1 removing white space before validation
                 $a['open_interest'] = str_replace(" ", "", $a['open_interest']);
                 $a['strike_price'] = str_replace(" ", "", $a['strike_price']);
                 $a['delta'] = str_replace(" ", "", $a['delta']);
                 // removed due to field type change [MM-811]
                 /*$a['spot_price'] = str_replace(" ", "", $a['spot_price']);*/
+
+                if($idx > 0) {
+                    // 3.2 Validate current row fields
+                    $validator = Validator::make($a,
+                        config('marketmartial.import_csv_field_mapping.open_interest_validation.rules'),
+                        config('marketmartial.import_csv_field_mapping.open_interest_validation.messages')
+                    );
+
+                    if($validator->fails()) {
+                        // 3.3 Add row validation errors to the list
+                        $errors[$idx] = $validator->messages();
+                    }
+                }
+
             }
         });
         array_shift($csv);
 
-        // Validate the uploaded Csv fields
-        $validator = Validator::make($csv,
-            config('marketmartial.import_csv_field_mapping.open_interest_validation.rules'),
-            config('marketmartial.import_csv_field_mapping.open_interest_validation.messages')
-        );
-        if ($validator->fails()) {
+        // 4. Return validation errors
+        if (!empty($errors)) {
             return response()->json([
-                'errors' => $validator->messages(),
+                'errors' => $errors,
                 'message' => 'Failed to upload Open Interest data.'
             ], 422);
         }
 
-        // removes all previous open interest records
+        // 5. removes all previous open interest records
         OpenInterest::truncate();
         try {
             DB::beginTransaction();
-            // create new records for each csv file entry
+            // 6. create new records for each csv file entry
             $created = array_map('App\Models\StatsUploads\OpenInterest::createFromCSV', $csv);
+            OpenInterest::insert($created);
             DB::commit();
         } catch (\Illuminate\Database\QueryException $e) {
             \Log::error($e);
