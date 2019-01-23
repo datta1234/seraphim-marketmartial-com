@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 
 import OptionGroup from './tradeconfirmations/OptionGroup';
 import FutureGroup from './tradeconfirmations/FutureGroup';
+import RequestGroup from './tradeconfirmations/RequestGroup';
 import Errors from './Errors';
 import util from './util';
 
@@ -27,12 +28,19 @@ export default class TradeConfirmation extends BaseModel {
                     setMethod: (future_groups) => { 
                         this.setFutureGroups(future_groups) 
                     },
+                },
+                // request groups - only used for var_swap
+                request_groups: {
+                    addMethod: (request_groups) => { 
+                        this.addRequestGroups(request_groups) 
+                    }
                 }
             }
         })
 
         this.option_groups = [];
         this.future_groups = [];
+        this.request_groups = [];
 
         const defaults = {
                 id : "",
@@ -51,7 +59,8 @@ export default class TradeConfirmation extends BaseModel {
                 is_offer : "",
                 brokerage_fee: [],
                 date: "",
-                status_id: null
+                status_id: null,
+                swap_parties: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -67,9 +76,14 @@ export default class TradeConfirmation extends BaseModel {
            this.addOptionGroups(options.option_groups);
         }
 
-         // register future groups
+        // register future groups
         if(options && options.future_groups) {
            this.addFutureGroups(options.future_groups);
+        }
+
+        // register request groups
+        if(options && options.request_groups) {
+           this.addRequestGroups(options.request_groups);
         }
     }
 
@@ -125,6 +139,20 @@ export default class TradeConfirmation extends BaseModel {
         this.future_groups.push(future_group);   
     }
 
+    addRequestGroups(request_groups)
+    {
+        request_groups.forEach((group)=>{
+            this.addRequestGroup(group);
+        });
+    }
+
+    addRequestGroup(request_group)
+    {
+        if(!(request_group instanceof RequestGroup)) {
+            request_group = new RequestGroup(request_group);
+        } 
+        this.request_groups.push(request_group);   
+    }
   
     postPhaseTwo(trading_account)
     {
