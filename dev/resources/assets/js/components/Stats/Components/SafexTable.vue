@@ -58,7 +58,13 @@
                                         Filter
                                     </button>
                                 </b-col>
-                                <b-col cols="4" offset="2">
+                                <b-col cols="2">
+                                    <button class="btn mm-button w-100 float-right ml-0 mr-2" 
+                                            @click="clearFilters()">
+                                        Clear Filter
+                                    </button>
+                                </b-col>
+                                <b-col cols="4">
                                     <datepicker v-model="table_data.param_options.date"
                                                 class="float-right filter-date-picker"
                                                 name="safex-table-datepicker"
@@ -163,6 +169,13 @@
             };
         },
         methods: {
+            clearFilters(index) {
+                this.table_data.param_options.date = null;
+                this.table_data.param_options.market = null;
+                this.table_data.param_options.expiration = null;
+                this.table_data.param_options.nominal = null;
+                this.table_data.param_options.underlying = null;
+            },
             loadTableData() {
                 this.table_data.loaded = false;
                 axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex', {
