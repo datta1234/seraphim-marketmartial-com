@@ -113,7 +113,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
 	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
-		'only' => ['store','index']
+		'only' => ['index']
 	]);
 
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');

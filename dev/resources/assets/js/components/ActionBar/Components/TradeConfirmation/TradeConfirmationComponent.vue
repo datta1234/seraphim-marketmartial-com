@@ -5,6 +5,58 @@
         <p>Thank you for your trade! Please check before accepting.</p>
         <p>Date: {{ trade_confirmation.date }} </p>
         <p>Structure: {{ trade_confirmation.trade_structure_title }}</p>
+        
+        <!-- Var Swap Details Confirmation -->
+        <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'var_swap'">
+            <div style="Display:inline;">
+                <h3 class="text-dark">Swap</h3>
+            </div>
+
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                    <th scope="col">{{ trade_confirmation.swap_parties.initiate_org }}</th>
+                    <th scope="col">{{ trade_confirmation.swap_parties.recieving_org }}</th>
+                    <th scope="col">Underlying</th>
+                    <th scope="col">Expiry</th>
+                    <th scope="col">Volatility Level</th>
+                    <th scope="col">Vega</th>
+                    <th scope="col">Capped</th>
+                    <th scope="col">Near Dated Future Ref</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr v-for="request_group in  trade_confirmation.request_groups">
+                    <td>
+                        {{ trade_confirmation.swap_parties.is_offer ? "Buys" : "Sell" }}
+                    </td>
+                    <td>
+                        {{ trade_confirmation.swap_parties.is_offer ? "Sell" : "Buys" }}
+                    </td>
+                    <td>
+                         {{ request_group.underlying_title }}
+                    </td>
+                    <td>
+                        {{ request_group.expires_at }}
+                    </td>
+                    <td>
+                         {{ trade_confirmation.volatility }}
+                    </td>
+                    <td>
+                        {{ splitValHelper(request_group.vega,' ',3) }}
+                    </td>
+                    <td>
+                        {{ splitValHelper(request_group.cap,' ',3) }} 
+                    </td>
+                    <td>
+                        {{ splitValHelper(request_group.future,' ',3) }}                            
+                    </td>
+                </tr>
+              </tbody>
+            </table>
+        </template>
+        
         <template v-if="trade_confirmation.option_groups.length > 0">
             <div style="Display:inline;">
                 <h3 class="text-dark">Option</h3>
@@ -62,123 +114,124 @@
               </tbody>
             </table>
         </template>
-
-        <div>
-            <h3 class="text-dark">Futures</h3>
-        </div>
-          <table class="table table-sm">
-          <thead>
-            <tr>
-                <th scope="col">{{ trade_confirmation.organisation }}</th>
-                <th scope="col">Underlying</th>
-                <th scope="col">Spot</th>
-                <th scope="col">Future</th>
-                <th scope="col">Contracts</th>
-                <th scope="col">Expiry</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="(future_group, key) in trade_confirmation.future_groups">
-                <!-- Used for Rolls Structure only -->
-                <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'rolls'">
-                    <tr>
-                        <td>
-                          {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sell"):'') }}
-                        </td>
-                        <td>
-                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
-                        </td>
-                        <td>
-                            -    
-                        </td>
-                        <td>
-                            <input class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
-                            <span class="text-danger">
-                                <!-- @TODO figure out how to not hardcode the first value -->
-                            <ul v-if="errors">
-                              <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
-                                  {{ error }}
-                              </li>
-                            </ul>
-                            </span>
-                        </td>
-                        <td>
-                            {{ trade_confirmation.future_groups[key]['contracts'] }}
-                        </td>
-                        <td>
-                            {{ future_group.expires_at_1 }}     
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                          {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sell"):'') }}
-                        </td>
-                        <td>
-                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
-                        </td>
-                        <td>
-                            -    
-                        </td>
-                        <td>
-                            {{ trade_confirmation.future_groups[key]['future_2'] }}
-                        </td>
-                        <td>
-                            {{ trade_confirmation.future_groups[key]['contracts'] }} 
-                        </td>
-                        <td>
-                            {{ future_group.expires_at_2 }}     
-                        </td>
-                    </tr> 
-                </template>
-                <template v-else>
-                    <tr>
-                        <td>
-                          {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
-                        </td>
-                        <td>
-                          {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
-                        </td>
-                        <td>
-                            
-                            <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
-                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
-                            </template>
-                            <template v-else>
+        <template v-if="trade_confirmation.future_groups.length > 0">
+            <div>
+                <h3 class="text-dark">Futures</h3>
+            </div>
+              <table class="table table-sm">
+              <thead>
+                <tr>
+                    <th scope="col">{{ trade_confirmation.organisation }}</th>
+                    <th scope="col">Underlying</th>
+                    <th scope="col">Spot</th>
+                    <th scope="col">Future</th>
+                    <th scope="col">Contracts</th>
+                    <th scope="col">Expiry</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template v-for="(future_group, key) in trade_confirmation.future_groups">
+                    <!-- Used for Rolls Structure only -->
+                    <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'rolls'">
+                        <tr>
+                            <td>
+                              {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sell"):'') }}
+                            </td>
+                            <td>
+                              {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                            </td>
+                            <td>
                                 -    
-                            </template>
-                        </td>
-                        <td v-if="can_set_future">
-                            <input class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
-                            <span class="text-danger">
-                                <!-- @TODO figure out how to not hardcode the first value -->
-                            <ul v-if="errors">
-                              <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
-                                  {{ error }}
-                              </li>
-                            </ul>
-                            </span>
-                        </td>
-                        <td v-else>
-                            {{ trade_confirmation.future_groups[key]['future'] }}
-                        </td>
-                        <td>
-                            <input class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
-                        </td>
-                        <td>
-                            {{ future_group.expires_at }}     
-                        </td>
-                    </tr>
+                            </td>
+                            <td>
+                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
+                                <span class="text-danger">
+                                    <!-- @TODO figure out how to not hardcode the first value -->
+                                <ul v-if="errors">
+                                  <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
+                                      {{ error }}
+                                  </li>
+                                </ul>
+                                </span>
+                            </td>
+                            <td>
+                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                            </td>
+                            <td>
+                                {{ future_group.expires_at_1 }}     
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                              {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sell"):'') }}
+                            </td>
+                            <td>
+                              {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                            </td>
+                            <td>
+                                -    
+                            </td>
+                            <td>
+                                {{ trade_confirmation.future_groups[key]['future_2'] }}
+                            </td>
+                            <td>
+                                {{ trade_confirmation.future_groups[key]['contracts'] }} 
+                            </td>
+                            <td>
+                                {{ future_group.expires_at_2 }}     
+                            </td>
+                        </tr> 
+                    </template>
+                    <template v-else>
+                        <tr>
+                            <td>
+                              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
+                            </td>
+                            <td>
+                              {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
+                            </td>
+                            <td>
+                                
+                                <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
+                                    <input class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
+                                </template>
+                                <template v-else>
+                                    -    
+                                </template>
+                            </td>
+                            <td v-if="can_set_future">
+                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
+                                <span class="text-danger">
+                                    <!-- @TODO figure out how to not hardcode the first value -->
+                                <ul v-if="errors">
+                                  <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
+                                      {{ error }}
+                                  </li>
+                                </ul>
+                                </span>
+                            </td>
+                            <td v-else>
+                                {{ trade_confirmation.future_groups[key]['future'] }}
+                            </td>
+                            <td>
+                                <input class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
+                            </td>
+                            <td>
+                                {{ future_group.expires_at }}     
+                            </td>
+                        </tr>
+                    </template>
                 </template>
-            </template>
-          </tbody>
-        </table>
+              </tbody>
+            </table>
+        </template>
          <b-row>
             <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
-                <button type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
                 <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
-                    <b-form-select :disabled="can_send" v-model="selected_trading_account">
+                    <b-form-select v-model="selected_trading_account">
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                         </option>
                     </b-form-select>
@@ -192,8 +245,8 @@
             </b-col>
            <b-col md="5" offset-md="7" v-else>
                 <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                <button type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                <button v-if="action_list.can_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -201,7 +254,12 @@
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.safex_number }}
                         </option>
                     </b-form-select>
-                    <a :href="base_url + '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
+                    <b-row v-if="errors && errors['trading_account']" class="text-center mt-2 mb-2">
+                        <b-col cols="12">
+                            <p class="text-danger mb-0">{{ errors['trading_account'] }}</p>
+                        </b-col>
+                    </b-row>
+                    <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
                 </div>
             </b-col>
         </b-row> 
@@ -220,7 +278,7 @@
       name: 'TradeConfirmationComponent',
         computed: {
             can_send:function (val) {
-                return  this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
+                return (this.action_list.can_calculate && this.action_list.can_dispute) ? (this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list))) : true;
             },
             can_calc:function (val) {
                 return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
@@ -241,6 +299,10 @@
                 can_dispute: true,
                 base_url: '',
                 change_exclude_list: ['contracts'],
+                action_list: {
+                    can_calculate: true,
+                    can_dispute: true,
+                },
             }
         },
         methods: {
@@ -249,10 +311,16 @@
                 this.trade_confirmation = tradeConfirmation;
                 this.updateOldData(this.trade_confirmation);
                 this.setDefaultTradingAccount();
+                if(this.trade_confirmation && this.trade_confirmation.trade_structure_slug == 'var_swap') {
+                    this.action_list.can_calculate = false;
+                    this.action_list.can_dispute = false;
+                }
             },
             clearConfirmation()
             {
-                this.trade_confirmation = null; 
+                this.trade_confirmation = null;
+                this.action_list.can_calculate = true;
+                this.action_list.can_dispute = true;
             },
             getError(field)
             {
