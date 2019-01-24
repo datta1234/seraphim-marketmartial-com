@@ -223,9 +223,17 @@ class TradeConfirmation extends Model
             'option_groups'             => $this->optionGroups->map(function($item) use ($is_sender){
                 return $item->preFormatted($is_sender);
             })->toArray(),
-            'future_groups'           => $this->futureGroups->map(function($item) use ($is_sender){
+            'future_groups'             => $this->futureGroups->map(function($item) use ($is_sender){
                 return $item->preFormatted($is_sender);
             })->toArray(),
+            'request_groups'                => $this->tradeStructureSlug == 'var_swap' ? $this->marketRequest->userMarketRequestGroups->map(function($item) {
+                    return $item->preFormatted();
+                })->toArray() : null,
+            'swap_parties'              => $this->tradeStructureSlug == 'var_swap' ? [
+                    'is_offer' => $this->tradeNegotiation->is_offer,
+                    'initiate_org' => $this->tradeNegotiation->initiateUser->organisation->title,
+                    'recieving_org' => $this->tradeNegotiation->recievingUser->organisation->title,
+                ] : null,
             'market_request_id'         => $this->marketRequest->id,
             'market_request_title'      => $this->marketRequest->title,
             

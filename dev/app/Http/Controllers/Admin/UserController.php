@@ -31,7 +31,7 @@ class UserController extends Controller
                 ->select(DB::raw((new User)->getTable().".*, ".(new Organisation)->getTable().".title as 'organisation_title'"))
                 ->join((new Organisation)->getTable(), (new Organisation)->getTable().'.id', '=', (new User)->getTable().'.organisation_id')
                 ->with('organisation','role')
-                ->paginate(10);
+                ->paginate(50);
 
         $sessions = Session::whereIn('user_id', $users->pluck('id'))->get();
 
