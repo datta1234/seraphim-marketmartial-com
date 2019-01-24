@@ -293,16 +293,20 @@
                 return this.trade_confirmation.trade_structure_slug != 'efp' 
                     && this.trade_confirmation.trade_structure_slug != 'efp_switch';
             },
+            /**
+             *   can_dispute - Checks the following to determine whether a user can dispute 
+             *      
+             *      1. Does the trade confo have Futures and are they set?
+             *      2. Does the trade confo have Spots and are they set?
+             *      3. Have the Future values changed for any of the following: 
+             *          ['future','future_1','future_2','spot']
+             *      4. Is any of the following states true
+             *          4.1 Has been Updated and Calculated (RAN PhaseTwo again)
+             *                       OR
+             *          4.2 Has not been Updated and Calculated (DID NOT RUN PhaseTwo again)
+             *              and have the Future Contracts changed.
+             */
             can_dispute:function (val) {
-                // Has been calculated
-                //    -have values not changed ('future','future_1','future_2','spot')
-                // = true
-
-                // OR
-
-                // Has not been calculated
-                //  - have values not changed ('future','future_1','future_2','spot')
-                //  - have values changed ('contracts')
                 return this.action_list.has_dispute ? (this.trade_confirmation.hasFutures() 
                     && this.trade_confirmation.hasSpots() 
                     && (this.trade_confirmation.canDisputeUpdated()
