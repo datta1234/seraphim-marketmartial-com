@@ -118,7 +118,8 @@
                 "title": "Sell in Middle (Private)"
             }
         ],
-        "only": "market"
+        "only": "market",
+        "applies_to": ["bid", "offer"]
     },
     {
         "title": "Buy/Sell at Best",

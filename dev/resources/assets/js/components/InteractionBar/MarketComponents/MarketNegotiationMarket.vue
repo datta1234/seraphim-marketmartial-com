@@ -71,6 +71,7 @@
             },
             'marketNegotiation.cond_buy_mid'(nv, ov) {
                 this.$nextTick(() => {
+                    console.log("test null");
                     if(this.resetting) { 
                         this.buying_at_mid = false;
                         return;
