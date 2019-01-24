@@ -97,6 +97,11 @@
         "hidden": true
     },
     {
+        "alias": "cond_fok_spin",
+        "default": null,
+        "hidden": true
+    },
+    {
         "title": "Meet in the Middle (Private)",
         "alias": "cond_buy_mid",
         "default": null,
@@ -113,7 +118,8 @@
                 "title": "Sell in Middle (Private)"
             }
         ],
-        "only": "market"
+        "only": "market",
+        "applies_to": ["bid", "offer"]
     },
     {
         "title": "Buy/Sell at Best",

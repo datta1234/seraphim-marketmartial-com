@@ -459,6 +459,9 @@ export default class UserMarketNegotiation extends BaseModel {
         
         if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
         {
+            if(prevItem.isTraded()) {
+                return this;
+            }
             return prevItem.getAmountSource(attr);   
         }else
         {

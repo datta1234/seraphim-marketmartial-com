@@ -85,17 +85,17 @@
 
                 this.tradeNegotiation.store(this.marketNegotiation)
                 .then(response => {
-                    this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
                     this.is_offer = this.isOffer;
                     this.confirmed = false;
+                    this.server_loading = false;
                 })
                 .catch(err => {
-                    this.server_loading = false;
 
                     this.history_message = err.errors.message;
                     this.errors = err.errors;
+                    this.server_loading = false;
 
                 });
            }

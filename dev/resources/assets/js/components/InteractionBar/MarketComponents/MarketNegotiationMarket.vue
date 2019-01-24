@@ -5,16 +5,16 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request v-input-mask.number.decimal="{ precision: 2 }" class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request v-input-mask.number.decimal="{ precision: 2 }" v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request v-input-mask.number.decimal="{ precision: 2 }" v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
+                            <b-form-input v-active-request v-input-mask.number.decimal="{ precision: 2 }" class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
                         </div>
                     </b-form>
                 </b-col>
@@ -71,6 +71,7 @@
             },
             'marketNegotiation.cond_buy_mid'(nv, ov) {
                 this.$nextTick(() => {
+                    console.log("test null");
                     if(this.resetting) { 
                         this.buying_at_mid = false;
                         return;
@@ -326,6 +327,9 @@
                         ) || (
                             this.is_empty(this.marketNegotiation.bid)  
                             && !this.is_empty(this.marketNegotiation.bid_qty)
+                        ) || (
+                            !this.is_empty(this.marketNegotiation.offer)
+                            && parseFloat(this.marketNegotiation.offer) <= parseFloat(this.marketNegotiation.bid)
                         )
                     );
                  
@@ -337,6 +341,9 @@
                         ) || (
                             this.is_empty(this.marketNegotiation.offer)  
                             && !this.is_empty(this.marketNegotiation.offer_qty)
+                        ) || (
+                            !this.is_empty(this.marketNegotiation.bid)
+                            && parseFloat(this.marketNegotiation.offer) <= parseFloat(this.marketNegotiation.bid)
                         )
                     );
                 }

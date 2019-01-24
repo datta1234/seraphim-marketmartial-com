@@ -116,7 +116,7 @@ class UserMarketPolicy
         // Cant respond to negotiation if FoK
         if($userMarket->lastNegotiation->isFoK()) {
             // only if its killed
-            return $userMarket->lastNegotiation->is_killed == true;
+            return $userMarket->lastNegotiation->is_killed == true || $userMarket->lastNegotiation->isTraded();
         }
 
         // Removed Per [MM-618]

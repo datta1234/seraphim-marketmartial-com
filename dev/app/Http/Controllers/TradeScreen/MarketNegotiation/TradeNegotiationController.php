@@ -17,7 +17,9 @@ class TradeNegotiationController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('lock-model:market_negotiation,trade')->only('store');
+        $this->middleware([
+            'lock-model:market_negotiation,trade'
+        ])->only('store');
     }
 
     /**

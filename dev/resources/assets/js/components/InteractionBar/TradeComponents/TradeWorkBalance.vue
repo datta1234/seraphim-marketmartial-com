@@ -72,14 +72,14 @@
                 let userMarket = this.marketRequest.chosen_user_market;
                 this.marketNegotiation.storeWorkBalance(this.marketRequest,userMarket,this.quantity)
                 .then(response => {
-                    this.server_loading = false;
                     this.errors = [];
+                    this.server_loading = false;
                 })
                 .catch(err => {
-                    this.server_loading = false;
                     console.log(err);
                     //this.history_message = err.errors.message;
                     //this.errors = err.errors.errors;
+                    this.server_loading = false;
                 });
            },
           noFutherCares(){
@@ -89,14 +89,14 @@
                 .then(response => {
                     EventBus.$emit('addToNoCares',this.marketRequest.id);
                     EventBus.$emit('interactionToggle', false);
-                    this.server_loading = false;
                     this.errors = [];
+                    this.server_loading = false;
                 })
                 .catch(err => {
-                    this.server_loading = false;
 
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
+                    this.server_loading = false;
                 });
           }
         },
