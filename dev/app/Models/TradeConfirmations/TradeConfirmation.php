@@ -241,7 +241,7 @@ class TradeConfirmation extends Model
 
             'market_type_id'            => $this->market->market_type_id,
 
-            'status_id'                 => $this->trade_confirmation_status_id,
+            'state'                     => $this->tradeConfirmationStatus->title,
 
             'can_interact'              => $this->canInteract(),
 

@@ -226,8 +226,8 @@
             </table>
         </template>
          <b-row>
-            <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
-                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+            <b-col md="5" offset-md="7" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
+                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
                 <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -245,8 +245,8 @@
             </b-col>
            <b-col md="5" offset-md="7" v-else>
                 <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                <button v-if="action_list.can_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                <button v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -278,15 +278,40 @@
       name: 'TradeConfirmationComponent',
         computed: {
             can_send:function (val) {
-                return (this.action_list.can_calculate && this.action_list.can_dispute) ? (this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list))) : true;
+                return (this.action_list.has_calculate && this.action_list.has_dispute) ? (this.trade_confirmation.hasFutures() 
+                    && this.trade_confirmation.hasSpots() 
+                    && !this.trade_confirmation.hasChanged(this.trade_confirmation.state == 'Pending: Initiate Confirmation' ? this.oldConfirmationDataContractsExcluded : this.oldConfirmationData)
+                    && this.trade_confirmation.canSend()
+                ) : true;
             },
             can_calc:function (val) {
-                return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
+                return  this.trade_confirmation.hasFutures() 
+                    &&  this.trade_confirmation.hasSpots() 
+                    &&  this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsExcluded, this.exclude_contracts);
             },
             can_set_future:function (val) {
                 return this.trade_confirmation.trade_structure_slug != 'efp' 
                     && this.trade_confirmation.trade_structure_slug != 'efp_switch';
-            }
+            },
+            can_dispute:function (val) {
+                // Has been calculated
+                //    -have values not changed ('future','future_1','future_2','spot')
+                // = true
+
+                // OR
+
+                // Has not been calculated
+                //  - have values not changed ('future','future_1','future_2','spot')
+                //  - have values changed ('contracts')
+                return this.action_list.has_dispute ? (this.trade_confirmation.hasFutures() 
+                    && this.trade_confirmation.hasSpots() 
+                    && (this.trade_confirmation.canDisputeUpdated()
+                        || this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsOnly, this.include_only_contracts)
+                        && this.trade_confirmation.canDisputeContracts())
+                    && !this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsExcluded, this.exclude_contracts)
+                ) : true;
+
+            },
         },
         data() {
             return {
@@ -295,13 +320,15 @@
                 errors:{},
                 confirmationLoaded: true,
                 oldConfirmationData: null,
+                oldConfirmationDataContractsExcluded: null,
+                oldConfirmationDataContractsOnly: null,
                 trade_confirmation: null,
-                can_dispute: true,
                 base_url: '',
-                change_exclude_list: ['contracts'],
+                exclude_contracts: ['contracts'],
+                include_only_contracts: ['future','future_1','future_2','spot'],
                 action_list: {
-                    can_calculate: true,
-                    can_dispute: true,
+                    has_calculate: true,
+                    has_dispute: true,
                 },
             }
         },
@@ -312,15 +339,15 @@
                 this.updateOldData(this.trade_confirmation);
                 this.setDefaultTradingAccount();
                 if(this.trade_confirmation && this.trade_confirmation.trade_structure_slug == 'var_swap') {
-                    this.action_list.can_calculate = false;
-                    this.action_list.can_dispute = false;
+                    this.action_list.has_calculate = false;
+                    this.action_list.has_dispute = false;
                 }
             },
             clearConfirmation()
             {
                 this.trade_confirmation = null;
-                this.action_list.can_calculate = true;
-                this.action_list.can_dispute = true;
+                this.action_list.has_calculate = true;
+                this.action_list.has_dispute = true;
             },
             getError(field)
             {
@@ -331,7 +358,9 @@
             },
             updateOldData(TradeConfirmation)
             {
-                this.oldConfirmationData = this.trade_confirmation.prepareStore(this.change_exclude_list);
+                this.oldConfirmationData = this.trade_confirmation.prepareStore();
+                this.oldConfirmationDataContractsExcluded = this.trade_confirmation.prepareStore(this.exclude_contracts);
+                this.oldConfirmationDataContractsOnly = this.trade_confirmation.prepareStore(this.include_only_contracts);
             },
             getTradingAccounts: function()
             {
@@ -361,11 +390,6 @@
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
-                   
-                    if(trade_confirmation.status_id != 1)
-                    {
-                       this.can_dispute = true; 
-                    }
 
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
