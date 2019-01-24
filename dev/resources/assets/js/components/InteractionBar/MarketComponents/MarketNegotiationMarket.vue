@@ -326,6 +326,9 @@
                         ) || (
                             this.is_empty(this.marketNegotiation.bid)  
                             && !this.is_empty(this.marketNegotiation.bid_qty)
+                        ) || (
+                            !this.is_empty(this.marketNegotiation.offer)
+                            && parseFloat(this.marketNegotiation.offer) <= parseFloat(this.marketNegotiation.bid)
                         )
                     );
                  
@@ -337,6 +340,9 @@
                         ) || (
                             this.is_empty(this.marketNegotiation.offer)  
                             && !this.is_empty(this.marketNegotiation.offer_qty)
+                        ) || (
+                            !this.is_empty(this.marketNegotiation.bid)
+                            && parseFloat(this.marketNegotiation.offer) <= parseFloat(this.marketNegotiation.bid)
                         )
                     );
                 }
