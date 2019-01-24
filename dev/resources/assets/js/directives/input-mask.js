@@ -1,7 +1,7 @@
 /**
-*   v-input-restrict directive
+*   v-input-mask directive
 *   Usage:
-*       <input v-input-restrict.number.decimal="{ precision: 2 }">
+*       <input v-input-mask.number.decimal="{ precision: 2 }">
 *
 *   Modifiers:
 *       .alpha will only allow alphabetical values a-Z

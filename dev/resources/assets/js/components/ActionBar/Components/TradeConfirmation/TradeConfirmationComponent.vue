@@ -144,7 +144,7 @@
                                 -    
                             </td>
                             <td>
-                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
                                 <span class="text-danger">
                                     <!-- @TODO figure out how to not hardcode the first value -->
                                 <ul v-if="errors">
@@ -193,14 +193,14 @@
                             <td>
                                 
                                 <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
-                                    <input class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
+                                    <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
                                 </template>
                                 <template v-else>
                                     -    
                                 </template>
                             </td>
                             <td v-if="can_set_future">
-                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
                                 <span class="text-danger">
                                     <!-- @TODO figure out how to not hardcode the first value -->
                                 <ul v-if="errors">
@@ -214,7 +214,7 @@
                                 {{ trade_confirmation.future_groups[key]['future'] }}
                             </td>
                             <td>
-                                <input class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
                             </td>
                             <td>
                                 {{ future_group.expires_at }}     
