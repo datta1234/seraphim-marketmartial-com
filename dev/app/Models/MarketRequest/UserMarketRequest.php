@@ -140,27 +140,30 @@ class UserMarketRequest extends Model
                     $q->where('active', true);
                     $q->where('updated_at', '>', now()->startOfDay());
                 });
-                $q->orWhere(\DB::raw('(
-                    select `trade_sub`.`traded` as `trade_sub_traded`
-                    from `user_markets` 
-                    left join (
-                        select *
-                        from `market_negotiations` 
-                        where `market_negotiations`.`deleted_at` is null
-                        order by `updated_at` desc 
-                    ) `neogitation_sub`
-                    on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
-                    left join (
-                        select * 
-                        from `trade_negotiations`
-                        order by `updated_at` desc 
-                    ) `trade_sub`
-                    on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
-                    where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
-                    and `user_markets`.`deleted_at` is null
-                    order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
-                    limit 1
-                )'), 0);
+                $q->orWhere(function($q) {
+                    $q->where('active', true);
+                    $q->where(\DB::raw('(
+                        select `trade_sub`.`traded` as `trade_sub_traded`
+                        from `user_markets` 
+                        left join (
+                            select *
+                            from `market_negotiations` 
+                            where `market_negotiations`.`deleted_at` is null
+                            order by `updated_at` desc 
+                        ) `neogitation_sub`
+                        on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
+                        left join (
+                            select * 
+                            from `trade_negotiations`
+                            order by `updated_at` desc 
+                        ) `trade_sub`
+                        on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
+                        where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
+                        and `user_markets`.`deleted_at` is null
+                        order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
+                        limit 1
+                    )'), 0);
+                });
             });
         });
     }
