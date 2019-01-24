@@ -35,6 +35,9 @@ class MarketNegotiationPolicy
         if($user->isViewer()) { 
             return false; 
         }
+        if($marketNegotiation->isTraded()) {
+            return false;
+        }
         if($marketNegotiation->isTrading()) {
             // only involved
             return $marketNegotiation->lastTradeNegotiation->isOrganisationInvolved($user->organisation_id);
