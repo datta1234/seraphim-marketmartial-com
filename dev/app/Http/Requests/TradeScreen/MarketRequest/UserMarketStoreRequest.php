@@ -81,6 +81,19 @@ class UserMarketStoreRequest extends FormRequest
             return !is_null($input->current_market_negotiation["offer_qty"]);
         }); 
 
+        // if both are set
+        $validator->after(function ($validator) {
+            $bid = $this->get('current_market_negotiation')['bid'];
+            $offer = $this->get('current_market_negotiation')['offer'];
+            // both are set
+            if(!is_null($bid) && !is_null($offer)) {
+                // bid cannot be higher than offer, offer cannot be lower than bid
+                if(floatval($bid) >= floatval($offer)) {
+                    $validator->errors()->add('bid', "Bid cannot be higher than or equal to offer");
+                }
+            }
+        });
+
         // $ratio = $userMarketRequest->ratio;
 
         $validator->sometimes(

@@ -98,7 +98,9 @@ Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQ
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';
+import InputMask from './directives/input-mask.js';
 Vue.directive('active-request', ActiveRequestDirective);
+Vue.directive('input-mask', InputMask);
 
 import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
