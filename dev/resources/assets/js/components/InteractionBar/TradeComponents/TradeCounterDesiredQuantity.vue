@@ -94,9 +94,9 @@
 
                 this.lastTradeNegotiation.counter(this.tradeNegotiation)
                 .then(response => {
-                    this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
+                    this.server_loading = false;
                 })
                 .catch(err => {
 

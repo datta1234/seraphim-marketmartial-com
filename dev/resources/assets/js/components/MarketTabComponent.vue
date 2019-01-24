@@ -60,9 +60,9 @@
         computed: {
             org_involved: function() {
                 // this is not org involvement any more - its "is the market pending for others"
-                console.log("ORG INVOLVEMENT >>> ", this.marketRequest.id, !this.marketRequest.attributes.market_open, this.marketRequest.myOrgInvolved());
                 return !this.marketRequest.attributes.market_open && (
-                    this.marketRequest.myOrgInvolved()
+                    this.marketRequest.attributes.involved
+                    || this.marketRequest.myOrgInvolved()
                     || (
                         this.marketRequest.is_interest
                         && (

@@ -892,6 +892,16 @@ class UserMarketRequest extends Model
             ? $this->chosenUserMarket->marketNegotiations()->selectedDay()->traded()->exists() // this should be formatted by loading_previous_day / loadign_current_day config settings
             : false
         );
+        $involved = false;
+        if($this->chosen_user_market_id != null) {
+            $last_negotiation = $this->chosenUserMarket->lastNegotiation;
+            if( 
+                ($last_negotiation->user && $last_negotiation->user->organisation_id == $current_org_id)
+                || ($last_negotiation->counterUser && $last_negotiation->counterUser->organisation_id == $current_org_id)
+            ) {
+                $involved = true;
+            }
+        }
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
@@ -905,6 +915,7 @@ class UserMarketRequest extends Model
                 'negotiation-open',
                 'trade-negotiation-open',
             ]),
+            'involved' => $involved,
         ];
  
         switch ($state) {
