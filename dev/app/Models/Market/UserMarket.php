@@ -802,19 +802,19 @@ class UserMarket extends Model
         * bid over → opens offer side
         * offered over → opens bid side
         */
-        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
-        $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
+        // $attr = $lastTradeNegotiation->getRoot()->is_offer ? 'offer' : 'bid';
+        // $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
         // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
         $newMarketNegotiation->user_id = $user->id;
 
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->bid = $lastMarketNegotiation->bid;
             $newMarketNegotiation->bid_qty = $quantity;
             
         }else
         {
-            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
             $newMarketNegotiation->offer_qty = $quantity;
         }
 
@@ -1063,7 +1063,8 @@ class UserMarket extends Model
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
-
+        $locale_info = localeconv();
+        
         $data = [
             "id"            => $this->id,
             "is_interest"   =>  $is_interest,
@@ -1072,8 +1073,8 @@ class UserMarket extends Model
             "offer_only"    => $this->currentMarketNegotiation->bid == null,
             "vol_spread"    => (
                 !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
-                $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
-                null 
+                rtrim(rtrim(bcsub($this->currentMarketNegotiation->offer,$this->currentMarketNegotiation->bid,2), "0"), $locale_info['decimal_point']) : 
+                null
             ),
             "time"          => $this->created_at->format("H:i"),
         ];
@@ -1085,7 +1086,7 @@ class UserMarket extends Model
             $data['is_repeat']  = $this->currentMarketNegotiation->is_repeat;
             $data['is_on_hold'] = $this->is_on_hold;
         }
-        if($data['is_interest']) {
+        if($data['is_interest']) { 
             $data['is_on_hold'] = $this->is_on_hold;
         }
 

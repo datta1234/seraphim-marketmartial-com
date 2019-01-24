@@ -186,6 +186,14 @@
                     }
                     return false;
                 }
+                if(typeof cond.applies_to !== 'undefined') {
+                    return cond.applies_to.reduce((a, v) => {
+                        a = a && (
+                            this.marketNegotiation[v] != null && this.marketNegotiation[v] != ''
+                        );
+                        return a
+                    }, true);
+                }
                 return true;
             },
             onToggleClick(condition, group) {

@@ -14,12 +14,16 @@
                 </b-row>
             </b-col>
             <b-col class="market-tab-state">
-                <b-row align-v="center" align-h="center" class="h-100">
-                    <b-col v-if="market_request_state_label != ''">
+                <b-row align-v="center" align-h="center" class="h-100" v-if="market_request_state_label != ''">
+                    <b-col>
                         <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
                     </b-col>
-                    <b-col v-else>
-                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                </b-row>
+                <b-row align-v="center" align-h="center" class="h-100" v-else>
+                    <b-col cols="12">
+                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">
+                            {{ user_market_offer }}
+                        </span>
                     </b-col>
                 </b-row>
             </b-col>

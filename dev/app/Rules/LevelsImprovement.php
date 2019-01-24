@@ -69,19 +69,23 @@ class LevelsImprovement implements Rule
                 $cond_att = $this->lastNegotiation->cond_fok_apply_bid ? 'bid' : 'offer';
                 // if the attribute on the last killed FoK is the one under validation, ignore its value...
                 if($attribute == $cond_att) {
-                    $valid = ( $attribute == 'bid' ? true : false );
-                    $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $attribute value.";
-                    \Log::info($attribute." >>> 3");
-                    return $this->request->input($attribute) != $this->lastNegotiation->getLatest($inverse)
-                        && $this->request->input($attribute) < $this->lastNegotiation->getLatest($inverse) === $valid;
+                    $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $inverse value.";
+                    if($attribute == 'bid') {
+                        if($this->request->input('bid') <= $this->lastNegotiation->getLatest('offer')) {
+                            return false;
+                        }
+                    } else {
+                        if($this->request->input('bid') >= $this->lastNegotiation->getLatest('offer')) {
+                            return false;
+                        }
+                    }
                 }
             }
 
             // should handle MM-845
             if($this->request->input($attribute) != null && $this->request->input($inverse) != null) {
-                if($this->request->input('offer') < $this->request->input('bid')) {
-                    $this->message = "Bid value cannot be higher than offer value.";
-                    \Log::info($attribute." >>> 4");
+                $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $inverse value.";
+                if($this->request->input('bid') >= $this->request->input('offer')) {
                     return false;
                 }
             }
