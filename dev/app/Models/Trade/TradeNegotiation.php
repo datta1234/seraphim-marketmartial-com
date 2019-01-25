@@ -213,4 +213,8 @@ class TradeNegotiation extends Model
         }
         return $data;
     }
+
+    public function getTradingRatio() {
+        return $this->quantity / $this->userMarket->userMarketRequest->tradingGroup->getDynamicItem('Quantity');
+    }
 }
