@@ -1269,6 +1269,12 @@ class UserMarketRequest extends Model
 
     /**
      * Return a simple or query object based on the search term
+     *   
+     *   This method requires extra fields to be present in the query see
+     *   \App\Http\Controllers\Stats\yearActivity
+     *   
+     *   Fields: trade_date, trade_send_user_id, trade_receiving_user_id,
+     *           trade_negotiation_id, trade_confirmation_id
      *
      * @param string $term
      * @param string $orderBy
@@ -1279,6 +1285,7 @@ class UserMarketRequest extends Model
      */
     public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
+
         if($orderBy == null)
         {
             $orderBy = "updated_at";
@@ -1302,46 +1309,35 @@ class UserMarketRequest extends Model
                     });
                 });
             });
-
-            /*$q->whereHas('tradeConfirmationGroups',function($q) use ($term){
-                $q->whereHas('userMarketRequestGroup', function ($q) use ($term) {
-                    $q->whereHas('tradable', function ($q) use ($term) {
-                        $q->whereHas('market', function ($q) use ($term) {
-                            $q->where('title','like',"%$term%");
-                        })
-                        ->orWhereHas('stock', function ($q) use ($term) {
-                            $q->where('code','like',"%$term%");  
-                        });
-                    });
-                });
-            });*/
         });
 
         // Apply Filters
-        /*if($filter !== null) {
+        if($filter !== null) {
             if(!empty($filter["filter_date"])) {
-                $user_market_requests_query->whereDate('updated_at', $filter["filter_date"]);
+                $user_market_requests_query->whereDate('trade_confirmations.updated_at', $filter["filter_date"]);
             }
 
             if(!empty($filter["filter_market"])) {
-                $user_market_requests_query->where('market_id', $filter["filter_market"]);
+                $user_market_requests_query->where('trade_confirmations.market_id', $filter["filter_market"]);
             }
 
             if(!empty($filter["filter_expiration"])) {
-                $user_market_requests_query->whereHas('tradeNegotiation', function ($query) use ($filter) {
-                    $query->whereHas('userMarket', function ($query) use ($filter) {
-                        $query->whereHas('userMarketRequest', function ($query) use ($filter) {
-                            $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
-                                $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
-                                    $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
-                                    ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                $user_market_requests_query->whereHas('tradeConfirmations', function ($query) use ($filter) {
+                    $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
+                        $query->whereHas('userMarket', function ($query) use ($filter) {
+                            $query->whereHas('userMarketRequest', function ($query) use ($filter) {
+                                $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
+                                    $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
+                                        $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                                        ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                                    });
                                 });
                             });
                         });
                     });
                 });
             }
-        }*/
+        }
 
         $user_market_requests_query->orderBy($orderBy,$order);
 
