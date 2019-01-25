@@ -597,7 +597,7 @@ const app = new Vue({
                         this.updateUserMarketRequest(packet_data.data);
                         console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         //@TODO - @Francois Move to new event when rebate gets created
-                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded_rebate_earned") {
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
                         }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
