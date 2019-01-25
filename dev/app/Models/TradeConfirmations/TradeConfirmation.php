@@ -954,55 +954,60 @@ public function preFormatStats($user = null, $is_Admin = false)
 
         //outright part of the optionGroup
         try {
-           DB::beginTransaction();
-                // trade trade for sender
-           $this->bookedTrades()->create([
-            "trading_account_id"        => $this->send_trading_account_id,
-            "is_sale"                   => !$sendIsOffer,
-            "is_purchase"               => $sendIsOffer,
-            "is_rebate"                 => false,
-            "is_confirmed"              => false,
-            "amount"                    => $senderNetPremium,
-            "user_id"                   => $this->send_user_id,
-            "trade_confirmation_id"     => $this->id,
-            "market_request_id"         => $this->user_market_request_id
-        ]);
-
-
-           $this->bookedTrades()->create([
-            "trading_account_id"        => $this->receiving_trading_account_id,
-            "is_sale"                   => !$recieverIsOffer ,
-            "is_purchase"               => $recieverIsOffer ,
-            "is_rebate"                 => false,
-            "is_confirmed"              => false,
-            "amount"                    => $this->resolveItem("Net Premiums",false),
-            "user_id"                   => $this->receiving_user_id,
-            "trade_confirmation_id"     => $this->id,
-            "market_request_id"         => $this->user_market_request_id
-        ]);
-
-           Rebate::create([
-            "user_market_request_id"    => $this->user_market_request_id,
-            "user_market_id"            => $userMarket->id,
-            "organisation_id"           => $userMarket->user->organisation_id,
-            "user_id"                   => $userMarket->user_id,
-            "is_paid"                   => false,
-            "trade_confirmation_id"     => $this->id,
-            "trade_date"                => Carbon::now(),
-            "amount"                    => $rebatetotal
+            DB::beginTransaction();
+            // trade trade for sender
+            $this->bookedTrades()->create([
+                "trading_account_id"        => $this->send_trading_account_id,
+                "is_sale"                   => !$sendIsOffer,
+                "is_purchase"               => $sendIsOffer,
+                "is_rebate"                 => false,
+                "is_confirmed"              => false,
+                "amount"                    => $senderNetPremium,
+                "user_id"                   => $this->send_user_id,
+                "trade_confirmation_id"     => $this->id,
+                "market_request_id"         => $this->user_market_request_id
             ]);
-                //book the trade
 
-           DB::commit();
 
-       } catch (\Illuminate\Database\QueryException $e) {
-        DB::rollBack();
+            $this->bookedTrades()->create([
+                "trading_account_id"        => $this->receiving_trading_account_id,
+                "is_sale"                   => !$recieverIsOffer ,
+                "is_purchase"               => $recieverIsOffer ,
+                "is_rebate"                 => false,
+                "is_confirmed"              => false,
+                "amount"                    => $this->resolveItem("Net Premiums",false),
+                "user_id"                   => $this->receiving_user_id,
+                "trade_confirmation_id"     => $this->id,
+                "market_request_id"         => $this->user_market_request_id
+            ]);
+
+            // DELTA ONE's dont have rebates [MM-900]
+            if(!in_array($this->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+                Rebate::create([
+                    "user_market_request_id"    => $this->user_market_request_id,
+                    "user_market_id"            => $userMarket->id,
+                    "organisation_id"           => $userMarket->user->organisation_id,
+                    "user_id"                   => $userMarket->user_id,
+                    "is_paid"                   => false,
+                    "trade_confirmation_id"     => $this->id,
+                    "trade_date"                => Carbon::now(),
+                    "amount"                    => $rebatetotal
+                ]);
+
+                $organisation = $userMarket->user->organisation;
+                $organisation->notify("rebate_earned","You earned a commission",true);
+                Rebate::notifyOrganisationUpdate($organisation);
+            }
+
+            //book the trade
+
+            DB::commit();
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
             \Log::error($e);
         }
 
-        $organisation = $userMarket->user->organisation;
-        $organisation->notify("rebate_earned","You earned a commission",true);
-        Rebate::notifyOrganisationUpdate($organisation);
     }
 
     public function getBrokerageTotal($is_sender)
