@@ -84,6 +84,18 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function tradingGroup()
+    {
+        return $this->hasOne(
+            'App\Models\MarketRequest\UserMarketRequestGroup',
+            'user_market_request_id'
+        )->where('is_selected', false);
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');

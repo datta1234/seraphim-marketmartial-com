@@ -36,23 +36,28 @@
               </b-row>
             </template>
             <template v-if="confirmed">
-            <div class="form-row align-items-center">
-                 <label class="col-sm-4">
-                  Desired Quantity
-                </label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
-                </div>
-                <label class="col-sm-4">
-                    {{ quantityType }}
-                </label>
-            </div>
+              <div class="form-row align-items-center">
+                   <label class="col-sm-4">
+                    Desired Quantity
+                  </label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
+                  </div>
+                  <label class="col-sm-4">
+                      {{ quantityType }}
+                  </label>
+              </div>
+              <b-row>
+                <b-col class="text-center">
+                  <label>If applicable, ratios will be maintained</label>
+                </b-col>
+              </b-row>
                 <b-row>
                     <b-col cols="12" :key="key" v-for="(error,key) in errors" class="text-danger">
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       
-                        <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired Size</b-btn>
+                        <b-btn v-active-request variant="primary" class="btn-block" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired Size</b-btn>
                     </b-col>
 
                 </b-row>

@@ -1109,7 +1109,7 @@ class MarketNegotiation extends Model
 
                     // DELTA ONE's dont have rebates [MM-900]
                     if(!in_array($this->userMarket->userMarketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
-                         $market_maker_message += " You have received a rebate";
+                         $market_maker_message .= " You have received a rebate";
                     }
                     $market_maker_org->notify("market_traded",$market_maker_message,true);
 

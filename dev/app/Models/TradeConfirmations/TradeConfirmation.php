@@ -513,6 +513,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         //3 index
         //4 single 
             $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
+            $ratio = $tradeNegotiation->getTradingRatio();
             foreach($groups as $key => $tradeStructureGroup) {
 
                 $tradeGroup = $this->tradeConfirmationGroups()->create([
@@ -524,7 +525,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
 
                 $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
 
-                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock);
+                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio);
             }
 
             return $this;
@@ -540,7 +541,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock)
+     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio)
      {
         $delta_one_list = ['efp', 'rolls', 'efp_switch'];
 
@@ -580,7 +581,9 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
-                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected 
+                        ? round( ($tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') ) * $ratio, 2)
+                        : $tradeNegotiation->quantity; //quantity
                     } else {
                         $value = null;
                     }
@@ -588,7 +591,9 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                 case 'Nominal':
                     if($is_single_stock) {
                         // Need to multiply by 1M because the Nomninal is amount per million
-                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') * 1000000 : $tradeNegotiation->quantity * 1000000;  
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected 
+                        ? round( ($tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') * 1000000 ) * $ratio, 2)
+                        : $tradeNegotiation->quantity * 1000000;
                     }
                     break;
             }

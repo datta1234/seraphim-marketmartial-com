@@ -618,9 +618,18 @@ const app = new Vue({
                     });
                 })
                 .listen('RebateEvent', (rebate) => {
+                    console.log("Got RebateEvent: ", rebate);
                     if(rebate.message)
                     {
-                         this.$toasted.show(rebate.message.data); 
+                         this.$toasted.show(rebate.message.data, { 
+                            duration : 30000, 
+                            action : {
+                                text : 'Got It!',
+                                onClick : (e, toastObject) => {
+                                    toastObject.goAway(0);
+                                }
+                            }
+                        }); 
                     }
                     EventBus.$emit('rebateUpdate', rebate.data);
                 })
