@@ -29,10 +29,10 @@
 
                 <tr v-for="request_group in  trade_confirmation.request_groups">
                     <td>
-                        {{ trade_confirmation.swap_parties.is_offer ? "Buys" : "Sell" }}
+                        {{ trade_confirmation.swap_parties.is_offer ? "Buys" : "Sells" }}
                     </td>
                     <td>
-                        {{ trade_confirmation.swap_parties.is_offer ? "Sell" : "Buys" }}
+                        {{ trade_confirmation.swap_parties.is_offer ? "Sells" : "Buys" }}
                     </td>
                     <td>
                          {{ request_group.underlying_title }}
@@ -81,7 +81,7 @@
 
                 <tr v-for="option_group in trade_confirmation.option_groups">
                     <td>
-                      {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sell"):'') }}
+                      {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sells"):'') }}
                     </td>
                     <td>
                         {{ option_group.underlying_title }}
@@ -135,7 +135,7 @@
                     <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'rolls'">
                         <tr>
                             <td>
-                              {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
@@ -163,7 +163,7 @@
                         </tr>
                         <tr>
                             <td>
-                              {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
@@ -185,7 +185,7 @@
                     <template v-else>
                         <tr>
                             <td>
-                              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
