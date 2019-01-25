@@ -787,7 +787,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                     break;
                 case 'Contract':
                     if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
-                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') : $tradeNegotiation->quantity; //quantity   
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected 
+                        ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') 
+                        : $tradeNegotiation->quantity; //quantity
                     } else {
                         $value = null;
                     }
@@ -795,7 +797,9 @@ public function preFormatStats($user = null, $is_Admin = false)
                 case 'Nominal':
                     if($is_single_stock) {
                         // Need to multiply by 1M because the Nomninal is amount per million
-                        $value = $tradeGroup->userMarketRequestGroup->is_selected ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') * 1000000 : $tradeNegotiation->quantity * 1000000;  
+                        $value = $tradeGroup->userMarketRequestGroup->is_selected 
+                        ? $tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') * 1000000 
+                        : $tradeNegotiation->quantity * 1000000;
                     }
                     break;
             }
