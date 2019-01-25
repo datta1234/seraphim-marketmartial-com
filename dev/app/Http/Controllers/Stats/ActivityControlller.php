@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
+use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\StructureItems\Market;
 use App\Models\StatsUploads\SafexTradeConfirmation;
 use App\Models\UserManagement\Organisation;
@@ -121,7 +122,46 @@ class ActivityControlller extends Controller
         // Checks for admin bank tables only
         $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
         
-        $trade_confirmations = TradeConfirmation::basicSearch(
+        //@TODO - refactor to include markets made but not traded
+        $user_market_requests = UserMarketRequest::basicSearch(
+            $request->input('search'),
+            $request->input('_order_by'),
+            $request->input('_order'),
+            [
+                "filter_date" => $request->input('filter_date'),
+                "filter_market" => $request->input('filter_market'),
+                "filter_expiration" => $request->input('filter_expiration')
+            ]
+        )
+        ->whereYear('user_market_requests.updated_at',$request->input('year'))
+        ->has('chosenUserMarket')
+        ->where(function ($tlq) {
+            $tlq->where(function ($q) {
+                $q->has('tradeConfirmations');
+            })
+            ->orWhere(function ($q) {
+                $q->doesnthave('tradeConfirmations');
+            });
+        });
+
+        if($request->input('is_my_activity')) {
+            $user_market_requests = $user_market_requests->where(function ($tlq) use ($user) {
+                $tlq->organisationInvolvedTrade($user->organisation_id,'=')
+                    ->organisationMarketMaker($user->organisation_id, true)
+                    ->organisationInterestNotTraded($user->organisation_id, true);
+            });
+        }
+
+        $user_market_requests =  $user_market_requests->select(DB::raw(
+            'user_market_requests.*, 
+            trade_confirmations.updated_at as trade_date,
+            trade_confirmations.send_user_id as trade_send_user_id, 
+            trade_confirmations.receiving_user_id as trade_receiving_user_id,
+            trade_confirmations.trade_negotiation_id as trade_negotiation_id,
+            trade_confirmations.id as trade_confirmation_id'))
+        ->leftJoin('trade_confirmations', 'trade_confirmations.user_market_request_id', '=', 'user_market_requests.id');
+
+        /*$trade_confirmations = TradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
             $request->input('_order'),
@@ -139,15 +179,15 @@ class ActivityControlller extends Controller
                 $tlq->organisationInvolved($user->organisation_id,'=')
                     ->orgnisationMarketMaker($user->organisation_id, true);
             });
-        }
+        }*/
+        
+        $user_market_requests = $user_market_requests->paginate(50);
 
-        $trade_confirmations = $trade_confirmations->paginate(50);
-
-        $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
-            return $trade_confirmation->preFormatStats($user, $is_Admin);
+        $user_market_requests->transform(function($user_market_request) use ($user, $is_Admin) {
+            return $user_market_request->preFormatStats($user, $is_Admin);
         });
 
-        return response()->json($trade_confirmations);
+        return response()->json($user_market_requests);
     }
 
     /**
