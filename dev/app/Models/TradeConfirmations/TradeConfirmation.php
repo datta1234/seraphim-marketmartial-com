@@ -404,296 +404,89 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
     });
 }
 
-public function resolveUserMarketRequestItems()
-{
-    $resolved_items = [
-        "expiration" => array(),
-        "strike" => array(),
-        "strike_percentage" => array(),
-        "nominal" => array(),
-        "underlying" => array(),
-        "volatility" => array(),
-    ];
-
-    foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
-        foreach ($group->userMarketRequestItems as $key => $item) {
-            switch ($item->title) {
-                case 'Expiration Date':
-                case 'Expiration Date 1':
-                case 'Expiration Date 2':
-                    $resolved_items["expiration"][] = $item->value;
-                    break;
-                case 'Strike':
-                    $resolved_items["strike"][] = $item->value;
-                    break;
-                case 'Quantity':
-                    $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
-                    break;
-            }
-        }
-        // Add the group underlying
-        $resolved_items["underlying"][] = $group->tradable->title;
-
-        // Add the group volatility
-        if($group->is_selected) {
-            $resolved_items["volatility"][] = $group->volatility->volatility;        
-        } else {
-            $marketNegotiation = $this->tradeNegotiation->marketNegotiation;
-            $resolved_items["volatility"][] = $this->tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
-        }
-    }
-
-    // Resolve Strike percentage
-    foreach ($this->tradeConfirmationGroups as $key => $group) {
-        $tradable = $group->userMarketRequestGroup->tradable;
-        $strike = $group->getOpVal('Strike');
-        $spot_price = $group->getOpVal('Spot');
-
-        // Will get into for Markets without a user defined Spot Price
-        // Asked by client to exclude
-        /*if(!empty($strike) && empty($spot_price)) {
-            switch ($tradable->market->title) {
-                case 'TOP40':
-                case 'DTOP':
-                case 'DCAP':
-                    $spot_price = $tradable->market->spot_price_ref;
-                    break;
-            }
-        }*/
-
-        // Only Calculate percentage if both Strike and Spot Price is set
-        if( !empty($strike) && !empty($spot_price) ) {
-            $resolved_items["strike_percentage"][] = round($strike/$spot_price, 2);
-        }
-    }
-
-    $is_versus_underlying_type = ['option_switch','efp_switch'];
-    // Remove duplicates tradables for non versus underlying trade structures
-    if(in_array($this->tradeStructureSlug, $is_versus_underlying_type)) {
-        $resolved_items["underlying"] = array_unique($resolved_items["underlying"]);
-    }
-
-    return $resolved_items;
-}
-
-public function resolveUnderlying() {
-    // Get the user market request items
-    $underlyings = array();
-    $user_market_request_tradables = $this->marketRequest->userMarketRequestTradables;
-    foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
-        $underlyings[] = $user_market_request_tradable->stock_id === null ?
-            $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
-    }
-
-    return $underlyings;
-}
-
-public function preFormatStats($user = null, $is_Admin = false)
-{   
-    $user_market_request_items = $this->resolveUserMarketRequestItems();
-
-    $data = [
-        "id" => $this->id,
-        "updated_at" => $this->updated_at->format('Y-m-d H:i:s'),
-        "underlying" => $user_market_request_items["underlying"],
-        "structure" => $this->tradeStructure->title,
-        "nominal" =>  $user_market_request_items["nominal"],
-        "strike" =>  $user_market_request_items["strike"],
-        "expiration" =>  $user_market_request_items["expiration"],
-        "strike_percentage" =>  $user_market_request_items["strike_percentage"],
-        "volatility" => $user_market_request_items["volatility"],
-    ];
-
-
-    if($is_Admin) {
-        $data["seller"] = $this->sendUser->organisation->title;
-        $data["buyer"] = $this->recievingUser->organisation->title;
-        return $data;
-    }
-
-    if($user === null) {
-        $data["status"] = $this->tradeNegotiation->traded ? 'Traded' : 'Not Traded';
-        return $data; 
-    }
-
-    
-    // Direction (Buy / Sell)
-    $root_trade_negotiation = $this->tradeNegotiation->getRoot();
-
-    if($root_trade_negotiation->is_offer) {
-        $data["direction"] = $root_trade_negotiation->initiate_user_id == $user->id;
-    } else {
-        $data["direction"] = $root_trade_negotiation->initiate_user_id;
-    }
-
-    switch (true) {
-    // My Trade
-        case ($root_trade_negotiation->initiate_user_id == $user->id):
-            $data["status"] = 'My Trade';
-            $data["trader"] = $user->full_name;
-            $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
-            break;
-        case ($root_trade_negotiation->recieving_user_id == $user->id):
-            $data["status"] = 'My Trade';
-            $data["trader"] = $user->full_name;
-            $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
-            break;
-    // Org Trade
-        case ($root_trade_negotiation->initiateUser->organisation->id == $user->organisation->id):
-            $data["status"] = 'Trade';
-            $data["trader"] = $root_trade_negotiation->initiateUser->full_name;
-            $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
-            break;
-        case ($root_trade_negotiation->recievingUser->organisation->id == $user->organisation->id):
-            $data["status"] = 'Trade';
-            $data["trader"] = $root_trade_negotiation->recievingUser->full_name;
-            $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
-            break;
-    // Traded Away
-        case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
-            $data["status"] = 'Market Maker Traded Away';
-            $data["trader"] = null;
-            $data["direction"] = null;
-            break;
-        default:
-            $data["status"] = null;
-            $data["trader"] = null;
-            $data["direction"] = null;
-            break;
-    }
-
-
-
-
-
-    // Determine direction, state and trader. Priority - My Trade > My Organisation Trade > Market Maker Traded Away
-    switch (true) {
-        case ($this->send_user_id == $user->id):
-        case ($this->receiving_user_id == $user->id):
-            $data["status"] = 'My Trade';
-            $data["trader"] = $user->full_name;
-            break;
-        case ($this->sendUser->organisation->id == $user->organisation->id):
-            $data["status"] = 'Trade';
-            $data["trader"] = $this->sendUser->full_name;
-            break;
-        case ($this->recievingUser->organisation->id == $user->organisation->id):
-            $data["status"] = 'Trade';
-            $data["trader"] = $this->recievingUser->full_name;
-        break;
-        case ($this->tradeNegotiation->userMarket->user->organisation->id == $user->organisation->id):
-            $data["status"] = 'Market Maker Traded Away';
-            $data["trader"] = null;
-            break;
-        default:
-            $data["status"] = null;
-            $data["trader"] = null;
-            break;
-    }
-
-    return $data;
-}
-
-    /**
-     * Return a simple or query object based on the search term
-     *
-     * @param string $term
-     * @param string $orderBy
-     * @param string $order
-     * @param array  $filter
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
+    public function resolveUserMarketRequestItems()
     {
-        if($orderBy == null)
-        {
-            $orderBy = "updated_at";
-        }
+        $resolved_items = [
+            "expiration" => array(),
+            "strike" => array(),
+            "strike_percentage" => array(),
+            "nominal" => array(),
+            "underlying" => array(),
+            "volatility" => array(),
+        ];
 
-        if($order == null)
-        {
-            $order = "DESC";
-        }
-        
-        // Search markets
-        $trade_confirmations_query = TradeConfirmation::where( function ($q) use ($term)
-        {
-            $q->whereHas('tradeConfirmationGroups',function($q) use ($term){
-                $q->whereHas('userMarketRequestGroup', function ($q) use ($term) {
-                    $q->whereHas('tradable', function ($q) use ($term) {
-                        $q->whereHas('market', function ($q) use ($term) {
-                            $q->where('title','like',"%$term%");
-                        })
-                        ->orWhereHas('stock', function ($q) use ($term) {
-                            $q->where('code','like',"%$term%");  
-                        });
-                    });
-                });
-            });
-        });
-
-        // Apply Filters
-        if($filter !== null) {
-            if(!empty($filter["filter_date"])) {
-                $trade_confirmations_query->whereDate('updated_at', $filter["filter_date"]);
+        foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
+            foreach ($group->userMarketRequestItems as $key => $item) {
+                switch ($item->title) {
+                    case 'Expiration Date':
+                    case 'Expiration Date 1':
+                    case 'Expiration Date 2':
+                        $resolved_items["expiration"][] = $item->value;
+                        break;
+                    case 'Strike':
+                        $resolved_items["strike"][] = $item->value;
+                        break;
+                    case 'Quantity':
+                        $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        break;
+                }
             }
+            // Add the group underlying
+            $resolved_items["underlying"][] = $group->tradable->title;
 
-            if(!empty($filter["filter_market"])) {
-                $trade_confirmations_query->where('market_id', $filter["filter_market"]);
-            }
-
-            if(!empty($filter["filter_expiration"])) {
-                $trade_confirmations_query->whereHas('tradeNegotiation', function ($query) use ($filter) {
-                    $query->whereHas('userMarket', function ($query) use ($filter) {
-                        $query->whereHas('userMarketRequest', function ($query) use ($filter) {
-                            $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
-                                $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
-                                    $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
-                                    ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
-                                });
-                            });
-                        });
-                    });
-                });
+            // Add the group volatility
+            if($group->is_selected) {
+                $resolved_items["volatility"][] = $group->volatility->volatility;        
+            } else {
+                $marketNegotiation = $this->tradeNegotiation->marketNegotiation;
+                $resolved_items["volatility"][] = $this->tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
             }
         }
 
-        // Apply Ordering
-        // @TODO - move this to a separate function
-        /*switch ($orderBy) {
-            case 'updated_at':
-            //dd("hit");
-                $trade_confirmations_query->orderBy($orderBy,$order);
-                break;
-            case 'market':
-                $trade_confirmations_query->whereHas('market',function($q) use ($order){
-                    $q->orderBy('title',$order);
-                });
-                //$trade_confirmations_query->orderBy("market_id",$order)
-                break;
-            case 'structure':
-            
-                break;
-            case 'direction':
-            
-                break;
-            case 'status':
-            
-                break;
-            case 'trader':
-            
-                break;
-            default:
-                $trade_confirmations_query->orderBy("updated_at", "ASC");
-                break;
+        // Resolve Strike percentage
+        foreach ($this->tradeConfirmationGroups as $key => $group) {
+            $tradable = $group->userMarketRequestGroup->tradable;
+            $strike = $group->getOpVal('Strike');
+            $spot_price = $group->getOpVal('Spot');
+
+            // Will get into for Markets without a user defined Spot Price
+            // Asked by client to exclude
+            /*if(!empty($strike) && empty($spot_price)) {
+                switch ($tradable->market->title) {
+                    case 'TOP40':
+                    case 'DTOP':
+                    case 'DCAP':
+                        $spot_price = $tradable->market->spot_price_ref;
+                        break;
+                }
             }*/
 
-            $trade_confirmations_query->orderBy($orderBy,$order);
-
-            return $trade_confirmations_query;
+            // Only Calculate percentage if both Strike and Spot Price is set
+            if( !empty($strike) && !empty($spot_price) ) {
+                $resolved_items["strike_percentage"][] = round($strike/$spot_price, 2);
+            }
         }
 
+        $is_versus_underlying_type = ['option_switch','efp_switch'];
+        // Remove duplicates tradables for non versus underlying trade structures
+        if(in_array($this->tradeStructureSlug, $is_versus_underlying_type)) {
+            $resolved_items["underlying"] = array_unique($resolved_items["underlying"]);
+        }
+
+        return $resolved_items;
+    }
+
+    public function resolveUnderlying() {
+        // Get the user market request items
+        $underlyings = array();
+        $user_market_request_tradables = $this->marketRequest->userMarketRequestTradables;
+        foreach ($user_market_request_tradables as $key => $user_market_request_tradable) {
+            $underlyings[] = $user_market_request_tradable->stock_id === null ?
+                $user_market_request_tradable->market->title : $user_market_request_tradable->stock->code;
+        }
+
+        return $underlyings;
+    }
 
         public function setUp($tradeNegotiation)
         {
