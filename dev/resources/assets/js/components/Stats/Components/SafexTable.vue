@@ -192,13 +192,15 @@
                 })
                 .then(safexDataResponse => {
                     if(safexDataResponse.status == 200) {
-                        // console.log("FROM SERVER: ",safexDataResponse.data);
-                        this.table_data.pagination.current_page = safexDataResponse.data.current_page;
-                        this.table_data.pagination.per_page = safexDataResponse.data.per_page;
-                        this.table_data.pagination.total = safexDataResponse.data.total;
-                        this.table_data.data = safexDataResponse.data.data;
+                        this.table_data.pagination.current_page = safexDataResponse.data.data.table_data.current_page;
+                        this.table_data.pagination.per_page = safexDataResponse.data.data.table_data.per_page;
+                        this.table_data.pagination.total = safexDataResponse.data.data.table_data.total;
+                        this.table_data.data = safexDataResponse.data.data.table_data.data;
                         this.table_data.loaded = true;
-                        // console.log(this.table_data.data);
+
+                        if(this.expiration_filter.length < 2) {
+                            this.expiration_filter = this.expiration_filter.concat(safexDataResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
+                        }
                     } else {
                         console.error(err); 
                     }
@@ -235,7 +237,7 @@
                         return item[key];
                 }
             },
-            loadExpirations() {
+            /*loadExpirations() {
                 axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
                     params:{
                         'not_paginate': true,
@@ -249,10 +251,10 @@
                     console.error(err);
                     this.$toasted.error("Failed to load safex expiration dates");
                 });
-            },
+            },*/
         },
         mounted() {
-            this.loadExpirations();
+            /*this.loadExpirations();*/
         	this.loadTableData();
         }
     }

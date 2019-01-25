@@ -196,11 +196,14 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
-                            this.table_data[index].current_page = activityResponse.data.current_page;
-                            this.table_data[index].per_page = activityResponse.data.per_page;
-                            this.table_data[index].total = activityResponse.data.total;
-                            this.table_data[index].data = activityResponse.data.data;
+                            this.table_data[index].current_page = activityResponse.data.data.table_data.current_page;
+                            this.table_data[index].per_page = activityResponse.data.data.table_data.per_page;
+                            this.table_data[index].total = activityResponse.data.data.table_data.total;
+                            this.table_data[index].data = activityResponse.data.data.table_data.data;
                             this.table_data_loaded = true;
+                            if(this.expiration_filter.length < 2) {
+                                this.expiration_filter = this.expiration_filter.concat(activityResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
+                            }
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+index+" year data.")
@@ -230,7 +233,7 @@
                     console.error(err);
                 });
             },
-            loadExpirations() {
+            /*loadExpirations() {
                 axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
                     params:{
                         'not_paginate': true,
@@ -244,7 +247,7 @@
                     console.error(err);
                     this.$toasted.error("Failed to load safex expiration dates");
                 });
-            },
+            },*/
             initTableData() {
                 this.table_years.forEach( (element, key) => {
                     this.table_data.push({
@@ -357,7 +360,7 @@
                 this.table_years = unordered_years.reverse();
                 this.$root.$on('bv::toggle::collapse',this.toggleState);
                 this.loadMarkets();
-                this.loadExpirations();
+                /*this.loadExpirations();*/
                 this.initTableData();
             }
         }
