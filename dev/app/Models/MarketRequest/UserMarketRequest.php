@@ -1470,7 +1470,6 @@ class UserMarketRequest extends Model
             "nominal"           => array(),
             "strike"            => array(),
             "expiration"        => array(),
-            "strike_percentage" => array(),
             "volatility"        => array(),
         ];
 
@@ -1509,27 +1508,30 @@ class UserMarketRequest extends Model
 
         $trade_confirmation_groups = TradeConfirmationGroup::where('trade_confirmation_id', $this->trade_confirmation_id)->get();
 
-        // Resolve Strike percentage
-        foreach ($trade_confirmation_groups as $key => $group) {
-            $tradable = $group->userMarketRequestGroup->tradable;
-            $strike = $group->getOpVal('Strike');
-            $spot_price = $group->getOpVal('Spot');
+        if($user === null) {
+            $data["strike_percentage"] = array();
+            // Resolve Strike percentage
+            foreach ($trade_confirmation_groups as $key => $group) {
+                $tradable = $group->userMarketRequestGroup->tradable;
+                $strike = $group->getOpVal('Strike');
+                $spot_price = $group->getOpVal('Spot');
 
-            // Will get into for Markets without a user defined Spot Price
-            // Asked by client to exclude
-            /*if(!empty($strike) && empty($spot_price)) {
-                switch ($tradable->market->title) {
-                    case 'TOP40':
-                    case 'DTOP':
-                    case 'DCAP':
-                        $spot_price = $tradable->market->spot_price_ref;
-                        break;
+                // Will get into for Markets without a user defined Spot Price
+                // Asked by client to exclude
+                /*if(!empty($strike) && empty($spot_price)) {
+                    switch ($tradable->market->title) {
+                        case 'TOP40':
+                        case 'DTOP':
+                        case 'DCAP':
+                            $spot_price = $tradable->market->spot_price_ref;
+                            break;
+                    }
+                }*/
+
+                // Only Calculate percentage if both Strike and Spot Price is set
+                if( !empty($strike) && !empty($spot_price) ) {
+                    $data["strike_percentage"][] = round($strike/$spot_price, 2) * 100;
                 }
-            }*/
-
-            // Only Calculate percentage if both Strike and Spot Price is set
-            if( !empty($strike) && !empty($spot_price) ) {
-                $data["strike_percentage"][] = round($strike/$spot_price, 2);
             }
         }
 
