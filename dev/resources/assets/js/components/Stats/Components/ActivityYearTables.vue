@@ -58,7 +58,7 @@
                                             <datepicker v-model="year_data.filter_date"
                                                         class="float-right filter-date-picker"
                                                         :name="index+'-table-datepicker'"
-                                                        placeholder="Select a date"
+                                                        placeholder="Select a trade date"
                                                         :bootstrap-styling="true"
                                                         :calendar-button="true"
                                                         calendar-button-icon="fas fa-calendar-alt"
