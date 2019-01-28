@@ -1301,7 +1301,7 @@ class UserMarketRequest extends Model
 
         if($orderBy == null)
         {
-            $orderBy = "updated_at";
+            $orderBy = "trade_confirmations.updated_at";
         }
 
         if($order == null)
@@ -1352,7 +1352,49 @@ class UserMarketRequest extends Model
             }
         }
 
-        $user_market_requests_query->orderBy($orderBy,$order);
+        // Apply Ordering
+        switch ($orderBy) {
+            /*case 'updated_at':
+                $trade_confirmations_query->orderBy($orderBy,$order);
+                break;
+            case 'market':
+                $trade_confirmations_query->whereHas('market',function($q) use ($order){
+                    $q->orderBy('title',$order);
+                });
+                //$trade_confirmations_query->orderBy("market_id",$order)
+                break;
+*/
+            case 'updated_at':
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at", $order);
+                break;
+            /*case 'underlying':
+                
+                break;*/
+            case 'structure':
+                $user_market_requests_query->orderBy("trade_structure_title", $order);
+                break;
+            /*case 'direction':
+            
+                break;
+            case 'nominal':
+            
+                break;
+            case 'strike_percentage':
+            
+                break;
+            case 'strike':
+            
+                break;
+            case 'volatility':
+            
+                break;
+            case 'expiration':
+            
+                break;*/
+            default:
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at","DESC");
+        }
+
 
         return $user_market_requests_query;
     }

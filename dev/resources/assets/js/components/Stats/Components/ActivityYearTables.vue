@@ -136,9 +136,9 @@
                     state: true,
                 },
                 table_fields: [
-                    { key: 'updated_at', label: 'Date', tdClass:'text-right', thClass:'text-right'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'updated_at', label: 'Date', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                     { key: 'underlying', label: 'Instrument', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                     (this.is_my_activity ? { key: 'direction', label: 'Direction', tdClass:'text-right', thClass:'text-right' } : {}),
                     { key: 'nominal', label: 'Nominal', tdClass:'text-right', thClass:'text-right' },
                     { key: 'strike_percentage', label: 'Strike %', tdClass:'text-right', thClass:'text-right' },

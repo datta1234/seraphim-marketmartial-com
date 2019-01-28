@@ -123,7 +123,6 @@ class ActivityControlller extends Controller
         // Checks for admin bank tables only
         $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
         
-        //@TODO - refactor to include markets made but not traded
         $user_market_requests = UserMarketRequest::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
@@ -159,7 +158,12 @@ class ActivityControlller extends Controller
             trade_confirmations.send_user_id as trade_send_user_id, 
             trade_confirmations.receiving_user_id as trade_receiving_user_id,
             trade_confirmations.trade_negotiation_id as trade_negotiation_id,
-            trade_confirmations.id as trade_confirmation_id'))
+            trade_confirmations.id as trade_confirmation_id, 
+            (
+                select title 
+                from trade_structures
+                where id=user_market_requests.trade_structure_id
+            ) as trade_structure_title'))
         ->leftJoin('trade_confirmations', 'trade_confirmations.user_market_request_id', '=', 'user_market_requests.id');
         
         $user_market_requests = $user_market_requests->paginate(50);
