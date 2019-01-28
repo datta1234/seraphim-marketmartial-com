@@ -92,7 +92,12 @@
                              :no-local-sorting="true"
                              @sort-changed="sortingChanged">
                         <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
-                            {{ formatItem(row.item, field.key) }}
+                            <template v-if="isSameDate(row.item.trade_date,latest_date)">
+                                <strong>{{ formatItem(row.item, field.key) }}</strong>
+                            </template>
+                            <template v-else>
+                                {{ formatItem(row.item, field.key) }}
+                            </template>
                         </template>
                     </b-table>
 
@@ -165,6 +170,7 @@
                         total: 10,
                     },
                     loaded: false,
+                    latest_date: null,
                 }
             };
         },
@@ -196,7 +202,9 @@
                         this.table_data.pagination.per_page = safexDataResponse.data.data.table_data.per_page;
                         this.table_data.pagination.total = safexDataResponse.data.data.table_data.total;
                         this.table_data.data = safexDataResponse.data.data.table_data.data;
+                        this.latest_date = safexDataResponse.data.data.latest_date;
                         this.table_data.loaded = true;
+                        console.log("Data from sever: ", safexDataResponse.data.data);
 
                         if(this.expiration_filter.length < 2) {
                             this.expiration_filter = this.expiration_filter.concat(safexDataResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
@@ -237,6 +245,9 @@
                         return item[key];
                 }
             },
+            isSameDate(date1,date2,test,tet,te) {
+                return moment(date1).isSame(date2);
+            }
         },
         mounted() {
         	this.loadTableData();

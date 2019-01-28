@@ -281,13 +281,15 @@ class ActivityControlller extends Controller
             ]
         )->paginate(50);
 
+        $latest_date = SafexTradeConfirmation::orderBy('trade_date', 'DESC')->first();
         $expiration_dates = SafexTradeConfirmation::select("expiry")->distinct()->orderBy('expiry', 'ASC')->pluck("expiry");
 
         return response()->json([
             'message' => "Year Data Loaded",
             'data' => [ 
                 "table_data" => $safex_confirmation_data,
-                "expiration_dates" => $expiration_dates,     
+                "expiration_dates" => $expiration_dates,
+                "latest_date" => isset($latest_date) ? $latest_date->trade_date : $latest_date
             ]
         ], 200);
     }
