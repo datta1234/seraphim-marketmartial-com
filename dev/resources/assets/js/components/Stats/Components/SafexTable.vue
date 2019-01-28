@@ -237,24 +237,8 @@
                         return item[key];
                 }
             },
-            /*loadExpirations() {
-                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
-                    params:{
-                        'not_paginate': true,
-                    }
-                })
-                .then(expirationsResponse => {
-                    Object.keys(expirationsResponse.data.data).forEach(key => {
-                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
-                    });
-                }, err => {
-                    console.error(err);
-                    this.$toasted.error("Failed to load safex expiration dates");
-                });
-            },*/
         },
         mounted() {
-            /*this.loadExpirations();*/
         	this.loadTableData();
         }
     }
