@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Models\TradeConfirmations\TradeConfirmationGroup;
 use App\Models\Trade\TradeNegotiation;
+use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\UserManagement\User;
 use App\Events\UserMarketRequested;
 use App\Helpers\Broadcast\Stream;
@@ -1419,11 +1420,9 @@ class UserMarketRequest extends Model
      */
     public function preFormatStats($user = null, $is_Admin = false)
     {   
-        /*$user_market_request_items = $this->resolveUserMarketRequestItems();*/
-
         $data = [
             "id" => $this->id,
-            "updated_at"        => /*isset($this->trade_date) ? $this->trade_date->format('Y-m-d H:i:s') : */$this->trade_date,
+            "updated_at"        => $this->trade_date,
             "underlying"        => array(),
             "structure"         => $this->tradeStructure->title,
             "nominal"           => array(),
@@ -1499,8 +1498,20 @@ class UserMarketRequest extends Model
         }
 
         if($is_Admin) {
-            $data["seller"] = User::find($this->trade_send_user_id)->organisation->title;
-            $data["buyer"] = User::find($this->trade_receiving_user_id)->organisation->title;
+            if(!is_null($this->trade_confirmation_id) && $tradeNegotiation->traded) {
+                $root_trade_negotiation = $tradeNegotiation->getRoot();
+                if($root_trade_negotiation->is_offer) {
+                    $data["buyer"] = $root_trade_negotiation->initiateUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->recievingUser->organisation->title;
+                } else {
+                    $data["buyer"] = $root_trade_negotiation->recievingUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->initiateUser->organisation->title;
+                }
+                return $data;
+            }
+
+            $data["buyer"] = null;
+            $data["seller"] = null;    
             return $data;
         }
 
@@ -1520,12 +1531,6 @@ class UserMarketRequest extends Model
 
         // Direction (Buy / Sell)
         $root_trade_negotiation = $tradeNegotiation->getRoot();
-
-        /*if($root_trade_negotiation->is_offer) {
-            $data["direction"] = $root_trade_negotiation->initiate_user_id == $user->id;
-        } else {
-            $data["direction"] = $root_trade_negotiation->initiate_user_id;
-        }*/
 
         switch (true) {
         // My Trade
