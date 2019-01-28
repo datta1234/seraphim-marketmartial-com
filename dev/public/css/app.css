@@ -18201,13 +18201,19 @@ input:checked + .slider:before {
   background-color: #9fe29f;
 }
 
-.organisation-chat .chat-header .new-message-alert {
+.chat-header .new-message-alert,
+.action-bar .new-message-alert {
   color: #f3931c;
   border-radius: 15px;
   -webkit-box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
           box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
-  -webkit-animation: pulse 2s 5;
-          animation: pulse 2s 5;
+  -webkit-animation: pulse 2s 10;
+          animation: pulse 2s 10;
+}
+
+.chat-header .new-message-alert span,
+.action-bar .new-message-alert span {
+  color: #f3931c;
 }
 
 @-webkit-keyframes pulse {
