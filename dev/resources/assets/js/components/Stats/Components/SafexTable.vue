@@ -140,7 +140,7 @@
                 table_data: {
                     table_fields: [
                         { key: 'trade_date', label: 'Trade Date', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
-                        { key: 'structure', label: 'Strucure', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                         { key: 'underlying_alt', label: 'Underlying', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                         { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                         { key: 'strike_percentage', label: 'Strike%', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
