@@ -34,6 +34,9 @@
 							<a class="dropdown-item" href="{{ route('admin.markets.index') }}">
 								Markets
 							</a>
+							<a class="dropdown-item" href="{{ route('admin.brokerage-fees.index') }}">
+								Brokerage Fees
+							</a>
 							<a class="dropdown-item" href="{{ route('admin.rebates.index') }}">
 								Rebates
 							</a>

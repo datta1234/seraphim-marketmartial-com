@@ -231,6 +231,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		return redirect('/admin/user');
 	})->name('2fa')->middleware('2fa');
 	
+	Route::resource('brokerage-fees', 'Admin\BrokerageFeesController', [
+		'as' => 'admin'
+	]);
 });
 
 Route::group(['middleware' => ['auth']], function() {

@@ -748,7 +748,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         $recieverNetPremium = $this->resolveItem("Net Premiums",false);
 
 
-        $rebatetotal =  config('marketmartial.confirmation_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
+        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
 
         //outright part of the optionGroup
         try {
