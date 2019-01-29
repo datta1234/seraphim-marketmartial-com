@@ -235,14 +235,12 @@
             return null;
         },
         getStateClass(attr) {
-            console.log("HERE=======================================");
             console.log("market negotiation",this.marketNegotiation);
 
             if(this.marketNegotiation[attr] == null && this.marketNegotiation[attr+"_display"] == null) {
                 return "";
             }
             let source = this.marketNegotiation.getAmountSource(attr);
-            console.log("WE WANT TO KNOW THIS SOURCE: ", attr, this.marketNegotiation.id,source);
             return {
                 "text": source[attr],
                 "is-interest":source.is_interest && !source.is_my_org,
