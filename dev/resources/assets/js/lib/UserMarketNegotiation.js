@@ -456,10 +456,12 @@ export default class UserMarketNegotiation extends BaseModel {
                 prevItem = this.getUserMarket().market_negotiations.find((itItem) => this.market_negotiation_id == itItem.id);
             }
         }
+
+        console.log("PREVIOUS ITEM: ", this,prevItem);
         
         if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
         {
-            if(prevItem.isTraded()) {
+            if(prevItem.isTraded() || (prevItem[attr] == null && this[attr] == null)) {
                 return this;
             }
             return prevItem.getAmountSource(attr);   
