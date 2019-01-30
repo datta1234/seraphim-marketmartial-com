@@ -232,7 +232,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	})->name('2fa')->middleware('2fa');
 	
 	Route::resource('brokerage-fees', 'Admin\BrokerageFeesController', [
-		'as' => 'admin'
+		'as' => 'admin',
+		'only' => ['index','edit','update']
 	]);
 });
 

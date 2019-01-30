@@ -21,38 +21,6 @@ class BrokerageFeesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -90,17 +58,22 @@ class BrokerageFeesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($id,$request->all());
-    }
+        if(is_array($request->all())) {
+            foreach ($request->all() as $key => $brokerage_fee) {
+                if(is_array($brokerage_fee) && array_key_exists('organisation_id', $brokerage_fee)
+                    && array_key_exists('key', $brokerage_fee)
+                    && array_key_exists('value', $brokerage_fee)) {
+                    $updated_brokerage_fee = BrokerageFee::updateOrCreate(
+                        ['organisation_id' => $brokerage_fee['organisation_id'], 'key' => $brokerage_fee['key']],
+                        ['value' => $brokerage_fee['value']]
+                    );
+                }
+            }
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return response()->json([
+            'data' => [],
+            'message' => 'Brokerage Fees successfully Updated.'
+        ]); 
     }
 }
