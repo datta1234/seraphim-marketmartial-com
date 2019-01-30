@@ -158,4 +158,10 @@ class Organisation extends Model
         }
         return $created_brokerage_fees;
     }
+
+    public function resolveBrokerageFee($key)
+    {
+        $brokerage_fee = $this->brokerageFees->firstWhere('key',$key);
+        return is_null($brokerage_fee) ? config($key) : $brokerage_fee->value;
+    }
 }

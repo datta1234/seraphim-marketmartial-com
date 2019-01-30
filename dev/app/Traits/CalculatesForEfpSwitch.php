@@ -41,18 +41,24 @@ trait CalculatesForEfpSwitch {
     	$counterFutBrodirection1 = $FutBrodirection1 * -1;
         $counterFutBrodirection2 = $FutBrodirection2 * -1;
 
-    	$D1switchFEE = config('marketmartial.confirmation_settings.efp_switch.index.per_leg')/100;//its a percentage
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $efp_switch_key = 'marketmartial.confirmation_settings.efp_switch.';
+
+        //its a percentage        
+        $D1switchFEESender = $sender_org->resolveBrokerageFee($efp_switch_key.'index.per_leg')/100;
+        $D1switchFEEReceiving = $receiving_org->resolveBrokerageFee($efp_switch_key.'index.per_leg')/100;
 
     	//FUTURE = Application.Round(Future1 * D1switchFEE * FutBrodirection1, 2) + Future1
-    	$finalFuture1 =  round($future1 * $D1switchFEE * $FutBrodirection1, 2) + $future1;
-        $finalFuture2 =  round($future2 * $D1switchFEE * $FutBrodirection2, 2) + $future2;
+    	$finalFuture1 =  round($future1 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection1, 2) + $future1;
+        $finalFuture2 =  round($future2 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection2, 2) + $future2;
     	$this->futureGroups[0]->setOpVal('Future', $finalFuture1,$is_sender);
         $this->futureGroups[1]->setOpVal('Future', $finalFuture2,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(FuturesSpotRef1 * D1switchFEE * FutureBrodirection1, 2) + (FuturesSpotRef1 + points1)
-        $finalFutureCounter1 =  round($FuturesSpotRef1 * $D1switchFEE * $counterFutBrodirection1, 2) + ($FuturesSpotRef1 + $points1);
-        $finalFutureCounter2 =  round($FuturesSpotRef2 * $D1switchFEE * $counterFutBrodirection2, 2) + ($FuturesSpotRef2 + $points2);
+        $finalFutureCounter1 =  round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 2) + ($FuturesSpotRef1 + $points1);
+        $finalFutureCounter2 =  round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 2) + ($FuturesSpotRef2 + $points2);
         $this->futureGroups[0]->setOpVal('Future', $finalFutureCounter1,!$is_sender);
         $this->futureGroups[1]->setOpVal('Future', $finalFutureCounter2,!$is_sender);
     }
