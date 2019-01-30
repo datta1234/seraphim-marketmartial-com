@@ -999,7 +999,14 @@ class MarketNegotiation extends Model
         if($this->is_killed && $this->getAttribute($attr) == null) {
             return "";
         }
-        if($this->is_repeat && $this->id != $source->id)
+        if($this->is_repeat && (
+            $this->id != $source->id || (
+                $this->getAttribute($attr) === null 
+                && $this->marketNegotiationParent 
+                && !$this->marketNegotiationParent->is_repeat
+                && is_null($this->marketNegotiationParent->getAttribute($attr))
+            )
+        ))
         {
             if($this->user->organisation_id == $source->user->organisation_id 
                 && !$this->isTradeAtBest() 
@@ -1105,8 +1112,13 @@ class MarketNegotiation extends Model
                     //Market Maker receives trade notification
                     //@TODO - @Francois Move to new event when rebate gets created after confirmation process is complete
                     $market_maker_org = $this->userMarket->user->organisation;
-                    $market_maker_message = "Market traded. You have received a rebate";
-                    $market_maker_org->notify("market_traded_rebate_earned",$market_maker_message,true);
+                    $market_maker_message = "Market traded.";
+
+                    // DELTA ONE's dont have rebates [MM-900]
+                    if(!in_array($this->userMarket->userMarketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+                         $market_maker_message .= " You have received a rebate";
+                    }
+                    $market_maker_org->notify("market_traded",$market_maker_message,true);
 
                     $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
                     $message = "Congrats on the trade! Complete the booking in the confirmation tab";

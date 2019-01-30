@@ -22,6 +22,19 @@ class TradeConfirmationController extends Controller
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
     	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
         $tradeConfirmation->phaseTwo();
+
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 3))
+        {
+            $tradeConfirmation->trade_confirmation_status_id = 6;
+        } 
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 2 || $tradeConfirmation->trade_confirmation_status_id == 5)) 
+        {
+            $tradeConfirmation->trade_confirmation_status_id = 7;
+        }
+
+
         $tradeConfirmation->save();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -109,7 +122,10 @@ class TradeConfirmationController extends Controller
     public function dispute(TradeConfirmation $tradeConfirmation,Request $request)
     {
         $user = $request->user();
-        $this->authorize('dispute',$tradeConfirmation);  
+        $this->authorize('dispute',$tradeConfirmation);
+        $tradeConfirmation->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
+        $tradeConfirmation->save();
+
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
         {
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');

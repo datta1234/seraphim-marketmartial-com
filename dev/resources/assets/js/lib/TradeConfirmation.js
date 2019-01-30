@@ -59,7 +59,7 @@ export default class TradeConfirmation extends BaseModel {
                 is_offer : "",
                 brokerage_fee: [],
                 date: "",
-                status_id: null,
+                state: null,
                 swap_parties: null,
         }
         // assign options with defaults
@@ -208,6 +208,18 @@ export default class TradeConfirmation extends BaseModel {
        });
     }
 
+    dispute(trading_account)
+    {
+        return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
+            "trading_account_id":trading_account.id,
+            "trade_confirmation": this.prepareStore()
+        })
+        .then(response => {
+            this.update(response.data.data);
+            return response;
+        });
+    }
+
     hasFutures()
     {
         return this.future_groups.reduce((out, group)=>{
@@ -243,16 +255,71 @@ export default class TradeConfirmation extends BaseModel {
 
     }
 
-    dispute(trading_account)
+    /**
+     *   canDisputeUpdated - Checks to see if the user can dispute an updated TradeConfirmation on 
+     *      the current state of the TradeConfirmation
+     *
+     *   @return {Boolean}
+     */
+    canDisputeUpdated()
     {
-        return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
-            "trading_account_id":trading_account.id,
-            "trade_confirmation": this.prepareStore()
-        })
-        .then(response => {
-            this.update(response.data.data);
-            return response;
-        });
+        let disputableStatuses = [
+            "Updated By Sender",
+            "Updated By Reciever",
+        ];
+            
+        return  disputableStatuses.indexOf(this.state) > -1;
+    }
+
+    /**
+     *   canDisputeContracts - Checks to see if the user can dispute a TradeConfirmation on the current
+     *      state of the TradeConfirmation if no update has been done.
+     *
+     *   @return {Boolean}
+     */
+    canDisputeContracts() {
+        let disputableStatuses = [
+            "Pending: Reciever Confirmation",
+            "Disiputed: By Reciever",
+            "Disiputed: By Sender",
+        ];
+
+        return  disputableStatuses.indexOf(this.state) > -1;
+    }
+
+    /**
+     *   canSend - Checks to see if the user can send a TradeConfirmation on the current state of the TradeConfirmation
+     *
+     *   @return {Boolean}
+     */
+    canSend()
+    {
+        let disputableStatuses = [
+            "Pending: Initiate Confirmation",
+            "Pending: Reciever Confirmation",
+            "Disiputed: By Reciever",
+            "Disiputed: By Sender",
+        ];
+            
+        return  disputableStatuses.indexOf(this.state) > -1;
+    }
+
+    /**
+     *   hasChanged - Checks to see if a TradeConfirmation's FutureGroups have changed and excludes an array of 
+     *      passed future group items to ignore in the check
+     *
+     *   @return {Boolean}
+     */
+    hasChanged(oldConfirmationData, exclude_list) {
+        if(!Array.isArray(exclude_list)) {
+            exclude_list = [];
+        }
+        
+        if(this.state == 'Pending: Initiate Confirmation' && exclude_list.indexOf('contracts') == -1) {
+            exclude_list.push('contracts');
+        }
+
+        return JSON.stringify(oldConfirmationData) != JSON.stringify(this.prepareStore(exclude_list));
     }
 
     /**

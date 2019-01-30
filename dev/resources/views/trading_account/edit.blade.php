@@ -24,9 +24,8 @@
 						{!! Form::model($user,['route' => 'trade_settings.update','method'=>'PUT']) !!}
 					@endif
 
-
 							@foreach ($trading_accounts as $index => $trading_account)
-								@include('trading_account.partials.trading_account', ['trading_account' => $trading_account])
+								@include('trading_account.partials.trading_account', ['trading_account' => $trading_account, 'first' => $loop->first])
 							@endforeach
 
 							<h2>

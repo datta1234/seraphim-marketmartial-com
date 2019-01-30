@@ -29,10 +29,10 @@
 
                 <tr v-for="request_group in  trade_confirmation.request_groups">
                     <td>
-                        {{ trade_confirmation.swap_parties.is_offer ? "Buys" : "Sell" }}
+                        {{ trade_confirmation.swap_parties.is_offer ? "Buys" : "Sells" }}
                     </td>
                     <td>
-                        {{ trade_confirmation.swap_parties.is_offer ? "Sell" : "Buys" }}
+                        {{ trade_confirmation.swap_parties.is_offer ? "Sells" : "Buys" }}
                     </td>
                     <td>
                          {{ request_group.underlying_title }}
@@ -81,7 +81,7 @@
 
                 <tr v-for="option_group in trade_confirmation.option_groups">
                     <td>
-                      {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sell"):'') }}
+                      {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sells"):'') }}
                     </td>
                     <td>
                         {{ option_group.underlying_title }}
@@ -135,7 +135,7 @@
                     <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug == 'rolls'">
                         <tr>
                             <td>
-                              {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer_1 != null ? (future_group.is_offer_1 ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
@@ -144,7 +144,7 @@
                                 -    
                             </td>
                             <td>
-                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
                                 <span class="text-danger">
                                     <!-- @TODO figure out how to not hardcode the first value -->
                                 <ul v-if="errors">
@@ -163,7 +163,7 @@
                         </tr>
                         <tr>
                             <td>
-                              {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer_2 != null ? (future_group.is_offer_2 ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
@@ -185,7 +185,7 @@
                     <template v-else>
                         <tr>
                             <td>
-                              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sell"):'') }}
+                              {{ (future_group.is_offer != null ? (future_group.is_offer ? "Buys" : "Sells"):'') }}
                             </td>
                             <td>
                               {{ future_group.underlying_title != null ? future_group.underlying_title:''  }}
@@ -193,14 +193,14 @@
                             <td>
                                 
                                 <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
-                                    <input class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
+                                    <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
                                 </template>
                                 <template v-else>
                                     -    
                                 </template>
                             </td>
                             <td v-if="can_set_future">
-                                <input class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
                                 <span class="text-danger">
                                     <!-- @TODO figure out how to not hardcode the first value -->
                                 <ul v-if="errors">
@@ -214,7 +214,7 @@
                                 {{ trade_confirmation.future_groups[key]['future'] }}
                             </td>
                             <td>
-                                <input class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
+                                <input v-input-mask.number.decimal="{ precision: 2 }" class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
                             </td>
                             <td>
                                 {{ future_group.expires_at }}     
@@ -226,8 +226,8 @@
             </table>
         </template>
          <b-row>
-            <b-col md="5" offset-md="7" v-if="trade_confirmation.status_id == 1">
-                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+            <b-col md="5" offset-md="7" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
+                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
                 <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -245,8 +245,8 @@
             </b-col>
            <b-col md="5" offset-md="7" v-else>
                 <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button v-if="action_list.can_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                <button v-if="action_list.can_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                <button v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -278,15 +278,44 @@
       name: 'TradeConfirmationComponent',
         computed: {
             can_send:function (val) {
-                return (this.action_list.can_calculate && this.action_list.can_dispute) ? (this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() && JSON.stringify(this.oldConfirmationData) == JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list))) : true;
+                return (this.action_list.has_calculate && this.action_list.has_dispute) ? (this.trade_confirmation.hasFutures() 
+                    && this.trade_confirmation.hasSpots() 
+                    && !this.trade_confirmation.hasChanged(this.trade_confirmation.state == 'Pending: Initiate Confirmation' ? this.oldConfirmationDataContractsExcluded : this.oldConfirmationData)
+                    && this.trade_confirmation.canSend()
+                ) : true;
             },
             can_calc:function (val) {
-                return this.trade_confirmation.hasFutures() && this.trade_confirmation.hasSpots() &&  JSON.stringify(this.oldConfirmationData) != JSON.stringify(this.trade_confirmation.prepareStore(this.change_exclude_list));
+                return  this.trade_confirmation.hasFutures() 
+                    &&  this.trade_confirmation.hasSpots() 
+                    &&  this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsExcluded, this.exclude_contracts);
             },
             can_set_future:function (val) {
                 return this.trade_confirmation.trade_structure_slug != 'efp' 
                     && this.trade_confirmation.trade_structure_slug != 'efp_switch';
-            }
+            },
+            /**
+             *   can_dispute - Checks the following to determine whether a user can dispute 
+             *      
+             *      1. Does the trade confo have Futures and are they set?
+             *      2. Does the trade confo have Spots and are they set?
+             *      3. Have the Future values changed for any of the following: 
+             *          ['future','future_1','future_2','spot']
+             *      4. Is any of the following states true
+             *          4.1 Has been Updated and Calculated (RAN PhaseTwo again)
+             *                       OR
+             *          4.2 Has not been Updated and Calculated (DID NOT RUN PhaseTwo again)
+             *              and have the Future Contracts changed.
+             */
+            can_dispute:function (val) {
+                return this.action_list.has_dispute ? (this.trade_confirmation.hasFutures() 
+                    && this.trade_confirmation.hasSpots() 
+                    && (this.trade_confirmation.canDisputeUpdated()
+                        || this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsOnly, this.include_only_contracts)
+                        && this.trade_confirmation.canDisputeContracts())
+                    && !this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsExcluded, this.exclude_contracts)
+                ) : true;
+
+            },
         },
         data() {
             return {
@@ -295,13 +324,15 @@
                 errors:{},
                 confirmationLoaded: true,
                 oldConfirmationData: null,
+                oldConfirmationDataContractsExcluded: null,
+                oldConfirmationDataContractsOnly: null,
                 trade_confirmation: null,
-                can_dispute: true,
                 base_url: '',
-                change_exclude_list: ['contracts'],
+                exclude_contracts: ['contracts'],
+                include_only_contracts: ['future','future_1','future_2','spot'],
                 action_list: {
-                    can_calculate: true,
-                    can_dispute: true,
+                    has_calculate: true,
+                    has_dispute: true,
                 },
             }
         },
@@ -312,15 +343,15 @@
                 this.updateOldData(this.trade_confirmation);
                 this.setDefaultTradingAccount();
                 if(this.trade_confirmation && this.trade_confirmation.trade_structure_slug == 'var_swap') {
-                    this.action_list.can_calculate = false;
-                    this.action_list.can_dispute = false;
+                    this.action_list.has_calculate = false;
+                    this.action_list.has_dispute = false;
                 }
             },
             clearConfirmation()
             {
                 this.trade_confirmation = null;
-                this.action_list.can_calculate = true;
-                this.action_list.can_dispute = true;
+                this.action_list.has_calculate = true;
+                this.action_list.has_dispute = true;
             },
             getError(field)
             {
@@ -331,7 +362,9 @@
             },
             updateOldData(TradeConfirmation)
             {
-                this.oldConfirmationData = this.trade_confirmation.prepareStore(this.change_exclude_list);
+                this.oldConfirmationData = this.trade_confirmation.prepareStore();
+                this.oldConfirmationDataContractsExcluded = this.trade_confirmation.prepareStore(this.exclude_contracts);
+                this.oldConfirmationDataContractsOnly = this.trade_confirmation.prepareStore(this.include_only_contracts);
             },
             getTradingAccounts: function()
             {
@@ -361,11 +394,6 @@
                     this.errors = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
-                   
-                    if(trade_confirmation.status_id != 1)
-                    {
-                       this.can_dispute = true; 
-                    }
 
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })

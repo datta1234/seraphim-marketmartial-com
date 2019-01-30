@@ -24,6 +24,6 @@ class  SafexExpirationDateController extends Controller
             ]);
     	}
 
-        return SafexExpirationDate::paginate(12);
+        return SafexExpirationDate::whereYear('expiration_date','>=',Carbon::today()->toDateString())->orderBy('expiration_date', 'ASC')->paginate(12);
     }
 }

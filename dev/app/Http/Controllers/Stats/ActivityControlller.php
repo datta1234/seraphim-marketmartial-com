@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Trade\TradeNegotiation;
 use App\Models\TradeConfirmations\TradeConfirmation;
+use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\StructureItems\Market;
 use App\Models\StatsUploads\SafexTradeConfirmation;
 use App\Models\UserManagement\Organisation;
+use App\Models\MarketRequest\UserMarketRequestItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
@@ -121,7 +123,7 @@ class ActivityControlller extends Controller
         // Checks for admin bank tables only
         $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
         
-        $trade_confirmations = TradeConfirmation::basicSearch(
+        $user_market_requests = UserMarketRequest::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
             $request->input('_order'),
@@ -131,23 +133,54 @@ class ActivityControlller extends Controller
                 "filter_expiration" => $request->input('filter_expiration')
             ]
         )
-        ->whereYear('updated_at',$request->input('year'))
-        ->where('trade_confirmation_status_id', 4);
+        ->whereYear('user_market_requests.updated_at',$request->input('year'))
+        ->has('chosenUserMarket')
+        ->where(function ($tlq) {
+            $tlq->where(function ($q) {
+                $q->has('tradeConfirmations');
+            })
+            ->orWhere(function ($q) {
+                $q->doesnthave('tradeConfirmations');
+            });
+        });
 
         if($request->input('is_my_activity')) {
-            $trade_confirmations = $trade_confirmations->where(function ($tlq) use ($user) {
-                $tlq->organisationInvolved($user->organisation_id,'=')
-                    ->orgnisationMarketMaker($user->organisation_id, true);
+            $user_market_requests = $user_market_requests->where(function ($tlq) use ($user) {
+                $tlq->organisationInvolvedTrade($user->organisation_id,'=')
+                    ->organisationMarketMaker($user->organisation_id, true)
+                    ->organisationInterestNotTraded($user->organisation_id, true);
             });
         }
 
-        $trade_confirmations = $trade_confirmations->paginate(50);
+        $user_market_requests =  $user_market_requests->select(DB::raw(
+            'user_market_requests.*, 
+            trade_confirmations.updated_at as trade_date,
+            trade_confirmations.send_user_id as trade_send_user_id, 
+            trade_confirmations.receiving_user_id as trade_receiving_user_id,
+            trade_confirmations.trade_negotiation_id as trade_negotiation_id,
+            trade_confirmations.id as trade_confirmation_id, 
+            (
+                select title 
+                from trade_structures
+                where id=user_market_requests.trade_structure_id
+            ) as trade_structure_title'))
+        ->leftJoin('trade_confirmations', 'trade_confirmations.user_market_request_id', '=', 'user_market_requests.id');
+        
+        $user_market_requests = $user_market_requests->paginate(50);
 
-        $trade_confirmations->transform(function($trade_confirmation) use ($user, $is_Admin) {
-            return $trade_confirmation->preFormatStats($user, $is_Admin);
+        $user_market_requests->transform(function($user_market_request) use ($user, $is_Admin) {
+            return $user_market_request->preFormatStats($user, $is_Admin);
         });
 
-        return response()->json($trade_confirmations);
+        $expiration_dates = UserMarketRequestItem::select("value")->where('type', 'expiration date')->distinct()->orderBy('value', 'ASC')->pluck("value");
+
+        return response()->json([
+            'message' => "Year Data Loaded",
+            'data' => [ 
+                "table_data" => $user_market_requests,
+                "expiration_dates" => $expiration_dates,     
+            ]
+        ], 200);
     }
 
     /**
@@ -236,7 +269,7 @@ class ActivityControlller extends Controller
     public function safexRollingData(Request $request)
     {
         // @TODO - Change reqeust to a custom reqeust
-        return SafexTradeConfirmation::basicSearch(
+        $safex_confirmation_data = SafexTradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
             $request->input('_order'),
@@ -247,6 +280,18 @@ class ActivityControlller extends Controller
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
         )->paginate(50);
+
+        $latest_date = SafexTradeConfirmation::orderBy('trade_date', 'DESC')->first();
+        $expiration_dates = SafexTradeConfirmation::select("expiry")->distinct()->orderBy('expiry', 'ASC')->pluck("expiry");
+
+        return response()->json([
+            'message' => "Year Data Loaded",
+            'data' => [ 
+                "table_data" => $safex_confirmation_data,
+                "expiration_dates" => $expiration_dates,
+                "latest_date" => isset($latest_date) ? $latest_date->trade_date : $latest_date
+            ]
+        ], 200);
     }
 
     /**

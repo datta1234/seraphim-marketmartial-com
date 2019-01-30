@@ -188,10 +188,10 @@ const app = new Vue({
                    self.trade_confirmations.push(new TradeConfirmation(x));   
                     return x;
                 });
-                console.log('====================================');
+                /*console.log('====================================');
                 console.log("Loading Trade Confirmations: FROM SERVER - ", tradeConfirmationResponse.data.data);
                 console.log("Loading Trade Confirmations: OBJECT - ", self.trade_confirmations);
-                console.log('====================================');
+                console.log('====================================');*/
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);
@@ -597,7 +597,7 @@ const app = new Vue({
                         this.updateUserMarketRequest(packet_data.data);
                         console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         //@TODO - @Francois Move to new event when rebate gets created
-                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded_rebate_earned") {
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
                         }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
@@ -618,9 +618,18 @@ const app = new Vue({
                     });
                 })
                 .listen('RebateEvent', (rebate) => {
+                    console.log("Got RebateEvent: ", rebate);
                     if(rebate.message)
                     {
-                         this.$toasted.show(rebate.message.data); 
+                         this.$toasted.show(rebate.message.data, { 
+                            duration : 30000, 
+                            action : {
+                                text : 'Got It!',
+                                onClick : (e, toastObject) => {
+                                    toastObject.goAway(0);
+                                }
+                            }
+                        }); 
                     }
                     EventBus.$emit('rebateUpdate', rebate.data);
                 })
