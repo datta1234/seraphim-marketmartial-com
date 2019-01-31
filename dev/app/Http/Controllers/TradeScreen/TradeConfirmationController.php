@@ -20,8 +20,12 @@ class TradeConfirmationController extends Controller
         $user = $request->user();
         $this->authorize('phaseTwo', $tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
-        $tradeConfirmation->phaseTwo();
+    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));  
+        try {
+            $tradeConfirmation->phaseTwo();
+        } catch(\App\Exceptions\SpotRefTooHighException $e) {
+            return response()->json(['message' => $e->getMessage(), 'errors' => [ "Spot" => "Spot Ref Too High" ]], 422);
+        }
 
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 
             && ($tradeConfirmation->trade_confirmation_status_id == 3))

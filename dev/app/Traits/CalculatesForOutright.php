@@ -17,7 +17,12 @@ trait CalculatesForOutright {
         if($singleStock) {
             $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
             // Need to multiply by 1M because the Nomninal is amount per million
-            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+            $val = round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0);
+            if($val === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High");
+            }
+            $this->optionGroups[0]->setOpVal('Contract', $val);
         }
         
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));

@@ -580,7 +580,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     $value = null;
                     break;
                 case 'Contract':
-                    if($isOption && !$is_single_stock || in_array($this->tradeStructureSlug, $delta_one_list)) {
+                    if(($isOption && !$is_single_stock) || in_array($this->tradeStructureSlug, $delta_one_list)) {
                         $value = $tradeGroup->userMarketRequestGroup->is_selected 
                         ? round( ($tradeGroup->userMarketRequestGroup->getDynamicItem('Quantity') ) * $ratio, 2)
                         : $tradeNegotiation->quantity; //quantity
