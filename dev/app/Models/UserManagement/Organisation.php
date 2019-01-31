@@ -10,6 +10,7 @@ use App\Traits\HasDismissibleActivity;
 use App\Observers\OrganisationObserver;
 use App\Helpers\Broadcast\Channel;
 use App\Helpers\Broadcast\Message;
+use App\Models\UserManagement\BrokerageFee;
 
 
 class Organisation extends Model
@@ -122,5 +123,45 @@ class Organisation extends Model
     {
         $channel = strtolower($this->title);
         return substr(snake_case(preg_replace("/[^a-z0-9\_\-\s]/", '', $channel)), 0, 21);
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function brokerageFees()
+    {
+        return $this->hasMany('App\Models\UserManagement\BrokerageFee', 'organisation_id');
+    }
+
+    /**
+     * Runs through a predefined config to set up default brokerage fees for each structure.
+     *  It will only create defaults if there are none set.
+     */
+    public function setUpDefaultBrokerageFees() 
+    {
+        $created_brokerage_fees = array();
+        if($this->brokerageFees->isEmpty()) {
+            $base_key = 'marketmartial.confirmation_settings.';
+            foreach (config('marketmartial.confirmation_settings') as $trade_structure => $market_types) {
+                foreach ($market_types as $market_type => $legs) {
+                    foreach ($legs as $leg => $value) {
+                        $brokerage_fee = $this->brokerageFees()->create([
+                            'organisation_id'   => $this->id,
+                            'key'               => $base_key.$trade_structure.'.'.$market_type.'.'.$leg,
+                            'value'             => $value,
+                        ]);
+                        $created_brokerage_fees[] = $brokerage_fee;
+                    } 
+                }
+            }
+        }
+        return $created_brokerage_fees;
+    }
+
+    public function resolveBrokerageFee($key)
+    {
+        $brokerage_fee = $this->brokerageFees->firstWhere('key',$key);
+        return is_null($brokerage_fee) ? config($key) : $brokerage_fee->value;
     }
 }

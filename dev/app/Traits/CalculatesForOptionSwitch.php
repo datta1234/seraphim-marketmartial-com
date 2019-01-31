@@ -126,8 +126,16 @@ trait CalculatesForOptionSwitch {
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
-		$SINGLEoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.singles.per_leg')/100;//its a percentage
-		$IXoptionswitchFEE = config('marketmartial.confirmation_settings.option_switch.index.per_leg')/100;//its a percentage
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $option_switch_key = 'marketmartial.confirmation_settings.option_switch.';
+
+        //its a percentage        
+        $SINGLEoptionswitchFEESender = $sender_org->resolveBrokerageFee($option_switch_key.'singles.per_leg')/100;
+        $SINGLEoptionswitchFEEReceiving = $receiving_org->resolveBrokerageFee($option_switch_key.'singles.per_leg')/100;
+
+        $IXoptionswitchFEESender = $sender_org->resolveBrokerageFee($option_switch_key.'index.per_leg')/100;
+        $IXoptionswitchFEEReceiving = $receiving_org->resolveBrokerageFee($option_switch_key.'index.per_leg')/100;
         
 
     	// Leg1 Top40, DTop, DCap or Single?
@@ -135,16 +143,16 @@ trait CalculatesForOptionSwitch {
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
 
     		//NETPREM = Application.Round(nominal1 * SINGLEoptionswitchFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-    		$netPremium1 =  round($nominal1 * $SINGLEoptionswitchFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+    		$netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEoptionswitchFEESender : $SINGLEoptionswitchFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
     		//set for the counter
-    		$netPremiumCounter1 = round($nominal1 * $SINGLEoptionswitchFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+    		$netPremiumCounter1 = round($nominal1 * ($is_sender ? $SINGLEoptionswitchFEEReceiving : $SINGLEoptionswitchFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
     	} else {
 			$SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoptionswitchFEE * Brodirection1, 0) + GrossPrem1
-    		$netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXoptionswitchFEE * $Brodirection1) + $gross_prem1;
+    		$netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection1) + $gross_prem1;
     		//set for the counter
-    		$netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXoptionswitchFEE * $counterBrodirection1) + $gross_prem1;
+    		$netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection1) + $gross_prem1;
     	}
 
     	// Leg2 Top40, DTop, DCap or Single?
@@ -152,16 +160,16 @@ trait CalculatesForOptionSwitch {
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
     		//NETPREM = Application.Round(nominal2 * SINGLEoptionswitchFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-    		$netPremium2 =  round($nominal2 * $SINGLEoptionswitchFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+    		$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEoptionswitchFEESender : $SINGLEoptionswitchFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
     		//set for the counter
-    		$netPremiumCounter2 =  round($nominal2 * $SINGLEoptionswitchFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+    		$netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEoptionswitchFEEReceiving : $SINGLEoptionswitchFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
     	} else {
     		$SpotReferencePrice2 = $this->marketRequest->userMarketRequestTradables[1]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice2 * 10 * IXoptionswitchFEE * Brodirection2, 0) + GrossPrem2
-    		$netPremium2 =  floor($SpotReferencePrice2 * 10 * $IXoptionswitchFEE * $Brodirection2) + $gross_prem2;
+    		$netPremium2 =  floor($SpotReferencePrice2 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection2) + $gross_prem2;
     		//set for the counter
-    		$netPremiumCounter2 =  floor($SpotReferencePrice2 * 10 * $IXoptionswitchFEE * $counterBrodirection2) + $gross_prem2;
+    		$netPremiumCounter2 =  floor($SpotReferencePrice2 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection2) + $gross_prem2;
     	}
 
     	$this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);

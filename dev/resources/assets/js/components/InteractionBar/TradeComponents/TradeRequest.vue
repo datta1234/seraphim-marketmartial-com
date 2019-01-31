@@ -27,20 +27,20 @@
                 <b-col  cols="3" class="text-center" :class="getStateClass('bid')">
 
                     <span v-if="selectable && marketNegotiation.bid && bid_selectable" class="pointer" @click="selectOption(false)" :id="'popover-hit-'+marketNegotiation.id">
-                        {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                        {{ marketNegotiation.bid_display ? marketNegotiation.bid_display : "-"  }}
                     </span>
                     <span v-else>
-                        {{ marketNegotiation.bid ? marketNegotiation.bid_display : "-"  }}
+                        {{ marketNegotiation.bid_display ? marketNegotiation.bid_display : "-"  }}
                     </span>
 
                 </b-col>
 
                 <b-col cols="3" class="text-center" :class="getStateClass('offer')">
                     <span v-if="selectable && marketNegotiation.offer && offer_selectable" class="pointer" @click="selectOption(true)" :id="'popover-lift-'+marketNegotiation.id">
-                        {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                        {{ marketNegotiation.offer_display ? marketNegotiation.offer_display : "-"  }}
                     </span>
                     <span v-else>
-                        {{ marketNegotiation.offer ? marketNegotiation.offer_display : "-"  }}
+                        {{ marketNegotiation.offer_display ? marketNegotiation.offer_display : "-"  }}
                     </span>
                 </b-col>
 
@@ -237,7 +237,7 @@
         getStateClass(attr) {
             console.log("market negotiation",this.marketNegotiation);
 
-            if(this.marketNegotiation[attr] == null) {
+            if(this.marketNegotiation[attr] == null && this.marketNegotiation[attr+"_display"] == null) {
                 return "";
             }
             let source = this.marketNegotiation.getAmountSource(attr);

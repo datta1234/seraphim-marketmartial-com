@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 use Carbon\Carbon;
+use App\Models\UserManagement\BrokerageFee;
 
 trait CalculatesForCalendar {
 	
@@ -121,59 +122,67 @@ trait CalculatesForCalendar {
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
-        if($singleStock) {
-	        $SINGLEcalendarbigFEE = config('marketmartial.confirmation_settings.calendar.singles.big_leg')/100;//its a percentage
-	        $SINGLEcalendarsmallFEE = config('marketmartial.confirmation_settings.calendar.singles.small_leg')/100;//its a percentage
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $calendar_key = 'marketmartial.confirmation_settings.calendar.';
 
+        if($singleStock) {
+            // These are percentage values
+            $SINGLEcalendarbigFEESender = $sender_org->resolveBrokerageFee($calendar_key.'singles.big_leg')/100;
+            $SINGLEcalendarbigFEEReceiving = $receiving_org->resolveBrokerageFee($calendar_key.'singles.big_leg')/100;
+
+            $SINGLEcalendarsmallFEESender = $sender_org->resolveBrokerageFee($calendar_key.'singles.small_leg')/100;
+            $SINGLEcalendarsmallFEEReceiving = $receiving_org->resolveBrokerageFee($calendar_key.'singles.small_leg')/100;
+            
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
             if($nominal1 < $nominal2) {
                 // NETPREM = Round(nominal1 * SINGLEcalendarbigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-                $netPremium1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+                $netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEcalendarbigFEESender : $SINGLEcalendarbigFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
                 // NETPREM = Round(nominal2 * SINGLEcalendarsmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-                $netPremium2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+                $netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEcalendarsmallFEESender : $SINGLEcalendarsmallFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
                 
                 //set for the counter
-                $netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarbigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-                $netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarsmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+                $netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEcalendarbigFEEReceiving : $SINGLEcalendarbigFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+                $netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEcalendarsmallFEEReceiving : $SINGLEcalendarsmallFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
             } else {
                 // NETPREM = Round(nominal1 * SINGLEcalendarsmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-                $netPremium1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+                $netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEcalendarsmallFEESender : $SINGLEcalendarsmallFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
                 // NETPREM = Round(nominal2 * SINGLEcalendarbigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-                $netPremium2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+                $netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEcalendarbigFEESender : $SINGLEcalendarbigFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 
                 //set for the counter
-                $netPremiumCounter1 =  round($nominal1 * $SINGLEcalendarsmallFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-                $netPremiumCounter2 =  round($nominal2 * $SINGLEcalendarbigFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+                $netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEcalendarsmallFEEReceiving : $SINGLEcalendarsmallFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+                $netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEcalendarbigFEEReceiving : $SINGLEcalendarbigFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
             }
 
         } else {
-	    	//get the spot price ref.
-	        $IXcalendarbigFEE = config('marketmartial.confirmation_settings.calendar.index.big_leg')/100;//its a percentage
-	        $IXcalendarsmallFEE = config('marketmartial.confirmation_settings.calendar.index.small_leg')/100;//its a percentage
+            // These are percentage values
+            $IXcalendarbigFEESender = $sender_org->resolveBrokerageFee($calendar_key.'index.big_leg')/100;
+            $IXcalendarbigFEEReceiving = $receiving_org->resolveBrokerageFee($calendar_key.'index.big_leg')/100;
+
+            $IXcalendarsmallFEESender = $sender_org->resolveBrokerageFee($calendar_key.'index.small_leg')/100;
+            $IXcalendarsmallFEEReceiving = $receiving_org->resolveBrokerageFee($calendar_key.'index.small_leg')/100;
 
 	        $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
 	        if($contracts1 < $contracts2) {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarbigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection2) + $gross_prem2;
-	        } else {
-	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarsmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $Brodirection2) + $gross_prem2;
-	        }
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection2) + $gross_prem2;
 
-            //dd($SpotReferencePrice1, $IXcalendarbigFEE, $IXcalendarsmallFEE, $Brodirection1, $Brodirection2, $gross_prem1, $gross_prem2);
+		        //set for the counter
+                $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection2) + $gross_prem2;
+            } else {
+                // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarsmallFEE * Brodirection1, 0) + GrossPrem1
+                $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection1) + $gross_prem1;
+                $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection2) + $gross_prem2;
 
-	        //set for the counter
-	        if($contracts1 < $contracts2) {
-		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection2) + $gross_prem2;
-	        } else {
-		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXcalendarsmallFEE * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXcalendarbigFEE * $counterBrodirection2) + $gross_prem2;
-	        }
+		        //set for the counter
+                $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection2) + $gross_prem2;
+            }
         }
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);

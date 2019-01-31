@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
 use App\Models\TradeConfirmations\TradeConfirmationGroup;
 use App\Models\Trade\TradeNegotiation;
+use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\UserManagement\User;
 use App\Events\UserMarketRequested;
 use App\Helpers\Broadcast\Stream;
@@ -1300,7 +1301,7 @@ class UserMarketRequest extends Model
 
         if($orderBy == null)
         {
-            $orderBy = "updated_at";
+            $orderBy = "trade_confirmations.updated_at";
         }
 
         if($order == null)
@@ -1351,7 +1352,49 @@ class UserMarketRequest extends Model
             }
         }
 
-        $user_market_requests_query->orderBy($orderBy,$order);
+        // Apply Ordering
+        switch ($orderBy) {
+            /*case 'updated_at':
+                $trade_confirmations_query->orderBy($orderBy,$order);
+                break;
+            case 'market':
+                $trade_confirmations_query->whereHas('market',function($q) use ($order){
+                    $q->orderBy('title',$order);
+                });
+                //$trade_confirmations_query->orderBy("market_id",$order)
+                break;
+*/
+            case 'updated_at':
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at", $order);
+                break;
+            /*case 'underlying':
+                
+                break;*/
+            case 'structure':
+                $user_market_requests_query->orderBy("trade_structure_title", $order);
+                break;
+            /*case 'direction':
+            
+                break;
+            case 'nominal':
+            
+                break;
+            case 'strike_percentage':
+            
+                break;
+            case 'strike':
+            
+                break;
+            case 'volatility':
+            
+                break;
+            case 'expiration':
+            
+                break;*/
+            default:
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at","DESC");
+        }
+
 
         return $user_market_requests_query;
     }
@@ -1419,17 +1462,14 @@ class UserMarketRequest extends Model
      */
     public function preFormatStats($user = null, $is_Admin = false)
     {   
-        /*$user_market_request_items = $this->resolveUserMarketRequestItems();*/
-
         $data = [
             "id" => $this->id,
-            "updated_at"        => /*isset($this->trade_date) ? $this->trade_date->format('Y-m-d H:i:s') : */$this->trade_date,
+            "updated_at"        => $this->trade_date,
             "underlying"        => array(),
             "structure"         => $this->tradeStructure->title,
             "nominal"           => array(),
             "strike"            => array(),
             "expiration"        => array(),
-            "strike_percentage" => array(),
             "volatility"        => array(),
         ];
 
@@ -1468,27 +1508,30 @@ class UserMarketRequest extends Model
 
         $trade_confirmation_groups = TradeConfirmationGroup::where('trade_confirmation_id', $this->trade_confirmation_id)->get();
 
-        // Resolve Strike percentage
-        foreach ($trade_confirmation_groups as $key => $group) {
-            $tradable = $group->userMarketRequestGroup->tradable;
-            $strike = $group->getOpVal('Strike');
-            $spot_price = $group->getOpVal('Spot');
+        if($user === null) {
+            $data["strike_percentage"] = array();
+            // Resolve Strike percentage
+            foreach ($trade_confirmation_groups as $key => $group) {
+                $tradable = $group->userMarketRequestGroup->tradable;
+                $strike = $group->getOpVal('Strike');
+                $spot_price = $group->getOpVal('Spot');
 
-            // Will get into for Markets without a user defined Spot Price
-            // Asked by client to exclude
-            /*if(!empty($strike) && empty($spot_price)) {
-                switch ($tradable->market->title) {
-                    case 'TOP40':
-                    case 'DTOP':
-                    case 'DCAP':
-                        $spot_price = $tradable->market->spot_price_ref;
-                        break;
+                // Will get into for Markets without a user defined Spot Price
+                // Asked by client to exclude
+                /*if(!empty($strike) && empty($spot_price)) {
+                    switch ($tradable->market->title) {
+                        case 'TOP40':
+                        case 'DTOP':
+                        case 'DCAP':
+                            $spot_price = $tradable->market->spot_price_ref;
+                            break;
+                    }
+                }*/
+
+                // Only Calculate percentage if both Strike and Spot Price is set
+                if( !empty($strike) && !empty($spot_price) ) {
+                    $data["strike_percentage"][] = round($strike/$spot_price, 2) * 100;
                 }
-            }*/
-
-            // Only Calculate percentage if both Strike and Spot Price is set
-            if( !empty($strike) && !empty($spot_price) ) {
-                $data["strike_percentage"][] = round($strike/$spot_price, 2);
             }
         }
 
@@ -1499,8 +1542,20 @@ class UserMarketRequest extends Model
         }
 
         if($is_Admin) {
-            $data["seller"] = User::find($this->trade_send_user_id)->organisation->title;
-            $data["buyer"] = User::find($this->trade_receiving_user_id)->organisation->title;
+            if(!is_null($this->trade_confirmation_id) && $tradeNegotiation->traded) {
+                $root_trade_negotiation = $tradeNegotiation->getRoot();
+                if($root_trade_negotiation->is_offer) {
+                    $data["buyer"] = $root_trade_negotiation->initiateUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->recievingUser->organisation->title;
+                } else {
+                    $data["buyer"] = $root_trade_negotiation->recievingUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->initiateUser->organisation->title;
+                }
+                return $data;
+            }
+
+            $data["buyer"] = null;
+            $data["seller"] = null;    
             return $data;
         }
 
@@ -1520,12 +1575,6 @@ class UserMarketRequest extends Model
 
         // Direction (Buy / Sell)
         $root_trade_negotiation = $tradeNegotiation->getRoot();
-
-        /*if($root_trade_negotiation->is_offer) {
-            $data["direction"] = $root_trade_negotiation->initiate_user_id == $user->id;
-        } else {
-            $data["direction"] = $root_trade_negotiation->initiate_user_id;
-        }*/
 
         switch (true) {
         // My Trade

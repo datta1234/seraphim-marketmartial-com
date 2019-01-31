@@ -10,6 +10,7 @@ use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\StructureItems\Market;
 use App\Models\StatsUploads\SafexTradeConfirmation;
 use App\Models\UserManagement\Organisation;
+use App\Models\MarketRequest\UserMarketRequestItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
@@ -122,7 +123,6 @@ class ActivityControlller extends Controller
         // Checks for admin bank tables only
         $is_Admin = $request->user()->role_id == 1 && $request->input('is_bank_level');
         
-        //@TODO - refactor to include markets made but not traded
         $user_market_requests = UserMarketRequest::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
@@ -158,28 +158,13 @@ class ActivityControlller extends Controller
             trade_confirmations.send_user_id as trade_send_user_id, 
             trade_confirmations.receiving_user_id as trade_receiving_user_id,
             trade_confirmations.trade_negotiation_id as trade_negotiation_id,
-            trade_confirmations.id as trade_confirmation_id'))
+            trade_confirmations.id as trade_confirmation_id, 
+            (
+                select title 
+                from trade_structures
+                where id=user_market_requests.trade_structure_id
+            ) as trade_structure_title'))
         ->leftJoin('trade_confirmations', 'trade_confirmations.user_market_request_id', '=', 'user_market_requests.id');
-
-        /*$trade_confirmations = TradeConfirmation::basicSearch(
-            $request->input('search'),
-            $request->input('_order_by'),
-            $request->input('_order'),
-            [
-                "filter_date" => $request->input('filter_date'),
-                "filter_market" => $request->input('filter_market'),
-                "filter_expiration" => $request->input('filter_expiration')
-            ]
-        )
-        ->whereYear('updated_at',$request->input('year'))
-        ->where('trade_confirmation_status_id', 4);
-
-        if($request->input('is_my_activity')) {
-            $trade_confirmations = $trade_confirmations->where(function ($tlq) use ($user) {
-                $tlq->organisationInvolved($user->organisation_id,'=')
-                    ->orgnisationMarketMaker($user->organisation_id, true);
-            });
-        }*/
         
         $user_market_requests = $user_market_requests->paginate(50);
 
@@ -187,7 +172,15 @@ class ActivityControlller extends Controller
             return $user_market_request->preFormatStats($user, $is_Admin);
         });
 
-        return response()->json($user_market_requests);
+        $expiration_dates = UserMarketRequestItem::select("value")->where('type', 'expiration date')->distinct()->orderBy('value', 'ASC')->pluck("value");
+
+        return response()->json([
+            'message' => "Year Data Loaded",
+            'data' => [ 
+                "table_data" => $user_market_requests,
+                "expiration_dates" => $expiration_dates,     
+            ]
+        ], 200);
     }
 
     /**
@@ -276,7 +269,7 @@ class ActivityControlller extends Controller
     public function safexRollingData(Request $request)
     {
         // @TODO - Change reqeust to a custom reqeust
-        return SafexTradeConfirmation::basicSearch(
+        $safex_confirmation_data = SafexTradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
             $request->input('_order'),
@@ -287,6 +280,18 @@ class ActivityControlller extends Controller
                 "filter_nominal" => $request->input('filter_nominal'),
             ]
         )->paginate(50);
+
+        $latest_date = SafexTradeConfirmation::orderBy('trade_date', 'DESC')->first();
+        $expiration_dates = SafexTradeConfirmation::select("expiry")->distinct()->orderBy('expiry', 'ASC')->pluck("expiry");
+
+        return response()->json([
+            'message' => "Year Data Loaded",
+            'data' => [ 
+                "table_data" => $safex_confirmation_data,
+                "expiration_dates" => $expiration_dates,
+                "latest_date" => isset($latest_date) ? $latest_date->trade_date : $latest_date
+            ]
+        ], 200);
     }
 
     /**

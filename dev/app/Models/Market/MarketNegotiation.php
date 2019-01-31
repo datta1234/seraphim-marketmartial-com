@@ -999,7 +999,14 @@ class MarketNegotiation extends Model
         if($this->is_killed && $this->getAttribute($attr) == null) {
             return "";
         }
-        if($this->is_repeat && $this->id != $source->id)
+        if($this->is_repeat && (
+            $this->id != $source->id || (
+                $this->getAttribute($attr) === null 
+                && $this->marketNegotiationParent 
+                && !$this->marketNegotiationParent->is_repeat
+                && is_null($this->marketNegotiationParent->getAttribute($attr))
+            )
+        ))
         {
             if($this->user->organisation_id == $source->user->organisation_id 
                 && !$this->isTradeAtBest() 

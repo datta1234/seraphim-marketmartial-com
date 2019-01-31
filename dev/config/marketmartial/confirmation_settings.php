@@ -1,7 +1,5 @@
 <?php
 return [
-	//big leg is based of the nominal
-    'rebate_percentage'   =>  env('REBATE_PERCENTAGE',0.25),
   // trade_structure fees are percentage values
   // __trade_structure__
 	"outright"=>

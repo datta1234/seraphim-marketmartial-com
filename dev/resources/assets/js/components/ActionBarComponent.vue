@@ -11,7 +11,7 @@
             <div class="col-3">
                 <div class="float-right">
                     <filter-markets-menu :markets="markets"></filter-markets-menu>
-                    <button id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened && !$root.is_admin">
+                    <button v-bind:class="{'new-message-alert': !chat_opened && $root.message_count > 0}" id="action-bar-open-chat" type="button" class="btn mm-transparent-button mr-2" @click="loadChatBar()" v-if="!chat_opened && !$root.is_admin">
                         <span class="badge badge-danger message-alert-count" v-if="$root.message_count > 0">{{ $root.message_count }}</span>
                         <span class="icon icon-chat"></span> Chat
                     </button>
@@ -83,6 +83,7 @@
                     select_market: false
                 },
                 chat_opened: false,
+                new_incoming: false,
             };
         },
         methods: {

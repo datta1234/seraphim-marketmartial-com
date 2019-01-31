@@ -58,7 +58,7 @@
                                             <datepicker v-model="year_data.filter_date"
                                                         class="float-right filter-date-picker"
                                                         :name="index+'-table-datepicker'"
-                                                        placeholder="Select a date"
+                                                        placeholder="Select a trade date"
                                                         :bootstrap-styling="true"
                                                         :calendar-button="true"
                                                         calendar-button-icon="fas fa-calendar-alt"
@@ -136,14 +136,14 @@
                     state: true,
                 },
                 table_fields: [
-                    { key: 'updated_at', label: 'Date', tdClass:'text-right', thClass:'text-right'/*, sortable: true, sortDirection: 'desc'*/ },
+                    { key: 'updated_at', label: 'Date', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                     { key: 'underlying', label: 'Instrument', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right' },
-                    (this.is_my_activity ? { key: 'direction', label: 'Direction', tdClass:'text-right', thClass:'text-right' } : {}),
+                    { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                    (this.is_my_activity ? { key: 'direction', label: 'Buy/Sell', tdClass:'text-right', thClass:'text-right' } : {}),
                     { key: 'nominal', label: 'Nominal', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'strike_percentage', label: 'Strike %', tdClass:'text-right', thClass:'text-right' },
+                    (this.is_my_activity ? {} : { key: 'strike_percentage', label: 'Strike %', tdClass:'text-right', thClass:'text-right' } ),
                     { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'volatility', label: 'Volatility', tdClass:'text-right', thClass:'text-right' },
+                    { key: 'volatility', label: 'Level', tdClass:'text-right', thClass:'text-right' },
                     { key: 'expiration', label: 'Expiration', tdClass:'text-right', thClass:'text-right' },
                 ],
                 table_data:[],
@@ -196,11 +196,15 @@
                     })
                     .then(activityResponse => {
                         if(activityResponse.status == 200) {
-                            this.table_data[index].current_page = activityResponse.data.current_page;
-                            this.table_data[index].per_page = activityResponse.data.per_page;
-                            this.table_data[index].total = activityResponse.data.total;
-                            this.table_data[index].data = activityResponse.data.data;
+                            this.table_data[index].current_page = activityResponse.data.data.table_data.current_page;
+                            this.table_data[index].per_page = activityResponse.data.data.table_data.per_page;
+                            this.table_data[index].total = activityResponse.data.data.table_data.total;
+                            this.table_data[index].data = activityResponse.data.data.table_data.data;
                             this.table_data_loaded = true;
+                            
+                            if(this.expiration_filter.length < 2) {
+                                this.expiration_filter = this.expiration_filter.concat(activityResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
+                            }
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+index+" year data.")
@@ -228,21 +232,6 @@
                     }
                 }, err => {
                     console.error(err);
-                });
-            },
-            loadExpirations() {
-                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
-                    params:{
-                        'not_paginate': true,
-                    }
-                })
-                .then(expirationsResponse => {
-                    Object.keys(expirationsResponse.data.data).forEach(key => {
-                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
-                    });
-                }, err => {
-                    console.error(err);
-                    this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
             initTableData() {
@@ -357,7 +346,6 @@
                 this.table_years = unordered_years.reverse();
                 this.$root.$on('bv::toggle::collapse',this.toggleState);
                 this.loadMarkets();
-                this.loadExpirations();
                 this.initTableData();
             }
         }
