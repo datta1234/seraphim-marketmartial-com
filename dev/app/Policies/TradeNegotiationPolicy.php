@@ -29,10 +29,6 @@ class TradeNegotiationPolicy
      */
     public function applyNoFurtherCares(User $user, TradeNegotiation $tradeNegotiation)
     {
-        \Log::info([$user->isViewer(), $user->isTrader()]);
-        if($user->isViewer()) { 
-            return false; 
-        }
         return $user->isTrader();
     }
 }

@@ -85,6 +85,7 @@ class PreviousDayController extends Controller
      */
     public function getOldQuotes()
     {
+        $this->authorize('refreshQuotes', UserMarket::class);
         \Config::set('loading_previous_day', true); // set request context
         $data = UserMarket::whereHas('user', function($q){
                 $q->where('organisation_id', \Auth::user()->organisation_id);
@@ -115,6 +116,7 @@ class PreviousDayController extends Controller
      */
     public function refreshOldQuotes(Request $request)
     {
+        $this->authorize('refreshQuotes', UserMarket::class);
         $refresh = $request->get('refresh');
 
         // get only the applicable quotes belonging to this user
@@ -169,6 +171,7 @@ class PreviousDayController extends Controller
      */
     public function getOldNegotiations()
     {
+        $this->authorize('refreshLevels', MarketNegotiation::class);
         \Config::set('loading_previous_day', true); // set request context
         $data = MarketNegotiation::whereHas('user', function($q){
             $q->where('organisation_id', \Auth::user()->organisation_id);
@@ -194,6 +197,7 @@ class PreviousDayController extends Controller
      */
     public function refreshOldNegotiations(Request $request)
     {
+        $this->authorize('refreshLevels', MarketNegotiation::class);
         $refresh = $request->get('refresh');
 
         // get only the applicable quotes belonging to this user

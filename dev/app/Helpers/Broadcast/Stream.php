@@ -96,7 +96,12 @@ class Stream
     {
         foreach ($this->chunks as $k => $chunk) 
         {
-            event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
+            if(count($this->chunks)>1 && $k == count($this->chunks)-1) {
+                \Log::info("Skipping $k of ".count($this->chunks));
+            } else {
+                \Log::info("Sending $k of ".count($this->chunks));
+                event(new SendStream($this->broadcastName,$this->channel,$chunk,$this->total));
+            }
         }
     }
 

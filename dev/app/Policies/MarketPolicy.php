@@ -30,10 +30,6 @@ class MarketPolicy
      */
     public function addMarketReqeust(User $user, Market $market)
     {
-
-        if($user->isViewer()) { 
-            return false; 
-        }
         return $user->isTrader();
     }
 
