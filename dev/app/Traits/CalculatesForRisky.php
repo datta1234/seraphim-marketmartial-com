@@ -123,17 +123,17 @@ trait CalculatesForRisky {
 		      	$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEriskysmallFEESender : $SINGLEriskysmallFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 		      	
 	        	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEriskybigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEriskysmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+	        	$netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEriskybigFEEReceiving : $SINGLEriskybigFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+		      	$netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEriskysmallFEEReceiving : $SINGLEriskysmallFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
 	        } else {
 	        	// NETPREM = Round(nominal1 * SINGLEriskysmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-	        	$netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEriskysmallFEEReceiving : $SINGLEriskysmallFEESender) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+	        	$netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEriskysmallFEESender : $SINGLEriskysmallFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
 		      	// NETPREM = Round(nominal2 * SINGLEriskybigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-		      	$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEriskybigFEEReceiving : $SINGLEriskybigFEESender) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+		      	$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEriskybigFEESender : $SINGLEriskybigFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 
 		      	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEriskysmallFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEriskybigFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+	        	$netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEriskysmallFEEReceiving : $SINGLEriskysmallFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+		      	$netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEriskybigFEEReceiving : $SINGLEriskybigFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
 	        }
 
         } else {
