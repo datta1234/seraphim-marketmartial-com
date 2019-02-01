@@ -20,9 +20,17 @@ trait CalculatesForFly {
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
             $nominal3 = $this->optionGroups[2]->getOpVal('Nominal');
             
-            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef * 100), 0));
-            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef * 100), 0));
-            $this->optionGroups[2]->setOpVal('Contract', round( $nominal3 / ($SpotRef * 100), 0));
+            $val1 = round( $nominal1 / ($SpotRef * 100), 0);
+            $val2 = round( $nominal2 / ($SpotRef * 100), 0);
+            $val3 = round( $nominal3 / ($SpotRef * 100), 0);
+            if($val1 === 0.0 || $val2 === 0.0 || $val3 === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
+            }
+
+            $this->optionGroups[0]->setOpVal('Contract', $val1);
+            $this->optionGroups[1]->setOpVal('Contract', $val2);
+            $this->optionGroups[2]->setOpVal('Contract', $val3);
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));

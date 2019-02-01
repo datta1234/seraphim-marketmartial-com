@@ -540,6 +540,7 @@
                     break;
             }
             this.setPreviousData();
+            console.log(this.errors);
         }
     }
 </script>

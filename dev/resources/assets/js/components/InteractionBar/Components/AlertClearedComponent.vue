@@ -1,6 +1,6 @@
 <template>
     <div dusk="alert-cleared" class="alert-cleared">
-        <b-form-checkbox @change="toggleAletCleared" id="market-request-subscribe" v-model="market_request.chosen_user_market.is_watched">
+        <b-form-checkbox v-active-request @change="toggleAletCleared" id="market-request-subscribe" v-model="market_request.chosen_user_market.is_watched">
             Alert me when cleared
         </b-form-checkbox>
     </div>

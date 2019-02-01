@@ -144,15 +144,12 @@
                                 -    
                             </td>
                             <td>
-                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future_1']" type="number"></input>
-                                <span class="text-danger">
-                                    <!-- @TODO figure out how to not hardcode the first value -->
-                                <ul v-if="errors">
-                                  <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
-                                      {{ error }}
-                                  </li>
-                                </ul>
-                                </span>
+                                <input  v-input-mask.number.decimal="{ precision: 2 }" 
+                                        class="form-control" 
+                                        v-model="trade_confirmation.future_groups[key]['future_1']" 
+                                        type="number"
+                                        v-bind:class="{ 'is-invalid': inputState(key,'future_1') }">
+                                </input>
                             </td>
                             <td>
                                 {{ trade_confirmation.future_groups[key]['contracts'] }}
@@ -193,28 +190,38 @@
                             <td>
                                 
                                 <template v-if="trade_confirmation.future_groups[key].hasOwnProperty('spot')">
-                                    <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['spot']" type="number"></input> 
+                                    <input  v-input-mask.number.decimal="{ precision: 2 }"
+                                            class="form-control" 
+                                            v-model="trade_confirmation.future_groups[key]['spot']" 
+                                            type="number"
+                                            v-bind:class="{ 'is-invalid': inputState(key,'spot') }">
+                                    </input> 
                                 </template>
                                 <template v-else>
                                     -    
                                 </template>
                             </td>
                             <td v-if="can_set_future">
-                                <input v-input-mask.number.decimal="{ precision: 2 }" class="form-control" v-model="trade_confirmation.future_groups[key]['future']" type="number"></input>
-                                <span class="text-danger">
-                                    <!-- @TODO figure out how to not hardcode the first value -->
-                                <ul v-if="errors">
-                                  <li class="text-danger" v-if="errors['trade_confirmation_data.structure_groups.0.items.0']" v-for="error in errors['trade_confirmation_data.structure_groups.0.items.0']">
-                                      {{ error }}
-                                  </li>
-                                </ul>
-                                </span>
+                                <input  v-input-mask.number.decimal="{ precision: 2 }"
+                                        class="form-control" v-model="trade_confirmation.future_groups[key]['future']" 
+                                        type="number"
+                                        v-bind:class="{ 'is-invalid': inputState(key,'future') }">
+                                </input>
                             </td>
                             <td v-else>
                                 {{ trade_confirmation.future_groups[key]['future'] }}
                             </td>
-                            <td>
-                                <input v-input-mask.number.decimal="{ precision: 2 }" class="mm-blue-bg form-control" v-model="trade_confirmation.future_groups[key]['contracts']" type="number"></input>
+                            <td v-if="trade_confirmation.trade_structure_slug == 'efp' 
+                                || trade_confirmation.trade_structure_slug == 'efp_switch'">
+                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                            </td>
+                            <td v-else>
+                                <input  v-input-mask.number.decimal="{ precision: 2 }" 
+                                        class="mm-blue-bg form-control" 
+                                        v-model="trade_confirmation.future_groups[key]['contracts']" 
+                                        type="number"
+                                        v-bind:class="{ 'is-invalid': inputState(key,'contract') }">
+                                </input>
                             </td>
                             <td>
                                 {{ future_group.expires_at }}     
@@ -226,7 +233,19 @@
             </table>
         </template>
          <b-row>
-            <b-col md="5" offset-md="7" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
+            <b-col md="5" offset="1">
+                <b-row v-if="new_errors.messages.length > 0" class="mt-4">
+                    <b-col cols="12">
+                        <ul>
+                            <li :key="index" v-for="(error, index) in new_errors.messages">
+                                <p class="text-danger mb-0">{{ error }}</p>
+                            </li>
+                        </ul>
+                    </b-col>
+                </b-row>
+            </b-col>
+
+            <b-col md="5" offset-md="1" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
                 <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
                 <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                 <div class="form-group">
@@ -334,9 +353,22 @@
                     has_calculate: true,
                     has_dispute: true,
                 },
+                new_errors: {
+                    fields: [],
+                    messages: [],
+                },
             }
         },
         methods: {
+            /**
+             * Toggles input states when there are errors for the input
+             *
+             * @param {number} index - the index of the input
+             * @param {string} type - the type of input
+             */
+            inputState(index, type) {
+                return (this.new_errors.fields.indexOf(index +'.'+ type) == -1)? false: true;
+            },
             loadConfirmation(tradeConfirmation)
             {
                 this.trade_confirmation = tradeConfirmation;
@@ -391,7 +423,9 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
-                    this.errors = [];
+                    /*this.errors = [];*/
+                    this.new_errors.fields = [];
+                    this.new_errors.messages = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
 
@@ -399,7 +433,9 @@
                 })
                 .catch(err => {
                     console.log("Catching error", err);
+                    this.loadErrors(err.errors);
                     EventBus.$emit('loading', 'confirmationSubmission');
+                    this.$toasted.error(err.message);
                     this.confirmationLoaded = true;
                     this.errors = err.errors;
                 });
@@ -411,7 +447,9 @@
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
                     this.$toasted.success(response.data.message);
-                    this.errors = [];
+                    /*this.errors = [];*/
+                    this.new_errors.fields = [];
+                    this.new_errors.messages = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
                     EventBus.$emit('loading', 'confirmationSubmission');
@@ -433,7 +471,9 @@
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.$emit('close');
-                    this.errors = [];
+                    /*this.errors = [];*/
+                    this.new_errors.fields = [];
+                    this.new_errors.messages = [];
                 })
                 .catch(err => {
                     
@@ -448,7 +488,9 @@
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.updateOldData();
-                    this.errors = [];
+                    /*this.errors = [];*/
+                    this.new_errors.fields = [];
+                    this.new_errors.messages = [];
                     this.$emit('close');
                 })
                 .catch(err => {
@@ -456,7 +498,38 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;
                 });  
-            }  
+            },
+            /*{
+              "message": "The given data was invalid.",
+              "errors": {
+                "trade_confirmation_data.structure_groups.0.items.1": [
+                  {
+                    "contract": "please enter a valid Contracts value"
+                  }
+                ]
+              }
+            }*/
+            loadErrors(errors) {
+                Object.keys(errors).forEach(error_key => {
+                    let error_key_array = error_key.split('.');
+                    let groups_index = error_key_array.findIndex(x=>{return x == 'structure_groups'});
+                    let group = '';
+                    if(groups_index !== -1 && error_key_array.length > groups_index) {
+                        group += error_key_array[groups_index+1];
+                    }
+
+                    errors[error_key].forEach(err=>{
+                        let item_key = Object.keys(err)[0];
+                        if(this.new_errors.fields.findIndex(x=>{return x == group+'.'+item_key}) == -1  ) {
+                            this.new_errors.fields.push(group+'.'+item_key);
+                        }
+
+                        if(this.new_errors.messages.findIndex(x=>{return x == err[item_key]}) == -1  ) {
+                            this.new_errors.messages.push(err[item_key]);
+                        }
+                    });
+                });
+            }
         },
         mounted() {
             this.base_url = axios.defaults.baseUrl;
