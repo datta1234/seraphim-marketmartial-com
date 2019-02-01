@@ -20,9 +20,17 @@ trait CalculatesForFly {
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
             $nominal3 = $this->optionGroups[2]->getOpVal('Nominal');
             
-            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef * 100), 0));
-            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef * 100), 0));
-            $this->optionGroups[2]->setOpVal('Contract', round( $nominal3 / ($SpotRef * 100), 0));
+            $val1 = round( $nominal1 / ($SpotRef * 100), 0);
+            $val2 = round( $nominal2 / ($SpotRef * 100), 0);
+            $val3 = round( $nominal3 / ($SpotRef * 100), 0);
+            if($val1 === 0.0 || $val2 === 0.0 || $val3 === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
+            }
+
+            $this->optionGroups[0]->setOpVal('Contract', $val1);
+            $this->optionGroups[1]->setOpVal('Contract', $val2);
+            $this->optionGroups[2]->setOpVal('Contract', $val3);
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -123,36 +131,44 @@ trait CalculatesForFly {
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
         $counterBrodirection3 = $Brodirection3 * -1;
+
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $fly_key = 'marketmartial.confirmation_settings.fly.';
             
         if($singleStock) {
-            $SINGLEflyFEE = config('marketmartial.confirmation_settings.fly.singles.per_leg')/100;//its a percentage
+            //its a percentage        
+            $SINGLEflyFEESender = $sender_org->resolveBrokerageFee($fly_key.'singles.per_leg')/100;
+            $SINGLEflyFEEReceiving = $receiving_org->resolveBrokerageFee($fly_key.'singles.per_leg')/100;
             
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
             $nominal3 = $this->optionGroups[2]->getOpVal('Nominal');
 
             // NETPREM = Round(nominal1 * SINGLEflyFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-            $netPremium1 =  round($nominal1 * $SINGLEflyFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
-            $netPremium2 =  round($nominal2 * $SINGLEflyFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
-            $netPremium3 =  round($nominal3 * $SINGLEflyFEE / $contracts3 * $Brodirection3 + $gross_prem3, 2);
+            $netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEflyFEESender : $SINGLEflyFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+            $netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEflyFEESender : $SINGLEflyFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+            $netPremium3 =  round($nominal3 * ($is_sender ? $SINGLEflyFEESender : $SINGLEflyFEEReceiving) / $contracts3 * $Brodirection3 + $gross_prem3, 2);
             //set for the counter
-            $netPremiumCounter1 =  round($nominal1 * $SINGLEflyFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-            $netPremiumCounter2 =  round($nominal2 * $SINGLEflyFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
-            $netPremiumCounter3 =  round($nominal3 * $SINGLEflyFEE / $contracts3 * $counterBrodirection3 + $gross_prem3, 2);
+            $netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+            $netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+            $netPremiumCounter3 =  round($nominal3 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts3 * $counterBrodirection3 + $gross_prem3, 2);
         } else {
-            //get the spot price ref.
-            $IXflyFEE = config('marketmartial.confirmation_settings.fly.index.per_leg')/100;//its a percentage
+            //its a percentage        
+            $IXflyFEESender = $sender_org->resolveBrokerageFee($fly_key.'index.per_leg')/100;
+            $IXflyFEEReceiving = $receiving_org->resolveBrokerageFee($fly_key.'index.per_leg')/100;
 
+            //get the spot price ref.
             $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
             // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection1) + $gross_prem1;
-            $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection2) + $gross_prem2; 
-            $netPremium3 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $Brodirection3) + $gross_prem3; 
+            $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection1) + $gross_prem1;
+            $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection2) + $gross_prem2; 
+            $netPremium3 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection3) + $gross_prem3; 
             //set for the counter
-            $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $counterBrodirection1) + $gross_prem1;
-            $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $counterBrodirection2) + $gross_prem2;
-            $netPremiumCounter3 =  floor($SpotReferencePrice1 * 10 * $IXflyFEE * $counterBrodirection3) + $gross_prem3;
+            $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection1) + $gross_prem1;
+            $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection2) + $gross_prem2;
+            $netPremiumCounter3 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3) + $gross_prem3;
         }
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);

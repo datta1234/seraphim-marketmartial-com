@@ -1,0 +1,791 @@
+
+Url: 
+	trade/admin/market-request/{market_request}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation/{trade_negotiation}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation/{trade_negotiation}
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation/{trade_negotiation}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-negotiation/{market_negotiation}/trade-negotiation/{trade_negotiation}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-request-subscribe/{user_market_request}
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{marketType}/trade-structure
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market/{market}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market/{market}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market/{market}
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/market/{market}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market-type/{market_type}/trade-confirmations
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request/{market_request}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request/{market_request}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request/{market_request}
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/market/{market}/market-request/{market_request}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/organisation-chat
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/organisation-chat
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/previous-negotiations
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/previous-negotiations
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/previous-quotes
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/previous-quotes
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/safex-expiration-date
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/stock
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/stream
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/trade-confirmation/{trade_confirmation
+Methods: 
+	PUT
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/trade-confirmation/{trade_confirmation}/confirm
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/trade-confirmation/{trade_confirmation}/dispute
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/trade-confirmation/{trade_confirmation}/phase-two
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/trade-negotiation/{trade_negotiation}/no-further-cares
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/action-taken
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/{user_market}
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/{user_market}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/{user_market}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/{user_market}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market-request/{user_market_request}/user-market/{user_market}/work-the-balance
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/activity/{activity}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/create
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}
+Methods: 
+	DELETE
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}
+Methods: 
+	PUT|PATCH
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}/counter
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}/edit
+Methods: 
+	GET|HEAD
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}/improve
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	
+
+
+Url: 
+	trade/user-market/{user_market}/market-negotiation/{market_negotiation}/repeat
+Methods: 
+	POST
+Query Params:
+	
+Body:
+	
+Constraints:
+	

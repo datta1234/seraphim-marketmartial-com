@@ -28,34 +28,45 @@ class ItemRule implements Rule
     {
         switch ($value['title']) {
             case 'Future':
+                if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                {
+                    $this->message = ["future" => "please enter a valid Future value"];
+                    return false;
+                }
+                break;
             case 'Future 1':
+                if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                {
+                    $this->message = ["future_1" => "please enter a valid Future value"];
+                    return false;
+                }
+                break;
             case 'Future 2':
                 if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
                 {
-                    $this->message = "please enter a valid Future value";
+                    $this->message = ["future_2" => "please enter a valid Future value"];
                     return false;
                 }
                 break;
             case 'Contract':
                 if($value['value'] !== null)
                 {
+                    if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
+                    {
+                        $this->message = ["contract" => "please enter a valid Contracts value"];
+                        return false;     
+                    }  
 
                     if($value['value'] == 0)
                     {
                         return true;
                     }
-
-                    if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
-                    {
-                        $this->message = "please enter a valid Contracts value";
-                        return false;     
-                    }  
                 }
                 break;
             case 'Spot':
                 if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
                 {
-                    $this->message = "please enter a valid Spot value";
+                    $this->message = ["spot" => "please enter a valid Spot value"];
                     return false;
                 }
                 break;

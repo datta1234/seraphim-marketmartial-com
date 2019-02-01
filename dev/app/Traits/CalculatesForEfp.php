@@ -30,16 +30,22 @@ trait CalculatesForEfp {
     {     
     	$FutBrodirection1 = $isOffer ? 1 : -1;
     	$counterFutBrodirection1 = $FutBrodirection1 * -1;
+        
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $efp_key = 'marketmartial.confirmation_settings.efp.';
 
-    	$D1efpFee = config('marketmartial.confirmation_settings.efp.index.only_leg')/100;//its a percentage
+        //its a percentage        
+        $D1efpFeeSender = $sender_org->resolveBrokerageFee($efp_key.'index.only_leg')/100;
+        $D1efpFeeReceiving = $receiving_org->resolveBrokerageFee($efp_key.'index.only_leg')/100;
 
     	//FUTURE = Application.Round(Future1 * D1efpFee * FutBrodirection1, 2) + Future1
-    	$future =  round($future1 * $D1efpFee * $FutBrodirection1, 2) + $future1;
+    	$future =  round($future1 * ($is_sender ? $D1efpFeeSender : $D1efpFeeReceiving) * $FutBrodirection1, 2) + $future1;
     	$this->futureGroups[0]->setOpVal('Future', $future,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(FuturesSpotRef1 * D1efpFee * FutureBrodirection1, 2) + (FuturesSpotRef1 + points1)
-        $futureCounter =  round( ($FuturesSpotRef1 * $D1efpFee * $counterFutBrodirection1), 2) + ($FuturesSpotRef1 + $points1);
+        $futureCounter =  round( ($FuturesSpotRef1 * ($is_sender ? $D1efpFeeReceiving : $D1efpFeeSender) * $counterFutBrodirection1), 2) + ($FuturesSpotRef1 + $points1);
         $this->futureGroups[0]->setOpVal('Future', $futureCounter,!$is_sender);
     }
 }

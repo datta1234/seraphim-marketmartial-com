@@ -17,6 +17,7 @@ class TradeConfirmationController extends Controller
     public function index(Request $request,MarketType $marketType)
     {       
         $user = $request->user();
+        $this->authorize('listTradeConfirmations', TradeConfirmation::class);
     	$trade_confirmations = TradeConfirmation::where(function($q) use($user,$marketType)
         {
             $q->sentByMyOrganisation($user->organisation_id)

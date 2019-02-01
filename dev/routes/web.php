@@ -107,9 +107,9 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     Route::get('/previous-negotiations', 'PreviousDayController@getOldNegotiations')->name('previous-negotiations');
     Route::post('/previous-negotiations', 'PreviousDayController@refreshOldNegotiations')->name('previous-negotiations.refresh');
 
-	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
-    Route::resource('market-type', 'TradeScreen\MarketTypeController');
-    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
+	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController')->only(['index', 'store', 'destroy']);
+    Route::resource('market-type', 'TradeScreen\MarketTypeController')->only(['index', 'show']);
+    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController')->only(['index']);
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
 	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
@@ -127,14 +127,14 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
     );
 
-    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
-    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController')->only(['store', 'update', 'destroy']);
+    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController')->only(['store', 'update', 'destroy']);
     
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/repeat', 'TradeScreen\UserMarket\MarketNegotiationController@repeatProposal');
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/improve', 'TradeScreen\UserMarket\MarketNegotiationController@improveBest');
     
-    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
+    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController')->only(['store']);
 
     Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']

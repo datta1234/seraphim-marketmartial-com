@@ -277,9 +277,6 @@
                     case 'updated_at':
                         return this.castToMoment(item[key]);
                         break;
-                    case 'direction':
-                        return item[key] ? 'Buy' : 'Sell';
-                        break;
                     default:
                         return item[key];
                 }

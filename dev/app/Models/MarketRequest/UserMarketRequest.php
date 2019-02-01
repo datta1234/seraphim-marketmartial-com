@@ -1115,7 +1115,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "RISKY",
                     $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
@@ -1128,7 +1129,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1143,7 +1145,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "FLY",
                     $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
@@ -1158,7 +1161,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1173,7 +1177,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1183,7 +1188,8 @@ class UserMarketRequest extends Model
             case 'efp':
                 $exp_date = "Expiration Date";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "EFP"
                 ]);
@@ -1193,7 +1199,8 @@ class UserMarketRequest extends Model
                 $exp_date_2 = "Expiration Date 2";
                 $strike = "Strike";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date_1))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date_2))->format("My"),
@@ -1204,7 +1211,8 @@ class UserMarketRequest extends Model
                 $exp_date = "Expiration Date";
                 $strike = "Strike";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     strtoupper($this->tradeStructure->title),
                     $this->getDynamicItem($strike)
@@ -1215,13 +1223,24 @@ class UserMarketRequest extends Model
                 $cap = 'Cap';
                 $capVal = $this->getDynamicItem($cap);
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     strtoupper($this->tradeStructure->title),
                     ( $capVal == 0 ? "(Uncapped)" : "(".$capVal."x Cap)" )
                 ]);
             break;
         }
+    }
+
+    /**
+     * Notify subscribed users and removes subscription,
+     *
+     * @return void
+     */
+    public function getTradeablesTitle($unique = false) {
+        $tradeables = $this->userMarketRequestTradables;
+        return $tradeables->pluck('title')->when($unique, function($c){ return $c->unique(); })->implode(',');
     }
 
     /**
@@ -1486,7 +1505,11 @@ class UserMarketRequest extends Model
                         $data["strike"][] = $item->value;
                         break;
                     case 'Quantity':
-                        $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        if($group->is_selected || is_null($this->trade_negotiation_id)) {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        } else {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$tradeNegotiation->quantity.'m' : $tradeNegotiation->quantity;
+                        }
                         break;
                 }
             }

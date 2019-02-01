@@ -56,11 +56,12 @@
                     <div class="chat-actions">
                         <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
                             <template v-for="(option, index) in quick_message_options">
-                                <button @click="quick_message = option.message" 
-                                            type="submit" 
-                                            class="btn mm-generic-trade-button w-50 mb-1">
-                                        {{ option.title }}
-                                    </button>
+                                <button v-active-request 
+                                        @click="quick_message = option.message" 
+                                        type="submit" 
+                                        class="btn mm-generic-trade-button w-50 mb-1">
+                                    {{ option.title }}
+                                </button>
                             </template>
                             <textarea @keydown.enter.prevent="sendMessage"
                                       rows="6"
