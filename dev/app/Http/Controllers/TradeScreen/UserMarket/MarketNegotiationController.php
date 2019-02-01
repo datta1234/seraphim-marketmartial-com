@@ -12,25 +12,6 @@ use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationImproveBestRequest
 
 class MarketNegotiationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(UserMarket $userMarket)
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(UserMarket $userMarket)
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -82,33 +63,11 @@ class MarketNegotiationController extends Controller
         //broadCast new market request;
         $userMarket->fresh()->userMarketRequest->notifyRequested();
         if($marketNegotiation) {
-            return response()->json(['success'=>true,'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
+            return response()->json(['success'=>true, 'data'=>$marketNegotiation->preFormattedMarketNegotiation() ,'message'=>'']);
 
         } else {
             return response()->json(['success'=>false,'data'=>null ,'message'=>'There was a problem adding your levels'], 500);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(UserMarket $userMarket,MarketNegotiation $marketNegotiation)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MarketNegotiation $marketNegotiation)
-    {
-        //
     }
 
     /**

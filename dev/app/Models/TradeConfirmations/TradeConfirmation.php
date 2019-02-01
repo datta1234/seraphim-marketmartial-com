@@ -793,7 +793,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                 ]);
 
                 $organisation = $userMarket->user->organisation;
-                $organisation->notify("rebate_earned","You earned a commission",true);
+                $organisation->notify("rebate_earned","You earned a rebate",true);
                 Rebate::notifyOrganisationUpdate($organisation);
             }
 

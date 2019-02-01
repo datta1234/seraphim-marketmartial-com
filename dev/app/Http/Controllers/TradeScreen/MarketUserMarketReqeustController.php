@@ -54,18 +54,6 @@ class MarketUserMarketReqeustController extends Controller
         return response()->json($output);
     }   
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param  \App\Models\StructureItems\Market  $market
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Market $market)
-    {
-
-
-        
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -227,43 +215,6 @@ class MarketUserMarketReqeustController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Market $market, UserMarketRequest $marketRequest)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Market $market, UserMarketRequest $marketRequest)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\StructureItems\Market  $market
-     * @param  \App\Models\MarketRequest\UserMarketRequest  $marketRequest
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Market $market, UserMarketRequest $marketRequest)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\StructureItems\Market  $market
@@ -295,7 +246,7 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function actionTaken(Request $request, UserMarketRequest $userMarketRequest)
     {   
-         $this->authorize('actionTaken',$userMarketRequest);
+        $this->authorize('actionTaken',$userMarketRequest);
         if($request->has('action_needed')) {
             if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
                 $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));
