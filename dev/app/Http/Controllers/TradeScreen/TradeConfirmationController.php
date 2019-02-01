@@ -19,8 +19,12 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('phaseTwo', $tradeConfirmation);
-        $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));  
+        $tradeConfirmation->setAccount($user,$request->input('trading_account_id')); 
+        $exclude_list = array();
+        if(in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $exclude_list[] = 'Contract';
+        }
+    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
         try {
             $tradeConfirmation->phaseTwo();
         } catch(\App\Exceptions\SpotRefTooHighException $e) {
@@ -65,7 +69,9 @@ class TradeConfirmationController extends Controller
         $user = $request->user();
         $this->authorize('update',$tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-        $tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
+        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
+        }
 
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
         {
@@ -135,7 +141,9 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('dispute',$tradeConfirmation);
-        $tradeConfirmation->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
+        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmation->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
+        }
         $tradeConfirmation->save();
 
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)

@@ -211,7 +211,11 @@
                             <td v-else>
                                 {{ trade_confirmation.future_groups[key]['future'] }}
                             </td>
-                            <td>
+                            <td v-if="trade_confirmation.trade_structure_slug == 'efp' 
+                                || trade_confirmation.trade_structure_slug == 'efp_switch'">
+                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                            </td>
+                            <td v-else>
                                 <input  v-input-mask.number.decimal="{ precision: 2 }" 
                                         class="mm-blue-bg form-control" 
                                         v-model="trade_confirmation.future_groups[key]['contracts']" 

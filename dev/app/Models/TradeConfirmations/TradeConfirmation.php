@@ -696,17 +696,20 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
        }
    }
 
-    public function updateGroups($groups, $update_only = null)
+    public function updateGroups($groups, $update_only = null, $update_exclude = null)
     {
         if(!isset($update_only)) {
             $update_only = [];
+        }
+        if(!isset($update_exclude)) {
+            $update_exclude = [];
         }
         foreach ($groups as $group) 
         {
             $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
             foreach ($group['items'] as $item) 
             {
-                if( empty($update_only) || in_array($item['title'], $update_only)) {
+                if( (empty($update_only) || in_array($item['title'], $update_only)) && !in_array($item['title'], $update_exclude) ) {
                     $itemModel = $groupModel->tradeConfirmationItems()->where([
                         'trade_confirmation_group_id' => $groupModel->id,
                         'title'=>$item['title']
