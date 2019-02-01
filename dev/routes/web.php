@@ -127,8 +127,8 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
     );
 
-    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
-    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController')->only(['store', 'update', 'destroy']);
+    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController')->only(['store', 'update', 'destroy']);
     
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/repeat', 'TradeScreen\UserMarket\MarketNegotiationController@repeatProposal');
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');

@@ -807,14 +807,21 @@ class UserMarket extends Model
         // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
         $newMarketNegotiation->user_id = $user->id;
 
+
+        /*
+        *   This keeps changing... 
+        *   currently set as per [MM-902] 
+        *       traded on bid @ level   = set offer to traded bid level
+        *       traded on offer @ level = set bid to traded offer level
+        */
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->bid = $lastMarketNegotiation->bid;
+            $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
             $newMarketNegotiation->bid_qty = $quantity;
             
         }else
         {
-            $newMarketNegotiation->offer = $lastMarketNegotiation->offer;
+            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
             $newMarketNegotiation->offer_qty = $quantity;
         }
 
