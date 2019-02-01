@@ -24,7 +24,15 @@ class TradeConfirmationController extends Controller
         try {
             $tradeConfirmation->phaseTwo();
         } catch(\App\Exceptions\SpotRefTooHighException $e) {
-            return response()->json(['message' => $e->getMessage(), 'errors' => [ "Spot" => "Spot Ref Too High" ]], 422);
+            return response()->json([
+                'message' => 'Calculation error occured.', 
+                'errors' => [ 
+                    'trade_confirmation_data.structure_groups.'.$e->getCode() => [
+                        ['spot' => $e->getMessage()]
+                    ] 
+
+                ]
+            ], 422);
         }
 
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 

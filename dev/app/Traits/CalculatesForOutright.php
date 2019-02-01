@@ -20,7 +20,7 @@ trait CalculatesForOutright {
             $val = round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0);
             if($val === 0.0) {
                 // handle cant process, spotref too high
-                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High");
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
             }
             $this->optionGroups[0]->setOpVal('Contract', $val);
         }

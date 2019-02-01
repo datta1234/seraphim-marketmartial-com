@@ -19,14 +19,26 @@ trait CalculatesForOptionSwitch {
             $SpotRef1 = floatval($this->futureGroups[0]->getOpVal('Spot'));
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
             
-            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef1 *100), 0));
+            $val1 = round( $nominal1 / ($SpotRef1 *100), 0);
+            if($val1 === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
+            }
+
+            $this->optionGroups[0]->setOpVal('Contract', $val1);
         }
 
         if($singleStock2) {
             $SpotRef2 = floatval($this->futureGroups[1]->getOpVal('Spot'));
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
-            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef2 *100), 0));
+            $val2 = round( $nominal2 / ($SpotRef2 *100), 0);
+            if($val2 === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",1);
+            }
+
+            $this->optionGroups[1]->setOpVal('Contract', $val2);
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));

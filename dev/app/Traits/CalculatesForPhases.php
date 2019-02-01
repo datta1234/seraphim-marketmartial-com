@@ -7,7 +7,6 @@ trait CalculatesForPhases {
 	
 	public function phaseTwo()
 	{
-        // @TODO (NANI!) what do we do with var swap?
         switch ($this->tradeStructure->title) {
            case 'Outright':
                 $this->outrightTwo();
