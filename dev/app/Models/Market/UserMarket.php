@@ -792,7 +792,8 @@ class UserMarket extends Model
         $newMarketNegotiation->market_negotiation_id = $lastMarketNegotiation->id;
 
         //see what the trade negotiation was started
-        $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->first();
+        $lastTradeNegotiation = $lastMarketNegotiation->lastTradeNegotiation->getRoot();
+        // updated per [MM-902] this seemed to get the first trade, just to be sure we are resolving the root now
         
        
 
