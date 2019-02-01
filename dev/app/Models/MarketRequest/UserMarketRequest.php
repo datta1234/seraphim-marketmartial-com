@@ -1505,7 +1505,11 @@ class UserMarketRequest extends Model
                         $data["strike"][] = $item->value;
                         break;
                     case 'Quantity':
-                        $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        if($group->is_selected || is_null($this->trade_negotiation_id)) {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        } else {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$tradeNegotiation->quantity.'m' : $tradeNegotiation->quantity;
+                        }
                         break;
                 }
             }
