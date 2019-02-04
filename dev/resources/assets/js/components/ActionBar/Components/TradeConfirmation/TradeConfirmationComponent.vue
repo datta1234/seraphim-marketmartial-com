@@ -409,7 +409,7 @@
 
                 })
                 .catch(err => {
-                
+                    console.error(err);
                 }); 
             },
             setDefaultTradingAccount() {
@@ -432,7 +432,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
                 .catch(err => {
-                    console.log("Catching error", err);
+                    console.error(err);
                     this.loadErrors(err.errors);
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.$toasted.error(err.message);
@@ -456,6 +456,8 @@
                     this.$emit('close');
                 })
                 .catch(err => {
+                    console.error(err);
+                    this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;
@@ -476,7 +478,9 @@
                     this.new_errors.messages = [];
                 })
                 .catch(err => {
-                    
+                    console.error(err);
+                    this.loadErrors(err.errors);
+                    this.confirmationLoaded = true;
                     this.errors = err.errors;
                 });  
             },
@@ -489,11 +493,14 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.updateOldData();
                     /*this.errors = [];*/
+                    this.confirmationLoaded = true;
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     this.$emit('close');
                 })
                 .catch(err => {
+                    console.error(err);
+                    this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;
