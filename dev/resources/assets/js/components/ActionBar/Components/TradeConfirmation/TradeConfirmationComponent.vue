@@ -378,6 +378,10 @@
                     this.action_list.has_calculate = false;
                     this.action_list.has_dispute = false;
                 }
+
+                this.selected_trading_account = this.trading_accounts.find((item)=>{
+                    return item.market_id == this.trade_confirmation.market_id;
+                });
             },
             clearConfirmation()
             {
@@ -403,10 +407,6 @@
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     this.trading_accounts = response.data.trading_accounts;
-                    this.selected_trading_account = this.trading_accounts.find((item)=>{
-                        return item.market_id == this.trade_confirmation.market_id;
-                    });
-
                 })
                 .catch(err => {
                     console.error(err);
