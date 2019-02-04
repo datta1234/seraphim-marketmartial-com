@@ -378,6 +378,10 @@
                     this.action_list.has_calculate = false;
                     this.action_list.has_dispute = false;
                 }
+
+                this.selected_trading_account = this.trading_accounts.find((item)=>{
+                    return item.market_id == this.trade_confirmation.market_id;
+                });
             },
             clearConfirmation()
             {
@@ -403,13 +407,9 @@
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     this.trading_accounts = response.data.trading_accounts;
-                    this.selected_trading_account = this.trading_accounts.find((item)=>{
-                        return item.market_id == this.trade_confirmation.market_id;
-                    });
-
                 })
                 .catch(err => {
-                
+                    console.error(err);
                 }); 
             },
             setDefaultTradingAccount() {
@@ -432,7 +432,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                 })
                 .catch(err => {
-                    console.log("Catching error", err);
+                    console.error(err);
                     this.loadErrors(err.errors);
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.$toasted.error(err.message);
@@ -456,6 +456,8 @@
                     this.$emit('close');
                 })
                 .catch(err => {
+                    console.error(err);
+                    this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;
@@ -476,7 +478,9 @@
                     this.new_errors.messages = [];
                 })
                 .catch(err => {
-                    
+                    console.error(err);
+                    this.loadErrors(err.errors);
+                    this.confirmationLoaded = true;
                     this.errors = err.errors;
                 });  
             },
@@ -489,11 +493,14 @@
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.updateOldData();
                     /*this.errors = [];*/
+                    this.confirmationLoaded = true;
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     this.$emit('close');
                 })
                 .catch(err => {
+                    console.error(err);
+                    this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;

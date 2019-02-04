@@ -68,5 +68,20 @@ class UserMarketUpdateRequest extends FormRequest
         $validator->sometimes(['volatilities'], ['required_without_all:accept,is_on_hold,is_repeat', new QuotesVolatilities($userMarketRequest)], function ($input) use ($userMarketRequest) {
             return in_array($userMarketRequest->trade_structure_id, [2, 3, 4, 5, 8]);
         });
+
+        $is_on_hold = $this->input('is_on_hold') == true;
+        $accept = $this->input('accept') == true;
+        $is_repeat = $this->input('is_repeat') == true;
+        $last_negotiation = $this->user_market->lastNegotiation;
+        $bid = $this->input('bid');
+        $offer = $this->input('offer');
+        
+        $validator->after(function ($validator) use ($last_negotiation, $is_on_hold, $accept, $is_repeat, $bid, $offer) {
+            if(!$is_on_hold && !$accept && !$is_repeat) {
+                if( $bid <= $last_negotiation->bid && $offer >= $last_negotiation->offer) {
+                    $validator->errors()->add('levels', "Bid or Offer value needs to be improved");
+                }
+            }
+        });
     }
 }
