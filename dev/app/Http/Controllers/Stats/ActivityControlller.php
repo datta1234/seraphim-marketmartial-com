@@ -14,6 +14,7 @@ use App\Models\MarketRequest\UserMarketRequestItem;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\Stats\MyActivityYearRequest;
 use App\Http\Requests\Stats\CsvUploadDataRequest;
+use App\Http\Requests\Stats\SafexRollingDataRequest;
 use Validator;
 use Illuminate\Validation\Rule;
 
@@ -266,9 +267,8 @@ class ActivityControlller extends Controller
         return response()->json(['data' => null,'message' => 'Safex data successfully uploaded.']);
     }
 
-    public function safexRollingData(Request $request)
+    public function safexRollingData(SafexRollingDataRequest $request)
     {
-        // @TODO - Change reqeust to a custom reqeust
         $safex_confirmation_data = SafexTradeConfirmation::basicSearch(
             $request->input('search'),
             $request->input('_order_by'),
