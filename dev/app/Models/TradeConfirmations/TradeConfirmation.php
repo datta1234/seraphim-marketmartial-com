@@ -92,9 +92,9 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function distputes()
+    public function disputes()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\Distpute','trade_confirmation_id');
+        return $this->hasMany('App\Models\TradeConfirmations\Dispute','trade_confirmation_id');
     }
 
     /**

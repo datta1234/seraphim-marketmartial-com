@@ -26,7 +26,7 @@ class TradeNegotiationSeeder extends Seeder
                    "traded" => true,
                    "quantity" => 500,//$is_offer ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
                    "is_offer" => $is_offer,
-                   "is_distpute" => false,
+                   "is_dispute" => false,
 
                ])->each(function($tradeNegotiation){
                     $tradeNegotiation->setUpConfirmation();

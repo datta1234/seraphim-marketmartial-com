@@ -23,7 +23,7 @@ export default class TradeNegotiation extends BaseModel {
             user_market_id: "",
 		    traded: false,
 		    is_offer: null,
-		    is_distpute: false,
+		    is_dispute: false,
             sent_by_me: false,
             sent_to_me: false,
 		    created_at: moment(),
@@ -87,7 +87,7 @@ export default class TradeNegotiation extends BaseModel {
 			quantity: this.quantity,
 			traded: !!this.traded,
 			is_offer: !!this.is_offer,
-			is_distpute: this.is_distpute
+			is_dispute: this.is_dispute
         };
     }
 
