@@ -59,7 +59,7 @@
         
         <b-row class="mb-1">
             <b-col cols="10">
-                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger text-center">
                     {{ error[0] }}
                 </b-col>
                 <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>

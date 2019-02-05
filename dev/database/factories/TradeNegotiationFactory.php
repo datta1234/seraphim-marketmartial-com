@@ -23,6 +23,6 @@ $factory->define(App\Models\Trade\TradeNegotiation::class, function (Faker $fake
 			"traded" => rand(0,1) == 1,
 			"quantity" => rand(0,300),
 			"is_offer" => rand(0,1) == 1,
-			"is_distpute" => false
+			"is_dispute" => false
     ];
 });

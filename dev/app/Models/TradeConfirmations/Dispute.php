@@ -4,13 +4,13 @@ namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Distpute extends Model
+class Dispute extends Model
 {
 	/**
 	 * @property integer $id
 	 * @property integer $send_user_id
 	 * @property integer $receiving_user_id
-	 * @property integer $distpute_status_id
+	 * @property integer $dispute_status_id
 	 * @property integer $trade_confirmation_id
 	 * @property string $title
 	 * @property \Carbon\Carbon $created_at
@@ -22,7 +22,7 @@ class Distpute extends Model
      *
      * @var string
      */
-    protected $table = 'distputes';
+    protected $table = 'disputes';
 
     /**
      * The attributes that are mass assignable.
@@ -37,9 +37,9 @@ class Distpute extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function distputeStatuses()
+    public function disputeStatuses()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\DistputeStatus','distpute_status_id');
+        return $this->belongsTo('App\Models\TradeConfirmations\DisputeStatus','dispute_status_id');
     }
 
     /**

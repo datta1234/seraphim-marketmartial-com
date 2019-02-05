@@ -187,18 +187,18 @@ class User extends Authenticatable
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function sendDistputes()
+    public function sendDisputes()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\Distpute','send_user_id');
+        return $this->hasMany('App\Models\TradeConfirmations\Dispute','send_user_id');
     }
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function receivingDistputes()
+    public function receivingDisputes()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\Distpute','receiving_user_id');
+        return $this->hasMany('App\Models\TradeConfirmations\Dispute','receiving_user_id');
     }
 
     /**
