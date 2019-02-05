@@ -19,7 +19,7 @@ class TradeNegotiation extends Model
 	 * @property double $quantity
 	 * @property double $traded
 	 * @property boolean $is_offer
-	 * @property boolean $is_distpute
+	 * @property boolean $is_dispute
      * @property boolean $no_cares
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
@@ -38,7 +38,7 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity','is_offer', 'is_distpute', 'no_cares',
+        'quantity','is_offer', 'is_dispute', 'no_cares',
     ];
 
     /**
@@ -202,7 +202,7 @@ class TradeNegotiation extends Model
             "traded"                => $this->traded,
             "trade_negotiation_id"  => $this->trade_negotiation_id,
             "is_offer"              => $this->is_offer,
-            "is_distpute"           => $this->is_distpute,
+            "is_dispute"           => $this->is_dispute,
             "sent_by_me"            => $sentByMe,
             'sent_to_me'            => $sentToMe
         ];

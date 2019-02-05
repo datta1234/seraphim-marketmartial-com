@@ -83,7 +83,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                 // $tradeNegotiation = $marketNegotiation->addTradeNegotiation($sourceNegotiation->user, [
                 //     "quantity"      =>  $marketNegotiation->cond_buy_best ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
                 //     "is_offer"      =>  $marketNegotiation->cond_buy_best,
-                //     "is_distpute"   =>  false,
+                //     "is_dispute"   =>  false,
                 // ]);
 
                 // notify users with updated data

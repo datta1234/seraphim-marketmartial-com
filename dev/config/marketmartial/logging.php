@@ -81,8 +81,8 @@ return [
         *   TradeConfirmations
         */
         // App\Models\TradeConfirmations\BookedTrade::class,
-        App\Models\TradeConfirmations\Distpute::class,
-        // App\Models\TradeConfirmations\DistputeStatus::class,
+        App\Models\TradeConfirmations\Dispute::class,
+        // App\Models\TradeConfirmations\DisputeStatus::class,
         App\Models\TradeConfirmations\TradeConfirmation::class,
         App\Models\TradeConfirmations\TradeConfirmationGroup::class,
         App\Models\TradeConfirmations\TradeConfirmationItem::class,

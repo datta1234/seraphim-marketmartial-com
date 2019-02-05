@@ -280,8 +280,8 @@ export default class TradeConfirmation extends BaseModel {
     canDisputeContracts() {
         let disputableStatuses = [
             "Pending: Reciever Confirmation",
-            "Disiputed: By Reciever",
-            "Disiputed: By Sender",
+            "Disputed: By Reciever",
+            "Disputed: By Sender",
         ];
 
         return  disputableStatuses.indexOf(this.state) > -1;
@@ -297,8 +297,8 @@ export default class TradeConfirmation extends BaseModel {
         let disputableStatuses = [
             "Pending: Initiate Confirmation",
             "Pending: Reciever Confirmation",
-            "Disiputed: By Reciever",
-            "Disiputed: By Sender",
+            "Disputed: By Reciever",
+            "Disputed: By Sender",
         ];
             
         return  disputableStatuses.indexOf(this.state) > -1;
