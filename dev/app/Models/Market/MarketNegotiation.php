@@ -172,7 +172,7 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketNegotiationSource($attr)
+    public function marketNegotiationSource($attr, $include_prior_traded_levels = true)
     {
         $table = $this->table;
         $parentKey = $this->marketNegotiationParent()->getForeignKey();
@@ -198,7 +198,7 @@ class MarketNegotiation extends Model
         ");
         $source = self::hydrate($source)->first();
         // try resolve the parent post trade
-        if($source->market_negotiation_id == null) {
+        if($include_prior_traded_levels == true && $source->market_negotiation_id == null) {
             $sourceNegotiation = $source->resolveTradedParent();
             // as long as there is source found with the same value on the bid/offer (that is traded)
             if($sourceNegotiation != null && $sourceNegotiation->isTraded() && floatval($sourceNegotiation->{$attr}) === floatval($source->{$attr})) {
@@ -1054,16 +1054,13 @@ class MarketNegotiation extends Model
             {
                  // find out who the the negotiation is sent to based of who set the level last
                 $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
-                $sourceMarketNegotiation = $this->marketNegotiationSource($attr);
+                $sourceMarketNegotiation = $this->marketNegotiationSource($attr, false);
                 $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
                 $tradeNegotiation->traded = false;
             }else
             {
-
                 $counterNegotiation = $this->tradeNegotiations->last();
 
-
-                
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
