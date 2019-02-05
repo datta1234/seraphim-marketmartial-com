@@ -51,7 +51,7 @@
                             <b-col>
                                 <b-row>
                                     <b-col cols="3" class="text-center">
-                                        ({{ negotiation.bid_qty ? negotiation.bid_qty : '&nbsp;-&nbsp;' }})&nbsp;&nbsp;{{ negotiation.bid ? negotiation.bid : '&nbsp;-&nbsp;' }}&nbsp;/&nbsp;{{ negotiation.offer ? negotiation.offer : '&nbsp;-&nbsp;' }}&nbsp;&nbsp;({{ negotiation.offer_qty ? negotiation.offer_qty : '&nbsp;-&nbsp;' }})
+                                        ({{ negotiation.bid_qty ? negotiation.bid_qty : '&nbsp;-&nbsp;' }})&nbsp;&nbsp;<span v-bind:class="{ 'user-action-dark': negotiation.owns_bid }">{{ negotiation.bid ? negotiation.bid : '&nbsp;-&nbsp;' }}</span>&nbsp;/&nbsp;<span v-bind:class="{ 'user-action-dark': negotiation.owns_offer }">{{ negotiation.offer ? negotiation.offer : '&nbsp;-&nbsp;' }}</span>&nbsp;&nbsp;({{ negotiation.offer_qty ? negotiation.offer_qty : '&nbsp;-&nbsp;' }})
                                     </b-col>
                                 </b-row>
                             </b-col>

@@ -17722,6 +17722,10 @@ input:checked + .slider:before {
   color: #EBC300;
 }
 
+.user-action-dark {
+  color: #b5980e;
+}
+
 .market-tab-state .is-maker {
   color: #37A53A;
 }
