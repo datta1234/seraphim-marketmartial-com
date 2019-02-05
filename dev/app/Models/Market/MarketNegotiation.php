@@ -185,7 +185,7 @@ class MarketNegotiation extends Model
                     SELECT @id AS _id, @attr as _attr, (
                         SELECT @id := $parentKey FROM $table WHERE id = _id
                     ) as parent_id, (
-                        SELECT @attr := $att FROM $table WHERE id = _id
+                        SELECT @attr := IFNULL($att, 0.00) FROM $table WHERE id = _id
                     ) as parent_attr
                     FROM (
                         SELECT @id := $id, @attr := $value
