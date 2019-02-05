@@ -4,7 +4,7 @@ namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DistputeStatus extends Model
+class DisputeStatus extends Model
 {
 	/**
 	 * @property integer $id
@@ -18,7 +18,7 @@ class DistputeStatus extends Model
      *
      * @var string
      */
-    protected $table = 'distpute_status';
+    protected $table = 'dispute_status';
 
     /**
      * The attributes that are mass assignable.
@@ -33,8 +33,8 @@ class DistputeStatus extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function distputes()
+    public function disputes()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\Distpute','distpute_status_id');
+        return $this->hasMany('App\Models\TradeConfirmations\Dispute','dispute_status_id');
     }
 }

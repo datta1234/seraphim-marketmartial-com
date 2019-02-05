@@ -29,7 +29,7 @@ class TradeNegotiationStoreRequest extends FormRequest
         return [
             'is_offer' => ['required','boolean',new PreventSelfTrade($this->market_negotiation,$this->user())],
             'quantity' => 'required|numeric',
-            'is_distpute' => 'boolean',
+            'is_dispute' => 'boolean',
         ];
     }
 
