@@ -173,14 +173,17 @@ class PreviousDayController extends Controller
     {
         $this->authorize('refreshLevels', MarketNegotiation::class);
         \Config::set('loading_previous_day', true); // set request context
-        $data = MarketNegotiation::whereHas('user', function($q){
-            $q->where('organisation_id', \Auth::user()->organisation_id);
+        $org_id = \Auth::user()->organisation_id;
+        $data = MarketNegotiation::whereHas('user', function($q) use ($org_id){
+            $q->where('organisation_id', $org_id);
         })
         ->previousDayRefreshable()
         ->get()
-        ->map(function($negotiation) {
+        ->map(function($negotiation) use ($org_id) {
             $item = $negotiation->setOrgContext()->preFormattedMarketNegotiation();
             $item['market_request_summary'] = $negotiation->userMarket->userMarketRequest->getSummary();
+            $item['owns_bid'] = $negotiation->marketNegotiationSource('bid')->user->organisation_id == $org_id;
+            $item['owns_offer'] = $negotiation->marketNegotiationSource('offer')->user->organisation_id == $org_id;
             return $item;
         });
         \Config::set('loading_previous_day', false); // reset request context
