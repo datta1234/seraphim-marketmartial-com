@@ -77,7 +77,7 @@
                 });
                 
                 let foundIndex = available.findIndex(x => {
-                    return this.defaults[this.condition.alias] && x.value.value == this.defaults[this.condition.alias].value;
+                    return this.defaults[this.condition.alias] && x.value.value === this.defaults[this.condition.alias].value;
                 });
 
                 // if its not found in the available list

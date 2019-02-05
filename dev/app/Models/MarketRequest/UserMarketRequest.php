@@ -920,7 +920,7 @@ class UserMarketRequest extends Model
         $involved = false;
         if($this->chosen_user_market_id != null) {
             $last_negotiation = $this->chosenUserMarket->lastNegotiation;
-            if( 
+            if(
                 ($last_negotiation->user && $last_negotiation->user->organisation_id == $current_org_id)
                 || ($last_negotiation->counterUser && $last_negotiation->counterUser->organisation_id == $current_org_id)
             ) {
