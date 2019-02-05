@@ -10,7 +10,7 @@ return [
 	],
 	[
         'id' => 3,
-        'title' => 'Disiputed: By Reciever'
+        'title' => 'Disputed: By Reciever'
 	],
 	[
         'id' => 4,
@@ -18,7 +18,7 @@ return [
 	],
 	[
         'id' => 5,
-        'title' => 'Disiputed: By Sender'
+        'title' => 'Disputed: By Sender'
 	],
     [
         'id' => 6,

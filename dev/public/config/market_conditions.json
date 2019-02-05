@@ -71,7 +71,7 @@
                     },
                     {
                         "value": {
-                            "value": null, 
+                            "value": "", 
                             "sets": [
                                 {
                                     "alias": "cond_fok_spin",

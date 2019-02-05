@@ -62,7 +62,8 @@
                 // this is not org involvement any more - its "is the market pending for others"
                 return !this.marketRequest.attributes.market_open && (
                     this.marketRequest.attributes.involved
-                    || this.marketRequest.myOrgInvolved()
+                    // No longer seem needed, was removed with taks [MM-919]
+                    /*|| this.marketRequest.myOrgInvolved()*/
                     || (
                         this.marketRequest.is_interest
                         && (
