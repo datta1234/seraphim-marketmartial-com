@@ -20,8 +20,9 @@ Auth::routes();
 */
 Route::get('/', 'PageController@index')->name('home');
 Route::get('/contact', 'PageController@contact')->name('contact');
-Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
+Route::get('/about', 'PageController@about')->name('about');
+Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
 
 // Keepalive For Trade Screen
 Route::get('/ping', function(\Illuminate\Http\Request $request) {

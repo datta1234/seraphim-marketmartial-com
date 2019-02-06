@@ -107,6 +107,10 @@
 *   Stats
 */
 
+/*
+* fee page
+*/
+
 /* 
 * bootstrap overrides
 */
@@ -167,6 +171,10 @@ a.mm-base {
 
 /*
 *   Stats
+*/
+
+/*
+* fee page
 */
 
 /* 
@@ -10676,10 +10684,53 @@ body .page-title h1 {
 	background-size: cover; */
 }
 
+table.borderless {
+  border: none;
+}
+
+table.borderless td,
+table.borderless th {
+  border: none;
+}
+
+table.shadowless {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+table.slim td,
+table.slim th {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+
 .card {
   border: none;
   -webkit-box-shadow: 4px 4px 9px -4px #000000;
           box-shadow: 4px 4px 9px -4px #000000;
+}
+
+.card.card-dark {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body {
+  background-color: #1c3641;
+  color: #ffffff;
+}
+
+.card.card-dark .card-body table {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body .card-title {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body .card-text {
+  color: #ffffff;
 }
 
 .card .card-header {
@@ -18661,6 +18712,80 @@ body > .popover > .arrow {
 
 .mm-blue-bg.form-control {
   background: rgba(35, 88, 189, 0.1);
+}
+
+.fee-title {
+  background-color: #234452;
+  padding: 1em 1.5em;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+}
+
+table.fee-table {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+table.fee-table > tr > td,
+table.fee-table > tbody > tr > td {
+  border-top: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #FFF;
+}
+
+table.fee-table > tr > td:first-child,
+table.fee-table > tbody > tr > td:first-child {
+  border-left: none;
+}
+
+table.fee-table > tr > td:last-child,
+table.fee-table > tbody > tr > td:last-child {
+  border-right: none;
+}
+
+table.fee-table > tr > td.bb-0,
+table.fee-table > tbody > tr > td.bb-0 {
+  border-bottom: none;
+}
+
+table.fee-table > tr:first-child > td,
+table.fee-table > tbody > tr:first-child > td {
+  border-top: none;
+}
+
+table.fee-table > tr:last-child > td,
+table.fee-table > tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+table.fee-table > tr.fee-header > td,
+table.fee-table > tbody > tr.fee-header > td {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+table.fee-table > tr.fee-row > td,
+table.fee-table > tbody > tr.fee-row > td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.fee-table > tr.fee-row > td:first-child,
+table.fee-table > tbody > tr.fee-row > td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+table.fee-table > tr td.fee-orange,
+table.fee-table > tbody > tr td.fee-orange {
+  color: #ffc100;
+}
+
+table.fee-table > tr td.fee-green,
+table.fee-table > tbody > tr td.fee-green {
+  color: #00b24b;
 }
 
 @font-face {
