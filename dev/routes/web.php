@@ -23,6 +23,7 @@ Route::get('/contact', 'PageController@contact')->name('contact');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
 Route::get('/about', 'PageController@about')->name('about');
 Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
+Route::get('/fsp-disclosures', 'PageController@fspDisclosures')->name('fsp_disclosures');
 
 // Keepalive For Trade Screen
 Route::get('/ping', function(\Illuminate\Http\Request $request) {
@@ -242,4 +243,13 @@ Route::group(['middleware' => ['auth']], function() {
 		Route::get('assemble/oldstyle', function () {
         return view('assemble.oldstyle')->with(['is_admin_update'=>false]);
     }); 
+});
+
+
+Route::group(['prefix' => 'document'], function() {
+    Route::get('terms-and-conditions', 'PDFController@termsAndConditions');
+    Route::get('privacy-policy', 'PDFController@privacyPolicy');
+    Route::get('conflicts-of-interest-policy', 'PDFController@conflictsOfInterestPolicy');
+
+    Route::get('trading-spreads-and-fees', 'PDFController@tradingSpreads', [ 'middleware' => 'auth' ]);
 });
