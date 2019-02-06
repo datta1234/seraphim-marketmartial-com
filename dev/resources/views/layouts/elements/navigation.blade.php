@@ -70,10 +70,9 @@
 							<a class="dropdown-item" href="{{ route('email.edit') }}">Email Settings</a>
 							<a class="dropdown-item" href="{{ route('trade_settings.edit') }}">Trade Settings</a>
 							@if(Auth::user()->verifiedActiveUser() )
-								<a class="dropdown-item" href="{{ route('rebate_summary.index') }}">
-									Rebates Summary
-								</a>
+								<a class="dropdown-item" href="{{ route('rebate_summary.index') }}">Rebates Summary</a>
 							@endif
+							<a class="dropdown-item" href="{{ route('fee_structures') }}">Fee Structure</a>
 						</div>
 					</li>
 				@endif
