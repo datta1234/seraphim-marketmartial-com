@@ -5,6 +5,7 @@ namespace App\Http\Requests\TradeScreen;
 use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\ItemRule;
+use Illuminate\Validation\Rule;
 
 class TradeConfirmationStoreRequest extends FormRequest
 {
@@ -45,6 +46,10 @@ class TradeConfirmationStoreRequest extends FormRequest
             
             $rules[$item] = [new ItemRule()];
         }
+
+
+        // stop cross account trades, only allow MY trading accounts through
+        $rules['trading_account_id'] = ['required',Rule::exists('trading_accounts', 'id')->where('user_id', $this->user()->id)];
 
         return $rules;
     }
