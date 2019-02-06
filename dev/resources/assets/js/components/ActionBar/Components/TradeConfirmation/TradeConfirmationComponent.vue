@@ -254,9 +254,9 @@
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account }}
                         </option>
                     </b-form-select>
-                    <b-row v-if="errors && errors['trading_account']" class="text-center mt-2 mb-2">
+                    <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
                         <b-col cols="12">
-                            <p class="text-danger mb-0">{{ errors['trading_account'] }}</p>
+                            <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
                         </b-col>
                     </b-row>
                     <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
@@ -273,9 +273,9 @@
                         <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account }}
                         </option>
                     </b-form-select>
-                    <b-row v-if="errors && errors['trading_account']" class="text-center mt-2 mb-2">
+                    <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
                         <b-col cols="12">
-                            <p class="text-danger mb-0">{{ errors['trading_account'] }}</p>
+                            <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
                         </b-col>
                     </b-row>
                     <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
@@ -419,30 +419,39 @@
             },
             phaseTwo: function()
             {
-                EventBus.$emit('loading', 'confirmationSubmission');
+                EventBus.$emit('loading', 'confirmationSubmission', true);
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
                     /*this.errors = [];*/
+                    console.log("here 4");
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
 
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
+                    console.log("here 3");
                 })
                 .catch(err => {
+                    console.log("here 1");
                     console.error(err);
+                    console.log("here 1");
                     this.loadErrors(err.errors);
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    console.log("here 1");
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
+                    console.log("here 1");
                     this.$toasted.error(err.message);
+                    console.log("here 1");
                     this.confirmationLoaded = true;
+                    console.log("here 1");
                     this.errors = err.errors;
+                    console.log("here 2");
                 });
             },
             send: function()
             {
-                EventBus.$emit('loading', 'confirmationSubmission');
+                EventBus.$emit('loading', 'confirmationSubmission', true);
                 this.confirmationLoaded = false;
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
@@ -452,26 +461,26 @@
                     this.new_errors.messages = [];
                     this.confirmationLoaded = true;
                     this.updateOldData();
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.$emit('close');
                 })
                 .catch(err => {
                     console.error(err);
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
-                    EventBus.$emit('loading', 'confirmationSubmission');
                     this.errors = err.errors;
                 });  
             },
             dispute: function()
             {
-                EventBus.$emit('loading', 'confirmationSubmission');
+                EventBus.$emit('loading', 'confirmationSubmission', true);
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
                     this.updateOldData();
                     this.confirmationLoaded = true;
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.$emit('close');
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
@@ -482,15 +491,16 @@
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     this.errors = err.errors;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
             },
             confirm: function()
             {
-                EventBus.$emit('loading', 'confirmationSubmission');
+                EventBus.$emit('loading', 'confirmationSubmission', true);
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.updateOldData();
                     /*this.errors = [];*/
                     this.confirmationLoaded = true;
@@ -502,7 +512,7 @@
                     console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
-                    EventBus.$emit('loading', 'confirmationSubmission');
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.errors = err.errors;
                 });  
             },
@@ -517,30 +527,39 @@
               }
             }*/
             loadErrors(errors) {
+                console.log("inner 1");
                 Object.keys(errors).forEach(error_key => {
+                    console.log("inner 2");
                     let error_key_array = error_key.split('.');
                     let groups_index = error_key_array.findIndex(x=>{return x == 'structure_groups'});
                     let group = '';
                     if(groups_index !== -1 && error_key_array.length > groups_index) {
                         group += error_key_array[groups_index+1];
                     }
+                    console.log("inner 3");
 
                     errors[error_key].forEach(err=>{
-                        let item_key = Object.keys(err)[0];
+                        console.log("inner 4");
+                        let item_key = (err.constructor == String ? error_key : Object.keys(err)[0]);
+                        let item = (err.constructor == String ? err : err[item_key]);
+
                         if(this.new_errors.fields.findIndex(x=>{return x == group+'.'+item_key}) == -1  ) {
                             this.new_errors.fields.push(group+'.'+item_key);
                         }
 
-                        if(this.new_errors.messages.findIndex(x=>{return x == err[item_key]}) == -1  ) {
-                            this.new_errors.messages.push(err[item_key]);
+                        if(this.new_errors.messages.findIndex(x=>{return x == item}) == -1  ) {
+                            this.new_errors.messages.push(item);
                         }
                     });
+                    console.log("inner 5");
                 });
+                console.log("inner last");
             }
         },
         mounted() {
             this.base_url = axios.defaults.baseUrl;
             this.getTradingAccounts();
+            this.$on('hide', this.clearConfirmation);
         }
     }
 </script>

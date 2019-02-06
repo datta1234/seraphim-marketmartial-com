@@ -19,7 +19,7 @@ trait CalculatesForEfpSwitch {
         $tradeNegotiationPoints = $this->tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
 
         $points1 = $this->futureGroups[0]->userMarketRequestGroup->is_selected ? $this->futureGroups[0]->userMarketRequestGroup->volatility->volatility : $tradeNegotiationPoints;
-        $points2 = $this->futureGroups[1]->userMarketRequestGroup->is_selected ? $this->futureGroups[0]->userMarketRequestGroup->volatility->volatility : $tradeNegotiationPoints;
+        $points2 = $this->futureGroups[1]->userMarketRequestGroup->is_selected ? $this->futureGroups[1]->userMarketRequestGroup->volatility->volatility : $tradeNegotiationPoints;
 
         $future1 = $closingspotref1 + $points1;
         $future2 = $closingspotref2 + $points2;
@@ -27,7 +27,7 @@ trait CalculatesForEfpSwitch {
         $future_contracts/*cell(21,6)*/ = $this->quantity;
 
         $isOffer1 = $this->futureGroups[0]->getOpVal('is_offer',true);
-        $isOffer2 = $this->futureGroups[0]->getOpVal('is_offer',true);
+        $isOffer2 = $this->futureGroups[1]->getOpVal('is_offer',true);
 
         $this->load(['futureGroups']);
 

@@ -49,7 +49,10 @@ class TradeConfirmationStoreRequest extends FormRequest
 
 
         // stop cross account trades, only allow MY trading accounts through
-        $rules['trading_account_id'] = ['required',Rule::exists('trading_accounts', 'id')->where('user_id', $this->user()->id)];
+        $rules['trading_account_id'] = [
+            // 'required',
+            Rule::exists('trading_accounts', 'id')->where('user_id', $this->user()->id)
+        ];
 
         return $rules;
     }
