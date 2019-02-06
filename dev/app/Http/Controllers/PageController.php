@@ -29,6 +29,16 @@ class PageController extends Controller
         return view('pages.contact');
     }
 
+    public function feeStructures()
+    {
+        return view('pages.fee_structures');
+    }
+
+    public function fspDisclosures()
+    {
+        return view('pages.fsp_disclosures');
+    }
+
     public function contactMessage(ContactUsRequest $request) {
 
         Mail::to(config("mail.admin_email"))->send(new ContactUsMail($request->all()));

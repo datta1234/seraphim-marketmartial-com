@@ -10,7 +10,7 @@
 			<div class="col col-lg-8 mt-2 mb-2 pt-2">
 				<div class="footer-links-block">
 					<!-- <a class="footer-link active mr-4" href="#">Colours Explained</a> -->
-					<a class="footer-link active mr-4" href="#">Fee Structure</a>
+					
 					<!-- <a class="footer-link active mr-4" href="#">Conditions Explained</a> -->
 				</div>
 			</div>

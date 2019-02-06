@@ -1,4 +1,4 @@
-<div class="card mt-5">
+<div class="card mt-5{{ isset($class) ? ' '.$class : '' }}">
   <div class="card-header text-center">
 	{{ $header }}
   </div>

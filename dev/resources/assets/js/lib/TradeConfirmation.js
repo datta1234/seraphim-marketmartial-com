@@ -159,7 +159,7 @@ export default class TradeConfirmation extends BaseModel {
         console.log("calculate");
         if(!trading_account) {
             return new Promise((resolve, reject) => {
-                reject({errors:{'trading_account':"Trading account is required"}});
+                reject({errors:{'trading_account_id':["Trading account is required"]}});
             });
         }
         return new Promise((resolve, reject) => {
