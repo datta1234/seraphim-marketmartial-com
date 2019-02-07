@@ -101,9 +101,9 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmationParents()
+    public function tradeConfirmationParent()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
     }
 
     /**
@@ -112,7 +112,7 @@ class TradeConfirmation extends Model
     */
     public function tradeConfirmationChildren()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
     }
 
 
