@@ -39,8 +39,8 @@ return [
 		],
 		"singles"=>
 		[
-			"big_leg"=>0.05,
-			"small_leg"=>0.05
+			"big_leg"=>0.035,
+			"small_leg"=>0.035
 
 		]
 	],

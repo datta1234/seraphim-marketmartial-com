@@ -161,6 +161,7 @@
                 this.table_data[index].filter_market = null;
                 this.table_data[index].filter_expiration = null;
                 this.table_data[index].search = null;
+                this.loadTableData(index, false);
             },
             toggleState(toggle_id) {
                 if(toggle_id.indexOf(this.accordion_base_id) !== -1) {

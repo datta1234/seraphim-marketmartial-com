@@ -48,10 +48,12 @@ class ActivityControlller extends Controller
 
         $trade_confirmations = TradeConfirmation::select(
             DB::raw("concat(MONTH(trade_confirmations.updated_at),'-',YEAR(trade_confirmations.updated_at))  as month"),
-            DB::raw("count(*) as total"),"markets.title")
-                ->leftJoin("markets", "trade_confirmations.market_id", "=", "markets.id")
-                ->groupBy("markets.title",'month')
-                ->where('trade_confirmation_status_id', 4);
+            DB::raw("count(*) as total"),
+            "markets.title"
+        )
+        ->leftJoin("markets", "trade_confirmations.market_id", "=", "markets.id")
+        ->groupBy("markets.title",'month')
+        ->where('trade_confirmation_status_id', 4);
 
         $years = TradeConfirmation::select(
             DB::raw("DISTINCT YEAR(trade_confirmations.updated_at) as year")
