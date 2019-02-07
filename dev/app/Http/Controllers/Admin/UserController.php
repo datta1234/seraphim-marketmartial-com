@@ -145,8 +145,8 @@ class UserController extends Controller
             ]);
 
             if($user->organisation->verified == false) {
-                // Creates the default brokerage fees for the organisation
-                $user->organisation->setUpDefaultBrokerageFees();
+/*                // Creates the default brokerage fees for the organisation
+                $user->organisation->setUpDefaultBrokerageFees();*/
                 // verify the organisation if it is not verified and create Slack channel
                 $organisation_update_result = $user->organisation->update([
                     'verified' => $request->input('verified'),

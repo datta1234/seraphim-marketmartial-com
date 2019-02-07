@@ -101,9 +101,9 @@ class TradeConfirmation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmationParents()
+    public function tradeConfirmationParent()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
     }
 
     /**
@@ -112,7 +112,7 @@ class TradeConfirmation extends Model
     */
     public function tradeConfirmationChildren()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','trade_confirmation_id');
     }
 
 
@@ -615,7 +615,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     "is_seller" => true,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-            } else if($item->title == "is_offer" || $item->title == "is_offer 1" || $item->title == "is_offer 2") {
+            } else if($item->title == "is_offer") {
                 $seller_value = $tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
                 $buyer_value = $tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id); 
                 
@@ -625,11 +625,6 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                 } else {
                     $seller_is_offer = null;
                     $buyer_is_offer = null;
-                }
-
-                if($item->title == "is_offer 2") {
-                    $seller_is_offer = !$seller_is_offer;
-                    $buyer_is_offer = !$buyer_is_offer;
                 }
 
                 $tradeGroup->tradeConfirmationItems()->create([
@@ -644,6 +639,36 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     'item_id' => $item->id,
                     'title' => $item->title,
                     'value' =>  $buyer_is_offer,
+                    "is_seller" => false,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+            } else if($item->title == "is_offer 1" || $item->title == "is_offer 2") {
+                // if BUY roll - buying long further dated leg and selling near dated leg
+                // if SELL roll - Selling long further dated leg and buying near dated leg
+                $is_offer = $tradeNegotiation->getRoot()->is_offer; // is_offer true means buying
+
+                if($item->title == "is_offer 1") {
+                    $sender_is_offer = $is_offer ? false : true;
+                    $receiver_is_offer = !$sender_is_offer;
+                }
+
+                if($item->title == "is_offer 2") {
+                    $sender_is_offer = $is_offer ? true : false;
+                    $receiver_is_offer = !$sender_is_offer;
+                }           
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $sender_is_offer,
+                    "is_seller" => true,
+                    'trade_confirmation_group_id' => $tradeStructureGroup->id
+                ]);
+
+                $tradeGroup->tradeConfirmationItems()->create([
+                    'item_id' => $item->id,
+                    'title' => $item->title,
+                    'value' =>  $receiver_is_offer,
                     "is_seller" => false,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);

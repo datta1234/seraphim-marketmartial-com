@@ -16,7 +16,7 @@ class OrganisationTableSeeder extends Seeder
             $organisation = factory(App\Models\UserManagement\Organisation::class)->create([
                 "title" => "Organisation ".$i
             ]);
-            $organisation->setUpDefaultBrokerageFees();
+            /*$organisation->setUpDefaultBrokerageFees();*/
             $user = factory(App\Models\UserManagement\User::class)->create([
                 // 'verified'  =>  true,
                 // 'active'  =>  true,
