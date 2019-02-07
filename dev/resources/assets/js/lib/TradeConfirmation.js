@@ -168,7 +168,7 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation_data": this.prepareStore()
            })
            .then(response => {
-
+            //@TODO - change from update to just returning a new instance because new confirmation
             this.update(response.data.data);
             resolve();
         })

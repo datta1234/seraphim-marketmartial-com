@@ -434,19 +434,12 @@
                     console.log("here 3");
                 })
                 .catch(err => {
-                    console.log("here 1");
                     console.error(err);
-                    console.log("here 1");
                     this.loadErrors(err.errors);
-                    console.log("here 1");
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    console.log("here 1");
                     this.$toasted.error(err.message);
-                    console.log("here 1");
                     this.confirmationLoaded = true;
-                    console.log("here 1");
                     this.errors = err.errors;
-                    console.log("here 2");
                 });
             },
             send: function()

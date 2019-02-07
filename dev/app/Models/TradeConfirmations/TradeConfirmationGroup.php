@@ -73,9 +73,9 @@ class TradeConfirmationGroup extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function tradeConfirmationGroupParents()
+    public function tradeConfirmationGroupParent()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroup',
         	'trade_confirmation_group_id');
     }
 
@@ -85,7 +85,7 @@ class TradeConfirmationGroup extends Model
     */
     public function tradeConfirmationGroupChildren()
     {
-        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_group_id');
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_group_id');
     }
 
     public function preFormatted($is_sender = null)
