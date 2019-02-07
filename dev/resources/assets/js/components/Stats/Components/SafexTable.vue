@@ -181,6 +181,7 @@
                 this.table_data.param_options.expiration = null;
                 this.table_data.param_options.nominal = null;
                 this.table_data.param_options.underlying = null;
+                this.loadTableData();
             },
             loadTableData() {
                 this.table_data.loaded = false;
