@@ -51,7 +51,7 @@ class TradeConfirmationPolicy
         }
 
         $child_trade_confirmation = TradeConfirmation::where('trade_confirmation_id', $tradeConfirmation->id)->exists();
-        if(!$child_trade_confirmation) {
+        if($child_trade_confirmation) {
             return false; 
         }
 
@@ -85,7 +85,7 @@ class TradeConfirmationPolicy
         }
 
         $child_trade_confirmation = TradeConfirmation::where('trade_confirmation_id', $tradeConfirmation->id)->exists();
-        if(!$child_trade_confirmation) {
+        if($child_trade_confirmation) {
             return false; 
         }
 
@@ -119,7 +119,7 @@ class TradeConfirmationPolicy
         }
 
         $child_trade_confirmation = TradeConfirmation::where('trade_confirmation_id', $tradeConfirmation->id)->exists();
-        if(!$child_trade_confirmation) {
+        if($child_trade_confirmation) {
             return false; 
         }
 
@@ -153,7 +153,7 @@ class TradeConfirmationPolicy
         }
 
         $child_trade_confirmation = TradeConfirmation::where('trade_confirmation_id', $tradeConfirmation->id)->exists();
-        if(!$child_trade_confirmation) {
+        if($child_trade_confirmation) {
             return false; 
         }
 

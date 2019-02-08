@@ -214,7 +214,6 @@ class TradeConfirmation extends Model
     {
         $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
-
         return [
             'id'                        => $this->id,
             'parent_id'                 => $this->trade_confirmation_id,

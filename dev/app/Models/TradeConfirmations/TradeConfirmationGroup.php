@@ -3,6 +3,7 @@
 namespace App\Models\TradeConfirmations;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TradeConfirmations\TradeConfirmationItem;
 
 class TradeConfirmationGroup extends Model
 {
@@ -90,6 +91,10 @@ class TradeConfirmationGroup extends Model
 
     public function preFormatted($is_sender = null)
     {
+        $parent_group_items = null;
+        if(!is_null($this->trade_confirmation_group_id)) {
+            $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)->get();
+        }
         return [
             'id'                            => $this->id,
             'is_options'                    => $this->is_options,
@@ -102,8 +107,12 @@ class TradeConfirmationGroup extends Model
                 ->orWhere('is_seller',$is_sender);
             })
             ->get()
-            ->map(function($item){
-                return $item->preFormatted();
+            ->map(function($item) use ($parent_group_items) {
+                if(is_null($parent_group_items)) {
+                    return $item->preFormatted();
+                } else {
+                    return $item->preFormatted($parent_group_items->firstWhere('title', $item->title));
+                }
             })
         ];
     }
