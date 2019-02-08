@@ -318,24 +318,28 @@ const app = new Vue({
             }
         },
         updateTradeConfirmation(tradeConfirmationData){
-
-         let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
+            let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
         
             if(index !== -1)
             {
                 let trade_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.id);
-                
+                let parent_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.parent_id);
+
                 if(trade_confirmation_index !== -1) {
                     
-                    if(!tradeConfirmationData.can_interact)
-                    {
+                    if(!tradeConfirmationData.can_interact) {
                         this.trade_confirmations.splice(trade_confirmation_index,1);
 
-                    }else
-                    {
+                    } else {
                         this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
                     }
+                } else if(parent_confirmation_index !== -1) {
+                    if(!tradeConfirmationData.can_interact) {
+                        this.trade_confirmations.splice(parent_confirmation_index,1);
 
+                    } else {
+                        this.trade_confirmations[parent_confirmation_index].update(tradeConfirmationData);
+                    }
                 } else {
                     console.log(tradeConfirmationData)
                     //only keep the interaction if the user can interact with it

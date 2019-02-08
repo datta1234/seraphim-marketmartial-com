@@ -217,6 +217,7 @@ class TradeConfirmation extends Model
 
         return [
             'id'                        => $this->id,
+            'parent_id'                 => $this->trade_confirmation_id,
             'organisation'              =>  $organisation ? $organisation->title : null,
 
             'trade_structure_title'     => $this->tradeStructure->title,

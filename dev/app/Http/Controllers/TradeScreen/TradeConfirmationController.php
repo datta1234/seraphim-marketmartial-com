@@ -19,15 +19,14 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('phaseTwo', $tradeConfirmation);
-        $tradeConfirmationChild = $tradeConfirmation->createChild();
-        $tradeConfirmationChild->setAccount($user,$request->input('trading_account_id')); 
+        $tradeConfirmation->setAccount($user,$request->input('trading_account_id')); 
         $exclude_list = array();
-        if(in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+        if(in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
             $exclude_list[] = 'Contract';
         }
-    	$tradeConfirmationChild->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
+    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
         try {
-            $tradeConfirmationChild->phaseTwo();
+            $tradeConfirmation->phaseTwo();
         } catch(\App\Exceptions\SpotRefTooHighException $e) {
             return response()->json([
                 'message' => 'Calculation error occured.', 
@@ -40,21 +39,21 @@ class TradeConfirmationController extends Controller
             ], 422);
         }
 
-        if($user->organisation_id == $tradeConfirmationChild->sendUser->organisation_id 
-            && ($tradeConfirmationChild->trade_confirmation_status_id == 3))
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 3))
         {
-            $tradeConfirmationChild->trade_confirmation_status_id = 6;
+            $tradeConfirmation->trade_confirmation_status_id = 6;
         } 
-        else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id 
-            && ($tradeConfirmationChild->trade_confirmation_status_id == 2 || $tradeConfirmationChild->trade_confirmation_status_id == 5)) 
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 2 || $tradeConfirmation->trade_confirmation_status_id == 5)) 
         {
-            $tradeConfirmationChild->trade_confirmation_status_id = 7;
+            $tradeConfirmation->trade_confirmation_status_id = 7;
         }
 
 
-        $tradeConfirmationChild->save();
+        $tradeConfirmation->save();
         
-        $data = $tradeConfirmationChild->fresh()->load([
+        $data = $tradeConfirmation->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);

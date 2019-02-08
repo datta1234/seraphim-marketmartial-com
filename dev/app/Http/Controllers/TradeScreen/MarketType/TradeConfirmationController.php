@@ -36,15 +36,20 @@ class TradeConfirmationController extends Controller
         })->whereRaw("
             id in (
                 SELECT max(id) as 'id'
-                FROM `trade_confirmations` 
-                WHERE exists (
+                FROM `trade_confirmations` parent_tc
+                WHERE EXISTS (
                     SELECT * 
                     FROM users 
                     WHERE users.organisation_id = ?
                     AND (
-                        id = `trade_confirmations`.send_user_id
-                        OR id = `trade_confirmations`.send_user_id
+                        id = parent_tc.send_user_id
+                        OR id = parent_tc.receiving_user_id
                     )
+                )
+                AND NOT EXISTS (
+                    SELECT *
+                    FROM `trade_confirmations` sub_tc
+                    WHERE sub_tc.trade_confirmation_id = parent_tc.id
                 )
                 GROUP BY `trade_negotiation_id`, `trade_confirmation_status_id`
             )

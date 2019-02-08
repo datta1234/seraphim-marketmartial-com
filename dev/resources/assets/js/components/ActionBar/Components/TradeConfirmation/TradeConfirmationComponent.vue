@@ -424,22 +424,22 @@
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
                     /*this.errors = [];*/
-                    console.log("here 4");
+                    console.log("We got this back: ", response);
+                    this.loadConfirmation(new TradeConfirmation(response.data.data));
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     this.confirmationLoaded = true;
-                    this.updateOldData();
+                    /*this.updateOldData();*/
 
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    console.log("here 3");
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.$toasted.error(err.message);
-                    this.confirmationLoaded = true;
                     this.errors = err.errors;
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 });
             },
             send: function()
@@ -448,21 +448,23 @@
                 this.confirmationLoaded = false;
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
+                    this.$emit('close');
+                    console.log("We got this back: ", response);
+                    this.loadConfirmation(new TradeConfirmation(response.data.data));
                     this.$toasted.success(response.data.message);
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
+                    /*this.updateOldData();*/
                     this.confirmationLoaded = true;
-                    this.updateOldData();
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    this.$emit('close');
                 })
                 .catch(err => {
                     console.error(err);
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.loadErrors(err.errors);
-                    this.confirmationLoaded = true;
                     this.errors = err.errors;
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
             },
             dispute: function()
@@ -471,7 +473,8 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-                    this.updateOldData();
+                    console.log("We got this back: ", response);
+                    this.loadConfirmation(new TradeConfirmation(response.data.data));
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.$emit('close');
@@ -493,20 +496,21 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
-                    this.updateOldData();
+                    this.$emit('close');
+                    console.log("We got this back: ", response);
+                    this.loadConfirmation(new TradeConfirmation(response.data.data));
                     /*this.errors = [];*/
-                    this.confirmationLoaded = true;
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    this.$emit('close');
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
+                    this.errors = err.errors;
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    this.errors = err.errors;
                 });  
             },
             /*{
