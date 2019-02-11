@@ -424,29 +424,20 @@
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
                     /*this.errors = [];*/
-                    console.log("here 4");
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    this.confirmationLoaded = true;
                     this.updateOldData();
 
+                    this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    console.log("here 3");
                 })
                 .catch(err => {
-                    console.log("here 1");
                     console.error(err);
-                    console.log("here 1");
                     this.loadErrors(err.errors);
-                    console.log("here 1");
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
-                    console.log("here 1");
                     this.$toasted.error(err.message);
-                    console.log("here 1");
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
-                    console.log("here 1");
-                    this.errors = err.errors;
-                    console.log("here 2");
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 });
             },
             send: function()
@@ -455,21 +446,21 @@
                 this.confirmationLoaded = false;
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
+                    this.$emit('close');
                     this.$toasted.success(response.data.message);
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    this.confirmationLoaded = true;
                     this.updateOldData();
+                    this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    this.$emit('close');
                 })
                 .catch(err => {
                     console.error(err);
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.loadErrors(err.errors);
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
-                    this.errors = err.errors;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
             },
             dispute: function()
@@ -478,19 +469,19 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-                    this.updateOldData();
-                    this.confirmationLoaded = true;
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
                     this.$emit('close');
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
+                    this.updateOldData();
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
-                    this.errors = err.errors;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
             },
@@ -500,20 +491,20 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
+                    this.$emit('close');
                     this.updateOldData();
                     /*this.errors = [];*/
-                    this.confirmationLoaded = true;
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    this.$emit('close');
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
-                    this.errors = err.errors;
                 });  
             },
             /*{
@@ -527,19 +518,15 @@
               }
             }*/
             loadErrors(errors) {
-                console.log("inner 1");
                 Object.keys(errors).forEach(error_key => {
-                    console.log("inner 2");
                     let error_key_array = error_key.split('.');
                     let groups_index = error_key_array.findIndex(x=>{return x == 'structure_groups'});
                     let group = '';
                     if(groups_index !== -1 && error_key_array.length > groups_index) {
                         group += error_key_array[groups_index+1];
                     }
-                    console.log("inner 3");
 
                     errors[error_key].forEach(err=>{
-                        console.log("inner 4");
                         let item_key = (err.constructor == String ? error_key : Object.keys(err)[0]);
                         let item = (err.constructor == String ? err : err[item_key]);
 
@@ -551,9 +538,7 @@
                             this.new_errors.messages.push(item);
                         }
                     });
-                    console.log("inner 5");
                 });
-                console.log("inner last");
             }
         },
         mounted() {
