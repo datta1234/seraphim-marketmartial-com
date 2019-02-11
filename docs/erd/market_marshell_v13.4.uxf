@@ -2309,7 +2309,7 @@ m2=0..1
 id: int(11)
 organisation_id: int(11)
 key: varchar(255)
-value: double(11,2)
+value: double(11,6)
 created_at: timestamp
 updated_at: timestamp
 
