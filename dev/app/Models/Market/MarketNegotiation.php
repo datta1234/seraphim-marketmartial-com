@@ -1042,7 +1042,6 @@ class MarketNegotiation extends Model
 
     public function addTradeNegotiation($user,$data)
     {
-            //dd([$data,$user, $this, $this->tradeNegotiations->last()]);
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;
