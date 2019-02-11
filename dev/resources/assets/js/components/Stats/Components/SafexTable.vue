@@ -92,12 +92,7 @@
                              :no-local-sorting="true"
                              @sort-changed="sortingChanged">
                         <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
-                            <template v-if="isSameDate(row.item.trade_date,latest_date)">
-                                <strong>{{ formatItem(row.item, field.key) }}</strong>
-                            </template>
-                            <template v-else>
                                 {{ formatItem(row.item, field.key) }}
-                            </template>
                         </template>
                     </b-table>
 
@@ -202,8 +197,9 @@
                         this.table_data.pagination.current_page = safexDataResponse.data.data.table_data.current_page;
                         this.table_data.pagination.per_page = safexDataResponse.data.data.table_data.per_page;
                         this.table_data.pagination.total = safexDataResponse.data.data.table_data.total;
-                        this.table_data.data = safexDataResponse.data.data.table_data.data;
+                        
                         this.latest_date = safexDataResponse.data.data.latest_date;
+                        this.table_data.data = this.resolveFormatData(safexDataResponse.data.data.table_data.data);
                         this.table_data.loaded = true;
                         console.log("Data from sever: ", safexDataResponse.data.data);
 
@@ -248,6 +244,15 @@
             },
             isSameDate(date1,date2,test,tet,te) {
                 return moment(date1).isSame(date2);
+            },
+            resolveFormatData(data) {
+                data.forEach(row_data => {
+                    console.log(row_data.trade_date);
+                    if(this.isSameDate(row_data.trade_date,this.latest_date)) {
+                        row_data._rowVariant = 'latest-data';
+                    }
+                });
+                return data;
             }
         },
         mounted() {
