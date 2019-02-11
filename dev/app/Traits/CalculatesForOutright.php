@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForOutright {
+trait CalculatesForOutright {
 	
     public function outrightTwo()
     {
@@ -17,7 +17,12 @@ trait CalcuatesForOutright {
         if($singleStock) {
             $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
             // Need to multiply by 1M because the Nomninal is amount per million
-            $this->optionGroups[0]->setOpVal('Contract', round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0));
+            $val = round( ($this->tradeNegotiation->quantity * 1000000) / ($SpotRef * 100), 0);
+            if($val === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
+            }
+            $this->optionGroups[0]->setOpVal('Contract', $val);
         }
         
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -58,48 +63,50 @@ trait CalcuatesForOutright {
         }
 
         // futures and deltas buy/sell
-        if($future_contracts < 0)
-        {
-            $isOffer = false;
-            $this->futureGroups[0]->setOpVal('is_offer', $isOffer);
-        } else {
-            $isOffer = true;
-            $this->futureGroups[0]->setOpVal('is_offer',$isOffer);
-        }
+        $isFutureOffer = !($future_contracts < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->outrightFees($isOffer,$gross_prem,$is_sender, $contracts1, $singleStock);
+        $this->outrightFees($is_offer,$gross_prem,$is_sender, $contracts1, $singleStock);
     }
 
     public function outrightFees($isOffer,$gross_prem,$is_sender,$contracts1,$singleStock)
     {     
         $Brodirection1 = $isOffer ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
+
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $outright_key = 'marketmartial.confirmation_settings.outright.';
             
         if($singleStock) {
-            $SINGLEoutrightFEE = config('marketmartial.confirmation_settings.outright.singles.only_leg')/100;//its a percentage
+            //its a percentage        
+            $SINGLEoutrightFEESender = $sender_org->resolveBrokerageFee($outright_key.'singles.only_leg')/100;
+            $SINGLEoutrightFEEReceiving = $receiving_org->resolveBrokerageFee($outright_key.'singles.only_leg')/100;
 
             $nominal1 = $this->tradeNegotiation->quantity * 1000000;
 
             //NETPREM = Round(nominal1 * SINGLEoutrightFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-            $netPremium =  round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $Brodirection1 + $gross_prem, 2);
+            $netPremium =  round($nominal1 * ($is_sender ? $SINGLEoutrightFEESender : $SINGLEoutrightFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem, 2);
 
             //set for the counter
-            $netPremiumCounter =  round($nominal1 * $SINGLEoutrightFEE / $contracts1 * $counterBrodirection1 + $gross_prem, 2); 
+            $netPremiumCounter =  round($nominal1 * ($is_sender ? $SINGLEoutrightFEEReceiving : $SINGLEoutrightFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem, 2); 
         } else {
-            //get the spot price ref.
-            $IXoutrightFEE = config('marketmartial.confirmation_settings.outright.index.only_leg')/100;//its a percentage       
+            //its a percentage        
+            $IXoutrightFEESender = $sender_org->resolveBrokerageFee($outright_key.'index.only_leg')/100;
+            $IXoutrightFEEReceiving = $receiving_org->resolveBrokerageFee($outright_key.'index.only_leg')/100;    
             
             $SpotReferencePrice1 = $this->optionGroups[0]->userMarketRequestGroup->tradable->market->spot_price_ref;
 
             //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium =  floor($SpotReferencePrice1 * 10 * $IXoutrightFEE * $Brodirection1) + $gross_prem;
+            $netPremium =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoutrightFEESender : $IXoutrightFEEReceiving) * $Brodirection1) + $gross_prem;
 
             //set for the counter
-            $netPremiumCounter =  floor($SpotReferencePrice1 * 10 * $IXoutrightFEE * $counterBrodirection1) + $gross_prem; 
+            $netPremiumCounter =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1) + $gross_prem; 
         }
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);

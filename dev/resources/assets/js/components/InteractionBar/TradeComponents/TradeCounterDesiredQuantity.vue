@@ -94,15 +94,15 @@
 
                 this.lastTradeNegotiation.counter(this.tradeNegotiation)
                 .then(response => {
-                    this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
+                    this.server_loading = false;
                 })
                 .catch(err => {
-                    this.server_loading = false;
 
                     this.history_message = err.errors.message;
                     this.errors = err.errors.errors;
+                    this.server_loading = false;
                 });
            }
         },

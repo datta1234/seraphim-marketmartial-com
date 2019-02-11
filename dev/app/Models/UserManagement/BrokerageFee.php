@@ -1,24 +1,26 @@
 <?php
 
-namespace App\Models\TradeConfirmations;
+namespace App\Models\UserManagement;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DistputeStatus extends Model
+class BrokerageFee extends Model
 {
-	/**
+    /**
 	 * @property integer $id
-	 * @property string $title
+	 * @property integer $organisation_id
+	 * @property string $key
+	 * @property double $value
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
-	
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'distpute_status';
+    protected $table = 'brokerage_fees';
 
     /**
      * The attributes that are mass assignable.
@@ -26,15 +28,17 @@ class DistputeStatus extends Model
      * @var array
      */
     protected $fillable = [
-      'title',  
+        'organisation_id',
+        'key',
+        'value',
     ];
 
     /**
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function distputes()
+    public function organisation()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\Distpute','distpute_status_id');
+        return $this->belongsTo('App\Models\UserManagement\Organisation', 'organisation_id');
     }
 }

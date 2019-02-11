@@ -91,6 +91,7 @@
 
 
 				</div>
+					{{ Form::label('', 'Which sport do you follow?') }}
 					<?php $index = 0; ?>
 					@foreach($interests->chunk(2) as $chunk)
 						<div class="row">

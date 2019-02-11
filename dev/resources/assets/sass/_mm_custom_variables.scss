@@ -29,6 +29,8 @@ $mm-footer-black: 		#000000;
 
 $mm-shadow:				#0c4545;
 
+$mm-card-background-dark: #1c3641;
+
 /* 
 * Fonts
 */
@@ -63,6 +65,7 @@ $mm-market-maker:		#37A53A;
 $mm-market-confirm:		#E17428;
 $mm-market-alert:		#BB1D1D;
 $mm-user-action:		#EBC300;
+$mm-user-action-dark:	#b5980e;
 $mm-footer-bg:			#303030;
 $mm-toggle-bg:			#1c7d74;
 
@@ -115,3 +118,10 @@ $trade-footer-height: 65px;
 *   Stats
 */
 $stats-warm-grey: #939598;
+
+
+/*
+* fee page
+*/
+$fee-orange: #ffc100;
+$fee-green: #00b24b;

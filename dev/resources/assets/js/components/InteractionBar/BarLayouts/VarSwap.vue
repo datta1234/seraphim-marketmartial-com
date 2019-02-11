@@ -1,7 +1,13 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-var_swap">
 
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        <ibar-user-market-title :market-request="marketRequest" :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+    
+        <ibar-market-requested-futures class="mb-2" 
+            :market-request="marketRequest" 
+            :columns="market_requested_future_columns"
+            :is-near-dated="true">
+        </ibar-market-requested-futures>
 
         <!-- VOL SPREAD History - Market-->
         <ibar-negotiation-history-market 
@@ -56,7 +62,7 @@
         
         <b-row class="mb-1">
             <b-col cols="10">
-                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger text-center">
                     {{ error[0] }}
                 </b-col>
                 <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
@@ -192,7 +198,7 @@
     import IbarVolatilityField from '../MarketComponents/VolatilityField';
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
-
+    import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
     import AlertCleared from '../Components/AlertClearedComponent.vue';
 
     import NegotiationBarMixin from '../NegotiationBarMixin';
@@ -206,7 +212,8 @@
             IbarVolatilityField,
             IbarMarketRequested,
             IbarTradeAtBestNegotiation,
-            AlertCleared
+            AlertCleared,
+            IbarMarketRequestedFutures
         },
         props: {
             
@@ -233,6 +240,9 @@
                     "market_request_update",
                     "market_request_delete",
                     "market_negotiation_store"
+                ],
+                market_requested_future_columns: [
+                    'future',
                 ]
             };
         },

@@ -172,7 +172,7 @@ class MarketNegotiation extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function marketNegotiationSource($attr)
+    public function marketNegotiationSource($attr, $include_prior_traded_levels = true)
     {
         $table = $this->table;
         $parentKey = $this->marketNegotiationParent()->getForeignKey();
@@ -185,7 +185,7 @@ class MarketNegotiation extends Model
                     SELECT @id AS _id, @attr as _attr, (
                         SELECT @id := $parentKey FROM $table WHERE id = _id
                     ) as parent_id, (
-                        SELECT @attr := $att FROM $table WHERE id = _id
+                        SELECT @attr := IFNULL($att, 0.00) FROM $table WHERE id = _id
                     ) as parent_attr
                     FROM (
                         SELECT @id := $id, @attr := $value
@@ -198,7 +198,7 @@ class MarketNegotiation extends Model
         ");
         $source = self::hydrate($source)->first();
         // try resolve the parent post trade
-        if($source->market_negotiation_id == null) {
+        if($include_prior_traded_levels == true && $source->market_negotiation_id == null) {
             $sourceNegotiation = $source->resolveTradedParent();
             // as long as there is source found with the same value on the bid/offer (that is traded)
             if($sourceNegotiation != null && $sourceNegotiation->isTraded() && floatval($sourceNegotiation->{$attr}) === floatval($source->{$attr})) {
@@ -360,6 +360,24 @@ class MarketNegotiation extends Model
         return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
     }
 
+    public function scopeCurrentDay($query) {
+        return $query->where('updated_at', '>', now()->startOfDay());
+    }
+
+    public function scopeSelectedDay($query) {
+        return $query->when(config('loading_previous_day', false), function($q){
+            $q->previousDay();
+        })->when(!config('loading_previous_day', false), function($q){
+            $q->currentDay();
+        });
+    }
+
+    public function scopeTraded($query) {
+        return $query->whereHas('tradeNegotiations', function($q) {
+            $q->where('traded', true);
+        });
+    }
+
     public function scopeFindCounterNegotiation($query,$user, $private = false)
     {
         return $query->where(function($q) use ($private, $user) {
@@ -396,6 +414,35 @@ class MarketNegotiation extends Model
             $q->where('is_killed', '=', false);
         });
         
+    }
+
+    /**
+    *
+    *
+    */
+    public function scopePreviousDayRefreshable($query)
+    {
+        return $query->whereRaw('
+            `id` = (
+                select `neg_sub_i`.`id`
+                from `market_negotiations` as `neg_sub_i`
+                where `neg_sub_i`.`user_market_id` = `market_negotiations`.`user_market_id`
+                and `neg_sub_i`.`is_private` = 0
+                and exists (
+                    select * 
+                    from `user_market_requests`
+                    where `user_market_requests`.`chosen_user_market_id` = `neg_sub_i`.`user_market_id`
+                    and `updated_at` between ? and ?
+                    and `active` = 1
+                )
+                order by `neg_sub_i`.`updated_at` DESC
+                limit 1
+            )',
+            [ 
+                now()->subDays(1)->startOfDay(), 
+                now()->startOfDay()
+            ]
+        );
     }
 
     /**
@@ -952,7 +999,14 @@ class MarketNegotiation extends Model
         if($this->is_killed && $this->getAttribute($attr) == null) {
             return "";
         }
-        if($this->is_repeat && $this->id != $source->id)
+        if($this->is_repeat && (
+            $this->id != $source->id || (
+                $this->getAttribute($attr) === null 
+                && $this->marketNegotiationParent 
+                && !$this->marketNegotiationParent->is_repeat
+                && is_null($this->marketNegotiationParent->getAttribute($attr))
+            )
+        ))
         {
             if($this->user->organisation_id == $source->user->organisation_id 
                 && !$this->isTradeAtBest() 
@@ -1000,16 +1054,13 @@ class MarketNegotiation extends Model
             {
                  // find out who the the negotiation is sent to based of who set the level last
                 $attr = $tradeNegotiation->is_offer ? 'offer' : 'bid';
-                $sourceMarketNegotiation = $this->marketNegotiationSource($attr);
+                $sourceMarketNegotiation = $this->marketNegotiationSource($attr, false);
                 $tradeNegotiation->recieving_user_id = $sourceMarketNegotiation->user_id;
                 $tradeNegotiation->traded = false;
             }else
             {
-
                 $counterNegotiation = $this->tradeNegotiations->last();
 
-
-                
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
@@ -1058,8 +1109,13 @@ class MarketNegotiation extends Model
                     //Market Maker receives trade notification
                     //@TODO - @Francois Move to new event when rebate gets created after confirmation process is complete
                     $market_maker_org = $this->userMarket->user->organisation;
-                    $market_maker_message = "Market traded. You have received a rebate";
-                    $market_maker_org->notify("market_traded_rebate_earned",$market_maker_message,true);
+                    $market_maker_message = "Market traded.";
+
+                    // DELTA ONE's dont have rebates [MM-900]
+                    if(!in_array($this->userMarket->userMarketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+                         $market_maker_message .= " You have received a rebate";
+                    }
+                    $market_maker_org->notify("market_traded",$market_maker_message,true);
 
                     $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
                     $message = "Congrats on the trade! Complete the booking in the confirmation tab";
@@ -1169,18 +1225,29 @@ class MarketNegotiation extends Model
             $market_negotiation_parent_id = $this->marketNegotiationParent->market_negotiation_id;
         }
 
+        $show_bid = true;
+        $show_offer = true;
+        // NOTE: below commented out - we would need a 'wasProposal' function for this to work
+        // if(($this->isTraded() || $this->isTrading()) && $this->wasProposal()) {
+        //     $traded_offer = $this->tradeNegotiations()->last()->getRoot()->is_offer;
+        //     $show_bid = !$traded_offer;
+        //     $show_offer = $traded_offer;
+        // }
+
         $data = [
             'id'                    => $this->id,
             "market_negotiation_id" => $market_negotiation_parent_id,
             "user_market_id"        => $this->user_market_id,
-            "bid"                   => $this->bid,
-            "offer"                 => $this->offer,
+            
+            "bid"                   => $show_bid ? $this->bid : null,
+            "offer"                 => $show_offer ? $this->offer : null,
+            "offer_qty"             => $show_offer ? $this->offer_qty : null,
+            "bid_qty"               => $show_bid ? $this->bid_qty : null,
+
             // "bid_source"            => $bid_source,
             // "offer_source"          => $offer_source,
             "bid_display"           => $this->setAmount($uneditedmarketNegotiations,'bid'),
             "offer_display"         => $this->setAmount($uneditedmarketNegotiations,'offer'),
-            "offer_qty"             => $this->offer_qty,
-            "bid_qty"               => $this->bid_qty,
             "bid_premium"           => $this->bid_premium,
             "offer_premium"         => $this->offer_premium,
             "future_reference"      => $this->future_reference,
@@ -1268,6 +1335,8 @@ class MarketNegotiation extends Model
     public function applyFOKCondition() {
         if (!$this->fok_applied) {
             $this->fok_applied = true;
+            // FORCE KILL - [MM-876]
+            $this->cond_fok_spin = false;
 
             // Prefer to Spin (fill)
             if( $this->cond_fok_spin == true ) {
@@ -1329,8 +1398,13 @@ class MarketNegotiation extends Model
     public function applyCondBuyMidCondition() {
         // assumption it exists... it should since you cant apply this to a quote...
         $parent = $this->marketNegotiationParent;
-        $bid = doubleval($parent->getLatestBid());
-        $offer = doubleval($parent->getLatestOffer());
+        if($parent) {
+            $bid = doubleval($parent->getLatestBid());
+            $offer = doubleval($parent->getLatestOffer());
+        } else {
+            $bid = $this->bid;
+            $offer = $this->offer;
+        }
 
         /*   
             @NOTICE: commented out below due to [MM-788]

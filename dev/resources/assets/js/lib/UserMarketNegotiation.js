@@ -64,6 +64,9 @@ export default class UserMarketNegotiation extends BaseModel {
             offer_user: null,
             bid_org: null,
             offer_org: null,
+            market_request_summary: null,
+            owns_bid: null,
+            owns_offer: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -458,6 +461,9 @@ export default class UserMarketNegotiation extends BaseModel {
         
         if(typeof prevItem !== "undefined" &&  prevItem != null  && prevItem[attr] == this[attr])
         {
+            if(prevItem.isTraded() || (prevItem[attr] == null && this[attr] == null)) {
+                return this;
+            }
             return prevItem.getAmountSource(attr);   
         }else
         {

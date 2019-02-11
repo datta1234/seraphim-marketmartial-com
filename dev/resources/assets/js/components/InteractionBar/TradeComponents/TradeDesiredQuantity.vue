@@ -1,12 +1,16 @@
 <template>
        <b-popover ref="popover" :target="target" placement="bottom" :show.sync="open" triggers="" :container="parent">
             <template slot="title">
-               <div class="text-center">{{ title }}
-                   <a @click="cancel" class="close" aria-label="Close">
-                    <span class="d-inline-block" aria-hidden="true">&times;</span>
+               <b-row no-gutters>
+                  <b-col class="text-center">
+                    {{ title }}
+                  </b-col>
+                  <b-col cols="auto">
+                    <a @click="cancel" class="close" aria-label="Close">
+                      <span class="d-inline-block" aria-hidden="true">&times;</span>
                     </a>
-               </div>
-            
+                  </b-col>
+               </b-row>
             </template>
             <b-row> 
                 <b-col cols="12" v-html="subtitle" class="text-center"></b-col>
@@ -32,23 +36,28 @@
               </b-row>
             </template>
             <template v-if="confirmed">
-            <div class="form-row align-items-center">
-                 <label class="col-sm-4">
-                  Desired Quantity
-                </label>
-                <div class="col-sm-4">
-                  <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
-                </div>
-                <label class="col-sm-4">
-                    {{ quantityType }}
-                </label>
-            </div>
+              <div class="form-row align-items-center">
+                   <label class="col-sm-4">
+                    Desired Quantity
+                  </label>
+                  <div class="col-sm-4">
+                    <input type="text" class="form-control" id="inlineFormInputName" v-if="tradeNegotiation" v-model="tradeNegotiation.quantity">
+                  </div>
+                  <label class="col-sm-4">
+                      {{ quantityType }}
+                  </label>
+              </div>
+              <b-row>
+                <b-col class="text-center">
+                  <label>If applicable, ratios will be maintained</label>
+                </b-col>
+              </b-row>
                 <b-row>
                     <b-col cols="12" :key="key" v-for="(error,key) in errors" class="text-danger">
                         {{ error[0] }}
                     </b-col>
                     <b-col cols="12">       
-                        <b-btn v-active-request variant="primary" class="btn-block mt-3" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired Size</b-btn>
+                        <b-btn v-active-request variant="primary" class="btn-block" :disabled="server_loading" @click="storeTradeNegotiation()"> Send Desired Size</b-btn>
                     </b-col>
 
                 </b-row>
@@ -106,12 +115,9 @@
             }
         },
         computed: {
-           title(){
-
+           title() {
                 let marketRequest = this.marketNegotiation.getUserMarket().getMarketRequest();
-                let marketTitle = marketRequest.getMarket().title
-                let title = marketTitle+" "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.expiration_date")]+
-                " "+marketRequest.trade_items.default[this.$root.config("trade_structure.outright.strike")];
+                let title = marketRequest.marketTradeTitle();
                 
                 if(this.is_offer == null) {
                   return "Buy Or Sell?"
@@ -119,7 +125,8 @@
                 if(this.is_offer)
                 {
                     return this.confirmed ?  title : "Lift the offer?";   
-                }else
+                }
+                else
                 {
                     return this.confirmed ?  title : "Hit the bid?";   
                 }
@@ -129,7 +136,7 @@
             if(this.is_offer){
                return this.confirmed ? "You Are Buying @ <span class='text-success'>" + this.marketNegotiation.offer +'</span>': "";
             }else
-            { 
+            {
               return this.confirmed ? "You Are Selling @ <span class='text-success'>" + this.marketNegotiation.bid +'</span>': "";
 
             }
@@ -161,17 +168,17 @@
 
                 this.tradeNegotiation.store(this.marketNegotiation)
                 .then(response => {
-                    this.server_loading = false;
                     this.errors = [];
                     this.$emit('close');
                     this.is_offer = this.isOffer;
                     this.confirmed = false;
+                    this.server_loading = false;
                 })
                 .catch(err => {
-                    this.server_loading = false;
 
                     this.history_message = err.errors.message;
                     this.errors = err.errors;
+                    this.server_loading = false;
 
                 });
            }

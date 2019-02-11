@@ -1,7 +1,7 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-efp-switch">
 
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        <ibar-user-market-title :market-request="marketRequest" :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
         <ibar-market-requested-futures class="mb-2" 
             :market-request="marketRequest" 
@@ -61,7 +61,7 @@
         
         <b-row class="mb-1">
             <b-col cols="10">
-                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger text-center">
                     {{ error[0] }}
                 </b-col>
                 <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>
@@ -253,10 +253,9 @@
         
         computed: {
             'market_title': function() {
-                let group1 = this.$root.config("trade_structure.efp_switch.group_1");
                 return [
-                    this.marketRequest.trade_items[group1].tradable.title,
-                    this.marketRequest.trade_items[group1][this.$root.config("trade_structure.efp_switch.expiration_date")],
+                    this.marketRequest.trade_items.default.tradable.title,
+                    this.marketRequest.trade_items.default[this.$root.config("trade_structure.efp.expiration_date")],
                     'EFP'
                 ].join(' ');
             },

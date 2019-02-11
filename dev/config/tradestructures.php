@@ -1362,38 +1362,12 @@ return [
                         'title' => 'Cap',
                         'type' => 'double'
                     ],
-                ],
-                "trade_confirmation_group"=>[
-                    "options" =>
                     [
-                        "title" => "Options Group",
-                        "items" => [
-                            [
-                                // __item__
-                                "id" => 162,
-                                "title"=>"is_offer",
-                                "type"=>"boolean"
-                            ],
-                            [
-                                // __item__
-                                "id" => 163,
-                                "title"=>"is_put",
-                                "type"=>"double"
-                            ],
-                            [
-                                // __item__
-                                "id" => 164,
-                                "title"=>"Volatility",
-                                "type"=>"double"
-                            ],
-                            [
-                                // __item__
-                                "id" => 165,
-                                "title"=>"Contract",
-                                "type"=> "double"
-                            ]
-                        ]
-                    ]
+                        // __item__
+                        "id" => 162,
+                        "title" => "Future",
+                        "type" => "double"   
+                    ],
                 ]
             ]
         ],

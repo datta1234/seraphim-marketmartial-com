@@ -13,6 +13,7 @@
     import UserMarketRequest from '~/lib/UserMarketRequest';
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import { EventBus } from '~/lib/EventBus';
+
     export default {
         name: 'condition-propose',
         props: {
@@ -73,6 +74,7 @@
                 } else {
                     this.marketNegotiation[this.condition.alias] = null;
                     EventBus.$emit('errorConditions', "Please improve the bid or the offer before applying buy/sell@best.");
+                    this.$emit('reset');
                 }
 
                 return available;

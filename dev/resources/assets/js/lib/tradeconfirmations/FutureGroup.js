@@ -18,6 +18,12 @@ export default class FutureGroup {
                 case 'is_offer':
                     this.is_offer = item.value == 1;
                     break;
+                case 'is_offer 1':
+                    this.is_offer_1 = item.value == 1;
+                    break;
+                case 'is_offer 2':
+                    this.is_offer_2 = item.value == 1;
+                    break;
                 case 'Expiration Date':
                     this.expires_at = this.setUpDate(item.value);
                     break;
@@ -26,6 +32,12 @@ export default class FutureGroup {
                     break;
                 case 'Future':
                     this.future = this.setUpNumbers(item.value);
+                    break;
+                case 'Future 1':
+                    this.future_1 = this.setUpNumbers(item.value);
+                    break;
+                case 'Future 2':
+                    this.future_2 = this.setUpNumbers(item.value);
                     break;
                 case 'Spot':
                     this.spot = this.setUpNumbers(item.value);
@@ -38,12 +50,17 @@ export default class FutureGroup {
                 case 'Expiration Date':
                     this.expires_at = this.setUpDate(item.value);
                     break;
+                case 'Expiration Date 1':
+                    this.expires_at_1 = this.setUpDate(item.value);
+                    break;
+                case 'Expiration Date 2':
+                    this.expires_at_2 = this.setUpDate(item.value);
+                    break;
                 case 'Strike':
                     this.strike = this.setUpNumbers(item.value);
                     break;
             }
         });
-        console.log("Show me the MONEY",this, structureGroup);
 
         this.underlying_title = structureGroup.user_market_request_group.tradable ? structureGroup.user_market_request_group.tradable.title: null;
     }
@@ -70,29 +87,46 @@ export default class FutureGroup {
         }
     }
 
-    prepareStore() {
+    prepareStore(exclude_list) {
+        if(!Array.isArray(exclude_list)) {
+            exclude_list = [];
+        }
         let store_items = [];
 
         Object.keys(this).forEach(key => {
-            switch(key) {
-                case 'contracts':
-                    store_items.push({
-                        "title": "Contract",
-                        "value": parseFloat(this.contracts)
-                    });
-                    break;
-                case 'future':
-                    store_items.push({
-                        "title": "Future",
-                        "value": parseFloat(this.future)
-                    });
-                    break;
-                case 'spot':
-                    store_items.push({
-                        "title": "Spot",
-                        "value": parseFloat(this.spot)
-                    });
-                    break;
+            if(!exclude_list.includes(key)) {
+                switch(key) {
+                    case 'contracts':
+                        store_items.push({
+                            "title": "Contract",
+                            "value": parseFloat(this.contracts)
+                        });
+                        break;
+                    case 'future':
+                        store_items.push({
+                            "title": "Future",
+                            "value": parseFloat(this.future)
+                        });
+                        break;
+                    case 'future_1':
+                        store_items.push({
+                            "title": "Future 1",
+                            "value": parseFloat(this.future_1)
+                        });
+                        break;
+                    case 'future_2':
+                        store_items.push({
+                            "title": "Future 2",
+                            "value": parseFloat(this.future_2)
+                        });
+                        break;
+                    case 'spot':
+                        store_items.push({
+                            "title": "Spot",
+                            "value": parseFloat(this.spot)
+                        });
+                        break;
+                }
             }
         });
 

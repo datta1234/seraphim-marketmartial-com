@@ -19,9 +19,38 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('phaseTwo', $tradeConfirmation);
-        $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'));    	
-        $tradeConfirmation->phaseTwo();
+        $tradeConfirmation->setAccount($user,$request->input('trading_account_id')); 
+        $exclude_list = array();
+        if(in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $exclude_list[] = 'Contract';
+        }
+    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
+        try {
+            $tradeConfirmation->phaseTwo();
+        } catch(\App\Exceptions\SpotRefTooHighException $e) {
+            return response()->json([
+                'message' => 'Calculation error occured.', 
+                'errors' => [ 
+                    'trade_confirmation_data.structure_groups.'.$e->getCode() => [
+                        ['spot' => $e->getMessage()]
+                    ] 
+
+                ]
+            ], 422);
+        }
+
+        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 3))
+        {
+            $tradeConfirmation->trade_confirmation_status_id = 6;
+        } 
+        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id 
+            && ($tradeConfirmation->trade_confirmation_status_id == 2 || $tradeConfirmation->trade_confirmation_status_id == 5)) 
+        {
+            $tradeConfirmation->trade_confirmation_status_id = 7;
+        }
+
+
         $tradeConfirmation->save();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -35,12 +64,15 @@ class TradeConfirmationController extends Controller
         return response()->json(['data' => $data]);
     }
 
-    public function update(TradeConfirmation $tradeConfirmation,Request $request)
+    public function update(TradeConfirmation $tradeConfirmation,TradeConfirmationStoreRequest $request)
     {
         $user = $request->user();
         $this->authorize('update',$tradeConfirmation);
         $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-     
+        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
+        }
+
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
         {
             $tradeConfirmation->trade_confirmation_status_id = 2;
@@ -62,7 +94,7 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-        return response()->json(['trade_confirmation' => $data]);
+        return response()->json(['message'=> 'Confirmation sent to counterparty','data' => $data]);
     }
 
     public function confirm(TradeConfirmation $tradeConfirmation,Request $request)
@@ -108,7 +140,12 @@ class TradeConfirmationController extends Controller
     public function dispute(TradeConfirmation $tradeConfirmation,Request $request)
     {
         $user = $request->user();
-        $this->authorize('dispute',$tradeConfirmation);  
+        $this->authorize('dispute',$tradeConfirmation);
+        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmation->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
+        }
+        $tradeConfirmation->save();
+
         if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
         {
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');

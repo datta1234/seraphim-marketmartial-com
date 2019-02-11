@@ -38,6 +38,8 @@ export default class UserMarketQuote extends BaseModel {
             user: null,
             org: null,
             market_request_summary: null,
+            org_interest: null,
+            org_maker: null,
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

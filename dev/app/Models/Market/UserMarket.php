@@ -151,7 +151,7 @@ class UserMarket extends Model
     * @return $query \Illuminate\Database\Eloquent\Builder
     */
     public function scopeCurrentDay($query) {
-        return $query->whereBetween('updated_at', [ now()->startOfDay(), now()->addDays(1)->startOfDay() ]);
+        return $query->where('updated_at', '>', now()->startOfDay());
     }
 
     /**
@@ -543,8 +543,17 @@ class UserMarket extends Model
             $qty = $this->userMarketRequest->getDynamicItem("quantity");
 
             if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                // @TODO: well shit
-                throw Exception("Can Only Improve One Side On New Negotian tree.");
+                // Well shit
+                // ... sooo cond MIM causes this to be hit... well... shit
+                if($marketNegotiation->cond_buy_mid !== null) {
+                    // MITM Buy = lock down with offer 
+                    // MITM Sell = lock down with the bid
+                    $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                    $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                } else {
+                    // the real well shit...
+                    throw new \Exception("Can Only Improve One Side On Open Market");
+                }
             }
             elseif ($marketNegotiation->bid != null) {
                 // improved bidw
@@ -608,7 +617,6 @@ class UserMarket extends Model
 
         $marketNegotiation->user_id = $user->id;
 
-        \Log::info("Want to Starting New Tree");
         if(
             // this is for when the counter waas traded, we start a new tree
             ($counterNegotiation && $counterNegotiation->isTraded()) 
@@ -616,7 +624,6 @@ class UserMarket extends Model
             // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
             || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
         ) {
-            \Log::info("Starting New Tree");
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
 
@@ -638,8 +645,17 @@ class UserMarket extends Model
                 && $counterNegotiation->marketNegotiationParent->is_repeat
             ) {
                 if($marketNegotiation->bid != null && $marketNegotiation->offer != null) {
-                    // @TODO: well shit
-                    throw \Exception("Can Only Improve One Side On SPIN");
+                    // Well shit
+                    // ... sooo cond MIM causes this to be hit... well... shit
+                    if($marketNegotiation->cond_buy_mid !== null) {
+                        // MITM Buy = lock down with offer 
+                        // MITM Sell = lock down with the bid
+                        $side = ( $marketNegotiation->cond_buy_mid == true ? 'offer' : 'bid' );
+                        $marketNegotiation->counter_user_id = $counterNegotiation->marketNegotiationSource($side)->user_id;
+                    } else {
+                        // the real well shit...
+                        throw new \Exception("Can Only Improve One Side On Open Market");
+                    }
                 }
                 elseif ($marketNegotiation->bid != null) {
                     // improved bid
@@ -660,8 +676,15 @@ class UserMarket extends Model
 
             // responding to RepeatATW will open to market automatically - no longer happens
             if($counterNegotiation->isRepeatATW() // parent is a RATW
-                && $counterNegotiation->marketNegotiationParent 
-                && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                && (
+                    (
+                        $counterNegotiation->marketNegotiationParent 
+                        && !$counterNegotiation->marketNegotiationParent->isRepeatATW() // parents - parent is NOT a RATW
+                    ) || (
+                        !$counterNegotiation->marketNegotiationParent
+                        && $this->marketNegotiations()->count() == 1
+                    )
+                )
             ) {
                 // then its a response to a RATW so open it up
                 $marketNegotiation->is_repeat = true;
@@ -671,10 +694,24 @@ class UserMarket extends Model
             if($marketNegotiation->bid == null) {
                 $marketNegotiation->bid = $counterNegotiation->bid;
                 $marketNegotiation->bid_qty = $counterNegotiation->bid_qty;
+
+                // no bid entered, check if the owner of bid is a RATW [MM-885]
+                $bidSourceNegotiation = $counterNegotiation->marketNegotiationSource('bid');
+                if($bidSourceNegotiation->isRepeatATW()) {
+                    // force repeat
+                    $marketNegotiation->is_repeat = true;
+                }
             }
             if($marketNegotiation->offer == null) {
                 $marketNegotiation->offer = $counterNegotiation->offer;
                 $marketNegotiation->offer_qty = $counterNegotiation->offer_qty;   
+
+                // no offer entered, check if the owner of offer is a RATW [MM-885]
+                $offerSourceNegotiation = $counterNegotiation->marketNegotiationSource('offer');
+                if($offerSourceNegotiation->isRepeatATW()) {
+                    // force repeat
+                    $marketNegotiation->is_repeat = true;
+                }
             }  
         }
         // @TODO, this fails when you send new negotiation after you already have, need to stop this?
@@ -755,7 +792,8 @@ class UserMarket extends Model
         $newMarketNegotiation->market_negotiation_id = $lastMarketNegotiation->id;
 
         //see what the trade negotiation was started
-        $lastTradeNegotiation = $lastMarketNegotiation->tradeNegotiations()->first();
+        $lastTradeNegotiation = $lastMarketNegotiation->lastTradeNegotiation->getRoot();
+        // updated per [MM-902] this seemed to get the first trade, just to be sure we are resolving the root now
         
        
 
@@ -765,11 +803,18 @@ class UserMarket extends Model
         * bid over → opens offer side
         * offered over → opens bid side
         */
-        $attr = $lastTradeNegotiation->is_offer ? 'offer' : 'bid';
-        $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
+        // $attr = $lastTradeNegotiation->getRoot()->is_offer ? 'offer' : 'bid';
+        // $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
         // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
         $newMarketNegotiation->user_id = $user->id;
 
+
+        /*
+        *   This keeps changing... 
+        *   currently set as per [MM-902] 
+        *       traded on bid @ level   = set offer to traded bid level
+        *       traded on offer @ level = set bid to traded offer level
+        */
         if($lastTradeNegotiation->is_offer)
         {   
             $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
@@ -965,7 +1010,7 @@ class UserMarket extends Model
                                             $data['creation_idx'] = array_search($org_id, $creation_idx_map);
                                             return $data;
                                         }),
-            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+            "active_conditions"      => $this->activeConditionNegotiations->filter(function($cond) {
                                             // only if counter
                                             $active = $this->isCounter(null, $cond);
                                             if($active === null) {
@@ -982,7 +1027,7 @@ class UserMarket extends Model
                                                 'type'      => $cond->activeConditionType
                                             ];
                                         })->values(),
-            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond){
+            "sent_conditions"      => $this->activeConditionNegotiations->filter(function($cond) {
                                             // only if counter
                                             $active = $this->isSent(null, $cond);
                                             return $active;
@@ -1022,11 +1067,12 @@ class UserMarket extends Model
     * Return pre formatted request for frontend
     * @return \App\Models\Market\UserMarket
     */
-    public function preFormattedQuote()
+    public function preFormattedQuote($show_levels = false)
     {
         $is_maker = $this->isMaker();
         $is_interest = $this->isInterest();
-
+        $locale_info = localeconv();
+        
         $data = [
             "id"            => $this->id,
             "is_interest"   =>  $is_interest,
@@ -1035,8 +1081,8 @@ class UserMarket extends Model
             "offer_only"    => $this->currentMarketNegotiation->bid == null,
             "vol_spread"    => (
                 !$this->currentMarketNegotiation->offer == null && !$this->currentMarketNegotiation->bid == null ? 
-                $this->currentMarketNegotiation->offer - $this->currentMarketNegotiation->bid : 
-                null 
+                rtrim(rtrim(bcsub($this->currentMarketNegotiation->offer,$this->currentMarketNegotiation->bid,2), "0"), $locale_info['decimal_point']) : 
+                null
             ),
             "time"          => $this->created_at->format("H:i"),
         ];
@@ -1048,7 +1094,7 @@ class UserMarket extends Model
             $data['is_repeat']  = $this->currentMarketNegotiation->is_repeat;
             $data['is_on_hold'] = $this->is_on_hold;
         }
-        if($data['is_interest']) {
+        if($data['is_interest']) { 
             $data['is_on_hold'] = $this->is_on_hold;
         }
 
@@ -1056,6 +1102,15 @@ class UserMarket extends Model
         if($this->isAdminContext()) {
             $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
+            if($show_levels) {
+                $data['bid']        = $this->currentMarketNegotiation->bid;
+                $data['offer']      = $this->currentMarketNegotiation->offer;
+                $data['bid_qty']    = $this->currentMarketNegotiation->bid_qty;
+                $data['offer_qty']  = $this->currentMarketNegotiation->offer_qty;
+                $data['org_interest']= $this->user->organisation_id == $this->userMarketRequest->user->organisation_id;
+                $data['org_maker']   = $this->userMarketRequest->chosen_user_market_id != null 
+                                    && $this->userMarketRequest->chosen_user_market_id == $this->id;
+            }
         }
         return $data;
     }

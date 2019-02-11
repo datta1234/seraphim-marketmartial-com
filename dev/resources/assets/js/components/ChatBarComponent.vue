@@ -30,22 +30,22 @@
                                             cols="10" 
                                             class="chat-block">
                                         <b-row>
-                                            <b-col cols="12" class="chat-user-name mb-0 pt-3">
+                                            <div class="w-100 chat-user-name pt-2 pr-2 pl-2">
                                                 <h6 class="m-0">
                                                     {{ messageUserName(message.user_name) }}
                                                     <span class="float-right chat-timestamp">{{ castToMomentTime(message.time_stamp) }}</span>
                                                 </h6>
-                                            </b-col>
-                                            <b-col cols="12" class="chat-message mt-3">
-                                                <p>{{ message.message }}</p>
-                                            </b-col>
-                                            <b-col cols="12" class="chat-time mt-0">
-                                                <h6 class="text-right">
+                                            </div>
+                                            <div class="w-100 chat-message mt-1 pr-2 pl-2">
+                                                <p class="mb-0">{{ message.message }}</p>
+                                            </div>
+                                            <div class="w-100 chat-time mt-0 pr-2 pl-2 pb-2">
+                                                <h6 class="text-right mb-0" v-if="message.status != null">
                                                     &nbsp;
                                                     <i v-if="message.status == 'sent'" class="fas fa-check"></i>
                                                     <i v-if="message.status == 'received'" class="fas fa-check-double"></i>
                                                 </h6>
-                                            </b-col>
+                                            </div>
                                         </b-row>
                                     </b-col>    
                                 </b-row>
@@ -55,9 +55,14 @@
                     
                     <div class="chat-actions">
                         <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
-                            <b-form-group v-for="(option, index) in quick_message_options" :key="index" class="text-center mb-1">
-                                <button @click="quick_message = option.message" type="submit" class="btn mm-generic-trade-button w-100">{{ option.title }}</button>
-                            </b-form-group>
+                            <template v-for="(option, index) in quick_message_options">
+                                <button v-active-request 
+                                        @click="quick_message = option.message" 
+                                        type="submit" 
+                                        class="btn mm-generic-trade-button w-50 mb-1">
+                                    {{ option.title }}
+                                </button>
+                            </template>
                             <textarea @keydown.enter.prevent="sendMessage"
                                       rows="6"
                                       class="mb-1 mt-1 w-100"
@@ -89,16 +94,20 @@
                 display_messages: [],
                 quick_message_options: [
                     {
-                        title: 'No cares, thanks',
-                        message: 'No cares, thanks',
-                    },
-                    {
                         title: 'Looking',
                         message: 'Looking',
                     },
                     {
-                        title: 'Please call me',
+                        title: 'No cares',
+                        message: 'No cares, thanks',
+                    },
+                    {
+                        title: 'Call me',
                         message: 'Please call me',
+                    },
+                    {
+                        title: 'Subject on all',
+                        message: 'Subject on all',
                     },
                 ],
             };

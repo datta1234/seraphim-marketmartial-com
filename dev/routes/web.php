@@ -20,13 +20,24 @@ Auth::routes();
 */
 Route::get('/', 'PageController@index')->name('home');
 Route::get('/contact', 'PageController@contact')->name('contact');
-Route::get('/about', 'PageController@about')->name('about');
 Route::post('/contact', 'PageController@contactMessage')->name('contact');
+Route::get('/about', 'PageController@about')->name('about');
+Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
+Route::get('/fsp-disclosures', 'PageController@fspDisclosures')->name('fsp_disclosures');
 
 // Keepalive For Trade Screen
-Route::get('/ping', function() {
-    // valid session still alive, continue
+Route::get('/ping', function(\Illuminate\Http\Request $request) {
     return response("pong");
+    // $authed = \Auth::guard('web')->check();
+    // $ft = (int) $request->get('t');
+    // $bt = (int) round(microtime(true) * 1000);
+    // // valid session still alive, continue
+    // return response()->json([
+    //     "ft" => $ft,
+    //     "bt" => $bt,
+    //     "bfd" => ($bt - $ft),
+    //     "authed" => $authed
+    // ]);
 });
 
 Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {
@@ -95,13 +106,16 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
     Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
 
-	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController');
-    Route::resource('market-type', 'TradeScreen\MarketTypeController');
-    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController');
+    Route::get('/previous-negotiations', 'PreviousDayController@getOldNegotiations')->name('previous-negotiations');
+    Route::post('/previous-negotiations', 'PreviousDayController@refreshOldNegotiations')->name('previous-negotiations.refresh');
+
+	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController')->only(['index', 'store', 'destroy']);
+    Route::resource('market-type', 'TradeScreen\MarketTypeController')->only(['index', 'show']);
+    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController')->only(['index']);
 
     Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
 	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
-		'only' => ['store','index']
+		'only' => ['index']
 	]);
 
     Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
@@ -115,14 +129,14 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
     );
 
-    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController');
-    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController');
+    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController')->only(['store', 'update', 'destroy']);
+    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController')->only(['store', 'update', 'destroy']);
     
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/repeat', 'TradeScreen\UserMarket\MarketNegotiationController@repeatProposal');
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
     Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/improve', 'TradeScreen\UserMarket\MarketNegotiationController@improveBest');
     
-    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController');
+    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController')->only(['store']);
 
     Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']
@@ -144,6 +158,15 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
     */
     Route::delete('/user-market/{user_market}/activity/{activity}', 'ActivityController@userMarket');
     
+    /*
+    * Admin Trade Screen Functionality
+    */
+    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
+        Route::resource('market-request', 'TradeScreen\Admin\MarketRequestController', [
+            'as' => 'market-request',
+            'only' => ['show']
+        ]);
+    });
 });
 
 /**
@@ -210,10 +233,23 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		return redirect('/admin/user');
 	})->name('2fa')->middleware('2fa');
 	
+	Route::resource('brokerage-fees', 'Admin\BrokerageFeesController', [
+		'as' => 'admin',
+		'only' => ['index','edit','update']
+	]);
 });
 
 Route::group(['middleware' => ['auth']], function() {
 		Route::get('assemble/oldstyle', function () {
         return view('assemble.oldstyle')->with(['is_admin_update'=>false]);
     }); 
+});
+
+
+Route::group(['prefix' => 'document'], function() {
+    Route::get('terms-and-conditions', 'PDFController@termsAndConditions');
+    Route::get('privacy-policy', 'PDFController@privacyPolicy');
+    Route::get('conflicts-of-interest-policy', 'PDFController@conflictsOfInterestPolicy');
+
+    Route::get('trading-spreads-and-fees', 'PDFController@tradingSpreads', [ 'middleware' => 'auth' ]);
 });

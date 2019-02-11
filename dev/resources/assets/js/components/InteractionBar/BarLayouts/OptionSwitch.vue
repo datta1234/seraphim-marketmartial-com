@@ -1,7 +1,7 @@
 <template>
     <b-container fluid dusk="ibar-negotiation-bar-option-switch">
 
-        <ibar-user-market-title :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
+        <ibar-user-market-title :market-request="marketRequest" :title="market_title" :time="market_time" class="mt-1 mb-2"></ibar-user-market-title>
         
        <ibar-market-requested class="mb-2" 
             :market-request="marketRequest" 
@@ -68,7 +68,7 @@
         
         <b-row class="mb-1">
             <b-col cols="10">
-                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger">
+                <b-col cols="12" v-for="(error,key) in errors" :key="key" class="text-danger text-center">
                     {{ error[0] }}
                 </b-col>
                 <ibar-remove-conditions  v-if="can_negotiate" :market-negotiation="proposed_user_market_negotiation"></ibar-remove-conditions>

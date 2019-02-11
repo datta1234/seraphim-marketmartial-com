@@ -79,7 +79,7 @@ class UserMarketRequestPolicy
      */
     public function addQoute(User $user, UserMarketRequest $userMarketRequest)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return !$userMarketRequest->userMarkets()->activeQuotes()->whereHas('user',function($query) use ($user) {
@@ -96,9 +96,6 @@ class UserMarketRequestPolicy
      */
     public function actionTaken (User $user, UserMarketRequest $userMarketRequest)
     {
-        if($user->isViewer()) { 
-            return false; 
-        }
         return $user->isTrader();
     }
 
@@ -111,9 +108,6 @@ class UserMarketRequestPolicy
      */
     public function ToggleAlertCleared (User $user, UserMarketRequest $userMarketRequest)
     {
-        if($user->isViewer()) { 
-            return false; 
-        }
         return $user->isTrader();
     }
 }

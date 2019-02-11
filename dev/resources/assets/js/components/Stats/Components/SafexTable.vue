@@ -58,11 +58,17 @@
                                         Filter
                                     </button>
                                 </b-col>
-                                <b-col cols="4" offset="2">
+                                <b-col cols="2">
+                                    <button class="btn mm-button w-100 float-right ml-0 mr-2" 
+                                            @click="clearFilters()">
+                                        Clear Filter
+                                    </button>
+                                </b-col>
+                                <b-col cols="4">
                                     <datepicker v-model="table_data.param_options.date"
                                                 class="float-right filter-date-picker"
                                                 name="safex-table-datepicker"
-                                                placeholder="Select a date"
+                                                placeholder="Select a trade date"
                                                 :bootstrap-styling="true"
                                                 :calendar-button="true"
                                                 calendar-button-icon="fas fa-calendar-alt"
@@ -86,7 +92,12 @@
                              :no-local-sorting="true"
                              @sort-changed="sortingChanged">
                         <template v-for="(field,key) in table_data.table_fields" :slot="field.key" slot-scope="row">
-                            {{ formatItem(row.item, field.key) }}
+                            <template v-if="isSameDate(row.item.trade_date,latest_date)">
+                                <strong>{{ formatItem(row.item, field.key) }}</strong>
+                            </template>
+                            <template v-else>
+                                {{ formatItem(row.item, field.key) }}
+                            </template>
                         </template>
                     </b-table>
 
@@ -133,15 +144,15 @@
                 ],
                 table_data: {
                     table_fields: [
-                        { key: 'trade_date', label: 'Trade Date' },
-                        { key: 'structure', label: 'Strucure' },
-                        { key: 'underlying_alt', label: 'Underlying' },
-                        { key: 'strike', label: 'Strike' },
-                        { key: 'strike_percentage', label: 'Strike%' },
-                        { key: 'is_put', label: 'Put/Call' },
-                        { key: 'volspread', label: 'Vol' },
-                        { key: 'expiry', label: 'Expiry' },
-                        { key: 'nominal', label: 'Nominal' },
+                        { key: 'trade_date', label: 'Trade Date', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'structure', label: 'Structure', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'underlying_alt', label: 'Underlying', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'strike_percentage', label: 'Strike%', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'is_put', label: 'Put/Call', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'volspread', label: 'Vol', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'expiry', label: 'Expiry', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
+                        { key: 'nominal', label: 'Nominal', tdClass:'text-right', thClass:'text-right', sortable: true, sortDirection: 'desc' },
                     ],
                     data: [],
                     param_options: {
@@ -151,7 +162,7 @@
                         nominal: null,
                         date: null,
                         order_by: null,
-                        order_ascending: true,
+                        order_ascending: false,
                     },
                     pagination: {
                         current_page: 1,
@@ -159,10 +170,19 @@
                         total: 10,
                     },
                     loaded: false,
+                    latest_date: null,
                 }
             };
         },
         methods: {
+            clearFilters(index) {
+                this.table_data.param_options.date = null;
+                this.table_data.param_options.market = null;
+                this.table_data.param_options.expiration = null;
+                this.table_data.param_options.nominal = null;
+                this.table_data.param_options.underlying = null;
+                this.loadTableData();
+            },
             loadTableData() {
                 this.table_data.loaded = false;
                 axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex', {
@@ -179,13 +199,17 @@
                 })
                 .then(safexDataResponse => {
                     if(safexDataResponse.status == 200) {
-                        // console.log("FROM SERVER: ",safexDataResponse.data);
-                        this.table_data.pagination.current_page = safexDataResponse.data.current_page;
-                        this.table_data.pagination.per_page = safexDataResponse.data.per_page;
-                        this.table_data.pagination.total = safexDataResponse.data.total;
-                        this.table_data.data = safexDataResponse.data.data;
+                        this.table_data.pagination.current_page = safexDataResponse.data.data.table_data.current_page;
+                        this.table_data.pagination.per_page = safexDataResponse.data.data.table_data.per_page;
+                        this.table_data.pagination.total = safexDataResponse.data.data.table_data.total;
+                        this.table_data.data = safexDataResponse.data.data.table_data.data;
+                        this.latest_date = safexDataResponse.data.data.latest_date;
                         this.table_data.loaded = true;
-                        // console.log(this.table_data.data);
+                        console.log("Data from sever: ", safexDataResponse.data.data);
+
+                        if(this.expiration_filter.length < 2) {
+                            this.expiration_filter = this.expiration_filter.concat(safexDataResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
+                        }
                     } else {
                         console.error(err); 
                     }
@@ -222,24 +246,11 @@
                         return item[key];
                 }
             },
-            loadExpirations() {
-                axios.get(axios.defaults.baseUrl + '/trade/safex-expiration-date', {
-                    params:{
-                        'not_paginate': true,
-                    }
-                })
-                .then(expirationsResponse => {
-                    Object.keys(expirationsResponse.data.data).forEach(key => {
-                        this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
-                    });
-                }, err => {
-                    console.error(err);
-                    this.$toasted.error("Failed to load safex expiration dates");
-                });
-            },
+            isSameDate(date1,date2,test,tet,te) {
+                return moment(date1).isSame(date2);
+            }
         },
         mounted() {
-            this.loadExpirations();
         	this.loadTableData();
         }
     }

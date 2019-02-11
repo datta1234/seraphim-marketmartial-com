@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MarketRequest\UserMarketRequest;
 use App\Models\Market\UserMarket;
+use App\Models\Market\MarketNegotiation;
 use App\Models\StructureItems\Market;
 use Carbon\Carbon;
 
@@ -84,6 +85,7 @@ class PreviousDayController extends Controller
      */
     public function getOldQuotes()
     {
+        $this->authorize('refreshQuotes', UserMarket::class);
         \Config::set('loading_previous_day', true); // set request context
         $data = UserMarket::whereHas('user', function($q){
                 $q->where('organisation_id', \Auth::user()->organisation_id);
@@ -101,7 +103,10 @@ class PreviousDayController extends Controller
                 return $data;
             });
         \Config::set('loading_previous_day', false); // reset request context
-        return response()->json($data, 200);
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
     }
 
     /**
@@ -111,6 +116,7 @@ class PreviousDayController extends Controller
      */
     public function refreshOldQuotes(Request $request)
     {
+        $this->authorize('refreshQuotes', UserMarket::class);
         $refresh = $request->get('refresh');
 
         // get only the applicable quotes belonging to this user
@@ -132,6 +138,7 @@ class PreviousDayController extends Controller
             if(in_array($quote->id, $refresh)) {
                 // REFRESH
                 $quote->touch();
+                $quote->lastNegotiation->touch();
                 // mark request to be updated
                 if(!in_array($quote->user_market_request_id, $marketRequests)) {
                     $marketRequests[] = $quote->user_market_request_id;
@@ -153,6 +160,89 @@ class PreviousDayController extends Controller
             'success' => true,
             'data' => [
                 'message' => $quotes->count()." quotes were refreshed"
+            ]
+        ], 200);
+    }
+
+    /**
+     * Display the previous day page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getOldNegotiations()
+    {
+        $this->authorize('refreshLevels', MarketNegotiation::class);
+        \Config::set('loading_previous_day', true); // set request context
+        $org_id = \Auth::user()->organisation_id;
+        $data = MarketNegotiation::whereHas('user', function($q) use ($org_id){
+            $q->where('organisation_id', $org_id);
+        })
+        ->previousDayRefreshable()
+        ->get()
+        ->map(function($negotiation) use ($org_id) {
+            $item = $negotiation->setOrgContext()->preFormattedMarketNegotiation();
+            $item['market_request_summary'] = $negotiation->userMarket->userMarketRequest->getSummary();
+            $item['owns_bid'] = $negotiation->marketNegotiationSource('bid')->user->organisation_id == $org_id;
+            $item['owns_offer'] = $negotiation->marketNegotiationSource('offer')->user->organisation_id == $org_id;
+            return $item;
+        });
+        \Config::set('loading_previous_day', false); // reset request context
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ], 200);
+    }
+
+    /**
+     * Display the previous day page
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function refreshOldNegotiations(Request $request)
+    {
+        $this->authorize('refreshLevels', MarketNegotiation::class);
+        $refresh = $request->get('refresh');
+
+        // get only the applicable quotes belonging to this user
+        \Config::set('loading_previous_day', true); // set request context
+        $negotiations = MarketNegotiation::whereHas('user', function($q){
+            $q->where('organisation_id', \Auth::user()->organisation_id);
+        })
+        ->previousDayRefreshable()
+        ->get();
+        \Config::set('loading_previous_day', false); // reset request context
+
+        // walk through the quotes and refresh if need be or pull
+        $marketRequests = [];
+        foreach($negotiations as $negotiation) {
+            if(in_array($negotiation->id, $refresh)) {
+                // REFRESH
+                $negotiation->touch();
+                $negotiation->userMarket->touch();
+                $negotiation->userMarket->userMarketRequest->touch();
+
+                // mark request to be updated
+                if(!in_array($negotiation->userMarket->user_market_request_id, $marketRequests)) {
+                    $marketRequests[] = $negotiation->userMarket->user_market_request_id;
+                }
+            } else {
+                // PULL
+                $negotiation->userMarket->userMarketRequest->active = false;
+                $negotiation->userMarket->userMarketRequest->save();
+            }
+        }
+
+        // push out notifications for required market requests
+        UserMarketRequest::whereIn('id', $marketRequests)
+        ->get()
+        ->each(function(&$marketRequest) {
+            $marketRequest->notifyRequested();
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'message' => $negotiations->count()." levels were refreshed"
             ]
         ], 200);
     }

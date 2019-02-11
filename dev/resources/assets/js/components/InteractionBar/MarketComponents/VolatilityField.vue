@@ -5,7 +5,7 @@
                 <b-col cols="10">
                     <b-form inline>
                         <div class="w-25 p-1 m-auto">
-                            <b-form-input v-active-request class="w-100" v-model="volatility.value" :disabled="disabled" type="text" dusk="market-negotiation-vol" placeholder="Choice"></b-form-input>
+                            <b-form-input v-active-request v-input-mask.number.decimal="{ precision: 2 }" class="w-100" v-model="volatility.value" :disabled="disabled" type="text" dusk="market-negotiation-vol" placeholder="Choice"></b-form-input>
                         </div>
                     </b-form>
                 </b-col>

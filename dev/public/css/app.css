@@ -107,6 +107,10 @@
 *   Stats
 */
 
+/*
+* fee page
+*/
+
 /* 
 * bootstrap overrides
 */
@@ -167,6 +171,10 @@ a.mm-base {
 
 /*
 *   Stats
+*/
+
+/*
+* fee page
 */
 
 /* 
@@ -10676,10 +10684,53 @@ body .page-title h1 {
 	background-size: cover; */
 }
 
+table.borderless {
+  border: none;
+}
+
+table.borderless td,
+table.borderless th {
+  border: none;
+}
+
+table.shadowless {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+table.slim td,
+table.slim th {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+}
+
 .card {
   border: none;
   -webkit-box-shadow: 4px 4px 9px -4px #000000;
           box-shadow: 4px 4px 9px -4px #000000;
+}
+
+.card.card-dark {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body {
+  background-color: #1c3641;
+  color: #ffffff;
+}
+
+.card.card-dark .card-body table {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body .card-title {
+  color: #ffffff;
+}
+
+.card.card-dark .card-body .card-text {
+  color: #ffffff;
 }
 
 .card .card-header {
@@ -11367,6 +11418,15 @@ table.table {
 		border: none;
 	}
 } */
+
+input.self-active-input {
+  background-color: #EBC300;
+}
+
+input.self-active-input:focus,
+input.self-active-input:active {
+  background-color: #EBC300;
+}
 
 #trade_html {
   position: relative;
@@ -17543,6 +17603,7 @@ input:checked + .slider:before {
 
 .market-tab-ratio {
   padding-left: 1.5em;
+  padding-right: 1.5em;
 }
 
 .market-tab-ratio.has-ratio:before {
@@ -17552,6 +17613,21 @@ input:checked + .slider:before {
   font-weight: bold;
   position: absolute;
   left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.market-tab-ratio.org-involvement:after {
+  content: "";
+  height: 0.75em;
+  width: 0.75em;
+  border-radius: 50%;
+  background-color: #EBC300;
+  -webkit-box-shadow: 0px 0px 3px 1px #000000;
+  box-shadow: 0px 0px 3px 1px #000000;
+  position: absolute;
+  right: 0;
   top: 50%;
   -webkit-transform: translateY(-50%);
   transform: translateY(-50%);
@@ -17567,17 +17643,6 @@ input:checked + .slider:before {
   background-color: #071a22;
 }
 
-.trade-section.dark-theme .market-tab.market-alert,
-.trade-section.light-theme .market-tab.market-alert,
-.trade-section .previous-day-traded .market-tab.market-alert,
-.trade-section .previous-day-untraded .market-tab.market-alert,
-.previous-day-wrapper.dark-theme .market-tab.market-alert,
-.previous-day-wrapper.light-theme .market-tab.market-alert,
-.previous-day-wrapper .previous-day-traded .market-tab.market-alert,
-.previous-day-wrapper .previous-day-untraded .market-tab.market-alert {
-  background-color: #BB1D1D;
-}
-
 .trade-section.dark-theme .market-tab.market-confirm,
 .trade-section.light-theme .market-tab.market-confirm,
 .trade-section .previous-day-traded .market-tab.market-confirm,
@@ -17587,6 +17652,28 @@ input:checked + .slider:before {
 .previous-day-wrapper .previous-day-traded .market-tab.market-confirm,
 .previous-day-wrapper .previous-day-untraded .market-tab.market-confirm {
   background-color: #E17428;
+}
+
+.trade-section.dark-theme .market-tab.traded-on-day,
+.trade-section.light-theme .market-tab.traded-on-day,
+.trade-section .previous-day-traded .market-tab.traded-on-day,
+.trade-section .previous-day-untraded .market-tab.traded-on-day,
+.previous-day-wrapper.dark-theme .market-tab.traded-on-day,
+.previous-day-wrapper.light-theme .market-tab.traded-on-day,
+.previous-day-wrapper .previous-day-traded .market-tab.traded-on-day,
+.previous-day-wrapper .previous-day-untraded .market-tab.traded-on-day {
+  background-color: #E17428;
+}
+
+.trade-section.dark-theme .market-tab.market-alert,
+.trade-section.light-theme .market-tab.market-alert,
+.trade-section .previous-day-traded .market-tab.market-alert,
+.trade-section .previous-day-untraded .market-tab.market-alert,
+.previous-day-wrapper.dark-theme .market-tab.market-alert,
+.previous-day-wrapper.light-theme .market-tab.market-alert,
+.previous-day-wrapper .previous-day-traded .market-tab.market-alert,
+.previous-day-wrapper .previous-day-untraded .market-tab.market-alert {
+  background-color: #BB1D1D;
 }
 
 .trade-section.dark-theme .market-tab.market-request,
@@ -17684,6 +17771,10 @@ input:checked + .slider:before {
 
 .user-action {
   color: #EBC300;
+}
+
+.user-action-dark {
+  color: #b5980e;
 }
 
 .market-tab-state .is-maker {
@@ -18165,13 +18256,19 @@ input:checked + .slider:before {
   background-color: #9fe29f;
 }
 
-.organisation-chat .chat-header .new-message-alert {
+.chat-header .new-message-alert,
+.action-bar .new-message-alert {
   color: #f3931c;
   border-radius: 15px;
   -webkit-box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
           box-shadow: 0 0 0 rgba(204, 169, 44, 0.4);
-  -webkit-animation: pulse 2s 5;
-          animation: pulse 2s 5;
+  -webkit-animation: pulse 2s 10;
+          animation: pulse 2s 10;
+}
+
+.chat-header .new-message-alert span,
+.action-bar .new-message-alert span {
+  color: #f3931c;
 }
 
 @-webkit-keyframes pulse {
@@ -18445,6 +18542,18 @@ body > .popover > .arrow {
   }
 }
 
+.market-text.is-maker {
+  color: #37A53A;
+}
+
+.market-text.is-interest {
+  color: #2358BD;
+}
+
+.market-text.is-my-org {
+  color: #EBC300;
+}
+
 .shader {
   width: 100%;
   height: 100%;
@@ -18603,6 +18712,80 @@ body > .popover > .arrow {
 
 .mm-blue-bg.form-control {
   background: rgba(35, 88, 189, 0.1);
+}
+
+.fee-title {
+  background-color: #234452;
+  padding: 1em 1.5em;
+  margin-left: -1.25rem;
+  margin-right: -1.25rem;
+}
+
+table.fee-table {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+table.fee-table > tr > td,
+table.fee-table > tbody > tr > td {
+  border-top: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  border-left: 2px solid #FFF;
+  border-right: 2px solid #FFF;
+}
+
+table.fee-table > tr > td:first-child,
+table.fee-table > tbody > tr > td:first-child {
+  border-left: none;
+}
+
+table.fee-table > tr > td:last-child,
+table.fee-table > tbody > tr > td:last-child {
+  border-right: none;
+}
+
+table.fee-table > tr > td.bb-0,
+table.fee-table > tbody > tr > td.bb-0 {
+  border-bottom: none;
+}
+
+table.fee-table > tr:first-child > td,
+table.fee-table > tbody > tr:first-child > td {
+  border-top: none;
+}
+
+table.fee-table > tr:last-child > td,
+table.fee-table > tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+table.fee-table > tr.fee-header > td,
+table.fee-table > tbody > tr.fee-header > td {
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+table.fee-table > tr.fee-row > td,
+table.fee-table > tbody > tr.fee-row > td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.fee-table > tr.fee-row > td:first-child,
+table.fee-table > tbody > tr.fee-row > td:first-child {
+  text-align: left;
+  font-weight: bold;
+}
+
+table.fee-table > tr td.fee-orange,
+table.fee-table > tbody > tr td.fee-orange {
+  color: #ffc100;
+}
+
+table.fee-table > tr td.fee-green,
+table.fee-table > tbody > tr td.fee-green {
+  color: #00b24b;
 }
 
 @font-face {

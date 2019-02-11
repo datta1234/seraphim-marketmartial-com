@@ -82,3 +82,12 @@ EventBus.$on('resetConditions', () => {
 EventBus.$on('errorConditions', (err) => {
     EventBus.$emit('conditionsError', err);
 });
+
+EventBus.$on('disableSend', () => {
+    EventBus.$emit('sendDisabled');
+});
+EventBus.$on('enableSend', (err) => {
+    EventBus.$emit('sendEnabled', err);
+});
+
+

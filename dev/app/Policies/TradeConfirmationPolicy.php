@@ -20,6 +20,23 @@ class TradeConfirmationPolicy
         
     }
 
+
+    public function listTradeConfirmations(User $user)
+    {
+        if(!$user->isTrader()) { 
+            return false; 
+        }
+        return true;
+    }
+
+    public function viewTradeConfirmations(User $user, TradeConfirmation $tradeConfirmation)
+    {
+        if(!$user->isTrader()) { 
+            return false; 
+        }
+        return $tradeConfirmation->sendUser->organisation_id == $user->organisation_id || $tradeConfirmation->recievingUser->organisation_id == $user->organisation_id;
+    }
+
     /**
      * Determine whether the user can dispute a TradeConfirmation.
      *
@@ -29,18 +46,17 @@ class TradeConfirmationPolicy
      */
     public function dispute(User $user, TradeConfirmation $tradeConfirmation)
     {
-
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 
-        if( in_array($tradeConfirmation->trade_confirmation_status_id, [3])) {
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [3,6])) {
             // test sender org
             if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
                 return $user->isTrader();
             }
         }
-        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5,7])) {
             // test receiver org
             if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
                 return $user->isTrader();
@@ -58,7 +74,7 @@ class TradeConfirmationPolicy
      */
     public function confirm(User $user, TradeConfirmation $tradeConfirmation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         // Status 3 = send user 2 or 5 received user anything else is not allowed 
@@ -86,17 +102,17 @@ class TradeConfirmationPolicy
      */
     public function phaseTwo(User $user, TradeConfirmation $tradeConfirmation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 
-        if( in_array($tradeConfirmation->trade_confirmation_status_id, [1,3])) {
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [1,3,6])) {
             // test sender org
             if($tradeConfirmation->sendUser->organisation_id == $user->organisation_id) {
                 return $user->isTrader();
             }
         }
-        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5])) {
+        if( in_array($tradeConfirmation->trade_confirmation_status_id, [2,5,7])) {
             // test receiver org
             if($tradeConfirmation->recievingUser->organisation_id == $user->organisation_id) {
                 return $user->isTrader();
@@ -114,7 +130,7 @@ class TradeConfirmationPolicy
      */
     public function update(User $user, TradeConfirmation $tradeConfirmation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         // Status 1 or 3 = send user 2 or 5 received user anything else is not allowed 

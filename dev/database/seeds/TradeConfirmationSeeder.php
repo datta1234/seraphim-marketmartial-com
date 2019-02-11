@@ -27,7 +27,7 @@ class TradeConfirmationSeeder extends Seeder
 					"traded" => true,
 					"quantity" => $is_offer ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
 					"is_offer" => $is_offer,
-					"is_distpute" => false,
+					"is_dispute" => false,
              
 	            ]);
 
@@ -80,7 +80,7 @@ class TradeConfirmationSeeder extends Seeder
 					"traded" => true,
 					"quantity" => $is_offer ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
 					"is_offer" => $is_offer,
-					"is_distpute" => false
+					"is_dispute" => false
 	            ]);
 
 	    		$send_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)
@@ -122,7 +122,7 @@ class TradeConfirmationSeeder extends Seeder
 					"traded" => true,
 					"quantity" => $is_offer ? $marketNegotiation->offer_qty : $marketNegotiation->bid_qty,
 					"is_offer" => $is_offer,
-					"is_distpute" => false
+					"is_dispute" => false
 	            ]);
 
 	    		$send_trading_account = App\Models\UserManagement\TradingAccount::where('user_id',$tradeNegotiation->initiateUser->id)

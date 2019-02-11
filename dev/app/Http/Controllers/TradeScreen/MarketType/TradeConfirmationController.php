@@ -17,17 +17,18 @@ class TradeConfirmationController extends Controller
     public function index(Request $request,MarketType $marketType)
     {       
         $user = $request->user();
+        $this->authorize('listTradeConfirmations', TradeConfirmation::class);
     	$trade_confirmations = TradeConfirmation::where(function($q) use($user,$marketType)
         {
             $q->sentByMyOrganisation($user->organisation_id)
                 ->marketType($marketType->id)
-                ->whereIn('trade_confirmation_status_id',[1,5]);
+                ->whereIn('trade_confirmation_status_id',[1,3,6]);
 
-        })->orWHere(function($q) use($user,$marketType){
+        })->orWhere(function($q) use($user,$marketType){
             
             $q->sentToMyOrganisation($user->organisation_id)
                 ->marketType($marketType->id)
-                ->whereIn('trade_confirmation_status_id',[2,3]);
+                ->whereIn('trade_confirmation_status_id',[2,5,7]);
 
         })->get()
         ->map(function($item){

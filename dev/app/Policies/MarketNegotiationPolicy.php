@@ -32,8 +32,11 @@ class MarketNegotiationPolicy
      */
     public function addTradeNegotiation(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
+        }
+        if($marketNegotiation->isTraded()) {
+            return false;
         }
         if($marketNegotiation->isTrading()) {
             // only involved
@@ -51,11 +54,11 @@ class MarketNegotiationPolicy
      */
     public function delete(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isViewer()) { 
-            return false; 
-        }
         if($user->isAdmin()) {
             return true;
+        }
+        if(!$user->isTrader()) { 
+            return false; 
         }
         
         // FoK
@@ -83,7 +86,7 @@ class MarketNegotiationPolicy
      */
     public function counter(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return (
@@ -94,7 +97,7 @@ class MarketNegotiationPolicy
 
     public function amend(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         $userMarket = $marketNegotiation->userMarket;
@@ -134,7 +137,7 @@ class MarketNegotiationPolicy
      */
     public function improveBest(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         $user_market = $marketNegotiation->userMarket;
@@ -145,6 +148,12 @@ class MarketNegotiationPolicy
             !$current_best->isTrading() &&
             !!$user_market
         );
+    }
+
+
+    public function refreshLevels(User $user)
+    {
+        return $user->isTrader();
     }
 
 }

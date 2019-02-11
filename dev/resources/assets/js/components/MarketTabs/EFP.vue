@@ -16,12 +16,16 @@
                 </b-row>
             </b-col>
             <b-col class="market-tab-state">
-                <b-row align-v="center" align-h="center" class="h-100">
-                    <b-col v-if="market_request_state_label != ''">
+                <b-row align-v="center" align-h="center" class="h-100" v-if="market_request_state_label != ''">
+                    <b-col>
                         <span v-bind:class="{'user-action': market_request_state_label == 'SENT'}" class="">{{ market_request_state_label }}</span>
                     </b-col>
-                    <b-col v-else>
-                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">{{ user_market_offer }}</span>
+                </b-row>
+                <b-row align-v="center" align-h="center" class="h-100" v-else>
+                    <b-col cols="12">
+                        <span class="" v-bind:class="bidState">{{ user_market_bid }}</span>&nbsp;/&nbsp;<span class="" v-bind:class="offerState">
+                            {{ user_market_offer }}
+                        </span>
                     </b-col>
                 </b-row>
             </b-col>
@@ -64,20 +68,6 @@
                 let group = this.$root.config("trade_structure.efp.group_1");
                 let exp = this.$root.config("trade_structure.efp.expiration_date");
                 return this.marketRequest.trade_items[group][exp];
-            },
-            marketState: function() {
-                return {
-                    'trade-negotiation-open':  this.market_request_state == 'trade-negotiation-open',
-                    'trade-negotiation-pending':  this.market_request_state == 'trade-negotiation-pending',
-                    'negotiation-vol-pending':  this.market_request_state == 'negotiation-vol-pending',
-                    'negotiation-vol': this.market_request_state == 'negotiation-vol',
-                    'market-request-grey': this.market_request_state == 'request-grey',
-                    'market-request': !this.marketRequest.is_interest  && this.no_cares.indexOf(this.marketRequest.id) == -1 && this.market_request_state == 'request',
-                    'market-request-vol': this.market_request_state == 'request-vol',
-                    'market-alert': this.marketRequest.attributes.action_needed,
-                    'market-confirm': this.market_request_state == 'confirm',
-                    'active': this.isActive,
-                }
             }
         },
         mounted() {

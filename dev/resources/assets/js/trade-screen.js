@@ -98,7 +98,9 @@ Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQ
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';
+import InputMask from './directives/input-mask.js';
 Vue.directive('active-request', ActiveRequestDirective);
+Vue.directive('input-mask', InputMask);
 
 import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'
@@ -186,10 +188,10 @@ const app = new Vue({
                    self.trade_confirmations.push(new TradeConfirmation(x));   
                     return x;
                 });
-                console.log('====================================');
+                /*console.log('====================================');
                 console.log("Loading Trade Confirmations: FROM SERVER - ", tradeConfirmationResponse.data.data);
                 console.log("Loading Trade Confirmations: OBJECT - ", self.trade_confirmations);
-                console.log('====================================');
+                console.log('====================================');*/
                 return self.trade_confirmations;
             }, err => {
                 console.error(err);
@@ -520,19 +522,19 @@ const app = new Vue({
                     });
                     promises.push(this.loadTradeConfirmations(market_type));
 
-                    promises.push(
-                        this.loadMarkets(market_type)
-                        .then(markets => {
-                            markets.forEach(market => {
-                                promises.push(
-                                    this.loadMarketRequests(market)
-                                );
-                            });
-                        })
-                    );
+                    promises.push(this.loadMarkets(market_type));
                 });
             }
             //
+            return Promise.all(promises);
+        })
+        .then(market_types => {
+            let promises = [];
+            this.display_markets.forEach(market => {
+                promises.push(
+                    this.loadMarketRequests(market)
+                );
+            });
             return Promise.all(promises);
         })
         .then(all_loaded => {
@@ -540,6 +542,14 @@ const app = new Vue({
             this.page_loaded = true;
             //load the no cares from storage
             this.loadNoCares();
+
+            let market_titles = [];
+            this.display_markets.forEach(m => {
+                m.market_requests.forEach(mr => {
+                    market_titles.push(mr.marketTradeTitle());
+                })
+            });
+            console.log("Market Titles >>>\n", market_titles.join('\n'));
         });
 
         let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
@@ -587,7 +597,7 @@ const app = new Vue({
                         this.updateUserMarketRequest(packet_data.data);
                         console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         //@TODO - @Francois Move to new event when rebate gets created
-                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded_rebate_earned") {
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
                         }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
@@ -608,9 +618,18 @@ const app = new Vue({
                     });
                 })
                 .listen('RebateEvent', (rebate) => {
+                    console.log("Got RebateEvent: ", rebate);
                     if(rebate.message)
                     {
-                         this.$toasted.show(rebate.message.data); 
+                         this.$toasted.show(rebate.message.data, { 
+                            duration : 30000, 
+                            action : {
+                                text : 'Got It!',
+                                onClick : (e, toastObject) => {
+                                    toastObject.goAway(0);
+                                }
+                            }
+                        }); 
                     }
                     EventBus.$emit('rebateUpdate', rebate.data);
                 })

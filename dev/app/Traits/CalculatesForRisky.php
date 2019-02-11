@@ -3,7 +3,7 @@
 namespace App\Traits;
 use Carbon\Carbon;
 
-trait CalcuatesForRisky {
+trait CalculatesForRisky {
     
     public function riskyTwo()
     {
@@ -19,8 +19,15 @@ trait CalcuatesForRisky {
             $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
             $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
-            $this->optionGroups[0]->setOpVal('Contract', round( $nominal1 / ($SpotRef * 100), 0));
-            $this->optionGroups[1]->setOpVal('Contract', round( $nominal2 / ($SpotRef * 100), 0));
+            $val1 = round( $nominal1 / ($SpotRef * 100), 0);
+            $val2 = round( $nominal2 / ($SpotRef * 100), 0);
+            if($val1 === 0.0 || $val2 === 0.0) {
+                // handle cant process, spotref too high
+                throw new \App\Exceptions\SpotRefTooHighException("Spot Ref Too High",0);
+            }
+            
+            $this->optionGroups[0]->setOpVal('Contract', $val1);
+            $this->optionGroups[1]->setOpVal('Contract', $val2);
         }
 
         $future1 =  floatval($this->futureGroups[0]->getOpVal('Future'));
@@ -35,9 +42,10 @@ trait CalcuatesForRisky {
  
         $future_contracts  = null;        
         
-        $is_offer = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer1 = $this->optionGroups[0]->getOpVal('is_offer',true);
+        $is_offer2 = $this->optionGroups[1]->getOpVal('is_offer',true);
 
-        if($is_offer == 1) {
+        if($is_offer1 == 1) {
             $putDirection1	= 1;
             $callDirection1 = 1;
             
@@ -81,81 +89,89 @@ trait CalcuatesForRisky {
         }
 
         // futures and deltas buy/sell
-        if($future_contracts < 0) {
-            $isOffer = false;
-        } else {
-            $isOffer = true;
-        }
-        $this->futureGroups[0]->setOpVal('is_offer', $isOffer, true);
-        $this->futureGroups[0]->setOpVal('is_offer', !$isOffer, false);
+        $isFutureOffer = !($future_contracts < 0);
+        $this->futureGroups[0]->setOpVal('is_offer', $isFutureOffer, true);
+        $this->futureGroups[0]->setOpVal('is_offer', !$isFutureOffer, false);
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
         $this->load(['futureGroups','optionGroups']);
 
-        $this->riskyFees($isOffer, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
+        $this->riskyFees($is_offer1, $is_offer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
 
-    public function riskyFees($isOffer,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
+    public function riskyFees($isOffer1,$isOffer2,$gross_prem1,$gross_prem2,$is_sender,$contracts1,$contracts2,$singleStock)
     {
-    	$Brodirection1 = $isOffer ? 1 : -1;
-    	$Brodirection2 = $isOffer ? -1 : 1;
+    	$Brodirection1 = $isOffer1 ? 1 : -1;
+    	$Brodirection2 = $isOffer2 ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
         $counterBrodirection2 = $Brodirection2 * -1;
 
-        if($singleStock) {
-	        $SINGLEriskybigFEE = config('marketmartial.confirmation_settings.risky.singles.big_leg')/100;//its a percentage
-	        $SINGLEriskysmallFEE = config('marketmartial.confirmation_settings.risky.singles.small_leg')/100;//its a percentage
+        $sender_org = $this->sendUser->organisation;
+        $receiving_org = $this->recievingUser->organisation;
+        $risky_key = 'marketmartial.confirmation_settings.risky.';
 
-	        $user_market_request_groups = $this->tradeNegotiation->userMarket->userMarketRequest->userMarketRequestGroups;
+        if($singleStock) {
+            //its a percentage        
+            $SINGLEriskybigFEESender = $sender_org->resolveBrokerageFee($risky_key.'singles.big_leg')/100;
+            $SINGLEriskybigFEEReceiving = $receiving_org->resolveBrokerageFee($risky_key.'singles.big_leg')/100;
+
+            //its a percentage        
+            $SINGLEriskysmallFEESender = $sender_org->resolveBrokerageFee($risky_key.'singles.small_leg')/100;
+            $SINGLEriskysmallFEEReceiving = $receiving_org->resolveBrokerageFee($risky_key.'singles.small_leg')/100;
+
 	        $nominal1 = $this->optionGroups[0]->getOpVal('Nominal');
 	        $nominal2 = $this->optionGroups[1]->getOpVal('Nominal');
 
 	        if($nominal1 < $nominal2) {
 	        	// NETPREM = Round(nominal1 * SINGLEriskybigFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-	        	$netPremium1 =  round($nominal1 * $SINGLEriskybigFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+	        	$netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEriskybigFEESender : $SINGLEriskybigFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
 		      	// NETPREM =  Round(nominal2 * SINGLEriskysmallFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-		      	$netPremium2 =  round($nominal2 * $SINGLEriskysmallFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+		      	$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEriskysmallFEESender : $SINGLEriskysmallFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 		      	
 	        	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEriskybigFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEriskysmallFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+	        	$netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEriskybigFEEReceiving : $SINGLEriskybigFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+		      	$netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEriskysmallFEEReceiving : $SINGLEriskysmallFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
 	        } else {
 	        	// NETPREM = Round(nominal1 * SINGLEriskysmallFEE / Contracts1 * Brodirection1 + GrossPrem1, 2)
-	        	$netPremium1 =  round($nominal1 * $SINGLEriskysmallFEE / $contracts1 * $Brodirection1 + $gross_prem1, 2);
+	        	$netPremium1 =  round($nominal1 * ($is_sender ? $SINGLEriskysmallFEESender : $SINGLEriskysmallFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem1, 2);
 		      	// NETPREM = Round(nominal2 * SINGLEriskybigFEE / Contracts2 * Brodirection2 + GrossPrem2, 2)
-		      	$netPremium2 =  round($nominal2 * $SINGLEriskybigFEE / $contracts2 * $Brodirection2 + $gross_prem2, 2);
+		      	$netPremium2 =  round($nominal2 * ($is_sender ? $SINGLEriskybigFEESender : $SINGLEriskybigFEEReceiving) / $contracts2 * $Brodirection2 + $gross_prem2, 2);
 
 		      	//set for the counter
-	        	$netPremiumCounter1 =  round($nominal1 * $SINGLEriskysmallFEE / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
-		      	$netPremiumCounter2 =  round($nominal2 * $SINGLEriskybigFEE / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
+	        	$netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEriskysmallFEEReceiving : $SINGLEriskysmallFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
+		      	$netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEriskybigFEEReceiving : $SINGLEriskybigFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
 	        }
 
         } else {
-	    	//get the spot price ref.
-	        $IXriskybigFEE = config('marketmartial.confirmation_settings.risky.index.big_leg')/100;//its a percentage
-	        $IXriskysmallFEE = config('marketmartial.confirmation_settings.risky.index.small_leg')/100;//its a percentage
+            //its a percentage        
+            $IXriskybigFEESender = $sender_org->resolveBrokerageFee($risky_key.'index.big_leg')/100;
+            $IXriskybigFEEReceiving = $receiving_org->resolveBrokerageFee($risky_key.'index.big_leg')/100;
+            
+            //its a percentage        
+            $IXriskysmallFEESender = $sender_org->resolveBrokerageFee($risky_key.'index.small_leg')/100;
+            $IXriskysmallFEEReceiving = $receiving_org->resolveBrokerageFee($risky_key.'index.small_leg')/100;
 
+	    	//get the spot price ref.
 	        $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
 	        if($contracts1 < $contracts2) {
 		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection2) + $gross_prem2;
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection2) + $gross_prem2;
+                
+                //set for the counter
+                $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection1) + $gross_prem1;
+                $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection2) + $gross_prem2;
 	        } else {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskysmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $Brodirection2) + $gross_prem2;
-	        }
-
-	        //set for the counter
-	        if($contracts1 < $contracts2) {
-		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection2) + $gross_prem2;
-	        } else {
-		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * $IXriskysmallFEE * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * $IXriskybigFEE * $counterBrodirection2) + $gross_prem2;
-	        }
+		        $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection1) + $gross_prem1;
+		        $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection2) + $gross_prem2;
+                
+                //set for the counter
+		        $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection1) + $gross_prem1;
+		        $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection2) + $gross_prem2;
+            }
         }
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);

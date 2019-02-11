@@ -39,8 +39,9 @@
                                 :market-request="marketRequest"
                                 :parser="parseRadioGroup"
                                 :defaults="defaults"
-                                @change="e => setCondition(condition, e, c_group)">
-                            </component>
+                                @change="e => setCondition(condition, e, c_group)"
+                                @reset="e => updateShownGroups()"
+                            ></component>
                         </div>
                         <div class="ibar-condition-panel-content text-left" v-else-if="condition.children && condition.children.length > 0">
                             <div v-for="(child, index) in condition.children" :key="index" v-if="child.hidden !== true && conditionDisplayed(child)">
@@ -54,6 +55,7 @@
                                         :parser="parseRadioGroup"
                                         :defaults="defaults"
                                         @change="e => setCondition(child, e, c_group)"
+                                        @reset="e => updateShownGroups()"
                                     ></component>
                                 </div>
                                 <div class="content" v-else>
@@ -62,7 +64,8 @@
                                                         v-model="defaults[child.alias]"
                                                         v-bind:options="parseRadioGroup(child.value)"
                                                         stacked
-                                                        v-on:change="e => setCondition(child, e, c_group)"
+                                                        @change="e => setCondition(child, e, c_group)"
+                                                        @reset="e => updateShownGroups()"
                                                         name="">
                                     </b-form-radio-group>
                                 </div>
@@ -75,7 +78,8 @@
                                                 v-model="defaults[condition.alias]"
                                                 v-bind:options="parseRadioGroup(condition.value)"
                                                 stacked
-                                                v-on:change="e => setCondition(condition, e, c_group)"
+                                                @change="e => setCondition(condition, e, c_group)"
+                                                @reset="e => updateShownGroups()"
                                                 name="">
                             </b-form-radio-group>
                         </div>
@@ -122,6 +126,7 @@
         },
         data() {
             return {
+                updating: false,
                 error: "",
                 shown_groups: [],
                 show_options: false,
@@ -181,6 +186,14 @@
                     }
                     return false;
                 }
+                if(typeof cond.applies_to !== 'undefined') {
+                    return cond.applies_to.reduce((a, v) => {
+                        a = a && (
+                            this.marketNegotiation[v] != null && this.marketNegotiation[v] != ''
+                        );
+                        return a
+                    }, true);
+                }
                 return true;
             },
             onToggleClick(condition, group) {
@@ -209,15 +222,19 @@
                 this.setDefaults(condition);
             },
             updateShownGroups() {
+                console.log(JSON.stringify(this.shown_groups));
                 this.shown_groups = [];
                 for(let k in this.condition_aliases) {
                     if(typeof this.shown_groups[this.condition_aliases[k].group] === 'undefined') {
                         this.shown_groups[this.condition_aliases[k].group] = false;
                     }
+                    console.log(k, this.marketNegotiation[k], this.condition_aliases[k].default);
                     if(this.marketNegotiation[k] != this.condition_aliases[k].default) {
                         this.shown_groups[this.condition_aliases[k].group] = true;
                     }
                 }
+                console.log(JSON.stringify(this.shown_groups));
+                this.updating = false;
             },
             getDeepValue(value) {
                 switch(value.constructor) {
@@ -236,16 +253,26 @@
                 switch(condition.value.constructor) {
                     case Array:
                         if(typeof condition.default_value !== 'undefined') {
-                            this.defaults[condition.alias] = condition.value.find(item => {
+                            let defaultVal = condition.value.find(item => {
                                 if(this.getDeepValue(item) === condition.default_value) {
                                     return true;
                                 }
-                            }).value;
+                            });
+                            if(condition.default_value === condition.default) {
+                                EventBus.$emit('disableSend');
+                            }
+                            if(typeof defaultVal !== 'undefined') {
+                                this.defaults[condition.alias] = defaultVal.value
+                            }
                             this.marketNegotiation[condition.alias] = condition.default_value;
+
                         }
                     break;
                     default:
                         if(typeof condition.default_value !== 'undefined') {
+                            if(condition.default_value === condition.default) {
+                                EventBus.$emit('disableSend');
+                            }
                             this.defaults[condition.alias] = condition.value;
                             this.marketNegotiation[condition.alias] = condition.default_value;
                         }
@@ -287,6 +314,7 @@
                 this.updateShownGroups();
             },
             resetConditions(group, ignores) {
+                EventBus.$emit('enableSend');
                 for(let k in this.condition_aliases) {
                     if(group) {
                         if(group != this.condition_aliases[k].group) {
@@ -311,6 +339,7 @@
             }
         },
         mounted() {
+            // deprecated causing issues post [MM-867]
             this.$watch(() => {
                 let val = "";
                 for(let k in this.condition_aliases) {

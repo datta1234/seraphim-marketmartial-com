@@ -30,7 +30,7 @@ class UserMarketPolicy
      */
     public function update(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return $user->orgnisation_id === $userMarket->user->orgnisation_id;
@@ -45,7 +45,7 @@ class UserMarketPolicy
      */
     public function placeOnHold(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
@@ -61,7 +61,7 @@ class UserMarketPolicy
      */
     public function accept(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return $userMarket->userMarketRequest->user->organisation_id == $user->organisation_id;
@@ -70,7 +70,7 @@ class UserMarketPolicy
 
     public function updateNegotiation(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         return $userMarket->marketNegotiations()->where(function($query) use ($user)
@@ -91,11 +91,11 @@ class UserMarketPolicy
      */
     public function delete(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
-            return false; 
-        }
-        if(\Auth::user()->isAdmin()) {
+        if($user->isAdmin()) {
             return true;
+        }
+        if(!$user->isTrader()) { 
+            return false; 
         }
         return $user->organisation_id === $userMarket->user->organisation_id 
             && !$userMarket->userMarketRequest->chosenUserMarket()->exists();
@@ -103,7 +103,7 @@ class UserMarketPolicy
 
     public function addNegotiation(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         $current_org_id = $user->organisation_id;
@@ -116,7 +116,7 @@ class UserMarketPolicy
         // Cant respond to negotiation if FoK
         if($userMarket->lastNegotiation->isFoK()) {
             // only if its killed
-            return $userMarket->lastNegotiation->is_killed == true;
+            return $userMarket->lastNegotiation->is_killed == true || $userMarket->lastNegotiation->isTraded();
         }
 
         // Removed Per [MM-618]
@@ -134,7 +134,7 @@ class UserMarketPolicy
 
     public function spinNegotiation(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
+        if(!$user->isTrader()) { 
             return false; 
         }
         $current_org_id = $user->organisation_id;
@@ -143,10 +143,12 @@ class UserMarketPolicy
 
     public function workTheBalance(User $user, UserMarket $userMarket)
     {
-        if($user->isViewer()) { 
-            return false; 
-        }
         return $user->isTrader();
     }
-    
+
+    public function refreshQuotes(User $user)
+    {
+        return $user->isTrader();
+    }
+
 }

@@ -287,6 +287,10 @@
 
                     // Check for valid expiration
                     can_submit = can_submit && element.expiration !== '' && element.expiration !== null;
+
+                    if(element.has_future) {
+                        can_submit = can_submit && element.future !== '' && element.future !== null
+                    }
                 });
 
                 
@@ -368,7 +372,7 @@
                         if(date.isAfter(moment())) {
                             this.expiry_dates.push({
                                 text: date.format('MMMYY'),
-                                value: expiryDateResponse.data.data[key].date,
+                                value: date.format('YYYY-MM-DD'),
                             });
                         }
                     });

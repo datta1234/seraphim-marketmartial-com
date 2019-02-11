@@ -28,6 +28,7 @@
 
 .market-tab-ratio {
 	padding-left:1.5em;
+	padding-right:1.5em;
 	&.has-ratio:before {
 		content: "R";
 		color: maroon;
@@ -35,6 +36,20 @@
 		font-weight: bold;
 		position: absolute;
 		left: 0;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+	&.org-involvement:after {
+		content: "";
+		height: 0.75em;
+		width: 0.75em;
+		border-radius: 50%;
+		background-color: $mm-yellow;
+		-webkit-box-shadow: 0px 0px 3px 1px #000000;
+		box-shadow: 0px 0px 3px 1px #000000;
+		position: absolute;
+		right: 0;
 		top: 50%;
 		-webkit-transform: translateY(-50%);
 		transform: translateY(-50%);
@@ -57,12 +72,16 @@
 
 		.market-tab
 		{
-			&.market-alert {
-				background-color: $mm-market-alert; 
-			}
-
 			&.market-confirm {
 				background-color: $mm-market-confirm;
+			}
+
+			&.traded-on-day {
+				background-color: $mm-market-confirm;
+			}
+
+			&.market-alert {
+				background-color: $mm-market-alert; 
 			}
 
 			&.market-request {
@@ -124,7 +143,9 @@
 	color: $mm-user-action;
 }
 
-
+.user-action-dark {
+	color: $mm-user-action-dark;	
+}
 
 
   

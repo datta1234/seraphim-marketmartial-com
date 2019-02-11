@@ -4,6 +4,10 @@ namespace App\Models\MarketRequest;
 use App\Models\MarketRequest\UserMarketRequestItem;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\UserManagement\Organisation;
+use App\Models\TradeConfirmations\TradeConfirmationGroup;
+use App\Models\Trade\TradeNegotiation;
+use App\Models\TradeConfirmations\TradeConfirmation;
+use App\Models\UserManagement\User;
 use App\Events\UserMarketRequested;
 use App\Helpers\Broadcast\Stream;
 use App\Notifications\NotifyUserMarketRequestCleared;
@@ -13,6 +17,7 @@ class UserMarketRequest extends Model
 {
     use \App\Traits\ResolvesUser;
     use \App\Traits\ActionListCache;
+    use \App\Traits\ResolveTradeStructureSlug;
 
     /**
      * @property integer $id
@@ -80,6 +85,18 @@ class UserMarketRequest extends Model
     * Return relation based of _id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
+    public function tradingGroup()
+    {
+        return $this->hasOne(
+            'App\Models\MarketRequest\UserMarketRequestGroup',
+            'user_market_request_id'
+        )->where('is_selected', false);
+    }
+
+    /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
     public function user()
     {
         return $this->belongsTo('App\Models\UserManagement\User','user_id');
@@ -122,18 +139,58 @@ class UserMarketRequest extends Model
     }
 
     /**
+    * Return relation based of _id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmations()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmation','user_market_request_id');
+    }
+
+    /**
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
     public function scopeActive($query)
     {
         // staging/demo is scoping to daily records to prevent clutter
-        $scope_to_daily = false;
+        $scope_to_daily = true;
 
-        return $query->where('active', true)
-            ->when($scope_to_daily, function($q) {
-                $q->where('created_at', '>', now()->startOfDay());
+        return $query->where(function($q) use ($scope_to_daily) {
+            $q->when(!$scope_to_daily, function($q) {
+                $q->where('active', true);
             });
+            $q->when($scope_to_daily, function($q) {
+                $q->where(function($q) {
+                    $q->where('active', true);
+                    $q->where('updated_at', '>', now()->startOfDay());
+                });
+                $q->orWhere(function($q) {
+                    $q->where('active', true);
+                    $q->where(\DB::raw('(
+                        select `trade_sub`.`traded` as `trade_sub_traded`
+                        from `user_markets` 
+                        left join (
+                            select *
+                            from `market_negotiations` 
+                            where `market_negotiations`.`deleted_at` is null
+                            order by `updated_at` desc 
+                        ) `neogitation_sub`
+                        on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
+                        left join (
+                            select * 
+                            from `trade_negotiations`
+                            order by `updated_at` desc 
+                        ) `trade_sub`
+                        on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
+                        where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
+                        and `user_markets`.`deleted_at` is null
+                        order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
+                        limit 1
+                    )'), 0);
+                });
+            });
+        });
     }
 
     /**
@@ -322,10 +379,12 @@ class UserMarketRequest extends Model
             "updated_at"        => $this->updated_at->format("Y-m-d H:i:s"),
         ];
 
-        $default_tradable =$this->userMarketRequestGroups->first(function ($value, $key) {
+        // default quantity should be from the quantity on group
+        $default_group = $this->userMarketRequestGroups->first(function ($value, $key) {
             return $value->is_selected == false;
-        })->tradable; 
-        $data["default_quantity"] = $this->marketDefaultQuantity($default_tradable);
+        });
+        $quantity = $default_group->getDynamicItem("Quantity");
+        $data["default_quantity"] = $quantity ? $quantity : $this->marketDefaultQuantity($default_group->tradable);
 
         $showLevels = $this->isAcceptedState($current_org_id);
 
@@ -354,6 +413,11 @@ class UserMarketRequest extends Model
             });
         }
 
+        // admin needs to see who owns what
+        if($this->isAdminContext()) {
+            $data['user'] = $this->user->full_name;
+            $data['org'] = $this->user->organisation->title;
+        }
         return $data;
     }
 
@@ -848,14 +912,38 @@ class UserMarketRequest extends Model
         $marketNegotiationRoles = $this->getCurrentUserRoleInMarketNegotiation($marketRequestRoles,$current_org_id);
         
         $tradeNegotiationRoles = $this->getCurrentUserRoleInTradeNegotiation($current_org_id);
+        $traded_on_day = (
+            $this->chosen_user_market_id !== null
+            ? $this->chosenUserMarket->marketNegotiations()->selectedDay()->traded()->exists() // this should be formatted by loading_previous_day / loadign_current_day config settings
+            : false
+        );
+        $involved = false;
+        if($this->chosen_user_market_id != null) {
+            $last_negotiation = $this->chosenUserMarket->lastNegotiation;
 
-
+            if($last_negotiation->lastTradeNegotiation && !$last_negotiation->lastTradeNegotiation->traded) {
+                $involved = $last_negotiation->lastTradeNegotiation->isOrganisationInvolved($current_org_id);
+            } elseif(
+                ($last_negotiation->user && $last_negotiation->user->organisation_id == $current_org_id)
+                || ($last_negotiation->counterUser && $last_negotiation->counterUser->organisation_id == $current_org_id)
+            ) {
+                $involved = true;
+            }
+        }
 
         $attributes = [
             'state'         => config('marketmartial.market_request_states.default'), // default state set first
             'bid_state'     => "",
             'offer_state'   => "",
-            'action_needed' => ""
+            'action_needed' => "",
+            'traded_on_day'  => $traded_on_day,
+            'market_open'   => in_array($state, [
+                'request',
+                'request-vol',
+                'negotiation-open',
+                'trade-negotiation-open',
+            ]),
+            'involved' => $involved,
         ];
  
         switch ($state) {
@@ -1004,14 +1092,14 @@ class UserMarketRequest extends Model
     }
 
     /**
-     * get the underlying market
+     * get the first underlying market
      *
      * @return \App\Models\StructureItems\Market
      */
-    public function getUnderlyingAttribute()
+    public function getTradingUnderlyingAttribute()
     {
-        //@TODO for sigle stock set up the relations and update method with tradeables
-        return $this->market;
+        $trading_group = $this->userMarketRequestGroups()->where('is_selected', false)->first();
+        return $trading_group->tradable;
     }
 
     /**
@@ -1030,7 +1118,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "RISKY",
                     $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
@@ -1043,7 +1132,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1058,7 +1148,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(true),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "FLY",
                     $groups[0]->getDynamicItem($strike).($groups[0]->is_selected ? 'ch' : ''),
@@ -1073,7 +1164,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1088,7 +1180,8 @@ class UserMarketRequest extends Model
                 $strike = "Strike";
                 $groups = $this->userMarketRequestGroups;
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($groups[0]->getDynamicItem($exp_date))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($groups[1]->getDynamicItem($exp_date))->format("My"),
@@ -1098,7 +1191,8 @@ class UserMarketRequest extends Model
             case 'efp':
                 $exp_date = "Expiration Date";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     "EFP"
                 ]);
@@ -1108,7 +1202,8 @@ class UserMarketRequest extends Model
                 $exp_date_2 = "Expiration Date 2";
                 $strike = "Strike";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date_1))->format("My"),
                     "vs",
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date_2))->format("My"),
@@ -1119,7 +1214,8 @@ class UserMarketRequest extends Model
                 $exp_date = "Expiration Date";
                 $strike = "Strike";
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     strtoupper($this->tradeStructure->title),
                     $this->getDynamicItem($strike)
@@ -1130,7 +1226,8 @@ class UserMarketRequest extends Model
                 $cap = 'Cap';
                 $capVal = $this->getDynamicItem($cap);
                 return implode(" ", [
-                    $this->market->title,
+                    //$this->market->title,
+                    $this->getTradeablesTitle(),
                     \Carbon\Carbon::parse($this->getDynamicItem($exp_date))->format("My"),
                     strtoupper($this->tradeStructure->title),
                     ( $capVal == 0 ? "(Uncapped)" : "(".$capVal."x Cap)" )
@@ -1140,40 +1237,13 @@ class UserMarketRequest extends Model
     }
 
     /**
-     * get computer readable slug of trade structure. this should be used as the unique identifier
+     * Notify subscribed users and removes subscription,
      *
-     * @return String
+     * @return void
      */
-    public function getTradeStructureSlugAttribute() {
-        switch($this->trade_structure_id) {
-            case 1:
-                return 'outright';
-            break;
-            case 2:
-                return 'risky';
-            break;
-            case 3:
-                return 'calendar';
-            break;
-            case 4:
-                return 'fly';
-            break;
-            case 5:
-                return 'option_switch';
-            break;
-            case 6:
-                return 'efp';
-            break;
-            case 7:
-                return 'rolls';
-            break;
-            case 8:
-                return 'efp_switch';
-            break;
-            case 9:
-                return 'var_swap';
-            break;
-        };
+    public function getTradeablesTitle($unique = false) {
+        $tradeables = $this->userMarketRequestTradables;
+        return $tradeables->pluck('title')->when($unique, function($c){ return $c->unique(); })->implode(',');
     }
 
     /**
@@ -1231,4 +1301,343 @@ class UserMarketRequest extends Model
         return "Market Request";
     }
 
+
+    /**
+     * Return a simple or query object based on the search term
+     *   
+     *   This method requires extra fields to be present in the query see
+     *   \App\Http\Controllers\Stats\yearActivity
+     *   
+     *   Fields: trade_date, trade_send_user_id, trade_receiving_user_id,
+     *           trade_negotiation_id, trade_confirmation_id
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param array  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
+    {
+
+        if($orderBy == null)
+        {
+            $orderBy = "trade_confirmations.updated_at";
+        }
+
+        if($order == null)
+        {
+            $order = "DESC";
+        }
+        
+        // Search markets
+        $user_market_requests_query = UserMarketRequest::where( function ($q) use ($term)
+        {
+            $q->whereHas('userMarketRequestGroups', function ($q) use ($term) {
+                $q->whereHas('tradable', function ($q) use ($term) {
+                    $q->whereHas('market', function ($q) use ($term) {
+                        $q->where('title','like',"%$term%");
+                    })
+                    ->orWhereHas('stock', function ($q) use ($term) {
+                        $q->where('code','like',"%$term%");  
+                    });
+                });
+            });
+        });
+
+        // Apply Filters
+        if($filter !== null) {
+            if(!empty($filter["filter_date"])) {
+                $user_market_requests_query->whereDate('trade_confirmations.updated_at', $filter["filter_date"]);
+            }
+
+            if(!empty($filter["filter_market"])) {
+                $user_market_requests_query->where('trade_confirmations.market_id', $filter["filter_market"]);
+            }
+
+            if(!empty($filter["filter_expiration"])) {
+                $user_market_requests_query->whereHas('tradeConfirmations', function ($query) use ($filter) {
+                    $query->whereHas('tradeNegotiation', function ($query) use ($filter) {
+                        $query->whereHas('userMarket', function ($query) use ($filter) {
+                            $query->whereHas('userMarketRequest', function ($query) use ($filter) {
+                                $query->whereHas('userMarketRequestGroups', function ($query) use ($filter) {
+                                    $query->whereHas('userMarketRequestItems', function ($query) use ($filter) {
+                                        $query->whereIn('title', ['Expiration Date',"Expiration Date 1","Expiration Date 2"])
+                                        ->whereDate('value', \Carbon\Carbon::parse($filter["filter_expiration"]));
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            }
+        }
+
+        // Apply Ordering
+        switch ($orderBy) {
+            /*case 'updated_at':
+                $trade_confirmations_query->orderBy($orderBy,$order);
+                break;
+            case 'market':
+                $trade_confirmations_query->whereHas('market',function($q) use ($order){
+                    $q->orderBy('title',$order);
+                });
+                //$trade_confirmations_query->orderBy("market_id",$order)
+                break;
+*/
+            case 'updated_at':
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at", $order);
+                break;
+            /*case 'underlying':
+                
+                break;*/
+            case 'structure':
+                $user_market_requests_query->orderBy("trade_structure_title", $order);
+                break;
+            /*case 'direction':
+            
+                break;
+            case 'nominal':
+            
+                break;
+            case 'strike_percentage':
+            
+                break;
+            case 'strike':
+            
+                break;
+            case 'volatility':
+            
+                break;
+            case 'expiration':
+            
+                break;*/
+            default:
+                $user_market_requests_query->orderBy("trade_confirmations.updated_at","DESC");
+        }
+
+
+        return $user_market_requests_query;
+    }
+
+    /**
+     * Scope for Markets made by the organisation
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrganisationMarketMaker($query, $organisation_id, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organisation_id) {
+            $tlq->whereHas('chosenUserMarket', function ($query) use ($organisation_id) {
+                $query->whereHas('user', function ($query) use ($organisation_id) {
+                    $query->where('organisation_id', $organisation_id);
+                });
+            });
+        });
+    }
+
+    /**
+     * Scope for Markets where the organisation was involved in the trade
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrganisationInvolvedTrade($query, $organisation_id, $operator, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organisation_id,$operator) {
+            $tlq->whereHas('tradeConfirmations', function ($q) use ($organisation_id,$operator) {
+                $q->whereHas('sendUser', function ($q) use ($organisation_id,$operator) {
+                    $q->where('organisation_id', $operator,$organisation_id);
+                })
+                ->orWhereHas('recievingUser', function ($q) use ($organisation_id,$operator) {
+                    $q->where('organisation_id', $operator,$organisation_id);
+                });
+            });
+        });
+
+    }
+
+    /**
+     * Scope for Markets made by the organisation
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrganisationInterestNotTraded($query, $organisation_id, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organisation_id) {
+            $tlq->whereHas('user', function ($q) use ($organisation_id) {
+                $q->where('organisation_id', $organisation_id);
+            })->doesnthave('tradeConfirmations');
+        });
+    }
+
+    /**
+     * Return pre formatted request for frontend with regards to stats.
+     *   
+     *   This method requires extra fields to be present in the collection see
+     *   \App\Http\Controllers\Stats\yearActivity
+     *   
+     *   Fields: trade_date, trade_send_user_id, trade_receiving_user_id,
+     *           trade_negotiation_id, trade_confirmation_id
+     *
+     * @return \App\Models\MarketRequest\UserMarketRequest
+     */
+    public function preFormatStats($user = null, $is_Admin = false)
+    {   
+        $data = [
+            "id" => $this->id,
+            "updated_at"        => $this->trade_date,
+            "underlying"        => array(),
+            "structure"         => $this->tradeStructure->title,
+            "nominal"           => array(),
+            "strike"            => array(),
+            "expiration"        => array(),
+            "volatility"        => array(),
+        ];
+
+        $tradeNegotiation = TradeNegotiation::find($this->trade_negotiation_id);
+        foreach ($this->userMarketRequestGroups as $key => $group) {
+            foreach ($group->userMarketRequestItems as $key => $item) {
+                switch ($item->title) {
+                    case 'Expiration Date':
+                    case 'Expiration Date 1':
+                    case 'Expiration Date 2':
+                        $data["expiration"][] = $item->value;
+                        break;
+                    case 'Strike':
+                        $data["strike"][] = $item->value;
+                        break;
+                    case 'Quantity':
+                        if($group->is_selected || is_null($this->trade_negotiation_id)) {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        } else {
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$tradeNegotiation->quantity.'m' : $tradeNegotiation->quantity;
+                        }
+                        break;
+                }
+            }
+            // Add the group underlying
+            $data["underlying"][] = $group->tradable->title;
+
+            // Add the group volatility
+            if($group->is_selected) {
+                $data["volatility"][] = $group->volatility->volatility;        
+            } else {
+                if(is_null($this->trade_negotiation_id)) {
+                    $data["volatility"][] = $this->chosenUserMarket->lastNegotiation->bid;
+                    $data["volatility"][] = $this->chosenUserMarket->lastNegotiation->offer;
+                } else {
+                    $data["volatility"][] = $tradeNegotiation->getRoot()->is_offer ? $tradeNegotiation->marketNegotiation->offer :  $tradeNegotiation->marketNegotiation->bid;
+                }
+            }
+        }
+
+        $trade_confirmation_groups = TradeConfirmationGroup::where('trade_confirmation_id', $this->trade_confirmation_id)->get();
+
+        if($user === null) {
+            $data["strike_percentage"] = array();
+            // Resolve Strike percentage
+            foreach ($trade_confirmation_groups as $key => $group) {
+                $tradable = $group->userMarketRequestGroup->tradable;
+                $strike = $group->getOpVal('Strike');
+                $spot_price = $group->getOpVal('Spot');
+
+                // Will get into for Markets without a user defined Spot Price
+                // Asked by client to exclude
+                /*if(!empty($strike) && empty($spot_price)) {
+                    switch ($tradable->market->title) {
+                        case 'TOP40':
+                        case 'DTOP':
+                        case 'DCAP':
+                            $spot_price = $tradable->market->spot_price_ref;
+                            break;
+                    }
+                }*/
+
+                // Only Calculate percentage if both Strike and Spot Price is set
+                if( !empty($strike) && !empty($spot_price) ) {
+                    $data["strike_percentage"][] = round($strike/$spot_price, 2) * 100;
+                }
+            }
+        }
+
+        $is_versus_underlying_type = ['option_switch','efp_switch'];
+        // Remove duplicates tradables for non versus underlying trade structures
+        if(!in_array($this->tradeStructureSlug, $is_versus_underlying_type)) {
+            $data["underlying"] = array_unique($data["underlying"]);
+        }
+
+        if($is_Admin) {
+            if(!is_null($this->trade_confirmation_id) && $tradeNegotiation->traded) {
+                $root_trade_negotiation = $tradeNegotiation->getRoot();
+                if($root_trade_negotiation->is_offer) {
+                    $data["buyer"] = $root_trade_negotiation->initiateUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->recievingUser->organisation->title;
+                } else {
+                    $data["buyer"] = $root_trade_negotiation->recievingUser->organisation->title;
+                    $data["seller"] = $root_trade_negotiation->initiateUser->organisation->title;
+                }
+                return $data;
+            }
+
+            $data["buyer"] = null;
+            $data["seller"] = null;    
+            return $data;
+        }
+
+
+        if($user === null) {
+            $data["status"] = !is_null($this->trade_confirmation_id) && $tradeNegotiation->traded ? 'Traded' : 'Not Traded';
+            return $data; 
+        }
+
+        if(is_null($this->trade_confirmation_id)) {
+            $data["status"] = 'Not Traded';
+            $data["trader"] = null;
+            $data["direction"] = null;
+
+            return $data;
+        }
+
+        // Direction (Buy / Sell)
+        $root_trade_negotiation = $tradeNegotiation->getRoot();
+
+        switch (true) {
+        // My Trade
+            case ($root_trade_negotiation->initiate_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
+                break;
+            case ($root_trade_negotiation->recieving_user_id == $user->id):
+                $data["status"] = 'My Trade';
+                $data["trader"] = $user->full_name;
+                $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
+                break;
+        // Org Trade
+            case ($root_trade_negotiation->initiateUser->organisation_id == $user->organisation_id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $root_trade_negotiation->initiateUser->full_name;
+                $data["direction"] = $root_trade_negotiation->is_offer ? 'Buy' : 'Sell';
+                break;
+            case ($root_trade_negotiation->recievingUser->organisation_id == $user->organisation_id):
+                $data["status"] = 'Trade';
+                $data["trader"] = $root_trade_negotiation->recievingUser->full_name;
+                $data["direction"] = $root_trade_negotiation->is_offer ? 'Sell' : 'Buy';
+                break;
+        // Traded Away
+            case ($this->chosenUserMarket->user->organisation_id == $user->organisation_id):
+                $data["status"] = 'Market Maker Traded Away';
+                $data["trader"] = null;
+                $data["direction"] = null;
+                break;
+            default:
+                $data["status"] = null;
+                $data["trader"] = null;
+                $data["direction"] = null;
+                break;
+        }
+
+        return $data;
+    }
 }

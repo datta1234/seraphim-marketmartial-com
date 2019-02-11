@@ -38,62 +38,54 @@
                     {
                         "value": {
                             "value": true, 
-                            "ignores": [
-                                "cond_timeout"
+                            "sets": [
+                                {
+                                    "alias": "cond_fok_spin",
+                                    "value": false
+                                },{
+                                    "alias": "cond_timeout",
+                                    "value": true
+                                }
                             ]
                         }, 
                         "text": "My Bid",
-                        "title": "Bid - ",
+                        "title": "Bid - FoK",
                         "applies_to": ["bid"]
                     },
                     {
                         "value": {
                             "value": false, 
-                            "ignores": [
-                                "cond_timeout"
-                            ]
-                        }, 
-                        "text": "My Offer",
-                        "title": "Offer - ",
-                        "applies_to": ["offer"]
-                    },
-                    {
-                        "value": {
-                            "value": null, 
-                            "ignores": [
-                                "cond_timeout"
-                            ]
-                        }, 
-                        "text": "Both Bid & Offer",
-                        "only": "quote",
-                        "title": "Bid & Offer - ",
-                        "applies_to": ["bid", "offer"]
-                    }
-                ]
-            },
-            {
-                "title": "Fill or kill",
-                "alias": "cond_fok_spin",
-                "default": null,
-                "default_value": true,
-                "value": [
-                    {
-                        "value": { 
-                            "value": false, 
                             "sets": [
                                 {
-                                    "alias": "cond_timeout", 
+                                    "alias": "cond_fok_spin",
+                                    "value": false
+                                },{
+                                    "alias": "cond_timeout",
                                     "value": true
                                 }
                             ]
                         }, 
-                        "text": "Prefer to kill (20min FoK)",
-                        "title": "FoK: Kill"
+                        "text": "My Offer",
+                        "title": "Offer - FoK",
+                        "applies_to": ["offer"]
                     },
                     {
-                        "value": true, 
-                        "text": "Happy to Spin",
-                        "title": "FoK: Fill"
+                        "value": {
+                            "value": "", 
+                            "sets": [
+                                {
+                                    "alias": "cond_fok_spin",
+                                    "value": false
+                                },{
+                                    "alias": "cond_timeout",
+                                    "value": true
+                                }
+                            ]
+                        }, 
+                        "text": "Both Bid & Offer",
+                        "only": "quote",
+                        "title": "Bid & Offer - FoK",
+                        "applies_to": ["bid", "offer"]
                     }
                 ]
             }
@@ -101,6 +93,11 @@
     },
     {
         "alias": "cond_timeout",
+        "default": null,
+        "hidden": true
+    },
+    {
+        "alias": "cond_fok_spin",
         "default": null,
         "hidden": true
     },
@@ -121,7 +118,8 @@
                 "title": "Sell in Middle (Private)"
             }
         ],
-        "only": "market"
+        "only": "market",
+        "applies_to": ["bid", "offer"]
     },
     {
         "title": "Buy/Sell at Best",

@@ -48,6 +48,6 @@ class QuotesVolatilities implements Rule
      */
     public function message()
     {
-        return 'Must Provide choice volatility';
+        return 'Must provide choice level';
     }
 }

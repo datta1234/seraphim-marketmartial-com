@@ -13,6 +13,7 @@
 <script>
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import UserMarketRequest from '~/lib/UserMarketRequest';
+    import { EventBus } from '~/lib/EventBus';
 
     export default {
         name: 'condition-fok-side',
@@ -76,7 +77,7 @@
                 });
                 
                 let foundIndex = available.findIndex(x => {
-                    return this.defaults[this.condition.alias] && x.value.value == this.defaults[this.condition.alias].value;
+                    return this.defaults[this.condition.alias] && x.value.value === this.defaults[this.condition.alias].value;
                 });
 
                 // if its not found in the available list
@@ -88,6 +89,9 @@
                     } else {
                         // default to null
                         this.defaults[this.condition.alias] = null;
+                        this.marketNegotiation[this.condition.alias] = null;
+                        EventBus.$emit('errorConditions', "Please improve the bid or the offer before applying an FoK.");
+                        this.$emit('reset');
                     }
                 } else {
                     // set to the default found value
