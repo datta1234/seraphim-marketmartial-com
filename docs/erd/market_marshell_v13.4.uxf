@@ -435,7 +435,6 @@ bg=green</panel_attributes>
 id: int(11)
 user_market_id: int(11)
 is_offer: tinyint(1)
-contracts: double(11,2)
 trade_negotiation_id: int(11) nullable
 market_negotiation_id: int(11)
 quantity: double(11,2)
