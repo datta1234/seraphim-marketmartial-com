@@ -180,6 +180,11 @@ export default class TradeConfirmation extends BaseModel {
 
     send(trading_account)
     {
+        if(!trading_account) {
+            return new Promise((resolve, reject) => {
+                reject({errors:{'trading_account_id':["Trading account is required"]}});
+            });
+        }
         return axios.put(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id,{
             "trading_account_id":trading_account.id,
             "trade_confirmation_data": this.prepareStore()
@@ -192,6 +197,11 @@ export default class TradeConfirmation extends BaseModel {
 
     confirm(trading_account)
     {
+        if(!trading_account) {
+            return new Promise((resolve, reject) => {
+                reject({errors:{'trading_account_id':["Trading account is required"]}});
+            });
+        }
       return new Promise((resolve, reject) => {
            axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/confirm',{
             "trading_account_id":trading_account.id,
@@ -210,6 +220,11 @@ export default class TradeConfirmation extends BaseModel {
 
     dispute(trading_account)
     {
+        if(!trading_account) {
+            return new Promise((resolve, reject) => {
+                reject({errors:{'trading_account_id':["Trading account is required"]}});
+            });
+        }
         return axios.post(axios.defaults.baseUrl + '/trade/trade-confirmation/'+ this.id+'/dispute',{
             "trading_account_id":trading_account.id,
             "trade_confirmation": this.prepareStore()
