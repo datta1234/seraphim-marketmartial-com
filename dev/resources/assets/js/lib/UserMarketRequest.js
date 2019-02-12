@@ -561,6 +561,6 @@ export default class UserMarketRequest extends BaseModel {
 
     runActionTaken() {
         console.log('runActionTaken called on Request');
-        return this.actionTaken();
+        this.actionTaken();
     }
 }

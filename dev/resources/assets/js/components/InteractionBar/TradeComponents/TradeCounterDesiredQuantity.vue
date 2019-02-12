@@ -43,9 +43,11 @@
         },
         watch:{
             marketRequest:{
-                handler: function (val, oldVal) { 
-                    this.tradeNegotiation.quantity = this.lastTradeNegotiation.quantity;
-                    this.tradeNegotiation.setUserMarket(this.lastTradeNegotiation.user_market_negotiation);
+                handler: function (val, oldVal) {
+                    if(this.tradeNegotiation.quantity === this.lastTradeNegotiation.quantity) {
+                        this.tradeNegotiation.quantity = this.lastTradeNegotiation.quantity;
+                        this.tradeNegotiation.setUserMarket(this.lastTradeNegotiation.user_market_negotiation);
+                    }
                 },
                 deep: true
             }
