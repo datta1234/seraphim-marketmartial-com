@@ -30,7 +30,7 @@ class ContactUsMail extends Mailable
     {
         $name = $this->contact_details['name'];
         $email = $this->contact_details['contact_email'];
-        $message = $this->contact_details['contact_email'];
+        $message = $this->contact_details['contact_message'];
 
         return $this->view('emails.contact')->with(['name' => $name, 'email' => $email, 'content' => $message]);
     }
