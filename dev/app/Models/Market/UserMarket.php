@@ -12,6 +12,7 @@ class UserMarket extends Model
 {
     use \App\Traits\ResolvesUser,SoftDeletes;
     use HasDismissibleActivity; // activity tracked and dismissible
+    use \App\Traits\ScopesToPreviousDay;
 
 	/**
 	 * @property integer $id
@@ -154,15 +155,8 @@ class UserMarket extends Model
         return $query->where('updated_at', '>', now()->startOfDay());
     }
 
-    /**
-    * Scope the query to the previous day
-    * @param $query \Illuminate\Database\Eloquent\Builder
-    *
-    * @return $query \Illuminate\Database\Eloquent\Builder
-    */
-    public function scopePreviousDay($query) {
-        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
-    }
+    // moved to Trait \App\Traits\ScopesToPreviousDay
+    // public function scopePreviousDay($query)
 
     /**
     * Scope the query to only the traded
