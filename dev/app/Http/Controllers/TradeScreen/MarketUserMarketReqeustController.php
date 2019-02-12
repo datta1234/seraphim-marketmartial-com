@@ -250,6 +250,7 @@ class MarketUserMarketReqeustController extends Controller
         if($request->has('action_needed')) {
             if($userMarketRequest->getAction($request->user()->organisation->id,$userMarketRequest->id) != null) {
                 $userMarketRequest->setAction($request->user()->organisation->id, $userMarketRequest->id, $request->input('action_needed'));
+                $userMarketRequest->fresh()->notifyRequested();
                 return response()->json(['data'=> ["action_needed" => false],'message'=>"Action successfully updated."]);
             } else {
                 return response()->json(['data'=> ["action_needed" => false],'message'=>"No action currently tracked."]);
