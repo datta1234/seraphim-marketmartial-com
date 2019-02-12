@@ -20,7 +20,7 @@
         <p class="card-text text-center mb-5">
             +27 82 784 6004
         </p>
-        <form id="ContactUsForm" action="{{ route('contact') }}" method="POST">
+        <form id="ContactUsForm" action="{{ route('contact_send') }}" method="POST">
              {{ csrf_field() }}
             <div class="page-form mx-auto">
                 <div class="form-group">
@@ -41,10 +41,10 @@
                     @endif
                 </div>
                 <div class="form-group">
-                    <textarea class="form-control {{ $errors->has('message') ? ' is-invalid' : '' }}" id="message" name="message" value="{{ old('message') }}" rows="10" placeholder="Enter your message here..."></textarea>
-                    @if ($errors->has('message'))
+                    <textarea class="form-control {{ $errors->has('contact_message') ? ' is-invalid' : '' }}" id="contact_message" name="contact_message" value="{{ old('contact_message') }}" rows="10" placeholder="Enter your message here..."></textarea>
+                    @if ($errors->has('contact_message'))
                         <div class="alert alert-danger">
-                            <strong>{{ $errors->first('message') }}</strong>
+                            <strong>{{ $errors->first('contact_message') }}</strong>
                         </div>
                     @endif
                 </div>

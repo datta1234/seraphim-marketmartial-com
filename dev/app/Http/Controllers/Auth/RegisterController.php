@@ -171,6 +171,8 @@ class RegisterController extends Controller
             return null;
         }
 
+        // @TODO - Check if we need to send an email after registration
+
         // Notify Admin Of User Creation
         \Slack::postMessage([
             "text"      => "New user registered: ".$user->full_name." (".$user->organisation->title.")",
