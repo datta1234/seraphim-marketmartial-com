@@ -568,10 +568,12 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     break;
                 case 'Future':
                 case 'Future 2':
-                    if($tradeGroup->userMarketRequestGroup->is_selected) {
-                        $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
-                    } else if(in_array($this->tradeStructureSlug, $delta_one_list)) {
-                        $value = $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                    if(in_array($this->tradeStructureSlug, $delta_one_list)) {
+                        if($tradeGroup->userMarketRequestGroup->is_selected) {
+                            $value = $tradeGroup->userMarketRequestGroup->volatility->volatility;
+                        } else {
+                            $value = $tradeNegotiation->getRoot()->is_offer ? $marketNegotiation->offer :  $marketNegotiation->bid;
+                        } 
                     } else {
                         $value = null;
                     }

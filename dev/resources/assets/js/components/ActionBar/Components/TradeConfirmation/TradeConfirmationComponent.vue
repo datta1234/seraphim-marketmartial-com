@@ -123,8 +123,8 @@
                 <tr>
                     <th scope="col">{{ trade_confirmation.organisation }}</th>
                     <th scope="col">Underlying</th>
-                    <th scope="col">Spot</th>
-                    <th scope="col">Future</th>
+                    <th scope="col">Spot {{ trade_confirmation.market_id == 4 ? '(ZAR)' : '' }}</th>
+                    <th scope="col">Future {{ trade_confirmation.market_id == 4 ? '(ZAR)' : '' }}</th>
                     <th scope="col">Contracts</th>
                     <th scope="col">Expiry</th>
                 </tr>
@@ -378,10 +378,6 @@
                     this.action_list.has_calculate = false;
                     this.action_list.has_dispute = false;
                 }
-
-                this.selected_trading_account = this.trading_accounts.find((item)=>{
-                    return item.market_id == this.trade_confirmation.market_id;
-                });
             },
             clearConfirmation()
             {
@@ -416,6 +412,7 @@
                 this.selected_trading_account = this.trading_accounts.find((item)=>{
                     return item.market_id == this.trade_confirmation.underlying_id;
                 });
+                console.log("Trading account stuff: ", this.selected_trading_account, this.trading_accounts, this.trade_confirmation);
             },
             phaseTwo: function()
             {
