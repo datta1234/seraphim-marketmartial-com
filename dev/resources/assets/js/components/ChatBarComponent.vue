@@ -204,19 +204,17 @@
                 });
             },
             addNewMessage(message) {
-                let message_index;
                 let chat_history = this.$refs.chat_history;
                 let should_scroll = false;
                 if(chat_history.scrollTop === (chat_history.scrollHeight - chat_history.offsetHeight) ) {
                     should_scroll = true;
                 }
-                if (this.display_messages.length > 0) {
-                    message_index = this.display_messages.findIndex( (listed_message) => {
-                        return listed_message.user_name == message.user_name
-                            && listed_message.message == message.message 
-                            && listed_message.time_stamp == message.time_stamp;
-                    });
-                }
+
+                let message_index = this.display_messages.findIndex( (listed_message) => {
+                    return listed_message.user_name == message.user_name
+                        && listed_message.message == message.message 
+                        && listed_message.time_stamp == message.time_stamp;
+                });
 
                 if(message_index == -1) {
                     this.display_messages.push(message);

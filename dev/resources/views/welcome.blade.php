@@ -313,7 +313,7 @@
         <div class="row">
             <div class="col col-12 col-md-6 col-lg-4 offset-lg-1 footer-sections pt-3 pb-3">
                 <h3>Send us a message</h3>
-                <form id="ContactUsForm" action="{{ route('contact') }}" method="POST">
+                <form id="ContactUsForm" action="{{ route('contact_send') }}" method="POST">
                      {{ csrf_field() }}
                     <div class="form-group mb-2">
                         <input type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" value="{{ old('name') }}" id="name" name="name" placeholder="Enter your name here...">
