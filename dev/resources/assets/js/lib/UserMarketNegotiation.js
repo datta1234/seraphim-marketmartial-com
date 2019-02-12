@@ -195,16 +195,15 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
  
-        return user_market_request.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id+"/work-the-balance", {quantity:quantity})
-                .then(response => {
-                    response.data.data = new UserMarketNegotiation(response.data.data);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id+"/work-the-balance", {quantity:quantity})
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                user_market_request.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -221,16 +220,15 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
      
-        return user_market.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
-                .then(response => {
-                    response.data.data = new UserMarketNegotiation(response.data.data);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                user_market.runActionTaken()
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -253,16 +251,15 @@ export default class UserMarketNegotiation extends BaseModel {
             });   
         }
      
-        return user_market.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.put(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
-                .then(response => {
-                    response.data.data = new UserMarketNegotiation(response.data.data);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.put(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                user_market.runActionTaken()
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -287,15 +284,14 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         // set to proposal by default (happens on server too hint type)
         counter_market_negotiation.is_private = true;
-        return counter_market_negotiation.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/counter", counter_market_negotiation.prepareStore())
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/counter", counter_market_negotiation.prepareStore())
+            .then(response => {
+                counter_market_negotiation.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -321,15 +317,14 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         // set to proposal by default (happens on server too hint type)
         counter_market_negotiation.is_private = true;
-        return counter_market_negotiation.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/improve", counter_market_negotiation.prepareStore())
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/improve", counter_market_negotiation.prepareStore())
+            .then(response => {
+                counter_market_negotiation.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -360,15 +355,14 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
         
-        return user_market.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation",{is_repeat: true})
+            .then(response => {
+                user_market.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -391,15 +385,14 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
         
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id+"/repeat",{is_repeat: true})
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id+"/repeat",{is_repeat: true})
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -415,15 +408,14 @@ export default class UserMarketNegotiation extends BaseModel {
                 reject(new Errors("Invalid Market"));
             });
         }
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.delete(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id)
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.delete(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/"+this.id)
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -445,20 +437,18 @@ export default class UserMarketNegotiation extends BaseModel {
         }
         user_market_request.id = typeof user_market_request.id !== 'undefined' ? user_market_request.id : this.getUserMarket().getMarketRequest().id;
         
-        return user_market_request.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-
-                 axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareAmend(user_market))
-                .then(response => {
-                    response.data.data = new UserMarketNegotiation(response.data.data);
-                    // link now that we are saved
-                    user_market.setMarketRequest(user_market_request);
-                    user_market.setCurrentNegotiation(this);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/"+user_market_request.id+"/user-market/"+user_market.id, this.prepareAmend(user_market))
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                // link now that we are saved
+                user_market.setMarketRequest(user_market_request);
+                user_market.setCurrentNegotiation(this);
+                user_market_request.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -557,18 +547,17 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         }
 
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                let user_market_request_id = this.getUserMarket().getMarketRequest().id;
+        return new Promise((resolve, reject) => {
+            let user_market_request_id = this.getUserMarket().getMarketRequest().id;
 
-                 axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/" + user_market_request_id+"/user-market/"+this._user_market.id,{'is_repeat':true})
-                .then(response => {
-                    response.data.data = new UserMarketNegotiation(response.data.data);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+             axios.patch(axios.defaults.baseUrl +"/trade/user-market-request/" + user_market_request_id+"/user-market/"+this._user_market.id,{'is_repeat':true})
+            .then(response => {
+                response.data.data = new UserMarketNegotiation(response.data.data);
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
@@ -645,13 +634,8 @@ export default class UserMarketNegotiation extends BaseModel {
 
     runActionTaken() {
         console.log('runActionTaken called on Negotiation');
-        return new Promise((resolve, reject) => {
-            if(this._user_market) {
-                this._user_market.runActionTaken()
-                .then(resolve, reject);
-            } else {
-                resolve();
-            }
-        });
+        if(this._user_market) {
+            this._user_market.runActionTaken();
+        }
     }
 }
