@@ -294,14 +294,15 @@ export default class UserMarket extends BaseModel {
                 reject(new Errors("Invalid Market Request"));
             });
         }
-
-        return new Promise((resolve, reject) => {
-            axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+market_request.id+"/user-market", this.prepareStore())
-            .then(response => {
-               resolve(response);
-            })
-            .catch(err => {
-                reject(err);
+        return market_request.runActionTaken().then(() => {
+            return new Promise((resolve, reject) => {
+                axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+market_request.id+"/user-market", this.prepareStore())
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                });
             });
         });
     }
@@ -317,13 +318,15 @@ export default class UserMarket extends BaseModel {
                 reject(new Errors("Invalid Market Request"));
             });
         }
-        return new Promise((resolve, reject) => {
-            return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id)
-            .then(response => {
-               resolve(response);
-            })
-            .catch(err => {
-                reject(err);
+        return this.runActionTaken().then(() => {
+            return new Promise((resolve, reject) => {
+                return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id)
+                .then(response => {
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                });
             });
         });
 
@@ -336,17 +339,30 @@ export default class UserMarket extends BaseModel {
     dismissActivity(activity) {
         // make a . notation string
         activity = activity instanceof Array ? activity.join('.') : activity;
-        console.log(activity);
-
-        return new Promise((resolve, reject) => {
-            return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
-            .then(response => {
-                console.log("ACT:", response);
-                this.setActivity(response.data.data.activity);
-            })
-            .catch(err => {
-                reject(err);
+        return this.runActionTaken().then(() => {
+            return new Promise((resolve, reject) => {
+                return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
+                .then(response => {
+                    this.setActivity(response.data.data.activity);
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                });
             });
+        });
+    }
+
+
+    runActionTaken() {
+        console.log('runActionTaken called on UserMarket');
+        return new Promise((resolve, reject) => {
+            if(this._user_market_request) {
+                this._user_market_request.runActionTaken()
+                .then(resolve, reject);
+            } else {
+                resolve();
+            }
         });
     }
 }
