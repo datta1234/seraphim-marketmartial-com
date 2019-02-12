@@ -183,65 +183,59 @@ export default class TradeNegotiation extends BaseModel {
             }
         }
         
-
-        return user_market_negotiation.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+user_market_negotiation.id+"/trade-negotiation", this.prepareStore())
-                .then(response => {
-                    //response.data.data = new UserMarketNegotiation(response.data.data);
-                    // link now that we are saved
-                    // user_market.setMarketRequest(user_market_request);
-                    // user_market.setCurrentNegotiation(this);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+user_market_negotiation.id+"/trade-negotiation", this.prepareStore())
+            .then(response => {
+                //response.data.data = new UserMarketNegotiation(response.data.data);
+                // link now that we are saved
+                // user_market.setMarketRequest(user_market_request);
+                // user_market.setCurrentNegotiation(this);
+                user_market_negotiation.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
 
     counter(tradeNegotiation)
     {
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-                 tradeNegotiation.is_offer = this.is_offer;
-                 axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+this.user_market_negotiation.id+"/trade-negotiation", tradeNegotiation.prepareStore())
-                .then(response => {
-                    //response.data.data = new UserMarketNegotiation(response.data.data);
-                    // link now that we are saved
-                    // user_market.setMarketRequest(user_market_request);
-                    // user_market.setCurrentNegotiation(this);
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                });
+        return new Promise((resolve, reject) => {
+             tradeNegotiation.is_offer = this.is_offer;
+             axios.post(axios.defaults.baseUrl +"/trade/market-negotiation/"+this.user_market_negotiation.id+"/trade-negotiation", tradeNegotiation.prepareStore())
+            .then(response => {
+                //response.data.data = new UserMarketNegotiation(response.data.data);
+                // link now that we are saved
+                // user_market.setMarketRequest(user_market_request);
+                // user_market.setCurrentNegotiation(this);
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
             });
         });
     }
 
     noFutherCares()
     {
-        return this.runActionTaken().then(() => {
-            return axios.post(axios.defaults.baseUrl + "/trade/trade-negotiation/"+this.id+"/no-further-cares")
-            .catch(err => {
-                console.error(err);
-            });
+        return axios.post(axios.defaults.baseUrl + "/trade/trade-negotiation/"+this.id+"/no-further-cares")
+        .then(response => {
+            this.runActionTaken();
+            return response;
+        })
+        .catch(err => {
+            console.error(err);
         });
     }
 
 
     runActionTaken() {
         console.log('runActionTaken called on TradeNegotiation');
-        return new Promise((resolve, reject) => {
-            if(this._user_market) {
-                this._user_market.runActionTaken()
-                .then(resolve, reject);
-            } else {
-                resolve();
-            }
-        });
+        if(this._user_market) {
+            this._user_market.runActionTaken();
+        }
     }
  
 }

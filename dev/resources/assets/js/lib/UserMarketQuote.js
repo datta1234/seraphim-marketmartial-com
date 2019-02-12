@@ -107,16 +107,15 @@ export default class UserMarketQuote extends BaseModel {
                 reject(new Errors("Invalid Market Request"));
             });
         }
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-               axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                }); 
-            });
+        return new Promise((resolve, reject) => {
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            }); 
         });
     }
 
@@ -127,16 +126,15 @@ export default class UserMarketQuote extends BaseModel {
                 reject(new Errors("Invalid Market Request"));
             });
         }
-        return this.runActionTaken().then(() => {
-            return new Promise((resolve, reject) => {
-               axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'accept': true})
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(err => {
-                    reject(err);
-                }); 
-            });
+        return new Promise((resolve, reject) => {
+           axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'accept': true})
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            }); 
         });
     }
 
@@ -164,13 +162,8 @@ export default class UserMarketQuote extends BaseModel {
 
     runActionTaken() {
         console.log('runActionTaken called on Quote');
-        return new Promise((resolve, reject) => {
-            if(this._user_market_request) {
-                this._user_market_request.runActionTaken()
-                .then(resolve, reject);
-            } else {
-                resolve();
-            }
-        });
+        if(this._user_market_request) {
+            this._user_market_request.runActionTaken();
+        }
     }
 }

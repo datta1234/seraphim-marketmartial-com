@@ -14,7 +14,7 @@
                                  v-model="accepted"
                                  :value="true"
                                  :unchecked-value="false">
-                    I accept the <a href="#">Privacy Policy</a> and <a href="#">Terms of use</a>
+                    I accept the <a target="_blank" v-bind:href="privacyPolicyLink">Privacy Policy</a> and <a target="_blank" v-bind:href="termsOfUseLink">Terms of use</a>
                 </b-form-checkbox>
 
                 <b-row v-if="errors.length > 0" class="mt-4">
@@ -48,8 +48,13 @@
             'tcAccepted': {
                 type: Boolean
             },
+            privacyPolicyLink: {
+                type: String
+            },
+            termsOfUseLink: {
+                type: String
+            }
         },
-
         data() {
             return {
             	errors: [],

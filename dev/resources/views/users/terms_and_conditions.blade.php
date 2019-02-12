@@ -14,7 +14,9 @@
 				</h2>
 			@endslot
 				@slot('body')
-					<terms-and-conditions :tc-accepted="{{ $user->tc_accepted ? "true" : "false" }}"></terms-and-conditions>
+					<terms-and-conditions :tc-accepted="{{ $user->tc_accepted ? "true" : "false" }}" 
+						privacy-policy-link="{{ action('PDFController@privacyPolicy') }}" 
+						terms-of-use-link="{{ action('PDFController@termsAndConditions') }}"></terms-and-conditions>
 				@endslot
 
 		@endcomponent
