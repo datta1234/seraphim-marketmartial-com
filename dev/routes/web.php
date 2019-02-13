@@ -40,7 +40,7 @@ Route::get('/ping', function(\Illuminate\Http\Request $request) {
     // ]);
 });
 
-Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
     Route::group(['middleware' => ['verified']], function () {
         Route::get('/previous-day', 'PreviousDayController@index')->name('previous_day');
         Route::get('/previous-day/markets', 'PreviousDayController@showMarkets')->name('previous_day.markets');

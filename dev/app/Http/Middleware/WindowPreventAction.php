@@ -22,7 +22,14 @@ class WindowPreventAction
     {   
         if(!$this->inWindow()) 
         {
-            return Auth::logout();
+            // only non admins are locked out
+            if(!Auth::user()->isAdmin()) {
+                Auth::logout();
+                $startTime = Carbon::createFromTimeString(config('marketmartial.window.operation_start_time'))->format('H:i');
+                $endTime = Carbon::createFromTimeString(config('marketmartial.window.operation_end_time'))->format('H:i');
+                return redirect('/')
+                    ->with('warning', "Login is only during $startTime and $endTime On Weekdays");
+            }
         }
 
         return $next($request);
