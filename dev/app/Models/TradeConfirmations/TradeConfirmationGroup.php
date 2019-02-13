@@ -91,14 +91,25 @@ class TradeConfirmationGroup extends Model
 
     public function preFormatted($is_sender = null)
     {
-        // Need to get previous unchanged calculated value
-        // current status 2 and 1 they dont need previous
-        
-        // status 3 - look at previous 5 or 6 or 1
-        // status 5 - look at previous 7
-
-
+        $trade_confirmation = $this->tradeConfirmation;
         $parent_group_items = null;
+        
+        // Resolved parent item groups only if has parent and the status is not 1 or 2
+        if( !is_null($trade_confirmation->trade_confirmation_id) 
+            && !in_array($trade_confirmation->trade_confirmation_status_id, [1,2]) ) {
+            $parent_trade_confirmation = $trade_confirmation->resolveParent();
+
+            if(in_array($parent_trade_confirmation->trade_confirmation_status_id, [6,7]) ) {
+                // get parent group
+                
+            } else {
+                // get group
+                $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)
+                    where('trade_confirmation_id', $parent_trade_confirmation->id)->get();
+            }
+        }
+
+
         if(!is_null($this->trade_confirmation_group_id)) {
             $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)->get();
         }

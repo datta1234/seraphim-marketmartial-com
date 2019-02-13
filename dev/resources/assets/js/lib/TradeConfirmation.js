@@ -44,6 +44,7 @@ export default class TradeConfirmation extends BaseModel {
 
         const defaults = {
                 id : "",
+                root_id : "",
                 organisation : "",
                 trade_structure_title : "",
                 volatility : "",
