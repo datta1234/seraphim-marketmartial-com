@@ -91,6 +91,13 @@ class TradeConfirmationGroup extends Model
 
     public function preFormatted($is_sender = null)
     {
+        // Need to get previous unchanged calculated value
+        // current status 2 and 1 they dont need previous
+        
+        // status 3 - look at previous 5 or 6 or 1
+        // status 5 - look at previous 7
+
+
         $parent_group_items = null;
         if(!is_null($this->trade_confirmation_group_id)) {
             $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)->get();
