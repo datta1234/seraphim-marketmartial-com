@@ -11,6 +11,12 @@
         {{Session::get('info')}}
     </div>
 @endif
+@if(Session::has('warning'))
+    <div class="alert alert-warning show fade">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{Session::get('warning')}}
+    </div>
+@endif
 @if(Session::has('error'))
     <div class="alert alert-danger show fade">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>

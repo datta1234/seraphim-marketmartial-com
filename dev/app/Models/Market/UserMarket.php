@@ -786,7 +786,8 @@ class UserMarket extends Model
         $newMarketNegotiation->market_negotiation_id = $lastMarketNegotiation->id;
 
         //see what the trade negotiation was started
-        $lastTradeNegotiation = $lastMarketNegotiation->lastTradeNegotiation->getRoot();
+        $lastTradeNegotiation = $lastMarketNegotiation->lastTradeNegotiation;//->getRoot();
+        $rootTradeNegotiation = $lastMarketNegotiation->lastTradeNegotiation->getRoot();
         // updated per [MM-902] this seemed to get the first trade, just to be sure we are resolving the root now
         
        
@@ -801,23 +802,31 @@ class UserMarket extends Model
         // $sourceNegotiation =  $lastMarketNegotiation->marketNegotiationSource($attr);
         // $newMarketNegotiation->user_id = $sourceNegotiation->user_id;
         $newMarketNegotiation->user_id = $user->id;
-
+        $level = (
+            $rootTradeNegotiation->is_offer     // if traded on level is offer
+            ? $lastMarketNegotiation->offer     // get the offer
+            : $lastMarketNegotiation->bid       // else get the bid
+        );
 
         /*
         *   This keeps changing... 
         *   currently set as per [MM-902] 
-        *       traded on bid @ level   = set offer to traded bid level
+        *       lift bid = buy = traded on bid @ level   = set offer to traded bid level
         *       traded on offer @ level = set bid to traded offer level
+        *
+        *   Updated Again per [MM-962] ... added $level resolution, i think this was needed all along, 
+        *       as there are multiple ways to reach a trade causing issue with WTB resolution of sides value, 
+        *       this should always get the traded level, yet leave the side up to the last negotiations state.
         */
         if($lastTradeNegotiation->is_offer)
         {   
-            $newMarketNegotiation->bid = $lastMarketNegotiation->offer;
-            $newMarketNegotiation->bid_qty = $quantity;
+            $newMarketNegotiation->offer = $level;
+            $newMarketNegotiation->offer_qty = $quantity;
             
         }else
         {
-            $newMarketNegotiation->offer = $lastMarketNegotiation->bid;
-            $newMarketNegotiation->offer_qty = $quantity;
+            $newMarketNegotiation->bid = $level;
+            $newMarketNegotiation->bid_qty = $quantity;
         }
 
         $newMarketNegotiation->save();
