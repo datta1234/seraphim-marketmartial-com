@@ -56,6 +56,16 @@ class OpenInterest extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *  note: this had to be done due to php json encode persision issues
+     *
+     * @var array
+     */
+    protected $casts = [
+        'delta' => 'string',
+    ];
+
+    /**
      * Creates a new OpenInterest record from the passed array
      *
      * @param array $data
