@@ -96,7 +96,7 @@ class TradeConfirmationGroup extends Model
         
         // Resolved parent item groups only if has parent and the status is not 1 or 2
         if( !is_null($trade_confirmation->trade_confirmation_id) 
-            && !in_array($trade_confirmation->trade_confirmation_status_id, [1,2]) ) {
+            && !in_array($trade_confirmation->trade_confirmation_status_id, [1,2,6,7]) ) {
             
             $parent_trade_confirmation = $trade_confirmation->resolveParent();
             $parent_group = TradeConfirmationGroup::where('trade_confirmation_id', $parent_trade_confirmation->id)

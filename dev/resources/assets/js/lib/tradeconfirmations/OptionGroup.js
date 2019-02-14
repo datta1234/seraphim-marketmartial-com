@@ -17,7 +17,7 @@ export default class OptionGroup {
             switch(item.title) {
                 case 'is_put':
                     this.is_put = item.value == 1;
-                    this.is_put_old = item.old_value == 1;
+                    this.is_put_old = item.old_value == null ? item.old_value : item.old_value == 1;
                     break;
                 case 'is_offer':
                     this.is_offer = item.value == 1;
