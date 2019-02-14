@@ -101,9 +101,18 @@ class TradeConfirmationGroup extends Model
             $parent_trade_confirmation = $trade_confirmation->resolveParent();
             $parent_group = TradeConfirmationGroup::where('trade_confirmation_id', $parent_trade_confirmation->id)
                 ->where('trade_structure_group_id', $this->trade_structure_group_id)
+                ->where('trade_structure_group_id', $this->trade_structure_group_id)
                 ->first();
         }
-        $parent_group_items = is_null($parent_group) ? null :  $parent_group->tradeConfirmationItems;
+        
+        $parent_group_items = is_null($parent_group) ? null :  $parent_group->tradeConfirmationItems()
+            ->where(function($query) use ($is_sender) {                
+                $query
+                ->whereNull('is_seller')
+                ->orWhere('is_seller',$is_sender);
+            })
+            ->get();
+        
         $item_ignore_list = ['is_offer'];
 
         return [
