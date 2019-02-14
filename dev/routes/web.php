@@ -20,7 +20,7 @@ Auth::routes();
 */
 Route::get('/', 'PageController@index')->name('home');
 Route::get('/contact', 'PageController@contact')->name('contact');
-Route::post('/contact', 'PageController@contactMessage')->name('contact');
+Route::post('/contact', 'PageController@contactMessage')->name('contact_send');
 Route::get('/about', 'PageController@about')->name('about');
 Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
 Route::get('/fsp-disclosures', 'PageController@fspDisclosures')->name('fsp_disclosures');
@@ -40,7 +40,7 @@ Route::get('/ping', function(\Illuminate\Http\Request $request) {
     // ]);
 });
 
-Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep']], function () {
+Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectProfileStep','timeWindowPreventAction']], function () {
     Route::group(['middleware' => ['verified']], function () {
         Route::get('/previous-day', 'PreviousDayController@index')->name('previous_day');
         Route::get('/previous-day/markets', 'PreviousDayController@showMarkets')->name('previous_day.markets');

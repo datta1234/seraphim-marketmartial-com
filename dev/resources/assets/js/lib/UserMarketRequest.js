@@ -235,28 +235,26 @@ export default class UserMarketRequest extends BaseModel {
     */
     actionTaken() {
         if(!this.attributes.action_needed) {
-            return new Promise((resolve, reject) => {
-                reject(new Errors("No actions needed"));
-            });
+           return new Promise((resolve, reject) => {
+                resolve();
+           });
         }
-        return new Promise((resolve, reject) => {
-            axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', 
-                {
-                    'action_needed': false
-                },
-                {
-                    headers: {
-                        [Config.get('app.ajax.headers.ignore')]: true
-                    }
+        return axios.post(axios.defaults.baseUrl + '/trade/user-market-request/'+ this.id +'/action-taken', 
+            {
+                'action_needed': false
+            },
+            {
+                headers: {
+                    [Config.get('app.ajax.headers.ignore')]: true
                 }
-            )
-            .then(response => {
-                this.attributes.action_needed = response.data.data.action_needed;
-                resolve(response);
-            })
-            .catch(err => {
-                reject(err);
-            }); 
+            }
+        )
+        .then(response => {
+            this.attributes.action_needed = response.data.data.action_needed;
+            return response;
+        })
+        .catch(err => {
+            console.error(err);
         });
     }
 
@@ -559,5 +557,10 @@ export default class UserMarketRequest extends BaseModel {
     getTradingGroupItem(name) {
         let group = this.getTradingGroup();
         return group ? group[name] : null;
+    }
+
+    runActionTaken() {
+        console.log('runActionTaken called on Request');
+        this.actionTaken();
     }
 }

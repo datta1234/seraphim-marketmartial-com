@@ -44,6 +44,10 @@ table {
 		    padding-right: 3px !important;
 		}
 	}
+
+	tr.table-latest-data {
+		background-color: darken($mm-background-light,10%);
+	}
 }
 
 .card {

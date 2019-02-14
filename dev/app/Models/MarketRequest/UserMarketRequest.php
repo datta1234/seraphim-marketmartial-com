@@ -18,6 +18,7 @@ class UserMarketRequest extends Model
     use \App\Traits\ResolvesUser;
     use \App\Traits\ActionListCache;
     use \App\Traits\ResolveTradeStructureSlug;
+    use \App\Traits\ScopesToPreviousDay;
 
     /**
      * @property integer $id
@@ -421,9 +422,8 @@ class UserMarketRequest extends Model
         return $data;
     }
 
-    public function scopePreviousDay($query) {
-        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
-    }
+    // moved to Trait \App\Traits\ScopesToPreviousDay
+    // public function scopePreviousDay($query)
 
     
     /**

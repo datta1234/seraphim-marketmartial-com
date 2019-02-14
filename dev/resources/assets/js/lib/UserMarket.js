@@ -294,11 +294,11 @@ export default class UserMarket extends BaseModel {
                 reject(new Errors("Invalid Market Request"));
             });
         }
-
         return new Promise((resolve, reject) => {
             axios.post(axios.defaults.baseUrl + "/trade/user-market-request/"+market_request.id+"/user-market", this.prepareStore())
             .then(response => {
-               resolve(response);
+                market_request.runActionTaken();
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
@@ -320,13 +320,13 @@ export default class UserMarket extends BaseModel {
         return new Promise((resolve, reject) => {
             return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this.user_market_request_id+"/user-market/"+this.id)
             .then(response => {
-               resolve(response);
+                this.runActionTaken();
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
             });
         });
-
     }
 
 
@@ -336,17 +336,24 @@ export default class UserMarket extends BaseModel {
     dismissActivity(activity) {
         // make a . notation string
         activity = activity instanceof Array ? activity.join('.') : activity;
-        console.log(activity);
-
         return new Promise((resolve, reject) => {
             return axios.delete(axios.defaults.baseUrl + "/trade/user-market/"+this.id+"/activity/"+activity)
             .then(response => {
-                console.log("ACT:", response);
                 this.setActivity(response.data.data.activity);
+                this.runActionTaken();
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
             });
         });
+    }
+
+
+    runActionTaken() {
+        console.log('runActionTaken called on UserMarket');
+        if(this._user_market_request) {
+            this._user_market_request.runActionTaken();
+        }
     }
 }

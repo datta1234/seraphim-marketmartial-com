@@ -108,10 +108,10 @@ export default class UserMarketQuote extends BaseModel {
             });
         }
         return new Promise((resolve, reject) => {
-
            axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'is_on_hold': true})
             .then(response => {
-               resolve(response);
+                this.runActionTaken();
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
@@ -127,10 +127,10 @@ export default class UserMarketQuote extends BaseModel {
             });
         }
         return new Promise((resolve, reject) => {
-
            axios.patch(axios.defaults.baseUrl + '/trade/user-market-request/'+this._user_market_request.id+'/user-market/'+this.id, {'accept': true})
             .then(response => {
-               resolve(response);
+                this.runActionTaken();
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
@@ -152,11 +152,18 @@ export default class UserMarketQuote extends BaseModel {
         return new Promise((resolve, reject) => {
             return axios.delete(axios.defaults.baseUrl + "/trade/user-market-request/"+this._user_market_request.id+"/user-market/"+this.id)
             .then(response => {
-               resolve(response);
+                resolve(response);
             })
             .catch(err => {
                 reject(err);
             });
         });
+    }
+
+    runActionTaken() {
+        console.log('runActionTaken called on Quote');
+        if(this._user_market_request) {
+            this._user_market_request.runActionTaken();
+        }
     }
 }

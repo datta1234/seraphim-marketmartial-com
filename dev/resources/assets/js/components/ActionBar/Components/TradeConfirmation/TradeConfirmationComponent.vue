@@ -135,8 +135,8 @@
                 <tr>
                     <th scope="col">{{ trade_confirmation.organisation }}</th>
                     <th scope="col">Underlying</th>
-                    <th scope="col">Spot</th>
-                    <th scope="col">Future</th>
+                    <th scope="col">Spot {{ trade_confirmation.market_id == 4 ? '(ZAR)' : '' }}</th>
+                    <th scope="col">Future {{ trade_confirmation.market_id == 4 ? '(ZAR)' : '' }}</th>
                     <th scope="col">Contracts</th>
                     <th scope="col">Expiry</th>
                 </tr>
@@ -420,10 +420,6 @@
                     this.action_list.has_calculate = false;
                     this.action_list.has_dispute = false;
                 }
-
-                this.selected_trading_account = this.trading_accounts.find((item)=>{
-                    return item.market_id == this.trade_confirmation.market_id;
-                });
             },
             clearConfirmation()
             {
@@ -458,6 +454,7 @@
                 this.selected_trading_account = this.trading_accounts.find((item)=>{
                     return item.market_id == this.trade_confirmation.underlying_id;
                 });
+                console.log("Trading account stuff: ", this.selected_trading_account, this.trading_accounts, this.trade_confirmation);
             },
             phaseTwo: function()
             {
@@ -473,13 +470,14 @@
                     this.confirmationLoaded = true;
                     /*this.updateOldData();*/
 
+                    this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
                     this.$toasted.error(err.message);
-                    this.errors = err.errors;
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });
@@ -493,18 +491,20 @@
                     this.$emit('close');
                     console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
+
                     this.$toasted.success(response.data.message);
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     /*this.updateOldData();*/
+
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    this.errors = err.errors;
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
@@ -517,18 +517,20 @@
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
                     console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
-                    this.confirmationLoaded = true;
-                    EventBus.$emit('loading', 'confirmationSubmission', false);
+
                     this.$emit('close');
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
+                    /*this.updateOldData();*/
+                    this.confirmationLoaded = true;
+                    EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
-                    this.errors = err.errors;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
             },
@@ -541,6 +543,7 @@
                     this.$emit('close');
                     console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
+
                     /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
@@ -550,7 +553,7 @@
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    this.errors = err.errors;
+                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
@@ -566,19 +569,15 @@
               }
             }*/
             loadErrors(errors) {
-                console.log("inner 1");
                 Object.keys(errors).forEach(error_key => {
-                    console.log("inner 2");
                     let error_key_array = error_key.split('.');
                     let groups_index = error_key_array.findIndex(x=>{return x == 'structure_groups'});
                     let group = '';
                     if(groups_index !== -1 && error_key_array.length > groups_index) {
                         group += error_key_array[groups_index+1];
                     }
-                    console.log("inner 3");
 
                     errors[error_key].forEach(err=>{
-                        console.log("inner 4");
                         let item_key = (err.constructor == String ? error_key : Object.keys(err)[0]);
                         let item = (err.constructor == String ? err : err[item_key]);
 
@@ -590,9 +589,7 @@
                             this.new_errors.messages.push(item);
                         }
                     });
-                    console.log("inner 5");
                 });
-                console.log("inner last");
             }
         },
         mounted() {

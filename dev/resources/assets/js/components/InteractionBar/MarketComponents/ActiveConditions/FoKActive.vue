@@ -12,15 +12,17 @@
                         {{ fok_value }}
                     </b-col>
                     <b-col v-if="isActive && !$root.is_viewer">
-                        <span id="fok-popover-hit">
-                            <a  href="" 
-                                @click.prevent.stop="doTrade">
-                                    Trade
-                            </a>
-                        </span>
-                        <span>
-                            <a href="" @click.prevent.stop="doKill">Kill</a>
-                        </span>
+                        <b-row>
+                            <b-col id="fok-popover-hit">
+                                <a  href="" 
+                                    @click.prevent.stop="doTrade">
+                                        Trade
+                                </a>
+                            </b-col>
+                            <b-col>
+                                <a href="" @click.prevent.stop="doKill">Kill</a>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
             </div>

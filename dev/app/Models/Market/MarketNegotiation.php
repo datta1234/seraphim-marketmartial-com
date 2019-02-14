@@ -12,6 +12,7 @@ class MarketNegotiation extends Model
 {
     use \App\Traits\ResolvesUser, \App\Traits\AppliesConditions, SoftDeletes;
     use HasDismissibleActivity; // activity tracked and dismissible
+    use \App\Traits\ScopesToPreviousDay;
 
 	/**
 	 * @property integer $id
@@ -356,9 +357,9 @@ class MarketNegotiation extends Model
         return null;
     }
 
-    public function scopePreviousDay($query) {
-        return $query->whereBetween('updated_at', [ now()->subDays(1)->startOfDay(), now()->startOfDay() ]);
-    }
+
+    // moved to Trait \App\Traits\ScopesToPreviousDay
+    // public function scopePreviousDay($query)
 
     public function scopeCurrentDay($query) {
         return $query->where('updated_at', '>', now()->startOfDay());
@@ -422,6 +423,8 @@ class MarketNegotiation extends Model
     */
     public function scopePreviousDayRefreshable($query)
     {
+        $start = $this->resolvePreviousDayStart();
+        $end = $this->resolvePreviousDayEnd();
         return $query->whereRaw('
             `id` = (
                 select `neg_sub_i`.`id`
@@ -439,8 +442,8 @@ class MarketNegotiation extends Model
                 limit 1
             )',
             [ 
-                now()->subDays(1)->startOfDay(), 
-                now()->startOfDay()
+                $start,
+                $end
             ]
         );
     }
@@ -1042,7 +1045,6 @@ class MarketNegotiation extends Model
 
     public function addTradeNegotiation($user,$data)
     {
-            //dd([$data,$user, $this, $this->tradeNegotiations->last()]);
             $tradeNegotiation = new TradeNegotiation($data);
             $tradeNegotiation->initiate_user_id = $user->id;            
             $tradeNegotiation->user_market_id = $this->user_market_id;

@@ -19,8 +19,8 @@ import Echo from "laravel-echo"
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'e86956c85e44edbfbc9c',
-    cluster: 'ap2',
+    key: document.head.querySelector('meta[name="pusher-key"]').content,
+    cluster: document.head.querySelector('meta[name="pusher-cluster"]').content,
     encrypted: true,
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
@@ -291,6 +291,10 @@ const app = new Vue({
          * @todo - Add logic to display market if not already displaying
          */
         updateUserMarketRequest(userMarketRequestData) {
+
+            // @TODO: ONLY update the found record, IF message.timestamp > current request.timestamp_recieved
+            // + add .timestamp_recieved field to marketRequests
+
             // handle removal of market requests
             if(typeof userMarketRequestData.inactive !== 'undefined' && userMarketRequestData.inactive == true) {
                 let market = this.display_markets.find(display_market => display_market.id == userMarketRequestData.market_id);

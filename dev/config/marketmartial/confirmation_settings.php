@@ -6,7 +6,7 @@ return [
 	[
 		"index" => 
 		[
-			"only_leg"=>0.004
+			"only_leg"=>0.003
 		],
 		"singles"=>
 		[
@@ -18,13 +18,13 @@ return [
 	[
 		"index" => 
 		[
-			"big_leg"=>0.004,
+			"big_leg"=>0.002,
 			"small_leg"=>0.002
 		],
 		"singles"=>
 		[
-			"big_leg"=>0.05,
-			"small_leg"=>0.025
+			"big_leg"=>0.035,
+			"small_leg"=>0.035
 		]
 	],
 
@@ -33,8 +33,8 @@ return [
 	[
 		"index" => 
 		[
-			"big_leg"=>0.004,
-			"small_leg"=>0.002
+			"big_leg"=>0.003,
+			"small_leg"=>0.003
 
 		],
 		"singles"=>
@@ -49,11 +49,11 @@ return [
 	[
 		"index" => 
 		[
-			"per_leg"=>0.0025
+			"per_leg"=>0.002
 		],
 		"singles"=>
 		[
-			"per_leg"=>0.035
+			"per_leg"=>0.03
 		]
 	],
 	// __trade_structure__
@@ -61,7 +61,7 @@ return [
 	[
 		"index" => 
 		[
-			"per_leg"=>0.004
+			"per_leg"=>0.003
 		],
 		"singles"=>
 		[
@@ -73,7 +73,7 @@ return [
 	[
 		"index" => 
 		[
-			"only_leg"=>0.0025
+			"only_leg"=>0.002
 		],
 	],
 	// __trade_structure__
@@ -81,7 +81,7 @@ return [
 	[
 		"index" => 
 		[
-			"far_leg_only"=>0.0025
+			"far_leg_only"=>0.002
 		],
 	],
 	// __trade_structure__
@@ -89,7 +89,7 @@ return [
 	[
 		"index" => 
 		[
-			"per_leg"=>0.0025
+			"per_leg"=>0.002
 		],
 	],
 ];

@@ -19,7 +19,7 @@ trait CalculatesForRolls {
         
         $future2 = $nearref + $Points;
 
-        $isOffer = $this->futureGroups[0]->getOpVal('is_offer 2');
+        $isOffer = $this->futureGroups[0]->getOpVal('is_offer 1');
 
         $this->rollsFees($isOffer,$is_sender, $future2, $nearref, $Points);
     }
@@ -37,6 +37,7 @@ trait CalculatesForRolls {
         $D1rollFeeSender = $sender_org->resolveBrokerageFee($rolls_key.'index.far_leg_only')/100;
         $D1rollFeeReceiving = $receiving_org->resolveBrokerageFee($rolls_key.'index.far_leg_only')/100;
 
+        //dd($future2, $D1rollFeeReceiving, $D1rollFeeSender, $is_sender, $FutBrodirection2);
     	//FUTURE = Application.Round(Future2 * D1rollFee * FutBrodirection2, 2) + Future2
     	$future =  round($future2 * ($is_sender ? $D1rollFeeSender : $D1rollFeeReceiving) * $FutBrodirection2, 2) + $future2;
     	$this->futureGroups[0]->setOpVal('Future 2', $future,$is_sender);

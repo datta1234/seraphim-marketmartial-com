@@ -10706,6 +10706,10 @@ table.slim th {
   padding-right: 3px !important;
 }
 
+table tr.table-latest-data {
+  background-color: #cbd3da;
+}
+
 .card {
   border: none;
   -webkit-box-shadow: 4px 4px 9px -4px #000000;
