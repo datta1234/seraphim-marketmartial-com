@@ -92,27 +92,20 @@ class TradeConfirmationGroup extends Model
     public function preFormatted($is_sender = null)
     {
         $trade_confirmation = $this->tradeConfirmation;
-        $parent_group_items = null;
+        $parent_group = null;
         
         // Resolved parent item groups only if has parent and the status is not 1 or 2
         if( !is_null($trade_confirmation->trade_confirmation_id) 
             && !in_array($trade_confirmation->trade_confirmation_status_id, [1,2]) ) {
+            
             $parent_trade_confirmation = $trade_confirmation->resolveParent();
-
-            if(in_array($parent_trade_confirmation->trade_confirmation_status_id, [6,7]) ) {
-                // get parent group
-                
-            } else {
-                // get group
-                $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)
-                    where('trade_confirmation_id', $parent_trade_confirmation->id)->get();
-            }
+            $parent_group = TradeConfirmationGroup::where('trade_confirmation_id', $parent_trade_confirmation->id)
+                ->where('trade_structure_group_id', $this->trade_structure_group_id)
+                ->first();
         }
+        $parent_group_items = is_null($parent_group) ? null :  $parent_group->tradeConfirmationItems;
+        $item_ignore_list = ['is_offer'];
 
-
-        if(!is_null($this->trade_confirmation_group_id)) {
-            $parent_group_items = TradeConfirmationItem::where('id',$this->trade_confirmation_group_id)->get();
-        }
         return [
             'id'                            => $this->id,
             'is_options'                    => $this->is_options,
@@ -125,11 +118,12 @@ class TradeConfirmationGroup extends Model
                 ->orWhere('is_seller',$is_sender);
             })
             ->get()
-            ->map(function($item) use ($parent_group_items) {
+            ->map(function($item) use ($parent_group_items,$item_ignore_list) {
                 if(is_null($parent_group_items)) {
                     return $item->preFormatted();
                 } else {
-                    return $item->preFormatted($parent_group_items->firstWhere('title', $item->title));
+                    return $item->preFormatted(in_array($item->title, $item_ignore_list) ? null 
+                        : $parent_group_items->firstWhere('title', $item->title));
                 }
             })
         ];

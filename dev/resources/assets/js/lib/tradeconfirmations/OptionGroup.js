@@ -17,6 +17,7 @@ export default class OptionGroup {
             switch(item.title) {
                 case 'is_put':
                     this.is_put = item.value == 1;
+                    this.is_put_old = item.old_value == 1;
                     break;
                 case 'is_offer':
                     this.is_offer = item.value == 1;
@@ -26,6 +27,7 @@ export default class OptionGroup {
                     break;
                 case 'Contract':
                     this.contracts = this.setUpNumbers(item.value);
+                    this.contracts_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Nominal':
                     this.nominal = this.setUpNumbers(item.value);
@@ -38,9 +40,11 @@ export default class OptionGroup {
                     break;
                 case 'Gross Premiums':
                     this.gross_prem = this.setUpNumbers(item.value);
+                    this.gross_prem_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Net Premiums':
                     this.net_prem = this.setUpNumbers(item.value);
+                    this.net_prem_old = this.setUpNumbers(item.old_value);
                     break;
                 
             }

@@ -79,7 +79,7 @@
               </thead>
               <tbody>
 
-                <tr v-for="option_group in trade_confirmation.option_groups">
+                <tr v-for="(option_group, key) in trade_confirmation.option_groups">
                     <td>
                       {{ (option_group.is_offer != null ? (option_group.is_offer ? "Buys" : "Sells"):'') }}
                     </td>
@@ -90,13 +90,19 @@
                         {{ option_group.hasOwnProperty('strike') ? splitValHelper(option_group.strike,' ',3) : '-' }} 
                     </td>
                     <td>
-                        {{ option_group.is_put ? "Put" : "Call" }} 
+                        {{ option_group.is_put ? "Put" : "Call" }}
+                        <div v-if="hasOldValue('option_groups',key,'is_put')" class="font-weight-bold text-danger modal-info-text">
+                            Calculated value : {{ option_group.is_put_old ? "Put" : "Call" }}.
+                        </div>
                     </td>
                     <td>
                         {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
                     </td>
                     <td>
-                        {{ option_group.contracts }} 
+                        {{ option_group.contracts }}
+                        <div v-if="hasOldValue('option_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                            Calculated value : {{ option_group.contracts_old }}.
+                        </div>
                     </td>
                     <td>
                         {{ option_group.expires_at }}                            
@@ -106,9 +112,15 @@
                     </td>
                     <td>
                         <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
+                        <div v-if="hasOldValue('option_groups',key,'gross_prem')" class="font-weight-bold text-danger modal-info-text">
+                            Calculated value : {{  splitValHelper(option_group.gross_prem_old,' ',3) }}.
+                        </div>
                     </td>
                     <td>
                         <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
+                        <div v-if="hasOldValue('option_groups',key,'net_prem')" class="font-weight-bold text-danger modal-info-text">
+                            Calculated value : {{  splitValHelper(option_group.net_prem_old,' ',3) }}.
+                        </div>
                     </td>
                 </tr>
               </tbody>
@@ -150,9 +162,15 @@
                                         type="number"
                                         v-bind:class="{ 'is-invalid': inputState(key,'future_1') }">
                                 </input>
+                                <div v-if="hasOldValue('future_groups',key,'future_1')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{  splitValHelper(future_group.future_1_old,' ',3) }}.
+                                </div>
                             </td>
                             <td>
-                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                                {{ future_group.contracts }}
+                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ future_group.contracts_old }}.
+                                </div>
                             </td>
                             <td>
                                 {{ future_group.expires_at_1 }}     
@@ -169,11 +187,15 @@
                                 -    
                             </td>
                             <td>
-                                {{ trade_confirmation.future_groups[key]['future_2'] }}
+                                {{ future_group.future_2 }}
+                                <div v-if="hasOldValue('future_groups',key,'future_2')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ future_group.future_2_old }}.
+                                </div>
                             </td>
-                            <td>
-                                {{ trade_confirmation.future_groups[key]['contracts'] }} 
-                            </td>
+                            {{ future_group.contracts }}
+                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ future_group.contracts_old }}.
+                                </div>
                             <td>
                                 {{ future_group.expires_at_2 }}     
                             </td>
@@ -195,7 +217,10 @@
                                             v-model="trade_confirmation.future_groups[key]['spot']" 
                                             type="number"
                                             v-bind:class="{ 'is-invalid': inputState(key,'spot') }">
-                                    </input> 
+                                    </input>
+                                    <div v-if="hasOldValue('future_groups',key,'spot')" class="font-weight-bold text-danger modal-info-text">
+                                        Calculated value : {{ splitValHelper(future_group.spot_old,' ',3) }}.
+                                    </div>
                                 </template>
                                 <template v-else>
                                     -    
@@ -207,13 +232,22 @@
                                         type="number"
                                         v-bind:class="{ 'is-invalid': inputState(key,'future') }">
                                 </input>
+                                <div v-if="hasOldValue('future_groups',key,'future')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ splitValHelper(future_group.future_old,' ',3) }}.
+                                </div>
                             </td>
                             <td v-else>
-                                {{ trade_confirmation.future_groups[key]['future'] }}
+                                {{ splitValHelper(future_group.future,' ',3) }}
+                                <div v-if="hasOldValue('future_groups',key,'future')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ splitValHelper(future_group.future_old,' ',3) }}.
+                                </div>
                             </td>
                             <td v-if="trade_confirmation.trade_structure_slug == 'efp' 
                                 || trade_confirmation.trade_structure_slug == 'efp_switch'">
-                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                                {{ future_group.contracts }}
+                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ future_group.contracts_old }}.
+                                </div>
                             </td>
                             <td v-else>
                                 <input  v-input-mask.number.decimal="{ precision: 2 }" 
@@ -222,6 +256,9 @@
                                         type="number"
                                         v-bind:class="{ 'is-invalid': inputState(key,'contract') }">
                                 </input>
+                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                    Calculated value : {{ future_group.contracts_old }}.
+                                </div>
                             </td>
                             <td>
                                 {{ future_group.expires_at }}     
@@ -364,10 +401,15 @@
              * Toggles input states when there are errors for the input
              *
              * @param {number} index - the index of the input
-             * @param {string} type - the type of input
+             * @param {string} field - the input field
              */
-            inputState(index, type) {
-                return (this.new_errors.fields.indexOf(index +'.'+ type) == -1)? false: true;
+            inputState(index, field) {
+                return ( (this.new_errors.fields.indexOf(index +'.'+ field) != -1) 
+                    || (this.trade_confirmation.future_groups[index][field+'_old'] != null) )? true: false;
+            },
+            hasOldValue(group,index,field) {
+                return (this.trade_confirmation[group][index].hasOwnProperty(field+'_old'))
+                    && (this.trade_confirmation[group][index][field+'_old'] != null);     
             },
             loadConfirmation(tradeConfirmation)
             {
