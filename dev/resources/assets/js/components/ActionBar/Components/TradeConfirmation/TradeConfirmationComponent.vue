@@ -454,7 +454,6 @@
                 this.selected_trading_account = this.trading_accounts.find((item)=>{
                     return item.market_id == this.trade_confirmation.underlying_id;
                 });
-                console.log("Trading account stuff: ", this.selected_trading_account, this.trading_accounts, this.trade_confirmation);
             },
             phaseTwo: function()
             {
@@ -462,13 +461,10 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.postPhaseTwo(this.selected_trading_account).then(response => {
-                    /*this.errors = [];*/
-                    console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
+
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    this.confirmationLoaded = true;
-                    /*this.updateOldData();*/
 
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -477,7 +473,6 @@
                     console.error(err);
                     this.loadErrors(err.errors);
                     this.$toasted.error(err.message);
-                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });
@@ -489,14 +484,11 @@
 
                this.trade_confirmation.send(this.selected_trading_account).then(response => {
                     this.$emit('close');
-                    console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
-
                     this.$toasted.success(response.data.message);
-                    /*this.errors = [];*/
+
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    /*this.updateOldData();*/
 
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -504,7 +496,6 @@
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
@@ -515,21 +506,18 @@
                 this.confirmationLoaded = false;
 
                 this.trade_confirmation.dispute(this.selected_trading_account).then(response => {
-                    console.log("We got this back: ", response);
+                    this.$emit('close');
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
 
-                    this.$emit('close');
-                    /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
-                    /*this.updateOldData();*/
+
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
@@ -541,10 +529,7 @@
 
                 this.trade_confirmation.confirm(this.selected_trading_account).then(response => {
                     this.$emit('close');
-                    console.log("We got this back: ", response);
                     this.loadConfirmation(new TradeConfirmation(response.data.data));
-
-                    /*this.errors = [];*/
                     this.new_errors.fields = [];
                     this.new_errors.messages = [];
                     this.confirmationLoaded = true;
@@ -553,7 +538,6 @@
                 .catch(err => {
                     console.error(err);
                     this.loadErrors(err.errors);
-                    /*this.errors = err.errors;*/
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 });  
