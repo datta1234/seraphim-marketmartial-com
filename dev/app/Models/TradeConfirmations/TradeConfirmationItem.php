@@ -50,13 +50,13 @@ class TradeConfirmationItem extends Model
         	'item_id');
     }
 
-    public function preFormatted()
+    public function preFormatted($parent_item = null)
     {
          return [
             'title' => $this->title,
             'value' => $this->value,
-            'is_seller' => $this->is_seller
-
+            'is_seller' => $this->is_seller,
+            'old_value' => is_null($parent_item) ? null : ($parent_item->value == $this->value ? null : $parent_item->value)
         ];
     }
 }

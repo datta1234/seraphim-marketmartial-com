@@ -7,6 +7,7 @@ use App\Helpers\Broadcast\Stream;
 use App\Models\Trade\Rebate;
 use App\Events\TradeConfirmationEvent;
 use App\Models\TradeConfirmations\TradeConfirmationItem;
+use App\Models\TradeConfirmations\TradeConfirmationGroup;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -213,9 +214,9 @@ class TradeConfirmation extends Model
     {
         $organisation = $this->resolveOrganisation();
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
-
         return [
             'id'                        => $this->id,
+            'root_id'                 => $this->getRoot()->id,
             'organisation'              =>  $organisation ? $organisation->title : null,
 
             'trade_structure_title'     => $this->tradeStructure->title,
@@ -733,7 +734,11 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         }
         foreach ($groups as $group) 
         {
-            $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
+            $groupModel = TradeConfirmationGroup::where('trade_confirmation_group_id',$group['id'])->first();
+            if(is_null($groupModel)){
+                $groupModel = $this->tradeConfirmationGroups->firstWhere('id',$group['id']);
+            }
+
             foreach ($group['items'] as $item) 
             {
                 if( (empty($update_only) || in_array($item['title'], $update_only)) && !in_array($item['title'], $update_exclude) ) {
@@ -881,5 +886,86 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         {
             return $netPremium->value;
         }
+    }
+
+    /**
+     * Creates a child duplicate including tradeConfirmationGroups and their items
+     *
+     * @return \App\Models\TradeConfirmations\TradeConfirmation
+     */
+    public function createChild()
+    {
+        $child = $this->replicate();
+        $child->trade_confirmation_id = $this->id;
+        $child->save();
+
+        foreach ($this->tradeConfirmationGroups as $key => $group) {
+            $child_group = $group->replicate();
+            $child_group->trade_confirmation_id = $child->id;
+            $child_group->trade_confirmation_group_id = $group->id;
+            $child_group->save();
+
+            foreach ($group->tradeConfirmationItems as $index => $item) {
+                $child_item = $item->replicate();
+                $child_item->trade_confirmation_group_id = $child_group->id;
+                $child_item->save();
+            }
+        }
+        return $child;
+    }
+
+    /**
+     *  Get source of confirmation
+     *   
+     */
+    public function getRoot()
+    {
+        $table = $this->table;
+        $parentKey = $this->tradeConfirmationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $confirmation_root = \DB::select("
+            SELECT *
+                FROM (
+                    SELECT @id AS _id, (
+                        SELECT @id := $parentKey FROM $table WHERE id = _id
+                    ) as parent_id
+                    FROM (
+                        SELECT @id := $id
+                    ) tmp1
+                    JOIN $table ON @id IS NOT NULL
+                ) parent_struct
+                JOIN $table outcome ON parent_struct._id = outcome.id
+        ");
+        return self::hydrate($confirmation_root)->sortBy('id')->first();
+    }
+
+    /**
+     *  Resolve the Parent Confirmation that is not an update
+     *   
+     */
+    public function resolveParent()
+    {
+        $table = $this->table;
+        $parentKey = $this->tradeConfirmationParent()->getForeignKey();
+        $id = (int)$this->id;
+        $parent = DB::select("
+            SELECT *
+            FROM (
+                SELECT @id AS _id, @status as _status, (
+                    SELECT @id := trade_confirmation_id FROM $table WHERE id = _id
+                ) as parent_id, (
+                    SELECT @status := trade_confirmation_status_id FROM $table WHERE id = _id
+                ) as parent_status
+                FROM (
+                    SELECT @id := $id, @status := 0
+                ) tmp1
+                JOIN $table ON @status IN (0,6,7)
+                ORDER BY parent_id ASC
+                LIMIT 1
+            ) parent_struct
+            JOIN $table outcome ON parent_struct.parent_id = outcome.id
+        ");
+
+        return self::hydrate($parent)->first();
     }
 }

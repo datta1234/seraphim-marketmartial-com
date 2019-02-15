@@ -27,9 +27,14 @@ class ActivityControlller extends Controller
      */
     public function index()
     {
-        $years = TradeConfirmation::select(
-            DB::raw("DISTINCT YEAR(trade_confirmations.updated_at) as year")
-        )->get();
+        $years = DB::select('
+            SELECT DISTINCT YEAR(updated_at) as year
+            FROM (
+                SELECT updated_at FROM trade_confirmations
+                UNION
+                SELECT updated_at FROM user_market_requests
+            ) updated_years
+        ');
 
         return view('stats.market_activity')->with(compact('years'));
     }
@@ -55,9 +60,14 @@ class ActivityControlller extends Controller
         ->groupBy("markets.title",'month')
         ->where('trade_confirmation_status_id', 4);
 
-        $years = TradeConfirmation::select(
-            DB::raw("DISTINCT YEAR(trade_confirmations.updated_at) as year")
-        )->get();
+        $years = DB::select('
+            SELECT DISTINCT YEAR(updated_at) as year
+            FROM (
+                SELECT updated_at FROM trade_confirmations
+                UNION
+                SELECT updated_at FROM user_market_requests
+            ) updated_years
+        ');
 
         if($request->ajax() && $request->has('my_trades') && $request->input('my_trades') == '1') {
             $my_org_trade_confirmations = clone $trade_confirmations;
@@ -156,7 +166,8 @@ class ActivityControlller extends Controller
         }
 
         $user_market_requests =  $user_market_requests->select(DB::raw(
-            'user_market_requests.*, 
+            'user_market_requests.*,
+            trade_confirmations.trade_confirmation_status_id as trade_status, 
             trade_confirmations.updated_at as trade_date,
             trade_confirmations.send_user_id as trade_send_user_id, 
             trade_confirmations.receiving_user_id as trade_receiving_user_id,
@@ -167,8 +178,12 @@ class ActivityControlller extends Controller
                 from trade_structures
                 where id=user_market_requests.trade_structure_id
             ) as trade_structure_title'))
-        ->leftJoin('trade_confirmations', 'trade_confirmations.user_market_request_id', '=', 'user_market_requests.id');
-        
+        ->leftJoin('trade_confirmations', function($join)
+        {
+           $join->on('trade_confirmations.user_market_request_id', '=', 'user_market_requests.id')
+                ->where('trade_confirmations.trade_confirmation_status_id', '=', 4);
+        });
+
         $user_market_requests = $user_market_requests->paginate(50);
 
         $user_market_requests->transform(function($user_market_request) use ($user, $is_Admin) {
@@ -385,9 +400,14 @@ class ActivityControlller extends Controller
         }, array_fill_keys( $markets->values()->toArray() , null)); // Adding all the markets that are not in our dataset
 
         // Get the years for the yearly tables
-        $years = TradeConfirmation::select(
-            DB::raw("YEAR(trade_confirmations.updated_at) as year")
-        )->groupBy('year')->get();
+        $years = DB::select('
+            SELECT DISTINCT YEAR(updated_at) as year
+            FROM (
+                SELECT updated_at FROM trade_confirmations
+                UNION
+                SELECT updated_at FROM user_market_requests
+            ) updated_years
+        ');
         
         return view('admin.stats.bank_activity')->with(compact('graph_data','years'));
     }

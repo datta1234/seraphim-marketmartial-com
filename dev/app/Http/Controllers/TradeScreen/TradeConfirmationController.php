@@ -19,14 +19,15 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('phaseTwo', $tradeConfirmation);
-        $tradeConfirmation->setAccount($user,$request->input('trading_account_id')); 
+        $tradeConfirmationUpdated = in_array($tradeConfirmation->trade_confirmation_status_id, [6,7]) ? $tradeConfirmation : $tradeConfirmation->createChild();
+        $tradeConfirmationUpdated->setAccount($user,$request->input('trading_account_id')); 
         $exclude_list = array();
-        if(in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+        if(in_array($tradeConfirmationUpdated->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
             $exclude_list[] = 'Contract';
         }
-    	$tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
+    	$tradeConfirmationUpdated->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
         try {
-            $tradeConfirmation->phaseTwo();
+            $tradeConfirmationUpdated->phaseTwo();
         } catch(\App\Exceptions\SpotRefTooHighException $e) {
             return response()->json([
                 'message' => 'Calculation error occured.', 
@@ -39,21 +40,21 @@ class TradeConfirmationController extends Controller
             ], 422);
         }
 
-        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id 
-            && ($tradeConfirmation->trade_confirmation_status_id == 3))
+        if($user->organisation_id == $tradeConfirmationUpdated->sendUser->organisation_id 
+            && ($tradeConfirmationUpdated->trade_confirmation_status_id == 3))
         {
-            $tradeConfirmation->trade_confirmation_status_id = 6;
+            $tradeConfirmationUpdated->trade_confirmation_status_id = 6;
         } 
-        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id 
-            && ($tradeConfirmation->trade_confirmation_status_id == 2 || $tradeConfirmation->trade_confirmation_status_id == 5)) 
+        else if($user->organisation_id == $tradeConfirmationUpdated->recievingUser->organisation_id 
+            && ($tradeConfirmationUpdated->trade_confirmation_status_id == 2 || $tradeConfirmationUpdated->trade_confirmation_status_id == 5)) 
         {
-            $tradeConfirmation->trade_confirmation_status_id = 7;
+            $tradeConfirmationUpdated->trade_confirmation_status_id = 7;
         }
 
 
-        $tradeConfirmation->save();
+        $tradeConfirmationUpdated->save();
         
-        $data = $tradeConfirmation->fresh()->load([
+        $data = $tradeConfirmationUpdated->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
@@ -68,26 +69,27 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('update',$tradeConfirmation);
-        $tradeConfirmation->setAccount($user,$request->input('trading_account_id'));
-        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
-            $tradeConfirmation->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
+        $tradeConfirmationChild = $tradeConfirmation->createChild();
+        $tradeConfirmationChild->setAccount($user,$request->input('trading_account_id'));
+        if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmationChild->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
         }
 
-        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 1)
+        if($user->organisation_id == $tradeConfirmationChild->sendUser->organisation_id && $tradeConfirmationChild->trade_confirmation_status_id == 1)
         {
-            $tradeConfirmation->trade_confirmation_status_id = 2;
-            $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->trade_confirmation_status_id = 2;
+            $tradeConfirmationChild->save();
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
 
         }
-        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id && $tradeConfirmation->trade_confirmation_status_id == 2)
+        else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id && $tradeConfirmationChild->trade_confirmation_status_id == 2)
         {
-            $tradeConfirmation->trade_confirmation_status_id = 3;
-            $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->trade_confirmation_status_id = 3;
+            $tradeConfirmationChild->save();
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
         }
 
-         $data = $tradeConfirmation->fresh()->load([
+         $data = $tradeConfirmationChild->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
@@ -141,32 +143,33 @@ class TradeConfirmationController extends Controller
     {
         $user = $request->user();
         $this->authorize('dispute',$tradeConfirmation);
-        if(!in_array($tradeConfirmation->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
-            $tradeConfirmation->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
+        $tradeConfirmationChild = $tradeConfirmation->createChild();
+        if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+            $tradeConfirmationChild->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
         }
-        $tradeConfirmation->save();
+        $tradeConfirmationChild->save();
 
-        if($user->organisation_id == $tradeConfirmation->sendUser->organisation_id)
+        if($user->organisation_id == $tradeConfirmationChild->sendUser->organisation_id)
         {
-            $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
-            $tradeConfirmation->trade_confirmation_status_id = 5;
-            $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
+            $tradeConfirmationChild->send_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmationChild->trade_confirmation_status_id = 5;
+            $tradeConfirmationChild->save();
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
 
         }
-        else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
+        else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id)
         {
-            $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
-            $tradeConfirmation->trade_confirmation_status_id = 3;
-            $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
+            $tradeConfirmationChild->receiving_trading_account_id = $request->input('trading_account_id');
+            $tradeConfirmationChild->trade_confirmation_status_id = 3;
+            $tradeConfirmationChild->save();
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
         }
 
         \Slack::postMessage([
-            "text"      => $tradeConfirmation->getMessage('confirmation_disputed')
+            "text"      => $tradeConfirmationChild->getMessage('confirmation_disputed')
         ], 'dispute');
 
-        $data = $tradeConfirmation->fresh()->load([
+        $data = $tradeConfirmationChild->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
             {
                 $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
