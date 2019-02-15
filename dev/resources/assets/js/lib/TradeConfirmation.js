@@ -44,6 +44,7 @@ export default class TradeConfirmation extends BaseModel {
 
         const defaults = {
                 id : "",
+                root_id : "",
                 organisation : "",
                 trade_structure_title : "",
                 volatility : "",
@@ -168,9 +169,8 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation_data": this.prepareStore()
            })
            .then(response => {
-
-            this.update(response.data.data);
-            resolve();
+            // this.update(response.data.data);
+            resolve(response);
         })
            .catch(err => {
             reject(err);
@@ -190,7 +190,7 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation_data": this.prepareStore()
         })
         .then(response => {
-            this.update(response.data.data);
+            this.update(response);
             return response;
         }); 
     }
@@ -208,9 +208,7 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation": this.prepareStore()
            })
            .then(response => {
-
-            this.update(response.data.data);
-            resolve();
+            resolve(response);
         })
            .catch(err => {
             reject(err);
@@ -230,7 +228,7 @@ export default class TradeConfirmation extends BaseModel {
             "trade_confirmation": this.prepareStore()
         })
         .then(response => {
-            this.update(response.data.data);
+            this.update(response);
             return response;
         });
     }

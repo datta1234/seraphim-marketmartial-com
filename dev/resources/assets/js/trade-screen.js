@@ -322,24 +322,36 @@ const app = new Vue({
             }
         },
         updateTradeConfirmation(tradeConfirmationData){
-
-         let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
+            let index = this.display_markets.findIndex(display_market => display_market.id == tradeConfirmationData.market_id);
         
             if(index !== -1)
             {
                 let trade_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.id == tradeConfirmationData.id);
+                let root_confirmation_index = this.trade_confirmations.findIndex( trade_confirmation => trade_confirmation.root_id == tradeConfirmationData.root_id);
                 
+                let is_old_confirmation = false;
+                this.trade_confirmations.forEach(trade_confirmation => {
+                    is_old_confirmation = is_old_confirmation || (trade_confirmation.id >= tradeConfirmationData.id);
+                });
+
                 if(trade_confirmation_index !== -1) {
                     
-                    if(!tradeConfirmationData.can_interact)
-                    {
+                    if(!tradeConfirmationData.can_interact) {
                         this.trade_confirmations.splice(trade_confirmation_index,1);
 
-                    }else
-                    {
+                    } else {
                         this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
                     }
+                } else if(root_confirmation_index !== -1) {
+                    if(!tradeConfirmationData.can_interact) {
+                        this.trade_confirmations.splice(root_confirmation_index,1);
 
+                    } else {
+                        this.trade_confirmations[root_confirmation_index].update(tradeConfirmationData);
+                    }
+                } else if(is_old_confirmation) {
+                    // Should never get reached but if it does we are handeling it
+                    return;
                 } else {
                     console.log(tradeConfirmationData)
                     //only keep the interaction if the user can interact with it
