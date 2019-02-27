@@ -450,9 +450,10 @@
                     console.error(err);
                 }); 
             },
-            setDefaultTradingAccount() {
-                this.selected_trading_account = this.trading_accounts.find((item)=>{
-                    return item.market_id == this.trade_confirmation.underlying_id;
+            setDefaultTradingAccount()
+            {
+                this.selected_trading_account = this.trading_accounts.find((item) => {
+                    return typeof item.market_id !== 'undefined' && item.market_id == this.trade_confirmation.underlying_id;
                 });
             },
             phaseTwo: function()
