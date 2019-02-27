@@ -1,13 +1,6 @@
 <template>
     <div dusk="terms-and-conditions" class="terms-and-conditions">
         <template v-if="!completed">
-            <p>
-                After submitting this information, the Market Martial team will verify your profile.
-            </p>
-            <p>
-                You can view your account details at any time.
-            </p>
-
             <b-form v-on:submit.prevent="" id="index-details-form">
             
                 <b-form-checkbox id="checkbox1"
