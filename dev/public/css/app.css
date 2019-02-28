@@ -10738,7 +10738,7 @@ table tr.table-latest-data {
 }
 
 .card .card-header {
-  background-color: #269a9b;
+  background-color: #006d6e;
   border: none;
   color: #ffffff;
 }
@@ -10773,7 +10773,7 @@ table tr.table-latest-data {
 }
 
 .card .card-body .card-text .elec-eff-card-list {
-  color: #269a9b;
+  color: #006d6e;
   font-size: 1.2em;
 }
 
@@ -10842,21 +10842,21 @@ table tr.table-latest-data {
 
 .mm-button {
   color: #ffffff;
-  background-color: #269a9b;
-  border-color: #269a9b;
+  background-color: #006d6e;
+  border-color: #006d6e;
 }
 
 .mm-button:focus,
 .mm-button.focus {
   color: #ffffff;
-  background-color: #1c7172;
-  border-color: #1c7172;
+  background-color: #003a3b;
+  border-color: #003a3b;
 }
 
 .mm-button:hover {
   color: #ffffff;
-  background-color: #1c7172;
-  border-color: #1c7172;
+  background-color: #003a3b;
+  border-color: #003a3b;
 }
 
 .mm-error-button {
@@ -10879,18 +10879,18 @@ table tr.table-latest-data {
 }
 
 .mm-login-button {
-  color: #269a9b;
+  color: #006d6e;
   background-color: #ffffff;
 }
 
 .mm-login-button:focus,
 .mm-login-button.focus {
-  color: #269a9b;
+  color: #006d6e;
   background-color: #e6e5e5;
 }
 
 .mm-login-button:hover {
-  color: #269a9b;
+  color: #006d6e;
   background-color: #e6e5e5;
 }
 
@@ -10902,33 +10902,33 @@ a.mm-login-button {
 }
 
 .mm-footer-button {
-  color: #269a9b;
+  color: #006d6e;
   background-color: transparent;
-  border: 0.2em solid #269a9b;
+  border: 0.2em solid #006d6e;
 }
 
 .mm-footer-button:focus,
 .mm-footer-button.focus {
-  color: #269a9b;
+  color: #006d6e;
   background-color: transparent;
-  border-color: #1c7172;
+  border-color: #003a3b;
 }
 
 .mm-footer-button:hover {
-  color: #269a9b;
+  color: #006d6e;
   background-color: transparent;
-  border-color: #1c7172;
+  border-color: #003a3b;
 }
 
 .circle-icon-tile .circle-icon-block .icon {
-  background-color: #269a9b;
+  background-color: #006d6e;
   color: #ffffff;
   border-radius: 100%;
   font-size: 5em;
 }
 
 .circle-icon-tile p {
-  color: #269a9b;
+  color: #006d6e;
 }
 
 .home-login .in-line-input {
@@ -11102,7 +11102,7 @@ a.mm-login-button {
 }
 
 .title-decorator {
-  background-color: #269a9b;
+  background-color: #006d6e;
   width: 4.8em;
   height: .1em;
   margin-top: 0em;
@@ -11141,7 +11141,7 @@ a.mm-login-button {
 }
 
 .home-sub-footer h3 {
-  color: #269a9b;
+  color: #006d6e;
   font-family: "Muli-Bold";
   font-size: 1.4rem;
 }
@@ -11200,7 +11200,7 @@ a.mm-login-button {
 }
 
 .register-info-group {
-  color: #269a9b;
+  color: #006d6e;
   font-size: 1em;
   cursor: pointer;
 }
@@ -11250,8 +11250,8 @@ a.mm-login-button {
 }
 
 .mm-menu .list-group-item.active {
-  background: #269a9b;
-  border-color: #269a9b;
+  background: #006d6e;
+  border-color: #006d6e;
 }
 
 .mm-menu .list-group-item.active > a {
@@ -11316,7 +11316,7 @@ input.input-small {
 
 a,
 a:hover {
-  color: #269a9b;
+  color: #006d6e;
 }
 
 table.table {
@@ -11328,7 +11328,7 @@ table.table {
 
 .table thead th {
   color: #FFFFFF;
-  background-color: #269a9b !important;
+  background-color: #006d6e !important;
   border: none;
   font-size: 1.2em;
 }
@@ -17400,7 +17400,7 @@ readers do not read off random characters that represent icons */
 }
 
 .flip-card-group .card .card-graph {
-  background-color: #269a9b;
+  background-color: #006d6e;
 }
 
 .flip-card-group .card .card-graph .back-title {
@@ -17507,7 +17507,7 @@ readers do not read off random characters that represent icons */
 }
 
 .flip-card-content {
-  background-color: #269a9b;
+  background-color: #006d6e;
 }
 
 /* The switch - the box around the slider */
@@ -18630,7 +18630,7 @@ body > .popover > .arrow {
 }
 
 .filter-date-picker .vdp-datepicker__calendar-button.input-group-prepend .input-group-text {
-  background-color: #269a9b;
+  background-color: #006d6e;
   color: #ffffff;
 }
 
@@ -18640,12 +18640,12 @@ body > .popover > .arrow {
 }
 
 .stats-nav-card .card-body {
-  background-color: #269a9b;
+  background-color: #212529;
   color: #ffffff;
 }
 
 .stats-nav-card.active .card-body {
-  background-color: #30c3c4;
+  background-color: #006d6e;
 }
 
 .stats-nav-card a {
@@ -18676,8 +18676,8 @@ body > .popover > .arrow {
 .monthly-activity .mm-button.active,
 .open-interests .mm-button.active,
 .bank-activity .mm-button.active {
-  background-color: #1c7172;
-  border-color: #1c7172;
+  background-color: #003a3b;
+  border-color: #003a3b;
 }
 
 .all-market-activity .selection-button {
@@ -18695,8 +18695,8 @@ body > .popover > .arrow {
 .all-market-activity .mm-button.mm-nav-button.active,
 .monthly-activity .mm-button.mm-nav-button.active,
 .bank-activity .mm-button.mm-nav-button.active {
-  background-color: #269a9b;
-  border-color: #269a9b;
+  background-color: #006d6e;
+  border-color: #006d6e;
 }
 
 #last-negotiation .popover,
