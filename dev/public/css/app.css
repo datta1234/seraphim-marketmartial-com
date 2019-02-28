@@ -11722,6 +11722,10 @@ input.self-active-input:active {
   cursor: pointer;
 }
 
+#cond-container a {
+  color: #ffffff;
+}
+
 @font-face {
   font-family: 'icomoon';
   src: url("/fonts/vendor/icomoon/icomoon.eot?ux4yi5");
