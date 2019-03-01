@@ -14,6 +14,15 @@
 				</h2>
 			@endslot
 				@slot('body')
+					<p>
+						Please accept the T&Cs below.
+					</p>
+					<p>
+		                After submitting this information, the Market Martial team will verify your profile.
+		            </p>
+		            <p>
+		                You can view your account details at any time.
+		            </p>
 					<terms-and-conditions :tc-accepted="{{ $user->tc_accepted ? "true" : "false" }}" 
 						privacy-policy-link="{{ action('PDFController@privacyPolicy') }}" 
 						terms-of-use-link="{{ action('PDFController@termsAndConditions') }}"></terms-and-conditions>

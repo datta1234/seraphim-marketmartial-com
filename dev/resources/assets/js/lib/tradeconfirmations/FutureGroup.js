@@ -29,18 +29,23 @@ export default class FutureGroup {
                     break;
                 case 'Contract':
                     this.contracts = this.setUpNumbers(item.value);
+                    this.contracts_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Future':
                     this.future = this.setUpNumbers(item.value);
+                    this.future_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Future 1':
                     this.future_1 = this.setUpNumbers(item.value);
+                    this.future_1_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Future 2':
                     this.future_2 = this.setUpNumbers(item.value);
+                    this.future_2_old = this.setUpNumbers(item.old_value);
                     break;
                 case 'Spot':
                     this.spot = this.setUpNumbers(item.value);
+                    this.spot_old = this.setUpNumbers(item.old_value);
                     break;
             }
         });

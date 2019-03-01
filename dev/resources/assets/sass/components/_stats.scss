@@ -31,13 +31,13 @@
 
 .stats-nav-card {
 	.card-body {
-		background-color: $mm-panel;
+		background-color: $mm-panel-dark;
 		color:  $mm-white;
 	}
 
 	&.active {
 		.card-body {
-			background-color: lighten($mm-panel, 10%);
+			background-color: $mm-panel;
 		}
 	}
 

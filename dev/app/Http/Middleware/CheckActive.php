@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckActive
 {
-    protected $redirectPage = 'home';
+    protected $redirectPage = 'login';
 
     /**
      * Handle an incoming request.

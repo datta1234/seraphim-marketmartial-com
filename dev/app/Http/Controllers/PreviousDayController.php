@@ -30,7 +30,9 @@ class PreviousDayController extends Controller
             }
         }
 
-        return view('pages.previous_day')->with(compact('tradeStart'));
+        return view('pages.previous_day')->with([
+            'tradeStart' => $tradeStart->toIso8601String(),
+        ]);
     }
 
     /**
