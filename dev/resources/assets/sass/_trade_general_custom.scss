@@ -80,6 +80,12 @@
 			}
 		}
 	}
+
+	.trading-opens, .trade-closing {
+        font-size: 1.1rem;
+        font-weight: lighter;
+        color: red;
+    }
 }
 
 #trade_app, #canvas_app {

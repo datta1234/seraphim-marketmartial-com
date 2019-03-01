@@ -20,6 +20,10 @@
 			<!-- Actions and Alerts -->
 			<action-bar :trade_confirmations="trade_confirmations" :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->
+			<div class="row">
+				<trade-closing-timer closing-time="{{ $closing_time }}"></trade-closing-timer>
+			</div>
+			
 			<!-- Markets sections -->
 			<!-- <VuePerfectScrollbar ref="barContent" :options="scroll_settings" class="interaction-scrollable"> -->
 			<b-row class="user-markets mt-3">

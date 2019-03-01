@@ -11531,6 +11531,13 @@ input.self-active-input:active {
   border-right: none;
 }
 
+#trade_app .trading-opens,
+#trade_app .trade-closing {
+  font-size: 1.1rem;
+  font-weight: lighter;
+  color: red;
+}
+
 #trade_app .sub-nav,
 #canvas_app .sub-nav {
   -webkit-box-shadow: 0px 1px 6px 0px black;

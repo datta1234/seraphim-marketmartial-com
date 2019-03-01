@@ -38,8 +38,6 @@
         methods: {
             /**
              * Creates a running clock from the current date and time.
-             *
-             * @todo Change clock time to be sent an initialsed from the backend
              */
             showTime() {
                 //Getting current time and setting our time object.
