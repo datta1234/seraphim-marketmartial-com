@@ -124,8 +124,6 @@ class RegisterController extends Controller
             $user = new User([
                 'full_name' => $data['full_name'],
                 'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'role_id' => $data['role_id'],
                 'organisation_id' => $organisation,
                 'cell_phone' => $data['cell_phone'],
                 'active' => $active,
@@ -133,6 +131,7 @@ class RegisterController extends Controller
                 'verified' => $user_verified,
                 'is_invited' => $is_invited,
             ]);
+            $user->password = \Hash::make($data['password']); //this is not a fillable field is if it was users could change
             $user->role_id  = $data['role_id'];//this is not a fillable field is if it was users could change
             $user->save();
 

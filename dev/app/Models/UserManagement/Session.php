@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Session extends Model
 {
     /**
-     * @property integer $id
+     * @property string $id
      * @property integer $user_id
      * @property string $ip_address
      * @property text $user_agent

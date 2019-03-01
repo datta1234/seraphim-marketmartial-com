@@ -95,6 +95,7 @@ Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
 Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
 Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
 Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQuotesModal.vue'));
+Vue.component('trade-closing-timer', require('./components/TradeClosingComponent.vue'));
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';

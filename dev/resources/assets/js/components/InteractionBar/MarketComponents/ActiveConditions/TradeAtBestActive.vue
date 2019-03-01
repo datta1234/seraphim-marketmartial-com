@@ -18,15 +18,21 @@
                     </b-col>
                     <b-col v-if="isActive && !$root.is_viewer">
                         <div class="pull-right">
-                            <span id="tab-popover">
-                                <a  href="" 
-                                    @click.prevent.stop="doTrade">
-                                        {{ action }}
-                                </a>
-                            </span>
-                            <span>
-                                <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
-                            </span>
+                            <b-row>
+                                <b-col>
+                                    <span id="tab-popover">
+                                        <a  href="" 
+                                            @click.prevent.stop="doTrade">
+                                                {{ action }}
+                                        </a>
+                                    </span>
+                                </b-col>
+                                <b-col>
+                                    <span>
+                                        <a href="" @click.prevent.stop="doRepeat" v-active-request>Repeat</a>
+                                    </span>
+                                </b-col>
+                            </b-row>
                         </div>
                     </b-col>
                 </b-row>

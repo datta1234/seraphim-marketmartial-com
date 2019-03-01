@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Rules\LoginWindow;
 use App\Rules\CheckActiveUser;
+use App\Models\UserManagement\Session;
 
 class LoginController extends Controller
 {
@@ -68,5 +69,36 @@ class LoginController extends Controller
                 return '/admin/mfa';        
         }
         return $this->redirectTo;
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request);
+
+        // add check to see if user has multiple logins and remove all that is not current login
+        $sessions = \DB::table('sessions')->where('user_id', \Auth::user()->id)
+            ->where('id','!=',session()->getId())
+            ->get();
+        
+
+        $filtered_sessions = array_filter($sessions->toArray(), function($session) {
+            return strpos(base64_decode($session->payload), 'impersonated_by') === false;
+        });
+
+        \DB::table('sessions')->whereIn('id',array_map(function($session) {
+            return $session->id;
+        }, $filtered_sessions))->delete();         
+
+        return $this->authenticated($request, $this->guard()->user())
+                ?: redirect()->intended($this->redirectPath());
     }
 }
