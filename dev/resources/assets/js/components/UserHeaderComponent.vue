@@ -22,7 +22,8 @@
         props: [
             'user_name',
             'organisation',
-            'total_rebate'
+            'total_rebate',
+            'server_time'
         ],
         data() {
             return {
@@ -42,17 +43,15 @@
              */
             showTime() {
                 //Getting current time and setting our time object.
-                this.time.computed_time = moment().format('HH:mm') + ' ' + this.time.location;
+                this.time.computed_time = moment.parseZone(this.server_time).format('HH:mm:ss') + ' ' + this.time.location;
             },
-          /**
+            /**
              * Listens for a pageLoaded event firing
              *
              * @event /lib/EventBus#pageLoaded
              */
             rebateListener() {
-                console.log("got to the rebate Listens");
                 EventBus.$on("rebateUpdate",(data)=>{
-                    console.log("got into the Listens",data);
                     this.displayRebate = data.total;
                 });
             },

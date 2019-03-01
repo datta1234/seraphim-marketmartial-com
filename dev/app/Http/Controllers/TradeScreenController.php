@@ -22,13 +22,13 @@ class TradeScreenController extends Controller
     	   $total_rebate = $organisation->rebates()->noTrade()->currentMonth()->sum('amount');
         }
 
-        $sa_local_time = now()->toIso8601String();
+        $server_time = now()->toIso8601String();
         
         return view('pages.trade')->with([
             'user'          => $user, 
             'organisation'  => $organisation, 
             'total_rebate'  => $total_rebate,
-            'sa_local_time' => $sa_local_time
+            'server_time' => $server_time
         ]);
     }
 }

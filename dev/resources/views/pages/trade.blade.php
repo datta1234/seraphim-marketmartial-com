@@ -13,7 +13,8 @@
 					organisation="{{ $organisation->title }}"
 				@endif
 				
-				:total_rebate="{{ $total_rebate }}">
+				:total_rebate="{{ $total_rebate }}"
+				server_time="{{ $server_time }}">
 			</user-header>
 			
 			<!-- Actions and Alerts -->

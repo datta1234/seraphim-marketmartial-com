@@ -20,7 +20,7 @@
         },
         methods: {
             getRemainingTime() {
-                let diff = moment(this.openTime).diff(moment());
+                let diff = moment.parseZone(this.openTime).diff(moment());
                 // ensure its not shown if its timed out
                 if(diff < 0) {
                     return "00:00:00";
