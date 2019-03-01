@@ -1486,7 +1486,7 @@ class UserMarketRequest extends Model
     {   
         $data = [
             "id" => $this->id,
-            "updated_at"        => $this->trade_date,
+            "updated_at"        => is_null($this->trade_date) ? $this->created_at->format("Y-m-d H:i:s") : $this->trade_date,
             "underlying"        => array(),
             "structure"         => $this->tradeStructure->title,
             "nominal"           => array(),
