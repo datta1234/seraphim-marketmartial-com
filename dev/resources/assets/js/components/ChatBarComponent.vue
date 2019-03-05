@@ -199,7 +199,7 @@
                         this.$refs.chat_history.scrollTop = this.$refs.chat_history.scrollHeight;
                     });
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                     this.$toasted.error(err.response.data.message);
                 });
             },

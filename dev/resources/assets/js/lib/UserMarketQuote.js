@@ -82,7 +82,6 @@ export default class UserMarketQuote extends BaseModel {
         }
         volatility.setUserMarket(this);
         this.volatilities.push(volatility);
-        console.log("Added Volatility", volatility);
     }
 
     /**
@@ -161,7 +160,6 @@ export default class UserMarketQuote extends BaseModel {
     }
 
     runActionTaken() {
-        console.log('runActionTaken called on Quote');
         if(this._user_market_request) {
             this._user_market_request.runActionTaken();
         }

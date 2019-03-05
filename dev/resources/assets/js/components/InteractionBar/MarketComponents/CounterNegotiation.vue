@@ -99,12 +99,10 @@
             this.marketNegotiation.counterNegotiation(this.proposed_market_negotiation)
             .then(data => {
               this.server_loading = false;
-              console.log(data);
             })
             .catch(err => {
               this.server_loading = false;
               this.errors = err.list(true);
-              console.log(this.errors);
             });
           }
         },

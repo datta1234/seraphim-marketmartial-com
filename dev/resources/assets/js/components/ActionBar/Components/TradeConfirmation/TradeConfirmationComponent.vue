@@ -283,8 +283,8 @@
             </b-col>
 
             <b-col md="5" offset-md="1" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
-                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
-                <button  type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
+                <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+                <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
                     <b-form-select v-model="selected_trading_account">
@@ -300,9 +300,9 @@
                 </div>
             </b-col>
            <b-col md="5" offset-md="7" v-else>
-                <button type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                <button v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
+                <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
+                <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                <button v-active-request v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
                 <div class="form-group">
                     <label for="exampleFormControlSelect1">Account Booking</label>
@@ -447,7 +447,7 @@
                     this.trading_accounts = response.data.trading_accounts;
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                 }); 
             },
             setDefaultTradingAccount()
@@ -471,7 +471,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.$toasted.error(err.message);
                     this.confirmationLoaded = true;
@@ -495,7 +495,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -517,7 +517,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -537,7 +537,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);

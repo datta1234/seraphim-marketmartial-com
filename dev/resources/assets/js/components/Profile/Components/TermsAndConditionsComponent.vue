@@ -65,12 +65,11 @@
                 }, err => {
                     this.errors = err.errors.tc_accepted;
                     this.$toasted.error(err.message);
-                    console.error(err);
+                    //console.error(err);
                 });
             },
         },
         mounted() {
-    		console.log("YEET", this.tcAccepted);
             this.accepted = this.tcAccepted;
             this.completed = this.tcAccepted;
         }

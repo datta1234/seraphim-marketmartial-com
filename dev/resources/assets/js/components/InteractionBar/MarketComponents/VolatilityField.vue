@@ -31,7 +31,6 @@ export default {
     },
     watch: {
         'userMarket':function(nv, ov) {
-            console.log("Changed !!!!> ", nv, ov);
             this.assignVolatility();
         }
     },
@@ -43,12 +42,9 @@ export default {
     methods: {
         assignVolatility() {
             let vol = this.userMarket.volatilityForGroup(this.tradeGroup.id);
-            console.log("Got vol: ", vol);
             if(typeof vol != 'undefined') {
-                console.log("referencing")
                 this.volatility = vol;
             } else {
-                console.log("creating")
                 this.volatility.group_id = this.tradeGroup.id;
                 this.userMarket.addVolatility(this.volatility);
             }    

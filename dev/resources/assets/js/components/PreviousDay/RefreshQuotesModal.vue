@@ -196,13 +196,11 @@
             }
         },
         mounted() {
-            console.log("LOADING PREVIOUS DAY");
             Promise.all([
                 this.loadOldQuotes(), 
                 this.loadOldNegotiations()
             ])
             .then((data) => {
-                console.log(data);
                 if(data[0].length > 0 || data[1].length > 0) {
                     this.modal_open = true;
                 }

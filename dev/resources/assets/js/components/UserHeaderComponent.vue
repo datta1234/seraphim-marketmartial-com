@@ -6,7 +6,7 @@
                 <h1 v-else class="pt-1">Welcome {{ user_name }}</h1>
             </div>
             <div class="col-2 current-time">
-                <p class="pt-1">{{ time.computed_time }}</p>
+                <p class="pt-1">{{ time.display_time }}</p>
             </div>
             <div class="col-4 total-rebate">
                 <p class="float-right pt-1">Rebates: <strong>{{ formatRandQty(displayRebate) }}</strong></p>
@@ -28,8 +28,9 @@
         data() {
             return {
                 time:{
+                    display_time: '',
                     location:'SA',
-                    computed_time:'',
+                    computed_time:null,
                     _interval: null
                 },
                 displayRebate: null
@@ -39,9 +40,10 @@
             /**
              * Creates a running clock from the current date and time.
              */
-            showTime() {
+            timeStep() {
                 //Getting current time and setting our time object.
-                this.time.computed_time = moment.parseZone(this.server_time).format('HH:mm:ss') + ' ' + this.time.location;
+                this.time.computed_time = this.time.computed_time.add(1,'seconds');
+                this.time.display_time = this.time.computed_time.format('HH:mm') + ' ' + this.time.location;
             },
             /**
              * Listens for a pageLoaded event firing
@@ -54,9 +56,12 @@
                 });
             },
         },
+        created() {
+            this.time.computed_time = moment.parseZone(this.server_time);
+        },
         mounted() {
             //Sets interval for running clock
-            this.time._interval = setInterval(this.showTime, 1000);
+            this.time._interval = setInterval(this.timeStep, 1000);
             this.displayRebate = this.total_rebate;
             this.rebateListener();
 

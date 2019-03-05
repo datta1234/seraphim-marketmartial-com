@@ -187,10 +187,10 @@
                         this.dates_loaded = true;*/
                         this.booked_trades_loaded = true;
                     } else {
-                        console.error(err);    
+                        //console.error(err);    
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             userStatus(user) {
@@ -214,7 +214,7 @@
                         this.$toasted.error(bookedTradesResponse.data.message);
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             /**

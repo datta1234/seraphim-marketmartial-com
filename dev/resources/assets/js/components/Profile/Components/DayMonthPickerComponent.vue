@@ -58,7 +58,6 @@
           this.selectedDate = moment(this.value, 'YYYY-MM-DD', false).format('YYYY-MM-DD'); 
           this.selectedMonth = moment(this.value, 'YYYY-MM-DD', false).format('M') - 1; 
           this.selectedDay = moment(this.value, 'YYYY-MM-DD', false).format('DD'); 
-          console.log(this.selectedMonth);
           this.days.push({text:"Please Select a day.",value:null});
           this.months.push({text:"Please Select a day.",value:null});
 

@@ -48,17 +48,14 @@ $( document ).ready(function() {
         };
         //Listens for input change on name input
         $( '#ContactUsForm' ).find('input#name').on("input", function() {
-        //    console.log("name Type");
             checkContactForm($('#ContactUsForm'));
         });
         //Listens for input change on email input
         $( '#ContactUsForm' ).find('input#contactEmail').on("input", function() {
-        //    console.log("contact Type");
             checkContactForm($('#ContactUsForm'));
         });
         //Listens for input change on message textarea
         $( '#ContactUsForm' ).find('textarea#contact_message').on("input", function() {
-        //    console.log("message Type");
             checkContactForm($('#ContactUsForm'));
         });
 

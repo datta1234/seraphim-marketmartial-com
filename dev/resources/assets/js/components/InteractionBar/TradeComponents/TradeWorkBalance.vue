@@ -76,7 +76,6 @@
                     this.server_loading = false;
                 })
                 .catch(err => {
-                    console.log(err);
                     //this.history_message = err.errors.message;
                     //this.errors = err.errors.errors;
                     this.server_loading = false;

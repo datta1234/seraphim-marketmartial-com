@@ -222,18 +222,15 @@
                 this.setDefaults(condition);
             },
             updateShownGroups() {
-                console.log(JSON.stringify(this.shown_groups));
                 this.shown_groups = [];
                 for(let k in this.condition_aliases) {
                     if(typeof this.shown_groups[this.condition_aliases[k].group] === 'undefined') {
                         this.shown_groups[this.condition_aliases[k].group] = false;
                     }
-                    console.log(k, this.marketNegotiation[k], this.condition_aliases[k].default);
                     if(this.marketNegotiation[k] != this.condition_aliases[k].default) {
                         this.shown_groups[this.condition_aliases[k].group] = true;
                     }
                 }
-                console.log(JSON.stringify(this.shown_groups));
                 this.updating = false;
             },
             getDeepValue(value) {

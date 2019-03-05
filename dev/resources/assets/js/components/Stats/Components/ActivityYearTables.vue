@@ -209,12 +209,12 @@
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+index+" year data.")
-                            console.error(err); 
+                            //console.error(err); 
                         }
                     }, err => {
                         this.table_data_loaded = this.table_data[index].data ? true : false;
                         this.$toasted.error("Failed to load "+index+" year data.")
-                        console.error(err);
+                        //console.error(err);
                     });
                 }
             },
@@ -229,10 +229,10 @@
                             });
                         });
                     } else {
-                        console.error(err); 
+                        //console.error(err); 
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             initTableData() {

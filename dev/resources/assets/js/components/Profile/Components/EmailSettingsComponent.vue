@@ -94,7 +94,6 @@
                         return a.default_id - b.default_id;
                     });
                     this.emailSettingForm.updateData({email:this.mutableEmailSettingsData});
-                    console.log(response.data);
                     this.$toasted.success(response.message);
                     
                     if(this.isAdmin == false && this.profileComplete == false)

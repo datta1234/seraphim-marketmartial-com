@@ -147,7 +147,6 @@
                 return false;
             },
             getTitle(group) {
-                console.log("Cond Group: ", group);
                 let title = "";
                 for(let i = 0, cond; cond = group.items[i]; i++) {
                     if(this.marketNegotiation[cond.alias] != cond.default)

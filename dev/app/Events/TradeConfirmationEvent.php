@@ -57,6 +57,8 @@ class TradeConfirmationEvent implements ShouldBroadcast
     */
     public function broadcastWith()
     {
+        $this->tradeconfirmation->load(['futureGroups','optionGroups']);
+        
         return ["message"=>$this->organisation->getNotification(),'data'=>$this->tradeconfirmation->setOrgContext($this->organisation)->preFormatted()];
     }
 }

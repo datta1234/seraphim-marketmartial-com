@@ -98,7 +98,6 @@ export default class BaseModel {
                 let countTemp = update_arr.findIndex((element) => {
                     return element.id == this[key][i].id;
                 });
-               console.log('quote',this[key],countTemp); 
 
             }
             
