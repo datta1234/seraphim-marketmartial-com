@@ -181,7 +181,6 @@ export default class UserMarket extends BaseModel {
         }
         volatility.setUserMarket(this);
         this.volatilities.push(volatility);
-        console.log("Added Volatility", volatility);
     }
 
     /**
@@ -290,7 +289,6 @@ export default class UserMarket extends BaseModel {
         // catch not assigned to a market request yet!
         if(market_request.id == null) {
             return new Promise((resolve, reject) => {
-                console.log("error man",market_request);
                 reject(new Errors("Invalid Market Request"));
             });
         }
@@ -351,7 +349,6 @@ export default class UserMarket extends BaseModel {
 
 
     runActionTaken() {
-        console.log('runActionTaken called on UserMarket');
         if(this._user_market_request) {
             this._user_market_request.runActionTaken();
         }

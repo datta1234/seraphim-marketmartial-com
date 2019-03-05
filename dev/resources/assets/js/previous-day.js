@@ -74,7 +74,6 @@ const app = new Vue({
         loadMarketRequests() {
             return axios.get(axios.defaults.baseUrl + '/previous-day/market-requests')
             .then(response => {
-                console.log(response);
                 this.display_markets_traded.forEach(market => {
                     market.addMarketRequests(response.data.traded_market_requests.filter(x => x.market_id == market.id));
                 });
@@ -88,7 +87,6 @@ const app = new Vue({
         loadConfigs(config_list) {
             let promises = [];
             config_list.forEach(config => {
-                // console.log(config)
                 promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
             });
             return Promise.all(promises);
@@ -108,7 +106,7 @@ const app = new Vue({
                     self.configs[config_name] = configResponse.data;
                     return configResponse.data;
                 } else {
-                    console.error(err);
+                    //console.error(err);
                 }
             });
         },
@@ -121,7 +119,7 @@ const app = new Vue({
                     return configResponse.data;
                 } else {
                     self.configs["user_preferences"] = null;
-                    console.error(err);
+                    //console.error(err);
                 }
                 return self.configs["user_preferences"];
             });
@@ -144,16 +142,15 @@ const app = new Vue({
             "app",
         ])
         .catch(err => {
-            console.error(err);
+            //console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
         .then(this.loadMarkets)
         .then(this.loadMarketRequests)
         .then(() => {
-            console.log("Loaded Data: ", this.display_markets);
         })
         .catch(err => {
-            console.error(err);
+            //console.error(err);
         });
     }
 });

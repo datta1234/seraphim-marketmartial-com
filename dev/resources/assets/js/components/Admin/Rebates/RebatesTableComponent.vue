@@ -202,10 +202,10 @@
                         this.dates_loaded = true;*/
                         this.rebates_loaded = true;
                     } else {
-                        console.error(err);    
+                        //console.error(err);    
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             userStatus(user) {
@@ -229,7 +229,7 @@
                         this.$toasted.error(rebatesResponse.data.message);
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             updateRebateAmount(new_amount, index) {
@@ -276,7 +276,6 @@
 
                 switch (key) {
                     case 'date':
-                    console.log("Should be date",item[key]);
                         return this.castToMoment(item[key].date);
                         break;
                     case 'rebate':

@@ -94,7 +94,7 @@ class TradeConfirmationGroup extends Model
         $trade_confirmation = $this->tradeConfirmation;
         $parent_group = null;
         
-        // Resolved parent item groups only if has parent and the status is not 1 or 2
+        // Resolved parent item groups only if has parent and the status is not 1,6 or 7
         if( !is_null($trade_confirmation->trade_confirmation_id) 
             && !in_array($trade_confirmation->trade_confirmation_status_id, [1,6,7]) ) {
             

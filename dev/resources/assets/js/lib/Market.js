@@ -70,11 +70,9 @@ export default class Market extends BaseModel {
         }
         if (is_new_market) {
             market_req.setMarket(this);
-            console.log("Adding MarketRequest: ", market_req);
             this.market_requests.push(market_req);
             EventBus.$emit('force-display-update');
         } else {
-            console.log("MarketRequest Already Tracked: ", market_req);
         }
     }
 

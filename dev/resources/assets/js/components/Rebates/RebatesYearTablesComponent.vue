@@ -120,12 +120,12 @@
                         } else {
                             this.table_data_loaded = this.table_data[index].data ? true : false;
                             this.$toasted.error("Failed to load "+this.table_years[index]+" year data.")
-                            console.error(err); 
+                            //console.error(err); 
                         }
                     }, err => {
                         this.table_data_loaded = this.table_data[index].data ? true : false;
                         this.$toasted.error("Failed to load "+this.table_years[index]+" year data.")
-                        console.error(err);
+                        //console.error(err);
                     });
                 }
             },

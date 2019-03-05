@@ -5,7 +5,6 @@ module.exports =  class Errors {
     constructor(errors) {
         this.errors = [];
         this.message = "";
-       // console.log(errors, errors.constructor);
 
         if(errors && errors.constructor == String) {
             this.errors = [];

@@ -207,10 +207,10 @@ export default {
                     this.dates_loaded = true;*/
                     this.users_loaded = true;
                 } else {
-                    console.error(err);    
+                    //console.error(err);    
                 }
             }, err => {
-                console.error(err);
+                //console.error(err);
             });
         },
         userStatus(user) {
@@ -235,7 +235,7 @@ export default {
                     this.$toasted.error(usersResponse.data.message);  
                 }
             }, err => {
-                console.error(err);
+                //console.error(err);
             });
         },
         /**

@@ -138,7 +138,6 @@
                         this.removeMarket(type_key);
                     });
                 }
-                console.log("Filter: ",this.$root.market_types);
             },
             /**
              * Adds a selected Market to Display Markets
@@ -172,10 +171,10 @@
                         return this.$root.configs["user_preferences"].prefered_market_types[this.$root.configs["user_preferences"].prefered_market_types.length-1];
                     } else {
                         return null;
-                        console.error(err);
+                        //console.error(err);
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             /**
@@ -210,10 +209,10 @@
                         }
                         return response.data.data;
                     } else {
-                        console.error(err);
+                        //console.error(err);
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             /**

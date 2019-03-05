@@ -254,7 +254,7 @@ export default class UserMarketRequest extends BaseModel {
             return response;
         })
         .catch(err => {
-            console.error(err);
+            //console.error(err);
         });
     }
 
@@ -357,7 +357,6 @@ export default class UserMarketRequest extends BaseModel {
             "TRADE-NEGOTIATION-BALANCER"
         ];
 
-        console.log("is trading got called",tradingStates.indexOf(this.attributes.state) > -1,this.is_trading_at_best == false,this.is_trading_at_best,this.is_trading_at_best_closed);
 
         return tradingStates.indexOf(this.attributes.state) > -1 
             && (this.is_trading_at_best == false || this.is_trading_at_best_closed); // if its trading at best, then its not trading
@@ -375,12 +374,10 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     get is_trading_at_best() {
-        // console.log("is_trading_at_best ",this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
         return (this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null);
     }
 
     get is_trading_at_best_closed() {
-        // console.log("is_trading_at_best_closed()",(this.chosen_user_market != null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining()));
         return (this.chosen_user_market !=null && this.chosen_user_market.trading_at_best != null && !this.chosen_user_market.trading_at_best.hasTimeoutRemaining());
     }
 
@@ -560,7 +557,6 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     runActionTaken() {
-        console.log('runActionTaken called on Request');
         this.actionTaken();
     }
 }

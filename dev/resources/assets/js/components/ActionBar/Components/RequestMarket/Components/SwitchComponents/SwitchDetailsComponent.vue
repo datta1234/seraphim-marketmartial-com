@@ -379,7 +379,7 @@
                     EventBus.$emit('loading', 'requestDates');
                     this.dates_loaded = true;
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                     this.$toasted.error("Failed to load safex expiration dates");
                 });
             },

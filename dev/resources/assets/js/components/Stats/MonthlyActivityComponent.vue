@@ -139,10 +139,10 @@
 	        			this.setChartData(activityResponse.data[this.active_market],this.active_market);    
 	                } else {
 	                	this.$toasted.error("Failed to load Your Trades.")
-	                    console.error(err);    
+	                    //console.error(err);    
 	                }
 	            }, err => {
-	                console.error(err);
+	                //console.error(err);
 	            });
 	        },
         },

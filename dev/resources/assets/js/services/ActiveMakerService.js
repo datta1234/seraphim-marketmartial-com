@@ -20,7 +20,7 @@ const ping = () => {
     })
     .then(res => {
         if(res.data != 'pong') {
-            console.error("Ping Event: ", event);
+            //console.error("Ping Event: ", event);
             let re = confirm("Live update stream may have disconnected!\n\nThis may be due to session inactivity.\n\nRefresh Page Now?");
             if(re) {
                 location.reload();
@@ -28,7 +28,7 @@ const ping = () => {
         } 
     })
     .catch(err => {
-        console.error("Ping Event: ", event);
+        //console.error("Ping Event: ", event);
         let re = confirm("Live update stream may have disconnected!\n\nThis may be due to session inactivity.\n\nRefresh Page Now?");
         if(re) {
             location.reload();

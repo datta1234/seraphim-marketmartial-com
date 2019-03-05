@@ -171,14 +171,14 @@
                       // The request was made but no response was received
                       // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
                       // http.ClientRequest in node.js
-                      console.error(err.request);
+                      //console.error(err.request);
                       this.$toasted.error("a Server connection error has occurred.");
                     } else {
                       // Something happened in setting up the request that triggered an Error
-                      console.error(err.message);
+                      //console.error(err.message);
                       this.$toasted.error("Oops, Something went wrong.");
                     }
-                    console.error(err.config);
+                    //console.error(err.config);
                     this.loadStepComponent();
                 });
             },
