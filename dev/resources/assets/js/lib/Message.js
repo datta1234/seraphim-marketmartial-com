@@ -109,7 +109,6 @@ export default class Message {
         clearTimeout(this._timeout);
         // creates new timeout
         if(this.packets.length !== this.total) {
-            console.log("Setting Timeout");
             this._timeout = setTimeout(() => {
                 this.requestMissingChunks();
             }, message_timeout);
@@ -143,7 +142,6 @@ export default class Message {
      * Makes an axios post request to get missing chunks 
      */
     requestMissingChunks() {
-        console.log("Fetchig Missing CHunks: ", this.missing_packets)
         return axios.post(axios.defaults.baseUrl + missing_packet_path, {
             "checksum": this.checksum,
             "missing_packets": this.missing_packets
@@ -152,19 +150,18 @@ export default class Message {
             // success - add new chunk data
             switch(missingChunkDataResponse.status) {
                 case 200:
-                    console.log(this);
                     this.addChunks(missingChunkDataResponse.data);
                 break;
                 case 404: // fail - expire remove message instance
                     this.can_request_missing = false;
                 break;
                 default:
-                    console.error(err);
+                    //console.error(err);
             }
             return missingChunkDataResponse;
         })
         .catch(err => {
-            console.error(err);
+            //console.error(err);
         });
     }
 

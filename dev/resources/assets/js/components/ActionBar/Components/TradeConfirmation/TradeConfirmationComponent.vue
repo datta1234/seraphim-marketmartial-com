@@ -447,7 +447,7 @@
                     this.trading_accounts = response.data.trading_accounts;
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                 }); 
             },
             setDefaultTradingAccount()
@@ -471,7 +471,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.$toasted.error(err.message);
                     this.confirmationLoaded = true;
@@ -495,7 +495,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -517,7 +517,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);
@@ -537,7 +537,7 @@
                     EventBus.$emit('loading', 'confirmationSubmission', false);
                 })
                 .catch(err => {
-                    console.error(err);
+                    //console.error(err);
                     this.loadErrors(err.errors);
                     this.confirmationLoaded = true;
                     EventBus.$emit('loading', 'confirmationSubmission', false);

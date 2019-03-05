@@ -103,7 +103,6 @@
             doReject() {
                 this.negotiation.killNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {

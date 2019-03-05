@@ -201,16 +201,15 @@
                         this.latest_date = safexDataResponse.data.data.latest_date;
                         this.table_data.data = this.resolveFormatData(safexDataResponse.data.data.table_data.data);
                         this.table_data.loaded = true;
-                        console.log("Data from sever: ", safexDataResponse.data.data);
 
                         if(this.expiration_filter.length < 2) {
                             this.expiration_filter = this.expiration_filter.concat(safexDataResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
                         }
                     } else {
-                        console.error(err); 
+                        //console.error(err); 
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             changePage($event) {
@@ -247,7 +246,6 @@
             },
             resolveFormatData(data) {
                 data.forEach(row_data => {
-                    console.log(row_data.trade_date);
                     if(this.isSameDate(row_data.trade_date,this.latest_date)) {
                         row_data._rowVariant = 'latest-data';
                     }

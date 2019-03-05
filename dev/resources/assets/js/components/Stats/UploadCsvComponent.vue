@@ -119,7 +119,7 @@
                     this.hideModal();
                     this.$toasted.success(csvUploadResponse.data.message);
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                     this.$toasted.error(err.message);
                     if(err.errors) {
                         Object.keys(err.errors).forEach(error => {

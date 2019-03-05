@@ -75,22 +75,20 @@
 	        		axios.get(axios.defaults.baseUrl + '/admin/brokerage-fees/'+value+'/edit')
 	                .then(brokerageFeesResponse => {
 	                	this.brokerage_fee_data = brokerageFeesResponse.data.data;
-	                    console.log("Response from server: ",brokerageFeesResponse);
 	                }, err => {
 	                	this.$toasted.error("Failed to load the organisation's Brokerage Fees");
-	                    console.error(err);
+	                    //console.error(err);
 	                });
         		}
         	},
         	saveOrganisationBrokerageFees() {
-        		console.log("Saving", this.selected_org);
         		axios.put(axios.defaults.baseUrl + '/admin/brokerage-fees/'+ this.selected_org,
         			this.brokerage_fee_data)
                 .then(brokerageFeesResponse => {
                 	this.$toasted.success(brokerageFeesResponse.data.message);
                 }).catch( (err) => {
                     this.$toasted.error(err.data.message);
-                    console.error(err);
+                    //console.error(err);
                 });
         	},
         	isDifferentStructure(current,previous) {

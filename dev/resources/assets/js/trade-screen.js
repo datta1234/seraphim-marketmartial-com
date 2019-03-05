@@ -163,11 +163,11 @@ const app = new Vue({
                     // set the available market types
                     self.market_types = marketTypeResponse.data;
                 } else {
-                    console.error(err);    
+                    //console.error(err);    
                 }
                 return self.market_types;
             }, err => {
-                console.error(err);
+                //console.error(err);
             });
         },
         removeTradeConfirmations(marketType){
@@ -189,13 +189,9 @@ const app = new Vue({
                    self.trade_confirmations.push(new TradeConfirmation(x));   
                     return x;
                 });
-                /*console.log('====================================');
-                console.log("Loading Trade Confirmations: FROM SERVER - ", tradeConfirmationResponse.data.data);
-                console.log("Loading Trade Confirmations: OBJECT - ", self.trade_confirmations);
-                console.log('====================================');*/
                 return self.trade_confirmations;
             }, err => {
-                console.error(err);
+                //console.error(err);
             });
         },
         loadMarkets(marketType) {
@@ -211,7 +207,7 @@ const app = new Vue({
                     self.reorderDisplayMarkets(self.display_markets);
                     return marketResponse.data;
                 } else {
-                    console.error(err);
+                    //console.error(err);
                 }
             });
         },
@@ -221,18 +217,16 @@ const app = new Vue({
             .then(marketResponse => {
                 if(marketResponse.status == 200) {
                     marketResponse.data = marketResponse.data.map(x => new UserMarketRequest(x));
-                    console.log("Retrieved Market Requests: ", market.id, marketResponse.data);
                     market.addMarketRequests(marketResponse.data);
                     return marketResponse.data;
                 } else {
-                    console.error(err);
+                    //console.error(err);
                 }
             });
         },
         loadConfigs(config_list) {
             let promises = [];
             config_list.forEach(config => {
-                // console.log(config)
                 promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
             });
             return Promise.all(promises);
@@ -252,7 +246,7 @@ const app = new Vue({
                     self.configs[config_name] = configResponse.data;
                     return configResponse.data;
                 } else {
-                    console.error(err);
+                    //console.error(err);
                 }
             });
         },
@@ -265,7 +259,7 @@ const app = new Vue({
                     return configResponse.data;
                 } else {
                     self.configs["user_preferences"] = null;
-                    console.error(err);
+                    //console.error(err);
                 }
                 return self.configs["user_preferences"];
             });
@@ -354,7 +348,6 @@ const app = new Vue({
                     // Should never get reached but if it does we are handeling it
                     return;
                 } else {
-                    console.log(tradeConfirmationData)
                     //only keep the interaction if the user can interact with it
                     if(tradeConfirmationData.can_interact)
                     {
@@ -438,12 +431,10 @@ const app = new Vue({
 
             // Check if the message has already been completed in this.completed_messages
             let message = this.completed_messages.find( (msg_val) => {
-                console.log("Checksum Compare: ", msg_val.checksum, chunk_data.checksum);
                 return ( msg_val.checksum == chunk_data.checksum );
             });
             if(typeof message !== 'undefined') {
                 // Break if there is already a completed message for this checksum
-                console.log("Found Existing Message", message);
                 return;
             }
 
@@ -463,7 +454,7 @@ const app = new Vue({
                         // run the message callback
                         callback(output_message.output);
                     } else {
-                        console.error(err);
+                        //console.error(err);
                     }
                 });
                 this.pusher_messages.push(message);
@@ -519,7 +510,7 @@ const app = new Vue({
             "app",
         ])
         .catch(err => {
-            console.error(err);
+            //console.error(err);
             // @TODO: handle this with critical failure... no config = no working trade screen
         })
         .then(configs => {
@@ -566,7 +557,6 @@ const app = new Vue({
                     market_titles.push(mr.marketTradeTitle());
                 })
             });
-            console.log("Market Titles >>>\n", market_titles.join('\n'));
         });
 
         let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
@@ -579,7 +569,7 @@ const app = new Vue({
         if(organisationUuid && organisationUuid.content)
         {
             let handlePusherDisconnect = function(event) {
-                console.error("Pusher failed Event: ", event);
+                //console.error("Pusher failed Event: ", event);
                 let re = confirm("Live update stream disconnected!\n\nIf problem persists, please contact an administrator\nReload Now?");
                 if(re) {
                     location.reload();
@@ -587,7 +577,6 @@ const app = new Vue({
             };
 
             let connectStream = (subCb) => {
-                console.log("Org UUID: ", organisationUuid.content);
                 // test if admin is viewing the page, then disable some send features across the frontend
                 if(organisationUuid.content == "admin") {
                     this.is_admin = true;
@@ -596,7 +585,6 @@ const app = new Vue({
                 window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
                 let channel = window.Echo.private('organisation.'+organisationUuid.content)
                 .listen('.UUIDUpdated', (newIdentity) => {
-                    console.log("New ID", newIdentity);
                     // remove bindings
                     window.Echo.connector.pusher.connection.unbind('disconnected', handlePusherDisconnect);
                     // leave old channel
@@ -612,7 +600,6 @@ const app = new Vue({
                     //this should be the market thats created
                     this.handlePacket(userMarketRequest, (packet_data) => {
                         this.updateUserMarketRequest(packet_data.data);
-                        console.log("[SOCKET] .UserMarketRequested ", packet_data);
                         //@TODO - @Francois Move to new event when rebate gets created
                         if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
@@ -621,7 +608,6 @@ const app = new Vue({
                     });
                 })
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
-                    console.log(".TradeConfirmationEvent triggerd");
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
 
@@ -635,7 +621,6 @@ const app = new Vue({
                     });
                 })
                 .listen('RebateEvent', (rebate) => {
-                    console.log("Got RebateEvent: ", rebate);
                     if(rebate.message)
                     {
                          this.$toasted.show(rebate.message.data, { 
@@ -661,7 +646,7 @@ const app = new Vue({
             connectStream();
             
         } else {
-            console.error("Missing Organisation UUID");
+            //console.error("Missing Organisation UUID");
             let re = confirm("Failed to load Organisation Credentials\nPlease reload your page\n\nIf problem persists, please contact an administrator\nReload Now?");
             if(re) {
                 location.reload();

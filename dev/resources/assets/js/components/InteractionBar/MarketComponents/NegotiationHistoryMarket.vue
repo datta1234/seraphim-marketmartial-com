@@ -109,7 +109,6 @@
             },
             spread_message: function() {
                 let ts = this.marketRequest.trade_structure_slug;
-                console.log("Trade Structure: ", ts);
                 if(['efp', 'efp_switch', 'rolls'].indexOf(ts) > -1) {
                     return "POINT SPREAD";
                 }

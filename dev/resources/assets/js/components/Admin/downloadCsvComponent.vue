@@ -200,7 +200,7 @@
                         this.expiration_filter.push(moment(expirationsResponse.data.data[key].date).format('DD MMM YYYY'));
                     });
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                     this.$toasted.error("Failed to load safex expiration dates");
                 });
             },
@@ -215,10 +215,10 @@
                             });
                         });
                     } else {
-                        console.error(err); 
+                        //console.error(err); 
                     }
                 }, err => {
-                    console.error(err);
+                    //console.error(err);
                 });
             },
         },

@@ -160,14 +160,13 @@ export default {
             axios.get(axios.defaults.baseUrl + '/admin/user/create')
             .then(createDataResponse => {
                 if(createDataResponse.status == 200) {
-                    console.log("Loaded data: ",createDataResponse.data.data);
                     this.organisations = createDataResponse.data.data.roles;
                     this.organisations = createDataResponse.data.data.organisations;
                 } else {
-                    console.error(err);    
+                    //console.error(err);    
                 }
             }, err => {
-                console.error(err);
+                //console.error(err);
             });
         }
     },

@@ -87,7 +87,6 @@
         },
         methods: {
             refreshTooltip() {
-                console.log("Refreshing", this.$refs.proposalCounterPopover)
                 this.$refs.proposalCounterPopover.$forceUpdate();
             },
             doTrade() {
@@ -99,7 +98,6 @@
             doReject() {
                 this.negotiation.killNegotiation()
                 .then(response => {
-                    console.log(response);
                     this.errors = [];
                 })
                 .catch(err => {

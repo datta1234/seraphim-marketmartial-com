@@ -84,7 +84,6 @@ const app = new Vue({
         loadConfigs(config_list) {
             let promises = [];
             config_list.forEach(config => {
-                // console.log(config)
                 promises.push(this.loadConfig.apply(this, config.constructor === Array ? config : [config]));
             });
             return Promise.all(promises);
@@ -104,7 +103,7 @@ const app = new Vue({
                     self.configs[config_name] = configResponse.data;
                     return configResponse.data;
                 } else {
-                    console.error(err);
+                    //console.error(err);
                 }
             });
         },

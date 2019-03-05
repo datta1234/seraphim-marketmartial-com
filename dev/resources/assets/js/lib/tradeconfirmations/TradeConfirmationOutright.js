@@ -57,13 +57,11 @@ const TradeConfirmationOutright = {
                 // register option group
                 this.option_groups = [];
                 if(options && options.option_groups) {
-                    console.log("option group method ran");
                     this.addOptionGroups(options.option_groups);
                 }
 
                  // register future groups
                 if(options && options.future_groups) {
-                    console.log("future group method ran");
                     this.addFutureGroups(options.future_groups);
                 }
 
@@ -88,15 +86,12 @@ const TradeConfirmationOutright = {
 
             updateOptionColoumns(tradeStructureGroup)
             {
-                console.log("update");
             }
 
             addOptionGroups(option_groups)
             {
-                console.log("the Add Method",option_groups);
 
                 option_groups.forEach((group)=>{
-                    console.log("the Loop",group);
                         let option_group = new OptionGroup();
                         option_group.constructFromStructureGroup(group);
                         this.option_groups.push(option_group);   

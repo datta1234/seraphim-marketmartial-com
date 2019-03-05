@@ -64,7 +64,6 @@
         computed: {
             spread_message: function() {
                 let ts = this.marketRequest.trade_structure_slug;
-                console.log("Trade Structure: ", ts);
                 if(['efp', 'efp_switch', 'rolls'].indexOf(ts) > -1) {
                     return "POINT SPREAD";
                 }
@@ -97,7 +96,6 @@
                 this.loading = true;
                 axios.get(axios.defaults.baseUrl + "/trade/admin/market-request/" + this.marketRequest.id)
                 .then(response => {
-                    console.log(response.data);
                     // test if the quotes are present and there are some
                     if(response.data && response.data.quotes) {
                         this.quotes = response.data.quotes.map(x => new UserMarketQuote(x));

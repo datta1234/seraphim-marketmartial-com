@@ -84,7 +84,6 @@
              * @param {string} $id a string id detailing the UserMarketRequests to be removed
              */
             addToNoCares(id) {
-                console.log("fire no cares");
                 EventBus.$emit('addToNoCares',id);
             },
             /**
@@ -92,7 +91,6 @@
              *      closes the popover
              */
             applyBulkNoCares() {
-                console.log("What are you? ",this.notifications);
                 if(this.status && this.notifications.length > 0) {
                     this.notifications.forEach(market_request => {
                         this.addToNoCares(market_request.id)

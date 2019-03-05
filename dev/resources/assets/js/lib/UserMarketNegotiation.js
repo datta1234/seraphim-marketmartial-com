@@ -85,7 +85,6 @@ export default class UserMarketNegotiation extends BaseModel {
         if(options && options.trade_negotiations) {
             this.addTradeNegotiations(options.trade_negotiations);
         }
-        console.log("options in the user_market_negotiation",options);
 
         this._active_condition = null;
         if(options && options['active_condition']) {
@@ -212,7 +211,6 @@ export default class UserMarketNegotiation extends BaseModel {
     *  store
     */
     storeNegotiation(user_market) {
-        console.log("Store");
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
@@ -237,7 +235,6 @@ export default class UserMarketNegotiation extends BaseModel {
     *  amend
     */
     amendNegotiation(user_market) {
-        console.log("Amending "+this.id, this);
         // catch not assigned to a market request yet!
         if(user_market.id == null) {
             return new Promise((resolve, reject) => {
@@ -633,7 +630,6 @@ export default class UserMarketNegotiation extends BaseModel {
 
 
     runActionTaken() {
-        console.log('runActionTaken called on Negotiation');
         if(this._user_market) {
             this._user_market.runActionTaken();
         }

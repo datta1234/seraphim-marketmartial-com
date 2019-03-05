@@ -96,7 +96,6 @@ export default {
                 groups.push(row);
                 itt++;
             }
-            console.log("NANI?!?!?! ", groups, this.marketRequest);
             return groups;
         }
     },

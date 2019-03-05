@@ -153,11 +153,11 @@
                         this.markets_loaded = true;
                     } else {
                         this.$toasted.error("Failed to load markets");
-                        console.error(err);    
+                        //console.error(err);    
                     }
                 }, err => {
                     this.$toasted.error("Failed to load markets");
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             toggleOption(option, index) {

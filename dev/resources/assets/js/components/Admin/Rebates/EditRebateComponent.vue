@@ -78,7 +78,6 @@
                 axios.put(axios.defaults.baseUrl + '/admin/rebates/'+this.item_data.id,
                 	{new_amount: this.modal_data.rebate})
                 .then(rebatesResponse => {
-                	console.log(rebatesResponse);
                 	this.callback(rebatesResponse.data.data.rebate, this.modal_data.rebate_index);
                     this.hideModal();
                     this.$toasted.success(rebatesResponse.data.message);
@@ -87,15 +86,13 @@
                 		this.modal_data.errors.push(error);
                 	});
                     this.$toasted.error(err.message);
-                    console.error(err);
+                    //console.error(err);
                 });
             },
             /**
              * Loads the Confirmation Modal 
              */
             showModal() {
-            	console.log("index: ",this.item_index);
-            	console.log("Data: ", this.item_data);
                 this.modal_data.rebate = this.item_data.rebate;
                 this.modal_data.rebate_index = this.item_index;
                 this.modal_data.show_modal = true;

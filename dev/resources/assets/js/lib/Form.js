@@ -133,8 +133,6 @@ module.exports = class Form {
                     resolve(response.data);
                 })
                 .catch(error => {
-                    console.log(error);
-
                     this.onFail(error.response.data);
                     reject(error.response.data);
                 });

@@ -200,7 +200,6 @@ export default {
 
 // REQUEST - blue
 setTimeout(function(){
-    console.log("REQUEST - blue");
     app.display_markets[1].addMarketRequest(
         new UserMarketRequest({
             id: "4",
@@ -217,20 +216,17 @@ setTimeout(function(){
 
 // REQUEST - grey
 setTimeout(function(){
-    console.log("REQUEST - grey");
     marketRequestSample.attributes.state = "request-grey";
 }, 10000);
 
 // VOL SPREAD
 setTimeout(function(){
-    console.log("VOL SPREAD");
     marketRequestSample.attributes.vol_spread = 3;
     marketRequestSample.attributes.state = 'vol-spread-alert';
 }, 10000);
 
 // VOL SPREAD
 setTimeout(function(){
-    console.log("VOL SPREAD");
     marketRequestSample2.chosen_user_market.setCurrentNegotiation(new UserMarketNegotiation({ bid: 32, bid_qty: 50000000, offer: 25, offer_qty: 50000000 }))
     marketRequestSample2.attributes.bid_state = 'action';
     marketRequestSample2.attributes.state = '';
@@ -238,7 +234,6 @@ setTimeout(function(){
 
 // RESET
 setTimeout(function(){
-    console.log("RESET STATE");
     sampleUserMarket.setCurrentNegotiation(sampleUserNegotitaion);
     marketRequestSample.setChosenUserMarket(sampleUserMarket);
 }, 20000);

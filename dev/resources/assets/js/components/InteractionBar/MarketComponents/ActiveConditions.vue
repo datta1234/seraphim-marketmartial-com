@@ -78,12 +78,10 @@
         computed: {
             conditions_active: function() {
                 let keys = Object.keys(this.condition_components);
-                console.log("Filtering Conditions Sent", this.conditions);
                 return this.conditions.filter(item => keys.indexOf(item.type) > -1);
             },
             conditions_sent: function() {
                 let keys = Object.keys(this.condition_components);
-                console.log("Filtering Conditions Sent", this.sent_conditions);
                 return this.sent_conditions.filter(item => keys.indexOf(item.type) > -1);
             },
             activity() {

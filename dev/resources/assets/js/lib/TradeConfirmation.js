@@ -105,7 +105,6 @@ export default class TradeConfirmation extends BaseModel {
 
     updateOptionColoumns(tradeStructureGroup)
     {
-        console.log("update");
     }
 
     addOptionGroups(option_groups)
@@ -157,7 +156,6 @@ export default class TradeConfirmation extends BaseModel {
   
     postPhaseTwo(trading_account)
     {
-        console.log("calculate");
         if(!trading_account) {
             return new Promise((resolve, reject) => {
                 reject({errors:{'trading_account_id':["Trading account is required"]}});

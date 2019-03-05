@@ -226,13 +226,12 @@ export default class TradeNegotiation extends BaseModel {
             return response;
         })
         .catch(err => {
-            console.error(err);
+            //console.error(err);
         });
     }
 
 
     runActionTaken() {
-        console.log('runActionTaken called on TradeNegotiation');
         if(this._user_market) {
             this._user_market.runActionTaken();
         }

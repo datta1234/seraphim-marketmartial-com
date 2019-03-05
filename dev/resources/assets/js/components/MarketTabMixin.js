@@ -24,9 +24,7 @@ export default {
      computed: {
             current_user_market_negotiation: function() {
                 let chosen_user_market = this.marketRequest.chosen_user_market;
-                // console.log('chosen_user_market', chosen_user_market);
                 if(chosen_user_market){
-                    // console.log('negotiation', this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1]);
                     return this.marketRequest.chosen_user_market.market_negotiations[chosen_user_market.market_negotiations.length -1];
                 }
                 return null;

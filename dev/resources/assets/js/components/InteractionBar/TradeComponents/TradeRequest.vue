@@ -235,7 +235,6 @@
             return null;
         },
         getStateClass(attr) {
-            console.log("market negotiation",this.marketNegotiation);
 
             if(this.marketNegotiation[attr] == null && this.marketNegotiation[attr+"_display"] == null) {
                 return "";
