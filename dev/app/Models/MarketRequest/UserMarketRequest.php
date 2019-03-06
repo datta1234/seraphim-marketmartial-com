@@ -1322,12 +1322,6 @@ class UserMarketRequest extends Model
      */
     public static function basicSearch($term = "",$orderBy="updated_at",$order='ASC', $filter = null)
     {
-
-        if($orderBy == null)
-        {
-            $orderBy = "trade_confirmations.updated_at";
-        }
-
         if($order == null)
         {
             $order = "DESC";
@@ -1389,7 +1383,11 @@ class UserMarketRequest extends Model
                 break;
 */
             case 'updated_at':
-                $user_market_requests_query->orderBy("trade_confirmations.updated_at", $order);
+                if($order == "DESC") {
+                    $user_market_requests_query->orderByRaw('IF(trade_confirmations.updated_at IS NULL,user_market_requests.created_at,trade_confirmations.updated_at) DESC');
+                } else {
+                    $user_market_requests_query->orderByRaw('IF(trade_confirmations.updated_at IS NULL,user_market_requests.created_at,trade_confirmations.updated_at) ASC');
+                }
                 break;
             /*case 'underlying':
                 
@@ -1416,7 +1414,7 @@ class UserMarketRequest extends Model
             
                 break;*/
             default:
-                $user_market_requests_query->orderBy("trade_confirmations.updated_at","DESC");
+                $user_market_requests_query->orderByRaw('IF(trade_confirmations.updated_at IS NULL,user_market_requests.created_at,trade_confirmations.updated_at) DESC');
         }
 
 
