@@ -98,7 +98,13 @@ class TradeConfirmationGroup extends Model
         if( !is_null($trade_confirmation->trade_confirmation_id) 
             && !in_array($trade_confirmation->trade_confirmation_status_id, [1,6,7]) ) {
             
-            $parent_trade_confirmation = $trade_confirmation->resolveParent();
+            /* $parent_trade_confirmation now refers to the original calculated confirmation
+             *  (Root TradeConfirmation's 1ste and only child)
+             *  This was changed due to task [MM-913] with regards to discussions on 2019-03-06
+             */
+            //$parent_trade_confirmation = $trade_confirmation->resolveParent();
+            $parent_trade_confirmation = $trade_confirmation->getRoot()->tradeConfirmationChildren()->first();
+            
             $parent_group = TradeConfirmationGroup::where('trade_confirmation_id', $parent_trade_confirmation->id)
                 ->where('trade_structure_group_id', $this->trade_structure_group_id)
                 ->where('trade_structure_group_id', $this->trade_structure_group_id)
