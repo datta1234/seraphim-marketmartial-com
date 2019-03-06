@@ -180,6 +180,9 @@ const app = new Vue({
                 }
         },
         loadTradeConfirmations(marketType) {
+            if(this.is_admin || this.is_viewer) {
+                return;
+            }
             let self = this;
             return axios.get(axios.defaults.baseUrl + '/trade/market-type/'+marketType.id+'/trade-confirmations')
             .then(tradeConfirmationResponse => {
@@ -497,6 +500,21 @@ const app = new Vue({
         is_admin: false,
         is_viewer: false,
     },
+    created() {
+        let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
+        // test if a viewer type user is viewing the page, then disable some send features across the frontend
+        if(viewer_type && viewer_type.content) {
+            this.is_viewer = true;
+        }
+
+        let organisationUuid = document.head.querySelector('meta[name="organisation-uuid"]');
+        if(organisationUuid && organisationUuid.content)
+        {
+            if(organisationUuid.content == "admin") {
+                this.is_admin = true;
+            }
+        }
+    },
     mounted: function() {
         Config.configs = this.configs;
         // get Saved theme setting
@@ -652,6 +670,7 @@ const app = new Vue({
                 location.reload();
             }
         }
+
         // Event listener for removing things from no cares
         EventBus.$on('addToNoCares', this.addToNoCares);
         EventBus.$on('removefromNoCares', this.removefromNoCares);
