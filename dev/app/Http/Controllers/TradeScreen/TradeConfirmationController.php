@@ -110,7 +110,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade Has been succefully been booked.");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade confirmation has been agreed.");
 
         }
         else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
@@ -118,7 +118,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade Has been succefully been booked.");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade confirmation has been agreed.");
         }
 
         /*
