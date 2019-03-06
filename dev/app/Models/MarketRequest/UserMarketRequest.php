@@ -1349,7 +1349,7 @@ class UserMarketRequest extends Model
             }
 
             if(!empty($filter["filter_market"])) {
-                $user_market_requests_query->where('trade_confirmations.market_id', $filter["filter_market"]);
+                $user_market_requests_query->where('user_market_requests.market_id', $filter["filter_market"]);
             }
 
             if(!empty($filter["filter_expiration"])) {
