@@ -93,7 +93,6 @@ export default class Market extends BaseModel {
     *   @param {Array} market_requests - array of UserMarketRequest objects
     */
     addMarketRequests(market_requests) {
-        console.log("Adding ["+market_requests.length+"] Market Requests");
         market_requests.forEach(market_req => {
             this.addMarketRequest(market_req);
         });

@@ -196,15 +196,17 @@
             }
         },
         mounted() {
-            Promise.all([
-                this.loadOldQuotes(), 
-                this.loadOldNegotiations()
-            ])
-            .then((data) => {
-                if(data[0].length > 0 || data[1].length > 0) {
-                    this.modal_open = true;
-                }
-            });
+            if(!this.$root.is_admin && !this.$root.is_viewer) {
+                Promise.all([
+                    this.loadOldQuotes(), 
+                    this.loadOldNegotiations()
+                ])
+                .then((data) => {
+                    if(data[0].length > 0 || data[1].length > 0) {
+                        this.modal_open = true;
+                    }
+                });
+            }
         }
     }
 </script>
