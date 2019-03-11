@@ -633,7 +633,8 @@ const app = new Vue({
                         if(packet_data.message)
                         {
                             this.$toasted.show(packet_data.message.data,{
-                                'className':"mm-confirm-toast"
+                                'className':"mm-confirm-toast",
+                                duration : 30000
                             }); 
                         }
                     });
