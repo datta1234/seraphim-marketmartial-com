@@ -91,18 +91,18 @@
                     </td>
                     <td>
                         {{ option_group.is_put ? "Put" : "Call" }}
-                        <div v-if="hasOldValue('option_groups',key,'is_put')" class="font-weight-bold text-danger modal-info-text">
+                        <!-- <div v-if="hasOldValue('option_groups',key,'is_put')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{ option_group.is_put_old ? "Put" : "Call" }}.
-                        </div>
+                        </div> -->
                     </td>
                     <td>
                         {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}
                     </td>
                     <td>
                         {{ option_group.contracts }}
-                        <div v-if="hasOldValue('option_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                        <!-- <div v-if="hasOldValue('option_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{ option_group.contracts_old }}.
-                        </div>
+                        </div> -->
                     </td>
                     <td>
                         {{ option_group.expires_at }}                            
@@ -112,15 +112,15 @@
                     </td>
                     <td>
                         <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
-                        <div v-if="hasOldValue('option_groups',key,'gross_prem')" class="font-weight-bold text-danger modal-info-text">
+                        <!-- <div v-if="hasOldValue('option_groups',key,'gross_prem')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{  splitValHelper(option_group.gross_prem_old,' ',3) }}.
-                        </div>
+                        </div> -->
                     </td>
                     <td>
                         <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
-                        <div v-if="hasOldValue('option_groups',key,'net_prem')" class="font-weight-bold text-danger modal-info-text">
+                        <!-- <div v-if="hasOldValue('option_groups',key,'net_prem')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{  splitValHelper(option_group.net_prem_old,' ',3) }}.
-                        </div>
+                        </div> -->
                     </td>
                 </tr>
               </tbody>
@@ -163,7 +163,7 @@
                                         v-bind:class="{ 'is-invalid': inputState(key,'future_1') }">
                                 </input>
                                 <div v-if="hasOldValue('future_groups',key,'future_1')" class="font-weight-bold text-danger modal-info-text">
-                                    Calculated value : {{  splitValHelper(future_group.future_1_old,' ',3) }}.
+                                    Previous value : {{  splitValHelper(future_group.future_1_old,' ',3) }}.
                                 </div>
                             </td>
                             <td>
@@ -189,7 +189,7 @@
                             <td>
                                 {{ future_group.future_2 }}
                                 <div v-if="hasOldValue('future_groups',key,'future_2')" class="font-weight-bold text-danger modal-info-text">
-                                    Calculated value : {{ future_group.future_2_old }}.
+                                    Previous value : {{ future_group.future_2_old }}.
                                 </div>
                             </td>
                             {{ future_group.contracts }}
@@ -219,7 +219,7 @@
                                             v-bind:class="{ 'is-invalid': inputState(key,'spot') }">
                                     </input>
                                     <div v-if="hasOldValue('future_groups',key,'spot')" class="font-weight-bold text-danger modal-info-text">
-                                        Calculated value : {{ splitValHelper(future_group.spot_old,' ',3) }}.
+                                        Previous value : {{ splitValHelper(future_group.spot_old,' ',3) }}.
                                     </div>
                                 </template>
                                 <template v-else>
@@ -233,7 +233,7 @@
                                         v-bind:class="{ 'is-invalid': inputState(key,'future') }">
                                 </input>
                                 <div v-if="hasOldValue('future_groups',key,'future')" class="font-weight-bold text-danger modal-info-text">
-                                    Calculated value : {{ splitValHelper(future_group.future_old,' ',3) }}.
+                                    Previous value : {{ splitValHelper(future_group.future_old,' ',3) }}.
                                 </div>
                             </td>
                             <td v-else>
