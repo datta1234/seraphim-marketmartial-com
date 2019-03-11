@@ -151,7 +151,9 @@
 					  					<p>Married:</p>
 					  				</div>
 					  				<div class="col col-lg-9">
-					  					<p>{{ $user->is_married == 1 ? 'Yes' : 'No' }}</p>
+					  					@if(!is_null($user->is_married))
+					  						<p>{{ $user->is_married == 1 ? 'Yes' : 'No' }}</p>
+					  					@endif
 					  				</div>
 				  				</div>
 				  				<div class="row">
@@ -159,7 +161,9 @@
 					  					<p>Children:</p>
 					  				</div>
 					  				<div class="col col-lg-9">
-					  					<p>{{ $user->has_children == 1 ? 'Yes' : 'No' }}</p>
+					  					@if(!is_null($user->has_children))
+					  						<p>{{ $user->has_children == 1 ? 'Yes' : 'No' }}</p>
+					  					@endif
 					  				</div>
 				  				</div>
 				  				<div class="row">
