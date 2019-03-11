@@ -9,14 +9,16 @@ class Message
     public $read;
     public $key;
     public $organisationId;
+    public $timer;
 
-    function __construct($organisationId, $key, $data, $status) 
+    function __construct($organisationId, $key, $data, $status, $timer) 
     {
        $this->organisationId = $organisationId;
        $this->key = $key;
 	   $this->data = $data;
        $this->status = $status;
        $this->read = false;
+       $this->timer = $timer; // Used on the front to specify auto dismiss timer
        $this->storeMessage();
     }
 	
@@ -33,6 +35,7 @@ class Message
             "data"   => $this->data,
             "status" => $this->status,
             "read"   => $this->read,
+            "timer"  => $this->timer,
         ];
     }
 
