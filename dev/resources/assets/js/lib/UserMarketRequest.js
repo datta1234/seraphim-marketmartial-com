@@ -252,7 +252,6 @@ export default class UserMarketRequest extends BaseModel {
         )
         .then(response => {
             this.attributes.action_needed = response.data.data.action_needed;
-            console.log("Action taken: ", this.attributes.action_needed);
             return response;
         })
         .catch(err => {
@@ -559,6 +558,7 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     runActionTaken() {
+        // Toggle sidebar event added as per client request see taks [MM-982]
         EventBus.$emit('interactionClose');
         this.actionTaken().then(response => {
             EventBus.$emit('toggleSidebar', 'interaction', true, this);
