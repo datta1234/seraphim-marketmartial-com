@@ -99,7 +99,7 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade','timeWindowRestrictTrade']], function() {
 
     Route::get('/', 'TradeScreenController@index')->name('trade');
 

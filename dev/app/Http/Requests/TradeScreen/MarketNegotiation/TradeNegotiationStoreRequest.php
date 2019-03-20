@@ -54,7 +54,10 @@ class TradeNegotiationStoreRequest extends FormRequest
         $negotiation = $this->market_negotiation;
         $isOffer = $this->get('is_offer');
         $validator->after(function ($validator) use ($negotiation, $isOffer) {
-            if($negotiation->isTradeAtBestOpen()) {
+            if(
+                $negotiation->isTradeAtBestOpen() 
+                && !$negotiation->lastTradeNegotiation->isOrganisationInvolved($this->user()->organisation_id)
+            ) {
                 if($negotiation->cond_buy_best == true) {
                     // if BUY @ best && OFFER
                     if($isOffer !== true) {

@@ -196,17 +196,17 @@ class TradeConfirmation extends Model
         }
     }
 
-    public function notifyConfirmation($organisation,$message)
+    public function notifyConfirmation($organisation,$message, $timer = 3000)
     {
         $sendOrg = $this->sendUser->organisation;
         $receiveOrg = $this->recievingUser->organisation;
 
-        $organisation->notify("trade_confirmation_store",$message,true);
+        $organisation->notify("trade_confirmation_store",$message,true,$timer);
         
         $stream = new Stream(new \App\Events\TradeConfirmationEvent($this,$sendOrg));
         $stream->run();
 
-        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this, $receiveOrg));
+        $stream = new Stream(new \App\Events\TradeConfirmationEvent($this,$receiveOrg));
         $stream->run();        
     }
 

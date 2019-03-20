@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'RedirectProfileStep' => \App\Http\Middleware\RedirectProfileStep::class,
         'timeWindowPreventAction' => \App\Http\Middleware\WindowPreventAction::class,
         'timeWindowPreventTrade' => \App\Http\Middleware\TradePreventAction::class,
+        'timeWindowRestrictTrade' => \App\Http\Middleware\TradeRestrictAction::class,
         'role' => \App\Http\Middleware\Role::class,
         'active' =>\App\Http\Middleware\CheckActive::class,
         '2fa' => \PragmaRX\Google2FALaravel\Middleware::class,

@@ -1494,8 +1494,9 @@ class UserMarketRequest extends Model
             "expiration"        => array(),
             "volatility"        => array(),
         ];
-
         $tradeNegotiation = TradeNegotiation::find($this->trade_negotiation_id);
+        $ratio = $tradeNegotiation ? $tradeNegotiation->getTradingRatio() : 1 ;
+
         foreach ($this->userMarketRequestGroups as $key => $group) {
             foreach ($group->userMarketRequestItems as $key => $item) {
                 switch ($item->title) {
@@ -1509,7 +1510,8 @@ class UserMarketRequest extends Model
                         break;
                     case 'Quantity':
                         if($group->is_selected || is_null($this->trade_negotiation_id)) {
-                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                            $ratio_value = round( $item->value * $ratio, 2);
+                            $data["nominal"][] = $group->tradable->isStock() ? 'R'.$ratio_value.'m' : $ratio_value;
                         } else {
                             $data["nominal"][] = $group->tradable->isStock() ? 'R'.$tradeNegotiation->quantity.'m' : $tradeNegotiation->quantity;
                         }
