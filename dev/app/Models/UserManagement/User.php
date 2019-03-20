@@ -489,4 +489,18 @@ class User extends Authenticatable
             return NULL;
         return decrypt($value);
     }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
+     */
+    public function routeNotificationForMail($notification)
+    {
+        // Default adress to use
+        return $this->emails ? $this->emails->filter(function ($value, $key) {
+            return $value->notifiable;
+        })->pluck('email') : $this->email;
+    }
 }

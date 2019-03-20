@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\MarketType;
 use App\Http\Requests\TradeScreen\TradeConfirmationStoreRequest;
+use App\Notifications\TradeConfirmedNotification;
 
 class TradeConfirmationController extends Controller
 {
@@ -111,7 +112,6 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade confirmation has been agreed.", 30000);
-
         }
         else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
@@ -121,9 +121,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade confirmation has been agreed.", 30000);
         }
 
-        /*
-        *   
-        */
+        //perform the booked trades
         $tradeConfirmation->bookTheTrades();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -133,8 +131,13 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
+        // Send Notification email with the trade confirmation details
+        /*try {*/
+        $user->notify(new TradeConfirmedNotification($data, $tradeConfirmation->tradeStructureSlug));
+        /*} catch(\Swift_TransportException $e) {
+            Log::error($e);
+        }*/
 
-         //perform the booked trades
 
         return response()->json(['data' => $data]);
     } 
