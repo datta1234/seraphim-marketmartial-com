@@ -132,11 +132,14 @@ class TradeConfirmationController extends Controller
         ])->preFormatted();
 
         // Send Notification email with the trade confirmation details
-        /*try {*/
-        $user->notify(new TradeConfirmedNotification($data, $tradeConfirmation->tradeStructureSlug));
-        /*} catch(\Swift_TransportException $e) {
-            Log::error($e);
-        }*/
+        $recipients = $user->notificationEmails;
+        if($recipients) {
+            try {
+                \Notification::send($recipients, new App\Notifications\TradeConfirmedNotification($data, $tradeConfirmation->tradeStructureSlug));
+            } catch(\Swift_TransportException $e) {
+                Log::error($e);
+            }
+        }
 
 
         return response()->json(['data' => $data]);

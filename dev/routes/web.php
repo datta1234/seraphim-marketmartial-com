@@ -11,6 +11,22 @@
 |
 */
 
+Route::get('/test', function(\Illuminate\Http\Request $request) {
+    $tradeConfirmation = App\Models\TradeConfirmations\TradeConfirmation::where('id', 9)->first();
+    $data = $tradeConfirmation->fresh()->load([
+        'tradeConfirmationGroups'=>function($q)
+        {
+            $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+        }
+    ])->preFormatted();
+    $recipients = \Auth::user()->notificationEmails;
+    if($recipients) {
+    	\Notification::send($recipients, new App\Notifications\TradeConfirmedNotification($data, $tradeConfirmation->tradeStructureSlug));
+    }
+
+    return response("Booya");
+});
+
 Auth::routes();
 
 /*
