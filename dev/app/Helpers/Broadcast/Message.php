@@ -11,7 +11,7 @@ class Message
     public $organisationId;
     public $timer;
 
-    function __construct($organisationId, $key, $data, $status, $timer) 
+    function __construct($organisationId, $key, $data, $status, $timer = null) 
     {
        $this->organisationId = $organisationId;
        $this->key = $key;
