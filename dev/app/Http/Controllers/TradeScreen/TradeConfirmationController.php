@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Models\TradeConfirmations\TradeConfirmation;
 use App\Models\StructureItems\MarketType;
 use App\Http\Requests\TradeScreen\TradeConfirmationStoreRequest;
-use App\Notifications\TradeConfirmedNotification;
 
 class TradeConfirmationController extends Controller
 {
@@ -131,16 +130,8 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-        // Send Notification email with the trade confirmation details
-        $recipients = $user->notificationEmails;
-        if($recipients) {
-            try {
-                \Notification::send($recipients, new App\Notifications\TradeConfirmedNotification($data, $tradeConfirmation->tradeStructureSlug));
-            } catch(\Swift_TransportException $e) {
-                Log::error($e);
-            }
-        }
-
+        // Send Notification email with the trade confirmation details to both parties
+        $tradeConfirmation->notifyTradingPartyEmails();
 
         return response()->json(['data' => $data]);
     } 

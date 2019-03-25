@@ -6,8 +6,9 @@ body, body *:not(html):not(style):not(br):not(tr):not(code) {
 }
 
 body {
-    background-color: #f5f8fa;
-    color: #74787E;
+    background-color: #D3D8DC;
+    color: #1D3641;
+    font-size: 0.7rem;
     height: 100%;
     hyphens: auto;
     line-height: 1.4;
@@ -56,15 +57,15 @@ h2 {
 }
 
 h3 {
-    color: #2F3133;
-    font-size: 14px;
+    color: #343a40;
+    font-size: 1.3125rem;
     font-weight: bold;
     margin-top: 0;
     text-align: left;
 }
 
 p {
-    color: #74787E;
+    color: #1D3641;
     font-size: 16px;
     line-height: 1.5em;
     margin-top: 0;
@@ -103,12 +104,14 @@ img {
 /* Header */
 
 .header {
+    background-color: #1a333f;
+    color: #FFFFFF;
     padding: 25px 0;
     text-align: center;
 }
 
 .header a {
-    color: #bbbfc3;
+    color: #FFFFFF;
     font-size: 19px;
     font-weight: bold;
     text-decoration: none;
@@ -133,10 +136,8 @@ img {
     background-color: #FFFFFF;
     margin: 0 auto;
     padding: 0;
-    width: 570px;
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
-    -premailer-width: 570px;
 }
 
 /* Subcopy */
@@ -177,19 +178,27 @@ img {
     -premailer-cellpadding: 0;
     -premailer-cellspacing: 0;
     -premailer-width: 100%;
+    
+    border-collapse: collapse;
+    box-shadow: 3px 4px 10px 0.2px #0c4545;
+    color: #000000;
+    border: none;
 }
 
 .table th {
-    border-bottom: 1px solid #EDEFF2;
-    padding-bottom: 8px;
+    background-color: #006d6e;
+    font-size: 1.2em;
+    color: #FFFFFF;
     margin: 0;
+    text-align: left;
+    padding: 10px 10px;
 }
 
 .table td {
-    color: #74787E;
-    font-size: 15px;
+    color: #000000;
+    font-size: 0.7rem;
     line-height: 18px;
-    padding: 10px 0;
+    padding: 10px 10px;
     margin: 0;
 }
 
@@ -284,4 +293,9 @@ img {
 .promotion p {
     font-size: 15px;
     text-align: center;
+}
+
+.footer-section {
+    color: #ffffff;
+    background-color: #303030;
 }

@@ -50,7 +50,7 @@
                         {{ splitValHelper(request_group.cap,' ',3) }} 
                     </td>
                     <td>
-                        {{ splitValHelper(request_group.future,' ',3) }}                            
+                        {{ request_group.future ? splitValHelper(request_group.future,' ',3) : '-' }}                            
                     </td>
                 </tr>
               </tbody>

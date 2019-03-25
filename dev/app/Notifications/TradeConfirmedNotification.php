@@ -13,15 +13,17 @@ class TradeConfirmedNotification extends Notification
 
     public $trade_confirmation;
     public $trade_structure_slug;
+    public $user;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($trade_confirmation,$trade_structure_slug)
+    public function __construct($trade_confirmation,$trade_structure_slug,$user)
     {
-        $this->trade_confirmation = $trade_confirmation;
+        $this->user = $user;
+        $this->trade_confirmation = $trade_confirmation->setOrgContext($user->organisation);
         $this->trade_structure_slug = $trade_structure_slug;
     }
 
@@ -44,12 +46,12 @@ class TradeConfirmedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        dd($this->trade_confirmation);
+        //dd($this->trade_confirmation);
         return (new MailMessage)
             ->cc(config("mail.admin_email")) // Set the cc address for the mail message.
             ->markdown(
             'emails.tradeconfirmations.'.$this->trade_structure_slug,
-            ['trade_confirmation' => $this->trade_confirmation]
+            ['trade_confirmation' => $this->trade_confirmation->preFormatted()]
         );
     }
 
