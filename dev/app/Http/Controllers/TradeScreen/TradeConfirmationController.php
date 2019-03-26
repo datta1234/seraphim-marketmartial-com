@@ -111,7 +111,6 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade confirmation has been agreed.", 30000);
-
         }
         else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
@@ -121,9 +120,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade confirmation has been agreed.", 30000);
         }
 
-        /*
-        *   
-        */
+        //perform the booked trades
         $tradeConfirmation->bookTheTrades();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -133,8 +130,8 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-
-         //perform the booked trades
+        // Send Notification email with the trade confirmation details to both parties
+        $tradeConfirmation->notifyTradingPartyEmails();
 
         return response()->json(['data' => $data]);
     } 

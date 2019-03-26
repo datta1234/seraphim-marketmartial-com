@@ -10,6 +10,7 @@ use App\Models\TradeConfirmations\TradeConfirmationItem;
 use App\Models\TradeConfirmations\TradeConfirmationGroup;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Notifications\TradeConfirmedNotification;
 
 class TradeConfirmation extends Model
 {
@@ -967,5 +968,46 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         ");
 
         return self::hydrate($parent)->first();
+    }
+
+    /**
+     *  Notifies both parties of a trade with the details of the confirmed trade confirmation
+     *   
+     */
+    public function notifyTradingPartyEmails()
+    {
+        $sending_users_recipients = $this->sendUser->notificationEmails;
+        $receiving_users_recipients = $this->recievingUser->notificationEmails;
+
+        $trade_confirmation = $this->fresh()->load([
+            'tradeConfirmationGroups'=>function($q)
+            {
+                $q->with(['tradeConfirmationItems','userMarketRequestGroup.userMarketRequestItems']);
+            }
+        ]);
+
+        if($sending_users_recipients) {
+            try {
+                \Notification::send($sending_users_recipients, new TradeConfirmedNotification(
+                    $trade_confirmation, 
+                    $this->tradeStructureSlug, 
+                    $this->sendUser)
+                );
+            } catch(\Swift_TransportException $e) {
+                Log::error($e);
+            }
+        }
+
+        if($receiving_users_recipients) {
+            try {
+                \Notification::send($receiving_users_recipients, new TradeConfirmedNotification(
+                    $trade_confirmation, 
+                    $this->tradeStructureSlug, 
+                    $this->recievingUser)
+                );
+            } catch(\Swift_TransportException $e) {
+                Log::error($e);
+            }
+        }
     }
 }
