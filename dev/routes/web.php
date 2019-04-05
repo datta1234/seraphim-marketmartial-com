@@ -104,8 +104,9 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']
 	]);
-	
-	Route::middleware(['timeWindowRestrictTrade'])->group(function () {
+
+	// Removed as per email also commented on Task [MM-987]
+	/*Route::middleware(['timeWindowRestrictTrade'])->group(function () {*/
 
 	    Route::get('/', 'TradeScreenController@index')->name('trade');
 
@@ -169,7 +170,7 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 	            'only' => ['show']
 	        ]);
 	    });
-	});	
+	/*});	*/
 
 });
 
