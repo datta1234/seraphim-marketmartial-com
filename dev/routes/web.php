@@ -99,74 +99,79 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 
 
-Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade','timeWindowRestrictTrade']], function() {
+Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
 
-    Route::get('/', 'TradeScreenController@index')->name('trade');
-
-    Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
-    Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
-
-    Route::get('/previous-negotiations', 'PreviousDayController@getOldNegotiations')->name('previous-negotiations');
-    Route::post('/previous-negotiations', 'PreviousDayController@refreshOldNegotiations')->name('previous-negotiations.refresh');
-
-	Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController')->only(['index', 'store', 'destroy']);
-    Route::resource('market-type', 'TradeScreen\MarketTypeController')->only(['index', 'show']);
-    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController')->only(['index']);
-
-    Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
-	Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
-		'only' => ['index']
-	]);
-
-    Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
-    Route::get('stock', 'TradeScreen\StockController@index');
-    
-    Route::post('trade-negotiation/{trade_negotiation}/no-further-cares',
-		'TradeScreen\MarketNegotiation\TradeNegotiationController@noFurtherCares');
-
-    Route::post(
-    	'user-market-request/{user_market_request}/user-market/{user_market}/work-the-balance', 
-    	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
-    );
-
-    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController')->only(['store', 'update', 'destroy']);
-    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController')->only(['store', 'update', 'destroy']);
-    
-    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/repeat', 'TradeScreen\UserMarket\MarketNegotiationController@repeatProposal');
-    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
-    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/improve', 'TradeScreen\UserMarket\MarketNegotiationController@improveBest');
-    
-    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController')->only(['store']);
-
-    Route::resource('organisation-chat', 'TradeScreen\ChatController', [
+	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
 		'only' => ['store','index']
 	]);
 
-	Route::post('trade-confirmation/{trade_confirmation}/dispute','TradeScreen\TradeConfirmationController@dispute');
- 	Route::post('trade-confirmation/{trade_confirmation}/confirm','TradeScreen\TradeConfirmationController@confirm');
-    Route::post('trade-confirmation/{trade_confirmation}/phase-two','TradeScreen\TradeConfirmationController@phaseTwo');
+	// Removed as per email also commented on Task [MM-987]
+	/*Route::middleware(['timeWindowRestrictTrade'])->group(function () {*/
 
-    Route::put('trade-confirmation/{trade_confirmation}','TradeScreen\TradeConfirmationController@update');
+	    Route::get('/', 'TradeScreenController@index')->name('trade');
 
-    Route::post('stream','TradeScreen\StreamController@index');
-    Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
+	    Route::get('/previous-quotes', 'PreviousDayController@getOldQuotes')->name('previous-quotes');
+	    Route::post('/previous-quotes', 'PreviousDayController@refreshOldQuotes')->name('previous-quotes.refresh');
 
-    Route::post('market-request-subscribe/{user_market_request}','TradeScreen\UserMarketRequestSubscritionController@ToggleAlertCleared');
+	    Route::get('/previous-negotiations', 'PreviousDayController@getOldNegotiations')->name('previous-negotiations');
+	    Route::post('/previous-negotiations', 'PreviousDayController@refreshOldNegotiations')->name('previous-negotiations.refresh');
 
-    /*
-    *	Activity Routes
-    */
-    Route::delete('/user-market/{user_market}/activity/{activity}', 'ActivityController@userMarket');
-    
-    /*
-    * Admin Trade Screen Functionality
-    */
-    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
-        Route::resource('market-request', 'TradeScreen\Admin\MarketRequestController', [
-            'as' => 'market-request',
-            'only' => ['show']
-        ]);
-    });
+		Route::resource('market.market-request', 'TradeScreen\MarketUserMarketReqeustController')->only(['index', 'store', 'destroy']);
+	    Route::resource('market-type', 'TradeScreen\MarketTypeController')->only(['index', 'show']);
+	    Route::resource('market-type.market', 'TradeScreen\MarketTypeMarketController')->only(['index']);
+
+	    Route::get('market-type/{marketType}/trade-structure', 'TradeScreen\MarketType\TradeStructureController@index');
+		Route::resource('market-type/{market_type}/trade-confirmations', 'TradeScreen\MarketType\TradeConfirmationController', [
+			'only' => ['index']
+		]);
+
+	    Route::get('safex-expiration-date', 'TradeScreen\SafexExpirationDateController@index');
+	    Route::get('stock', 'TradeScreen\StockController@index');
+	    
+	    Route::post('trade-negotiation/{trade_negotiation}/no-further-cares',
+			'TradeScreen\MarketNegotiation\TradeNegotiationController@noFurtherCares');
+
+	    Route::post(
+	    	'user-market-request/{user_market_request}/user-market/{user_market}/work-the-balance', 
+	    	'TradeScreen\MarketRequest\UserMarketController@workTheBalance'
+	    );
+
+	    Route::resource('user-market-request.user-market', 'TradeScreen\MarketRequest\UserMarketController')->only(['store', 'update', 'destroy']);
+	    Route::resource('user-market.market-negotiation', 'TradeScreen\UserMarket\MarketNegotiationController')->only(['store', 'update', 'destroy']);
+	    
+	    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/repeat', 'TradeScreen\UserMarket\MarketNegotiationController@repeatProposal');
+	    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/counter', 'TradeScreen\UserMarket\MarketNegotiationController@counterProposal');
+	    Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/improve', 'TradeScreen\UserMarket\MarketNegotiationController@improveBest');
+	    
+	    Route::resource('market-negotiation.trade-negotiation', 'TradeScreen\MarketNegotiation\TradeNegotiationController')->only(['store']);
+
+		Route::post('trade-confirmation/{trade_confirmation}/dispute','TradeScreen\TradeConfirmationController@dispute');
+	 	Route::post('trade-confirmation/{trade_confirmation}/confirm','TradeScreen\TradeConfirmationController@confirm');
+	    Route::post('trade-confirmation/{trade_confirmation}/phase-two','TradeScreen\TradeConfirmationController@phaseTwo');
+
+	    Route::put('trade-confirmation/{trade_confirmation}','TradeScreen\TradeConfirmationController@update');
+
+	    Route::post('stream','TradeScreen\StreamController@index');
+	    Route::post('/user-market-request/{user_market_request}/action-taken','TradeScreen\MarketUserMarketReqeustController@actionTaken');
+
+	    Route::post('market-request-subscribe/{user_market_request}','TradeScreen\UserMarketRequestSubscritionController@ToggleAlertCleared');
+
+	    /*
+	    *	Activity Routes
+	    */
+	    Route::delete('/user-market/{user_market}/activity/{activity}', 'ActivityController@userMarket');
+	    
+	    /*
+	    * Admin Trade Screen Functionality
+	    */
+	    Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], function() {
+	        Route::resource('market-request', 'TradeScreen\Admin\MarketRequestController', [
+	            'as' => 'market-request',
+	            'only' => ['show']
+	        ]);
+	    });
+	/*});	*/
+
 });
 
 /**

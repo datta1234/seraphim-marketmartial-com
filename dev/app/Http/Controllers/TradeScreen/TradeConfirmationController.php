@@ -151,7 +151,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmationChild->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmationChild->trade_confirmation_status_id = 5;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab", null);
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Your trade confirmation has been disputed, please review in the confirmation tab.", null);
 
         }
         else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id)
@@ -159,7 +159,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmationChild->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmationChild->trade_confirmation_status_id = 3;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab", null);
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Your trade confirmation has been disputed, please review in the confirmation tab.", null);
         }
 
         \Slack::postMessage([
