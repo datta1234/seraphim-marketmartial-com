@@ -99,7 +99,7 @@ class UserMarket extends Model
             $q->when(!config('loading_previous_day', false), function($qq) {
                 $qq->currentDay();
             });
-            $q->when(config('loading_previous_day', false), function($qq) {
+            $q->when(config('loading_previous_day', true), function($qq) {
                 $qq->previousDay();
             });
         });
