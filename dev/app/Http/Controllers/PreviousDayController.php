@@ -64,6 +64,11 @@ class PreviousDayController extends Controller
 
         $data['traded_market_requests'] = UserMarketRequest::active()
             ->previousDayTraded()
+            /**  
+             *  Added as possible solution to markets created to day not to show
+             *   But markets that were refreshed today will show. [MM-988]
+             */
+            ->where('created_at', '<', now()->startOfDay())
             ->get()
             ->map(function($mr) {
                 return $mr->setOrgContext()->preFormattedPreviousDay(true);

@@ -160,11 +160,6 @@ class UserMarketRequest extends Model
         return $query->where(function($q) use ($scope_to_daily) {
             $q->when(!$scope_to_daily, function($q) {
                 $q->where('active', true);
-                /**  
-                 *  Added as possible solution to markets created to day not to show
-                 *   But markets that were refreshed today will show. [MM-988]
-                 */
-                $q->where('created_at', '<', now()->startOfDay());
             });
             $q->when($scope_to_daily, function($q) {
                 $q->where(function($q) {
