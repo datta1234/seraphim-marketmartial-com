@@ -43,7 +43,8 @@
          :check-invalid="check_invalid" 
          :current-negotiation="last_negotiation" 
          :market-negotiation="proposed_user_market_negotiation"
-         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best"
+         :must-work-balance="mustWorkBalance">
         </ibar-trade-at-best-negotiation>
     </template>
     <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
