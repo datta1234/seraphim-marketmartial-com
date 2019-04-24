@@ -74,7 +74,7 @@
         		if(value !== null) {
 	        		axios.get(axios.defaults.baseUrl + '/admin/brokerage-fees/'+value+'/edit')
 	                .then(brokerageFeesResponse => {
-	                	this.brokerage_fee_data = brokerageFeesResponse.data.data;
+	                	this.brokerage_fee_data = this.orderBrokerageFees(brokerageFeesResponse.data.data);
 	                }, err => {
 	                	this.$toasted.error("Failed to load the organisation's Brokerage Fees");
 	                    //console.error(err);
@@ -91,6 +91,27 @@
                     //console.error(err);
                 });
         	},
+            orderBrokerageFees(brokerage_fees) {
+                if(Array.isArray(brokerage_fees)) {
+                    for(let i = 0; i < brokerage_fees.length - 1; i++) {
+                        for(let j = 0; j < brokerage_fees.length - i - 1; j++) {
+                            let current_key = brokerage_fees[j].key.split('.');
+                            let next_key = brokerage_fees[j+1].key.split('.');
+                            if( 
+                                current_key[2] == next_key[2] 
+                                && current_key[3] == next_key[3] 
+                                && current_key[4] == "big_leg" 
+                                && next_key[4] == "small_leg"
+                            ) {
+                                let temp = brokerage_fees[j];
+                                brokerage_fees[j] = brokerage_fees[j+1];
+                                brokerage_fees[j+1] = temp;
+                            }
+                        }
+                    }
+                }
+                return brokerage_fees;
+            },
         	isDifferentStructure(current,previous) {
         		return current.split('.')[2] != previous.split('.')[2];
         	},

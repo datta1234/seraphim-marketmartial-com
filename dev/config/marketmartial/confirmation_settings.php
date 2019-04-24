@@ -18,13 +18,13 @@ return [
 	[
 		"index" => 
 		[
-			"big_leg"=>0.002,
-			"small_leg"=>0.002
+			"small_leg"=>0.002,
+			"big_leg"=>0.002
 		],
 		"singles"=>
 		[
-			"big_leg"=>0.035,
-			"small_leg"=>0.035
+			"small_leg"=>0.035,
+			"big_leg"=>0.035
 		]
 	],
 
@@ -33,14 +33,14 @@ return [
 	[
 		"index" => 
 		[
-			"big_leg"=>0.003,
-			"small_leg"=>0.003
+			"small_leg"=>0.003,
+			"big_leg"=>0.003
 
 		],
 		"singles"=>
 		[
-			"big_leg"=>0.035,
-			"small_leg"=>0.035
+			"small_leg"=>0.035,
+			"big_leg"=>0.035
 
 		]
 	],

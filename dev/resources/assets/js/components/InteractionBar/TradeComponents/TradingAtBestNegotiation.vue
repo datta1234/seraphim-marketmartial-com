@@ -2,7 +2,7 @@
     <b-row dusk="ibar-market-negotiation-market" class="ibar market-negotiation">
         <b-col v-if="timed_out" class="text-center">
             <trade-at-best-desired-quantity 
-                v-if="rootNegotiation.is_my_org"
+                v-if="rootNegotiation.is_my_org && !mustWorkBalance"
                 :market-negotiation="currentNegotiation">
             </trade-at-best-desired-quantity>
             <span v-else>
@@ -67,6 +67,10 @@
                 type: UserMarketNegotiation
             },
             disabled: {
+                type: Boolean,
+                default: false
+            },
+            mustWorkBalance: {
                 type: Boolean,
                 default: false
             }

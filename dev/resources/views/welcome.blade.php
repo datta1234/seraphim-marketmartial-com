@@ -358,13 +358,6 @@
                 <h3>Benefits of using Market Martial</h3>
                 <div class="row">
                     <div class="col col-2 col-lg-1 col-md-2">
-                        <span class="icon icon-money2"></span>
-                    </div>
-                    <div class="col col-10 col-lg-11 col-md-10">
-                        <p class="mb-3">get paid to make markets and trade!</p>
-                    </div>
-
-                    <div class="col col-2 col-lg-1 col-md-2">
                         <span class="icon icon-globe"></span>
                     </div>
                     <div class="col col-10 col-lg-11 col-md-10">
