@@ -16,7 +16,7 @@
         <div>
             <p class="card-text text-center">
             Please fill in your details below.<br>
-            Once your credentials have been verified, you will be able to view and use the Market Martial trading platform.
+            Once your credentials have been verified, you will be able to view and use the Market Martial negotiation platform.
             </p>
 
             <div class="row justify-content-md-center mb-">
@@ -116,7 +116,7 @@
 
 
             <div class="form-group row">
-                <label for="market_types" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be trading</label>
+                <label for="market_types" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Markets that you will be negotiating</label>
 
                 <div class="form-group col-sm-12 col-md-4 mt-2">
                     <div class="no-backdrop form-control {{ $errors->has('market_types') ? ' is-invalid' : '' }} mb-4" id="market_types">
