@@ -109,9 +109,9 @@ class Organisation extends Model
         return $this->slackIntegrations()->where("field", '=', 'channel')->first();
     }
 
-    public function notify($key,$message,$status)
+    public function notify($key,$message,$status,$timer = 3000)
     { 
-        $this->message = new Message($this->id,$key, $message, $status);
+        $this->message = new Message($this->id,$key, $message, $status, $timer);
     }
 
     public function getNotification()

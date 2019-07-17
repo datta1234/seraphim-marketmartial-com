@@ -64,6 +64,7 @@ class PreviousDayController extends Controller
 
         $data['traded_market_requests'] = UserMarketRequest::active()
             ->previousDayTraded()
+            ->previousDayTillNow() // Added as per reqeust on task [MM-988] 2019-04-29
             ->get()
             ->map(function($mr) {
                 return $mr->setOrgContext()->preFormattedPreviousDay(true);
@@ -71,6 +72,7 @@ class PreviousDayController extends Controller
 
         $data['untraded_market_requests'] = UserMarketRequest::active()
             ->previousDayUntraded()
+            ->previousDayTillNow() // Added as per reqeust on task [MM-988] 2019-04-29
             ->get()
             ->map(function($mr) {
                 return $mr->setOrgContext()->preFormattedPreviousDay(false);

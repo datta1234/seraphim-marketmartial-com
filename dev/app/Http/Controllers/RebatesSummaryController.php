@@ -21,7 +21,7 @@ class RebatesSummaryController extends Controller
     {
         $user = $request->user();
         $date_grouped_rebates = Rebate::where('organisation_id', $user->organisation->id)
-            ->where('is_paid', true)
+            /*->where('is_paid', true)*/
             ->whereYear('trade_date', Carbon::now()->year)
             ->get()
             // group date
@@ -96,7 +96,7 @@ class RebatesSummaryController extends Controller
     public function show(SummaryYearRequest $request)
     {
         $user = $request->user();
-        $rebates_query = Rebate::where('is_paid', true)->whereYear('trade_date', $request->input('year'));
+        $rebates_query = Rebate::/*where('is_paid', true)->*/whereYear('trade_date', $request->input('year'));
 
         if($user->role_id != 1) {
             $rebates_query = $rebates_query->where('organisation_id', $user->organisation->id);

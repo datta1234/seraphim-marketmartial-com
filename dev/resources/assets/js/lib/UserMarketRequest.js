@@ -4,6 +4,7 @@ import UserMarketQuote from './UserMarketQuote';
 import Errors from './Errors';
 import Config from './Config';
 import util from './util';
+import { EventBus } from './EventBus';
 
 export default class UserMarketRequest extends BaseModel {
 
@@ -557,6 +558,13 @@ export default class UserMarketRequest extends BaseModel {
     }
 
     runActionTaken() {
-        this.actionTaken();
+        // Toggle sidebar event added as per client request see taks [MM-982]
+        EventBus.$emit('interactionClose');
+        this.actionTaken().then(response => {
+            EventBus.$emit('toggleSidebar', 'interaction', true, this);
+        })
+        .catch(err => {
+            //console.error(err);
+        });
     }
 }

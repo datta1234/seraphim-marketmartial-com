@@ -628,12 +628,12 @@ const app = new Vue({
                 .listen('.TradeConfirmationEvent', (tradeConfirmationPackets) => {
                     //this should be the market thats created
                     this.handlePacket(tradeConfirmationPackets, (packet_data) => {
-
                         this.updateTradeConfirmation(packet_data.data);
                         if(packet_data.message)
                         {
                             this.$toasted.show(packet_data.message.data,{
-                                'className':"mm-confirm-toast"
+                                'className':"mm-confirm-toast",
+                                duration : packet_data.message.timer,
                             }); 
                         }
                     });

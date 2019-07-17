@@ -2,7 +2,7 @@
     <b-row dusk="ibar-market-negotiation-market" class="ibar market-negotiation">
         <b-col v-if="timed_out" class="text-center">
             <trade-at-best-desired-quantity 
-                v-if="rootNegotiation.is_my_org"
+                v-if="rootNegotiation.is_my_org && !mustWorkBalance && !traded"
                 :market-negotiation="currentNegotiation">
             </trade-at-best-desired-quantity>
             <span v-else>
@@ -69,6 +69,10 @@
             disabled: {
                 type: Boolean,
                 default: false
+            },
+            mustWorkBalance: {
+                type: Boolean,
+                default: false
             }
         },
         components: {
@@ -94,6 +98,10 @@
             },
             term() {
                 return this.rootNegotiation.cond_buy_best ? 'Buying' : 'Selling' ;
+            },
+            traded() {
+                let last_trade_negotiation = this.currentNegotiation.getLastTradeNegotiation();
+                return last_trade_negotiation ? last_trade_negotiation.traded : false; 
             }
         },
         data() {

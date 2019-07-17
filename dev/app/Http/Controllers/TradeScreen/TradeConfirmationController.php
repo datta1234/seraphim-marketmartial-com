@@ -110,20 +110,17 @@ class TradeConfirmationController extends Controller
             $tradeConfirmation->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade confirmation has been agreed.");
-
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->recievingUser->organisation,"Trade confirmation has been agreed.", 30000);
         }
         else if($user->organisation_id == $tradeConfirmation->recievingUser->organisation_id)
         {
             $tradeConfirmation->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmation->trade_confirmation_status_id = 4;
             $tradeConfirmation->save();
-            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade confirmation has been agreed.");
+            $tradeConfirmation->notifyConfirmation($tradeConfirmation->sendUser->organisation,"Trade confirmation has been agreed.", 30000);
         }
 
-        /*
-        *   
-        */
+        //perform the booked trades
         $tradeConfirmation->bookTheTrades();
         
         $data = $tradeConfirmation->fresh()->load([
@@ -133,8 +130,8 @@ class TradeConfirmationController extends Controller
             }
         ])->preFormatted();
 
-
-         //perform the booked trades
+        // Send Notification email with the trade confirmation details to both parties
+        $tradeConfirmation->notifyTradingPartyEmails();
 
         return response()->json(['data' => $data]);
     } 
@@ -154,7 +151,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmationChild->send_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmationChild->trade_confirmation_status_id = 5;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Your trade confirmation has been disputed, please review in the confirmation tab.", null);
 
         }
         else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id)
@@ -162,7 +159,7 @@ class TradeConfirmationController extends Controller
             $tradeConfirmationChild->receiving_trading_account_id = $request->input('trading_account_id');
             $tradeConfirmationChild->trade_confirmation_status_id = 3;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Your Trade has been disputed please review the contents through confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Your trade confirmation has been disputed, please review in the confirmation tab.", null);
         }
 
         \Slack::postMessage([

@@ -3,6 +3,7 @@
 namespace App\Models\UserManagement;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Email extends Model
 {
@@ -16,6 +17,8 @@ class Email extends Model
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
+
+    use Notifiable;
 	
     /**
      * The table associated with the model.
@@ -54,5 +57,16 @@ class Email extends Model
     public function users()
     {
         return $this->belongsTo('App\Models\UserManagement\User', 'user_id');
+    }
+
+    /**
+     * Route notifications for the mail channel.
+     *
+     * @return string
+     */
+    public function routeNotificationForMail()
+    {
+        // Default adress to use
+        return $this->email;
     }
 }

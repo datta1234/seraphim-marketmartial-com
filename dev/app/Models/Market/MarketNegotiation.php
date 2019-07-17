@@ -1028,7 +1028,7 @@ class MarketNegotiation extends Model
     {
          // Set action that needs to be taken for the org related to this marketNegotiation
         $this->userMarket->userMarketRequest->setAction(
-            $counterNegotiation->recievingUser->organisation_id,
+            $counterNegotiation->initiateUser->organisation_id,
             $counterNegotiation->userMarket->userMarketRequest->id,
             true
         );
@@ -1064,7 +1064,7 @@ class MarketNegotiation extends Model
                 $counterNegotiation = $this->tradeNegotiations->last();
 
                 $tradeNegotiation->trade_negotiation_id = $counterNegotiation->id;
-                $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //swicth the type as it is counter so the opposite
+                $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //switch the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
 
                 //if it is greater it is an amend but if it is less or eqaul it is traded

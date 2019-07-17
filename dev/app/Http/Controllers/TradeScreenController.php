@@ -24,7 +24,8 @@ class TradeScreenController extends Controller
 
         $server_time = now()->toIso8601String();
 
-        $closing_time = Carbon::createFromTimeString(config('marketmartial.window.trade_end_time'))->toIso8601String();
+        $closing_time = Carbon::createFromTimeString(config('marketmartial.window.trade_view_end_time'))
+            ->toIso8601String();
         
         return view('pages.trade')->with([
             'user'          => $user, 

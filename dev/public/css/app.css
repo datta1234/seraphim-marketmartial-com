@@ -11153,6 +11153,10 @@ a.mm-login-button {
   font-family: "Muli-Bold";
 }
 
+.home-sub-footer .benefits-block {
+  margin-bottom: 3rem;
+}
+
 .home-sub-footer .benefits-block p,
 .home-sub-footer .benefits-block span {
   display: inline-block;

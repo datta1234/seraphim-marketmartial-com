@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
             \App\Console\Commands\GenOrgAction::class,
             \App\Console\Commands\PlaceUserMarketsOnHold::class,
             \App\Console\Commands\UpdateUuid::class,
+            \App\Console\Commands\ClearUserSessions::class,
 
     ];
 
@@ -31,6 +32,7 @@ class Kernel extends ConsoleKernel
         //          ->hourly();
         $schedule->command('gen:actions')->daily();
         $schedule->command('usermarkets:place-on-hold')->everyMinute();
+        $schedule->command('users:clear-user-sessions')->everyMinute();
     }
 
     /**

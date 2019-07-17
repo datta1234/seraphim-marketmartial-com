@@ -36,14 +36,15 @@
                     return false;
                 }
                 let current_negotiation = chosen_user_market.getLastNegotiation();
+                let is_value_improved = side == "bid" ? value > current_negotiation.bid : value < current_negotiation.offer;
                 // if the value is the same as the current one
                 if(current_negotiation[side] == value) {
-                    // i can only apply it if i own that side
+                    // i can only apply it if i own that side and i have improved it
                     let source = current_negotiation.getAmountSource(side);
-                    return source.is_my_org;
+                    return source.is_my_org && is_value_improved;
                 } else {
                     // if the value is different, and i have improved it, i will be owning that side, so i can apply it
-                    return side == "bid" ? value > current_negotiation.bid : value < current_negotiation.offer;
+                    return is_value_improved;
                 }
                 return false;
             }
@@ -59,7 +60,6 @@
                     offer: this.marketNegotiation.offer,
                 }
                 let chosen_user_market = this.marketRequest.getChosenUserMarket();
-                
                 let available = this.condition.value.filter(val => {
                     return val.applies_to.reduce((out, side) => {
                         if(vals[side] == null || vals[side] == 0 || !this.mySideAtValue(side, vals[side])) {
@@ -68,7 +68,6 @@
                         return out;
                     }, true);
                 });
-
                 if(available.length > 0) {
                     this.marketNegotiation[this.condition.alias] = available[0].value;
                 } else {
@@ -76,6 +75,7 @@
                     EventBus.$emit('errorConditions', "Please improve the bid or the offer before applying buy/sell@best.");
                     this.$emit('reset');
                 }
+
 
                 return available;
             }

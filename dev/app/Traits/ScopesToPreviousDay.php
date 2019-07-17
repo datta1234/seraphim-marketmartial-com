@@ -18,6 +18,19 @@ trait ScopesToPreviousDay {
     }
 
     /**
+    * Scope the query to between the previous day and now
+    * @param $query \Illuminate\Database\Eloquent\Builder
+    *
+    * @return $query \Illuminate\Database\Eloquent\Builder
+    */
+    public function scopePreviousDayTillNow($query)
+    {
+        $start = $this->resolvePreviousDayStart();
+        $end = now();
+        return $query->whereBetween('updated_at', [ $start, $end ]);
+    }
+
+    /**
     * return previous trading day start
     *
     * @return $start \Carbon\Carbon
