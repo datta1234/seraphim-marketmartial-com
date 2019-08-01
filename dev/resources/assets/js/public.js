@@ -22,7 +22,7 @@ Vue.use(Toasted, {
 });
 
 Vue.use(FlatSurfaceShader);
-Vue.component('header-canvas', require('./components/HeaderCanvas.vue'));
+Vue.component('header-canvas', require('./components/HeaderCanvas.vue').default);
 
 import ActiveMakerService from '~/services/ActiveMakerService';
 import ActiveMarketMakers from './components/ActiveMarketMakers.vue'

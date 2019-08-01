@@ -47,33 +47,33 @@ Vue.directive('active-request', ActiveRequestDirective);
 Vue.component('Datepicker', Datepicker);
 
 // Profile Components
-Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue'));
-Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue'));
-Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue'));
-Vue.component('day-month-picker', require('./components/Profile/Components/DayMonthPickerComponent.vue'));
-Vue.component('terms-and-conditions', require('./components/Profile/Components/TermsAndConditionsComponent.vue'));
+Vue.component('email-settings', require('./components/Profile/Components/EmailSettingsComponent.vue').default);
+Vue.component('activate-input', require('./components/Profile/Components/ActivateInputComponent.vue').default);
+Vue.component('toggle-input', require('./components/Profile/Components/ToggleInputComponent.vue').default);
+Vue.component('day-month-picker', require('./components/Profile/Components/DayMonthPickerComponent.vue').default);
+Vue.component('terms-and-conditions', require('./components/Profile/Components/TermsAndConditionsComponent.vue').default);
 
 // Admin Components
-Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue'));
-//Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue'));
-Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue'));
-Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue'));
-Vue.component('download-csv', require('./components/Admin/downloadCsvComponent.vue'));
-Vue.component('bank-activity', require('./components/Admin/Stats/BankActivityComponent.vue'));
-Vue.component('rebates-assigned', require('./components/Admin/Rebates/RebatesAssignedComponent.vue'));
-Vue.component('brokerage-fee', require('./components/Admin/BrokerageFees/BrokerageFeesComponent.vue'));
+Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue').default);
+//Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue').default);
+Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue').default);
+Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue').default);
+Vue.component('download-csv', require('./components/Admin/downloadCsvComponent.vue').default);
+Vue.component('bank-activity', require('./components/Admin/Stats/BankActivityComponent.vue').default);
+Vue.component('rebates-assigned', require('./components/Admin/Rebates/RebatesAssignedComponent.vue').default);
+Vue.component('brokerage-fee', require('./components/Admin/BrokerageFees/BrokerageFeesComponent.vue').default);
 
 // Stats Components
-Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue'));
-Vue.component('activity-year-tables', require('./components/Stats/Components/ActivityYearTables.vue'));
-Vue.component('all-market-activity', require('./components/Stats/AllMarketActivity.vue'));
-Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue'));
-Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue'));
-Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue'));
+Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue').default);
+Vue.component('activity-year-tables', require('./components/Stats/Components/ActivityYearTables.vue').default);
+Vue.component('all-market-activity', require('./components/Stats/AllMarketActivity.vue').default);
+Vue.component('safex-table', require('./components/Stats/Components/SafexTable.vue').default);
+Vue.component('upload-csv', require('./components/Stats/UploadCsvComponent.vue').default);
+Vue.component('open-interests', require('./components/Stats/OpenInterestsComponent.vue').default);
 
 // Rebate Componenets
-Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue'));
-Vue.component('rebates-year-tables', require('./components/Rebates/RebatesYearTablesComponent.vue'));
+Vue.component('rebates-earned', require('./components/Rebates/RebatesEarnedComponent.vue').default);
+Vue.component('rebates-year-tables', require('./components/Rebates/RebatesYearTablesComponent.vue').default);
 
 import FormatMixin from './FormatMixin.js'
 Vue.mixin(FormatMixin);
