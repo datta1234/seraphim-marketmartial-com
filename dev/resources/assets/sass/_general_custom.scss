@@ -729,14 +729,16 @@ table.table {
 [mm-disabled] {
 	opacity: 0.65;
 	pointer-events:none;
-	&input {
-		background-color: #afafaf;
-    	border-color: #8e8e8e;
-	}
-	&.btn {
-		background-color: #afafaf;
-	}
 }
+
+[mm-disabled]input {
+	background-color: #afafaf;
+	border-color: #8e8e8e;
+}
+[mm-disabled].btn {
+	background-color: #afafaf;
+}
+
 
 .admin-label {
 	font-size: .9em;

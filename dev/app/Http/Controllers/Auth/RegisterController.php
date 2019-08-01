@@ -17,6 +17,7 @@ use App\Models\UserManagement\Role;
 use App\Models\StructureItems\Market;
 use App\Models\StructureItems\MarketType;
 use App\Models\ApiIntegration\SlackIntegration;
+use App\Rules\MicrosoftPasswordPolicy;
 
 
 class RegisterController extends Controller
@@ -67,12 +68,16 @@ class RegisterController extends Controller
             'cell_phone.required' => 'The phone field is required',
             'new_organisation.unique' => 'The organisation already exists in the system',
         ];
-
-
+        
         return Validator::make($data, [
             'full_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'confirmed',
+                'string',
+                new MicrosoftPasswordPolicy
+            ],
             'cell_phone' => 'required|numeric',
             'role_id' => [
                 'required',
