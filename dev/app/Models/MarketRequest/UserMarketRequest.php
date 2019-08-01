@@ -155,7 +155,7 @@ class UserMarketRequest extends Model
     public function scopeActive($query)
     {
         // staging/demo is scoping to daily records to prevent clutter
-        $scope_to_daily = false;
+        $scope_to_daily = true;
 
         return $query->where(function($q) use ($scope_to_daily) {
             $q->when(!$scope_to_daily, function($q) {

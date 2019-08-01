@@ -12,7 +12,7 @@ class OrganisationTableSeeder extends Seeder
     public function run()
     {
         
-        for($i = 1; $i < 8; $i++) {
+        for($i = 1; $i < 2; $i++) {
             $organisation = factory(App\Models\UserManagement\Organisation::class)->create([
                 "title" => "Organisation ".$i
             ]);
