@@ -1094,7 +1094,7 @@ class MarketNegotiation extends Model
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
                         "text"      => $this->getMessage('market_traded'),
-                        "channel"   => config("marketmartial.slack.trade_channel"),
+                        "channel"   => config("marketmartial.slack.trade_channel")
                     ], 'trade');
                 }
                
