@@ -38,9 +38,9 @@ import TradedMarkets from './components/PreviousDay/TradedMarkets.vue';
 import UntradedMarkets from './components/PreviousDay/UntradedMarkets.vue';
 
 // globals
-Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
-Vue.component('market-tab', require('./components/PreviousDay/MarketTab.vue'));
-Vue.component('trading-countdown', require('./components/PreviousDay/TradingCountdown.vue'));
+Vue.component('market-group', require('./components/MarketGroupComponent.vue').default);
+Vue.component('market-tab', require('./components/PreviousDay/MarketTab.vue').default);
+Vue.component('trading-countdown', require('./components/PreviousDay/TradingCountdown.vue').default);
 
 // Models
 import Market from './lib/Market';

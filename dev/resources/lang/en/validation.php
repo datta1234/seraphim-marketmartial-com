@@ -87,6 +87,7 @@ return [
     'unique'               => 'The :attribute has already been taken.',
     'uploaded'             => 'The :attribute failed to upload.',
     'url'                  => 'The :attribute format is invalid.',
+    'recaptcha'            => 'Confirm that you are not a Robot.',
 
     /*
     |--------------------------------------------------------------------------

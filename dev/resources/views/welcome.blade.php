@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="row justify-content-md-end">
     <div class="col col-md-12">
         <p class="float-right active-markets">
@@ -23,32 +22,47 @@
     <div class="home-login float-md-right">
         <form id="homePageLoginForm" method="POST" action="{{ route('login') }}">
              {{ csrf_field() }}
-
                 <div class="w-100 mb-3">
                     <div class="in-line-input email-input">
                         
                         <input id="email" type="email" class="form-control pb-0 {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" placeholder="Email address" required autofocus>
+                        
+                        @if ($errors->has('email'))
+                            <div class="invalid-feedback">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </div>
+                        @endif
                     </div>
 
-                    @if ($errors->has('email'))
-                        <span class="invalid-feedback">
-                            <strong>{{ $errors->first('email') }}</strong>
-                        </span>
-                    @endif
                 </div>
 
                 <div class="w-100 mb-3">
                     <div class="in-line-input pass-input">
                         
                         <input id="password" type="password" class="form-control pb-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required>
+
+                        @if ($errors->has('password'))
+                            <div class="invalid-feedback">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </div> 
+                        @endif
                     </div>
 
-                    @if ($errors->has('password'))
-                        <span class="invalid-feedback">
-                            <strong>{{ $errors->first('password') }}</strong>
-                        </span>
-                    @endif
                 </div>
+
+                @if(Session::has('include_recaptcha') && Session::get('include_recaptcha'))
+                    <div class="w-100 mb-3">
+                        <div class="in-line-input {{ $errors->has('g-recaptcha-response') ? ' is-invalid' : '' }}">
+                            {!! ReCaptcha::htmlFormSnippet() !!}
+                            
+                        </div>
+                        @if($errors->has('g-recaptcha-response'))
+                            <div class="text-danger">
+                                <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                            </div> 
+                        @endif
+                    </div>
+                @endif
 
                 <div class="w-100 mb-3">
                     <button type="submit" class="btn mm-login-button w-100 pb-1 pt-1">

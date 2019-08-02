@@ -64,38 +64,38 @@ Vue.component('Datepicker', Datepicker);
 
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
 
-Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
+Vue.component('user-header', require('./components/UserHeaderComponent.vue').default);
 
-Vue.component('mm-loader', require('./components/LoaderComponent.vue'));
+Vue.component('mm-loader', require('./components/LoaderComponent.vue').default);
 
-Vue.component('theme-toggle', require('./components/ThemeToggleComponent.vue'));
+Vue.component('theme-toggle', require('./components/ThemeToggleComponent.vue').default);
 
 // Market Tab Components
-Vue.component('market-group', require('./components/MarketGroupComponent.vue'));
-Vue.component('market-tab', require('./components/MarketTabComponent.vue'));
+Vue.component('market-group', require('./components/MarketGroupComponent.vue').default);
+Vue.component('market-tab', require('./components/MarketTabComponent.vue').default);
 
 // Interaction Bar Component + children
-Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue'));
-    Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue'));
-    Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue'));
-    Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue'));
-    Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue'));
-    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue'));
-    Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue'));
+Vue.component('interaction-bar', require('./components/InteractionBarComponent.vue').default);
+    Vue.component('ibar-user-market-title', require('./components/InteractionBar/Components/UserMarketTitle.vue').default);
+    Vue.component('ibar-negotiation-history-contracts', require('./components/InteractionBar/TradeComponents/NegotiationHistoryContracts.vue').default);
+    Vue.component('ibar-negotiation-history-market', require('./components/InteractionBar/MarketComponents/NegotiationHistoryMarket.vue').default);
+    Vue.component('ibar-market-negotiation-contracts', require('./components/InteractionBar/MarketComponents/MarketNegotiationMarket.vue').default);
+    Vue.component('ibar-apply-conditions', require('./components/InteractionBar/MarketComponents/ApplyConditionsComponent.vue').default);
+    Vue.component('ibar-apply-premium-calculator', require('./components/InteractionBar/MarketComponents/ApplyPremiumCalculatorComponent.vue').default);
     
-    Vue.component('ibar-trade-request', require('./components/InteractionBar/TradeComponents/TradeRequest.vue'));
-    Vue.component('ibar-trade-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeDesiredQuantity.vue'));
-    Vue.component('ibar-trade-counter-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeCounterDesiredQuantity.vue'));
-    Vue.component('ibar-trade-work-balance', require('./components/InteractionBar/TradeComponents/TradeWorkBalance.vue'));
-    Vue.component('ibar-counter-negotiation', require('./components/InteractionBar/MarketComponents/CounterNegotiation.vue'));
+    Vue.component('ibar-trade-request', require('./components/InteractionBar/TradeComponents/TradeRequest.vue').default);
+    Vue.component('ibar-trade-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeDesiredQuantity.vue').default);
+    Vue.component('ibar-trade-counter-desired-quantity', require('./components/InteractionBar/TradeComponents/TradeCounterDesiredQuantity.vue').default);
+    Vue.component('ibar-trade-work-balance', require('./components/InteractionBar/TradeComponents/TradeWorkBalance.vue').default);
+    Vue.component('ibar-counter-negotiation', require('./components/InteractionBar/MarketComponents/CounterNegotiation.vue').default);
 
 // Action Bar Component
-Vue.component('action-bar', require('./components/ActionBarComponent.vue'));
+Vue.component('action-bar', require('./components/ActionBarComponent.vue').default);
 
-Vue.component('user-header', require('./components/UserHeaderComponent.vue'));
-Vue.component('chat-bar', require('./components/ChatBarComponent.vue'));
-Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQuotesModal.vue'));
-Vue.component('trade-closing-timer', require('./components/TradeClosingComponent.vue'));
+Vue.component('user-header', require('./components/UserHeaderComponent.vue').default);
+Vue.component('chat-bar', require('./components/ChatBarComponent.vue').default);
+Vue.component('refresh-quotes-modal', require('./components/PreviousDay/RefreshQuotesModal.vue').default);
+Vue.component('trade-closing-timer', require('./components/TradeClosingComponent.vue').default);
 
 // directives
 import ActiveRequestDirective from './directives/active-request.js';

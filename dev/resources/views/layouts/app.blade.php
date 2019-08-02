@@ -76,6 +76,10 @@
             ]) !!};
         </script>
     @yield('header-scripts')
+    
+    <!-- Recaptcha Helper -->
+    {!! ReCaptcha::htmlScriptTagJsApi() !!}
+    
     </head>
 
     <body>

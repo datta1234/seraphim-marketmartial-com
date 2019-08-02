@@ -34,7 +34,7 @@ Vue.use(Toasted, {
     duration : 3000,
 });
 
-Vue.component('activity-log-download', require('./components/ActivityLogDownload.vue'));
+Vue.component('activity-log-download', require('./components/ActivityLogDownload.vue').default);
 
 const activity_log_app = new Vue({
     el: '#activity_log_app',

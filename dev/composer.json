@@ -7,6 +7,7 @@
     "require": {
         "php": ">=7.0",
         "bacon/bacon-qr-code": "^1.0",
+        "biscolab/laravel-recaptcha": "^2.0",
         "ddtraceweb/monolog-parser": "^1.2",
         "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
