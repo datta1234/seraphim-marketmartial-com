@@ -63,9 +63,8 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
-    <meta name="pusher-key" content="{{ env('PUSHER_APP_KEY') }}">
-    <meta name="pusher-cluster" content="{{ env('PUSHER_APP_CLUSTER') }}">
+    <meta name="pusher-key" content="{{ config("marketmartial.pusher.app_key") }}">
+    <meta name="pusher-cluster" content="{{config("marketmartial.pusher.app_cluster") }}">
     @if(Auth::user()->organisation)
         <!-- Organisation key -->
         <meta name="organisation-uuid" content="{{ Auth::user()->organisation->uuid }}">

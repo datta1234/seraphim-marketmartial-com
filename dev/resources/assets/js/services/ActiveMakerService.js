@@ -31,7 +31,7 @@ const ping = () => {
         //console.error("Ping Event: ", event);
         let re = confirm("Live update stream may have disconnected!\n\nThis may be due to session inactivity.\n\nRefresh Page Now?");
         if(re) {
-            location.reload();
+           location.reload();
         }
     });
 }

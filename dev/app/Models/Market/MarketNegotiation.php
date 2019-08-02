@@ -1094,7 +1094,7 @@ class MarketNegotiation extends Model
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
                         "text"      => $this->getMessage('market_traded'),
-                        "channel"   => env("SLACK_ADMIN_TRADES_CHANNEL")
+                        "channel"   => config("marketmartial.slack.trade_channel")
                     ], 'trade');
                 }
                
@@ -1357,7 +1357,7 @@ class MarketNegotiation extends Model
                 $title_initiator = $this->user->organisation->title;
                 \Slack::postMessage([
                     "text"      => $this->getMessage('fok_timeout'),
-                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                    "channel"   => config("marketmartial.slack.admin_notify_channel")
                 ], 'timeout');
             }
         }
@@ -1457,7 +1457,7 @@ class MarketNegotiation extends Model
 
             \Slack::postMessage([
                 "text"      => $this->getMessage('trade_at_best_timeout'),
-                "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                "channel"   => config("marketmartial.slack.admin_notify_channel")
             ], "timeout");
 
         } else {
