@@ -54,7 +54,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                     // Notify The Admin 
                     \Slack::postMessage([
                         "text"      => $marketNegotiation->getMessage('fok_timeout'),
-                        "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                        "channel"   => config('marketmartial.slack.notify_channel')
                     ], 'timeout');
                 }
             }
@@ -71,7 +71,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                 // Notify The Admin 
                 \Slack::postMessage([
                     "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
-                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                    "channel"   => config('marketmartial.slack.notify_channel')
                 ], "timeout");
             }
 
@@ -92,7 +92,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                 // Notify The Admin 
                 \Slack::postMessage([
                     "text"      => $marketNegotiation->getMessage('trade_at_best_timeout'),
-                    "channel"   => env("SLACK_ADMIN_NOTIFY_CHANNEL")
+                    "channel"   => config('marketmartial.slack.notify_channel')
                 ], "timeout");
             }
         }

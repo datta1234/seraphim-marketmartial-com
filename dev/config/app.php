@@ -190,7 +190,7 @@ return [
         // user impersonate for admins
         Lab404\Impersonate\ImpersonateServiceProvider::class,
         // Recaptcha for login
-        Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
+       Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
 
     ],
 
@@ -244,7 +244,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Slack' => \App\Facades\Slack\Slack::class,
         'ActivityLogger' => \App\Facades\Logging\ActivityLogger::class,
-        'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
+       'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
     ],
 
 ];

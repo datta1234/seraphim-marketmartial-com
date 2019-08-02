@@ -23,13 +23,13 @@ trait OrganisationSlackChat {
             "name" => $channel_name
         ];
         $header = [
-            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            "Authorization" => "Bearer ".config('marketmartial.slack.auth_bearer'), 
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
         try {
             $client = new Client();
-            $response = $client->request('POST', env('SLACK_API_URL').'/groups.create', [
+            $response = $client->request('POST', config('marketmartial.slack.api_url').'/groups.create', [
                     'headers' => $header,
                     'body'  =>  json_encode($body)
             ]);
@@ -78,13 +78,13 @@ trait OrganisationSlackChat {
     public function findChannel($channel_name)
     {
         $header = [
-            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            "Authorization" => "Bearer ".config('marketmartial.slack.auth_bearer'), 
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
         try {
             $client = new Client();
-            $response = $client->request('GET', env('SLACK_API_URL').'/groups.list', [
+            $response = $client->request('GET', config('marketmartial.slack.api_url').'/groups.list', [
                     'headers' => $header,
             ]);
             $body = json_decode($response->getBody());
@@ -132,7 +132,7 @@ trait OrganisationSlackChat {
             "channel" => $organisation->slack_channel->value
         ];
         $header = [
-            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            "Authorization" => "Bearer ".config('marketmartial.slack.auth_bearer'), 
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
@@ -140,7 +140,7 @@ trait OrganisationSlackChat {
 
         try {
             $client = new Client();
-            $response = $client->request('POST', env('SLACK_API_URL').'/chat.postMessage', [
+            $response = $client->request('POST', config('marketmartial.slack.api_url').'/chat.postMessage', [
                     'headers' => $header,
                     'body'  =>  json_encode($body)
             ]);
@@ -160,7 +160,7 @@ trait OrganisationSlackChat {
     public function channelMessageHistory($user)
     {
         $header = [
-            "Authorization" => "Bearer ".env('SLACK_AUTH_BEARER'), 
+            "Authorization" => "Bearer ".config('marketmartial.slack.auth_bearer'), 
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'
         ];
@@ -172,7 +172,7 @@ trait OrganisationSlackChat {
         }
         try {
             $client = new Client();
-            $response = json_decode($client->request('GET', env('SLACK_API_URL').'/groups.history?channel='.$user->organisation->slack_channel->value, [
+            $response = json_decode($client->request('GET', config('marketmartial.slack.api_url').'/groups.history?channel='.$user->organisation->slack_channel->value, [
                     'headers' => $header,
             ])->getBody());
 
@@ -202,11 +202,11 @@ trait OrganisationSlackChat {
                 if(property_exists($message,'subtype') && $message->subtype === 'bot_message') {
                     $formatted_messages[] = (object) array(
                         "user_name" => $message->username,
-                        "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $message->text),
+                        "message" => str_replace("<@".config('marketmartial.slack.admin_id').">",config('marketmartial.slack.admin_ref'), $message->text),
                         "time_stamp" => $message->ts,
                         "status" => ($user->full_name == $message->username ? 'received' : null) 
                     );
-                } elseif(property_exists($message,'user') && $message->user === env('SLACK_ADMIN_ID') && !property_exists($message,'subtype')) {
+                } elseif(property_exists($message,'user') && $message->user === config('marketmartial.slack.admin_id') && !property_exists($message,'subtype')) {
                     $formatted_messages[] = (object) array(
                         "user_name" => "Market Martial",
                         "message" => $message->text,
@@ -225,13 +225,13 @@ trait OrganisationSlackChat {
             if(array_key_exists('subtype',$eventData) && $eventData["subtype"] === 'bot_message') {
                 $formatted_message_bot = array(
                     "user_name" => $eventData["username"],
-                    "message" => str_replace("<@".env('SLACK_ADMIN_ID').">",env('SLACK_ADMIN_REF'), $eventData["text"]),
+                    "message" => str_replace("<@".config('marketmartial.slack.admin_id').">",config('marketmartial.slack.admin_ref'), $eventData["text"]),
                     "time_stamp" => $eventData["ts"],
                     "status" => null
                 );
                 
                 event(new ChatMessageReceived($organisation,$formatted_message_bot));
-            } elseif(array_key_exists('user',$eventData) && $eventData["user"] === env('SLACK_ADMIN_ID') && !array_key_exists('subtype',$eventData)) {
+            } elseif(array_key_exists('user',$eventData) && $eventData["user"] === config('marketmartial.slack.admin_id') && !array_key_exists('subtype',$eventData)) {
                 $formatted_message_admin = array(
                     "user_name" => "Market Martial",
                     "message" => $eventData["text"],

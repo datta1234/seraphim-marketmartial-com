@@ -25,7 +25,7 @@ class CheckSlackToken implements Rule
      */
     public function passes($attribute, $value)
     {
-        return env('SLACK_VERIFICATION_TOKEN') === $value;
+        return config('marketmartial.slack.verification_token') === $value;
     }
 
     /**

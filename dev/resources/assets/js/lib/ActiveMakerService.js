@@ -24,6 +24,7 @@ state.keepalive.setInterval(() => {
         } 
     })
     .catch(err => {
+        console.log(err);
         //console.error("Ping Event: ", event);
         let re = confirm("Live update stream may have disconnected!\n\nThis may be due to session inactivity.\n\nRefresh Page Now?");
         if(re) {
