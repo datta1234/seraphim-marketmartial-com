@@ -13,8 +13,8 @@ class Slack
 
     function __construct() {
        $this->httpClient = new Client();
-       $this->baseUrl = env('SLACK_API_URL');
-       $this->authToken = "Bearer ".env('SLACK_AUTH_BEARER');
+       $this->baseUrl = config('marketmartial.slack.api_url');
+       $this->authToken = "Bearer ".config('marketmartial.slack.auth_bearer');
     }
 
 

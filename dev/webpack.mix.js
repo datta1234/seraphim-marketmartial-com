@@ -13,6 +13,17 @@ let mix = require('laravel-mix');
 mix;
 
 mix.webpackConfig({
+    module: {
+      rules: [
+        {
+          test: /package\.json$/,
+          loader: 'package-json-cleanup-loader',
+          options: {
+            only: ['version', 'name', 'otherParam']
+          }
+        }
+      ]
+    },
     resolve: {
       alias: {
         '~': path.resolve(__dirname, 'resources/assets/js')

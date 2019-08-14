@@ -994,7 +994,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     $this->sendUser)
                 );
             } catch(\Swift_TransportException $e) {
-                Log::error($e);
+                \Log::error($e);
             }
         }
 
@@ -1006,7 +1006,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     $this->recievingUser)
                 );
             } catch(\Swift_TransportException $e) {
-                Log::error($e);
+                \Log::error($e);
             }
         }
     }

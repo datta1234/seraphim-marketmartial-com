@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ConfirmOldPassword;
+use App\Rules\MicrosoftPasswordPolicy;
 
 class PasswordRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class PasswordRequest extends FormRequest
     {
         return [
             'old_password' => ['required',new ConfirmOldPassword()],
-            'password' => 'required|string|min:8|confirmed'
+            'password' => [
+                'required',
+                'confirmed',
+                'string',
+                new MicrosoftPasswordPolicy
+            ],
         ];
     }
 }

@@ -44,6 +44,18 @@
                         </label>
                     </div>
                 </div>
+
+                @if(Session::has('include_recaptcha') && Session::get('include_recaptcha'))
+                    <div class="form-group">
+                            {!! ReCaptcha::htmlFormSnippet() !!}
+                    </div>
+
+                    @if($errors->has('g-recaptcha-response'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('g-recaptcha-response') }}</strong>
+                        </span>
+                    @endif
+                @endif
             </div>
 
             <div class="form-group row mb-0">

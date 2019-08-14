@@ -49,6 +49,16 @@ class LoginController extends Controller
      */
     protected function validateLogin(Request $request)
     {
+        // Recaptcha will be include after the 3nd login attempt, attempts start at 0
+        if($this->limiter()->attempts($this->throttleKey($request)) >= 2) {
+            $request->session()->put('include_recaptcha', true);
+        }
+
+        // Will validate the recaptcha from the 4de login attempt, attempts start at 0
+        if($request->session()->has('include_recaptcha') && $request->session()->get('include_recaptcha')) {
+            $this->validate($request, ['g-recaptcha-response' => 'recaptcha']);
+        }
+
         $this->validate($request, [
             $this->username() => [
                 'required',
@@ -82,6 +92,9 @@ class LoginController extends Controller
         
         $request->session()->regenerate();
 
+        // Remove recaptcha from session after login
+        $request->session()->put('include_recaptcha', false);
+        
         $this->clearLoginAttempts($request);
 
         // add check to see if user has multiple logins and remove all that is not current login
