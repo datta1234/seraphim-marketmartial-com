@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                    <input id="password" type="password" class="form-control" name="password" required placeholder="Password">
+                    <input id="password" type="password" class="form-control" name="password" required placeholder="Password" autocomplete="off">
 
                     @if ($errors->has('password'))
                         <span class="help-block">
