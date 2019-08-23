@@ -38,7 +38,7 @@
                     <label for="password" class="col-md-3 offset-md-2 control-label">Password</label>
 
                     <div class="col-md-5">
-                        <input id="password" type="password" class="form-control" name="password" required>
+                        <input id="password" type="password" class="form-control" name="password" required autocomplete="off">
 
                         @if ($errors->has('password'))
                             <span class="help-block">
