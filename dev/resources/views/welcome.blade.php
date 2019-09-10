@@ -39,7 +39,7 @@
                 <div class="w-100 mb-3">
                     <div class="in-line-input pass-input">
                         
-                        <input id="password" type="password" class="form-control pb-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required>
+                        <input id="password" type="password" class="form-control pb-0 {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" placeholder="Password" required autocomplete="off">
 
                         @if ($errors->has('password'))
                             <div class="invalid-feedback">
