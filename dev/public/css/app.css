@@ -17634,6 +17634,10 @@ body > .popover > .arrow {
   margin-left: 0.8rem;
 }
 
+.organisations-table .admin-organisations-table a.mm-generic-trade-button {
+  color: #FFFFFF;
+}
+
 .create-user {
   display: inline;
 }
