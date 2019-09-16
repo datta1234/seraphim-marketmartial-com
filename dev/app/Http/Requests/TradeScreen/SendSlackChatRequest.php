@@ -23,9 +23,10 @@ class SendSlackChatRequest extends FormRequest
      */
     public function rules()
     {
+        $quick_message_ids = collect(config('marketmartial.slack.quick_messages'))->implode('id', ',');
         return [
             'new_message' => 'required_without:quick_message|string|max:1000',
-            'quick_message' => 'required_without:new_message|string|max:1000',
+            'quick_message' => 'required_without:new_message|integer|in:'.$quick_message_ids,
         ];
     }
 
@@ -36,8 +37,7 @@ class SendSlackChatRequest extends FormRequest
             'new_message.string' => 'Only text messages are accepted',
             'new_message.max' => 'Messages cannot be larger than a 1000 characters',
             'quick_message.required' => 'Message is required',
-            'quick_message.string' => 'Only text messages are accepted',
-            'quick_message.max' => 'Messages cannot be larger than a 1000 characters',
+            'quick_message.integer' => 'Incorrect quick message option sent',
         ];  
     }
 }
