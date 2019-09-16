@@ -55,6 +55,7 @@ Vue.component('terms-and-conditions', require('./components/Profile/Components/T
 
 // Admin Components
 Vue.component('users-table', require('./components/Admin/Users/UsersTableComponent.vue').default);
+Vue.component('organisations-table', require('./components/Admin/Organisations/OrganisationsTableComponent.vue').default);
 //Vue.component('create-user', require('./components/Admin/Users/CreateUserComponent.vue').default);
 Vue.component('booked-trades-table', require('./components/Admin/BookedTrades/BookedTradesTableComponent.vue').default);
 Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableComponent.vue').default);

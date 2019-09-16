@@ -183,6 +183,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		'as' => 'admin'
 	]);
 
+	Route::get('organisation-man', 'Admin\OrganisationManagementController@index')
+		->name('admin.organisation-man.index');
+	Route::put('organisation-man/{organisation}', 'Admin\OrganisationManagementController@update')
+		->name('admin.organisation-man.update');
+
 	Route::get('logging/download', 'Admin\ActivityLogController@download')->name('admin.logging.download');
     Route::get('logging', 'Admin\ActivityLogController@index')->name('admin.logging.index');
 

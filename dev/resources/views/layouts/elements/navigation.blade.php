@@ -31,6 +31,9 @@
 							<a class="dropdown-item" href="{{ route('admin.user.index') }}">
 								Users
 							</a>
+							<a class="dropdown-item" href="{{ route('admin.organisation-man.index') }}">
+								Organisations
+							</a>
 							<a class="dropdown-item" href="{{ route('admin.markets.index') }}">
 								Markets
 							</a>
