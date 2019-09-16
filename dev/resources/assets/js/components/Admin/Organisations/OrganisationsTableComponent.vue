@@ -158,7 +158,6 @@ export default {
                 {'slack_text_chat': true},
                 index, 
                 "- "+(organisation.slack_text_chat ? "Activate" : 'Deactivate') + " organisation chat.")
-            console.log($event, organisation, index);
         },
         changePage($event) {
             this.current_page = $event;
@@ -184,7 +183,6 @@ export default {
                     this.per_page = OrganisationsResponse.data.per_page;
                     this.total = OrganisationsResponse.data.total;
                     this.items = OrganisationsResponse.data.data;
-                    console.log("Items: ",this.items);
                     /*EventBus.$emit('loading', 'requestDates');
                     this.dates_loaded = true;*/
                     this.organisations_loaded = true;
