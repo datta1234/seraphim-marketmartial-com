@@ -62,6 +62,7 @@ export default class TradeConfirmation extends BaseModel {
                 date: "",
                 state: null,
                 swap_parties: null,
+                fee: null
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {

@@ -150,6 +150,7 @@ class TradeConfirmationGroup extends Model
                         : $parent_group_items->firstWhere('title', $item->title));
                 }
             })
+            ->values()
         ];
     }
 
