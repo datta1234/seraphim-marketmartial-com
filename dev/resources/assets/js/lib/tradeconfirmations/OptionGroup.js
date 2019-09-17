@@ -42,10 +42,6 @@ export default class OptionGroup {
                     this.gross_prem = this.setUpNumbers(item.value);
                     this.gross_prem_old = this.setUpNumbers(item.old_value);
                     break;
-                case 'Net Premiums':
-                    this.net_prem = this.setUpNumbers(item.value);
-                    this.net_prem_old = this.setUpNumbers(item.old_value);
-                    break;
                 
             }
         });

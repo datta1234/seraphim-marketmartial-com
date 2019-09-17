@@ -74,7 +74,6 @@
                     <th scope="col">Expiry</th>
                     <th scope="col">Volatility</th>
                     <th scope="col">Gross Prem</th>
-                    <th scope="col">Net Prem</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,12 +113,6 @@
                         <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
                         <!-- <div v-if="hasOldValue('option_groups',key,'gross_prem')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{  splitValHelper(option_group.gross_prem_old,' ',3) }}.
-                        </div> -->
-                    </td>
-                    <td>
-                        <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
-                        <!-- <div v-if="hasOldValue('option_groups',key,'net_prem')" class="font-weight-bold text-danger modal-info-text">
-                            Calculated value : {{  splitValHelper(option_group.net_prem_old,' ',3) }}.
                         </div> -->
                     </td>
                 </tr>
@@ -446,7 +439,6 @@
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     this.trading_accounts = response.data.trading_accounts;
-                    console.log("This: ",this.trading_accounts);
                 })
                 .catch(err => {
                     //console.error(err);
