@@ -1014,6 +1014,7 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
 
     public function calculateFee()
     {
+        // @TODO - change to calculated value, currently hardcoded with test value
         return 58.36;
     }
 }
