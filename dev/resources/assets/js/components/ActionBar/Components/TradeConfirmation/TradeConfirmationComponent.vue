@@ -263,7 +263,7 @@
             </table>
         </template>
         
-        <template v-if="trade_confirmation">
+        <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
             <div style="Display:inline;">
                 <h3 class="text-dark">Fees</h3>
             </div>
@@ -271,7 +271,7 @@
 
         <b-row>
             <b-col md="6">
-                <template v-if="trade_confirmation">
+                <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
                     <b-row>
                         <!-- Confirmation Fee -->
                         <b-col md="12">
