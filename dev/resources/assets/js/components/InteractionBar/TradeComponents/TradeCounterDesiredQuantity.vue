@@ -84,8 +84,8 @@
                 return this.tradeNegotiation.quantity > this.lastTradeNegotiation.quantity
             },
             killTrade() {
-                // @TODO - add kill logic
-                return true;
+                this.tradeNegotiation.trade_killed = true;
+                this.storeTradeNegotiation();
             },
             storeTradeNegotiation(){
                 this.server_loading = true;
