@@ -25,6 +25,7 @@ export default class TradeNegotiation extends BaseModel {
 		    is_offer: null,
             is_source_offer: null,
 		    is_dispute: false,
+            trade_killed: false,
             sent_by_me: false,
             sent_to_me: false,
             source_sent_by_me: false,
@@ -90,7 +91,8 @@ export default class TradeNegotiation extends BaseModel {
 			quantity: this.quantity,
 			traded: !!this.traded,
 			is_offer: !!this.is_offer,
-			is_dispute: this.is_dispute
+			is_dispute: this.is_dispute,
+            trade_killed: this.trade_killed
         };
     }
 

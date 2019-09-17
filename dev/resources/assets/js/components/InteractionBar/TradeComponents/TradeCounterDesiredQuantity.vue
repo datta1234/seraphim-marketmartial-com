@@ -9,22 +9,29 @@
         <b-row class="justify-content-md-center">
             <b-col cols="6">
 
-                  <b-button v-active-request  class="w-100 mt-1" 
-                                 :disabled="server_loading || amendInput()" 
-                                 size="sm" 
-                                 dusk="ibar-send-counter" 
-                                 variant="success" 
-                                 @click="storeTradeNegotiation()">
-                                    Trade
-                    </b-button>
-                     <b-button v-active-request  class="w-100 mt-1" 
-                                 :disabled="server_loading || !amendInput()" 
-                                 size="sm" 
-                                 dusk="ibar-send-amend" 
-                                 variant="primary" 
-                                 @click="storeTradeNegotiation()">
-                                    Send amended size
-                    </b-button>
+                <b-button v-active-request  class="w-100 mt-1" 
+                          :disabled="server_loading || amendInput()" 
+                          size="sm" 
+                          dusk="ibar-send-counter" 
+                          variant="success" 
+                          @click="storeTradeNegotiation()">
+                            Trade
+                </b-button>
+                <b-button v-active-request  class="w-100 mt-1" 
+                          :disabled="server_loading || !amendInput()" 
+                          size="sm" 
+                          dusk="ibar-send-amend" 
+                          variant="primary" 
+                          @click="storeTradeNegotiation()">
+                            Send amended size
+                </b-button>
+                <b-button v-active-request  class="w-100 mt-1" 
+                          size="sm" 
+                          dusk="ibar-no-trade"
+                          variant="primary"
+                          @click="killTrade()">
+                            No Trade
+                </b-button>
             </b-col>
         </b-row>
     </div>
@@ -76,7 +83,11 @@
             amendInput(){
                 return this.tradeNegotiation.quantity > this.lastTradeNegotiation.quantity
             },
-           storeTradeNegotiation(){
+            killTrade() {
+                // @TODO - add kill logic
+                return true;
+            },
+            storeTradeNegotiation(){
                 this.server_loading = true;
                 this.tradeNegotiation.is_offer = this.isOffer;
 
