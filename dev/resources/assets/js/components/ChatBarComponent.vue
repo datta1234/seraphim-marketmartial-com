@@ -102,9 +102,9 @@
         methods: {
             sendMessage() {
                 if(this.new_message || this.quick_message !== null) {
-                    let sendMessage = this.new_message ? 
-                        {new_message: this.new_message}
-                        : {quick_message:this.quick_message};
+                    let sendMessage = this.quick_message ? 
+                        {quick_message:this.quick_message}
+                        : {new_message: this.new_message};
                     axios.post(axios.defaults.baseUrl + "/trade/organisation-chat" , sendMessage)
                     .then(response => {
                         let chat_history = this.$refs.chat_history;
@@ -117,7 +117,8 @@
                             chat_history.scrollTop = chat_history.scrollHeight;
                         });
                     }, err => {
-                        console.error(err);
+                        this.quick_message = null;
+                        //console.error(err);
                         this.$toasted.error(err.response.data.message);
                     });
                 } else {

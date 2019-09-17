@@ -13,6 +13,10 @@ class SendSlackChatRequest extends FormRequest
      */
     public function authorize()
     {
+        if(isset($this->new_message) && !\Auth::user()->organisation->slack_text_chat) {
+            return false;
+        }
+
         return true;
     }
 
