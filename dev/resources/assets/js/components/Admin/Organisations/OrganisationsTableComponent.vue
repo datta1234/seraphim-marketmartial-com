@@ -36,7 +36,10 @@
                 {{ row.item.organisation.title }}
             </template>
             <template slot="status" slot-scope="row">
-                {{ OrganisationStatus(row.item) }}
+                {{ organisationStatus(row.item) }}
+            </template>
+            <template slot="slack_text_chat" slot-scope="row">
+                {{ chatStatus(row.item) }}
             </template>
             <template slot="toggle_chat" slot-scope="data">
                 <!-- Rounded toggle switch -->
@@ -76,7 +79,7 @@
 
             <b-row v-if="modal_data.organisation" class="justify-content-md-center">
                 <b-col class="text-center" cols="12">
-                    <p class="modal-info-text">Are you sure you want to apply the following on {{ modal_data.organisation.title }}? <br>
+                    <p class="modal-info-text">Are you sure you want to apply the following to {{ modal_data.organisation.title }}? <br>
                         {{ modal_data.confirm_actions }}
                     </p>
                 </b-col>
@@ -131,8 +134,8 @@ export default {
                 {text: "All", value: null},
                 {text: "Verified", value: 'active'},
                 {text: "Unverified", value: 'inactive'},
-                {text: "Chat Activated", value: 'chat_full'},
-                {text: "Chat Deactivated", value: 'chat_limited'},
+                {text: "Chat Active", value: 'chat_full'},
+                {text: "Chat Disabled", value: 'chat_limited'},
             ],
             sort_options: {
                 search: '',
@@ -157,7 +160,7 @@ export default {
                 organisation,
                 {'slack_text_chat': true},
                 index, 
-                "- "+(organisation.slack_text_chat ? "Activate" : 'Deactivate') + " organisation chat.")
+                "- "+(organisation.slack_text_chat ? "Disable" : "Activate") + " organisation chat.")
         },
         changePage($event) {
             this.current_page = $event;
@@ -193,11 +196,17 @@ export default {
                 //console.error(err);
             });
         },
-        OrganisationStatus(organisation) {
+        organisationStatus(organisation) {
             if(organisation.verified) {
                 return "Verified";
             }
             return "Unverified";
+        },
+        chatStatus(organisation) {
+            if(organisation.slack_text_chat) {
+                return "Active";
+            }
+            return "Disabled";
         },
         organisationAction() {
             let index = this.modal_data.organisation_index;
