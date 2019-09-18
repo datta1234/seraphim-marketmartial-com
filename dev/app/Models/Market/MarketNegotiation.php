@@ -1126,11 +1126,16 @@ class MarketNegotiation extends Model
                         "channel"   => config("marketmartial.slack.trade_channel")
                     ], 'trade');
                 }
-                // Notify an admin that a trade has been killed
                 if($tradeNegotiation->trade_killed) {
+                    // Notify an admin that a trade has been killed
                     \Slack::postMessage([
                         "text"      => $this->getMessage('trade_killed'),
                     ], 'notify');
+
+                    // Notify trading users that it has been killed
+                    $message = "Trade has been rejected.";
+                    $tradeNegotiation->initiateUser->organisation->notify("no_trade",$message,true);
+                    $tradeNegotiation->recievingUser->organisation->notify("no_trade",$message,true);
                 }
                
                 if($newMarketNegotiation )

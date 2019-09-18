@@ -622,6 +622,12 @@ const app = new Vue({
                         if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
                         }
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "no_trade") {
+                            this.$toasted.show(packet_data.message.data,{
+                                'className':"mm-confirm-toast",
+                                duration : 20000,
+                            }); 
+                        }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });
                 })
