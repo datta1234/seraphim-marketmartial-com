@@ -119,8 +119,12 @@ export default class TradeNegotiation extends BaseModel {
            return trade_negotiation.trade_negotiation_id == this.id;
         });
 
-        let text = this.getSortedTradingText();
-        text += this.traded ? " ("+this.quantity+")" : "";
+        let text;
+        if(this.trade_killed) {
+            text = "No Trade";
+        } else {
+            text = this.getSortedTradingText() + (this.traded ? " ("+this.quantity+")" : "");
+        }
 
         if(ChildTradeNegotiationIndex === -1) {
             return text;
