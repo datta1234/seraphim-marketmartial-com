@@ -45,7 +45,9 @@
 
 		</b-col>
 		@if(Auth::user()->isAdmin() == false)
-			<chat-bar></chat-bar>
+			<chat-bar :chat_limited="{{ $organisation->slack_text_chat }}" 
+					  :quick_messages="{{ json_encode($quick_messages) }}">
+			</chat-bar>
 		@endif
 		<!-- @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ]) -->
 	</b-row>
