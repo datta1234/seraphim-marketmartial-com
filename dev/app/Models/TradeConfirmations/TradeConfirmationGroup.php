@@ -118,8 +118,10 @@ class TradeConfirmationGroup extends Model
                 ->orWhere('is_seller',$is_sender);
             })
             ->get();
-        
+        // List of items to exlcude from getting previous value
         $item_ignore_list = ['is_offer'];
+        // List of items to remove from the formatted list
+        $exclude_list = ['Net Premiums'];
 
         return [
             'id'                            => $this->id,
@@ -133,6 +135,13 @@ class TradeConfirmationGroup extends Model
                 ->orWhere('is_seller',$is_sender);
             })
             ->get()
+            /* 
+             * Removes items we no longer want to send to the front
+             * As per Phase 2 that include Net Premiums
+             */
+            ->filter(function ($item, $key) use ($exclude_list) {
+                return !in_array($item->title, $exclude_list);
+            })
             ->map(function($item) use ($parent_group_items,$item_ignore_list) {
                 if(is_null($parent_group_items)) {
                     return $item->preFormatted();
@@ -141,6 +150,7 @@ class TradeConfirmationGroup extends Model
                         : $parent_group_items->firstWhere('title', $item->title));
                 }
             })
+            ->values()
         ];
     }
 

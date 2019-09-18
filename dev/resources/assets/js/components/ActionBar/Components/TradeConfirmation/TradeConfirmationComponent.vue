@@ -74,7 +74,6 @@
                     <th scope="col">Expiry</th>
                     <th scope="col">Volatility</th>
                     <th scope="col">Gross Prem</th>
-                    <th scope="col">Net Prem</th>
                 </tr>
               </thead>
               <tbody>
@@ -114,12 +113,6 @@
                         <span v-if="option_group.gross_prem != null">{{  splitValHelper(option_group.gross_prem,' ',3) }}</span>
                         <!-- <div v-if="hasOldValue('option_groups',key,'gross_prem')" class="font-weight-bold text-danger modal-info-text">
                             Calculated value : {{  splitValHelper(option_group.gross_prem_old,' ',3) }}.
-                        </div> -->
-                    </td>
-                    <td>
-                        <span v-if="option_group.net_prem != null">{{  splitValHelper(option_group.net_prem,' ',3)   }}</span>
-                        <!-- <div v-if="hasOldValue('option_groups',key,'net_prem')" class="font-weight-bold text-danger modal-info-text">
-                            Calculated value : {{  splitValHelper(option_group.net_prem_old,' ',3) }}.
                         </div> -->
                     </td>
                 </tr>
@@ -269,55 +262,89 @@
               </tbody>
             </table>
         </template>
-         <b-row>
-            <b-col md="5" offset="1">
-                <b-row v-if="new_errors.messages.length > 0" class="mt-4">
-                    <b-col cols="12">
-                        <ul>
-                            <li :key="index" v-for="(error, index) in new_errors.messages">
-                                <p class="text-danger mb-0">{{ error }}</p>
-                            </li>
-                        </ul>
+        
+        <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
+            <div style="Display:inline;">
+                <h3 class="text-dark">Fees</h3>
+            </div>
+        </template>
+
+        <b-row>
+            <b-col md="6">
+                <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
+                    <b-row>
+                        <!-- Confirmation Fee -->
+                        <b-col md="12">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr><th scope="col">Calculated Fee</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <span v-if="trade_confirmation.fee != null">
+                                            {{  splitValHelper(trade_confirmation.fee,' ',3) }}
+                                        </span>
+                                    </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                        </b-col>
+                    </b-row>
+                </template>
+
+                <b-row>
+                    <b-col md="10" offset="2">
+                        <b-row v-if="new_errors.messages.length > 0" class="mt-4">
+                            <b-col cols="12">
+                                <ul>
+                                    <li :key="index" v-for="(error, index) in new_errors.messages">
+                                        <p class="text-danger mb-0">{{ error }}</p>
+                                    </li>
+                                </ul>
+                            </b-col>
+                        </b-row>
                     </b-col>
                 </b-row>
             </b-col>
+            <b-col md="6">
+                <b-col md="10" offset-md="2" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
+                    <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
+                    <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Account Booking</label>
+                        <b-form-select v-model="selected_trading_account">
+                            <option  v-for="trading_account in trading_accounts" :value="trading_account">
+                                {{ trading_account.sub_account ? trading_account.sub_account : trading_account.safex_number }}
+                            </option>
+                        </b-form-select>
+                        <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
+                            <b-col cols="12">
+                                <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
+                            </b-col>
+                        </b-row>
+                        <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
+                    </div>
+                </b-col>
+               <b-col md="10" offset-md="2" v-else>
+                    <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
+                    <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
+                    <button v-active-request v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
 
-            <b-col md="5" offset-md="1" v-if="trade_confirmation.state == 'Pending: Initiate Confirmation'">
-                <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and calculate</button>
-                <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="send()">Send to counterparty</button>
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1">Account Booking</label>
-                    <b-form-select v-model="selected_trading_account">
-                        <option  v-for="trading_account in trading_accounts" :value="trading_account">
-                            {{ trading_account.sub_account ? trading_account.sub_account : trading_account.safex_number }}
-                        </option>
-                    </b-form-select>
-                    <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
-                        <b-col cols="12">
-                            <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
-                        </b-col>
-                    </b-row>
-                    <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
-                </div>
-            </b-col>
-           <b-col md="5" offset-md="7" v-else>
-                <button v-active-request type="button" :disabled="!can_send" class="btn mm-generic-trade-button w-100 mb-1" @click="confirm()">Im Happy, Trade Confirmed</button>
-                <button v-active-request v-if="action_list.has_calculate" type="button" :disabled="!can_calc" class="btn mm-generic-trade-button w-100 mb-1" @click="phaseTwo()">Update and Calculate</button>
-                <button v-active-request v-if="action_list.has_dispute" type="button" :disabled="!can_dispute" class="btn mm-generic-trade-button w-100 mb-1" @click="dispute()">Send Dispute</button>
-
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1">Account Booking</label>
-                    <b-form-select v-model="selected_trading_account">
-                        <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account }}
-                        </option>
-                    </b-form-select>
-                    <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
-                        <b-col cols="12">
-                            <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
-                        </b-col>
-                    </b-row>
-                    <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
-                </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Account Booking</label>
+                        <b-form-select v-model="selected_trading_account">
+                            <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account }}
+                            </option>
+                        </b-form-select>
+                        <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">
+                            <b-col cols="12">
+                                <p class="text-danger mb-0">{{ errors['trading_account_id'] }}</p>
+                            </b-col>
+                        </b-row>
+                        <a :href="base_url+ '/trade-settings'" class="btn mm-generic-trade-button w-100 mb-1 mt-1">Edit Accounts</a>
+                    </div>
+                </b-col>
             </b-col>
         </b-row> 
 
@@ -446,7 +473,6 @@
                 axios.get(axios.defaults.baseUrl + '/trade-accounts')
                 .then(response => {
                     this.trading_accounts = response.data.trading_accounts;
-                    console.log("This: ",this.trading_accounts);
                 })
                 .catch(err => {
                     //console.error(err);

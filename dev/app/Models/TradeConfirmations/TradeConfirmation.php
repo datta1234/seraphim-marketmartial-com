@@ -253,6 +253,7 @@ class TradeConfirmation extends Model
             'date'                      => Carbon::now()->format("Y-m-d"),
             
             'traded_at'                 => $this->tradeNegotiation->updated_at,
+            'fee'            => $this->calculateFee()
         ];
     }
 
@@ -1009,5 +1010,11 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                 \Log::error($e);
             }
         }
+    }
+
+    public function calculateFee()
+    {
+        // @TODO - change to calculated value, currently hardcoded with test value
+        return 58.36;
     }
 }
