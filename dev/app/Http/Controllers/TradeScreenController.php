@@ -32,7 +32,8 @@ class TradeScreenController extends Controller
             'organisation'  => $organisation, 
             'total_rebate'  => $total_rebate,
             'server_time'   => $server_time,
-            'closing_time'  => $closing_time
+            'closing_time'  => $closing_time,
+            'quick_messages'=> config('marketmartial.slack.quick_messages')
         ]);
     }
 }

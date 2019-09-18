@@ -101,9 +101,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
 
-	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
-		'only' => ['store','index']
-	]);
+	Route::get('/organisation-chat', 'TradeScreen\ChatController@index');
+	Route::post('/organisation-chat', 'TradeScreen\ChatController@sendChat');
 
 	// Removed as per email also commented on Task [MM-987]
 	/*Route::middleware(['timeWindowRestrictTrade'])->group(function () {*/

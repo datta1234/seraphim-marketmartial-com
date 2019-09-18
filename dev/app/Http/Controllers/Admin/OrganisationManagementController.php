@@ -90,18 +90,18 @@ class OrganisationManagementController extends Controller
                 if($request->ajax()) {
                     return response()->json([
                         'data' => $organisation,
-                        'message' => $organisation->slack_text_chat ? 'Chat Reactivated.': 'Chat Deactivated.'
+                        'message' => $organisation->slack_text_chat ? 'Chat Activated.': 'Chat Disabled.'
                     ]);
                 }
-                return redirect()->back()->with('success', $organisation->slack_text_chat ? 'Chat Reactivated.': 'Chat Deactivated.');
+                return redirect()->back()->with('success', $organisation->slack_text_chat ? 'Chat Activated.': 'Chat Disabled.');
             }
             if($request->ajax()) {
                 return response()->json([
                         'data' => null,
-                        'message' => $request->input('active') ? 'Failed to Reactivate the Organisation Chat.' : 'Failed to Deactivated the Organisation Chat.'
+                        'message' => $request->input('active') ? 'Failed to Activate the Organisation Chat.' : 'Failed to Disable the Organisation Chat.'
                     ],500);
             }
-            return redirect()->back()->with('error', $request->input('active') ? 'Failed to Reactivate the User.' : 'Failed to Deactivated the User .');
+            return redirect()->back()->with('error', $request->input('active') ? 'Failed to Activate the Organisation Chat.' : 'Failed to Disable the Organisation Chat.');
         } else {
            if($request->ajax()) {
                 return response()->json([
