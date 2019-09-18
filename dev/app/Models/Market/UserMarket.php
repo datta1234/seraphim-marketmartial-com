@@ -318,7 +318,7 @@ class UserMarket extends Model
     */
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
-        return ( $trade ? !$trade->traded : false );
+        return ( $trade ? !$trade->traded && !$trade->trade_killed : false );
     }
 
     /**
