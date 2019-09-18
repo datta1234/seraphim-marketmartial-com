@@ -551,7 +551,7 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function isTrading() {
-        return $this->tradeNegotiations->count() > 0 && $this->lastTradeNegotiation->traded == false;
+        return $this->tradeNegotiations->count() > 0 && $this->lastTradeNegotiation->traded == false && $this->lastTradeNegotiation->trade_killed == false;
     }
 
     /**
@@ -639,6 +639,18 @@ class MarketNegotiation extends Model
                 }
                 
                 return $term." At Best: ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+            case 'trade_killed':
+                $tradeNegotiation = $this->lastTradeNegotiation;
+                $marketRequest = $this->userMarket->userMarketRequest;
+
+                $buyer  =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->recievingUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->initiateUser->organisation()->pluck('title')[0];
+                $seller =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->initiateUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->recievingUser->organisation()->pluck('title')[0];
+                return "No Trade occured between ".$buyer." (buyer) and ".$seller." (seller) on ".$marketRequest->getSummary();
             break;
         }
     }
@@ -870,6 +882,13 @@ class MarketNegotiation extends Model
         return $this->is_repeat && $this->marketNegotiationParent && $this->marketNegotiationParent->is_repeat;
     }
 
+    public function isKilled()
+    {
+        return $this->tradeNegotiations()->where(function($q){
+            return $q->where('trade_killed',true);
+        })->exists();
+    }
+
     public function getLatest($side)
     {
         $side = ( $side == 'bid' ? 'bid' : 'offer' );
@@ -1067,8 +1086,17 @@ class MarketNegotiation extends Model
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //switch the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
 
+                if($tradeNegotiation->trade_killed)
+                {
+                    /*
+                     * To ensure no work the balance clauses gets triggered down the line,
+                     *  fail save but on a no trade the contracts should remain the same.
+                     */
+                    $tradeNegotiation->quantity = $counterNegotiation->quantity;
+                    $tradeNegotiation->traded = false;
+
                 //if it is greater it is an amend but if it is less or eqaul it is traded
-                if($tradeNegotiation->quantity == $counterNegotiation->quantity)
+                }else if($tradeNegotiation->quantity == $counterNegotiation->quantity)
                 {
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
@@ -1091,11 +1119,23 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
+                // Notify the admin of a trade
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
                         "text"      => $this->getMessage('market_traded'),
                         "channel"   => config("marketmartial.slack.trade_channel")
                     ], 'trade');
+                }
+                if($tradeNegotiation->trade_killed) {
+                    // Notify an admin that a trade has been killed
+                    \Slack::postMessage([
+                        "text"      => $this->getMessage('trade_killed'),
+                    ], 'notify');
+
+                    // Notify trading users that it has been killed
+                    $message = "Trade has been rejected.";
+                    $tradeNegotiation->initiateUser->organisation->notify("no_trade",$message,true);
+                    $tradeNegotiation->recievingUser->organisation->notify("no_trade",$message,true);
                 }
                
                 if($newMarketNegotiation )

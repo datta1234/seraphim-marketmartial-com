@@ -252,7 +252,6 @@
             this.chatBarListener();
             this.newChatMessageListener();
             this.loadChatHistory();
-            console.log("Test", this.quick_messages);
         }
     }
 </script>
