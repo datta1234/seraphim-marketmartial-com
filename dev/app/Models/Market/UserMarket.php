@@ -971,6 +971,20 @@ class UserMarket extends Model
         if($this->isAdminContext()) {
             $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
+
+            // Admin needs to see applied condition, sending the active condition.
+            // Might need to change this if the admin requires more info to its own property
+            $data['active_conditions'] = $this->activeConditionNegotiations
+                ->map(function($cond) use ($uneditedmarketNegotiations) {
+                    return [
+                        'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                        'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                            return $item->setOrgContext($this->resolveOrganisation())
+                                        ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                        })->values(),
+                        'type'      => $cond->activeConditionType
+                    ];
+                })->values();
         }
 
         return $data;
