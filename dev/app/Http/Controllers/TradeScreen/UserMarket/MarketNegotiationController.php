@@ -9,6 +9,7 @@ use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationImproveBestRequest;
+use App\Http\Requests\TradeScreen\UserMarket\AlterTradeAtBestTimerRequest;
 
 class MarketNegotiationController extends Controller
 {
@@ -300,5 +301,20 @@ class MarketNegotiationController extends Controller
         return ['success'=>true, 'message'=>'Improvement Sent'];
     }
 
+    /**
+     * Reset trade-at-best condition timer
+     *
+     * @param  \App\Http\Requests\TradeScreen\UserMarket\AlterTradeAtBestTimerRequest  $request
+     * @param  \App\Models\Market\UserMarket  $userMarket
+     * @return \Illuminate\Http\Response
+     */
+    public function alterTradeAtBestTimer(AlterTradeAtBestTimerRequest $request, UserMarket $userMarket)
+    {
+        // @TODO - finish authorize policy depending on logic needed
+        // currently on MarketNegotiationPolicy
+        //$this->authorize('alterTradeAtBestTimer',MarketNegotiation::class);
 
+        // @TODO - add logic to reset timer
+        dd($request->all());
+    }
 }

@@ -53,14 +53,14 @@
                               size="sm" 
                               dusk="ibar-condition-end" 
                               variant="primary" 
-                              @click="doEnd()">
+                              @click="alterTimer('end')">
                                 End Timer
                     </b-button>
                     <b-button v-active-request class="float-right admin-condition-btn"  
                               size="sm" 
                               dusk="ibar-condition-reset" 
                               variant="primary" 
-                              @click="doReset()">
+                              @click="alterTimer('reset')">
                                 Reset Timer
                     </b-button>
             
@@ -117,11 +117,16 @@
                     this.errors = err.errors;
                 });
             },
-            doEnd() {
-
-            },
-            doReset() {
-
+            alterTimer(option) {
+                this.negotiation.alterTradeAtBestTimer(option)
+                .then(response => {
+                    // @TODO - review best way to reset timer once it has been reset
+                    this.timer_value = this.negotiation.getTimeoutRemaining();
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.errors = err.errors;
+                });
             },
             startTimer() {
                 if(this.timer != null) {

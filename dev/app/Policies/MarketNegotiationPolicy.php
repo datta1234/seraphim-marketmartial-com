@@ -156,4 +156,13 @@ class MarketNegotiationPolicy
         return $user->isTrader();
     }
 
+    public function alterTradeAtBestTimer(User $user)
+    {
+        if($user->isAdmin()) {
+            return true;
+        }
+        if(!$user->isTrader()) { 
+            return false; 
+        }
+    }
 }

@@ -325,7 +325,29 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         });
     }
-    
+
+    alterTradeAtBestTimer(option) {
+        // catch not assigned to a market request yet!
+        if(!this._user_market || this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Market"));
+            });
+        }
+
+        let data = {};
+        data[option] = true;
+        
+        return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl +"/trade/user-market/"+this._user_market.id+"/market-negotiation/reset-timer",data)
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        });
+    }
     
     getQuantityType()
     {

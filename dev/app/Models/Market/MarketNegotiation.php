@@ -30,6 +30,7 @@ class MarketNegotiation extends Model
 	 * @property boolean $has_premium_calc
 	 * @property boolean $is_repeat
 	 * @property boolean $is_accepted
+     * @property boolean $job_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -73,6 +74,8 @@ class MarketNegotiation extends Model
             "cond_is_subject",
             "cond_buy_mid",
             "cond_buy_best",
+
+            "job_id"
     ];
 
     protected $hidden = ["user_id","user"];
@@ -107,6 +110,13 @@ class MarketNegotiation extends Model
         "cond_buy_mid" => null,
         "cond_buy_best" => null,
     ];
+
+    /**
+     *  Used in the instance where a condition is applied and a job is dispactched on save
+     *  where the the job id needs to be attached to the MarketNegotiation to avoid an
+     *  endless loop of saving and dispatching a job.
+     */
+    public $conditions_is_applied = false;
 
     /**
      * The attributes that should be mutated to dates.
@@ -1372,12 +1382,26 @@ class MarketNegotiation extends Model
             $this->timeout_cond_applied = true;
         }
     }
+
     public function applyCondTimeoutPostCondition() {
         if($this->timeout_cond_applied) {
             $job = new \App\Jobs\MarketNegotiationTimeout($this);
             $timeout = $this->getApplicableTimeout(); // mins
-            dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
+            $job_id = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
+
+            $this->conditions_is_applied = true;
+            $this->update(["job_id"=>$job_id]);
         }
+    }
+
+    /**
+     * Reset a Condition Timeout either fully or to a set time interval
+     */
+    public function resetCondTimeout() {
+        // @TODO - delete the current job related to this negotiation
+
+        // @TODO - set handle time
+        $this->applyCondTimeoutCondition(); // force it
     }
 
     /**

@@ -11,6 +11,11 @@ namespace App\Traits;
 
     Conditons are applied based on a method name pattern of "apply<_ConditonNameInCamelCase_>Condtion"
     eg: applyMyThingCondition(){ ... }
+
+    Add the following boolean attribute to the model applying conditions, and toggle to skip an endless loop
+    when updating model post save.
+    
+        public $conditions_applied = false;
 */
 trait AppliesConditions {
     
@@ -42,6 +47,11 @@ trait AppliesConditions {
         });
 
         static::saved(function($item) {
+            if(property_exists($item,'conditions_is_applied') && $item->conditions_is_applied) {
+                $item->conditions_is_applied = false;
+                return;
+            }
+            
             if($item->applicableConditions) {
                 // go through all registered condition attributes to run post application
                 foreach($item->applicableConditions as $attr => $default) {
