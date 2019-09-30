@@ -310,8 +310,7 @@ class MarketNegotiationController extends Controller
      */
     public function alterTradeAtBestTimer(AlterTradeAtBestTimerRequest $request, UserMarket $userMarket, MarketNegotiation $marketNegotiation)
     {
-        // @TODO - finish authorize policy depending on logic needed
-        $this->authorize('alterTradeAtBestTimer',MarketNegotiation::class);
+        $this->authorize('alterTradeAtBestTimer',$marketNegotiation);
 
         if($request->has("end") && $request->get("end")) {
             $option = "end";

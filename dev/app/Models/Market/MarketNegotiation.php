@@ -572,8 +572,16 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function timeoutExpired() {
-        $timeout = $this->getApplicableTimeout();
-        return is_null($this->cond_expiry) ? true : $this->cond_expiry > \Carbon\Carbon::now()->subMinutes($timeout);
+        return is_null($this->cond_expiry) ? true : $this->cond_expiry <= \Carbon\Carbon::now();
+    }
+
+    /**
+    * Check if the timeout has been locked and can no longer be edited
+    * @return Boolean
+    */
+    public function timeoutLocked() {
+        $lock_timeout = config('marketmartial.thresholds.lock_timeout');
+        return is_null($this->cond_expiry) ? true : $this->cond_expiry <= \Carbon\Carbon::now()->addSeconds($lock_timeout);
     }
 
     public function getApplicableTimeout() {
@@ -1421,7 +1429,7 @@ class MarketNegotiation extends Model
         // Find current Job
         $current_job_id = $this->job_id;
         $job = DB::table('jobs')->where("id",$current_job_id)->count();
-        if($job < 1) {
+        if($job < 1 || $this->timeoutLocked()) {
             return false;
         }
 
