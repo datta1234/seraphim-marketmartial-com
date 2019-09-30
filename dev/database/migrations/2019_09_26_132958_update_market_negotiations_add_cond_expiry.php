@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateMarketNegotiationsAddJobId extends Migration
+class UpdateMarketNegotiationsAddCondExpiry extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,7 @@ class UpdateMarketNegotiationsAddJobId extends Migration
     public function up()
     {
         Schema::table('market_negotiations', function (Blueprint $table) {
-            $table->bigInteger('job_id')->unsigned()->nullable();
-
-            /*$table->foreign('job_id')
-                ->references('id')->on('jobs');*/
+            $table->timestamp('cond_expiry')->nullable();
         });
     }
 
@@ -29,8 +26,7 @@ class UpdateMarketNegotiationsAddJobId extends Migration
     public function down()
     {
         Schema::table('market_negotiations', function (Blueprint $table) {
-            //$table->dropForeign(['job_id']);
-            $table->dropColumn('job_id');
+            $table->dropColumn('cond_expiry');
         });
     }
 }

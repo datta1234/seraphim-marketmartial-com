@@ -159,10 +159,10 @@ class MarketNegotiationPolicy
     public function alterTradeAtBestTimer(User $user)
     {
         if($user->isAdmin()) {
+            // @TODO - add checks to see if admin can action this
             return true;
-        }
-        if(!$user->isTrader()) { 
-            return false; 
-        }
+        } 
+        
+        return false; 
     }
 }

@@ -308,13 +308,34 @@ class MarketNegotiationController extends Controller
      * @param  \App\Models\Market\UserMarket  $userMarket
      * @return \Illuminate\Http\Response
      */
-    public function alterTradeAtBestTimer(AlterTradeAtBestTimerRequest $request, UserMarket $userMarket)
+    public function alterTradeAtBestTimer(AlterTradeAtBestTimerRequest $request, UserMarket $userMarket, MarketNegotiation $marketNegotiation)
     {
         // @TODO - finish authorize policy depending on logic needed
-        // currently on MarketNegotiationPolicy
-        //$this->authorize('alterTradeAtBestTimer',MarketNegotiation::class);
+        $this->authorize('alterTradeAtBestTimer',MarketNegotiation::class);
 
-        // @TODO - add logic to reset timer
-        dd($request->all());
+        if($request->has("end") && $request->get("end")) {
+            $option = "end";
+            $message = "Condition timer Ended";
+        } else if($request->has("reset") && $request->get("reset")) {
+            $option = "reset";
+            $message = "Condition timer Reset";
+        } else {
+            return response()->json(['success'=>false,'data'=>null ,'message'=>'Invalid condition timer alter request'], 422);
+        }
+
+        $result = $marketNegotiation->resetCondTimeout($option);
+
+        //Broadcast new market request;
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        if($result) {
+            return response()->json(['success'=>true, 'data'=>null ,'message'=>$message]);
+
+        } else {
+            return response()->json([
+                'success'=>false,
+                'data'=>null ,
+                'message'=>'There was a problem altering the condition timer'
+            ], 500);
+        }
     }
 }
