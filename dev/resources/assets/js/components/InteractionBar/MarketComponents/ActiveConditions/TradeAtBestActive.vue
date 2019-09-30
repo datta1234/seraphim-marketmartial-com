@@ -48,7 +48,7 @@
                 parent="cond-container">
             </ibar-trade-desired-quantity>
         </b-col>
-        <b-col cols="12 mt-1" v-if="$root.is_admin">
+        <b-col cols="12 mt-1" v-if="$root.is_admin && !negotiation.isTimeoutLocked()">
                     <b-button v-active-request class="admin-condition-btn"  
                               size="sm" 
                               dusk="ibar-condition-end" 
@@ -120,7 +120,6 @@
             alterTimer(option) {
                 this.negotiation.alterTradeAtBestTimer(option)
                 .then(response => {
-                    // @TODO - review best way to reset timer once it has been reset
                     this.timer_value = this.negotiation.getTimeoutRemaining();
                     this.errors = [];
                 })

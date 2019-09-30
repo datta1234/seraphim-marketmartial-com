@@ -59,6 +59,7 @@ export default class UserMarketNegotiation extends BaseModel {
             creation_idx: null,
             created_at: moment(),
             cond_expiry: null,
+            lock_timeout: null,
 
             // optional
             bid_user: null,
@@ -191,6 +192,13 @@ export default class UserMarketNegotiation extends BaseModel {
         let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         return diff > 0;
+    }
+
+    isTimeoutLocked() {
+        if(!this.lock_timeout) {
+            return false;
+        }
+        return moment(moment().add(this.lock_timeout, "seconds")).isSameOrAfter(this.cond_expiry);
     }
 
     storeWorkBalance(user_market_request,user_market,quantity) {

@@ -1303,6 +1303,7 @@ class MarketNegotiation extends Model
             "applicable_timeout"    => $this->getApplicableTimeout(),
             "created_at"            => $this->created_at->toIso8601String(),
             "cond_expiry"           => is_null($this->cond_expiry) ? $this->cond_expiry : $this->cond_expiry->toIso8601String(),
+            "lock_timeout"          => config('marketmartial.thresholds.lock_timeout'),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
                 
                 return $tradeNegotiation->setOrgContext($this->resolveOrganisation())->preFormatted();
@@ -1429,7 +1430,7 @@ class MarketNegotiation extends Model
         // Find current Job
         $current_job_id = $this->job_id;
         $job = DB::table('jobs')->where("id",$current_job_id)->count();
-        if($job < 1 || $this->timeoutLocked()) {
+        if($job < 1) {
             return false;
         }
 

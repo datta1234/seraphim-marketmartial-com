@@ -319,7 +319,11 @@ class MarketNegotiationController extends Controller
             $option = "reset";
             $message = "Condition timer Reset";
         } else {
-            return response()->json(['success'=>false,'data'=>null ,'message'=>'Invalid condition timer alter request'], 422);
+            return response()->json([
+                'success'=>false,
+                'data'=>null ,
+                'message'=>'Invalid condition timer alter request'
+            ], 422);
         }
 
         $result = $marketNegotiation->resetCondTimeout($option);
