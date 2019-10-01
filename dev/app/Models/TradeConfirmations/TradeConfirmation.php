@@ -259,21 +259,21 @@ class TradeConfirmation extends Model
 
     public function canInteract()
     {
-        $current_org_id =  $this->resolveOrganisationId();
-        $is_sender =   $current_org_id == $this->sendUser->organisation_id;
-        $is_reciever = $current_org_id == $this->recievingUser->organisation_id;
-        $senderStatuses = [1,3];
-        $receiverStatuses = [2,5];
-        
-        if($is_sender)
-        {
-         return  in_array($this->trade_confirmation_status_id,$senderStatuses);
-     }else if($is_reciever)
-     {
-        return in_array($this->trade_confirmation_status_id,$receiverStatuses);
-    }
+            $current_org_id =  $this->resolveOrganisationId();
+            $is_sender =   $current_org_id == $this->sendUser->organisation_id;
+            $is_reciever = $current_org_id == $this->recievingUser->organisation_id;
+            $senderStatuses = [1,3];
+            $receiverStatuses = [2,5];
+            
+            if($is_sender)
+            {
+             return  in_array($this->trade_confirmation_status_id,$senderStatuses);
+         }else if($is_reciever)
+         {
+            return in_array($this->trade_confirmation_status_id,$receiverStatuses);
+        }
 
-}
+    }
 
     /**
     * Return relation based of _id_foreign index
@@ -335,77 +335,74 @@ class TradeConfirmation extends Model
     * Return relation based of trade_confirmation_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder
     */
-   public function tradeConfirmationGroups()
-   {
-    return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
-        'trade_confirmation_id');
-}
+    public function tradeConfirmationGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id');
+    }
 
-public function scopeMarketType($query, $market_type_id)
-{
- return $query->where(function ($q)  use ($market_type_id) {
-    $q->whereHas('market', function ($qq) use ($market_type_id) {
-        $qq->where('market_type_id', $market_type_id);
-    });
-}
-);
-}
-
-public function scopeSentByMyOrganisation($query, $organisation_id)
-{
- return $query->where(function ($q)  use ($organisation_id) {
-    $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
-        $qq->where('organisation_id', $organisation_id);
-    });
-}
-);
-}
-
-public function scopeSentToMyOrganisation($query, $organisation_id)
-{
- return $query->where(function ($q)  use ($organisation_id) {
-    $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
-        $qq->where('organisation_id', $organisation_id);
-    });
-}
-);
-}
-
-
-
-public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
-{
-    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
-        $tlq->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
-            $query->where('organisation_id', $operator,$organistation_id);
-        })
-        ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
-            $query->where('organisation_id', $operator,$organistation_id);
+    public function scopeMarketType($query, $market_type_id)
+    {
+        return $query->where(function ($q)  use ($market_type_id) {
+            $q->whereHas('market', function ($qq) use ($market_type_id) {
+                $qq->where('market_type_id', $market_type_id);
+            });
         });
-    });
+    }
 
-}
+    public function scopeSentByMyOrganisation($query, $organisation_id)
+    {
+        return $query->where(function ($q)  use ($organisation_id) {
+            $q->whereHas('sendUser', function ($qq) use ($organisation_id) {
+                $qq->where('organisation_id', $organisation_id);
+            });
+        });
+    }
 
-public function scopeUserInvolved($query, $user_id, $operator, $or = false)
-{
-    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($user_id,$operator) {
-        $tlq->where('send_user_id', $operator,$user_id)
-        ->orWhere('receiving_user_id', $operator,$user_id);
-    });
-}    
+    public function scopeSentToMyOrganisation($query, $organisation_id)
+    {
+        return $query->where(function ($q)  use ($organisation_id) {
+            $q->whereHas('recievingUser', function ($qq) use ($organisation_id) {
+                $qq->where('organisation_id', $organisation_id);
+            });
+        });
+    }
 
-public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = false)
-{
-    return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organistation_id) {
-        $tlq->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
-            $query->whereHas('userMarket', function ($query) use ($organistation_id) {
-                $query->whereHas('user', function ($query) use ($organistation_id) {
-                    $query->where('organisation_id', $organistation_id);
+
+
+    public function scopeOrganisationInvolved($query, $organistation_id, $operator, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq)  use ($organistation_id,$operator) {
+            $tlq->whereHas('sendUser', function ($query) use ($organistation_id,$operator) {
+                $query->where('organisation_id', $operator,$organistation_id);
+            })
+            ->orWhereHas('recievingUser', function ($query) use ($organistation_id,$operator) {
+                $query->where('organisation_id', $operator,$organistation_id);
+            });
+        });
+
+    }
+
+    public function scopeUserInvolved($query, $user_id, $operator, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($user_id,$operator) {
+            $tlq->where('send_user_id', $operator,$user_id)
+            ->orWhere('receiving_user_id', $operator,$user_id);
+        });
+    }    
+
+    public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = false)
+    {
+        return $query->{($or ? 'orWhere' : 'where')}(function ($tlq) use ($organistation_id) {
+            $tlq->whereHas('tradeNegotiation', function ($query) use ($organistation_id) {
+                $query->whereHas('userMarket', function ($query) use ($organistation_id) {
+                    $query->whereHas('user', function ($query) use ($organistation_id) {
+                        $query->where('organisation_id', $organistation_id);
+                    });
                 });
             });
         });
-    });
-}
+    }
 
     public function resolveUserMarketRequestItems()
     {
@@ -479,7 +476,8 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         return $resolved_items;
     }
 
-    public function resolveUnderlying() {
+    public function resolveUnderlying()
+    {
         // Get the user market request items
         $underlyings = array();
         $user_market_request_tradables = $this->marketRequest->userMarketRequestTradables;
@@ -491,50 +489,50 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
         return $underlyings;
     }
 
-        public function setUp($tradeNegotiation)
-        {
+    public function setUp($tradeNegotiation)
+    {
 
-            $marketNegotiation = $tradeNegotiation->marketNegotiation;
-            $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
-            $tradeNegotiationRoot = $tradeNegotiation->getRoot();
-            $this->fill([
-                'send_user_id' => $tradeNegotiationRoot->initiate_user_id,
-                'receiving_user_id' => $tradeNegotiationRoot->recieving_user_id,
-                'trade_negotiation_id' => $tradeNegotiation->id,
-                'stock_id' => null,
-                'market_id' => $marketRequest->market_id,
-                'trade_structure_id' =>  $marketRequest->trade_structure_id,
-                'user_market_request_id' => $marketRequest->id,
-                'send_trading_account_id' => null,
-                'receiving_trading_account_id' => null,
-                'trade_confirmation_status_id' =>1,
-            ]);
-            $this->save();
+        $marketNegotiation = $tradeNegotiation->marketNegotiation;
+        $marketRequest = $marketNegotiation->userMarket->userMarketRequest;
+        $tradeNegotiationRoot = $tradeNegotiation->getRoot();
+        $this->fill([
+            'send_user_id' => $tradeNegotiationRoot->initiate_user_id,
+            'receiving_user_id' => $tradeNegotiationRoot->recieving_user_id,
+            'trade_negotiation_id' => $tradeNegotiation->id,
+            'stock_id' => null,
+            'market_id' => $marketRequest->market_id,
+            'trade_structure_id' =>  $marketRequest->trade_structure_id,
+            'user_market_request_id' => $marketRequest->id,
+            'send_trading_account_id' => null,
+            'receiving_trading_account_id' => null,
+            'trade_confirmation_status_id' =>1,
+        ]);
+        $this->save();
 
 
 
         //3 index
         //4 single 
-            $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
-            $ratio = $tradeNegotiation->getTradingRatio();
-            foreach($groups as $key => $tradeStructureGroup) {
+        $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
+        $ratio = $tradeNegotiation->getTradingRatio();
+        foreach($groups as $key => $tradeStructureGroup) {
 
-                $tradeGroup = $this->tradeConfirmationGroups()->create([
-                    'trade_structure_group_id'  =>  $tradeStructureGroup->id,
-                    'trade_confirmation_id'     =>  $this->id,
-                    "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
-                    'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
-                ]);
+            $tradeGroup = $this->tradeConfirmationGroups()->create([
+                'trade_structure_group_id'  =>  $tradeStructureGroup->id,
+                'trade_confirmation_id'     =>  $this->id,
+                "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
+                'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
+            ]);
 
-                $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
+            $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
 
-                $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio);
-            }
+            $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio);
+        }
 
-            return $this;
-        } 
+        return $this;
+    } 
 
-     /**
+    /**
      * Return a simple or query object based on the search term
      *
      * @param string $term
@@ -544,11 +542,11 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-     private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio)
-     {
+    private function setUpItems($isOption,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio)
+    {
         $delta_one_list = ['efp', 'rolls', 'efp_switch'];
 
-         foreach($tradeStructureGroup->items as $key => $item) {
+        foreach($tradeStructureGroup->items as $key => $item) {
 
             $value = null;
             switch ($item->title) {
@@ -722,9 +720,9 @@ public function scopeOrgnisationMarketMaker($query, $organistation_id, $or = fal
                     'value' =>  $value,
                     'trade_confirmation_group_id' => $tradeStructureGroup->id
                 ]);
-           }         
-       }
-   }
+            }         
+        }
+    }
 
     public function updateGroups($groups, $update_only = null, $update_exclude = null)
     {
