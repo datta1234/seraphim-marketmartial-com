@@ -1,6 +1,10 @@
 <?php 
         //fly selected, outright -> force yes
         //efp switch, risky, caly,options swicth, -> no force select
+        /**
+         * NOTE: Fees trade_confirmation_group is post live addition and thus
+         *  continues on the last original id for items
+         */ 
 return [
     [
         // __trade_structure__
@@ -119,6 +123,19 @@ return [
                                 "id" => 15,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 163,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -243,6 +260,19 @@ return [
                                 "id" => 30,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 164,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -448,6 +478,19 @@ return [
                                 "id" => 55,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 165,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -681,6 +724,19 @@ return [
                                 "id" => 84,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 166,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -953,6 +1009,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 167,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
             ],
@@ -1131,6 +1200,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 168,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -1206,6 +1288,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 169,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -1267,6 +1362,19 @@ return [
                                 "id" => 152,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "Fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 170,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -1368,6 +1476,13 @@ return [
                         "title" => "Future",
                         "type" => "double"   
                     ],
+                    [
+                        // __item__
+                        "id" => 171,
+                        "title"=>"Fee Total",
+                        "type"=> "double",
+                        "update_seed"=> true
+                    ]
                 ]
             ]
         ],
