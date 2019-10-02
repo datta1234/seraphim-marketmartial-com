@@ -228,6 +228,9 @@ class TradeConfirmation extends Model
             'future_groups'             => $this->futureGroups->map(function($item) use ($is_sender){
                 return $item->preFormatted($is_sender);
             })->toArray(),
+            'fee_groups'                => $this->feeGroups->map(function($item) use ($is_sender){
+                return $item->preFormatted($is_sender);
+            })->toArray(),
             'request_groups'                => $this->tradeStructureSlug == 'var_swap' ? $this->marketRequest->userMarketRequestGroups->map(function($item) {
                     return $item->preFormatted();
                 })->toArray() : null,
@@ -317,8 +320,10 @@ class TradeConfirmation extends Model
     */
     public function optionGroups()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
-            'trade_confirmation_id')->where('is_options',true);
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_id')
+                ->whereHas('tradeConfirmationGroupType',function($q) {
+                    $q->where('title',"Options Group");
+                });
     }
 
     /**
@@ -327,8 +332,10 @@ class TradeConfirmation extends Model
     */
     public function futureGroups()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
-            'trade_confirmation_id')->where('is_options',false);
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_id')
+                ->whereHas('tradeConfirmationGroupType',function($q) {
+                    $q->where('title',"Futures Group");
+                });
     }
 
     /**
@@ -337,8 +344,10 @@ class TradeConfirmation extends Model
     */
     public function feeGroups()
     {
-        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
-            'trade_confirmation_id')->where('is_options',false);
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup','trade_confirmation_id')
+                ->whereHas('tradeConfirmationGroupType',function($q) {
+                    $q->where('title',"Fees Group");
+                });
     }
 
    /**
@@ -526,17 +535,18 @@ class TradeConfirmation extends Model
         $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
         $ratio = $tradeNegotiation->getTradingRatio();
         foreach($groups as $key => $tradeStructureGroup) {
-
+            $tradeGroupType = TradeConfirmationGroup::where("title",$tradeStructureGroup->title)->first();
             $tradeGroup = $this->tradeConfirmationGroups()->create([
-                'trade_structure_group_id'  =>  $tradeStructureGroup->id,
-                'trade_confirmation_id'     =>  $this->id,
-                "is_options"                 =>  $tradeStructureGroup->title == "Options Group" ? 1: 0,
+                'trade_structure_group_id' => $tradeStructureGroup->id,
+                'trade_confirmation_id' => $this->id,
+                "trade_confirmation_group_type_id" => $tradeGroupType->id,
                 'user_market_request_group_id' => $marketRequest->userMarketRequestGroups()->where('trade_structure_group_id',$tradeStructureGroup->trade_structure_group_id)->first()->id,
             ]);
 
+            $is_option = $tradeStructureGroup->title == "Options Group" ? 1: 0;
             $is_single_stock = $tradeGroup->userMarketRequestGroup->tradable->isStock();
 
-            $this->setUpItems($tradeGroup->is_options,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio);
+            $this->setUpItems($is_option,$marketNegotiation,$tradeNegotiation,$tradeStructureGroup,$tradeGroup,$is_single_stock,$ratio);
         }
 
         return $this;
@@ -572,9 +582,8 @@ class TradeConfirmation extends Model
                     }
                     break;
                 case 'Gross Premiums':
-                    $value = null;
-                    break;
                 case 'Net Premiums':
+                case 'Fee Total'
                     $value = null;
                     break;
                 case 'Future':
@@ -611,7 +620,7 @@ class TradeConfirmation extends Model
                     break;
             }
 
-            if($item->title =="Net Premiums")
+            if($item->title =="Net Premiums" || $item->title == "Fee Total")
             {
                 $tradeGroup->tradeConfirmationItems()->create([
                     'item_id' => $item->id,
