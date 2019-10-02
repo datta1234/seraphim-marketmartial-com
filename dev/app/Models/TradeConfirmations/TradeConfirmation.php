@@ -331,6 +331,16 @@ class TradeConfirmation extends Model
             'trade_confirmation_id')->where('is_options',false);
     }
 
+    /**
+    * Return relation based of trade_confirmation_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function feeGroups()
+    {
+        return $this->hasMany('App\Models\TradeConfirmations\TradeConfirmationGroup',
+            'trade_confirmation_id')->where('is_options',false);
+    }
+
    /**
     * Return relation based of trade_confirmation_id_foreign index
     * @return \Illuminate\Database\Eloquent\Builder

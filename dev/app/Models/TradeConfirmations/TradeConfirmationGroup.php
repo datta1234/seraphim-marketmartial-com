@@ -18,7 +18,7 @@ class TradeConfirmationGroup extends Model
 	 * @property \Carbon\Carbon $updated_at
 	 */
 
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -38,6 +38,16 @@ class TradeConfirmationGroup extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\TradeStructureGroup',
         	'trade_structure_group_id');
+    }
+
+    /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroupType()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroupType',
+            'trade_confirmation_group_type_id');
     }
 
     /**

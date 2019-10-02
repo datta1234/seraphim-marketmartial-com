@@ -126,7 +126,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -263,7 +263,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -481,7 +481,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -727,7 +727,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -1010,7 +1010,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -1201,7 +1201,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -1289,7 +1289,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
@@ -1365,7 +1365,7 @@ return [
                             ]
                         ]
                     ],
-                    "Fees" =>
+                    "fees" =>
                     [
                         "title" => "Fees Group",
                         "items" => [
