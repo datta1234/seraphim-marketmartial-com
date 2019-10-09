@@ -58,6 +58,8 @@ export default class UserMarketNegotiation extends BaseModel {
             applicable_timeout: 0,
             creation_idx: null,
             created_at: moment(),
+            cond_expiry: null,
+            lock_timeout: null,
 
             // optional
             bid_user: null,
@@ -95,6 +97,12 @@ export default class UserMarketNegotiation extends BaseModel {
         if(options && options['sent_condition']) {
             this.setSentCondition(options['sent_condition']);
         }
+
+        // Set condition time
+        if(options && options['cond_expiry']) {
+            this.cond_expiry = moment(options['cond_expiry']);
+        }
+
     }
 
 
@@ -171,7 +179,7 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     getTimeoutRemaining() {
-        let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
+        let diff = moment(this.cond_expiry).diff(moment());
         // ensure its not shown if its timed out
         if(diff < 0) {
             return "00:00";
@@ -184,6 +192,13 @@ export default class UserMarketNegotiation extends BaseModel {
         let diff = moment(this.created_at).add(this.applicable_timeout, 'minutes').diff(moment());
         // ensure its not shown if its timed out
         return diff > 0;
+    }
+
+    isTimeoutLocked() {
+        if(!this.lock_timeout) {
+            return false;
+        }
+        return moment(moment().add(this.lock_timeout, "seconds")).isSameOrAfter(this.cond_expiry);
     }
 
     storeWorkBalance(user_market_request,user_market,quantity) {
@@ -325,7 +340,29 @@ export default class UserMarketNegotiation extends BaseModel {
             });
         });
     }
-    
+
+    alterTradeAtBestTimer(option) {
+        // catch not assigned to a market request yet!
+        if(!this._user_market || this._user_market.id == null) {
+            return new Promise((resolve, reject) => {
+                reject(new Errors("Invalid Market"));
+            });
+        }
+
+        let data = {};
+        data[option] = true;
+        
+        return new Promise((resolve, reject) => {
+            axios.post(axios.defaults.baseUrl +"/trade/admin/user-market/"+this.getUserMarket().id+"/market-negotiation/"+this.id+"/reset-timer",data)
+            .then(response => {
+                this.runActionTaken();
+                resolve(response);
+            })
+            .catch(err => {
+                reject(err);
+            });
+        });
+    }
     
     getQuantityType()
     {
