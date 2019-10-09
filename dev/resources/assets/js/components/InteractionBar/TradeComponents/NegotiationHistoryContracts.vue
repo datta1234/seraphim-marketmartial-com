@@ -3,7 +3,7 @@
         <b-col>
             <template v-for="item in history" v-if="item.id != ''">   
                 <!-- && !item.is_killed"  -->
-                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item) && canInitiateTrade && !item.isTrading() && !item.isTraded()" :is-current="isLast(item)"></ibar-trade-request>
+                <ibar-trade-request :market-negotiation="item" :selectable="isLast(item) && canInitiateTrade && !item.isTrading() && !item.isTraded() && !item.isNoTrade()" :is-current="isLast(item)"></ibar-trade-request>
             </template>
             <b-row v-if="message">
                 <b-col cols="10" class="mt-2">

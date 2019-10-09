@@ -38,7 +38,7 @@ class TradeNegotiationController extends Controller
         if($tradeNegotiation)
         {
             $marketNegotiation->fresh()->userMarket->userMarketRequest->notifyRequested();
-            return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to counterparty."]);    
+            return response()->json(['data' => $tradeNegotiation, 'message' => "Response sent to counterparty."]);
         }
         else
         {

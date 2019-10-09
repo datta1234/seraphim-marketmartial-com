@@ -35,7 +35,7 @@ class MarketNegotiationPolicy
         if(!$user->isTrader()) { 
             return false; 
         }
-        if($marketNegotiation->isTraded()) {
+        if($marketNegotiation->isTraded() || $marketNegotiation->isKilled()) {
             return false;
         }
         if($marketNegotiation->isTrading()) {

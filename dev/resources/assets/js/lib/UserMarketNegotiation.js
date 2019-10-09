@@ -597,6 +597,14 @@ export default class UserMarketNegotiation extends BaseModel {
     }
 
     /**
+    *   test if the negotiation is a No Trade (has been killed)
+    */
+    isNoTrade() {
+        let lastTrade = this.getLastTradeNegotiation();
+        return lastTrade && lastTrade.trade_killed;
+    }
+
+    /**
     *   test if the negotiation is trading
     */
     isTrading() {
