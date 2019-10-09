@@ -16,7 +16,7 @@
                     <b-col>
                         {{ term }} at best: {{ trade_value }}
                     </b-col>
-                    <b-col v-if="isActive && !$root.is_viewer">
+                    <b-col v-if="isActive && !$root.is_viewer && !$root.is_admin">
                         <div class="pull-right">
                             <b-row>
                                 <b-col>
@@ -47,7 +47,23 @@
                 @close="trade_open = false" 
                 parent="cond-container">
             </ibar-trade-desired-quantity>
-
+        </b-col>
+        <b-col cols="12 mt-1" v-if="$root.is_admin && !negotiation.isTimeoutLocked()">
+                    <b-button v-active-request class="admin-condition-btn"  
+                              size="sm" 
+                              dusk="ibar-condition-end" 
+                              variant="primary" 
+                              @click="alterTimer('end')">
+                                End Timer
+                    </b-button>
+                    <b-button v-active-request class="float-right admin-condition-btn"  
+                              size="sm" 
+                              dusk="ibar-condition-reset" 
+                              variant="primary" 
+                              @click="alterTimer('reset')">
+                                Reset Timer
+                    </b-button>
+            
         </b-col>
     </b-row>
 </template>
@@ -95,6 +111,16 @@
             doRepeat() {
                 this.negotiation.repeatNegotiation()
                 .then(response => {
+                    this.errors = [];
+                })
+                .catch(err => {
+                    this.errors = err.errors;
+                });
+            },
+            alterTimer(option) {
+                this.negotiation.alterTradeAtBestTimer(option)
+                .then(response => {
+                    this.timer_value = this.negotiation.getTimeoutRemaining();
                     this.errors = [];
                 })
                 .catch(err => {

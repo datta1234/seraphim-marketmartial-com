@@ -13,7 +13,7 @@
                             Trade At {{ value }}
                         </span>
                     </b-col>
-                    <b-col v-if="isActive && !$root.is_viewer" cols="7">
+                    <b-col v-if="isActive && !$root.is_viewer && !$root.is_admin" cols="7">
                         <b-row>
                             <b-col id="meet-in-middle-do-trade">
                                 <a href="" @click.prevent.stop="doTrade">{{ type }}</a>

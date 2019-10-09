@@ -9,6 +9,7 @@ use App\Models\Market\MarketNegotiation;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationCounterRequest;
 use App\Http\Requests\TradeScreen\UserMarket\MarketNegotiationImproveBestRequest;
+use App\Http\Requests\TradeScreen\UserMarket\AlterTradeAtBestTimerRequest;
 
 class MarketNegotiationController extends Controller
 {
@@ -299,5 +300,44 @@ class MarketNegotiationController extends Controller
         return ['success'=>true, 'message'=>'Improvement Sent'];
     }
 
+    /**
+     * Reset trade-at-best condition timer
+     *
+     * @param  \App\Http\Requests\TradeScreen\UserMarket\AlterTradeAtBestTimerRequest  $request
+     * @param  \App\Models\Market\UserMarket  $userMarket
+     * @return \Illuminate\Http\Response
+     */
+    public function alterTradeAtBestTimer(AlterTradeAtBestTimerRequest $request, UserMarket $userMarket, MarketNegotiation $marketNegotiation)
+    {
+        $this->authorize('alterTradeAtBestTimer',$marketNegotiation);
 
+        if($request->has("end") && $request->get("end")) {
+            $option = "end";
+            $message = "Condition timer Ended";
+        } else if($request->has("reset") && $request->get("reset")) {
+            $option = "reset";
+            $message = "Condition timer Reset";
+        } else {
+            return response()->json([
+                'success'=>false,
+                'data'=>null ,
+                'message'=>'Invalid condition timer alter request'
+            ], 422);
+        }
+
+        $result = $marketNegotiation->resetCondTimeout($option);
+
+        //Broadcast new market request;
+        $userMarket->fresh()->userMarketRequest->notifyRequested();
+        if($result) {
+            return response()->json(['success'=>true, 'data'=>null ,'message'=>$message]);
+
+        } else {
+            return response()->json([
+                'success'=>false,
+                'data'=>null ,
+                'message'=>'There was a problem altering the condition timer'
+            ], 500);
+        }
+    }
 }
