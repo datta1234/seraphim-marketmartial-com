@@ -8,6 +8,7 @@ use App\Models\Trade\Rebate;
 use App\Events\TradeConfirmationEvent;
 use App\Models\TradeConfirmations\TradeConfirmationItem;
 use App\Models\TradeConfirmations\TradeConfirmationGroup;
+use App\Models\TradeConfirmations\TradeConfirmationGroupType;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Notifications\TradeConfirmedNotification;
@@ -255,8 +256,7 @@ class TradeConfirmation extends Model
 
             'date'                      => Carbon::now()->format("Y-m-d"),
             
-            'traded_at'                 => $this->tradeNegotiation->updated_at,
-            'fee'            => $this->calculateFee()
+            'traded_at'                 => $this->tradeNegotiation->updated_at
         ];
     }
 
@@ -535,7 +535,7 @@ class TradeConfirmation extends Model
         $groups =  $marketRequest->tradeStructure->tradeStructureGroups()->where('trade_structure_group_type_id',3)->get();
         $ratio = $tradeNegotiation->getTradingRatio();
         foreach($groups as $key => $tradeStructureGroup) {
-            $tradeGroupType = TradeConfirmationGroup::where("title",$tradeStructureGroup->title)->first();
+            $tradeGroupType = TradeConfirmationGroupType::where("title",$tradeStructureGroup->title)->first();
             $tradeGroup = $this->tradeConfirmationGroups()->create([
                 'trade_structure_group_id' => $tradeStructureGroup->id,
                 'trade_confirmation_id' => $this->id,
@@ -583,8 +583,17 @@ class TradeConfirmation extends Model
                     break;
                 case 'Gross Premiums':
                 case 'Net Premiums':
-                case 'Fee Total':
                     $value = null;
+                    break;
+                case 'Fee Total':
+                    if($this->tradeStructureSlug == 'var_swap') {
+                        // var swap fee is Vega x Trade Sctructure Fee percentage
+                        $fee_percentage = is_null($this->tradeStructure->fee_percentage) ? 0 : $this->tradeStructure->fee_percentage / 100; // Its a percentage value
+                        $vega = $tradeGroup->userMarketRequestGroup->getDynamicItem("Quantity");
+                        $value = $fee_percentage * $vega;
+                    } else {
+                        $value = null;
+                    }
                     break;
                 case 'Future':
                 case 'Future 2':
@@ -1027,11 +1036,5 @@ class TradeConfirmation extends Model
                 \Log::error($e);
             }
         }
-    }
-
-    public function calculateFee()
-    {
-        // @TODO - change to calculated value, currently hardcoded with test value
-        return 58.36;
     }
 }
