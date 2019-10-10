@@ -22,6 +22,8 @@ class FeesSeeder extends Seeder
        			throw new Exception("Unable to seed Fees, No Trade Structure found for: ".$tradeStructure['title']);
        		}
 
+            $tradeStructureModel->update(['has_structure_fee' => $tradeStructure['has_structure_fee']]);
+
         	foreach ($tradeStructure['trade_structure_group'] as $group) {
 				        		
     			// Find tradeStructureGroup (__user_market_request_group__)

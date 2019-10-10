@@ -62,7 +62,8 @@ Vue.component('rebates-table', require('./components/Admin/Rebates/RebatesTableC
 Vue.component('download-csv', require('./components/Admin/downloadCsvComponent.vue').default);
 Vue.component('bank-activity', require('./components/Admin/Stats/BankActivityComponent.vue').default);
 Vue.component('rebates-assigned', require('./components/Admin/Rebates/RebatesAssignedComponent.vue').default);
-Vue.component('brokerage-fee', require('./components/Admin/BrokerageFees/BrokerageFeesComponent.vue').default);
+Vue.component('organisation-brokerage-fee', require('./components/Admin/BrokerageFees/OrganisationBrokerageFeesComponent.vue').default);
+Vue.component('trade-structure-brokerage-fee', require('./components/Admin/BrokerageFees/TradeStructureBrokerageFeesComponent.vue').default);
 
 // Stats Components
 Vue.component('monthly-activity', require('./components/Stats/MonthlyActivityComponent.vue').default);

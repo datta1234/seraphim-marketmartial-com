@@ -583,7 +583,7 @@ class TradeConfirmation extends Model
                     break;
                 case 'Gross Premiums':
                 case 'Net Premiums':
-                case 'Fee Total'
+                case 'Fee Total':
                     $value = null;
                     break;
                 case 'Future':
