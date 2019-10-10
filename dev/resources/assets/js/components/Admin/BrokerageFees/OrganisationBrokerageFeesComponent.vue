@@ -1,5 +1,5 @@
 <template>
-    <div dusk="brokerage-fees" class="brokerage-fees" >
+    <div dusk="org-brokerage-fees" class="org-brokerage-fees" >
 		<b-row>
             <b-col cols="12">
                 <b-row class="mt-4">
@@ -18,7 +18,7 @@
         <b-row v-if="brokerage_fee_data" class="mt-3">
             <b-col cols="12">
             	<b-card>
-                	<b-form v-on:submit.prevent="" id="brokerage-fees-form">
+                	<b-form v-on:submit.prevent="" id="org-brokerage-fees-form">
 	                    <b-row :key="index" v-for="(field, index) in brokerage_fee_data" class="mt-2">
 	                    	<b-col v-if="index == 0 || isDifferentStructure(field.key, brokerage_fee_data[index-1].key)" cols="12" class="text-center mt-4 mb-2">
 								<h3>{{ getStructure(field.key) }}</h3>
@@ -56,7 +56,7 @@
 
 <script>
     export default {
-    	name: 'BrokerageFees',
+    	name: 'OrganisationBrokerageFees',
     	props: [
             'organisations',
         ],

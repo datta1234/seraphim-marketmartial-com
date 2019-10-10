@@ -95,7 +95,7 @@ class UserMarketRequestRequest extends FormRequest
                         } else {
                             $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;
                         }
-                        break;      
+                        break;
                     default:
                         $rules["trade_structure_groups.{$i}.fields.{$structureItem->title}"] = $structureItem->itemType->validation_rule;
                         break;

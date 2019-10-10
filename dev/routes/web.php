@@ -248,6 +248,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		'as' => 'admin',
 		'only' => ['index','edit','update']
 	]);
+
+	Route::post('brokerage-fees/trade-structures','Admin\BrokerageFeesController@updateTradeStructureFees');
 });
 
 Route::group(['middleware' => ['auth']], function() {

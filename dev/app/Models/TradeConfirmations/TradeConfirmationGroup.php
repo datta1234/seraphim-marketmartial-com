@@ -13,12 +13,12 @@ class TradeConfirmationGroup extends Model
 	 * @property integer $trade_structure_group_id
 	 * @property integer $user_market_request_group_id
 	 * @property integer $trade_confirmation_group_id
-	 * @property boolean $is_options
+	 * @property integer $trade_confirmation_group_type_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
 
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -26,7 +26,7 @@ class TradeConfirmationGroup extends Model
     protected $fillable = [
         "trade_structure_group_id",
         "trade_confirmation_id",
-        "is_options",
+        "trade_confirmation_group_type_id",
         "user_market_request_group_id"
     ];
 
@@ -38,6 +38,16 @@ class TradeConfirmationGroup extends Model
     {
         return $this->belongsTo('App\Models\StructureItems\TradeStructureGroup',
         	'trade_structure_group_id');
+    }
+
+    /**
+    * Return relation based of market_id_foreign index
+    * @return \Illuminate\Database\Eloquent\Builder
+    */
+    public function tradeConfirmationGroupType()
+    {
+        return $this->belongsTo('App\Models\TradeConfirmations\TradeConfirmationGroupType',
+            'trade_confirmation_group_type_id');
     }
 
     /**
@@ -125,7 +135,6 @@ class TradeConfirmationGroup extends Model
 
         return [
             'id'                            => $this->id,
-            'is_options'                    => $this->is_options,
             'user_market_request_group'     => $this->userMarketRequestGroup->preFormatted(),
             'trade_confirmation_items'      => 
             $this->tradeConfirmationItems()

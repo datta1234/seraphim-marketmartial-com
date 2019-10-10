@@ -263,7 +263,7 @@
             </table>
         </template>
         
-        <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
+        <template v-if="trade_confirmation">
             <div style="Display:inline;">
                 <h3 class="text-dark">Fees</h3>
             </div>
@@ -271,7 +271,7 @@
 
         <b-row>
             <b-col md="6">
-                <template v-if="trade_confirmation && trade_confirmation.trade_structure_slug != 'var_swap'">
+                <template v-if="trade_confirmation && trade_confirmation.fee_groups.length > 0">
                     <b-row>
                         <!-- Confirmation Fee -->
                         <b-col md="12">
@@ -280,13 +280,11 @@
                                     <tr><th scope="col">Calculated Fee</th></tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <span v-if="trade_confirmation.fee != null">
-                                            {{  splitValHelper(trade_confirmation.fee,' ',3) }}
-                                        </span>
-                                    </td>
-                                </tr>
+                                    <tr v-for="(fee_groups, key) in trade_confirmation.fee_groups">
+                                        <td>
+                                            {{ fee_groups.fee_total ? splitValHelper(fee_groups.fee_total,' ',3) : '-' }}
+                                        </td>
+                                    </tr>
                               </tbody>
                             </table>
                         </b-col>

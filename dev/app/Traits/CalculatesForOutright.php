@@ -69,7 +69,7 @@ trait CalculatesForOutright {
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
-        $this->load(['futureGroups','optionGroups']);
+        $this->load(['futureGroups','optionGroups','feeGroups']);
 
         $this->outrightFees($is_offer,$gross_prem,$is_sender, $contracts1, $singleStock);
     }
@@ -109,10 +109,19 @@ trait CalculatesForOutright {
             $netPremiumCounter =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1) + $gross_prem; 
         }
 
+        // Fee = |GrossPrem - NetPremContracts| * Contracts
+        $totalFee = round(abs($gross_prem - $netPremium) * $contracts1,2);
+        // Calculate for the counter
+        $totalFeeCounter = round(abs($gross_prem - $netPremiumCounter) * $contracts1,2);
+
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
-        
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
+         
         //set for the counter
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremiumCounter,!$is_sender);
+        
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
 
 
     }
