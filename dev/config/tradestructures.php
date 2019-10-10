@@ -1484,15 +1484,24 @@ return [
                         "id" => 162,
                         "title" => "Future",
                         "type" => "double"   
-                    ],
+                    ]
+                ],
+                "trade_confirmation_group"=> [
+                    "fees" =>
                     [
-                        // __item__
-                        "id" => 171,
-                        "title"=>"Fee Total",
-                        "type"=> "double",
-                        "update_seed"=> true
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 171,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
+
             ]
         ],
         
