@@ -1178,7 +1178,6 @@ class MarketNegotiation extends Model
                 if($tradeNegotiation->traded)
                 {
                     //Market Maker receives trade notification
-                    //@TODO - @Francois Move to new event when rebate gets created after confirmation process is complete
                     $market_maker_org = $this->userMarket->user->organisation;
                     $market_maker_message = "Market traded.";
 

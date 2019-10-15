@@ -50,16 +50,33 @@ trait CalculatesForEfpSwitch {
         $D1switchFEEReceiving = $receiving_org->resolveBrokerageFee($efp_switch_key.'index.per_leg')/100;
 
     	//FUTURE = Application.Round(Future1 * D1switchFEE * FutBrodirection1, 2) + Future1
-    	$finalFuture1 =  round($future1 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection1, 2) + $future1;
-        $finalFuture2 =  round($future2 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection2, 2) + $future2;
-    	$this->futureGroups[0]->setOpVal('Future', $finalFuture1,$is_sender);
-        $this->futureGroups[1]->setOpVal('Future', $finalFuture2,$is_sender);
+        // Phase 2 - New calc is just future, fee is now split
+    	$this->futureGroups[0]->setOpVal('Future', $future1,$is_sender);
+        $this->futureGroups[1]->setOpVal('Future', $future2,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(FuturesSpotRef1 * D1switchFEE * FutureBrodirection1, 2) + (FuturesSpotRef1 + points1)
-        $finalFutureCounter1 =  round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 2) + ($FuturesSpotRef1 + $points1);
-        $finalFutureCounter2 =  round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 2) + ($FuturesSpotRef2 + $points2);
+        // Phase 2 - New calc is just future, fee is now split
+        $finalFutureCounter1 = $FuturesSpotRef1 + $points1;
+        $finalFutureCounter2 = $FuturesSpotRef2 + $points2;
         $this->futureGroups[0]->setOpVal('Future', $finalFutureCounter1,!$is_sender);
         $this->futureGroups[1]->setOpVal('Future', $finalFutureCounter2,!$is_sender);
+
+        $contracts1 =  floatval($this->futureGroups[0]->getOpVal('Contract'));
+        $contracts2 =  floatval($this->futureGroups[1]->getOpVal('Contract'));
+
+        // Fee = |Amount| * Contracts * 10
+        $fee1 = abs(round($future1 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection1, 2)) * $contracts1 * 10;
+        $fee2 = abs(round($future2 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection2, 2)) * $contracts2 * 10;
+        // set for the counter
+        $feeCounter1 = abs(round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 2)) * $contracts1 * 10;
+        $feeCounter2 = abs(round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 2)) * $contracts2 * 10;
+        // Fee Total = SUM(Fee)
+        $totalFee = round($fee1 + $fee2,2);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2,2);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
+        //set for the counter
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
     }
 }
