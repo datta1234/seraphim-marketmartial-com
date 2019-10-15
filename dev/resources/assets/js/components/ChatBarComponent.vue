@@ -55,22 +55,23 @@
                     
                     <div class="chat-actions">
                         <b-form @submit.stop.prevent="sendMessage" id="chat-message-form">
-                            <template v-for="(option, index) in quick_message_options">
+                            <template v-for="(option, index) in quick_messages">
                                 <button v-active-request 
-                                        @click="quick_message = option.message" 
+                                        @click="quick_message = option.id" 
                                         type="submit" 
                                         class="btn mm-generic-trade-button w-50 mb-1">
                                     {{ option.title }}
                                 </button>
                             </template>
-                            <textarea @keydown.enter.prevent="sendMessage"
+                            <textarea v-if="chat_limited"
+                                      @keydown.enter.prevent="sendMessage"
                                       rows="6"
                                       class="mb-1 mt-1 w-100"
                                       v-model="new_message"
                                       placeholder="Enter your message here...">
                             </textarea>  
                             
-                            <b-form-group class="text-center mb-0 pb-0">
+                            <b-form-group v-if="chat_limited" class="text-center mb-0 pb-0">
                                 <button type="submit" class="btn mm-generic-trade-button w-100">Send message</button>
                             </b-form-group>
                         </b-form>
@@ -85,6 +86,10 @@
 <script>
     import { EventBus } from '~/lib/EventBus.js';
     export default {
+        props: [
+            'chat_limited',
+            'quick_messages'
+        ],
         data() {
             return {
                 new_incoming: false,
@@ -92,35 +97,19 @@
                 new_message: "",
                 quick_message: "",
                 display_messages: [],
-                quick_message_options: [
-                    {
-                        title: 'Looking',
-                        message: 'Looking',
-                    },
-                    {
-                        title: 'No cares',
-                        message: 'No cares, thanks',
-                    },
-                    {
-                        title: 'Call me',
-                        message: 'Please call me',
-                    },
-                    {
-                        title: 'Subject on all',
-                        message: 'Subject on all',
-                    },
-                ],
             };
         },
         methods: {
             sendMessage() {
-                if(this.new_message || this.quick_message) {
-                    let sendMessage = this.new_message ? {new_message: this.new_message} : {quick_message:this.quick_message};
-                    axios.post(axios.defaults.baseUrl + "/trade/organisation-chat", sendMessage)
+                if(this.new_message || this.quick_message !== null) {
+                    let sendMessage = this.quick_message ? 
+                        {quick_message:this.quick_message}
+                        : {new_message: this.new_message};
+                    axios.post(axios.defaults.baseUrl + "/trade/organisation-chat" , sendMessage)
                     .then(response => {
                         let chat_history = this.$refs.chat_history;
                         this.new_message = "";
-                        this.quick_message = "";
+                        this.quick_message = null;
                         this.display_messages.push(response.data.data);
                         this.display_messages[this.display_messages.length -1].status = "sent";
                         
@@ -128,12 +117,13 @@
                             chat_history.scrollTop = chat_history.scrollHeight;
                         });
                     }, err => {
-                        console.error(err);
+                        this.quick_message = null;
+                        //console.error(err);
                         this.$toasted.error(err.response.data.message);
                     });
                 } else {
                     this.new_message = "";
-                    this.quick_message = "";
+                    this.quick_message = null;
                 }
 
             },

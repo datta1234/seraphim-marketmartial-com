@@ -118,7 +118,7 @@ trait CalculatesForFly {
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
-        $this->load(['futureGroups','optionGroups']);
+        $this->load(['futureGroups','optionGroups','feeGroups']);
 
         $this->flyFees($is_offer1, $is_offer2, $is_offer3, $gross_prem1, $gross_prem2, $gross_prem3, $is_sender, $contracts1, $contracts2, $contracts3,$singleStock);
     }
@@ -171,13 +171,29 @@ trait CalculatesForFly {
             $netPremiumCounter3 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3) + $gross_prem3;
         }
 
+        // Fee = |GrossPrem - NetPremContracts| * Contracts
+        $fee1 = abs($gross_prem1 - $netPremium1) * $contracts1;
+        $fee2 = abs($gross_prem2 - $netPremium2) * $contracts2;
+        $fee3 = abs($gross_prem3 - $netPremium3) * $contracts3;
+        // set for the counter
+        $feeCounter1 = abs($gross_prem1 - $netPremiumCounter1) * $contracts1;
+        $feeCounter2 = abs($gross_prem2 - $netPremiumCounter2) * $contracts2;
+        $feeCounter3 = abs($gross_prem3 - $netPremiumCounter3) * $contracts3;
+        // Fee Total = SUM(Fee)
+        $totalFee = round($fee1 + $fee2 + $fee3,2);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2 + $feeCounter3,2);
+
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremium2,$is_sender);
         $this->optionGroups[2]->setOpVal('Net Premiums', $netPremium3,$is_sender);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
         
         //set for the counter
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremiumCounter1,!$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremiumCounter2,!$is_sender);
         $this->optionGroups[2]->setOpVal('Net Premiums', $netPremiumCounter3,!$is_sender);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
     }
 }

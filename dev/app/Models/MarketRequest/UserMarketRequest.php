@@ -593,8 +593,9 @@ class UserMarketRequest extends Model
     }
     
     /*
-    *market is either open after a traded market or spin following each other
-    */
+     * market is either open after a traded market or spin following each other
+     *  or a market negotiation has been killed
+     */
     public function openToMarket()
     {
 
@@ -616,6 +617,11 @@ class UserMarketRequest extends Model
                 }
           
                 if($lastNegotiation->isTraded())
+                {
+                    return true;
+                }
+
+                if($lastNegotiation->isKilled())
                 {
                     return true;
                 }
@@ -708,7 +714,7 @@ class UserMarketRequest extends Model
     //     }
     // }
 
-     public function lastTradeNegotiationIsTraded()
+    public function lastTradeNegotiationIsTraded()
     {
         if(!is_null($this->chosenUserMarket))
         {
@@ -724,6 +730,14 @@ class UserMarketRequest extends Model
         }
     }
 
+    public function lastTradeNegotiationIsKilled()
+    {
+        if(!is_null($this->chosenUserMarket))
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->trade_killed;  
+        }
+    }
 
     //need a method for trade at best
     public function isTradeAtBestOpen()
@@ -752,6 +766,7 @@ class UserMarketRequest extends Model
         $needsBalanceWorked =  $this->chosenUserMarket ? $this->chosenUserMarket->needsBalanceWorked() : false;
         $is_trading         =  $this->chosenUserMarket ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $this->lastTradeNegotiationIsTraded();
+        $lastKilled         =  $this->lastTradeNegotiationIsKilled();
 
         $balance_worked_no_cares = ($this->chosenUserMarket 
             && $this->chosenUserMarket->lastNegotiation
@@ -775,16 +790,16 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded)
+        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded && !$lastKilled)
         {
             return 'trade-negotiation-open';
         }
-        elseif(!$marketOpen && $is_trading && !$lastTraded)
+        elseif(!$marketOpen && $is_trading && !$lastTraded && !$lastKilled)
         {
             return 'trade-negotiation-pending';
         }
         // @TODO - state when new trade happens on a market that has already traded 
-        elseif($marketOpen && $is_trading && !$lastTraded) // Checks to check if new trade is happening
+        elseif($marketOpen && $is_trading && !$lastTraded && !$lastKilled) // Checks to check if new trade is happening
         {
             // @TODO - figure out what state if not a new one is required.
             return 'trade-negotiation-pending';
@@ -802,7 +817,7 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-open';
         }
-        
+        dd([$acceptedState , $marketOpen , !$is_trading]);
     }
 
     

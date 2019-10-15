@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserManagement\Organisation;
 use App\Models\UserManagement\BrokerageFee;
+use App\Models\StructureItems\TradeStructure;
+use App\Http\Requests\Admin\TradeStructureFeesRequest;
 
 class BrokerageFeesController extends Controller
 {
@@ -16,8 +18,13 @@ class BrokerageFeesController extends Controller
      */
     public function index()
     {
+        $trade_structures = TradeStructure::where('has_structure_fee',true)->get();
         $organisations = Organisation::where('verified',true)->pluck('title','id');
-        return view('admin.brokerage_fees.index')->with(['organisations' => $organisations->toJson()]);
+        return view('admin.brokerage_fees.index')
+            ->with([
+                'organisations' => $organisations->toJson(),
+                'trade_structures' => is_null($trade_structures) ? $trade_structures : $trade_structures->toJson()
+            ]);
     }
 
     /**
@@ -52,7 +59,7 @@ class BrokerageFeesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Admin\TradeStructureFeesRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -73,7 +80,33 @@ class BrokerageFeesController extends Controller
 
         return response()->json([
             'data' => [],
-            'message' => 'Brokerage Fees successfully Updated.'
+            'message' => 'Organisation Brokerage Fees successfully Updated.'
+        ]); 
+    }
+
+    /**
+     * Update Trade Structure fee percentages
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTradeStructureFees(TradeStructureFeesRequest $request)
+    {
+        $trade_structures = $request->get('trade_structures');
+
+        foreach ($trade_structures as $key => $trade_structure) {
+            $trade_structure_model = TradeStructure::findOrFail($trade_structure['id']);
+            if($trade_structure_model->has_structure_fee) {
+                $trade_structure_model->update([
+                    'fee_percentage'=>$trade_structure['fee_percentage']
+                ]);
+            }  
+        }
+
+        return response()->json([
+            'data' => [],
+            'message' => 'Trade Structure Fees successfully Updated.'
         ]); 
     }
 }

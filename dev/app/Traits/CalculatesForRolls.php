@@ -39,12 +39,24 @@ trait CalculatesForRolls {
 
         //dd($future2, $D1rollFeeReceiving, $D1rollFeeSender, $is_sender, $FutBrodirection2);
     	//FUTURE = Application.Round(Future2 * D1rollFee * FutBrodirection2, 2) + Future2
-    	$future =  round($future2 * ($is_sender ? $D1rollFeeSender : $D1rollFeeReceiving) * $FutBrodirection2, 2) + $future2;
-    	$this->futureGroups[0]->setOpVal('Future 2', $future,$is_sender);
+        // Phase 2 - New calc is just future, fee is now split
+    	$this->futureGroups[0]->setOpVal('Future 2', $future2,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(RollNearFutureRef * D1rollFee * FutureBrodirection2, 2) + (RollNearFutureRef + points1)
-        $futureCounter =  round( ($RollNearFutureRef * ($is_sender ? $D1rollFeeReceiving : $D1rollFeeSender) * $counterFutBrodirection2) + ($RollNearFutureRef + $points1), 2);
+        // Phase 2 - New calc is just future, fee is now split
+        $futureCounter = $RollNearFutureRef + $points1;
         $this->futureGroups[0]->setOpVal('Future 2', $futureCounter,!$is_sender);
+
+        $contracts =  floatval($this->futureGroups[0]->getOpVal('Contract'));
+
+        // Fee = |Amount| * Contracts * 10
+        $totalFee = round(abs(round($future2 * ($is_sender ? $D1rollFeeSender : $D1rollFeeReceiving) * $FutBrodirection2, 2)) * $contracts * 10,2);
+        // Calculate for the counter
+        $totalFeeCounter = round(abs(round( ($RollNearFutureRef * ($is_sender ? $D1rollFeeReceiving : $D1rollFeeSender) * $counterFutBrodirection2), 2)) * $contracts * 10,2);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
+        //set for the counter
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
     }
 }

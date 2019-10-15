@@ -65,7 +65,6 @@ class Slack
                 $content = array_merge($data, $content); // overwrite with input if need be
             }
         }
-
         $response = $this->sendHttp('POST',[
             'Content-Type' =>'application/json', 
             'Accept' => 'application/json'

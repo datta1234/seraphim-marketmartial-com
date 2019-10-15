@@ -7,6 +7,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 
 class MarketNegotiationTimeout implements ShouldQueue
 {
@@ -96,6 +97,20 @@ class MarketNegotiationTimeout implements ShouldQueue
                 ], "timeout");
             }
         }
+
+        if(!is_null($marketNegotiation->job_id)) {
+            try {
+                $marketNegotiation->update(["job_id"=>null]);
+            } catch (\Illuminate\Database\QueryException $e) {
+                \Log::info(["Failed to remove Job ID from marketNegotiation",[
+                    "Market Negotiation Id" => $marketNegotiation->id,
+                    "Job ID" => $marketNegotiation->job_id
+                ]]);
+                \Log::error($e);
+                return false;
+            }
+        }
+
         return true;
     }
 }

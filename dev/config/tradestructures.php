@@ -1,12 +1,17 @@
 <?php 
         //fly selected, outright -> force yes
         //efp switch, risky, caly,options swicth, -> no force select
+        /**
+         * NOTE: Fees trade_confirmation_group is post live addition and thus
+         *  continues on the last original id for items
+         */ 
 return [
     [
         // __trade_structure__
         "id" => 1,
         "title" => "Outright",
         "is_selectable" => true,
+        "has_structure_fee" => false,
         "trade_structure_group" =>
         [
             [
@@ -121,6 +126,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 163,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]                                
             ]
@@ -131,6 +149,7 @@ return [
         "id" => 2,
         "title" => "Risky",
         "is_selectable" => true,
+        "has_structure_fee" => false,
         "trade_structure_group" =>
         [
             [
@@ -245,6 +264,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 164,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
 
@@ -336,6 +368,7 @@ return [
         "id" => 3,
         "title" => "Calendar",
         "is_selectable" => true,
+        "has_structure_fee" => false,
         "trade_structure_group" =>
         [
             [
@@ -448,6 +481,19 @@ return [
                                 "id" => 55,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 165,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -570,6 +616,7 @@ return [
         "id" => 4,
         "title" => "Fly",
         "is_selectable" => true,
+        "has_structure_fee" => false,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -681,6 +728,19 @@ return [
                                 "id" => 84,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 166,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -840,6 +900,7 @@ return [
         "id" => 5,
         "title" => "Option Switch",
         "is_selectable" => false,
+        "has_structure_fee" => false,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -951,6 +1012,19 @@ return [
                                 "id" => 117,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 167,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -1079,6 +1153,7 @@ return [
         "id" => 6,
         "title" => "EFP",
         "is_selectable" => false,
+        "has_structure_fee" => false,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -1131,6 +1206,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 168,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -1142,6 +1230,7 @@ return [
         "id" => 7,
         "title" => "Rolls",
         "is_selectable" => false,
+        "has_structure_fee" => false,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -1206,6 +1295,19 @@ return [
                                 "type"=> "double"
                             ]
                         ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 169,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -1217,6 +1319,7 @@ return [
         "id" => 8,
         "title" => "EFP Switch",
         "is_selectable" => false,
+        "has_structure_fee" => false,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -1267,6 +1370,19 @@ return [
                                 "id" => 152,
                                 "title"=>"Spot",
                                 "type"=> "double"
+                            ]
+                        ]
+                    ],
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 170,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
                             ]
                         ]
                     ]
@@ -1335,6 +1451,7 @@ return [
         "id" => 9,
         "title" => "Var Swap",
         "is_selectable" => true,
+        "has_structure_fee" => true,
         "trade_structure_group" => [
             [
                 // __user_market_request_group__
@@ -1367,8 +1484,24 @@ return [
                         "id" => 162,
                         "title" => "Future",
                         "type" => "double"   
-                    ],
+                    ]
+                ],
+                "trade_confirmation_group"=> [
+                    "fees" =>
+                    [
+                        "title" => "Fees Group",
+                        "items" => [
+                            [
+                                // __item__
+                                "id" => 171,
+                                "title"=>"Fee Total",
+                                "type"=> "double",
+                                "update_seed"=> true
+                            ]
+                        ]
+                    ]
                 ]
+
             ]
         ],
         

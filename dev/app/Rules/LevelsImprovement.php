@@ -91,7 +91,7 @@ class LevelsImprovement implements Rule
                 }
             }
 
-            if($this->lastNegotiation->isTraded()) {
+            if($this->lastNegotiation->isTraded() || $this->lastNegotiation->isKilled()) {
                 \Log::info($attribute." >>> 5");
                 return true;
             }

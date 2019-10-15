@@ -95,7 +95,7 @@ trait CalculatesForRisky {
 
         $this->futureGroups[0]->setOpVal('Contract', abs($future_contracts));
 
-        $this->load(['futureGroups','optionGroups']);
+        $this->load(['futureGroups','optionGroups','feeGroups']);
 
         $this->riskyFees($is_offer1, $is_offer2, $gross_prem1, $gross_prem2, $is_sender, $contracts1, $contracts2, $singleStock);
     }
@@ -174,11 +174,25 @@ trait CalculatesForRisky {
             }
         }
 
+        // Fee = |GrossPrem - NetPremContracts| * Contracts
+        $fee1 = abs($gross_prem1 - $netPremium1) * $contracts1;
+        $fee2 = abs($gross_prem2 - $netPremium2) * $contracts2;
+        // set for the counter
+        $feeCounter1 = abs($gross_prem1 - $netPremiumCounter1) * $contracts1;
+        $feeCounter2 = abs($gross_prem2 - $netPremiumCounter2) * $contracts2;
+        // Fee Total = SUM(Fee)
+        $totalFee = round($fee1 + $fee2,2);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2,2);
+
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremium2,$is_sender);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
 
         //set for the counter
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremiumCounter1,!$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremiumCounter2,!$is_sender);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
     }
 }

@@ -11,9 +11,14 @@
             <p class="text-center">{{ message }}&nbsp;&nbsp;<span @click="message = null">X</span></p>
         </b-row>
         <template v-if="conditions_active.length > 0">
-            <b-row>
+            <b-row v-if="!$root.is_admin">
                 <b-col class="text-center">
                     <strong>Received</strong>
+                </b-col>
+            </b-row>
+            <b-row v-else>
+                <b-col class="text-center">
+                    <strong>Condition Applied</strong>
                 </b-col>
             </b-row>
             <b-row v-for="cond in conditions_active" :key="'active_'+cond.condition.id">
