@@ -101,9 +101,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 
 Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','timeWindowPreventAction','timeWindowPreventTrade']], function() {
 
-	Route::resource('organisation-chat', 'TradeScreen\ChatController', [
-		'only' => ['store','index']
-	]);
+	Route::get('/organisation-chat', 'TradeScreen\ChatController@index');
+	Route::post('/organisation-chat', 'TradeScreen\ChatController@sendChat');
 
 	// Removed as per email also commented on Task [MM-987]
 	/*Route::middleware(['timeWindowRestrictTrade'])->group(function () {*/
@@ -169,6 +168,8 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 	            'as' => 'market-request',
 	            'only' => ['show']
 	        ]);
+	        
+	        Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/reset-timer', 'TradeScreen\UserMarket\MarketNegotiationController@alterTradeAtBestTimer');
 	    });
 	/*});	*/
 
@@ -182,6 +183,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 	Route::resource('user', 'Admin\UserController', [
 		'as' => 'admin'
 	]);
+
+	Route::get('organisation-man', 'Admin\OrganisationManagementController@index')
+		->name('admin.organisation-man.index');
+	Route::put('organisation-man/{organisation}', 'Admin\OrganisationManagementController@update')
+		->name('admin.organisation-man.update');
 
 	Route::get('logging/download', 'Admin\ActivityLogController@download')->name('admin.logging.download');
     Route::get('logging', 'Admin\ActivityLogController@index')->name('admin.logging.index');
@@ -242,6 +248,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:Admin','active',]], fu
 		'as' => 'admin',
 		'only' => ['index','edit','update']
 	]);
+
+	Route::post('brokerage-fees/trade-structures','Admin\BrokerageFeesController@updateTradeStructureFees');
 });
 
 Route::group(['middleware' => ['auth']], function() {

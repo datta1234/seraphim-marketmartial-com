@@ -27,10 +27,13 @@ class TradeStructure extends Model
      */
     protected $fillable = [
         'title',
+        'has_structure_fee',
+        'fee_percentage'
     ];
 
     protected $casts = [
         'is_selectable' => 'boolean',
+        'has_structure_fee' => 'boolean'
     ];
 
     /**

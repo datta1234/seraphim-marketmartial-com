@@ -21,7 +21,7 @@ trait CalculatesForEfp {
 
         $isOffer = $this->futureGroups[0]->getOpVal('is_offer',true);
 
-        $this->load(['futureGroups']);
+        $this->load(['futureGroups','feeGroups']);
         
         $this->efpFees($isOffer,$is_sender, $future1, $closingspotref, $Points);
     }
@@ -39,13 +39,25 @@ trait CalculatesForEfp {
         $D1efpFeeSender = $sender_org->resolveBrokerageFee($efp_key.'index.only_leg')/100;
         $D1efpFeeReceiving = $receiving_org->resolveBrokerageFee($efp_key.'index.only_leg')/100;
 
-    	//FUTURE = Application.Round(Future1 * D1efpFee * FutBrodirection1, 2) + Future1
-    	$future =  round($future1 * ($is_sender ? $D1efpFeeSender : $D1efpFeeReceiving) * $FutBrodirection1, 2) + $future1;
-    	$this->futureGroups[0]->setOpVal('Future', $future,$is_sender);
+    	// FUTURE = Application.Round(Future1 * D1efpFee * FutBrodirection1, 2) + Future1
+        // Phase 2 - New calc is just future, fee is now split
+    	$this->futureGroups[0]->setOpVal('Future', $future1,$is_sender);
 
         //set for the counter
         // FUTURE = Application.Round(FuturesSpotRef1 * D1efpFee * FutureBrodirection1, 2) + (FuturesSpotRef1 + points1)
-        $futureCounter =  round( ($FuturesSpotRef1 * ($is_sender ? $D1efpFeeReceiving : $D1efpFeeSender) * $counterFutBrodirection1), 2) + ($FuturesSpotRef1 + $points1);
+        // Phase 2 - New calc is just future, fee is now split
+        $futureCounter = $FuturesSpotRef1 + $points1;
         $this->futureGroups[0]->setOpVal('Future', $futureCounter,!$is_sender);
+
+        $contracts =  floatval($this->futureGroups[0]->getOpVal('Contract'));
+
+        // Fee = |Amount| * Contracts * 10
+        $totalFee = round(abs(round($future1 * ($is_sender ? $D1efpFeeSender : $D1efpFeeReceiving) * $FutBrodirection1, 2)) * $contracts * 10,2);
+        // Calculate for the counter
+        $totalFeeCounter = round(abs(round( ($FuturesSpotRef1 * ($is_sender ? $D1efpFeeReceiving : $D1efpFeeSender) * $counterFutBrodirection1), 2)) * $contracts * 10,2);
+
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
+        //set for the counter
+        $this->feeGroups[0]->setOpVal('Fee Total', $totalFeeCounter,!$is_sender);
     }
 }

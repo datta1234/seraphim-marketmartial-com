@@ -11,7 +11,7 @@
                     <b-col>
                         {{ fok_value }}
                     </b-col>
-                    <b-col v-if="isActive && !$root.is_viewer">
+                    <b-col v-if="isActive && !$root.is_viewer && !$root.is_admin">
                         <b-row>
                             <b-col id="fok-popover-hit">
                                 <a  href="" 
