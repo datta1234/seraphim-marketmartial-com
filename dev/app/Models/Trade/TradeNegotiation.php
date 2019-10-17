@@ -21,6 +21,7 @@ class TradeNegotiation extends Model
 	 * @property boolean $is_offer
 	 * @property boolean $is_dispute
      * @property boolean $no_cares
+     * @property boolean $trade_killed
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
 	 */
@@ -38,7 +39,7 @@ class TradeNegotiation extends Model
      * @var array
      */
     protected $fillable = [
-        'quantity','is_offer', 'is_dispute', 'no_cares',
+        'quantity','is_offer', 'is_dispute', 'no_cares','trade_killed'
     ];
 
     /**
@@ -58,7 +59,8 @@ class TradeNegotiation extends Model
     protected $casts = [
         'traded' => 'boolean',
         'is_offer' => 'boolean',
-        'no_cares' => 'boolean'
+        'no_cares' => 'boolean',
+        'trade_killed' => 'boolean'
     ];
 
     public static function boot()
@@ -205,6 +207,7 @@ class TradeNegotiation extends Model
             "is_offer"              => $this->is_offer,
             "is_source_offer"       => $root_trade_negotiation->is_offer,
             "is_dispute"            => $this->is_dispute,
+            "trade_killed"          => $this->trade_killed,
             "sent_by_me"            => $sentByMe,
             "sent_to_me"            => $sentToMe,
             "source_sent_by_me"     => $root_trade_negotiation->initiateUser->organisation_id == $loggedInUserOrganisationId,

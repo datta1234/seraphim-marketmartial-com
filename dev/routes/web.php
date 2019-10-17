@@ -168,6 +168,8 @@ Route::group(['prefix' => 'trade', 'middleware' => ['auth','active','verified','
 	            'as' => 'market-request',
 	            'only' => ['show']
 	        ]);
+	        
+	        Route::post('user-market/{user_market}/market-negotiation/{market_negotiation}/reset-timer', 'TradeScreen\UserMarket\MarketNegotiationController@alterTradeAtBestTimer');
 	    });
 	/*});	*/
 

@@ -160,6 +160,7 @@
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 let value = this.marketNegotiation.offer;
                 let only = (this.bid_offer_selected.includes('offer-only') && this.isRequestPhase );
@@ -173,7 +174,7 @@
                     return !this.currentNegotiation.getAmountSource('bid').is_my_org;
                 }
 
-                if((traded || spun) && value) {
+                if((traded || spun || no_trade) && value) {
                     return true;
                 }
                 return false;
@@ -182,6 +183,7 @@
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 let value = this.marketNegotiation.bid;
                 let only = (this.bid_offer_selected.includes('bid-only') && this.isRequestPhase);
@@ -195,7 +197,7 @@
                     return !this.currentNegotiation.getAmountSource('offer').is_my_org;
                 }
 
-                if((traded || spun) && value) {
+                if((traded || spun || no_trade) && value) {
                     return true;
                 }
                 return false;
@@ -218,7 +220,8 @@
                 };
 
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-                if(traded) {
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
+                if(traded || no_trade) {
                     return false;
                 }
 

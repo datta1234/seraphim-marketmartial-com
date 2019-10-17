@@ -318,7 +318,7 @@ class UserMarket extends Model
     */
     public function isTrading() {
         $trade = $this->tradeNegotiations()->latest()->first();
-        return ( $trade ? !$trade->traded : false );
+        return ( $trade ? !$trade->traded && !$trade->trade_killed : false );
     }
 
     /**
@@ -612,11 +612,14 @@ class UserMarket extends Model
         $marketNegotiation->user_id = $user->id;
 
         if(
-            // this is for when the counter waas traded, we start a new tree
-            ($counterNegotiation && $counterNegotiation->isTraded()) 
+            // this is for when the counter was traded or killed ie. No Trade, we start a new tree
+            ( $counterNegotiation && ($counterNegotiation->isTraded() || $counterNegotiation->isKilled()) ) 
             // handle exceptions to the case where the counter is not the one traded, 
             // ie: trade@best the person sending this one is the same as teh one sending the last trade@best [MM-828]
-            || ($counterNegotiation->id != $this->lastNegotiation->id && $this->lastNegotiation->isTraded()) 
+            || (
+                $counterNegotiation->id != $this->lastNegotiation->id 
+                && ( $this->lastNegotiation->isTraded() || $this->lastNegotiation->isKilled() )
+            ) 
         ) {
             return $this->startNegotiationTree($marketNegotiation,$counterNegotiation,$user,$data);
         }
@@ -971,6 +974,20 @@ class UserMarket extends Model
         if($this->isAdminContext()) {
             $data['user'] = $this->user->full_name;
             $data['org'] = $this->user->organisation->title;
+
+            // Admin needs to see applied condition, sending the active condition.
+            // Might need to change this if the admin requires more info to its own property
+            $data['active_conditions'] = $this->activeConditionNegotiations
+                ->map(function($cond) use ($uneditedmarketNegotiations) {
+                    return [
+                        'condition' => $cond->preFormattedMarketNegotiation($uneditedmarketNegotiations),
+                        'history'   => $cond->getConditionHistory()->map(function($item) use ($uneditedmarketNegotiations) {
+                            return $item->setOrgContext($this->resolveOrganisation())
+                                        ->preFormattedMarketNegotiation($uneditedmarketNegotiations);
+                        })->values(),
+                        'type'      => $cond->activeConditionType
+                    ];
+                })->values();
         }
 
         return $data;

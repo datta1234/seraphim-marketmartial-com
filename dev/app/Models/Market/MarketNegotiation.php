@@ -30,8 +30,10 @@ class MarketNegotiation extends Model
 	 * @property boolean $has_premium_calc
 	 * @property boolean $is_repeat
 	 * @property boolean $is_accepted
+     * @property boolean $job_id
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
+     * @property \Carbon\Carbon $cond_expiry
 	 */
 
     /**
@@ -73,6 +75,9 @@ class MarketNegotiation extends Model
             "cond_is_subject",
             "cond_buy_mid",
             "cond_buy_best",
+
+            "job_id",
+            "cond_expiry"
     ];
 
     protected $hidden = ["user_id","user"];
@@ -109,6 +114,13 @@ class MarketNegotiation extends Model
     ];
 
     /**
+     *  Used in the instance where a condition is applied and a job is dispactched on save
+     *  where the the job id needs to be attached to the MarketNegotiation to avoid an
+     *  endless loop of saving and dispatching a job.
+     */
+    public $conditions_is_applied = false;
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -116,7 +128,8 @@ class MarketNegotiation extends Model
     protected $dates = [
         'created_at', 
         'updated_at', 
-        'deleted_at'
+        'deleted_at',
+        'cond_expiry'
     ];
 
     /**
@@ -551,7 +564,7 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function isTrading() {
-        return $this->tradeNegotiations->count() > 0 && $this->lastTradeNegotiation->traded == false;
+        return $this->tradeNegotiations->count() > 0 && $this->lastTradeNegotiation->traded == false && $this->lastTradeNegotiation->trade_killed == false;
     }
 
     /**
@@ -559,8 +572,16 @@ class MarketNegotiation extends Model
     * @return Boolean
     */
     public function timeoutExpired() {
-        $timeout = $this->getApplicableTimeout();
-        return $this->created_at > \Carbon\Carbon::now()->subMinutes($timeout);
+        return is_null($this->cond_expiry) ? true : $this->cond_expiry <= \Carbon\Carbon::now();
+    }
+
+    /**
+    * Check if the timeout has been locked and can no longer be edited
+    * @return Boolean
+    */
+    public function timeoutLocked() {
+        $lock_timeout = config('marketmartial.thresholds.lock_timeout');
+        return is_null($this->cond_expiry) ? true : $this->cond_expiry <= \Carbon\Carbon::now()->addSeconds($lock_timeout);
     }
 
     public function getApplicableTimeout() {
@@ -578,6 +599,15 @@ class MarketNegotiation extends Model
         return 0;
     }
 
+    /**
+     * Calculated the timestamp from the passed condition timeout from the current time
+     * @param int $timeout
+     * @return \Carbon\Carbon
+     */
+    public function createConditionTimeoutTimestamp($timeout) {
+        // $timeout is in minutes
+        return \Carbon\Carbon::now()->addMinutes($timeout);
+    }
 
     /**
     * test if is MeetInMiddle
@@ -639,6 +669,18 @@ class MarketNegotiation extends Model
                 }
                 
                 return $term." At Best: ".$state." for _".$this->user->full_name."_ on *".$message."*";
+            break;
+            case 'trade_killed':
+                $tradeNegotiation = $this->lastTradeNegotiation;
+                $marketRequest = $this->userMarket->userMarketRequest;
+
+                $buyer  =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->recievingUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->initiateUser->organisation()->pluck('title')[0];
+                $seller =   $tradeNegotiation->is_offer 
+                            ? $tradeNegotiation->initiateUser->organisation()->pluck('title')[0] 
+                            : $tradeNegotiation->recievingUser->organisation()->pluck('title')[0];
+                return "No Trade occured between ".$buyer." (buyer) and ".$seller." (seller) on ".$marketRequest->getSummary();
             break;
         }
     }
@@ -870,6 +912,13 @@ class MarketNegotiation extends Model
         return $this->is_repeat && $this->marketNegotiationParent && $this->marketNegotiationParent->is_repeat;
     }
 
+    public function isKilled()
+    {
+        return $this->tradeNegotiations()->where(function($q){
+            return $q->where('trade_killed',true);
+        })->exists();
+    }
+
     public function getLatest($side)
     {
         $side = ( $side == 'bid' ? 'bid' : 'offer' );
@@ -994,7 +1043,6 @@ class MarketNegotiation extends Model
         return $this->tradeNegotiations()->latest()->first();
     }
 
-
     public function setAmount($marketNegotiations,$attr)
     {
         // $source = $marketNegotiations->where($attr, $this->getAttribute($attr))->sortBy('id')->first();
@@ -1067,8 +1115,17 @@ class MarketNegotiation extends Model
                 $tradeNegotiation->is_offer = !$counterNegotiation->is_offer; //switch the type as it is counter so the opposite
                 $tradeNegotiation->recieving_user_id = $counterNegotiation->initiate_user_id;
 
+                if($tradeNegotiation->trade_killed)
+                {
+                    /*
+                     * To ensure no work the balance clauses gets triggered down the line,
+                     *  fail save but on a no trade the contracts should remain the same.
+                     */
+                    $tradeNegotiation->quantity = $counterNegotiation->quantity;
+                    $tradeNegotiation->traded = false;
+
                 //if it is greater it is an amend but if it is less or eqaul it is traded
-                if($tradeNegotiation->quantity == $counterNegotiation->quantity)
+                }else if($tradeNegotiation->quantity == $counterNegotiation->quantity)
                 {
                     //create a new market negotiation if the quantity is 
                     $tradeNegotiation->traded = true;
@@ -1091,11 +1148,23 @@ class MarketNegotiation extends Model
             try {
                 DB::beginTransaction();
                 $this->tradeNegotiations()->save($tradeNegotiation);
+                // Notify the admin of a trade
                 if($tradeNegotiation->traded) {
                     \Slack::postMessage([
                         "text"      => $this->getMessage('market_traded'),
                         "channel"   => config("marketmartial.slack.trade_channel")
                     ], 'trade');
+                }
+                if($tradeNegotiation->trade_killed) {
+                    // Notify an admin that a trade has been killed
+                    \Slack::postMessage([
+                        "text"      => $this->getMessage('trade_killed'),
+                    ], 'notify');
+
+                    // Notify trading users that it has been killed
+                    $message = "Trade has been rejected.";
+                    $tradeNegotiation->initiateUser->organisation->notify("no_trade",$message,true);
+                    $tradeNegotiation->recievingUser->organisation->notify("no_trade",$message,true);
                 }
                
                 if($newMarketNegotiation )
@@ -1272,6 +1341,8 @@ class MarketNegotiation extends Model
             "time"                  => $this->time,
             "applicable_timeout"    => $this->getApplicableTimeout(),
             "created_at"            => $this->created_at->toIso8601String(),
+            "cond_expiry"           => is_null($this->cond_expiry) ? $this->cond_expiry : $this->cond_expiry->toIso8601String(),
+            "lock_timeout"          => config('marketmartial.thresholds.lock_timeout'),
             "trade_negotiations"    => $this->tradeNegotiations->map(function($tradeNegotiation){
                 
                 return $tradeNegotiation->setOrgContext($this->resolveOrganisation())->preFormatted();
@@ -1371,12 +1442,69 @@ class MarketNegotiation extends Model
             $this->timeout_cond_applied = true;
         }
     }
+
     public function applyCondTimeoutPostCondition() {
         if($this->timeout_cond_applied) {
             $job = new \App\Jobs\MarketNegotiationTimeout($this);
             $timeout = $this->getApplicableTimeout(); // mins
-            dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
+            $timestamp = $timeout == 0 ? null : $this->createConditionTimeoutTimestamp($timeout);
+            $job_id = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
+
+            // ensure that no condition functions in AppliesConditions trait run
+            $this->conditions_is_applied = true;
+            $this->update([
+                "cond_expiry" => $timestamp,
+                "job_id" => $job_id
+            ]);
         }
+    }
+
+    /**
+     * Reset a Condition Timeout either fully or to a set time interval depending on passed option.
+     *  NOTE: if Queue driver changes from DB this will fail 
+     * @param string $option
+     * @return boolean
+     */
+    public function resetCondTimeout($option = 'reset') {
+        // Find current Job
+        $current_job_id = $this->job_id;
+        $job = DB::table('jobs')->where("id",$current_job_id)->count();
+        if($job < 1) {
+            return false;
+        }
+
+        // ensure that no condition functions in AppliesConditions trait run
+        $this->conditions_is_applied = true;
+        // delete the current job related to this negotiation
+        try {
+            DB::beginTransaction();
+            $this->update(["job_id" => null]);
+            DB::table('jobs')->where("id",$current_job_id)->delete();
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            \Log::info(["resetCondTimeout Failed to remove current job",[
+                "Market Negotiation Id" => $this->id,
+                "Job ID" => $this->job_id
+            ]]);
+            \Log::error($e);
+            DB::rollBack();
+            return false;
+        }
+
+        $timeout = $option == 'end' ? 0 : $this->getApplicableTimeout(); // mins
+        $timestamp = $this->createConditionTimeoutTimestamp($timeout);
+        // Create new Job
+        $job = new \App\Jobs\MarketNegotiationTimeout($this);
+        $job_id = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
+
+        // ensure that no condition functions in AppliesConditions trait run
+        $this->conditions_is_applied = true;
+        $this->update([
+            "cond_expiry" => $timestamp,
+            "job_id" => $job_id
+        ]);
+
+        return true;
     }
 
     /**

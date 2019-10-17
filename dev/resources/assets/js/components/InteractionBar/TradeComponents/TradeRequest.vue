@@ -68,7 +68,7 @@
 
         <b-col cols="10">
 
-            <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded">
+            <template v-if="lastTradeNegotiation != null && !lastTradeNegotiation.traded && !lastTradeNegotiation.trade_killed">
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
                     <template v-if="(tradeNegotiation.sent_by_me || tradeNegotiation.sent_to_me) 
                                     && index == (marketNegotiation.trade_negotiations.length - 1)">
@@ -86,7 +86,8 @@
                     </div>
                 </div>
             </template>
-            <div v-else-if="lastTradeNegotiation != null && lastTradeNegotiation.traded" class="text-my-org text-center">
+            <div v-else-if="lastTradeNegotiation != null && (lastTradeNegotiation.traded || lastTradeNegotiation.trade_killed)"
+                 class="text-my-org text-center">
                 <div v-for="(tradeNegotiation,index) in marketNegotiation.trade_negotiations">
                     {{ tradeNegotiation.getTradingText() }}
                 </div>
@@ -94,7 +95,7 @@
         </b-col>
         <b-col cols="2"></b-col>
         
-        <b-col v-if="isCurrent && lastTradeNegotiation != null && lastTradeNegotiation.traded">
+        <b-col v-if="isCurrent && lastTradeNegotiation != null && (lastTradeNegotiation.traded || lastTradeNegotiation.trade_killed)">
             <b-row dusk="ibar-trade-request-open">
                 <b-col cols="10">
                     <b-row>

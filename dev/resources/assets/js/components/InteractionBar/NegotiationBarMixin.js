@@ -85,7 +85,11 @@ export default {
                 return !this.last_negotiation.is_my_org 
                     ||  (
                         this.last_negotiation.is_my_org &&
-                        ( this.last_negotiation.isSpun() || this.last_negotiation.isTraded() )
+                        ( 
+                            this.last_negotiation.isSpun() 
+                            || this.last_negotiation.isTraded() 
+                            || this.last_negotiation.isNoTrade() 
+                        )
                     )
             }
             return false;
@@ -131,7 +135,7 @@ export default {
             return this.marketRequest.chosen_user_market.isTradingAtBest();
         },
         is_trading_at_best_closed: function() {
-            return !this.last_negotiation.hasTimeoutRemaining() || this.last_negotiation.isTraded();
+            return !this.last_negotiation.hasTimeoutRemaining() || this.last_negotiation.isTraded() || this.last_negotiation.isNoTrade();
         },
         is_trading_at_best_source: function() {
             return this.marketRequest.chosen_user_market.trading_at_best && this.marketRequest.chosen_user_market.trading_at_best.is_my_org;
@@ -401,7 +405,7 @@ export default {
             //if we have a chosen negotiation use that else its still dealing with quotes
             if(this.marketRequest.chosen_user_market && this.last_negotiation != null && (this.last_negotiation.offer_qty != null || this.last_negotiation.bid_qty != null) )
             {
-                if(!this.last_negotiation.isTraded()) {
+                if(!this.last_negotiation.isTraded() && !this.last_negotiation.isNoTrade()) {
                     this.proposed_user_market_negotiation.offer_qty = this.last_negotiation.offer_qty;
                     this.proposed_user_market_negotiation.bid_qty = this.last_negotiation.bid_qty;  
                     if(!this.last_negotiation.isSpun()) {
@@ -419,7 +423,7 @@ export default {
                             this.proposed_user_market_negotiation._bid_initial_value = this.last_negotiation.bid;
                         }
                     }
-                // Traded set quantities back to default   
+                // Traded or with a No Trade set quantities back to default   
                 } else {
                     this.proposed_user_market_negotiation.offer_qty = this.marketRequest.defaultQuantity();
                     this.proposed_user_market_negotiation.bid_qty = this.marketRequest.defaultQuantity(); 

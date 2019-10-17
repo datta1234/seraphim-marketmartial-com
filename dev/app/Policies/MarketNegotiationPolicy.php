@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\UserManagement\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Market\MarketNegotiation;
+use Illuminate\Support\Facades\DB;
 
 class MarketNegotiationPolicy
 {
@@ -35,7 +36,7 @@ class MarketNegotiationPolicy
         if(!$user->isTrader()) { 
             return false; 
         }
-        if($marketNegotiation->isTraded()) {
+        if($marketNegotiation->isTraded() || $marketNegotiation->isKilled()) {
             return false;
         }
         if($marketNegotiation->isTrading()) {
@@ -156,4 +157,19 @@ class MarketNegotiationPolicy
         return $user->isTrader();
     }
 
+    public function alterTradeAtBestTimer(User $user, MarketNegotiation $marketNegotiation)
+    {
+        if($user->isAdmin()) {
+            // Find current Job
+            $job = DB::table('jobs')->where("id",$marketNegotiation->job_id)->count();
+            // If there is no current job queued or the timeout still has not reached the lock timeout condition
+            if($job < 1 || $marketNegotiation->timeoutLocked()) {
+                return false;
+            }
+
+            return true;
+        } 
+        
+        return false; 
+    }
 }
