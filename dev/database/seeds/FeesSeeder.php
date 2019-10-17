@@ -43,9 +43,10 @@ class FeesSeeder extends Seeder
     				);
     			}
 
-        		foreach ($group['items'] as $item) {
+
+                foreach ($group['items'] as $item) {
         			// Only add update items
-        			if(array_key_exists('update_seed',$item) && $item['update_seed']) {
+                    if(array_key_exists('update_seed',$item) && $item['update_seed']) {
         				$itemType = $itemTypes->firstWhere('title',$item['type']);
         				factory(\App\Models\StructureItems\Item::class)->create([
                             'title' => $item['title'],
@@ -56,19 +57,19 @@ class FeesSeeder extends Seeder
 
         		}
 			
-    			if(
-    				isset($group['trade_confirmation_group']['Fees']) 
-    				&& isset($group['trade_confirmation_group']['Fees']['items'])
-    			) {
+                if(
+                    isset($group['trade_confirmation_group']['fees']) 
+                    && isset($group['trade_confirmation_group']['fees']['items'])
+                ) {
     				$feesGroupModel = factory(\App\Models\StructureItems\TradeStructureGroup::class)->create([
-		                                'title' => $group['trade_confirmation_group']['Fees']['title'],
+		                                'title' => $group['trade_confirmation_group']['fees']['title'],
 		                                'trade_structure_id' => $tradeStructureModel->id,
 		                                'force_select'=> null,
 		                                'trade_structure_group_id'=>$tradeStructureGroupModel->id,
 		                                'trade_structure_group_type_id'=> 3
 		                            ]);
 
-    				foreach ($group['trade_confirmation_group']['Fees']['items'] as $item) {
+    				foreach ($group['trade_confirmation_group']['fees']['items'] as $item) {
                         // Only add update items
                         if(array_key_exists('update_seed',$item) && $item['update_seed']) {
 	                        $itemType = $itemTypes->firstWhere('title',$item['type']);
