@@ -100,6 +100,8 @@ class MarketNegotiationTimeout implements ShouldQueue
 
         if(!is_null($marketNegotiation->job_id)) {
             try {
+                // ensure that no condition functions in AppliesConditions trait run
+                $this->conditions_is_applied = true;
                 $marketNegotiation->update(["job_id"=>null]);
             } catch (\Illuminate\Database\QueryException $e) {
                 \Log::info(["Failed to remove Job ID from marketNegotiation",[
