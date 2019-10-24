@@ -1450,12 +1450,19 @@ class MarketNegotiation extends Model
             $timestamp = $timeout == 0 ? null : $this->createConditionTimeoutTimestamp($timeout);
             $job_id = app(\Illuminate\Contracts\Bus\Dispatcher::class)->dispatch($job->delay( $timeout == 0 ? $timeout : ($timeout*60) )); // delay by timeout in seconds
 
+            
             // ensure that no condition functions in AppliesConditions trait run
             $this->conditions_is_applied = true;
             $this->update([
-                "cond_expiry" => $timestamp,
+                "cond_expiry" => $this->isTradeAtBestOpen() 
+                                 && $this->marketNegotiationParent 
+                                 && $this->marketNegotiationParent->isTradeAtBest() ?
+                                 \Carbon\Carbon::now() 
+                                 : $timestamp,
                 "job_id" => $job_id
             ]);
+
+
         }
     }
 
