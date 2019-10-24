@@ -282,7 +282,7 @@
                                 <tbody>
                                     <tr v-for="(fee_groups, key) in trade_confirmation.fee_groups">
                                         <td>
-                                            {{ fee_groups.fee_total ? splitValHelper(fee_groups.fee_total,' ',3) : '-' }}
+                                            {{ (typeof fee_groups.fee_total !== "undefined" && fee_groups.fee_total !== null ) ? splitValHelper(fee_groups.fee_total,' ',3) : '-' }}
                                         </td>
                                     </tr>
                               </tbody>
