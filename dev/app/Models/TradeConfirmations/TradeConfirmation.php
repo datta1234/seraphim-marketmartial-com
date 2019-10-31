@@ -816,11 +816,19 @@ class TradeConfirmation extends Model
         //need to update for other tradesctruvtures
         $sendIsOffer = $this->resolveItem("is_offer",true);
         $recieverIsOffer = $this->resolveItem("is_offer",false);
+
         $senderTotalFee = $this->resolveItem("Fee Total",true);
         $recieverTotalFee = $this->resolveItem("Fee Total",false);
 
+        // This is for var_swaps because they do not have the is_offer as an item
+        if(is_null($sendIsOffer)) {
+            $sendIsOffer = $this->tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
+        }
+        if(is_null($recieverIsOffer)) {
+            $recieverIsOffer = $this->tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id);
+        }
 
-        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
+        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($senderTotalFee + $recieverTotalFee);
 
         //outright part of the optionGroup
         try {
@@ -876,34 +884,6 @@ class TradeConfirmation extends Model
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             \Log::error($e);
-        }
-
-    }
-
-    public function getBrokerageTotal($is_sender)
-    {
-        $brokerFee = 0;
-        foreach ($this->optionGroups as $group) 
-        {
-            $isOffer = $group->getOpVal("is_offer",$is_sender);  
-            $grossPremium = $group->getOpVal("Gross Premiums");
-            $netPremium = $group->getOpVal("Net Premiums",$is_sender);
-            $contracts = $group->getOpVal("Contract");
-            $brokerFee += abs($this->calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts));
-        }
-
-        return  $brokerFee;
-    }
-
-    public function calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts)
-    {
-            //isOffer is Buy
-        if($isOffer)
-        {
-            return ($netPremium - $grossPremium) * $contracts;
-        }else
-        {
-            return ($grossPremium - $netPremium) * $contracts;
         }
 
     }

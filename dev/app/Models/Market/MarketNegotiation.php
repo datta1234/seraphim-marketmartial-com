@@ -621,6 +621,18 @@ class MarketNegotiation extends Model
         ); 
     }
 
+    /**
+    * test if is MeetInMiddle
+    * @return Boolean
+    */
+    public function isRepeatTimeout()
+    {
+        return (
+            $this->is_repeat == true &&
+            $this->cond_timeout == true
+        ); 
+    }
+
     public function doTradeAtBest($user, $quantity, $is_offer) {
         // @TODO: rework to get latest
         $tradeNegotiation = $this->addTradeNegotiation($user,[
@@ -1454,8 +1466,9 @@ class MarketNegotiation extends Model
             // ensure that no condition functions in AppliesConditions trait run
             $this->conditions_is_applied = true;
             $this->update([
-                "cond_expiry" => $this->isTradeAtBestOpen() 
-                                 && $this->marketNegotiationParent 
+                "cond_expiry" => $this->isTradeAtBestOpen()
+                                 && !$this->isRepeatTimeout()
+                                 && $this->marketNegotiationParent
                                  && $this->marketNegotiationParent->isTradeAtBest() ?
                                  \Carbon\Carbon::now() 
                                  : $timestamp,
