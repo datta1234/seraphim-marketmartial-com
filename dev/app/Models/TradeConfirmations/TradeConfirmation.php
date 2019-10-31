@@ -434,6 +434,7 @@ class TradeConfirmation extends Model
             "volatility" => array(),
         ];
 
+        $ratio = $this->tradeNegotiation->getTradingRatio();
         foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
             foreach ($group->userMarketRequestItems as $key => $item) {
                 switch ($item->title) {
@@ -445,8 +446,16 @@ class TradeConfirmation extends Model
                     case 'Strike':
                         $resolved_items["strike"][] = $item->value;
                         break;
-                    case 'Quantity':
+                    /*case 'Quantity':
                         $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        break;*/
+                    case 'Quantity':
+                        if($group->is_selected) {
+                            $ratio_value = round( $item->value * $ratio, 2);
+                            $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$ratio_value.'m' : $ratio_value;
+                        } else {
+                            $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$this->tradeNegotiation->quantity.'m' : $this->tradeNegotiation->quantity;
+                        }
                         break;
                 }
             }
