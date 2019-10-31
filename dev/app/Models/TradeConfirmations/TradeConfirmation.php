@@ -816,8 +816,8 @@ class TradeConfirmation extends Model
         //need to update for other tradesctruvtures
         $sendIsOffer = $this->resolveItem("is_offer",true);
         $recieverIsOffer = $this->resolveItem("is_offer",false);
-        $senderNetPremium = $this->resolveItem("Net Premiums",true);
-        $recieverNetPremium = $this->resolveItem("Net Premiums",false);
+        $senderTotalFee = $this->resolveItem("Fee Total",true);
+        $recieverTotalFee = $this->resolveItem("Fee Total",false);
 
 
         $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
@@ -832,7 +832,7 @@ class TradeConfirmation extends Model
                 "is_purchase"               => $sendIsOffer,
                 "is_rebate"                 => false,
                 "is_confirmed"              => false,
-                "amount"                    => $senderNetPremium,
+                "amount"                    => $senderTotalFee,
                 "user_id"                   => $this->send_user_id,
                 "trade_confirmation_id"     => $this->id,
                 "market_request_id"         => $this->user_market_request_id
@@ -845,7 +845,7 @@ class TradeConfirmation extends Model
                 "is_purchase"               => $recieverIsOffer ,
                 "is_rebate"                 => false,
                 "is_confirmed"              => false,
-                "amount"                    => $this->resolveItem("Net Premiums",false),
+                "amount"                    => $recieverTotalFee,
                 "user_id"                   => $this->receiving_user_id,
                 "trade_confirmation_id"     => $this->id,
                 "market_request_id"         => $this->user_market_request_id
