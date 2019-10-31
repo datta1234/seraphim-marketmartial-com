@@ -425,8 +425,10 @@ export default class UserMarketRequest extends BaseModel {
 
     getQuantityType()
     {        
-       if(this.getMarket())
-        {
+        if(this.getMarket()) {
+            if(this.trade_structure_slug == "var_swap") {
+                return "Vega";
+            }
             return this.getMarket().title == "SINGLES" ? "Rm" : "Contracts";
         }
     }

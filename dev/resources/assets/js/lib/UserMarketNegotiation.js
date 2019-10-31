@@ -366,8 +366,13 @@ export default class UserMarketNegotiation extends BaseModel {
     
     getQuantityType()
     {
-       if(this.getUserMarket() && this.getUserMarket().getMarketRequest() && this.getUserMarket().getMarketRequest().getMarket())
+        if(this.getUserMarket() && this.getUserMarket().getMarketRequest() && this.getUserMarket().getMarketRequest().getMarket())
         {
+            let trade_structure = this.getUserMarket().getMarketRequest().trade_structure_slug;
+            if(trade_structure == "var_swap") {
+                return "Vega";
+            }
+
             return this.getUserMarket().getMarketRequest().getMarket().title == "SINGLES" ? "Rm" : "Contracts";
         }
     }
