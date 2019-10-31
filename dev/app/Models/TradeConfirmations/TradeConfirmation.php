@@ -856,7 +856,7 @@ class TradeConfirmation extends Model
                 ]);
 
                 $organisation = $userMarket->user->organisation;
-                $organisation->notify("rebate_earned","You earned a rebate",true);
+                // $organisation->notify("rebate_earned","You earned a rebate",true);
                 Rebate::notifyOrganisationUpdate($organisation);
             }
 
