@@ -72,8 +72,8 @@ trait CalculatesForEfpSwitch {
         $feeCounter1 = abs(round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 2)) * $contracts1 * 10;
         $feeCounter2 = abs(round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 2)) * $contracts2 * 10;
         // Fee Total = SUM(Fee)
-        $totalFee = round($fee1 + $fee2,2);
-        $totalFeeCounter = round($feeCounter1 + $feeCounter2,2);
+        $totalFee = round($fee1 + $fee2);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2);
 
         $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
         //set for the counter

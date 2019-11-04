@@ -434,6 +434,7 @@ class TradeConfirmation extends Model
             "volatility" => array(),
         ];
 
+        $ratio = $this->tradeNegotiation->getTradingRatio();
         foreach ($this->marketRequest->userMarketRequestGroups as $key => $group) {
             foreach ($group->userMarketRequestItems as $key => $item) {
                 switch ($item->title) {
@@ -445,8 +446,16 @@ class TradeConfirmation extends Model
                     case 'Strike':
                         $resolved_items["strike"][] = $item->value;
                         break;
-                    case 'Quantity':
+                    /*case 'Quantity':
                         $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$item->value.'m' : $item->value;
+                        break;*/
+                    case 'Quantity':
+                        if($group->is_selected) {
+                            $ratio_value = round( $item->value * $ratio, 2);
+                            $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$ratio_value.'m' : $ratio_value;
+                        } else {
+                            $resolved_items["nominal"][] = $group->tradable->isStock() ? 'R'.$this->tradeNegotiation->quantity.'m' : $this->tradeNegotiation->quantity;
+                        }
                         break;
                 }
             }
@@ -807,11 +816,19 @@ class TradeConfirmation extends Model
         //need to update for other tradesctruvtures
         $sendIsOffer = $this->resolveItem("is_offer",true);
         $recieverIsOffer = $this->resolveItem("is_offer",false);
-        $senderNetPremium = $this->resolveItem("Net Premiums",true);
-        $recieverNetPremium = $this->resolveItem("Net Premiums",false);
 
+        $senderTotalFee = $this->resolveItem("Fee Total",true);
+        $recieverTotalFee = $this->resolveItem("Fee Total",false);
 
-        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($this->getBrokerageTotal(true) + $this->getBrokerageTotal(false));
+        // This is for var_swaps because they do not have the is_offer as an item
+        if(is_null($sendIsOffer)) {
+            $sendIsOffer = $this->tradeNegotiation->getIsOfferForOrg($this->sendUser->organisation_id);
+        }
+        if(is_null($recieverIsOffer)) {
+            $recieverIsOffer = $this->tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id);
+        }
+
+        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($senderTotalFee + $recieverTotalFee);
 
         //outright part of the optionGroup
         try {
@@ -823,7 +840,7 @@ class TradeConfirmation extends Model
                 "is_purchase"               => $sendIsOffer,
                 "is_rebate"                 => false,
                 "is_confirmed"              => false,
-                "amount"                    => $senderNetPremium,
+                "amount"                    => $senderTotalFee,
                 "user_id"                   => $this->send_user_id,
                 "trade_confirmation_id"     => $this->id,
                 "market_request_id"         => $this->user_market_request_id
@@ -836,7 +853,7 @@ class TradeConfirmation extends Model
                 "is_purchase"               => $recieverIsOffer ,
                 "is_rebate"                 => false,
                 "is_confirmed"              => false,
-                "amount"                    => $this->resolveItem("Net Premiums",false),
+                "amount"                    => $recieverTotalFee,
                 "user_id"                   => $this->receiving_user_id,
                 "trade_confirmation_id"     => $this->id,
                 "market_request_id"         => $this->user_market_request_id
@@ -856,7 +873,7 @@ class TradeConfirmation extends Model
                 ]);
 
                 $organisation = $userMarket->user->organisation;
-                $organisation->notify("rebate_earned","You earned a rebate",true);
+                // $organisation->notify("rebate_earned","You earned a rebate",true);
                 Rebate::notifyOrganisationUpdate($organisation);
             }
 
@@ -867,34 +884,6 @@ class TradeConfirmation extends Model
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             \Log::error($e);
-        }
-
-    }
-
-    public function getBrokerageTotal($is_sender)
-    {
-        $brokerFee = 0;
-        foreach ($this->optionGroups as $group) 
-        {
-            $isOffer = $group->getOpVal("is_offer",$is_sender);  
-            $grossPremium = $group->getOpVal("Gross Premiums");
-            $netPremium = $group->getOpVal("Net Premiums",$is_sender);
-            $contracts = $group->getOpVal("Contract");
-            $brokerFee += abs($this->calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts));
-        }
-
-        return  $brokerFee;
-    }
-
-    public function calcBrokerage($isOffer,$netPremium,$grossPremium,$contracts)
-    {
-            //isOffer is Buy
-        if($isOffer)
-        {
-            return ($netPremium - $grossPremium) * $contracts;
-        }else
-        {
-            return ($grossPremium - $netPremium) * $contracts;
         }
 
     }

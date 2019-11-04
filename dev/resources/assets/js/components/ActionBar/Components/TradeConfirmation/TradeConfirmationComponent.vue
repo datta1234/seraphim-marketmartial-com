@@ -332,7 +332,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlSelect1">Account Booking</label>
                         <b-form-select v-model="selected_trading_account">
-                            <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account }}
+                            <option  v-for="trading_account in trading_accounts" :value="trading_account">{{ trading_account.sub_account ? trading_account.sub_account : trading_account.safex_number }}
                             </option>
                         </b-form-select>
                         <b-row v-if="errors && errors['trading_account_id']" class="text-center mt-2 mb-2">

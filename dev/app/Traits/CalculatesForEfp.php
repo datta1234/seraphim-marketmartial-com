@@ -52,9 +52,9 @@ trait CalculatesForEfp {
         $contracts =  floatval($this->futureGroups[0]->getOpVal('Contract'));
 
         // Fee = |Amount| * Contracts * 10
-        $totalFee = round(abs(round($future1 * ($is_sender ? $D1efpFeeSender : $D1efpFeeReceiving) * $FutBrodirection1, 2)) * $contracts * 10,2);
+        $totalFee = round(abs(round($future1 * ($is_sender ? $D1efpFeeSender : $D1efpFeeReceiving) * $FutBrodirection1, 2)) * $contracts * 10);
         // Calculate for the counter
-        $totalFeeCounter = round(abs(round( ($FuturesSpotRef1 * ($is_sender ? $D1efpFeeReceiving : $D1efpFeeSender) * $counterFutBrodirection1), 2)) * $contracts * 10,2);
+        $totalFeeCounter = round(abs(round( ($FuturesSpotRef1 * ($is_sender ? $D1efpFeeReceiving : $D1efpFeeSender) * $counterFutBrodirection1), 2)) * $contracts * 10);
 
         $this->feeGroups[0]->setOpVal('Fee Total', $totalFee,$is_sender);
         //set for the counter
