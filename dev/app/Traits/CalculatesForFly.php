@@ -180,8 +180,8 @@ trait CalculatesForFly {
         $feeCounter2 = abs($gross_prem2 - $netPremiumCounter2) * $contracts2;
         $feeCounter3 = abs($gross_prem3 - $netPremiumCounter3) * $contracts3;
         // Fee Total = SUM(Fee)
-        $totalFee = round($fee1 + $fee2 + $fee3,2);
-        $totalFeeCounter = round($feeCounter1 + $feeCounter2 + $feeCounter3,2);
+        $totalFee = round($fee1 + $fee2 + $fee3);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2 + $feeCounter3);
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremium2,$is_sender);

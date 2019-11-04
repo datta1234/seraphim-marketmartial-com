@@ -181,8 +181,8 @@ trait CalculatesForRisky {
         $feeCounter1 = abs($gross_prem1 - $netPremiumCounter1) * $contracts1;
         $feeCounter2 = abs($gross_prem2 - $netPremiumCounter2) * $contracts2;
         // Fee Total = SUM(Fee)
-        $totalFee = round($fee1 + $fee2,2);
-        $totalFeeCounter = round($feeCounter1 + $feeCounter2,2);
+        $totalFee = round($fee1 + $fee2);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2);
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremium2,$is_sender);

@@ -110,9 +110,9 @@ trait CalculatesForOutright {
         }
 
         // Fee = |GrossPrem - NetPremContracts| * Contracts
-        $totalFee = round(abs($gross_prem - $netPremium) * $contracts1,2);
+        $totalFee = round(abs($gross_prem - $netPremium) * $contracts1);
         // Calculate for the counter
-        $totalFeeCounter = round(abs($gross_prem - $netPremiumCounter) * $contracts1,2);
+        $totalFeeCounter = round(abs($gross_prem - $netPremiumCounter) * $contracts1);
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
 
