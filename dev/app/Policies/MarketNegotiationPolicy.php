@@ -159,7 +159,14 @@ class MarketNegotiationPolicy
 
     public function alterTradeAtBestTimer(User $user, MarketNegotiation $marketNegotiation)
     {
-        if($user->isAdmin() && $marketNegotiation->isTradeAtBest()) {
+        if(
+            $user->isAdmin() && (
+                $marketNegotiation->isTradeAtBest() || ( 
+                    $marketNegotiation->isTradeAtBestOpen()
+                    && $marketNegotiation->isRepeatTimeout()
+                )
+            ) 
+        ) {
             // Find current Job
             $job = DB::table('jobs')->where("id",$marketNegotiation->job_id)->count();
             // If there is no current job queued or the timeout still has not reached the lock timeout condition
@@ -170,6 +177,6 @@ class MarketNegotiationPolicy
             return true;
         } 
         
-        return false; 
+        return false;
     }
 }

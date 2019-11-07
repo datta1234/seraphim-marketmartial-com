@@ -48,22 +48,11 @@
                 parent="cond-container">
             </ibar-trade-desired-quantity>
         </b-col>
-        <b-col cols="12 mt-1" v-if="$root.is_admin && !negotiation.isTimeoutLocked()">
-                    <b-button v-active-request class="admin-condition-btn"  
-                              size="sm" 
-                              dusk="ibar-condition-end" 
-                              variant="primary" 
-                              @click="alterTimer('end')">
-                                End Timer
-                    </b-button>
-                    <b-button v-active-request class="float-right admin-condition-btn"  
-                              size="sm" 
-                              dusk="ibar-condition-reset" 
-                              variant="primary" 
-                              @click="alterTimer('reset')">
-                                Reset Timer
-                    </b-button>
-            
+        <b-col cols="12 mt-1" v-if="$root.is_admin">
+            <time-condition-admin-actions
+                :market-negotiation="negotiation"
+                :timed-out="timed_out">
+            </time-condition-admin-actions>
         </b-col>
     </b-row>
 </template>
@@ -71,6 +60,8 @@
     import UserMarketNegotiation from '~/lib/UserMarketNegotiation';
     import ActiveCondition from '~/lib/ActiveCondition';
     import SentCondition from '~/lib/SentCondition';
+
+    import TimeConditionAdminActions from '../../Components/TimeConditionAdminActions';
 
     export default {
         props: {
@@ -81,6 +72,9 @@
                 type: Boolean,
                 default: true,
             },
+        },
+        components: {
+            TimeConditionAdminActions
         },
         data() {
             return {
@@ -111,16 +105,6 @@
             doRepeat() {
                 this.negotiation.repeatNegotiation()
                 .then(response => {
-                    this.errors = [];
-                })
-                .catch(err => {
-                    this.errors = err.errors;
-                });
-            },
-            alterTimer(option) {
-                this.negotiation.alterTradeAtBestTimer(option)
-                .then(response => {
-                    this.timer_value = this.negotiation.getTimeoutRemaining();
                     this.errors = [];
                 })
                 .catch(err => {
