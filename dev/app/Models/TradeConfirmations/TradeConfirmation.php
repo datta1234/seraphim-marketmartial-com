@@ -873,7 +873,8 @@ class TradeConfirmation extends Model
                 ]);
 
                 $organisation = $userMarket->user->organisation;
-                // $organisation->notify("rebate_earned","You earned a rebate",true);
+                // Changed as per JIRA task [MM-1044]
+                $organisation->notify("rebate_earned","Rebate Earned",true);
                 Rebate::notifyOrganisationUpdate($organisation);
             }
 
