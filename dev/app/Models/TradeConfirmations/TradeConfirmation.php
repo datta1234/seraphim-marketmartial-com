@@ -232,9 +232,10 @@ class TradeConfirmation extends Model
             'fee_groups'                => $this->feeGroups->map(function($item) use ($is_sender){
                 return $item->preFormatted($is_sender);
             })->toArray(),
-            'request_groups'                => $this->tradeStructureSlug == 'var_swap' ? $this->marketRequest->userMarketRequestGroups->map(function($item) {
+            'request_groups'            => $this->tradeStructureSlug == 'var_swap' ? $this->marketRequest->userMarketRequestGroups->map(function($item) {
                     return $item->preFormatted();
                 })->toArray() : null,
+            'vega'                      => $this->tradeStructureSlug == 'var_swap' ? $this->tradeNegotiation->quantity : null,
             'swap_parties'              => $this->tradeStructureSlug == 'var_swap' ? [
                     'is_offer' => $this->tradeNegotiation->is_offer,
                     'initiate_org' => $this->tradeNegotiation->initiateUser->organisation->title,
@@ -598,7 +599,7 @@ class TradeConfirmation extends Model
                     if($this->tradeStructureSlug == 'var_swap') {
                         // var swap fee is Vega x Trade Sctructure Fee percentage
                         $fee_percentage = is_null($this->tradeStructure->fee_percentage) ? 0 : $this->tradeStructure->fee_percentage / 100; // Its a percentage value
-                        $vega = $tradeGroup->userMarketRequestGroup->getDynamicItem("Quantity");
+                        $vega = $this->tradeNegotiation->quantity;
                         $value = $fee_percentage * $vega;
                     } else {
                         $value = null;

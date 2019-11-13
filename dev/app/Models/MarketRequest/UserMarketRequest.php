@@ -1573,7 +1573,7 @@ class UserMarketRequest extends Model
 
                 // Only Calculate percentage if both Strike and Spot Price is set
                 if( !empty($strike) && !empty($spot_price) ) {
-                    $data["strike_percentage"][] = round($strike/$spot_price, 2) * 100;
+                    $data["strike_percentage"][] = round($strike/$spot_price * 100, 2);
                 }
             }
         }

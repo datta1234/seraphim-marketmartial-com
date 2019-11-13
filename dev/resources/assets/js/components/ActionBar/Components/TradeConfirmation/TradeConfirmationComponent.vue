@@ -44,7 +44,7 @@
                          {{ trade_confirmation.volatility }}
                     </td>
                     <td>
-                        {{ splitValHelper(request_group.vega,' ',3) }}
+                        {{ splitValHelper(trade_confirmation.vega,' ',3) }}
                     </td>
                     <td>
                         {{ splitValHelper(request_group.cap,' ',3) }} 

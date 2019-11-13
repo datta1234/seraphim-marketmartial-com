@@ -102,7 +102,7 @@ class RebatesSummaryController extends Controller
             $rebates_query = $rebates_query->where('organisation_id', $user->organisation->id);
         }
 
-        $rebates = $rebates_query->orderBy("trade_date", "ASC")->paginate(25);
+        $rebates = $rebates_query->orderBy("updated_at", "DESC")->paginate(25);
 
 
         $rebates->transform(function($rebate) {
