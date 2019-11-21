@@ -72,7 +72,7 @@
                 table_fields: [
                     { key: 'date', label: 'Date', tdClass:'text-right', thClass:'text-right'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'market', label: 'Instrument', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'is_put', label: 'Option Strategy', tdClass:'text-right', thClass:'text-right' },
+                    /*{ key: 'is_put', label: 'Option Strategy', tdClass:'text-right', thClass:'text-right' },*/
                     { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right' },
                     { key: 'expiration', label: 'Expiration', tdClass:'text-right', thClass:'text-right' },
                     { key: 'nominal', label: 'Nominal (ZAR)', tdClass:'text-right', thClass:'text-right' },
