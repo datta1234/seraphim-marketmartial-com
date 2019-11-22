@@ -829,7 +829,7 @@ class TradeConfirmation extends Model
             $recieverIsOffer = $this->tradeNegotiation->getIsOfferForOrg($this->recievingUser->organisation_id);
         }
 
-        $rebatetotal =  config('marketmartial.rebates_settings.rebate_percentage') * ($senderTotalFee + $recieverTotalFee);
+        $rebatetotal =  round( config('marketmartial.rebates_settings.rebate_percentage') * ($senderTotalFee + $recieverTotalFee) );
 
         //outright part of the optionGroup
         try {

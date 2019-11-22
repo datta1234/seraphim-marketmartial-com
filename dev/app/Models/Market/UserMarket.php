@@ -697,6 +697,8 @@ class UserMarket extends Model
                 if($bidSourceNegotiation->isRepeatATW()) {
                     // force repeat
                     $marketNegotiation->is_repeat = true;
+                    // Set RATW user action [MM-1060]
+                    $this->setCounterOrgnisationAction($bidSourceNegotiation->user->organisation_id);
                 }
             }
             if($marketNegotiation->offer == null) {
@@ -708,6 +710,8 @@ class UserMarket extends Model
                 if($offerSourceNegotiation->isRepeatATW()) {
                     // force repeat
                     $marketNegotiation->is_repeat = true;
+                    // Set RATW user action [MM-1060]
+                    $this->setCounterOrgnisationAction($offerSourceNegotiation->user->organisation_id);
                 }
             }  
         }
