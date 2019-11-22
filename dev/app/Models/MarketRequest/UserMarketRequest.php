@@ -152,11 +152,15 @@ class UserMarketRequest extends Model
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeActive($query)
+    public function scopeActive($query, $scope_to_today = false)
     {
-        return $query->where(function($q) {
-            $q->where(function($q) {
+        return $query->where(function($q) use ($scope_to_today) {
+            $q->where(function($q) use ($scope_to_today)  {
                 $q->where('active', true);
+                // Added check due to possible issues with Previous day results and current trade results[MM-1057]
+                if($scope_to_today) {
+                    $q->where('updated_at', '>', now()->startOfDay());
+                }
             });
             $q->orWhere(function($q) {
                 $q->where('active', true);

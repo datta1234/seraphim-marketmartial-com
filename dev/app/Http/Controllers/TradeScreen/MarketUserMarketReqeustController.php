@@ -32,8 +32,9 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function index(Request $request,Market $market)
     {
+        $scope_to_today = true;
         $userMarketRequests = $market->userMarketRequests()
-            ->active()
+            ->active($scope_to_today)
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',
