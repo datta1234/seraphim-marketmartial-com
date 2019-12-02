@@ -97,7 +97,7 @@ trait CalculatesForPhases {
         $callOptionPremium = $future * $this->normSdist($h) - $strike * $this->normSdist($h - $volatility * pow($tt,0.5));
 
         if(!$singleStock){
-            return round($callOptionPremium*10);
+            return round($callOptionPremium*10,2);
         }else{
             return round($callOptionPremium*100,2);
         }  
@@ -111,7 +111,7 @@ trait CalculatesForPhases {
         $putOptionPremium = -$future * $this->normSdist(-$h) + $strike * $this->normSdist($volatility * pow($tt,0.5) - $h);
 
          if(!$singleStock){
-            return round($putOptionPremium*10);
+            return round($putOptionPremium*10,2);
 
         }else{
             return round($putOptionPremium*100,2);
