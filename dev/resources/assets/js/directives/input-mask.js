@@ -10,6 +10,7 @@
 *
 *   Options:
 *       precision: set the allowed decimal precission (length after decimal point)
+*       negative: Allows negative values
 */
 export default {
   bind (el, binding) {
@@ -20,6 +21,25 @@ export default {
             // decimal(numpad), period
             special.push(110, 190)
         }
+        console.log(el.value.length);
+        // If negative add special for negatives
+        if(binding.value && binding.value['negative']) {
+            special.push(109, 189)
+        }
+        /*if(
+            binding.value 
+            && binding.value['negative'] 
+            && (e.keyCode === 109 || e.keyCode === 189)
+        ) {
+            let negative_index = el.value.indexOf("-");
+            console.log('Index: ', negative_index);
+            if(negative_index > -1) {
+                return // allow
+            } else {
+                
+            }
+            
+        }*/
         // special from above
         if (
             special.indexOf(e.keyCode) !== -1 ||
@@ -66,5 +86,21 @@ export default {
         // otherwise stop the keystroke
         e.preventDefault() // prevent
     }) // end addEventListener
-  } // end bind
+  console.log('TEST: ', el.value);
+  }, // end bind
+  update: (el, binding, vnode, oldVnode) => {
+    console.log();
+    // Checks instances of a negative in the value and add's it to the front or removes it if toggled again
+    if(vnode.data.model && vnode.data.model.value) {
+      let split_val = vnode.data.model.value.split('-');
+      // Toggle negatives for the value
+      if((split_val.length - 1) % 2 == 0) {
+        // Remove all with array join('')
+      } else {
+        // concat with ['-'] array and join('') 
+      }
+    }
+    console.log("Update", vnode.data.model);
+    console.log("This: ", binding);
+  }
 }
