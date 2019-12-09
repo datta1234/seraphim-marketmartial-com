@@ -168,7 +168,7 @@ class Rebate extends Model
 
     public static function notifyOrganisationUpdate($organisation)
     {
-        $data = ["total"=> $organisation->rebates()->noTrade()->sum('amount')];
+        $data = ["total"=> $organisation->rebates()->noTrade()->currentMonth()->sum('amount')];
         event(new RebateEvent($data,$organisation));
     }
 
