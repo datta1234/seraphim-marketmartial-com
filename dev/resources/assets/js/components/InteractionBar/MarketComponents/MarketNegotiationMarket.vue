@@ -8,10 +8,32 @@
                             <b-form-input v-active-request v-input-mask.number.decimal class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-input-mask.number.decimal="{ negative: allow_negative() }" v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request 
+                                          v-input-mask.number.decimal="{ 
+                                            negative: allow_negative(),
+                                            negative_callback: setBid
+                                          }" 
+                                          v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" 
+                                          v-model="marketNegotiation.bid" 
+                                          :disabled="disabled_bid || disabled || disable_input" 
+                                          type="text" 
+                                          dusk="market-negotiation-bid" 
+                                          placeholder="Bid">
+                            </b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-input-mask.number.decimal v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request
+                                          v-input-mask.number.decimal="{ 
+                                            negative: allow_negative(),
+                                            negative_callback: setOffer
+                                          }"
+                                          v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }"
+                                          v-model="marketNegotiation.offer"
+                                          :disabled="disabled_offer || disabled || disable_input" 
+                                          type="text" 
+                                          dusk="market-negotiation-offer" 
+                                          placeholder="Offer">
+                            </b-form-input>
                         </div>
                         <div class="w-25 p-1">
                             <b-form-input v-active-request v-input-mask.number.decimal class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
@@ -60,7 +82,11 @@
             isRequestPhase: {
                 type: Boolean,
                 default: false    
-            }
+            },
+            negativeBidOffer: {
+                type: Boolean,
+                default: false    
+            },
         },
         watch: {
             marketNegotiation: {
@@ -205,7 +231,17 @@
         },
         methods: {
             allow_negative: function() {
-                return true;
+                return this.negativeBidOffer;
+            },
+            setBid: function(value) {
+                if(value && value !== this.marketNegotiation.bid) {
+                    this.marketNegotiation.bid = value;
+                }
+            },
+            setOffer: function(value) {
+                if(value && value !== this.marketNegotiation.offer) {
+                    this.marketNegotiation.offer = value;
+                }
             },
             'is_empty': function(value) {
                 return value === undefined || value == null || value == '';

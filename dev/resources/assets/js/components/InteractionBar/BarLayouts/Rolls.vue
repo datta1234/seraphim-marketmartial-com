@@ -59,6 +59,7 @@
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
             :is-request-phase="is_request_phase"
+            :negative-bid-offer="negativeBidOffer()"
         >
         </ibar-market-negotiation-contracts>
    
