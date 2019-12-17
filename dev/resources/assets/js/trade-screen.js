@@ -333,19 +333,24 @@ const app = new Vue({
                 });
 
                 if(trade_confirmation_index !== -1) {
-                    
                     if(!tradeConfirmationData.can_interact) {
+                        // User can no longer interact with this confirmation and thus should not have it
                         this.trade_confirmations.splice(trade_confirmation_index,1);
 
                     } else {
+                        /*
+                            Got a new packet for existing confo and updates the confirmation
+                                should no longer hit but is left in as possible error handleing for the scenario
+                        */
                         this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
                     }
                 } else if(root_confirmation_index !== -1) {
                     if(!tradeConfirmationData.can_interact) {
+                        // User can no longer interact with this confirmation and thus should not have it
                         this.trade_confirmations.splice(root_confirmation_index,1);
-
                     } else {
-                        this.trade_confirmations[root_confirmation_index].update(tradeConfirmationData);
+                        // Updated phase creates a new confo record and replaces the old one
+                        this.trade_confirmations.splice(root_confirmation_index,1, new TradeConfirmation(tradeConfirmationData));
                     }
                 } else if(is_old_confirmation) {
                     // Should never get reached but if it does we are handeling it

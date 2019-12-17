@@ -669,8 +669,8 @@ class UserMarketRequest extends Model
                     //     }
                     // }
 
-                    //when spin and parent is spin
-                    return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
+                    //when spin and not TradeAtBest and parent is spin
+                    return $lastNegotiation->is_repeat && !$lastNegotiation->isTradeAtBest() && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
 
                     // there should only be one - is it same org = open
@@ -812,7 +812,6 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-open';
         }
-        dd([$acceptedState , $marketOpen , !$is_trading]);
     }
 
     

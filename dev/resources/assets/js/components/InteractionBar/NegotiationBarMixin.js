@@ -463,6 +463,14 @@ export default {
             EventBus.$emit('addToNoCares',this.marketRequest.id);
             EventBus.$emit('interactionToggle', false);
         },
+        /**
+         * Determines whether a bid / offer can be negative
+         */
+        negativeBidOffer() {
+            // Only delta one structures can be negative
+            let allowed_list = ['efp_switch','efp','rolls'];
+            return allowed_list.includes(this.marketRequest.trade_structure_slug);
+        },
         init() {
             EventBus.$emit('startReset');
             this.reset();// clear current state
