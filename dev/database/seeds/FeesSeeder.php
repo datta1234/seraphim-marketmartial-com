@@ -44,6 +44,7 @@ class FeesSeeder extends Seeder
     			}
 
         		foreach ($group['items'] as $item) {
+					print_r($group['items']);
         			// Only add update items
         			if(array_key_exists('update_seed',$item) && $item['update_seed']) {
         				$itemType = $itemTypes->firstWhere('title',$item['type']);
