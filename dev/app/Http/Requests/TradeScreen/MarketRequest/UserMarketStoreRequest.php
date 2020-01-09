@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use \Illuminate\Contracts\Validation\Validator;
 use App\Rules\QuotesVolatilities;
 use App\Rules\MaintainsRatio;
+use App\Rules\NegativeLevel;
 
 class UserMarketStoreRequest extends FormRequest
 {
@@ -73,13 +74,29 @@ class UserMarketStoreRequest extends FormRequest
     {
         $userMarketRequest = $this->user_market_request;
 
-        $validator->sometimes(['current_market_negotiation.bid'], 'required_without_all:is_repeat,offer|nullable|numeric', function ($input) {
-            return !is_null($input->current_market_negotiation["bid_qty"]);
-        }); 
+        $validator->sometimes(
+            ['current_market_negotiation.bid'],
+            [
+                'required_without_all:is_repeat,offer',
+                'nullable','numeric',
+                new NegativeLevel($userMarketRequest, 'bid')
+            ],
+            function ($input) {
+                return !is_null($input->current_market_negotiation["bid_qty"]);
+            }
+        ); 
 
-        $validator->sometimes(['current_market_negotiation.offer'], 'required_with:offer_qty|required_without_all:is_repeat,bid|nullable|numeric', function ($input) {
-            return !is_null($input->current_market_negotiation["offer_qty"]);
-        }); 
+        $validator->sometimes(
+            ['current_market_negotiation.offer'],
+            [
+                'required_with:offer_qty','required_without_all:is_repeat,bid',
+                'nullable','numeric',
+                new NegativeLevel($userMarketRequest, 'offer')
+            ],
+            function ($input) {
+                return !is_null($input->current_market_negotiation["offer_qty"]);
+            }
+        ); 
 
         // if both are set
         $validator->after(function ($validator) {

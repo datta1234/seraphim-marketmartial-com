@@ -53,6 +53,8 @@ class TradeConfirmationController extends Controller
 
 
         $tradeConfirmationUpdated->save();
+
+        $tradeConfirmationUpdated->notifyConfirmation($user->organisation,null);
         
         $data = $tradeConfirmationUpdated->fresh()->load([
             'tradeConfirmationGroups'=>function($q)
