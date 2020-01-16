@@ -29,7 +29,7 @@ class RebatesController extends Controller
                         "filter_paid" => $request->input('filter_paid') == '' ? null : $request->input('filter_paid'),
                         "filter_date" => $request->input('date_filter'),
                     ])
-                ->paginate(10);
+                ->paginate(50);
         $rebates->transform(function($rebate) {
             return $rebate->preFormatAdmin();
         });

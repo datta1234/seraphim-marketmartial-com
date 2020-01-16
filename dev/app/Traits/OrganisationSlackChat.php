@@ -58,7 +58,7 @@ trait OrganisationSlackChat {
                 if($channel != false) {
                     return (object)['ok' => true,'group' => $channel];
                 }
-                \Log::error(["Failed to find Oganisation Channel: ", (array)$body]);
+                \Log::error(["Failed to find Organisation Channel: ", (array)$body]);
             }
 
             \Log::error(["Oganisation Channel Failed to create: ", (array)$body]);

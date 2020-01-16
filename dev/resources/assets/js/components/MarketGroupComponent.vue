@@ -8,7 +8,7 @@
                 
                 <div v-if="this.is_delta" class="user-market-group col-12">
                     <!-- Date collection section -->
-                    <div class="row mt-3 pr-3 pl-3" v-for="group in market_delta_groups_order">
+                    <div class="row mt-3 pr-3 pl-3" v-for="group in market_delta_groups_order" v-show="market_delta_groups[group] && market_delta_groups[group].length > 0">
                         <div class="col-12" v-if="market_delta_groups[group] && market_delta_groups[group].length > 0">
                             <p class="mb-1 market-tab-group-title">{{ group }}</p>
                         </div>

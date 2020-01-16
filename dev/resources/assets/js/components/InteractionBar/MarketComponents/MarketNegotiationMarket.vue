@@ -8,10 +8,32 @@
                             <b-form-input v-active-request v-input-mask.number.decimal class="w-100" v-model="marketNegotiation.bid_qty" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid-qty" placeholder="Qty"></b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-input-mask.number.decimal v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" v-model="marketNegotiation.bid" :disabled="disabled_bid || disabled || disable_input" type="text" dusk="market-negotiation-bid" placeholder="Bid"></b-form-input>
+                            <b-form-input v-active-request 
+                                          v-input-mask.number.decimal="{ 
+                                            negative: allow_negative(),
+                                            negative_callback: setBid
+                                          }" 
+                                          v-bind:class="{ 'w-100': true, 'self-active-input': active_input_bid }" 
+                                          v-model="marketNegotiation.bid" 
+                                          :disabled="disabled_bid || disabled || disable_input" 
+                                          type="text" 
+                                          dusk="market-negotiation-bid" 
+                                          placeholder="Bid">
+                            </b-form-input>
                         </div>
                         <div class="w-25 p-1">
-                            <b-form-input v-active-request v-input-mask.number.decimal v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }" v-model="marketNegotiation.offer" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer" placeholder="Offer"></b-form-input>
+                            <b-form-input v-active-request
+                                          v-input-mask.number.decimal="{ 
+                                            negative: allow_negative(),
+                                            negative_callback: setOffer
+                                          }"
+                                          v-bind:class="{ 'w-100': true, 'self-active-input': active_input_offer }"
+                                          v-model="marketNegotiation.offer"
+                                          :disabled="disabled_offer || disabled || disable_input" 
+                                          type="text" 
+                                          dusk="market-negotiation-offer" 
+                                          placeholder="Offer">
+                            </b-form-input>
                         </div>
                         <div class="w-25 p-1">
                             <b-form-input v-active-request v-input-mask.number.decimal class="w-100" v-model="marketNegotiation.offer_qty" :disabled="disabled_offer || disabled || disable_input" type="text" dusk="market-negotiation-offer-qty" placeholder="Qty"></b-form-input>
@@ -60,7 +82,11 @@
             isRequestPhase: {
                 type: Boolean,
                 default: false    
-            }
+            },
+            negativeBidOffer: {
+                type: Boolean,
+                default: false    
+            },
         },
         watch: {
             marketNegotiation: {
@@ -160,6 +186,7 @@
                 // if both parents are spin and offer has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 let value = this.marketNegotiation.offer;
                 let only = (this.bid_offer_selected.includes('offer-only') && this.isRequestPhase );
@@ -173,7 +200,7 @@
                     return !this.currentNegotiation.getAmountSource('bid').is_my_org;
                 }
 
-                if((traded || spun) && value) {
+                if((traded || spun || no_trade) && value) {
                     return true;
                 }
                 return false;
@@ -182,6 +209,7 @@
                 // if both parents are spin and bid has value disabled
                 let spun = this.currentNegotiation && this.currentNegotiation.isSpun();
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
                 let amending = this.currentNegotiation && this.currentNegotiation.id == this.marketNegotiation.id;
                 let value = this.marketNegotiation.bid;
                 let only = (this.bid_offer_selected.includes('bid-only') && this.isRequestPhase);
@@ -195,13 +223,26 @@
                     return !this.currentNegotiation.getAmountSource('offer').is_my_org;
                 }
 
-                if((traded || spun) && value) {
+                if((traded || spun || no_trade) && value) {
                     return true;
                 }
                 return false;
             },
         },
         methods: {
+            allow_negative: function() {
+                return this.negativeBidOffer;
+            },
+            setBid: function(value) {
+                if(value && value !== this.marketNegotiation.bid) {
+                    this.marketNegotiation.bid = value;
+                }
+            },
+            setOffer: function(value) {
+                if(value && value !== this.marketNegotiation.offer) {
+                    this.marketNegotiation.offer = value;
+                }
+            },
             'is_empty': function(value) {
                 return value === undefined || value == null || value == '';
             },
@@ -218,7 +259,8 @@
                 };
 
                 let traded = this.currentNegotiation && this.currentNegotiation.isTraded();
-                if(traded) {
+                let no_trade = this.currentNegotiation && this.currentNegotiation.isNoTrade();
+                if(traded || no_trade) {
                     return false;
                 }
 

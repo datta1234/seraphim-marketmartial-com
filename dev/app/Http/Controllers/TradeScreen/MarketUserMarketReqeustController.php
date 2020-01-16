@@ -32,8 +32,9 @@ class MarketUserMarketReqeustController extends Controller
      */
     public function index(Request $request,Market $market)
     {
+        $scope_to_today = true;
         $userMarketRequests = $market->userMarketRequests()
-            ->active()
+            ->active($scope_to_today)
             ->with([
                 'tradeStructure', 
                 'userMarketRequestGroups',
@@ -98,7 +99,7 @@ class MarketUserMarketReqeustController extends Controller
             {
 
 
-                $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//earier to work with
+                $tradeStructuregroup = $tradeStructure->tradeStructureGroups[$i];//easier to work with
                 $userMarketRequestGroup = UserMarketRequestGroup::create([
                     'is_selected'               =>  $tradeStructuregroup->force_select === null ? $inputTradeStructureGroups[$i]['is_selected'] : $tradeStructuregroup->force_select,
                     'trade_structure_group_id'  =>  $tradeStructuregroup->id,
@@ -141,7 +142,7 @@ class MarketUserMarketReqeustController extends Controller
                 {
                     if(array_key_exists($structureItem->title, $inputTradeStructureGroupsfields))
                     {       
-                     //most of the values are based of the relation of schema only the va,ue is grabed from the join
+                     //most of the values are based of the relation of schema only the value is grabed from the join
                      $userMarketRequestItem =   UserMarketRequestItem::create([
                             'user_market_request_group_id'  => $userMarketRequestGroup->id,
                             'item_id'                       => $structureItem->id,

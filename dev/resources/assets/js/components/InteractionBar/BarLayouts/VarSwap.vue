@@ -43,6 +43,13 @@
          :must-work-balance="mustWorkBalance">
         </ibar-trade-at-best-negotiation>
     </template>
+    <template v-if="$root.is_admin">
+        <ibar-trade-at-best-admin 
+         v-if="!can_negotiate && is_trading_at_best"
+         :current-negotiation="last_negotiation"
+         :root-negotiation="marketRequest.chosen_user_market.trading_at_best">
+        </ibar-trade-at-best-admin>
+    </template>
     <template v-if="(!is_trading || is_trading_at_best) && negotiation_available">
         
         <ibar-market-negotiation-contracts 
@@ -53,6 +60,7 @@
             :current-negotiation="last_negotiation" 
             :market-negotiation="proposed_user_market_negotiation"
             :is-request-phase="is_request_phase"
+            :negative-bid-offer="negativeBidOffer()"
         >
         </ibar-market-negotiation-contracts>
 
@@ -199,6 +207,7 @@
     import IbarVolatilityField from '../MarketComponents/VolatilityField';
     import IbarMarketRequested from '../MarketComponents/MarketRequested';
     import IbarTradeAtBestNegotiation from '../TradeComponents/TradingAtBestNegotiation.vue';
+    import IbarTradeAtBestAdmin from '../TradeComponents/TradingAtBestAdmin.vue';
     import IbarMarketRequestedFutures from '../MarketComponents/MarketRequestedFutures.vue';
     import AlertCleared from '../Components/AlertClearedComponent.vue';
 
@@ -213,6 +222,7 @@
             IbarVolatilityField,
             IbarMarketRequested,
             IbarTradeAtBestNegotiation,
+            IbarTradeAtBestAdmin,
             AlertCleared,
             IbarMarketRequestedFutures
         },

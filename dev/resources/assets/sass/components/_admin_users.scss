@@ -28,6 +28,14 @@
 	}
 }
 
+.organisations-table {
+	.admin-organisations-table {
+		a.mm-generic-trade-button {
+			color: $mm-text-white;
+		}
+	}
+}
+
 .create-user {
     display: inline;
 }

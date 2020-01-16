@@ -2,6 +2,7 @@ import BaseModel from './BaseModel';
 
 import OptionGroup from './tradeconfirmations/OptionGroup';
 import FutureGroup from './tradeconfirmations/FutureGroup';
+import FeeGroup from './tradeconfirmations/FeeGroup';
 import RequestGroup from './tradeconfirmations/RequestGroup';
 import Errors from './Errors';
 import util from './util';
@@ -11,7 +12,7 @@ export default class TradeConfirmation extends BaseModel {
     constructor(options,fees) {
 
         super({
-            _used_model_list: [OptionGroup,FutureGroup],
+            _used_model_list: [OptionGroup,FutureGroup,FeeGroup],
             _relations:{
                 option_groups: {
                     addMethod: (option_groups) => { 
@@ -29,6 +30,14 @@ export default class TradeConfirmation extends BaseModel {
                         this.setFutureGroups(future_groups) 
                     },
                 },
+                fee_groups: {
+                    addMethod: (fee_groups) => { 
+                        this.addFeeGroups(fee_groups) 
+                    },
+                    setMethod: (fee_groups) => { 
+                        this.setFeeGroups(fee_groups) 
+                    },
+                },
                 // request groups - only used for var_swap
                 request_groups: {
                     addMethod: (request_groups) => { 
@@ -40,6 +49,7 @@ export default class TradeConfirmation extends BaseModel {
 
         this.option_groups = [];
         this.future_groups = [];
+        this.fee_groups = [];
         this.request_groups = [];
 
         const defaults = {
@@ -62,6 +72,7 @@ export default class TradeConfirmation extends BaseModel {
                 date: "",
                 state: null,
                 swap_parties: null,
+                vega: null
         }
         // assign options with defaults
         Object.keys(defaults).forEach(key => {
@@ -80,6 +91,11 @@ export default class TradeConfirmation extends BaseModel {
         // register future groups
         if(options && options.future_groups) {
            this.addFutureGroups(options.future_groups);
+        }
+
+        // register future groups
+        if(options && options.fee_groups) {
+           this.addFeeGroups(options.fee_groups);
         }
 
         // register request groups
@@ -137,6 +153,21 @@ export default class TradeConfirmation extends BaseModel {
             future_group = new FutureGroup(future_group);
         } 
         this.future_groups.push(future_group);   
+    }
+
+    addFeeGroups(fee_groups)
+    {
+        fee_groups.forEach((group)=>{
+            this.addFeeGroup(group);
+        });
+    }
+
+    addFeeGroup(fee_group)
+    {
+        if(!(fee_group instanceof FeeGroup)) {
+            fee_group = new FeeGroup(fee_group);
+        } 
+        this.fee_groups.push(fee_group);   
     }
 
     addRequestGroups(request_groups)

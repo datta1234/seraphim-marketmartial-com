@@ -19,6 +19,7 @@ class Organisation extends Model
 	 * @property integer $id
 	 * @property string $title
 	 * @property boolean $verified
+     * @property boolean $slack_text_chat 
 	 * @property text $description
 	 * @property \Carbon\Carbon $created_at
 	 * @property \Carbon\Carbon $updated_at
@@ -41,7 +42,10 @@ class Organisation extends Model
      * @var array
      */
     protected $fillable = [
-        'title', 'verified', 'description',
+        'title',
+        'verified',
+        'description',
+        'slack_text_chat'
     ];
 
     /**
@@ -163,5 +167,54 @@ class Organisation extends Model
     {
         $brokerage_fee = $this->brokerageFees->firstWhere('key',$key);
         return is_null($brokerage_fee) ? config($key) : $brokerage_fee->value;
+    }
+
+    /**
+     * Return a simple or query object based on the search term
+     *
+     * @param string $term
+     * @param string $orderBy
+     * @param string $order
+     * @param string  $filter
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function basicSearch($term = null,$orderBy="title",$order='ASC', $filter = null)
+    {
+        if($orderBy == null)
+        {
+            $orderBy = "title";
+        }
+
+        if($order == null)
+        {
+            $order = "ASC";
+        }
+
+        $organisationQuery = Organisation::where( function ($q) use ($term)
+        {
+            $q->where('title', 'like',"%$term%");
+        });
+
+        if($filter !== null) {
+            switch ($filter) {
+                case 'active':
+                    $organisationQuery->where('verified', true);
+                    break;
+                case 'inactive':
+                    $organisationQuery->where('verified', false);
+                    break;
+                case 'chat_full':
+                    $organisationQuery->where('slack_text_chat', true);
+                    break;
+                case 'chat_limited':
+                    $organisationQuery->where('slack_text_chat', false);
+                    break;
+            }
+        }
+
+        $organisationQuery->orderBy($orderBy,$order);
+
+        return $organisationQuery;
     }
 }
