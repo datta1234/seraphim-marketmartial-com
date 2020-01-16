@@ -11,7 +11,7 @@ class LevelsImprovement implements Rule
     private $request; 
     private $lastNegotiation;
 
-    private $message = 'Either improve the bid or the offer';
+    private $message = 'Please improve the bid or the offer';
 
     /**
      * Create a new rule instance.
@@ -85,13 +85,13 @@ class LevelsImprovement implements Rule
 
             // should handle MM-845
             if($this->request->input($attribute) != null && $this->request->input($inverse) != null) {
-                $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $inverse value.";
                 if($this->request->input('bid') >= $this->request->input('offer')) {
+                    $this->message = ($attribute == 'bid' ? 'Bid' : 'Offer')." value cannot be equal or ".($attribute == 'bid' ? 'higher' : 'lower' )." than $inverse value.";
                     return false;
                 }
             }
 
-            if($this->lastNegotiation->isTraded()) {
+            if($this->lastNegotiation->isTraded() || $this->lastNegotiation->isKilled()) {
                 \Log::info($attribute." >>> 5");
                 return true;
             }

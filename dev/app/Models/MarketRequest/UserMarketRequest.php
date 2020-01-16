@@ -152,44 +152,39 @@ class UserMarketRequest extends Model
     * Scope for active markets today
     * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function scopeActive($query)
+    public function scopeActive($query, $scope_to_today = false)
     {
-        // staging/demo is scoping to daily records to prevent clutter
-        $scope_to_daily = true;
-
-        return $query->where(function($q) use ($scope_to_daily) {
-            $q->when(!$scope_to_daily, function($q) {
+        return $query->where(function($q) use ($scope_to_today) {
+            $q->where(function($q) use ($scope_to_today)  {
                 $q->where('active', true);
-            });
-            $q->when($scope_to_daily, function($q) {
-                $q->where(function($q) {
-                    $q->where('active', true);
+                // Added check due to possible issues with Previous day results and current trade results[MM-1057]
+                if($scope_to_today) {
                     $q->where('updated_at', '>', now()->startOfDay());
-                });
-                $q->orWhere(function($q) {
-                    $q->where('active', true);
-                    $q->where(\DB::raw('(
-                        select `trade_sub`.`traded` as `trade_sub_traded`
-                        from `user_markets` 
-                        left join (
-                            select *
-                            from `market_negotiations` 
-                            where `market_negotiations`.`deleted_at` is null
-                            order by `updated_at` desc 
-                        ) `neogitation_sub`
-                        on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
-                        left join (
-                            select * 
-                            from `trade_negotiations`
-                            order by `updated_at` desc 
-                        ) `trade_sub`
-                        on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
-                        where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
-                        and `user_markets`.`deleted_at` is null
-                        order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
-                        limit 1
-                    )'), 0);
-                });
+                }
+            });
+            $q->orWhere(function($q) {
+                $q->where('active', true);
+                $q->where(\DB::raw('(
+                    select `trade_sub`.`traded` as `trade_sub_traded`
+                    from `user_markets` 
+                    left join (
+                        select *
+                        from `market_negotiations` 
+                        where `market_negotiations`.`deleted_at` is null
+                        order by `updated_at` desc 
+                    ) `neogitation_sub`
+                    on `user_markets`.`id` = `neogitation_sub`.`user_market_id` 
+                    left join (
+                        select * 
+                        from `trade_negotiations`
+                        order by `updated_at` desc 
+                    ) `trade_sub`
+                    on `neogitation_sub`.`id` = `trade_sub`.`market_negotiation_id` 
+                    where `user_market_requests`.`chosen_user_market_id` = `user_markets`.`id` 
+                    and `user_markets`.`deleted_at` is null
+                    order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
+                    limit 1
+                )'), 0);
             });
         });
     }
@@ -593,8 +588,9 @@ class UserMarketRequest extends Model
     }
     
     /*
-    *market is either open after a traded market or spin following each other
-    */
+     * market is either open after a traded market or spin following each other
+     *  or a market negotiation has been killed
+     */
     public function openToMarket()
     {
 
@@ -616,6 +612,11 @@ class UserMarketRequest extends Model
                 }
           
                 if($lastNegotiation->isTraded())
+                {
+                    return true;
+                }
+
+                if($lastNegotiation->isKilled())
                 {
                     return true;
                 }
@@ -668,8 +669,8 @@ class UserMarketRequest extends Model
                     //     }
                     // }
 
-                    //when spin and parent is spin
-                    return $lastNegotiation->is_repeat && $lastNegotiation->marketNegotiationParent->is_repeat;
+                    //when spin and not TradeAtBest and parent is spin
+                    return $lastNegotiation->is_repeat && !$lastNegotiation->isTradeAtBest() && $lastNegotiation->marketNegotiationParent->is_repeat;
                 } else {
 
                     // there should only be one - is it same org = open
@@ -708,7 +709,7 @@ class UserMarketRequest extends Model
     //     }
     // }
 
-     public function lastTradeNegotiationIsTraded()
+    public function lastTradeNegotiationIsTraded()
     {
         if(!is_null($this->chosenUserMarket))
         {
@@ -724,6 +725,14 @@ class UserMarketRequest extends Model
         }
     }
 
+    public function lastTradeNegotiationIsKilled()
+    {
+        if(!is_null($this->chosenUserMarket))
+        {
+            $lastNegotiation = $this->chosenUserMarket->lastNegotiation;
+            return !is_null($lastNegotiation) && !is_null($lastNegotiation->lastTradeNegotiation) && $lastNegotiation->lastTradeNegotiation->trade_killed;  
+        }
+    }
 
     //need a method for trade at best
     public function isTradeAtBestOpen()
@@ -752,6 +761,7 @@ class UserMarketRequest extends Model
         $needsBalanceWorked =  $this->chosenUserMarket ? $this->chosenUserMarket->needsBalanceWorked() : false;
         $is_trading         =  $this->chosenUserMarket ? $this->chosenUserMarket->isTrading() : false;
         $lastTraded         =  $this->lastTradeNegotiationIsTraded();
+        $lastKilled         =  $this->lastTradeNegotiationIsKilled();
 
         $balance_worked_no_cares = ($this->chosenUserMarket 
             && $this->chosenUserMarket->lastNegotiation
@@ -775,16 +785,16 @@ class UserMarketRequest extends Model
         {
             return 'trade-negotiation-balance';
         }
-        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded)
+        elseif($marketOpen && $is_trade_at_best && !$is_trading && !$lastTraded && !$lastKilled)
         {
             return 'trade-negotiation-open';
         }
-        elseif(!$marketOpen && $is_trading && !$lastTraded)
+        elseif(!$marketOpen && $is_trading && !$lastTraded && !$lastKilled)
         {
             return 'trade-negotiation-pending';
         }
         // @TODO - state when new trade happens on a market that has already traded 
-        elseif($marketOpen && $is_trading && !$lastTraded) // Checks to check if new trade is happening
+        elseif($marketOpen && $is_trading && !$lastTraded && !$lastKilled) // Checks to check if new trade is happening
         {
             // @TODO - figure out what state if not a new one is required.
             return 'trade-negotiation-pending';
@@ -802,7 +812,6 @@ class UserMarketRequest extends Model
         {
             return 'negotiation-open';
         }
-        
     }
 
     
@@ -1558,7 +1567,7 @@ class UserMarketRequest extends Model
 
                 // Only Calculate percentage if both Strike and Spot Price is set
                 if( !empty($strike) && !empty($spot_price) ) {
-                    $data["strike_percentage"][] = round($strike/$spot_price, 2) * 100;
+                    $data["strike_percentage"][] = round($strike/$spot_price * 100, 2);
                 }
             }
         }

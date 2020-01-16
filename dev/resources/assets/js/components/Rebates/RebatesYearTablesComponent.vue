@@ -72,7 +72,7 @@
                 table_fields: [
                     { key: 'date', label: 'Date', tdClass:'text-right', thClass:'text-right'/*, sortable: true, sortDirection: 'desc'*/ },
                     { key: 'market', label: 'Instrument', tdClass:'text-right', thClass:'text-right' },
-                    { key: 'is_put', label: 'Option Strategy', tdClass:'text-right', thClass:'text-right' },
+                    /*{ key: 'is_put', label: 'Option Strategy', tdClass:'text-right', thClass:'text-right' },*/
                     { key: 'strike', label: 'Strike', tdClass:'text-right', thClass:'text-right' },
                     { key: 'expiration', label: 'Expiration', tdClass:'text-right', thClass:'text-right' },
                     { key: 'nominal', label: 'Nominal (ZAR)', tdClass:'text-right', thClass:'text-right' },
@@ -176,24 +176,22 @@
                 if(array_item.length < 1) {
                     return '-';
                 }
-                let formatted_array = '';
-                array_item.forEach(element => {
-                    switch (key) {
-                        case 'expiration':
-                            formatted_array += this.castToMoment(element) + ' / ';
-                            break;
-                        case 'strike':
-                        case 'nominal':
-                            formatted_array += this.$root.splitValHelper(element, ' ', 3) + ' / ';
-                            break;
-                        case 'market':
-                            formatted_array += element + ' vs. ';
-                            break;
-                        default:
-                            formatted_array += element + ' / ';
-                    }
-                });
-                return formatted_array.substring(0, formatted_array.length - (key == 'market' ? 5 : 3));
+                let formatted_element = '';
+                switch (key) {
+                    case 'expiration':
+                        formatted_element = array_item.map(x => this.castToMoment(x)).join(' / ');
+                        break;
+                    case 'strike':
+                    case 'nominal':
+                        formatted_element = array_item.map(x => x[0] == 'R' ? x : this.$root.splitValHelper(x, ' ', 3)).join(' / ');
+                        break;
+                    case 'market':
+                        formatted_element = array_item.join(' vs. ');
+                        break;
+                    default:
+                        formatted_element = array_item.join(' / ');
+                }
+                return formatted_element;
             },
             /**
              * Casting a passed string to moment with a new format

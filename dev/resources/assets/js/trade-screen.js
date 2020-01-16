@@ -333,19 +333,24 @@ const app = new Vue({
                 });
 
                 if(trade_confirmation_index !== -1) {
-                    
                     if(!tradeConfirmationData.can_interact) {
+                        // User can no longer interact with this confirmation and thus should not have it
                         this.trade_confirmations.splice(trade_confirmation_index,1);
 
                     } else {
+                        /*
+                            Got a new packet for existing confo and updates the confirmation
+                                should no longer hit but is left in as possible error handleing for the scenario
+                        */
                         this.trade_confirmations[trade_confirmation_index].update(tradeConfirmationData);
                     }
                 } else if(root_confirmation_index !== -1) {
                     if(!tradeConfirmationData.can_interact) {
+                        // User can no longer interact with this confirmation and thus should not have it
                         this.trade_confirmations.splice(root_confirmation_index,1);
-
                     } else {
-                        this.trade_confirmations[root_confirmation_index].update(tradeConfirmationData);
+                        // Updated phase creates a new confo record and replaces the old one
+                        this.trade_confirmations.splice(root_confirmation_index,1, new TradeConfirmation(tradeConfirmationData));
                     }
                 } else if(is_old_confirmation) {
                     // Should never get reached but if it does we are handeling it
@@ -621,6 +626,12 @@ const app = new Vue({
                         //@TODO - @Francois Move to new event when rebate gets created
                         if(packet_data.message && packet_data.message.key && packet_data.message.key == "market_traded") {
                             this.$toasted.success(packet_data.message.data, { duration : 20000 });
+                        }
+                        if(packet_data.message && packet_data.message.key && packet_data.message.key == "no_trade") {
+                            this.$toasted.show(packet_data.message.data,{
+                                'className':"mm-confirm-toast",
+                                duration : 20000,
+                            }); 
                         }
                         EventBus.$emit('notifyUser',{"user_market_request_id":packet_data.data.id,"message":packet_data.message });
                     });

@@ -27,6 +27,10 @@ class UserMarketRequestSubscritionController extends Controller
             $message = 'You will no longer be alerted once this market clears';
         }
 
+        \Slack::postMessage([
+            "text"      => "User: ".$user->full_name." - Requested to ".($request->input('market_request_subscribe') ? "be alerted once " : "NOT be alerted once ").$userMarketRequest->getSummary()." clears.",
+        ], 'notify');
+
         $userMarketRequest->notifyRequested([$user->organisation]);
         return response()->json(['data' => null, 'message' => $message]);
     }

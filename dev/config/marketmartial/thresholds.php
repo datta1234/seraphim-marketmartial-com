@@ -12,5 +12,7 @@ return [
         // Timeouts In Mins
         'cond_fok_spin'   =>  20,
         'cond_buy_best'   =>  15,
-    ]
+    ],
+    // Lock time in Seconds
+    'lock_timeout'        => 30,
 ];

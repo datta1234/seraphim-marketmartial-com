@@ -31,19 +31,24 @@ class ChatController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Send a new chat message.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(SendSlackChatRequest $request)
+    public function sendChat(SendSlackChatRequest $request)
     {
         $user = Auth::user();
         $response = null;
+        // Checks for new message else defaults to quick message
         if( $request->has('new_message') ) {
             $response = $user->organisation->sendMessage(str_replace(config('marketmartial.slack.admin_ref'),"<@".config('marketmartial.slack.admin_id').">",$request->input('new_message')), $user->full_name, $user->organisation);
         } else {
-            $response = $user->organisation->sendMessage("<@".config('marketmartial.slack.admin_id')."> ".$request->input('quick_message'), $user->full_name, $user->organisation);
+            $quick_message = collect(config('marketmartial.slack.quick_messages'))
+                ->first(function ($value, $key) use ($request) {
+                    return $value["id"] == $request->input('quick_message');
+                });
+            $response = $user->organisation->sendMessage("<@".config('marketmartial.slack.admin_id')."> ".$quick_message["message"], $user->full_name, $user->organisation);
         }
         if($response === false) {
             return response()->json(['data'=> null,'message'=>'Failed to send message, if the problem persists contact the admin.'], 500);

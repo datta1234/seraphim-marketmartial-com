@@ -10,6 +10,7 @@
 *
 *   Options:
 *       precision: set the allowed decimal precission (length after decimal point)
+*       negative: Allows negative values
 */
 export default {
   bind (el, binding) {
@@ -19,6 +20,14 @@ export default {
         if (binding.modifiers['decimal']) {
             // decimal(numpad), period
             special.push(110, 190)
+        }
+        // If negative add special for negatives
+        if(
+            binding.value 
+            && binding.value['negative'] 
+            && (e.keyCode === 109 || (e.keyCode === 189 && e.key == '-'))
+        ) {
+          return // allow 
         }
         // special from above
         if (
@@ -66,5 +75,28 @@ export default {
         // otherwise stop the keystroke
         e.preventDefault() // prevent
     }) // end addEventListener
-  } // end bind
+  }, // end bind
+  update: (el, binding, vnode, oldVnode) => {
+    // Checks instances of a negative in the value and add's it to the front or removes it if toggled again
+    if(
+      binding.value 
+      && binding.value['negative']
+      && binding.value['negative_callback']
+      && vnode.data.model 
+      && typeof vnode.data.model.value === 'string'
+    ) {
+      let result;
+      if(vnode.data.model.value == '--' || vnode.data.model.value == '-') {
+        // Deals with Case where no numbers have been added
+        console.log(vnode.data.model.value.length);
+        result = vnode.data.model.value.length > 1 ? '' : vnode.data.model.value;
+      } else {
+        let split_val = vnode.data.model.value.split('-');
+        // Toggle negatives for the value
+        result = (split_val.length - 1) % 2 == 0 ? split_val.join('') : ['-'].concat(split_val).join('');
+      }
+
+      binding.value['negative_callback'](result);
+    }
+  }
 }

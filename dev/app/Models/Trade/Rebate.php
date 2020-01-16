@@ -132,7 +132,7 @@ class Rebate extends Model
             "expiration"    => $user_market_request_items["expiration"],
             "nominal"       => $user_market_request_items["nominal"],
             "role"          => null,
-            "rebate"        => $this->amount,
+            "rebate"        => $this->amount ? round($this->amount) : $this->amount,
         ];
 
         if(\Auth::user()->role_id == 1){
@@ -168,7 +168,7 @@ class Rebate extends Model
 
     public static function notifyOrganisationUpdate($organisation)
     {
-        $data = ["total"=> $organisation->rebates()->noTrade()->sum('amount')];
+        $data = ["total"=> $organisation->rebates()->noTrade()->currentMonth()->sum('amount')];
         event(new RebateEvent($data,$organisation));
     }
 
