@@ -326,7 +326,7 @@
     <div class="container">
         <div class="row">
             <div class="col col-12 col-md-6 col-lg-4 offset-lg-1 footer-sections pt-3 pb-3">
-                <h3>Send us a message</h3>
+                {{-- <h3>Send us a message</h3>
                 <form id="ContactUsForm" action="{{ route('contact_send') }}" method="POST">
                      {{ csrf_field() }}
                     <div class="form-group mb-2">
@@ -357,7 +357,7 @@
                     <div class="form-group mb-2">
                         <button disabled type="submit" class="btn mm-footer-button float-right">Submit message</button>
                     </div>
-                </form>
+                </form> --}}
             </div>
             <!-- <div class="col col-lg-4 footer-sections">
                 <h3>About Market Martial</h3>

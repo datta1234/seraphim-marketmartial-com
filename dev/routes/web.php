@@ -19,8 +19,8 @@ Auth::routes();
 *
 */
 Route::get('/', 'PageController@index')->name('home');
-Route::get('/contact', 'PageController@contact')->name('contact');
-Route::post('/contact', 'PageController@contactMessage')->name('contact_send');
+/*Route::get('/contact', 'PageController@contact')->name('contact');
+Route::post('/contact', 'PageController@contactMessage')->name('contact_send');*/
 Route::get('/about', 'PageController@about')->name('about');
 Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
 Route::get('/fsp-disclosures', 'PageController@fspDisclosures')->name('fsp_disclosures');
