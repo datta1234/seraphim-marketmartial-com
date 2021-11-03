@@ -109,7 +109,7 @@
         @yield('sub-footer')
     </div>
     
-    @include('layouts.elements.footer')
+    {{-- @include('layouts.elements.footer') --}}
     
      <!-- JavaScripts -->
     <script src="{{ mix('js/public.js') }}"></script>
