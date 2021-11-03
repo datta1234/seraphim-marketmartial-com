@@ -16,7 +16,7 @@
         <div>
             <p class="card-text text-center">
             Please fill in your details below.<br>
-            Once your credentials have been verified, you will be able to view and use the Market Martial negotiation platform.
+            Once your credentials have been verified, you will be able to view and use Market Martial.
             </p>
 
             <div class="row justify-content-md-center mb-">
