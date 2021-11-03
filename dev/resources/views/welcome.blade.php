@@ -2,19 +2,11 @@
 
 @section('content')
 
-<div class="row justify-content-md-end">
-    <div class="col col-md-12">
-        <p class="float-right active-markets">
-            Active Market Makers Online: <strong><active-makers></active-makers></strong>
-        </p>
-    </div>
-</div>
-
 <div class="home-login-block">
 <div class="row">
     <div class="col col-lg-8">
     <div class="home-page-title">
-        <h1>The Inter-Bank Derivatives<br>Negotiation Platform</h1>
+        {{-- <h1>The Inter-Bank Derivatives<br>Negotiation Platform</h1> --}}
     </div>
     </div>
     @if (Auth::guest())
