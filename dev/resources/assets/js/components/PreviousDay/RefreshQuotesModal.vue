@@ -93,6 +93,7 @@
             }
         },
         computed: {
+            // Phase 3 addition - De-activate the Refresh button until at least 1 box is ticked.
             disabled_submit() {
 
                 return !(this.selected.length > 0 || this.selected_negotiations.length > 0);
