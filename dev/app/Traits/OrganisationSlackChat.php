@@ -11,15 +11,15 @@ trait OrganisationSlackChat {
     public function createChannel($channel_name)
     {
         /*Creates a new private channel on slack for organisation
-        url - https://slack.com/api/groups.create
+        url - https://slack.com/api/conversations.create
         header - Authorization : Bearer $bearer_auth_key
         body -  {
-                    "validate": true,
+                    "is_private": true,
                     "name": $channel_name
                 }
         */
         $body = [
-            "validate" => true,
+            "is_private" => true,
             "name" => $channel_name
         ];
         $header = [
@@ -29,7 +29,7 @@ trait OrganisationSlackChat {
         ];
         try {
             $client = new Client();
-            $response = $client->request('POST', config('marketmartial.slack.api_url').'/groups.create', [
+            $response = $client->request('POST', config('marketmartial.slack.api_url').'/conversations.create', [
                     'headers' => $header,
                     'body'  =>  json_encode($body)
             ]);
@@ -84,7 +84,7 @@ trait OrganisationSlackChat {
         ];
         try {
             $client = new Client();
-            $response = $client->request('GET', config('marketmartial.slack.api_url').'/groups.list', [
+            $response = $client->request('GET', config('marketmartial.slack.api_url').'/conversations.list', [
                     'headers' => $header,
             ]);
             $body = json_decode($response->getBody());
@@ -172,7 +172,7 @@ trait OrganisationSlackChat {
         }
         try {
             $client = new Client();
-            $response = json_decode($client->request('GET', config('marketmartial.slack.api_url').'/groups.history?channel='.$user->organisation->slack_channel->value, [
+            $response = json_decode($client->request('GET', config('marketmartial.slack.api_url').'/conversations.history?channel='.$user->organisation->slack_channel->value, [
                     'headers' => $header,
             ])->getBody());
 
