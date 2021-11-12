@@ -63,7 +63,7 @@
                         </b-row>
                     </b-col>
                     <b-col cols="12" v-if="quotes.length > 0">
-                        <b-btn size="md" variant="primary" class="float-right" v-active-request @click="refresh(false, true)">Refresh Levels Only</b-btn>
+                        <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_submit" v-active-request @click="refresh(false, true)">Refresh Levels Only</b-btn>
                     </b-col>
                 </b-row>
                 <b-row>
@@ -74,7 +74,7 @@
             </b-container>
         </template>
         <template slot="modal-footer">
-            <b-btn size="md" variant="primary" class="float-right" v-active-request @click="refresh(true, true)">Refresh</b-btn>
+            <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_submit" v-active-request @click="refresh(true, true)">Refresh</b-btn>
             <b-btn size="md" variant="default" class="float-right" @click="closeModal()">Close</b-btn>
         </template>
     </b-modal>
@@ -91,6 +91,12 @@
                 selected: [],
                 selected_negotiations: [],
             }
+        },
+        computed: {
+            disabled_submit() {
+
+                return !(this.selected.length > 0 || this.selected_negotiations.length > 0);
+            },
         },
         methods: {
             closeModal() {
