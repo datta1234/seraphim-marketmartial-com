@@ -174,6 +174,10 @@ export default class TradeNegotiation extends BaseModel {
         return this.is_offer ? "You are Offered Over " : "You are Bid over, "; 
     }
 
+    getQuantityType() {
+        return this.getUserMarket() ? this.getUserMarket().getQuantityType() : "Contracts";
+    }
+
     /**
     *  store
     */
