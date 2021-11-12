@@ -25,7 +25,7 @@ class RolesTableSeeder extends Seeder
             [
                 'id' => 3,
                 'title' => 'Viewer',
-                'is_selectable' => true,
+                'is_selectable' => false,
             ]
         ]);
     }

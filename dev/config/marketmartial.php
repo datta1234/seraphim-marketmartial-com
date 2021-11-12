@@ -25,7 +25,7 @@ return [
 			],
 			[
 				'title' => 'Viewer',
-				'is_selectable' => true,
+				'is_selectable' => false,
 			]
 		],
 		'market_condition_category' => [

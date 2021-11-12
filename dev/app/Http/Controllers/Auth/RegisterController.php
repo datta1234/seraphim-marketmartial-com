@@ -62,8 +62,6 @@ class RegisterController extends Controller
     {
         $messages = [
             'markets.required' => 'Please select at least one of the listed markets',
-            'role_id.required' => 'Please select a role',
-            'role_id.exists' => 'Please select a role that is valid',
             'organisation_id.required_without' => 'Please select your organisation.',
             'cell_phone.required' => 'The phone field is required',
             'new_organisation.unique' => 'The organisation already exists in the system',
@@ -79,12 +77,6 @@ class RegisterController extends Controller
                 new MicrosoftPasswordPolicy
             ],
             'cell_phone' => 'required|numeric',
-            'role_id' => [
-                'required',
-                Rule::exists('roles','id')->where(function ($query) {
-                     $query->where('is_selectable', 1);
-                }),
-            ],
             'market_types' => 'required',
             'organisation_id' => 'required_without:not_listed',
             'new_organisation' => 'required_with:not_listed|unique:organisations,title|string|max:255',
@@ -196,7 +188,6 @@ class RegisterController extends Controller
         // $market_types = MarketType::all()->pluck('title', 'id')->toArray();
         $market_types = [1 => "Options", 2 => "Delta One (EFPs, Rolls and EFP Switches)"];
         $organisations = Organisation::all()->pluck('title','id')->toArray();
-        $roles = Role::where('is_selectable',true)->get()->pluck('label','id')->toArray();
         return view('auth.register')->with(compact('organisations', 'market_types','roles'));
     }
 
@@ -209,8 +200,13 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
+        $register_data = $request->all();
 
-        $user = $this->create($request->all());
+        // Removed Role choice - all users are now Traders Phase 3 updates
+        $default_role = config('marketmartial.default_role');
+        $register_data['role_id'] = Role::where('title', $default_role)->pluck('id')->first();
+
+        $user = $this->create($register_data);
         if(!$user) {
             return redirect()->back()->with('error', 'Failed to register new user.');
         } 

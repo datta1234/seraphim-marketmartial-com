@@ -136,27 +136,6 @@
                     @endif
                 </div>
             </div>
-         
-
-      <div class="form-group row">
-                <label for="organisation_id" class="col-sm-12 col-md-4 offset-md-1 col-form-label text-md-right">Your Role</label>
-
-                <div class="col-sm-12 col-md-4">
-                    <div class="form-group">
-
-                      {{ Form::select('role_id',[''=>'Select Role'] + $roles, null,['class' => ($errors->has('role_id') ? 'form-control is-invalid' : 'form-control')] ) }}
-
-                        @if ($errors->has('role_id'))
-                            <span class="invalid-feedback">
-                                <strong>{{ $errors->first('role_id') }}</strong>
-                            </span>
-                        @endif
-
-                    </div>
-    
-            </div>  
-        </div>
-
 
             {{-- NEEDS CHANGE END --}}
             <div class="form-group row">

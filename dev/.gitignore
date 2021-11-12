@@ -12,3 +12,6 @@ npm-debug.log
 yarn-error.log
 .env
 .env.dusk.local
+installer
+installer.1
+.bash_history
