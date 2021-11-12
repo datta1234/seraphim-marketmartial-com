@@ -36,7 +36,7 @@
                         </b-row>
                     </b-col>
                     <b-col cols="12" v-if="negotiations.length > 0">
-                        <b-btn size="md" variant="primary" class="float-right" v-active-request @click="refresh(true, false)">Refresh Quotes Only</b-btn>
+                        <b-btn size="md" variant="primary" class="float-right" v-active-request :disabled="disabled_quotes" @click="refresh(true, false)">Refresh Quotes Only</b-btn>
                     </b-col>
                 </b-row>
                 <b-row v-if="negotiations.length > 0" class="mb-3">
@@ -63,7 +63,7 @@
                         </b-row>
                     </b-col>
                     <b-col cols="12" v-if="quotes.length > 0">
-                        <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_submit" v-active-request @click="refresh(false, true)">Refresh Levels Only</b-btn>
+                        <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_levels" v-active-request @click="refresh(false, true)">Refresh Levels Only</b-btn>
                     </b-col>
                 </b-row>
                 <b-row>
@@ -74,7 +74,7 @@
             </b-container>
         </template>
         <template slot="modal-footer">
-            <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_submit" v-active-request @click="refresh(true, true)">Refresh</b-btn>
+            <b-btn size="md" variant="primary" class="float-right" :disabled="disabled_refresh" v-active-request @click="refresh(true, true)">Refresh</b-btn>
             <b-btn size="md" variant="default" class="float-right" @click="closeModal()">Close</b-btn>
         </template>
     </b-modal>
@@ -94,9 +94,17 @@
         },
         computed: {
             // Phase 3 addition - De-activate the Refresh button until at least 1 box is ticked.
-            disabled_submit() {
+            disabled_refresh() {
 
                 return !(this.selected.length > 0 || this.selected_negotiations.length > 0);
+            },
+            disabled_levels() {
+
+                return !(this.selected_negotiations.length > 0);
+            },
+            disabled_quotes() {
+
+                return !(this.selected.length > 0);
             },
         },
         methods: {
