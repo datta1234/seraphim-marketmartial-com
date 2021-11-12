@@ -81,14 +81,14 @@ class TradeConfirmationController extends Controller
         {
             $tradeConfirmationChild->trade_confirmation_status_id = 2;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Complete the booking in the confirmation tab");
 
         }
         else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id && $tradeConfirmationChild->trade_confirmation_status_id == 2)
         {
             $tradeConfirmationChild->trade_confirmation_status_id = 3;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Complete the booking in the confirmation tab");
         }
 
          $data = $tradeConfirmationChild->fresh()->load([

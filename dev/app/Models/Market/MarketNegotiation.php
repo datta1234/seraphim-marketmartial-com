@@ -1201,7 +1201,7 @@ class MarketNegotiation extends Model
                     $market_maker_org->notify("market_traded",$market_maker_message,true);
 
                     $tradeConfirmation =  $tradeNegotiation->setUpConfirmation();
-                    $message = "Congrats on the trade! Complete the booking in the confirmation tab";
+                    $message = "Complete the booking in the confirmation tab";
                     $organisation = $tradeConfirmation->sendUser->organisation;
                     $tradeConfirmation->notifyConfirmation($organisation,$message);
                 }
