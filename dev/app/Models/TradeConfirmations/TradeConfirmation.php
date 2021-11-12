@@ -875,8 +875,8 @@ class TradeConfirmation extends Model
 
                 $organisation = $userMarket->user->organisation;
                 // Changed as per JIRA task [MM-1044]
-                $organisation->notify("rebate_earned","Rebate Earned",true);
-                Rebate::notifyOrganisationUpdate($organisation);
+                /*$organisation->notify("rebate_earned","Rebate Earned",true);
+                Rebate::notifyOrganisationUpdate($organisation);*/
             }
 
             //book the trade

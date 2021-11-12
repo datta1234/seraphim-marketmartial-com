@@ -8,9 +8,9 @@
             <div class="col-2 current-time">
                 <p class="pt-1">{{ time.display_time }}</p>
             </div>
-            <div class="col-4 total-rebate">
+            <!-- <div class="col-4 total-rebate">
                 <p class="float-right pt-1">Rebates: <strong>{{ formatRandQty(displayRebate) }}</strong></p>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
