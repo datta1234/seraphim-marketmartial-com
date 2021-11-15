@@ -235,6 +235,7 @@ trait OrganisationSlackChat {
                 $formatted_message_admin = array(
                     "user_name" => "Market Martial",
                     "message" => $eventData["text"],
+                    "auto_open_chat" => true,
                     "time_stamp" => $eventData["ts"],
                     "status" => null
                 );
