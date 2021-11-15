@@ -84,16 +84,16 @@ trait OrganisationSlackChat {
         ];
         try {
             $client = new Client();
-            $response = $client->request('GET', config('marketmartial.slack.api_url').'/conversations.list', [
+            $response = $client->request('GET', config('marketmartial.slack.api_url').'/conversations.list?types=public_channel,private_channel', [
                     'headers' => $header,
             ]);
             $body = json_decode($response->getBody());
             
             if(isset($body->ok)) {
                 if($body->ok == true) {
-                    if(isset($body->groups) && is_array($body->groups)) {
-                        $index = array_search($channel_name, array_column($body->groups, 'name'));
-                        return $body->groups[$index];
+                    if(isset($body->channels) && is_array($body->channels)) {
+                        $index = array_search($channel_name, array_column($body->channels, 'name'));
+                        return $body->channels[$index];
                     }
                 }
                 return false;
@@ -137,7 +137,6 @@ trait OrganisationSlackChat {
             'Accept' => 'application/json'
         ];
         $response = null;
-
         try {
             $client = new Client();
             $response = $client->request('POST', config('marketmartial.slack.api_url').'/chat.postMessage', [
@@ -154,6 +153,7 @@ trait OrganisationSlackChat {
             \Log::error(array( "Errors" => $error_data));
             return false;
         }
+
         return json_decode($response->getBody());
     }
 
