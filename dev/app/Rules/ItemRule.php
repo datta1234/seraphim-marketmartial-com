@@ -49,7 +49,8 @@ class ItemRule implements Rule
                 }
                 break;
             case 'Contract':
-                if($value['value'] !== null)
+                /* Phase3 Update, no longer allowed to edit contracts*/
+                /*if($value['value'] !== null)
                 {
                     if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))
                     {
@@ -61,7 +62,8 @@ class ItemRule implements Rule
                     {
                         return true;
                     }
-                }
+                }*/
+                return true;
                 break;
             case 'Spot':
                 if(!filter_var($value['value'], FILTER_VALIDATE_FLOAT))

@@ -357,9 +357,9 @@ export default class TradeConfirmation extends BaseModel {
             exclude_list = [];
         }
         
-        if(this.state == 'Pending: Initiate Confirmation' && exclude_list.indexOf('contracts') == -1) {
+        /*if(this.state == 'Pending: Initiate Confirmation' && exclude_list.indexOf('contracts') == -1) {
             exclude_list.push('contracts');
-        }
+        }*/
 
         return JSON.stringify(oldConfirmationData) != JSON.stringify(this.prepareStore(exclude_list));
     }
