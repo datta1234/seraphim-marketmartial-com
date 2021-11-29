@@ -22,9 +22,10 @@ class TradeConfirmationController extends Controller
         $tradeConfirmationUpdated = in_array($tradeConfirmation->trade_confirmation_status_id, [6,7]) ? $tradeConfirmation : $tradeConfirmation->createChild();
         $tradeConfirmationUpdated->setAccount($user,$request->input('trading_account_id')); 
         $exclude_list = array();
-        if(in_array($tradeConfirmationUpdated->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+        /* Phase3 Update, no longer allowed to edit contracts */
+        /*if(in_array($tradeConfirmationUpdated->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {*/
             $exclude_list[] = 'Contract';
-        }
+        /*}*/
     	$tradeConfirmationUpdated->updateGroups($request->input('trade_confirmation_data.structure_groups'), array(), $exclude_list);  
         try {
             $tradeConfirmationUpdated->phaseTwo();
@@ -73,22 +74,23 @@ class TradeConfirmationController extends Controller
         $this->authorize('update',$tradeConfirmation);
         $tradeConfirmationChild = $tradeConfirmation->createChild();
         $tradeConfirmationChild->setAccount($user,$request->input('trading_account_id'));
-        if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+        /* Phase3 Update, no longer allowed to edit contracts */
+        /*if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
             $tradeConfirmationChild->updateGroups($request->input('trade_confirmation_data.structure_groups'), ['Contract']);
-        }
+        }*/
 
         if($user->organisation_id == $tradeConfirmationChild->sendUser->organisation_id && $tradeConfirmationChild->trade_confirmation_status_id == 1)
         {
             $tradeConfirmationChild->trade_confirmation_status_id = 2;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->recievingUser->organisation,"Complete the booking in the confirmation tab");
 
         }
         else if($user->organisation_id == $tradeConfirmationChild->recievingUser->organisation_id && $tradeConfirmationChild->trade_confirmation_status_id == 2)
         {
             $tradeConfirmationChild->trade_confirmation_status_id = 3;
             $tradeConfirmationChild->save();
-            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Congrats on the trade! Complete the booking in the confirmation tab");
+            $tradeConfirmationChild->notifyConfirmation($tradeConfirmationChild->sendUser->organisation,"Complete the booking in the confirmation tab");
         }
 
          $data = $tradeConfirmationChild->fresh()->load([
@@ -143,9 +145,10 @@ class TradeConfirmationController extends Controller
         $user = $request->user();
         $this->authorize('dispute',$tradeConfirmation);
         $tradeConfirmationChild = $tradeConfirmation->createChild();
-        if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
+        /* Phase3 Update, no longer allowed to edit contracts */
+        /*if(!in_array($tradeConfirmationChild->marketRequest->trade_structure_slug, ['efp', 'rolls', 'efp_switch'])) {
             $tradeConfirmationChild->updateGroups($request->input('trade_confirmation.structure_groups'), ['Contract']);
-        }
+        }*/
         $tradeConfirmationChild->save();
 
         if($user->organisation_id == $tradeConfirmationChild->sendUser->organisation_id)

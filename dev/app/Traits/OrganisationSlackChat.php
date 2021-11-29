@@ -11,15 +11,15 @@ trait OrganisationSlackChat {
     public function createChannel($channel_name)
     {
         /*Creates a new private channel on slack for organisation
-        url - https://slack.com/api/groups.create
+        url - https://slack.com/api/conversations.create
         header - Authorization : Bearer $bearer_auth_key
         body -  {
-                    "validate": true,
+                    "is_private": true,
                     "name": $channel_name
                 }
         */
         $body = [
-            "validate" => true,
+            "is_private" => true,
             "name" => $channel_name
         ];
         $header = [
@@ -29,7 +29,7 @@ trait OrganisationSlackChat {
         ];
         try {
             $client = new Client();
-            $response = $client->request('POST', config('marketmartial.slack.api_url').'/groups.create', [
+            $response = $client->request('POST', config('marketmartial.slack.api_url').'/conversations.create', [
                     'headers' => $header,
                     'body'  =>  json_encode($body)
             ]);
@@ -84,16 +84,16 @@ trait OrganisationSlackChat {
         ];
         try {
             $client = new Client();
-            $response = $client->request('GET', config('marketmartial.slack.api_url').'/groups.list', [
+            $response = $client->request('GET', config('marketmartial.slack.api_url').'/conversations.list?types=public_channel,private_channel', [
                     'headers' => $header,
             ]);
             $body = json_decode($response->getBody());
             
             if(isset($body->ok)) {
                 if($body->ok == true) {
-                    if(isset($body->groups) && is_array($body->groups)) {
-                        $index = array_search($channel_name, array_column($body->groups, 'name'));
-                        return $body->groups[$index];
+                    if(isset($body->channels) && is_array($body->channels)) {
+                        $index = array_search($channel_name, array_column($body->channels, 'name'));
+                        return $body->channels[$index];
                     }
                 }
                 return false;
@@ -137,7 +137,6 @@ trait OrganisationSlackChat {
             'Accept' => 'application/json'
         ];
         $response = null;
-
         try {
             $client = new Client();
             $response = $client->request('POST', config('marketmartial.slack.api_url').'/chat.postMessage', [
@@ -154,6 +153,7 @@ trait OrganisationSlackChat {
             \Log::error(array( "Errors" => $error_data));
             return false;
         }
+
         return json_decode($response->getBody());
     }
 
@@ -172,7 +172,7 @@ trait OrganisationSlackChat {
         }
         try {
             $client = new Client();
-            $response = json_decode($client->request('GET', config('marketmartial.slack.api_url').'/groups.history?channel='.$user->organisation->slack_channel->value, [
+            $response = json_decode($client->request('GET', config('marketmartial.slack.api_url').'/conversations.history?channel='.$user->organisation->slack_channel->value, [
                     'headers' => $header,
             ])->getBody());
 
@@ -235,6 +235,7 @@ trait OrganisationSlackChat {
                 $formatted_message_admin = array(
                     "user_name" => "Market Martial",
                     "message" => $eventData["text"],
+                    "auto_open_chat" => true,
                     "time_stamp" => $eventData["ts"],
                     "status" => null
                 );

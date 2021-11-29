@@ -2,7 +2,7 @@
     <div dusk="safex-table" class="safex-table" >
         <div class="card mt-5">
             <div class="card-header text-center">
-                <h2 class="mt-2 mb-2">Rolling 6 Months of Safex Data</h2>
+                <h2 class="mt-2 mb-2">Rolling 2 Years of Data</h2>
             </div>
             <div class="card-body">
                 <b-row>

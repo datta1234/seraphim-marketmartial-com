@@ -15,13 +15,13 @@
     },
     {
         "alias": "cond_is_oco",
-        "title": "OCO",
+        "title": "Best",
         "default": null,
         "value": true
     },
     {
         "alias": "cond_is_subject",
-        "title": "Subject",
+        "title": "To trade",
         "default": null,
         "value": true
     },
