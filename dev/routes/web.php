@@ -22,7 +22,7 @@ Route::get('/', 'PageController@index')->name('home');
 /*Route::get('/contact', 'PageController@contact')->name('contact');
 Route::post('/contact', 'PageController@contactMessage')->name('contact_send');
 Route::get('/about', 'PageController@about')->name('about');*/
-Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');
+/*Route::get('/fee-structures', 'PageController@feeStructures')->name('fee_structures');*/
 Route::get('/fsp-disclosures', 'PageController@fspDisclosures')->name('fsp_disclosures');
 
 // Keepalive For Trade Screen
@@ -68,8 +68,8 @@ Route::group(['middleware' => ['auth','active','redirectOnFirstLogin','RedirectP
 			//Route::get('/open-interest/table', 'Stats\OpenInterestControlller@openInterestTableData')->name('open_interest.table');
 		});
 
-		Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
-		Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');
+		/*Route::get('/rebates-summary', 'RebatesSummaryController@index')->name('rebate_summary.index');
+		Route::get('/rebates-summary/year', 'RebatesSummaryController@show')->name('rebate_summary.show');*/
 	});
 
 	Route::get('/my-profile', 'UserController@edit')->name('user.edit');

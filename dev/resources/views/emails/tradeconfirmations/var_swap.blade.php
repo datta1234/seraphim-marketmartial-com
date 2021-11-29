@@ -9,7 +9,7 @@ Structure: {{ $trade_confirmation["trade_structure_title"] }}<br>
 
 |
  {{ $trade_confirmation["swap_parties"]["initiate_org"] }} | {{ $trade_confirmation["swap_parties"]["recieving_org"] }} | Underlying | Expiry | Volatility Level | Vega | Capped | Near Dated Future Ref |
-|-----------------------------------------------------------|------------------------------------------------------------|------------|--------|------------------|------|--------|-----------------------|
+|-----------------------------------------------------------:|------------------------------------------------------------:|------------:|--------:|------------------:|------:|--------:|-----------------------:|
 @foreach ( $trade_confirmation["request_groups"] as $request_group )
 | {{ $trade_confirmation['swap_parties']['is_offer'] ? "Buys" : "Sells" }} | {{ $trade_confirmation['swap_parties']['is_offer'] ? "Sells" : "Buys" }} | {{ $request_group["tradable"]["title"] }} | {{ $request_group['items']->firstWhere("title","Expiration Date")["value"] }} | {{ $trade_confirmation["volatility"] }} | {{ $request_group['items']->firstWhere("title","Quantity")["value"] ? number_format($request_group['items']->firstWhere("title","Quantity")["value"],0,'.',' ') : '-' }} | {{ $request_group['items']->firstWhere("title","Cap")["value"] }} | {{ $request_group['items']->firstWhere("title","Future")["value"] ? number_format($request_group['items']->firstWhere("title","Future")["value"],2,'.',' ') : '-' }} |
 @endforeach

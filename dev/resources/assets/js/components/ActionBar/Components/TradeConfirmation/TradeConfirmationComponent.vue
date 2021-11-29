@@ -161,9 +161,9 @@
                             </td>
                             <td>
                                 {{ future_group.contracts }}
-                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                <!-- <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
                                     Calculated value : {{ future_group.contracts_old }}.
-                                </div>
+                                </div> -->
                             </td>
                             <td>
                                 {{ future_group.expires_at_1 }}     
@@ -186,9 +186,9 @@
                                 </div>
                             </td>
                             {{ future_group.contracts }}
-                                <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
+                                <!-- <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
                                     Calculated value : {{ future_group.contracts_old }}.
-                                </div>
+                                </div> -->
                             <td>
                                 {{ future_group.expires_at_2 }}     
                             </td>
@@ -243,7 +243,8 @@
                                 </div>
                             </td>
                             <td v-else>
-                                <input  v-input-mask.number.decimal="{ precision: 2 }" 
+                                {{ trade_confirmation.future_groups[key]['contracts'] }}
+                                <!-- <input  v-input-mask.number.decimal="{ precision: 2 }" 
                                         class="mm-blue-bg form-control" 
                                         v-model="trade_confirmation.future_groups[key]['contracts']" 
                                         type="number"
@@ -251,7 +252,7 @@
                                 </input>
                                 <div v-if="hasOldValue('future_groups',key,'contracts')" class="font-weight-bold text-danger modal-info-text">
                                     Calculated value : {{ future_group.contracts_old }}.
-                                </div>
+                                </div> -->
                             </td>
                             <td>
                                 {{ future_group.expires_at }}     
@@ -362,7 +363,7 @@
             can_send:function (val) {
                 return (this.action_list.has_calculate && this.action_list.has_dispute) ? (this.trade_confirmation.hasFutures() 
                     && this.trade_confirmation.hasSpots() 
-                    && !this.trade_confirmation.hasChanged(this.trade_confirmation.state == 'Pending: Initiate Confirmation' ? this.oldConfirmationDataContractsExcluded : this.oldConfirmationData)
+                    && !this.trade_confirmation.hasChanged(this.trade_confirmation.state == 'Pending: Initiate Confirmation' ? this.oldConfirmationDataContractsExcluded : this.oldConfirmationData, this.exclude_contracts)
                     && this.trade_confirmation.canSend()
                 ) : true;
             },
@@ -392,8 +393,8 @@
                 return this.action_list.has_dispute ? (this.trade_confirmation.hasFutures() 
                     && this.trade_confirmation.hasSpots() 
                     && (this.trade_confirmation.canDisputeUpdated()
-                        || this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsOnly, this.include_only_contracts)
-                        && this.trade_confirmation.canDisputeContracts())
+                        /*|| this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsOnly, this.include_only_contracts)
+                        && this.trade_confirmation.canDisputeContracts()*/)
                     && !this.trade_confirmation.hasChanged(this.oldConfirmationDataContractsExcluded, this.exclude_contracts)
                 ) : true;
 
@@ -411,7 +412,7 @@
                 trade_confirmation: null,
                 base_url: '',
                 exclude_contracts: ['contracts'],
-                include_only_contracts: ['future','future_1','future_2','spot'],
+                include_only_contracts: ['future','future_1','future_2','spot','contracts'],
                 action_list: {
                     has_calculate: true,
                     has_dispute: true,
@@ -462,7 +463,7 @@
             },
             updateOldData(TradeConfirmation)
             {
-                this.oldConfirmationData = this.trade_confirmation.prepareStore();
+                this.oldConfirmationData = this.trade_confirmation.prepareStore(this.exclude_contracts);
                 this.oldConfirmationDataContractsExcluded = this.trade_confirmation.prepareStore(this.exclude_contracts);
                 this.oldConfirmationDataContractsOnly = this.trade_confirmation.prepareStore(this.include_only_contracts);
             },

@@ -13,23 +13,23 @@
     {
         "condition": "cond_is_oco",
         "true": {
-            "bid": "OCO",
-            "offer": "OCO"
+            "bid": "Best",
+            "offer": "Best"
         },
         "false": {
-            "bid": "OCO",
-            "offer": "OCO"  
+            "bid": "Best",
+            "offer": "Best"  
         }
     },
     {
         "condition": "cond_is_subject",
         "true": {
-            "bid": "Subject",
-            "offer": "Subject"
+            "bid": "To trade",
+            "offer": "To trade"
         },
         "false": {
-            "bid": "Subject",
-            "offer": "Subject"  
+            "bid": "To trade",
+            "offer": "To trade"  
         }
     },
     {

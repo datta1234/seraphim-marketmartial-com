@@ -6,7 +6,7 @@
               <div cols="4">
                   <b-form-input v-active-request class="mb-5" type="text" v-model="quantity" placeholder="Contracts"></b-form-input>
               </div>
-              <label class="col-4 col-form-label">Contracts</label>
+              <label class="col-4 col-form-label">{{ lastTradeNegotiation.getQuantityType() }}</label>
           </b-row>
           <b-row class="justify-content-md-center">
               <b-col cols="6">

@@ -266,9 +266,8 @@ class TradeConfirmation extends Model
             $current_org_id =  $this->resolveOrganisationId();
             $is_sender =   $current_org_id == $this->sendUser->organisation_id;
             $is_reciever = $current_org_id == $this->recievingUser->organisation_id;
-            $senderStatuses = [1,3];
-            $receiverStatuses = [2,5];
-            
+            $senderStatuses = [1,3,6];
+            $receiverStatuses = [2,5,7];
             if($is_sender)
             {
              return  in_array($this->trade_confirmation_status_id,$senderStatuses);
@@ -875,8 +874,8 @@ class TradeConfirmation extends Model
 
                 $organisation = $userMarket->user->organisation;
                 // Changed as per JIRA task [MM-1044]
-                $organisation->notify("rebate_earned","Rebate Earned",true);
-                Rebate::notifyOrganisationUpdate($organisation);
+                /*$organisation->notify("rebate_earned","Rebate Earned",true);
+                Rebate::notifyOrganisationUpdate($organisation);*/
             }
 
             //book the trade

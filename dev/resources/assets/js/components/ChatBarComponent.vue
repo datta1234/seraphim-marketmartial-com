@@ -219,6 +219,12 @@
                             this.toggleNewIncomingState(true);
                         }
                     });
+
+                    // If message is set to open chat open if not already open
+                    if(message.auto_open_chat && !this.opened) {
+                        this.fireChatBar();
+                    }
+
                 } else {
                     this.display_messages[message_index].status = 'received';
                 }
