@@ -57,6 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'confirmation_address' => env('MAIL_TO_CONFIRMATION_ADDRESS' , 'Confirmations@SeraphimFS.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
