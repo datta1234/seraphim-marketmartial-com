@@ -46,9 +46,8 @@ class TradeConfirmedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        //dd($this->trade_confirmation);
         return (new MailMessage)
-            ->from(config("mail.from.confirmation_address"), config("mail.from.name"))
+            ->from(config("mail.from.confirmation_address"), config("mail.from.confirmation_name"))
             ->cc(config("mail.admin_email")) // Set the cc address for the mail message.
             ->markdown(
             'emails.tradeconfirmations.'.$this->trade_structure_slug,
