@@ -15,9 +15,6 @@
 			@endslot
 				@slot('body')
 					<p>
-						Please accept the T&Cs below.
-					</p>
-					<p>
 		                After submitting this information, the Market Martial team will verify your profile.
 		            </p>
 		            <p>
