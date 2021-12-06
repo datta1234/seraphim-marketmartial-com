@@ -24,14 +24,14 @@ class TermsofUseRequest extends FormRequest
     public function rules()
     {
          return [
-            'tc_accepted' => 'required|accepted'
+            'tc_accepted' => 'required'
         ];
     }
 
     public function messages()
     {
-          return [
-            'tc_accepted.accepted' => 'please ensure you accept the terms of use and the privacy policy'
+        return [
+            /*'tc_accepted.accepted' => 'please ensure you accept the terms of use and the privacy policy'*/
         ];
     }
 }
