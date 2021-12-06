@@ -3,12 +3,12 @@
         <template v-if="!completed">
             <b-form v-on:submit.prevent="" id="index-details-form">
             
-                <b-form-checkbox id="checkbox1"
+                <!-- <b-form-checkbox id="checkbox1"
                                  v-model="accepted"
                                  :value="true"
                                  :unchecked-value="false">
                     I accept the <a target="_blank" v-bind:href="privacyPolicyLink">Privacy Policy</a> and <a target="_blank" v-bind:href="termsOfUseLink">Terms of use</a>
-                </b-form-checkbox>
+                </b-form-checkbox> -->
 
                 <b-row v-if="errors.length > 0" class="mt-4">
                     <b-col :key="index" v-for="(error, index) in errors" cols="12">
@@ -21,8 +21,7 @@
                         <b-button id="submit-index-details" 
                                   type="submit" 
                                   class="btn mm-button" 
-                                  @click="update()"
-                                  :disabled="!accepted">
+                                  @click="update()">
                             Next
                         </b-button>
                     </div>

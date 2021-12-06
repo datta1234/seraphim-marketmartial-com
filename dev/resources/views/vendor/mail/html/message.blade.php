@@ -2,7 +2,7 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            {{ config('app.name') }}
+            {{ isset($seraphim_mail) && ($seraphim_mail === true) ? 'SERAPHIM FINANCIAL SERVICES (PTY) LTD' : config('app.name') }}
         @endcomponent
     @endslot
 
@@ -21,7 +21,7 @@
     {{-- Footer --}}
     @slot('footer')
         @component('mail::footer')
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ isset($seraphim_mail) && ($seraphim_mail === true) ? '' : config('app.name').'. ' }}All rights reserved.
         @endcomponent
     @endslot
 @endcomponent

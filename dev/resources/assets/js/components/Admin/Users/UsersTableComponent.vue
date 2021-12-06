@@ -69,7 +69,6 @@
                 <button v-else 
                         type="button" 
                         class="btn mm-generic-trade-button w-100"
-                        :disabled="!data.item.tc_accepted"
                         @click="showModal(data.item, {'verified': true}, data.index, 'Verify')">
                     Verify
                 </button>
