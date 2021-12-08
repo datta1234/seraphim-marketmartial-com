@@ -12,7 +12,11 @@ return [
             "Invoices"
         ],
         "AutoSetTradeAccounts" => [
-            "Direct"
+            "Direct",
+            "Group",
+            "Clearer",
+            "Compliance",
+            "Invoices"
         ],
 		"roles" => [
 			[
