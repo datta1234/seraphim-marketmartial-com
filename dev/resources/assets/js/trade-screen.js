@@ -69,6 +69,7 @@ Vue.component('user-header', require('./components/UserHeaderComponent.vue').def
 Vue.component('mm-loader', require('./components/LoaderComponent.vue').default);
 
 Vue.component('theme-toggle', require('./components/ThemeToggleComponent.vue').default);
+Vue.component('notification-toggle', require('./components/NotificationToggleComponent.vue').default);
 
 // Market Tab Components
 Vue.component('market-group', require('./components/MarketGroupComponent.vue').default);

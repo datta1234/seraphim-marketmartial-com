@@ -39,6 +39,7 @@
 
 		        		<!-- Rounded toggle switch -->
 		        		<theme-toggle></theme-toggle>
+		        		<notification-toggle></notification-toggle>
 					</div>
 				</div>
 			</b-row>
