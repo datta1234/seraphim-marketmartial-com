@@ -1,10 +1,11 @@
 <template>
     <b-row dusk="ibar-fok-active" class="active-cond-bar">
-        <b-col cols="11" offset="1">
+        <!-- FOK timer Removed in Phase 3 as requested by client -->
+        <!-- <b-col cols="11" offset="1">
             <div class="text-right negotiation condition-timer">
                 <strong>{{ timer_value }}</strong>
             </div>
-        </b-col>
+        </b-col> -->
         <b-col cols="12">
             <div v-bind:class="[ isActive ? 'cond-bar-alert' : 'cond-bar-sent' ]">
                 <b-row id="cond-container" class="trade-popover">
