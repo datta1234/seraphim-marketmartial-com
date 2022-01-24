@@ -44,8 +44,9 @@ class MarketNegotiationTimeout implements ShouldQueue
         // is the latest negotiation in the tree
         if($stillActive) {
             
+            // FOK timer Removed in Phase 3 as requested by client
             // FoK
-            if($marketNegotiation->isFoK() && !$marketNegotiation->isTrading()){
+            /*if($marketNegotiation->isFoK() && !$marketNegotiation->isTrading()){
                 // kill it
                 if($marketNegotiation->cond_fok_spin == false) {
                     $marketNegotiation->kill();
@@ -58,7 +59,7 @@ class MarketNegotiationTimeout implements ShouldQueue
                         "channel"   => config('marketmartial.slack.admin_notify_channel')
                     ], 'timeout');
                 }
-            }
+            }*/
 
             // Trade @ best
             if($marketNegotiation->isTradeAtBest() && !$marketNegotiation->isTrading()) {
