@@ -84,31 +84,66 @@ trait CalculatesForFly {
         $POD3 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike3,$volatility3) * $contracts3, 0)  * $putDirection3;
         $COD3 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike3,$volatility3) * $contracts3, 0) * $callDirection3;
 
-        if(abs($POD1 + $POD2 + $POD3) <= abs($COD1 + $COD2 + $COD3)) {
+        /*
+            Phase 3 update as requested by client
+            Only use prefered Option Delta 
+                i.e. abs($POD1) <= abs($COD1)
+            On the initial calc
+                i.e. Gross Premium not set
+            After this point the put / call will dictate the set
+                i.e. is_put true / false
+        */
+        $gross_prem1_exists = !is_null($this->optionGroups[0]->getOpVal('Gross Premiums'));
+        $gross_prem2_exists = !is_null($this->optionGroups[1]->getOpVal('Gross Premiums'));
+        $gross_prem3_exists = !is_null($this->optionGroups[2]->getOpVal('Gross Premiums'));
+
+        $pref_option_premium1 = $pref_option_premium2 = $pref_option_premium3 = abs($POD1 + $POD2 + $POD3) <= abs($COD1 + $COD2 + $COD3);
+
+        if($gross_prem1_exists && $gross_prem2_exists && $gross_prem3_exists) {
+            $pref_option_premium1 = $this->optionGroups[0]->getOpVal('is_put');
+            $pref_option_premium2 = $this->optionGroups[1]->getOpVal('is_put');
+            $pref_option_premium3 = $this->optionGroups[2]->getOpVal('is_put');
+        }
+
+        $future_contracts = 0;
+
+        if($pref_option_premium1) {
             //set the cell to a put
             $this->optionGroups[0]->setOpVal('is_put',true);
-            $this->optionGroups[1]->setOpVal('is_put',true);
-            $this->optionGroups[2]->setOpVal('is_put',true);
             $gross_prem1 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
-            $gross_prem2 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
-            $gross_prem3 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
             $this->optionGroups[0]->setOpVal('Gross Premiums',$gross_prem1,$is_sender);
-            $this->optionGroups[1]->setOpVal('Gross Premiums',$gross_prem2,$is_sender);
-            $this->optionGroups[2]->setOpVal('Gross Premiums',$gross_prem3,$is_sender);
-
-            $future_contracts = $POD1 + $POD2 + $POD3;
+            $future_contracts += $POD1;
         } else {
-           $this->optionGroups[0]->setOpVal('is_put',false);
-           $this->optionGroups[1]->setOpVal('is_put',false);
-           $this->optionGroups[2]->setOpVal('is_put',false);
-           $gross_prem1 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
-           $gross_prem2 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
-           $gross_prem3 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
-           $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem1,$is_sender);
-           $this->optionGroups[1]->setOpVal('Gross Premiums', $gross_prem2,$is_sender);
-           $this->optionGroups[2]->setOpVal('Gross Premiums', $gross_prem3,$is_sender);
+            $this->optionGroups[0]->setOpVal('is_put',false);
+            $gross_prem1 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
+            $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem1,$is_sender);
+            $future_contracts += $COD1;
+        }
 
-          $future_contracts/*cell(21,6)*/ = $COD1 + $COD2 + $COD3;
+        if($pref_option_premium2) {
+            //set the cell to a put
+            $this->optionGroups[1]->setOpVal('is_put',true);
+            $gross_prem2 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
+            $this->optionGroups[1]->setOpVal('Gross Premiums',$gross_prem2,$is_sender);
+            $future_contracts += $POD2;
+        } else {
+            $this->optionGroups[1]->setOpVal('is_put',false);
+            $gross_prem2 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
+            $this->optionGroups[1]->setOpVal('Gross Premiums', $gross_prem2,$is_sender);
+            $future_contracts += $COD2;
+        }
+
+        if($pref_option_premium3) {
+            //set the cell to a put
+            $this->optionGroups[2]->setOpVal('is_put',true);
+            $gross_prem3 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
+            $this->optionGroups[2]->setOpVal('Gross Premiums',$gross_prem3,$is_sender);
+            $future_contracts += $POD3;
+        } else {
+            $this->optionGroups[2]->setOpVal('is_put',false);
+            $gross_prem3 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
+            $this->optionGroups[2]->setOpVal('Gross Premiums', $gross_prem3,$is_sender);
+            $future_contracts += $COD3;
         }
         
         // futures and deltas buy/sell
