@@ -89,10 +89,23 @@
                         {{ option_group.hasOwnProperty('strike') ? splitValHelper(option_group.strike,' ',3) : '-' }} 
                     </td>
                     <td>
-                        {{ option_group.is_put ? "Put" : "Call" }}
-                        <!-- <div v-if="hasOldValue('option_groups',key,'is_put')" class="font-weight-bold text-danger modal-info-text">
-                            Calculated value : {{ option_group.is_put_old ? "Put" : "Call" }}.
-                        </div> -->
+                        <template v-if="option_group.gross_prem == null">
+                            {{ option_group.is_put ? "Put" : "Call" }}
+                        </template>
+                        <template v-else>
+                            <b-form-select v-model="option_group.is_put">
+                                <option :value="true">
+                                    Put
+                                </option>
+                                <option :value="false">
+                                    Call
+                                </option>
+                            </b-form-select>
+                            <div v-if="hasOldValue('option_groups',key,'is_put')" class="font-weight-bold text-danger modal-info-text">
+                                Previous value : {{ option_group.is_put_old ? "Put" : "Call" }}.
+                            </div>
+                        </template>
+
                     </td>
                     <td>
                         {{ option_group.hasOwnProperty('nominal') ? splitValHelper(option_group.nominal,' ',3) : "-" }}

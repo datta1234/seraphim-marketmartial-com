@@ -48,7 +48,24 @@ trait CalculatesForOutright {
         $POD1 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0) * $putDirection1;
         $COD1 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike1,$volatility1) * $contracts1, 0) * $callDirection1;
 
-        if(abs($POD1) <= abs($COD1)) {
+        /*
+            Phase 3 update as requested by client
+            Only use prefered Option Delta 
+                i.e. abs($POD1) <= abs($COD1)
+            On the initial calc
+                i.e. Gross Premium not set
+            After this point the put / call will dictate the set
+                i.e. is_put true / false
+        */
+        $gross_prem_exists = !is_null($this->optionGroups[0]->getOpVal('Gross Premiums'));
+        $pref_option_premium = $gross_prem_exists ? $this->optionGroups[0]->getOpVal('is_put') : (abs($POD1) <= abs($COD1));
+        
+        \Log::info([
+            "Gross Prem Exists" =>  $gross_prem_exists,
+            "Pref Option Prem" => $pref_option_premium
+        ]);
+
+        if($pref_option_premium) {
             //set the cell to a put
             $this->optionGroups[0]->setOpVal('is_put',true);
             $gross_prem = $this->putOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
@@ -61,6 +78,7 @@ trait CalculatesForOutright {
            $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem,$is_sender);
           $future_contracts/*cell(21,6)*/ = $COD1;
         }
+
 
         // futures and deltas buy/sell
         $isFutureOffer = !($future_contracts < 0);
