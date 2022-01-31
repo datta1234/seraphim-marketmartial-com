@@ -118,6 +118,13 @@ trait CalculatesForPhases {
         }   
     }
 
+    public function calcFutureFee($spotRef, $futureContracts, $feePercentage, $singleStock)
+    {
+      // Index Future Fee = Spot * future Contracts * 10 * Fee%
+      // Singles Future Fee = Spot * future Contracts * 100 * Fee%
+      return $spotRef * $futureContracts * ( $singleStock ? 100 : 10) * $feePercentage;
+    }
+
     // start excel calculations
 
     /*

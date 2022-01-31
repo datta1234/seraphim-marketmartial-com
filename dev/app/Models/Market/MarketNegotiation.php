@@ -1433,8 +1433,9 @@ class MarketNegotiation extends Model
                 // cond_fok_apply_bid
                 $this->is_private = true;
 
-                $this->cond_timeout = true;
-                $this->applyCondTimeoutCondition(); // force it
+                // FOK timer Removed in Phase 3 as requested by client
+                /*$this->cond_timeout = true;
+                $this->applyCondTimeoutCondition(); // force it*/
 
                 // notify admin
                 $title_initiator = $this->user->organisation->title;

@@ -72,6 +72,13 @@ class ItemRule implements Rule
                     return false;
                 }
                 break;
+            case 'is_put':
+                if(!filter_var($value['value'], FILTER_VALIDATE_BOOLEAN))
+                {
+                    $this->message = ["is_put" => "please enter a valid Put or Call value"];
+                    return false;
+                }
+                break;
             default:
                 $this->message = "Invalid field";
                 return false;

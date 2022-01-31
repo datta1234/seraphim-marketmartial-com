@@ -1,7 +1,15 @@
 <?php
 return [
-  // trade_structure fees are percentage values
-  // __trade_structure__
+	"futures" => [
+		"index" => [
+			"all_futures"=> 0.123
+		],
+		"singles" => [
+			"all_futures"=> 0.456
+		],
+	],
+  	// trade_structure fees are percentage values
+  	// __trade_structure__
 	"outright"=>
 	[
 		"index" => 

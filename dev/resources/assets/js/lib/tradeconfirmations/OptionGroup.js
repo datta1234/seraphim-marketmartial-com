@@ -81,6 +81,28 @@ export default class OptionGroup {
             return parseFloat(value);
         }
     }
+
+    // Currently Option Group store only allows user to update is_put
+    prepareStore() {
+        let store_items = [];
+
+        Object.keys(this).forEach(key => {
+            switch(key) {
+                case 'is_put':
+                    store_items.push({
+                        "title": "is_put",
+                        "value": this.is_put
+                    });
+                    break;
+            }
+        });
+
+        return {
+            id: this.id,
+            is_option: true,
+            items: store_items,
+        };
+    } 
    
 }
 
