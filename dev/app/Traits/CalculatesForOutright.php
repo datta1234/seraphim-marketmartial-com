@@ -13,7 +13,8 @@ trait CalculatesForOutright {
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
         
         $singleStock = $this->optionGroups[0]->userMarketRequestGroup->tradable->isStock();
-        
+        $SpotRef = null;
+
         if($singleStock) {
             $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
             // Need to multiply by 1M because the Nomninal is amount per million
@@ -59,11 +60,6 @@ trait CalculatesForOutright {
         */
         $gross_prem_exists = !is_null($this->optionGroups[0]->getOpVal('Gross Premiums'));
         $pref_option_premium = $gross_prem_exists ? $this->optionGroups[0]->getOpVal('is_put') : (abs($POD1) <= abs($COD1));
-        
-        \Log::info([
-            "Gross Prem Exists" =>  $gross_prem_exists,
-            "Pref Option Prem" => $pref_option_premium
-        ]);
 
         if($pref_option_premium) {
             //set the cell to a put
@@ -89,10 +85,10 @@ trait CalculatesForOutright {
 
         $this->load(['futureGroups','optionGroups','feeGroups']);
 
-        $this->outrightFees($is_offer,$gross_prem,$is_sender, $contracts1, $singleStock);
+        $this->outrightFees($is_offer,$gross_prem,$is_sender, $contracts1, $singleStock, $SpotRef);
     }
 
-    public function outrightFees($isOffer,$gross_prem,$is_sender,$contracts1,$singleStock)
+    public function outrightFees($isOffer,$gross_prem,$is_sender,$contracts1,$singleStock, $SpotRef)
     {     
         $Brodirection1 = $isOffer ? 1 : -1;
         $counterBrodirection1 = $Brodirection1 * -1;
@@ -100,7 +96,7 @@ trait CalculatesForOutright {
         $sender_org = $this->sendUser->organisation;
         $receiving_org = $this->recievingUser->organisation;
         $outright_key = 'marketmartial.confirmation_settings.outright.';
-            
+
         if($singleStock) {
             //its a percentage        
             $SINGLEoutrightFEESender = $sender_org->resolveBrokerageFee($outright_key.'singles.only_leg')/100;
@@ -112,25 +108,38 @@ trait CalculatesForOutright {
             $netPremium =  round($nominal1 * ($is_sender ? $SINGLEoutrightFEESender : $SINGLEoutrightFEEReceiving) / $contracts1 * $Brodirection1 + $gross_prem, 2);
 
             //set for the counter
-            $netPremiumCounter =  round($nominal1 * ($is_sender ? $SINGLEoutrightFEEReceiving : $SINGLEoutrightFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem, 2); 
+            $netPremiumCounter =  round($nominal1 * ($is_sender ? $SINGLEoutrightFEEReceiving : $SINGLEoutrightFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem, 2);
+
         } else {
             //its a percentage        
             $IXoutrightFEESender = $sender_org->resolveBrokerageFee($outright_key.'index.only_leg')/100;
             $IXoutrightFEEReceiving = $receiving_org->resolveBrokerageFee($outright_key.'index.only_leg')/100;    
             
-            $SpotReferencePrice1 = $this->optionGroups[0]->userMarketRequestGroup->tradable->market->spot_price_ref;
+            $SpotRef = $this->optionGroups[0]->userMarketRequestGroup->tradable->market->spot_price_ref;
 
-            //NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoutrightFEESender : $IXoutrightFEEReceiving) * $Brodirection1) + $gross_prem;
+            //NETPREM = Application.RoundDown(SpotRef * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
+            $netPremium =  floor($SpotRef * 10 * ($is_sender ? $IXoutrightFEESender : $IXoutrightFEEReceiving) * $Brodirection1) + $gross_prem;
 
             //set for the counter
-            $netPremiumCounter =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1) + $gross_prem; 
+            $netPremiumCounter =  floor($SpotRef * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1) + $gross_prem;
         }
 
-        // Fee = |GrossPrem - NetPremContracts| * Contracts
-        $totalFee = round(abs($gross_prem - $netPremium) * $contracts1);
+        // Phase 3 addition - Future Fee calc changes Index vs Singles
+        $future_contracts = $this->futureGroups[0]->getOpVal('Contract');
+        $future_key = 'marketmartial.confirmation_settings.futures.'.($singleStock ? 'singles' : 'index').'.all_futures';
+        //its a percentage        
+        $future_fee_percentage_sender = $sender_org->resolveBrokerageFee($future_key)/100;
+        $future_fee_percentage_receiving = $receiving_org->resolveBrokerageFee($future_key)/100;
+        $future_fee_percentage = ($is_sender ? $future_fee_percentage_sender : $future_fee_percentage_receiving);
+        $future_fee_percentage_counter = ($is_sender ? $future_fee_percentage_receiving : $future_fee_percentage_sender);
+        // Future Fee = Spot * future Contracts * 100 * Fee%
+        $future_fee = $this->calcFutureFee($SpotRef, $future_contracts, $future_fee_percentage, $singleStock);
+        $future_fee_counter = $this->calcFutureFee($SpotRef, $future_contracts, $future_fee_percentage_counter, $singleStock);
+
+        // Fee = |GrossPrem - NetPremContracts| * Contracts + Future Fee
+        $totalFee = round((abs($gross_prem - $netPremium) * $contracts1) + $future_fee);
         // Calculate for the counter
-        $totalFeeCounter = round(abs($gross_prem - $netPremiumCounter) * $contracts1);
+        $totalFeeCounter = round((abs($gross_prem - $netPremiumCounter) * $contracts1) + $future_fee_counter);
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium,$is_sender);
 
