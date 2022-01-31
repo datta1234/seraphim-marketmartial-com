@@ -2,9 +2,9 @@
     <div dusk="notification-toggle" class="notification-toggle">
          <!-- Rounded toggle switch -->
         <div class="float-right">
-            <span class="toggle">Enable chat notification sound</span>
+            <span class="toggle">Enable notification sound</span>
             <label class="switch mb-0 ml-1" id="notification-toggle">
-                <input type="checkbox" v-model="notification_toggler">
+                <input type="checkbox" v-model="notification_toggler" @change="toggleUpdate">
                 <span class="slider round"></span>
             </label>
         </div>
@@ -18,37 +18,38 @@
         data() {
             return {
                 notification_toggler: false,
-                notification_sound: null
+                notification_sound: null,
+                audio_timeout_buffer: null,
             };
-        },
-        watch: {
-            'notification_toggler': function(val) {
-                if(val && this.notification_sound) {
-                    // Play notification sound
-                    this.notification_sound.play(`${axios.defaults.baseUrl}/sounds/plink_sound`);
-                    this.test();
-                }
-            }
         },
         methods: {
             /**
-             * Listens for a chatMessageReceived event firing
+             * Listens for a playNotificationAudio event firing
              *
-             * @event /$root#chatMessageReceived
+             * @event /$root#playNotificationAudio
              */
-            newChatMessageListener() {
-                this.$root.$on('chatMessageReceived', this.notifyEventReceived);
+            notifyListener() {
+                this.$root.$on('audioNotify', this.playNotificationAudio);
             },
-            notifyEventReceived() {
-                if(this.notification_toggler && this.notification_sound) {
-                    // Play notification sound
-                    this.notification_sound.play(`${axios.defaults.baseUrl}/sounds/plink_sound`);
+            toggleUpdate() {
+                if(this.notification_toggler && this.notification_audio) {
+                    this.playNotificationAudio();
+                }  
+            },
+            playNotificationAudio() {
+                // Play notification sound
+                try {
+                    // Timeout buffer to not spam the user with notification sounds
+                    if(!this.audio_timeout_buffer) {
+                        this.notification_audio.play();
+                        this.audio_timeout_buffer = setTimeout(() => {
+                            this.audio_timeout_buffer = null;
+                        }, 2000);
+                    }
+                } catch(error) {
+                    console.log("Failed to play notification audio.");
+                    console.log(error);
                 }
-            },
-            test() {
-                let src = 'https://file-examples.com/wp-content/uploads/2017/11/file_example_MP3_700KB.mp3';
-                let audio = new Audio(src);
-                audio.play();
             }
         },
         mounted() {
@@ -67,16 +68,9 @@
                     localStorage.removeItem('notificationState');
                 }
             }
-            this.notification_sound = new Audio();
-            console.log(`CHECK: ${axios.defaults.baseUrl}/sounds/plink_sound`);
-            /*axios.get(`${axios.defaults.baseUrl}/sounds/plink_sound`)
-            .then(response => {
-                console.log("Response: ", response);
-            })
-            .catch(err => {
-                console.log(err)
-            });*/
 
+            this.notification_audio = document.getElementById("notifyAudio");
+            this.notifyListener();
         }
     }
 
