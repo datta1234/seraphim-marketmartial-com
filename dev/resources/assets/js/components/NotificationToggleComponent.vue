@@ -32,23 +32,27 @@
                 this.$root.$on('audioNotify', this.playNotificationAudio);
             },
             toggleUpdate() {
-                if(this.notification_toggler && this.notification_audio) {
-                    this.playNotificationAudio();
-                }  
+                try {
+                    localStorage.setItem('notificationState', this.notification_toggler);
+                } catch(e) {
+                    localStorage.removeItem('notificationState');
+                }
+                this.playNotificationAudio();
             },
             playNotificationAudio() {
                 // Play notification sound
-                try {
-                    // Timeout buffer to not spam the user with notification sounds
-                    if(!this.audio_timeout_buffer) {
-                        this.notification_audio.play();
-                        this.audio_timeout_buffer = setTimeout(() => {
-                            this.audio_timeout_buffer = null;
-                        }, 2000);
+                if(this.notification_toggler && this.notification_audio) {
+                    try {
+                        // Timeout buffer to not spam the user with notification sounds
+                        if(!this.audio_timeout_buffer) {
+                            this.notification_audio.play();
+                            this.audio_timeout_buffer = setTimeout(() => {
+                                this.audio_timeout_buffer = null;
+                            }, 2000);
+                        }
+                    } catch(error) {
+                        console.log("Failed to play notification audio.");
                     }
-                } catch(error) {
-                    console.log("Failed to play notification audio.");
-                    console.log(error);
                 }
             }
         },
