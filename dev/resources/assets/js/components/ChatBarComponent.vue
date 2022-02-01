@@ -220,10 +220,16 @@
                         }
                     });
 
-                    // If message is set to open chat open if not already open
-                    if(message.auto_open_chat && !this.opened) {
-                        this.fireChatBar();
+                    if(!this.opened) {
+                        // Send Audio Notification of new chat message
+                        this.$root.$emit('audioNotify');
+
+                        // If message is set to open chat open if not already open
+                        if(message.auto_open_chat) {
+                            this.fireChatBar();
+                        }
                     }
+
 
                 } else {
                     this.display_messages[message_index].status = 'received';

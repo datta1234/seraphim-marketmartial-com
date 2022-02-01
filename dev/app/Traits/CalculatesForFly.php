@@ -13,6 +13,7 @@ trait CalculatesForFly {
         $is_sender  = $organisation->id == $this->sendUser->organisation_id;
 
         $singleStock = $this->optionGroups[0]->userMarketRequestGroup->tradable->isStock();
+        $SpotRef = null;
         
         if($singleStock) {
             $SpotRef = floatval($this->futureGroups[0]->getOpVal('Spot'));
@@ -84,31 +85,66 @@ trait CalculatesForFly {
         $POD3 = round($this->putOptionDelta($startDate,$expiry1,$future1,$strike3,$volatility3) * $contracts3, 0)  * $putDirection3;
         $COD3 = round($this->callOptionDelta($startDate,$expiry1,$future1,$strike3,$volatility3) * $contracts3, 0) * $callDirection3;
 
-        if(abs($POD1 + $POD2 + $POD3) <= abs($COD1 + $COD2 + $COD3)) {
+        /*
+            Phase 3 update as requested by client
+            Only use prefered Option Delta 
+                i.e. abs($POD1) <= abs($COD1)
+            On the initial calc
+                i.e. Gross Premium not set
+            After this point the put / call will dictate the set
+                i.e. is_put true / false
+        */
+        $gross_prem1_exists = !is_null($this->optionGroups[0]->getOpVal('Gross Premiums'));
+        $gross_prem2_exists = !is_null($this->optionGroups[1]->getOpVal('Gross Premiums'));
+        $gross_prem3_exists = !is_null($this->optionGroups[2]->getOpVal('Gross Premiums'));
+
+        $pref_option_premium1 = $pref_option_premium2 = $pref_option_premium3 = abs($POD1 + $POD2 + $POD3) <= abs($COD1 + $COD2 + $COD3);
+
+        if($gross_prem1_exists && $gross_prem2_exists && $gross_prem3_exists) {
+            $pref_option_premium1 = $this->optionGroups[0]->getOpVal('is_put');
+            $pref_option_premium2 = $this->optionGroups[1]->getOpVal('is_put');
+            $pref_option_premium3 = $this->optionGroups[2]->getOpVal('is_put');
+        }
+
+        $future_contracts = 0;
+
+        if($pref_option_premium1) {
             //set the cell to a put
             $this->optionGroups[0]->setOpVal('is_put',true);
-            $this->optionGroups[1]->setOpVal('is_put',true);
-            $this->optionGroups[2]->setOpVal('is_put',true);
             $gross_prem1 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
-            $gross_prem2 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
-            $gross_prem3 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
             $this->optionGroups[0]->setOpVal('Gross Premiums',$gross_prem1,$is_sender);
-            $this->optionGroups[1]->setOpVal('Gross Premiums',$gross_prem2,$is_sender);
-            $this->optionGroups[2]->setOpVal('Gross Premiums',$gross_prem3,$is_sender);
-
-            $future_contracts = $POD1 + $POD2 + $POD3;
+            $future_contracts += $POD1;
         } else {
-           $this->optionGroups[0]->setOpVal('is_put',false);
-           $this->optionGroups[1]->setOpVal('is_put',false);
-           $this->optionGroups[2]->setOpVal('is_put',false);
-           $gross_prem1 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
-           $gross_prem2 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
-           $gross_prem3 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
-           $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem1,$is_sender);
-           $this->optionGroups[1]->setOpVal('Gross Premiums', $gross_prem2,$is_sender);
-           $this->optionGroups[2]->setOpVal('Gross Premiums', $gross_prem3,$is_sender);
+            $this->optionGroups[0]->setOpVal('is_put',false);
+            $gross_prem1 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike1,$volatility1,$singleStock);
+            $this->optionGroups[0]->setOpVal('Gross Premiums', $gross_prem1,$is_sender);
+            $future_contracts += $COD1;
+        }
 
-          $future_contracts/*cell(21,6)*/ = $COD1 + $COD2 + $COD3;
+        if($pref_option_premium2) {
+            //set the cell to a put
+            $this->optionGroups[1]->setOpVal('is_put',true);
+            $gross_prem2 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
+            $this->optionGroups[1]->setOpVal('Gross Premiums',$gross_prem2,$is_sender);
+            $future_contracts += $POD2;
+        } else {
+            $this->optionGroups[1]->setOpVal('is_put',false);
+            $gross_prem2 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike2,$volatility2,$singleStock);
+            $this->optionGroups[1]->setOpVal('Gross Premiums', $gross_prem2,$is_sender);
+            $future_contracts += $COD2;
+        }
+
+        if($pref_option_premium3) {
+            //set the cell to a put
+            $this->optionGroups[2]->setOpVal('is_put',true);
+            $gross_prem3 = $this->putOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
+            $this->optionGroups[2]->setOpVal('Gross Premiums',$gross_prem3,$is_sender);
+            $future_contracts += $POD3;
+        } else {
+            $this->optionGroups[2]->setOpVal('is_put',false);
+            $gross_prem3 = $this->callOptionPremium($startDate,$expiry1,$future1,$strike3,$volatility3,$singleStock);
+            $this->optionGroups[2]->setOpVal('Gross Premiums', $gross_prem3,$is_sender);
+            $future_contracts += $COD3;
         }
         
         // futures and deltas buy/sell
@@ -120,10 +156,10 @@ trait CalculatesForFly {
 
         $this->load(['futureGroups','optionGroups','feeGroups']);
 
-        $this->flyFees($is_offer1, $is_offer2, $is_offer3, $gross_prem1, $gross_prem2, $gross_prem3, $is_sender, $contracts1, $contracts2, $contracts3,$singleStock);
+        $this->flyFees($is_offer1, $is_offer2, $is_offer3, $gross_prem1, $gross_prem2, $gross_prem3, $is_sender, $contracts1, $contracts2, $contracts3, $singleStock, $SpotRef);
     }
 
-    public function flyFees($isOffer1,$isOffer2,$isOffer3,$gross_prem1,$gross_prem2,$gross_prem3,$is_sender,$contracts1,$contracts2,$contracts3,$singleStock)
+    public function flyFees($isOffer1,$isOffer2,$isOffer3,$gross_prem1,$gross_prem2,$gross_prem3,$is_sender,$contracts1,$contracts2,$contracts3,$singleStock,$SpotRef)
     {     
     	$Brodirection1 = $isOffer1 ? 1 : -1;
         $Brodirection2 = $isOffer2 ? 1 : -1;
@@ -153,22 +189,23 @@ trait CalculatesForFly {
             $netPremiumCounter1 =  round($nominal1 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts1 * $counterBrodirection1 + $gross_prem1, 2);
             $netPremiumCounter2 =  round($nominal2 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts2 * $counterBrodirection2 + $gross_prem2, 2);
             $netPremiumCounter3 =  round($nominal3 * ($is_sender ? $SINGLEflyFEEReceiving : $SINGLEflyFEESender) / $contracts3 * $counterBrodirection3 + $gross_prem3, 2);
+
         } else {
             //its a percentage        
             $IXflyFEESender = $sender_org->resolveBrokerageFee($fly_key.'index.per_leg')/100;
             $IXflyFEEReceiving = $receiving_org->resolveBrokerageFee($fly_key.'index.per_leg')/100;
 
             //get the spot price ref.
-            $SpotReferencePrice1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
+            $SpotRef = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
             // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection1) + $gross_prem1;
-            $netPremium2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection2) + $gross_prem2; 
-            $netPremium3 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection3) + $gross_prem3; 
+            $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection1) + $gross_prem1;
+            $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection2) + $gross_prem2; 
+            $netPremium3 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection3) + $gross_prem3; 
             //set for the counter
-            $netPremiumCounter1 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection1) + $gross_prem1;
-            $netPremiumCounter2 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection2) + $gross_prem2;
-            $netPremiumCounter3 =  floor($SpotReferencePrice1 * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3) + $gross_prem3;
+            $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection1) + $gross_prem1;
+            $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection2) + $gross_prem2;
+            $netPremiumCounter3 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3) + $gross_prem3;
         }
 
         // Fee = |GrossPrem - NetPremContracts| * Contracts
@@ -179,9 +216,22 @@ trait CalculatesForFly {
         $feeCounter1 = abs($gross_prem1 - $netPremiumCounter1) * $contracts1;
         $feeCounter2 = abs($gross_prem2 - $netPremiumCounter2) * $contracts2;
         $feeCounter3 = abs($gross_prem3 - $netPremiumCounter3) * $contracts3;
+
+        // Phase 3 addition - Future Fee calc changes Index vs Singles
+        $future_contracts = $this->futureGroups[0]->getOpVal('Contract');
+        $future_key = 'marketmartial.confirmation_settings.futures.'.($singleStock ? 'singles' : 'index').'.all_futures';
+        //its a percentage        
+        $future_fee_percentage_sender = $sender_org->resolveBrokerageFee($future_key)/100;
+        $future_fee_percentage_receiving = $receiving_org->resolveBrokerageFee($future_key)/100;
+        $future_fee_percentage = ($is_sender ? $future_fee_percentage_sender : $future_fee_percentage_receiving);
+        $future_fee_percentage_counter = ($is_sender ? $future_fee_percentage_receiving : $future_fee_percentage_sender);
+        // Future Fee = Spot * future Contracts * 100 * Fee%
+        $future_fee = $this->calcFutureFee($SpotRef, $future_contracts, $future_fee_percentage, $singleStock);
+        $future_fee_counter = $this->calcFutureFee($SpotRef, $future_contracts, $future_fee_percentage_counter, $singleStock);
+
         // Fee Total = SUM(Fee)
-        $totalFee = round($fee1 + $fee2 + $fee3);
-        $totalFeeCounter = round($feeCounter1 + $feeCounter2 + $feeCounter3);
+        $totalFee = round($fee1 + $fee2 + $fee3 + $future_fee);
+        $totalFeeCounter = round($feeCounter1 + $feeCounter2 + $feeCounter3 + $future_fee_counter);
 
         $this->optionGroups[0]->setOpVal('Net Premiums', $netPremium1,$is_sender);
         $this->optionGroups[1]->setOpVal('Net Premiums', $netPremium2,$is_sender);

@@ -10,7 +10,8 @@ return [
     'stock_quantity' 	=> env('STOCK_THRESHOLD_QUANTITY',50),
     'condition_timeouts'    =>  [
         // Timeouts In Mins
-        'cond_fok_spin'   =>  20,
+        // FOK timer Removed in Phase 3 as requested by client
+        //'cond_fok_spin'   =>  20,
         'cond_buy_best'   =>  15,
     ],
     // Lock time in Seconds

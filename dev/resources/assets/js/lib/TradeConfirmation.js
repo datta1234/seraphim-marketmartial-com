@@ -112,6 +112,9 @@ export default class TradeConfirmation extends BaseModel {
         this.future_groups.forEach((group)=>{
           options.push(group.prepareStore(exclude_list));
         });
+        this.option_groups.forEach((group)=>{
+          options.push(group.prepareStore(exclude_list));
+        });
         return options;
     }
 
