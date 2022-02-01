@@ -51,14 +51,14 @@ class TradeConfirmationStoreRequest extends FormRequest
             $rules[$item] = [new ItemRule()];
         }
 
-        for($i = 0; $i < $this->trade_confirmation->optionGroups->count(); $i++) 
+        /*for($i = 0; $i < $this->trade_confirmation->optionGroups->count(); $i++) 
         { 
             $item = "trade_confirmation_data.structure_groups.{$i}.items.*";
             $optionLabel= "trade_confirmation_data.structure_groups.{$i}.items.*.title";
             $optionValue = "trade_confirmation_data.structure_groups.{$i}.items.*.value";
             
             $rules[$item] = [new ItemRule()];
-        }
+        }*/
 
 
         // stop cross account trades, only allow MY trading accounts through
