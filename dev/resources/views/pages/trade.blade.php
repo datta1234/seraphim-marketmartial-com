@@ -39,6 +39,7 @@
 
 		        		<!-- Rounded toggle switch -->
 		        		<theme-toggle></theme-toggle>
+		        		<notification-toggle></notification-toggle>
 					</div>
 				</div>
 			</b-row>
@@ -51,6 +52,9 @@
 		@endif
 		<!-- @include('layouts.elements.trade_footer', [ 'layout' => [ 'fluid' => true ] ]) -->
 	</b-row>
+	<audio id="notifyAudio">
+		<source src="{{asset('audio/plink_sound.mp3')}}">
+	</audio>
 </div>
 <refresh-quotes-modal></refresh-quotes-modal>
 @endsection

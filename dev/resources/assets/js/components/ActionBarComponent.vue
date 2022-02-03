@@ -79,6 +79,9 @@
                     alert: [],
                     confirm: [],
                 },
+                notification_tracker : {
+                    old_alert: []
+                },
                 modals: {
                     select_market: false
                 },
@@ -100,6 +103,8 @@
                 let alert_states = ['alert'];
                 let confirm_states = ['confirm'];
 
+                // Phase 3 additions - notification tracker
+                let should_notify = false;
 
                 this.markets.forEach(market => {
 
@@ -108,8 +113,11 @@
                         if(market_request.attributes.action_needed || alert_states.indexOf(market_request.attributes.state) > -1) //if this market request is in need of attention its considerd important
                         {
                             this.market_notifications.alert.push(market_request);
+                            if(!this.notification_tracker.old_alert.includes(market_request.id)) {
+                                should_notify = true;
+                            }
 
-                        }else if(important_states.indexOf(market_request.attributes.state) > -1 && this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
+                        } else if(important_states.indexOf(market_request.attributes.state) > -1 && this.no_cares.indexOf(market_request.id) == -1) //if its important and hasnt been placed in no cares
                         {
                             if(!market_request.quotes.find(quote => quote.is_maker) && !market_request.is_interest)
                             {
@@ -123,6 +131,19 @@
                     //     {
                     //         this.market_notifications.confirm.push(market_request);
                     //     }
+
+                // Phase 3 additions - notification tracker
+                if(this.market_notifications.alert && this.market_notifications.alert.length > 0) {
+                    this.notification_tracker.old_alert = this.market_notifications.alert.map(market_request => {
+                        return market_request.id;
+                    });
+                } else {
+                    this.notification_tracker.old_alert = []
+                }
+
+                if(should_notify) {
+                    this.$root.$emit('audioNotify');
+                }
 
             },
             toggleBar(set) {
