@@ -208,7 +208,7 @@ trait OrganisationSlackChat {
                     );
                 } elseif(property_exists($message,'user') && $message->user === config('marketmartial.slack.admin_id') && !property_exists($message,'subtype')) {
                     $formatted_messages[] = (object) array(
-                        "user_name" => "Market Martial",
+                        "user_name" => "Seraphim",
                         "message" => $message->text,
                         "time_stamp" => $message->ts,
                         "status" => null
@@ -233,7 +233,7 @@ trait OrganisationSlackChat {
                 event(new ChatMessageReceived($organisation,$formatted_message_bot));
             } elseif(array_key_exists('user',$eventData) && $eventData["user"] === config('marketmartial.slack.admin_id') && !array_key_exists('subtype',$eventData)) {
                 $formatted_message_admin = array(
-                    "user_name" => "Market Martial",
+                    "user_name" => "Seraphim",
                     "message" => $eventData["text"],
                     "auto_open_chat" => true,
                     "time_stamp" => $eventData["ts"],
