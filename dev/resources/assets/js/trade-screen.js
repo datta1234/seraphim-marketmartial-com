@@ -360,7 +360,8 @@ const app = new Vue({
                     //only keep the interaction if the user can interact with it
                     if(tradeConfirmationData.can_interact)
                     {
-                        this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));    
+                        this.trade_confirmations.push(new TradeConfirmation(tradeConfirmationData));
+                        this.$emit('audioNotify');  
                     }
                 }
 

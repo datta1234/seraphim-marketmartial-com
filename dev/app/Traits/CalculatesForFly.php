@@ -199,13 +199,13 @@ trait CalculatesForFly {
             $SpotRef = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
             // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXflyFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection1) + $gross_prem1;
-            $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection2) + $gross_prem2; 
-            $netPremium3 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection3) + $gross_prem3; 
+            $netPremium1 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
+            $netPremium2 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection2, 3) + $gross_prem2; 
+            $netPremium3 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEESender : $IXflyFEEReceiving) * $Brodirection3, 3) + $gross_prem3; 
             //set for the counter
-            $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection1) + $gross_prem1;
-            $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection2) + $gross_prem2;
-            $netPremiumCounter3 =  floor($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3) + $gross_prem3;
+            $netPremiumCounter1 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection1, 3) + $gross_prem1;
+            $netPremiumCounter2 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection2, 3) + $gross_prem2;
+            $netPremiumCounter3 =  round($SpotRef * 10 * ($is_sender ? $IXflyFEEReceiving : $IXflyFEESender) * $counterBrodirection3, 3) + $gross_prem3;
         }
 
         // Fee = |GrossPrem - NetPremContracts| * Contracts

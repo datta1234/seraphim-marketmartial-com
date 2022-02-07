@@ -61,11 +61,11 @@
                 try {
                     this.notification_toggler = localStorage.getItem('notificationState') === 'true';
                 } catch(e) {
-                    this.notification_toggler = false;
+                    this.notification_toggler = true;
                     localStorage.removeItem('notificationState');
                 }
             } else {
-                this.notification_toggler = false;
+                this.notification_toggler = true;
                 try {
                     localStorage.setItem('notificationState', this.notification_toggler);
                 } catch(e) {
