@@ -118,10 +118,10 @@ trait CalculatesForOutright {
             $SpotRef = $this->optionGroups[0]->userMarketRequestGroup->tradable->market->spot_price_ref;
 
             //NETPREM = Application.RoundDown(SpotRef * 10 * IXoutrightFEE * Brodirection1, 0) + GrossPrem1
-            $netPremium =  floor($SpotRef * 10 * ($is_sender ? $IXoutrightFEESender : $IXoutrightFEEReceiving) * $Brodirection1) + $gross_prem;
+            $netPremium =  round($SpotRef * 10 * ($is_sender ? $IXoutrightFEESender : $IXoutrightFEEReceiving) * $Brodirection1, 3) + $gross_prem;
 
             //set for the counter
-            $netPremiumCounter =  floor($SpotRef * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1) + $gross_prem;
+            $netPremiumCounter =  round($SpotRef * 10 * ($is_sender ? $IXoutrightFEEReceiving : $IXoutrightFEESender) * $counterBrodirection1, 3) + $gross_prem;
         }
 
         // Phase 3 addition - Future Fee calc changes Index vs Singles
