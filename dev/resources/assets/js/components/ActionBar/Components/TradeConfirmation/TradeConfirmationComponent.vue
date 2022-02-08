@@ -38,7 +38,7 @@
                          {{ request_group.underlying_title }}
                     </td>
                     <td>
-                        {{ request_group.expires_at }}
+                        {{ castToMoment(request_group.expires_at) }}
                     </td>
                     <td>
                          {{ trade_confirmation.volatility }}
@@ -117,7 +117,7 @@
                         </div> -->
                     </td>
                     <td>
-                        {{ option_group.expires_at }}                            
+                        {{ castToMoment(option_group.expires_at) }}                            
                     </td>
                     <td>
                         {{ option_group.volatility }} %
@@ -179,7 +179,7 @@
                                 </div> -->
                             </td>
                             <td>
-                                {{ future_group.expires_at_1 }}     
+                                {{ castToMoment(future_group.expires_at_1) }}     
                             </td>
                         </tr>
                         <tr>
@@ -203,7 +203,7 @@
                                     Calculated value : {{ future_group.contracts_old }}.
                                 </div> -->
                             <td>
-                                {{ future_group.expires_at_2 }}     
+                                {{ castToMoment(future_group.expires_at_2) }}     
                             </td>
                         </tr> 
                     </template>
@@ -268,7 +268,7 @@
                                 </div> -->
                             </td>
                             <td>
-                                {{ future_group.expires_at }}     
+                                {{ castToMoment(future_group.expires_at) }}     
                             </td>
                         </tr>
                     </template>
@@ -615,7 +615,15 @@
                         }
                     });
                 });
-            }
+            },
+            /**
+             * Casting a passed string to moment with a new format
+             *
+             * @param {string} date_string
+             */
+            castToMoment(date_string) {
+                return moment(date_string, 'DD-MM-YYYY').format('DD-MMM-YYYY'); //Format eg. 15-Jun-2022
+            },
         },
         mounted() {
             this.base_url = axios.defaults.baseUrl;

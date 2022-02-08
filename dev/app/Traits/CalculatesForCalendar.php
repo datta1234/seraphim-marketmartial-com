@@ -196,20 +196,20 @@ trait CalculatesForCalendar {
 
 	        if($contracts1 < $contracts2) {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarbigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection2) + $gross_prem2;
+		        $netPremium1 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
+		        $netPremium2 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection2, 3) + $gross_prem2;
 
 		        //set for the counter
-                $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection2) + $gross_prem2;
+                $netPremiumCounter1 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection1, 3) + $gross_prem1;
+		        $netPremiumCounter2 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection2, 3) + $gross_prem2;
             } else {
                 // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXcalendarsmallFEE * Brodirection1, 0) + GrossPrem1
-                $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection1) + $gross_prem1;
-                $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection2) + $gross_prem2;
+                $netPremium1 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEESender : $IXcalendarsmallFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
+                $netPremium2 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEESender : $IXcalendarbigFEEReceiving) * $Brodirection2, 3) + $gross_prem2;
 
 		        //set for the counter
-                $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection2) + $gross_prem2;
+                $netPremiumCounter1 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarsmallFEEReceiving : $IXcalendarsmallFEESender) * $counterBrodirection1, 3) + $gross_prem1;
+		        $netPremiumCounter2 =  round($SpotRef * 10 * ($is_sender ? $IXcalendarbigFEEReceiving : $IXcalendarbigFEESender) * $counterBrodirection2, 3) + $gross_prem2;
             }
         }
 

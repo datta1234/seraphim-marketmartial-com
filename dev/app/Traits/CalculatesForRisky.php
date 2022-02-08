@@ -184,20 +184,20 @@ trait CalculatesForRisky {
 
 	        if($contracts1 < $contracts2) {
 		        // NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskybigFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection2) + $gross_prem2;
+		        $netPremium1 =  round($SpotRef * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
+		        $netPremium2 =  round($SpotRef * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection2, 3) + $gross_prem2;
                 
                 //set for the counter
-                $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection1) + $gross_prem1;
-                $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection2) + $gross_prem2;
+                $netPremiumCounter1 =  round($SpotRef * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection1, 3) + $gross_prem1;
+                $netPremiumCounter2 =  round($SpotRef * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection2, 3) + $gross_prem2;
 	        } else {
 	        	// NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXriskysmallFEE * Brodirection1, 0) + GrossPrem1
-		        $netPremium1 =  floor($SpotRef * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection1) + $gross_prem1;
-		        $netPremium2 =  floor($SpotRef * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection2) + $gross_prem2;
+		        $netPremium1 =  round($SpotRef * 10 * ($is_sender ? $IXriskysmallFEESender : $IXriskysmallFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
+		        $netPremium2 =  round($SpotRef * 10 * ($is_sender ? $IXriskybigFEESender : $IXriskybigFEEReceiving) * $Brodirection2, 3) + $gross_prem2;
                 
                 //set for the counter
-		        $netPremiumCounter1 =  floor($SpotRef * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection1) + $gross_prem1;
-		        $netPremiumCounter2 =  floor($SpotRef * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection2) + $gross_prem2;
+		        $netPremiumCounter1 =  round($SpotRef * 10 * ($is_sender ? $IXriskysmallFEEReceiving : $IXriskysmallFEESender) * $counterBrodirection1, 3) + $gross_prem1;
+		        $netPremiumCounter2 =  round($SpotRef * 10 * ($is_sender ? $IXriskybigFEEReceiving : $IXriskybigFEESender) * $counterBrodirection2, 3) + $gross_prem2;
             }
         }
 

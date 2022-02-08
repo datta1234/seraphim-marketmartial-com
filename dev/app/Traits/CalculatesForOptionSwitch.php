@@ -184,9 +184,9 @@ trait CalculatesForOptionSwitch {
 			$SpotRef1 = $this->marketRequest->userMarketRequestTradables[0]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice1 * 10 * IXoptionswitchFEE * Brodirection1, 0) + GrossPrem1
-    		$netPremium1 =  floor($SpotRef1 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection1) + $gross_prem1;
+    		$netPremium1 =  round($SpotRef1 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection1, 3) + $gross_prem1;
     		//set for the counter
-    		$netPremiumCounter1 =  floor($SpotRef1 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection1) + $gross_prem1;
+    		$netPremiumCounter1 =  round($SpotRef1 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection1, 3) + $gross_prem1;
     	}
 
     	// Leg2 Top40, DTop, DCap or Single?
@@ -201,9 +201,9 @@ trait CalculatesForOptionSwitch {
     		$SpotRef2 = $this->marketRequest->userMarketRequestTradables[1]->market->spot_price_ref;
 
     		//NETPREM = Application.RoundDown(SpotReferencePrice2 * 10 * IXoptionswitchFEE * Brodirection2, 0) + GrossPrem2
-    		$netPremium2 =  floor($SpotRef2 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection2) + $gross_prem2;
+    		$netPremium2 =  round($SpotRef2 * 10 * ($is_sender ? $IXoptionswitchFEESender : $IXoptionswitchFEEReceiving) * $Brodirection2, 3) + $gross_prem2;
     		//set for the counter
-    		$netPremiumCounter2 =  floor($SpotRef2 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection2) + $gross_prem2;
+    		$netPremiumCounter2 =  round($SpotRef2 * 10 * ($is_sender ? $IXoptionswitchFEEReceiving : $IXoptionswitchFEESender) * $counterBrodirection2, 3) + $gross_prem2;
     	}
 
         // Fee = |GrossPrem - NetPremContracts| * Contracts

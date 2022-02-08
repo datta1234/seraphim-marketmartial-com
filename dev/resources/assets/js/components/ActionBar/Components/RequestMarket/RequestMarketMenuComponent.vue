@@ -1,6 +1,6 @@
 <template>
     <div dusk="request-market-menu" class="request-market-menu">
-        <b-button v-active-request :disabled="!$root.market_types.length > 0" class="btn mm-request-button mr-2 p-1" @click="showModal()">Request a Market</b-button>
+        <b-button v-active-request :disabled="!$root.market_types.length > 0" class="btn mm-request-button mr-2 p-1" @click="showModal()">Request</b-button>
         
         <!-- Confirmations Modal -->
         <b-modal class="mm-modal mx-auto" size="lg" v-model="modal_data.show_modal" :ref="modal_data.modal_ref">
