@@ -39,7 +39,7 @@ class EmailController extends Controller
     {
         $email = new Email($request->all());
         $email->user_id = $request->user()->id;
-        $email->notifiable = false;
+        $email->notifiable = true;
         $email->save();
        return response()->json(['data'=>$email,'message'=>'Email added.']);
     }
@@ -63,7 +63,9 @@ class EmailController extends Controller
     	{
     		$emailModel = array_key_exists('id', $email) ? $savedModels->firstWhere('id',$email['id']) : New Email(); 
     		$emailModel->fill($email);
-            $emailModel->notifiable = in_array($emailModel->title, config('marketmartial.AutoSetTradeAccounts'));
+            /*$emailModel->notifiable = in_array($emailModel->title, config('marketmartial.AutoSetTradeAccounts'));*/
+            // Phase 3 update - All accounts should be notified even the custom accounts
+            $emailModel->notifiable = true;
             
             if(empty($emailModel->email)) {
                 $defaultLabels[] = $emailModel;

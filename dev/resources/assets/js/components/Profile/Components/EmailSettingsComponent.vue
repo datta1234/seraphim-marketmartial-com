@@ -1,7 +1,7 @@
 <template>
 <div>
 
-  <form>
+  <form v-if="renderForm">
           <b-form-group
 
            v-for="(email,index) in emailSettingForm.data().email"
@@ -82,7 +82,8 @@
                 }),
                 emailSettingForm: new Form(),
                 mutableEmailSettingsData: [],
-                formattedDefaultLabelsData: []
+                formattedDefaultLabelsData: [],
+                renderForm: true,
             }
         },
         methods: {
@@ -90,6 +91,8 @@
                 this.emailSettingForm.put(axios.defaults.baseUrl + (this.isAdmin ? '/admin/user/email-settings/' + this.user.id : '/email-settings') )
                 .then((response) => {
                     this.mutableEmailSettingsData = response.data.email.concat(response.data.defaultLabels);
+                    // Remove empty custom lables
+                    this.removeEmptyCustomLables();
                     this.mutableEmailSettingsData.sort( (a,b) => {
                         return a.default_id - b.default_id;
                     });
@@ -99,10 +102,31 @@
                     if(this.isAdmin == false && this.profileComplete == false)
                     {
                         window.location.href = response.data.redirect;
+                    } else {
+                        this.forceRerender();
                     }
+
 
                 });
                 
+            },
+            removeEmptyCustomLables() {
+                this.mutableEmailSettingsData.forEach( (setting, index) => {
+                    if(!setting.default_id && !setting.email) {
+                        this.mutableEmailSettingsData.splice(index, 1);
+                    }
+                });
+            },
+            forceRerender() {
+                // Remove form from the DOM
+                this.renderForm = false;
+
+                // If you like promises better you can
+                // also use nextTick this way
+                this.$nextTick().then(() => {
+                    // Add the form back in
+                    this.renderForm = true;
+                });
             },
             showModal () {
                 this.$refs.myModalRef.show()
