@@ -20,7 +20,8 @@
 								<email-settings dusk="email-settings-component" 
 									:is-admin="{{ $is_admin_update ? "true" : "false" }}" 
 									:user="{{ $user }}"
-									:profile-complete="{{ $profileIsComplete ? "true" : "false" }}" :default-labels="'{{ $defaultLabels }}'" 
+									:profile-complete="{{ $profileIsComplete ? "true" : "false" }}"
+									:default-labels="'{{ $defaultLabels }}'" 
 									:email-settings="'{{ $emails }}'" >
 								</email-settings>
 						</div>
