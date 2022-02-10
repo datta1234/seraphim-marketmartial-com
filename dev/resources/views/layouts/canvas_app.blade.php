@@ -13,6 +13,7 @@
     @endif
     
     <title>Market Martial</title>
+    @yield('favicon', \View::make('layouts.elements.favicon'))
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">

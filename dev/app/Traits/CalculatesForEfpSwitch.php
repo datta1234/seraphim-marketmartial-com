@@ -66,11 +66,11 @@ trait CalculatesForEfpSwitch {
         $contracts2 =  floatval($this->futureGroups[1]->getOpVal('Contract'));
 
         // Fee = |Amount| * Contracts * 10
-        $fee1 = abs(round($future1 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection1, 2)) * $contracts1 * 10;
-        $fee2 = abs(round($future2 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection2, 2)) * $contracts2 * 10;
+        $fee1 = abs(round($future1 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection1, 5)) * $contracts1 * 10;
+        $fee2 = abs(round($future2 * ($is_sender ? $D1switchFEESender : $D1switchFEEReceiving) * $FutBrodirection2, 5)) * $contracts2 * 10;
         // set for the counter
-        $feeCounter1 = abs(round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 2)) * $contracts1 * 10;
-        $feeCounter2 = abs(round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 2)) * $contracts2 * 10;
+        $feeCounter1 = abs(round($FuturesSpotRef1 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection1, 5)) * $contracts1 * 10;
+        $feeCounter2 = abs(round($FuturesSpotRef2 * ($is_sender ? $D1switchFEEReceiving : $D1switchFEESender) * $counterFutBrodirection2, 5)) * $contracts2 * 10;
         // Fee Total = SUM(Fee)
         $totalFee = round($fee1 + $fee2);
         $totalFeeCounter = round($feeCounter1 + $feeCounter2);

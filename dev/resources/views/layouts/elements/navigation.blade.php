@@ -23,7 +23,7 @@
 				@endif
 				@if(Auth::user()->isAdmin())
 					<li class="nav-item">
-						<a class="nav-link active p-0 ml-4" href="{{ route('admin.activity.show') }}">Stats</a>
+						<a class="nav-link active p-0 ml-4" target="_blank" href="{{ route('admin.activity.show') }}">Stats</a>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle p-0 ml-4" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Management</a>
@@ -62,7 +62,7 @@
 				@else
 					@if(Auth::user()->verifiedActiveUser())
 						<li class="nav-item">
-							<a class="nav-link active p-0 ml-4" href="{{ route('activity.show') }}">Stats</a>
+							<a class="nav-link active p-0 ml-4" target="_blank" href="{{ route('activity.show') }}">Stats</a>
 						</li>
 					@endif
 					<li class="nav-item dropdown">

@@ -1,4 +1,4 @@
-@component('mail::confirmation_message', ['trade_confirmation' => $trade_confirmation])
+@component('mail::message', ['trade_confirmation' => $trade_confirmation])
 The following is your confirmed trade with Seraphim.<br><br>
 Thank you for the trade!<br>
 Date: {{ $trade_confirmation["date"] }}<br>
