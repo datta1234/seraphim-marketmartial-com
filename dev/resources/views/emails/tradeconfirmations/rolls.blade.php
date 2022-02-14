@@ -14,7 +14,7 @@ Structure: {{ $trade_confirmation["trade_structure_title"] }}<br>
 @endcomponent
 
 ###Fees
-@include('emails.tradeconfirmations.partials.future_groups', ['trade_confirmation' => $trade_confirmation])
+@include('emails.tradeconfirmations.partials.fee_groups', ['trade_confirmation' => $trade_confirmation])
 
 @endcomponent
 

@@ -622,6 +622,9 @@
              * @param {string} date_string
              */
             castToMoment(date_string) {
+                if(!date_string) {
+                    return date_string;
+                }
                 return moment(date_string, 'DD-MM-YYYY').format('DD-MMM-YYYY'); //Format eg. 15-Jun-2022
             },
         },
