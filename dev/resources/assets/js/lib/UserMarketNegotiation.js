@@ -237,11 +237,7 @@ export default class UserMarketNegotiation extends BaseModel {
              axios.post(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation", this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
-                /*
-                    Phase 3 commented out to test if we solve the active market bug on the open interaction window
-                    where a market notification changes the active market from the current to the notify market
-                */
-                //user_market.runActionTaken()
+                user_market.runActionTaken()
                 resolve(response);
             })
             .catch(err => {
@@ -271,11 +267,7 @@ export default class UserMarketNegotiation extends BaseModel {
              axios.put(axios.defaults.baseUrl +"/trade/user-market/"+user_market.id+"/market-negotiation/"+this.id, this.prepareStore())
             .then(response => {
                 response.data.data = new UserMarketNegotiation(response.data.data);
-                /*
-                    Phase 3 commented out to test if we solve the active market bug on the open interaction window
-                    where a market notification changes the active market from the current to the notify market
-                */
-                //user_market.runActionTaken()
+                user_market.runActionTaken()
                 resolve(response);
             })
             .catch(err => {
