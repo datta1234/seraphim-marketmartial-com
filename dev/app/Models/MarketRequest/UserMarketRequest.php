@@ -162,7 +162,7 @@ class UserMarketRequest extends Model
                     $q->where('updated_at', '>', now()->startOfDay());
                 }
             });
-            $q->orWhere(function($q) {
+            $q->orWhere(function($q) use ($scope_to_today) {
                 $q->where('active', true);
                 $q->where(\DB::raw('(
                     select `trade_sub`.`traded` as `trade_sub_traded`
@@ -185,6 +185,9 @@ class UserMarketRequest extends Model
                     order by `neogitation_sub`.`updated_at` desc, `trade_sub`.`updated_at` desc
                     limit 1
                 )'), 0);
+                if($scope_to_today) {
+                    $q->where('updated_at', '>', now()->startOfDay());
+                }
             });
         });
     }
