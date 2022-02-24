@@ -305,8 +305,7 @@ class User extends Authenticatable
     */
     public function completeProfile()
     {
-        // Phase 3 updates, Tc removed no longer required
-        return /*(bool)$this->tc_accepted*/ true;
+        return (bool)$this->tc_accepted;
     }
 
     /**
