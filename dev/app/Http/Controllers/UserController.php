@@ -113,7 +113,8 @@ class UserController extends Controller
     public function storeTermsAndConditions(TermsofUseRequest $request)
     {
         $user = $request->user();
-        $user->tc_accepted = $request->input('tc_accepted');
+        // Phase 3 updates, Tc accepted by default
+        $user->tc_accepted = /*$request->input('tc_accepted')*/ true;
         $user->update();
 
         return response()->json([
