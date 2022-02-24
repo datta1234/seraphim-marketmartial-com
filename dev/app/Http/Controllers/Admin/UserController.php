@@ -169,7 +169,7 @@ class UserController extends Controller
                 $slack_integration = new SlackIntegration([
                     "type"  => "string",
                     "field" => "channel",
-                    "value" => $slack_channel_data->group->id,
+                    "value" => ((array)$slack_channel_data)['channel']->id,
                 ]);
                 $slack_integration->save();
                 $user->organisation->slackIntegrations()->attach($slack_integration->id);
