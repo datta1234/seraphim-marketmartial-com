@@ -91,7 +91,7 @@ class TradingAccountController extends Controller
         foreach ($emails as $key => $email) 
         {
             $emailModel = $savedEmailModels->firstWhere('id',$email['id']); 
-            $email['notifiable'] = $email['notifiable'] ? $email['notifiable'] : false;
+            $email['notifiable'] = $email['notifiable'] ? $email['notifiable'] : true;
             $emailModel->fill($email);
             $emailModels[] = $emailModel;
         }
