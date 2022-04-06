@@ -1,5 +1,11 @@
 @extends('layouts.trade_app')
 
+@section('head')
+@parent
+<!-- Trading Open Time -->
+<meta name="trading-opens" content="{{ $trade_start }}">
+@endsection
+
 @section('content')
 <div class="container-fluid trade-screen-wrapper">
 	<b-row class="interaction-bar-wrapper">
@@ -16,7 +22,9 @@
 				:total_rebate="{{ $total_rebate }}"
 				server_time="{{ $server_time }}">
 			</user-header>
-			
+			<div class="row">
+		        <trading-countdown :open-time="trading_opens"></trading-countdown>
+		    </div class="row">
 			<!-- Actions and Alerts -->
 			<action-bar :trade_confirmations="trade_confirmations" :markets="display_markets" :no_cares="no_cares"></action-bar>
 			<!-- END Actions and Alerts -->

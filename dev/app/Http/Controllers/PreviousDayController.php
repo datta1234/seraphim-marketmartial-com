@@ -19,10 +19,10 @@ class PreviousDayController extends Controller
     public function index()
     {
         $now = Carbon::now();
-        $tradeStart = Carbon::createFromTimeString(config('marketmartial.window.trade_start_time'));
+        $tradeStart = Carbon::createFromTimeString(config('marketmartial.window.trade_start_time_display_only'));
         // if we are already in trading time
         if( $now->gt($tradeStart) ) {
-            $tradeEnd = Carbon::createFromTimeString(config('marketmartial.window.trade_end_time'));
+            $tradeEnd = Carbon::createFromTimeString(config('marketmartial.window.trade_end_time_display_only'));
             // if we have passed the closing time
             if( $now->gt($tradeEnd) ) {
                 // add 1 day to make it tomorrow
