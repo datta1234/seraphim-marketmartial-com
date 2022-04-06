@@ -1,9 +1,9 @@
 <?php
 return [
-    'trade_start_time'   			=> env("TRADE_START"),
-    'trade_end_time'   				=> env("TRADE_END"),
-    'trade_start_time_display_only'	=> env("TRADE_START_DISPLAY"),
-    'trade_end_time_display_only'	=> env("TRADE_END_DISPLAY"),
+    'trade_start_time'   			=> env("TRADE_START",'09:00:00'),
+    'trade_end_time'   				=> env("TRADE_END",'17:00:00'),
+    'trade_start_time_display_only'	=> env("TRADE_START_DISPLAY",'09:00:00'),
+    'trade_end_time_display_only'	=> env("TRADE_END_DISPLAY",'17:00:00'),
     'trade_view_start_time'			=> env("TRADE_VIEW_START",'09:00:00'),
     'trade_view_end_time' 			=> env("TRADE_VIEW_END",'17:00:00'),
     'operation_start_time'  		=> env("OPERATION_START"),
