@@ -62,6 +62,8 @@ import { EventBus } from './lib/EventBus.js';
 // datepicker
 Vue.component('Datepicker', Datepicker);
 
+Vue.component('trading-countdown', require('./components/PreviousDay/TradingCountdown.vue').default);
+
 Vue.component('VuePerfectScrollbar', VuePerfectScrollbar);
 
 Vue.component('user-header', require('./components/UserHeaderComponent.vue').default);
@@ -506,6 +508,7 @@ const app = new Vue({
         },
         is_admin: false,
         is_viewer: false,
+        trading_opens: null,
     },
     created() {
         let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
@@ -523,6 +526,7 @@ const app = new Vue({
         }
     },
     mounted: function() {
+        this.trading_opens = moment(document.head.querySelector('meta[name="trading-opens"]').content);
         Config.configs = this.configs;
         // get Saved theme setting
         this.loadThemeSetting();

@@ -86,6 +86,7 @@
         'organisationUuid' => is_null(Auth::user()->organisation) ? null : Auth::user()->organisation->uuid 
         ]) !!};
     </script>
+    @yield('head')
     </head>
     <body id="trade_body">
         <div id="trade_app">
