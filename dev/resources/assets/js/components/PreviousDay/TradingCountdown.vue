@@ -23,6 +23,7 @@
                 let diff = moment.parseZone(this.openTime).diff(moment());
                 // ensure its not shown if its timed out
                 if(diff < 0) {
+
                     return "00:00:00";
                 } else {
                     this.show_timer = true;
@@ -45,6 +46,7 @@
             },
             stopTimer() {
                 clearInterval(this.timer);
+                this.show_timer = false;
                 this.timer = null;
             }
         },
