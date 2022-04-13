@@ -94,7 +94,8 @@ class UserController extends Controller
     public function storePassword(PasswordRequest $request)
     {
         $user = $request->user();
-        $user->update(['password'=>bcrypt($request->input('password'))]);
+
+        $user->forceFill(['password' => bcrypt($request->input('password'))])->save();
 
         if($user->verifiedActiveUser() && !$user->completeProfile()) {
             \Cache::put('user_password_complete_'.$user->id, true,1440);
