@@ -28,6 +28,7 @@
         ],
         data() {
             return {
+                should_update: false,
                 time:{
                     display_time: '',
                     location:'SA',
@@ -56,6 +57,19 @@
                     this.displayRebate = data.total;
                 });
             },
+            /**
+             * Listens for a serverTimesUpdated event firing
+             *
+             * @event /$root#serverTimesUpdated
+             */
+            serverTimesUpdatedListener() {
+                this.$root.$on('serverTimesUpdated', this.updateComputedTime);
+            },
+            updateComputedTime() {
+                if(this.$root.server_time) {
+                    this.time.computed_time = moment.parseZone(this.$root.server_time);
+                }
+            }
         },
         created() {
             this.time.computed_time = moment.parseZone(this.server_time);
@@ -65,7 +79,17 @@
             this.time._interval = setInterval(this.timeStep, 1000);
             this.displayRebate = this.total_rebate;
             this.rebateListener();
-
+            window.addEventListener('blur', () => {
+                this.should_update = true;
+            });
+            window.addEventListener('focus', () => {
+                if(this.should_update) {
+                    // Run root server update time query
+                    this.$root.updateServerTimes();
+                    this.should_update = false;
+                }
+            });
+            this.serverTimesUpdatedListener();
         }
     }
 </script>
