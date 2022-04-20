@@ -11,17 +11,8 @@ use Carbon\Carbon;
 
 class TradeScreenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-    	$user = Auth::user();
-    	$organisation = $user->organisation;
-
-        if($user->isAdmin()) {
-           $total_rebate = Rebate::noTrade()->currentMonth()->sum('amount');
-        } else {
-    	   $total_rebate = $organisation->rebates()->noTrade()->currentMonth()->sum('amount');
-        }
-
         $now = Carbon::now();
         $server_time = $now->toIso8601String();
 
@@ -37,6 +28,23 @@ class TradeScreenController extends Controller
                 // add 1 day to make it tomorrow
                 $trade_start = $trade_start->addDays(1);
             }
+        }
+
+        if($request->ajax()) {
+            return [
+                'server_time'   => $server_time,
+                'closing_time'  => $closing_time, 
+                'trade_start'   => $trade_start->toIso8601String()
+            ];
+        }
+
+        $user = Auth::user();
+        $organisation = $user->organisation;
+
+        if($user->isAdmin()) {
+           $total_rebate = Rebate::noTrade()->currentMonth()->sum('amount');
+        } else {
+           $total_rebate = $organisation->rebates()->noTrade()->currentMonth()->sum('amount');
         }
         
         return view('pages.trade')->with([

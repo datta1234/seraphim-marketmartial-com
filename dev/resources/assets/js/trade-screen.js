@@ -131,6 +131,25 @@ const app = new Vue({
         }
     },
     methods: {
+        updateServerTimes() {
+            let self = this;
+            return axios.get(axios.defaults.baseUrl + '/trade')
+            .then(serverTimesResponse => {
+                if(serverTimesResponse.status == 200) {
+                    // Emit server times updated event to notify components to read new times
+                    if(serverTimesResponse.data) {
+                        self.server_time = serverTimesResponse.data.server_time; 
+                        self.closing_time = serverTimesResponse.data.closing_time; 
+                        self.trade_start = serverTimesResponse.data.trade_start; 
+                    }
+                    self.$emit('serverTimesUpdated');
+                } else {
+                    //console.error(err);    
+                }
+            }, err => {
+                //console.error(err);
+            });
+        },
         /**
          * Basic bubble sort that sorts Display Markets according to a set Market Order
          *
@@ -509,6 +528,9 @@ const app = new Vue({
         is_admin: false,
         is_viewer: false,
         trading_opens: null,
+        server_time: null,
+        closing_time: null,
+        trade_start: null,
     },
     created() {
         let viewer_type = document.head.querySelector('meta[name="viewer-type"]');
