@@ -336,6 +336,7 @@ const app = new Vue({
                     this.display_markets[index].updateMarketRequest(userMarketRequestData, request_index);
                 } else {
                     this.display_markets[index].addMarketRequest(new UserMarketRequest(userMarketRequestData));
+                    this.$emit('audioNotify');
                 }
             } else {
                 //@TODO: Add logic to display market if not already displaying
