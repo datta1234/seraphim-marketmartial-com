@@ -1284,7 +1284,7 @@ class UserMarketRequest extends Model
                 \Notification::send($users, new NotifyUserMarketRequestCleared($this));
                 $this->userSubscriptions()->detach($this->userSubscriptions->pluck("id"));
             } catch(\Swift_TransportException $e) {
-                Log::error($e);
+                \Log::error($e);
             }
         }
     }
