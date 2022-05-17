@@ -25,6 +25,27 @@ window.Echo = new Echo({
     authEndpoint: window.axios.defaults.baseUrl + '/broadcasting/auth',
 });
 
+/**
+ *  Sentry for tracking and logging client issues
+ */
+import * as Sentry from "@sentry/vue";
+import { Integrations } from "@sentry/tracing";
+
+Sentry.init({
+    Vue,
+    dsn: "https://1bd4f21d4e514da398cd8552d50146c6@sentry.exonic.co.za/29",
+    integrations: [
+        new Integrations.BrowserTracing({}),
+    ],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 0.3,
+    logErrors: true
+});
+
+
+
 import Datepicker from 'vuejs-datepicker';
 import BootstrapVue from 'bootstrap-vue';
 import Toasted from 'vue-toasted';
@@ -622,10 +643,32 @@ const app = new Vue({
         {
             let handlePusherDisconnect = function(event) {
                 //console.error("Pusher failed Event: ", event);
+                Sentry.captureException(event, {
+                    tags: {
+                        section: "pusher-disconnect-handler"
+                    }
+                });
+
                 let re = confirm("Live update stream disconnected!\n\nIf problem persists, please contact an administrator\nReload Now?");
                 if(re) {
                     location.reload();
                 }
+            };
+
+            let handlePusherError = function(error) {
+                Sentry.withScope(function(scope) {
+                    Sentry.setContext("Error object string", error.error);
+                    Sentry.captureException(error, {
+                        tags: {
+                            section: "pusher-error-handler"
+                        }
+                    });
+                });
+            };
+
+            let handlePusherStateChange = function(state) {
+                // @TODO - add handler for states to display
+                /*console.log("Pusher state change: ", state);*/
             };
 
             let connectStream = (subCb) => {
@@ -635,6 +678,9 @@ const app = new Vue({
                 }
                 // possibly let us cath what happens when pusher dc's
                 window.Echo.connector.pusher.connection.bind('disconnected', handlePusherDisconnect);
+                window.Echo.connector.pusher.connection.bind('error', handlePusherError);
+                window.Echo.connector.pusher.connection.bind('state_change', handlePusherStateChange);
+
                 let channel = window.Echo.private('organisation.'+organisationUuid.content)
                 .listen('.UUIDUpdated', (newIdentity) => {
                     // remove bindings
