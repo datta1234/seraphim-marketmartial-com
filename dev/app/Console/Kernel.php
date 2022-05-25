@@ -33,6 +33,12 @@ class Kernel extends ConsoleKernel
         $schedule->command('gen:actions')->daily();
         $schedule->command('usermarkets:place-on-hold')->everyMinute();
         $schedule->command('users:clear-user-sessions')->everyMinute();
+
+        // Hard reset Org UUID's to keep inconsistant websocket disconnect from happening
+        $schedule->call(function() {
+            \Log::info("RESET ORG UUIDs");
+            \App\Helpers\Misc\ResolveUuid::generateOrganisationUuid();
+        })->dailyAt('01:00');
     }
 
     /**
