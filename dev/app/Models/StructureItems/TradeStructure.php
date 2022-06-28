@@ -31,6 +31,8 @@ class TradeStructure extends Model
         'fee_percentage'
     ];
 
+    protected $appends = ["explained_name"];
+
     protected $casts = [
         'is_selectable' => 'boolean',
         'has_structure_fee' => 'boolean'
@@ -86,6 +88,19 @@ class TradeStructure extends Model
     public function marketTypes()
     {
         return $this->belongsToMany('App\Models\StructureItems\MarketType', 'market_types_trade_structures', 'trade_structure_id', 'market_type_id');
+    }
+
+    public function getExplainedNameAttribute()
+    {
+        $found_tradestructure_key = array_search($this->title, array_column(config('tradestructures'), 'title') );
+
+        if($found_tradestructure_key === false) {
+            return $this->title;
+        }
+
+        $tradestructure = config('tradestructures')[$found_tradestructure_key];
+
+        return array_key_exists('explained_title', $tradestructure) ? $tradestructure['explained_title'] : $this->title;
     }
 
 }
