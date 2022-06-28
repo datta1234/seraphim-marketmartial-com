@@ -10,6 +10,7 @@ return [
         // __trade_structure__
         "id" => 1,
         "title" => "Outright",
+        "explained_title" => "Outright, 1 Strike",
         "is_selectable" => true,
         "has_structure_fee" => false,
         "trade_structure_group" =>
@@ -148,6 +149,7 @@ return [
         // __trade_structure__
         "id" => 2,
         "title" => "Risky",
+        "explained_title" => "Risky, 2 Strikes",
         "is_selectable" => true,
         "has_structure_fee" => false,
         "trade_structure_group" =>
@@ -367,6 +369,7 @@ return [
         // __trade_structure__
         "id" => 3,
         "title" => "Calendar",
+        "explained_title" => "Calendar, 2 Expiries",
         "is_selectable" => true,
         "has_structure_fee" => false,
         "trade_structure_group" =>
@@ -615,6 +618,7 @@ return [
         // __trade_structure__
         "id" => 4,
         "title" => "Fly",
+        "explained_title" => "Fly, 3 Strikes",
         "is_selectable" => true,
         "has_structure_fee" => false,
         "trade_structure_group" => [
@@ -899,6 +903,7 @@ return [
         // __trade_structure__
         "id" => 5,
         "title" => "Option Switch",
+        "explained_title" => "Option Switch",
         "is_selectable" => false,
         "has_structure_fee" => false,
         "trade_structure_group" => [
@@ -1152,6 +1157,7 @@ return [
         // __trade_structure__
         "id" => 6,
         "title" => "EFP",
+        "explained_title" => "EFP",
         "is_selectable" => false,
         "has_structure_fee" => false,
         "trade_structure_group" => [
@@ -1229,6 +1235,7 @@ return [
         // __trade_structure__
         "id" => 7,
         "title" => "Rolls",
+        "explained_title" => "Rolls",
         "is_selectable" => false,
         "has_structure_fee" => false,
         "trade_structure_group" => [
@@ -1318,6 +1325,7 @@ return [
         // __trade_structure__
         "id" => 8,
         "title" => "EFP Switch",
+        "explained_title" => "EFP Switch",
         "is_selectable" => false,
         "has_structure_fee" => false,
         "trade_structure_group" => [
@@ -1450,6 +1458,7 @@ return [
         // __trade_structure__
         "id" => 9,
         "title" => "Var Swap",
+        "explained_title" => "Var Swap",
         "is_selectable" => true,
         "has_structure_fee" => true,
         "trade_structure_group" => [
