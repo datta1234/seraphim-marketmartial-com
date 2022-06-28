@@ -5,7 +5,7 @@
             <b-row v-if="structures_loaded" class="text-center">
                 <b-col v-for="(trade_structure, index) in trade_structures" :key="index" v-if="trade_structure.is_selectable" cols="12" class="mt-2">
                     <b-button :id="trade_structure.title+'-structure-choice'" class="mm-modal-market-button-alt w-50" @click="selectStructure(trade_structure.title)">
-                        {{ trade_structure.title }}
+                        {{ trade_structure.explained_name ? trade_structure.explained_name : trade_structure.title }}
                     </b-button>
                 </b-col>
             </b-row>

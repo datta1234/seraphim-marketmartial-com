@@ -1,6 +1,7 @@
 {
     "outright": {
         "title": "Outright",
+        "explained_title": "Outright, 1 Strike",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -9,6 +10,7 @@
     },
     "risky": {
         "title": "Risky",
+        "explained_title": "Risky, 2 Strikes",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -18,6 +20,7 @@
     },
     "fly": {
         "title": "Fly",
+        "explained_title": "Fly, 3 Strikes",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -28,6 +31,7 @@
     },
     "calendar": {
         "title": "Calendar",
+        "explained_title": "Calendar, 2 Expiries",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -37,6 +41,7 @@
     },
     "option_switch": {
         "title": "Option Switch",
+        "explained_title": "Option Switch",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -46,6 +51,7 @@
     },
     "efp_switch": {
         "title": "EFP Switch",
+        "explained_title": "EFP Switch",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -55,6 +61,7 @@
     },
     "efp": {
         "title": "EFP",
+        "explained_title": "EFP",
         "expiration_date": "Expiration Date",
         "strike": "Strike",
         "quantity": "Quantity",
@@ -63,6 +70,7 @@
     },
     "rolls": {
         "title": "Rolls",
+        "explained_title": "Rolls",
         "expiration_date_1": "Expiration Date 1",
         "expiration_date_2": "Expiration Date 2",
         "strike": "Strike",
@@ -73,6 +81,7 @@
     },
     "var_swap": {
         "title": "Var Swap",
+        "explained_title": "Var Swap",
         "expiration_date": "Expiration Date",
         "quantity": "Quantity",
         "cap": "Cap",
