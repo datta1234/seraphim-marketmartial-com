@@ -21,7 +21,7 @@ class UserMarketRequestTest extends TestCase
 			'organisation_id' => $organisation->id
 		]);
 		$safexDate = \App\Models\StructureItems\SafexExpirationDate::where('expiration_date','>',Carbon::now())->first();
-		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','DTOP','DCAP']))->first();
+		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','CTOP','CTOR']))->first();
 		$userMarketRequest = [
 			"trade_structure"=> "Outright",
 			"trade_structure_groups"=> [
@@ -68,7 +68,7 @@ class UserMarketRequestTest extends TestCase
 			'organisation_id' => $organisation->id
 		]);
 		$safexDate = \App\Models\StructureItems\SafexExpirationDate::where('expiration_date','<',Carbon::now())->first();//old date
-		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','DTOP','DCAP']))->first();
+		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','CTOP','CTOR']))->first();
 		$userMarketRequest = [
 			"trade_structure"=> "Outright",
 			"trade_structure_groups"=> [
@@ -105,7 +105,7 @@ class UserMarketRequestTest extends TestCase
 		$user = factory(\App\Models\UserManagement\User::class)->create([
 			'organisation_id' => $organisation->id
 		]);
-		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','DTOP','DCAP']))->first();
+		$market =  \App\Models\StructureItems\Market::where('title',array_random(['TOP40','CTOP','CTOR']))->first();
 		$userMarketRequest = [
 			"trade_structure"					=> "Outright",
 			"trade_structure_groups"			=> [

@@ -69,7 +69,7 @@
         },
         data() {
             return {
-                graph_markets: ['ALSI','DTOP','DCAP','SINGLES'],
+                graph_markets: ['ALSI','CTOP','CTOR','SINGLES'],
             	graph_data:null,
                 table_data: [],
                 data_details:[

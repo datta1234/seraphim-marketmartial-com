@@ -37,7 +37,7 @@ class UserMarketRequestSeeder extends Seeder
                
 
                 //for outright make some that are on hold
-                if($tradeStruct->title == "Outright" && in_array($market->title,["TOP40","DTOP","DCAP"])) 
+                if($tradeStruct->title == "Outright" && in_array($market->title,["TOP40","CTOP","CTOR"])) 
                 {
                     //Needed more data for stats
                     for($i = 0; $i <= 2; $i++) {

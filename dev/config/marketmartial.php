@@ -156,7 +156,7 @@ return [
                 'is_selectable' => true
             ],
           	[
-                'title'=> 'DTOP',
+                'title'=> 'CTOP',
                 'description' => null,
                 'is_seldom' => true,
                 'has_deadline'=> true,
@@ -169,7 +169,7 @@ return [
                 'is_selectable' => true
             ],
          	[
-                'title'=> 'DCAP',
+                'title'=> 'CTOR',
                 'description' => null,
                 'is_seldom' => true,
                 'has_deadline'=> true,

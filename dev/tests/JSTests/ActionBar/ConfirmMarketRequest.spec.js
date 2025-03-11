@@ -12,8 +12,8 @@ localVue.use(BootstrapVue);
 describe('ConfirmMarketRequestComponent.vue', () => {
 	let test_markets = [
 		new Market({id:1,title:"TOP40",market_type_id:1,is_displayed:1}),
-		new Market({id:2,title:"DTOP",market_type_id:1,is_displayed:1}),
-		new Market({id:3,title:"DCAP",market_type_id:1,is_displayed:1})
+		new Market({id:2,title:"CTOP",market_type_id:1,is_displayed:1}),
+		new Market({id:3,title:"CTOR",market_type_id:1,is_displayed:1})
 	];
 	let index_data = {
         market_type_title:'Index Option',

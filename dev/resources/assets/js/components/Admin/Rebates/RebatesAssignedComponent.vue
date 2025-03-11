@@ -54,15 +54,15 @@
                             data:[]
                         },
                         {
-                            id_key: "DTOP",
+                            id_key: "CTOP",
                             backgroundColor:'#269a9b',
-                            label: "DTOP",
+                            label: "CTOP",
                             data:[]
                         },
                         {
-                            id_key: "DCAP",
+                            id_key: "CTOR",
                             backgroundColor:'#1a333f',
-                            label: "DCAP",
+                            label: "CTOR",
                             data:[]
                         },
                         {

@@ -15,8 +15,8 @@ describe('MarketSelectionComponent.vue', () => {
         market_type: {
 			markets: [
 				new Market({id:1,title:"TOP40",market_type_id:1,is_displayed:1}),
-				new Market({id:2,title:"DTOP",market_type_id:1,is_displayed:1}),
-				new Market({id:3,title:"DCAP",market_type_id:1,is_displayed:1})
+				new Market({id:2,title:"CTOP",market_type_id:1,is_displayed:1}),
+				new Market({id:3,title:"CTOR",market_type_id:1,is_displayed:1})
 			]
 		},
         index_market_object: {
@@ -33,7 +33,7 @@ describe('MarketSelectionComponent.vue', () => {
 
 	it('Select Market', (done) => {
 		let marketSelectionCallback = (market) => {
-			chai.assert.deepEqual(index_data.index_market_object.market, market, "DTOP is the selected Market set");
+			chai.assert.deepEqual(index_data.index_market_object.market, market, "CTOP is the selected Market set");
 			done();
 		};
 

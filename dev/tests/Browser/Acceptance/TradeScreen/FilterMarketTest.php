@@ -23,7 +23,7 @@ class FilterMarketTest extends DuskTestCase
     {
         parent::setUp();
         FactoryHelper::setUpMarkets();
-        $this->marketText = collect(['INDEX'=>['TOP40','DTOP','DCAP'],
+        $this->marketText = collect(['INDEX'=>['TOP40','CTOP','CTOR'],
                                     'SINGLES'=>['SINGLES'],
                                     'DELTA ONE'=>['DELTA ONE']
                                 ]);

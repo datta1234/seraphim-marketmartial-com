@@ -141,7 +141,7 @@ let markets = [
     new Market({
         id: "2",
         order: 2,
-        title: "DTOP",
+        title: "CTOP",
         market_requests: [
             new UserMarketRequest({
                 id: "2",

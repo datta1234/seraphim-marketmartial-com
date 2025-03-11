@@ -16,6 +16,7 @@ class TimeRestrictions
 
 	public static function canTrade($date)
 	{
+		return true;
 		$startTime = Carbon::createFromTimeString(config('marketmartial.window.trade_start_time'));
         $endTime = Carbon::createFromTimeString(config('marketmartial.window.trade_end_time'));
         return $date->between($startTime,$endTime);

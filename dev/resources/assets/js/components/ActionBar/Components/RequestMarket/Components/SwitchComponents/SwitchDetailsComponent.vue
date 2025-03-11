@@ -320,8 +320,8 @@
                 ],
                 quantity_default: {
                     TOP40: 500,
-                    DTOP: 2500,
-                    DCAP: 1500,
+                    CTOP: 2500,
+                    CTOR: 1500,
                     stock: 50,
                 }
             };

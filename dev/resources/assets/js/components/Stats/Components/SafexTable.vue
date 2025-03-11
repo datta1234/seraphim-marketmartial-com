@@ -9,7 +9,7 @@
                     <b-col cols="12">
                         <b-form v-on:submit.prevent="" id="chat-message-form">
                             <b-row class="mt-4">
-                                <b-col cols="1">
+                                <b-col cols="1" class="d-flex align-items-center">
                                     <label class="mr-sm-2" for="stats-safex-nominal">Min.Nominal:</label>
                                 </b-col>
                                 <b-col cols="3">
@@ -21,7 +21,7 @@
                                 </b-col>
                             </b-row>
                             <b-row class="mt-2">
-                                <b-col cols="1">
+                                <b-col cols="1" class="d-flex align-items-center">
                                     <label class="mr-sm-2" for="stats-safex-markets">Markets:</label>
                                 </b-col>
                                 <b-col cols="3">
@@ -33,19 +33,27 @@
                                 </b-col>
                             </b-row>
                             <b-row class="mt-2">
-                                <b-col cols="1">
+                                <b-col cols="1" class="d-flex align-items-center">
                                     <label class="mr-sm-2" for="stats-safex-expiration">Expiration:</label>
                                 </b-col>
                                 <b-col cols="3">
                                     <b-form-select id="stats-safex-expiration"
-                                                   class="w-100"
-                                                   :options="expiration_filter"
-                                                   v-model="table_data.param_options.expiration">
+                                                class="w-100"
+                                                :options="expiration_filter"
+                                                v-model="table_data.param_options.expiration">
                                     </b-form-select>
                                 </b-col>
+                                <b-col cols="2" class="d-flex align-items-center pl-2">
+                                    <b-form-checkbox v-model="table_data.param_options.non_expired" 
+                                                    class=""
+                                                    @change="onExpiredToggled">
+                                        Non Expired
+                                    </b-form-checkbox>
+                                </b-col>
                             </b-row>
+
                             <b-row class="mt-2">
-                                <b-col cols="1">
+                                <b-col cols="1" class="d-flex align-items-center">
                                     <label class="mr-sm-2" for="stats-safex-underlying">Underlying:</label>
                                 </b-col>
                                 <b-col cols="3">
@@ -125,8 +133,8 @@
                 markets_filter: [
                     {text: "All Markets", value: null},
                     {text: "ALSI", value: "ALSI"},
-                    {text: "DTOP", value: "DTOP"},
-                    {text: "DCAP", value: "DCAP"},
+                    {text: "CTOP", value: "CTOP"},
+                    {text: "CTOR", value: "CTOR"},
                     {text: "SINGLES", value: "SINGLES"},
                 ],
                 expiration_filter: [
@@ -158,6 +166,7 @@
                         date: null,
                         order_by: null,
                         order_ascending: false,
+                        non_expired: true,
                     },
                     pagination: {
                         current_page: 1,
@@ -178,6 +187,25 @@
                 this.table_data.param_options.underlying = null;
                 this.loadTableData();
             },
+            onExpiredToggled(is_toggle = false) {
+                if(is_toggle !== null) {
+                    this.table_data.param_options.non_expired = !this.table_data.param_options.non_expired;
+                }
+
+                const today = new Date();
+
+                if (this.table_data.param_options.non_expired) {
+                    this.expiration_filter = this.expiration_filter.filter(date => {
+                        if (typeof date === "object" && date.value === null) return true;
+                        return new Date(date) > today;
+                    });
+                    if(this.table_data.param_options.expiration && new Date(this.table_data.param_options.expiration) < today) {
+                        this.table_data.param_options.expiration = this.expiration_filter[1]
+                    }
+                } else {
+                    this.expiration_filter = [...this.original_expiration_filter]
+                }
+            },
             loadTableData() {
                 this.table_data.loaded = false;
                 axios.get(axios.defaults.baseUrl + '/stats/market-activity/safex', {
@@ -190,6 +218,7 @@
                         "search": this.table_data.param_options.underlying,
                         '_order_by': (this.table_data.param_options.order_by !== null ? this.table_data.param_options.order_by : ''),
                         '_order': (this.table_data.param_options.order_ascending ? 'ASC' : 'DESC'),
+                        "filter_non_expired": this.table_data.param_options.non_expired,
                     }
                 })
                 .then(safexDataResponse => {
@@ -204,7 +233,10 @@
 
                         if(this.expiration_filter.length < 2) {
                             this.expiration_filter = this.expiration_filter.concat(safexDataResponse.data.data.expiration_dates.map(date => moment(date).format('DD MMM YYYY')))
+                            this.original_expiration_filter = this.expiration_filter;
                         }
+
+                        this.onExpiredToggled(null)
                     } else {
                         //console.error(err); 
                     }

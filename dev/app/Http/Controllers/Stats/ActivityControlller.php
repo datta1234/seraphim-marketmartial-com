@@ -295,6 +295,7 @@ class ActivityControlller extends Controller
                 "filter_market" => $request->input('filter_market'),
                 "filter_expiration" => $request->input('filter_expiration'),
                 "filter_nominal" => $request->input('filter_nominal'),
+                "filter_non_expired" => $request->input('filter_non_expired'),
             ]
         )->paginate(50);
 

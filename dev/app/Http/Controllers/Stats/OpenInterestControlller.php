@@ -27,13 +27,11 @@ class OpenInterestControlller extends Controller
                 case 'ALSX':
                     return ["ALSI" => $item];
                     break;
-                case 'DTOP':
-                case 'DTOX':
-                    return ["DTOP" => $item];
+                case 'CTOP':
+                    return ["CTOP" => $item];
                     break;
-                case 'DCAP':
-                case 'DCAX':
-                    return ["DCAP" => $item];
+                case 'CTOR':
+                    return ["CTOR" => $item];
                     break;
                 default:
                     return ["SINGLES" => $item];

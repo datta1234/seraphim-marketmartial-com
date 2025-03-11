@@ -531,7 +531,7 @@ const app = new Vue({
     },
     data: {
         // default data
-        market_order:['TOP 40','DTOP','DCAP','SINGLES','DELTA ONE'],
+        market_order:['TOP 40','CTOP','CTOR','SINGLES','DELTA ONE'],
         no_cares: [],
         display_markets: [],
         hidden_markets: [],

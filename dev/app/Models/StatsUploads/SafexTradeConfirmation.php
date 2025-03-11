@@ -129,8 +129,8 @@ class SafexTradeConfirmation extends Model
                 $market = $filter['filter_market'];
                 switch ($market) {
                     case 'ALSI':
-                    case 'DTOP':
-                    case 'DCAP':
+                    case 'CTOP':
+                    case 'CTOR':
                         $safex_trad_confirmation_query->where( function ($q) use ($market) {
                             $q->where('underlying','like',"%$market%");
                         });
@@ -139,8 +139,8 @@ class SafexTradeConfirmation extends Model
                     default:
                         $safex_trad_confirmation_query->where( function ($q) {
                             $q->where('underlying','not like',"%ALSI%")
-                                ->where('underlying','not like',"%DTOP%")
-                                ->where('underlying','not like',"%DCAP%");
+                                ->where('underlying','not like',"%CTOP%")
+                                ->where('underlying','not like',"%CTOR%");
                         });
                         break;
                 }
@@ -149,6 +149,10 @@ class SafexTradeConfirmation extends Model
             // Applies Expiration filter
             if(!empty($filter["filter_expiration"])) {
                 $safex_trad_confirmation_query->whereDate('expiry', $filter["filter_expiration"]);
+            }
+
+            if(!empty($filter["filter_non_expired"]) && $filter["filter_non_expired"] == "true") {
+                $safex_trad_confirmation_query->whereDate('expiry', ">=", date("Y-m-d"));
             }
 
             // Applies nominal filter

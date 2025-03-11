@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-12">
-                    <p class="m-2">DCAP and DTOP: Only displayed when markets are requested</p>
+                    <p class="m-2">CTOP and CTOR: Only displayed when markets are requested</p>
                 </div>
                 
                 <div class="col-6 offset-6 mt-1">

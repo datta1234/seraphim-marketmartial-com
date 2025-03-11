@@ -67,15 +67,15 @@
                             data:[]
                         },
                         {
-                            market: "DTOP",
+                            market: "CTOP",
                             backgroundColor:'#269a9b',
-                            label: "DTOP",
+                            label: "CTOP",
                             data:[]
                         },
                         {
-                            market: "DCAP",
+                            market: "CTOR",
                             backgroundColor:'#1a333f',
-                            label: "DCAP",
+                            label: "CTOR",
                             data:[]
                         },
                         {

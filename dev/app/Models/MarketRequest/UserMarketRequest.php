@@ -1561,8 +1561,8 @@ class UserMarketRequest extends Model
                 /*if(!empty($strike) && empty($spot_price)) {
                     switch ($tradable->market->title) {
                         case 'TOP40':
-                        case 'DTOP':
-                        case 'DCAP':
+                        case 'CTOP':
+                        case 'CTOR':
                             $spot_price = $tradable->market->spot_price_ref;
                             break;
                     }

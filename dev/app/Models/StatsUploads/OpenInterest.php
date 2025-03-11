@@ -135,16 +135,14 @@ class OpenInterest extends Model
                                 ->orWhere('contract','like',"%ALSX%");
                         });
                         break;
-                    case 'DTOP':
+                    case 'CTOP':
                         $open_interest_query->where( function ($q) use ($market) {
-                            $q->where('contract','like',"%$market%")
-                                ->orWhere('contract','like',"%DTOX%");
+                            $q->where('contract','like',"%$market%");
                         });
                         break;
-                    case 'DCAP':
+                    case 'CTOR':
                         $open_interest_query->where( function ($q) use ($market) {
-                            $q->where('contract','like',"%$market%")
-                                ->orWhere('contract','like',"%DCAX%");
+                            $q->where('contract','like',"%$market%");
                         });
                         break;
                     case 'SINGLES':
@@ -152,10 +150,8 @@ class OpenInterest extends Model
                         $open_interest_query->where( function ($q) {
                             $q->where('contract','not like',"%ALSI%")
                                 ->where('contract','not like',"%ALSX%")
-                                ->where('contract','not like',"%DTOP%")
-                                ->where('contract','not like',"%DTOX%")
-                                ->where('contract','not like',"%DCAP%")
-                                ->where('contract','not like',"%DCAX%");
+                                ->where('contract','not like',"%CTOP%")
+                                ->where('contract','not like',"%CTOR%");
                         });
                         break;
                 }

@@ -25,8 +25,8 @@ class MarketTableSeeder extends Seeder
             'is_selectable' => true
         ]);
 
-        $DTOP = factory(App\Models\StructureItems\Market::class)->create([
-            'title'=> 'DTOP',
+        $CTOP = factory(App\Models\StructureItems\Market::class)->create([
+            'title'=> 'CTOP',
             'description' => null,
             'is_seldom' => true,
             'has_deadline'=> true,
@@ -39,8 +39,8 @@ class MarketTableSeeder extends Seeder
             'is_selectable' => true
         ]);
 
-        $DCAP = factory(App\Models\StructureItems\Market::class)->create([
-            'title'=> 'DCAP',
+        $CTOR = factory(App\Models\StructureItems\Market::class)->create([
+            'title'=> 'CTOR',
             'description' => null,
             'is_seldom' => true,
             'has_deadline'=> true,
