@@ -34,7 +34,7 @@
         },
         data() {
             return {
-            	is_mm_table: true,
+            	is_mm_table: false,
             };
         },
         methods: {
